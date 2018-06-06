@@ -1,0 +1,28 @@
+{
+  "name": "@flood/element",
+  "version": "1.0.0",
+  "description": "Flood Element is a browser based load generation tool for easily testing modern web application performance",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "mocha --trace-warnings -r ts-node/register \\\"src/**/*.spec.ts\\\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/flood-io/element.git"
+  },
+  "keywords": [
+    "load",
+    "testing",
+    "puppeteer",
+    "chrome",
+    "browser",
+    "testing",
+    "testing"
+  ],
+  "author": "Ivan Vanderbyl <ivan@flood.io>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/flood-io/element/issues"
+  },
+  "homepage": "https://github.com/flood-io/element#readme"
+}

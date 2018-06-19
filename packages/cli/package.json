@@ -1,11 +1,12 @@
 {
 	"name": "@flood/element-cli",
-	"version": "1.0.3-1",
+	"version": "1.0.3-2",
 	"license": "Apache-2.0",
 	"description": "The command line interface for Flood Element",
 	"repository": "flood-io/element",
 	"bin": {
-		"element": "./dist/element.js"
+		"element": "./dist/element.js",
+		"create-element-test": "./dist/create.js"
 	},
 	"private": false,
 	"scripts": {

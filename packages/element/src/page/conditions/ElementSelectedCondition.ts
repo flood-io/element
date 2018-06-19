@@ -1,0 +1,44 @@
+import { ElementCondition } from '../Condition'
+import { EvaluateFn } from 'puppeteer'
+import { Locatable } from '../Locator'
+
+export class ElementSelectedCondition extends ElementCondition {
+	constructor(locator: Locatable, ...args: any[]) {
+		super(locator)
+		this.pageFuncArgs = args
+	}
+
+	toString() {
+		return 'waiting element to be selected'
+	}
+
+	pageFunc: EvaluateFn = (node: HTMLElement, waitForSelected: boolean) => {
+		if (!node) return false
+		if (!isSelectable(node)) return false
+
+		let tagName = node.tagName
+		var propertyName = 'selected'
+		var type = tagName.toUpperCase()
+		if ('CHECKBOX' == type || 'RADIO' == type) {
+			propertyName = 'checked'
+		}
+
+		let value = !!node[propertyName]
+		return value === waitForSelected
+
+		function isSelectable(node: HTMLElement) {
+			let tagName = node.tagName
+
+			if (tagName === 'OPTION') {
+				return true
+			}
+
+			if (tagName === 'INPUT') {
+				let type = tagName.toLowerCase()
+				return type == 'checkbox' || type == 'radio'
+			}
+
+			return false
+		}
+	}
+}

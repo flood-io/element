@@ -1,0 +1,27 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"target": "ES2017",
+		"moduleResolution": "node",
+		"inlineSourceMap": true,
+		"outDir": "dist",
+		"lib": ["dom", "dom.iterable", "es7", "es2017", "es2016.array.include", "es2017.object"],
+		"pretty": true,
+		"rootDir": ".",
+		"strictNullChecks": false,
+		"forceConsistentCasingInFileNames": false,
+		"allowUnreachableCode": false,
+		"alwaysStrict": true,
+		"noUnusedLocals": true,
+		"allowJs": true,
+		"checkJs": true,
+		"noImplicitAny": false,
+		"allowSyntheticDefaultImports": true,
+		"experimentalDecorators": true,
+		"types": ["@types/node"],
+		"typeRoots": ["node_modules/@types"],
+		"emitDecoratorMetadata": true
+	},
+	"exclude": ["node_modules", "dist", "examples", "*.spec.ts"],
+	"files": ["./index.ts"]
+}

@@ -1,8 +1,5 @@
-// import { TestDataRow } from '@flood/chrome'
-// import { extname } from 'path'
 import { readFile } from 'fs'
 import { promisify } from 'util'
-// import { parse as parseCSV } from 'csv'
 import * as parseCSV from 'csv-parse/lib/sync'
 
 const readFilePromise = promisify(readFile)

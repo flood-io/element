@@ -4,6 +4,8 @@
 	"description": "Flood Element is a browser based load generation tool for easily testing modern web application performance",
 	"main": "dist/index.js",
 	"scripts": {
+		"build": "tsc --outDir dist --project .",
+		"prepublishOnly": "npm run build",
 		"test": "mocha --trace-warnings -r ts-node/register \\\"src/**/*.spec.ts\\\""
 	},
 	"repository": {
@@ -92,6 +94,5 @@
 		"bracketSpacing": true,
 		"jsxBracketSameLine": true,
 		"arrowParens": "avoid"
-	},
-	"private": false
+	}
 }

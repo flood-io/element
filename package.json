@@ -6,6 +6,6 @@
   "author": "Ivan Vanderbyl <ivanvanderbyl@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "lerna": "^2.11.0"
+    "lerna": "2.11.0"
   }
 }

@@ -1,0 +1,26 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"target": "ES2015",
+		"moduleResolution": "node",
+		"removeComments": true,
+		"outDir": "dist",
+		"lib": ["esnext"],
+		"pretty": false,
+		"rootDir": ".",
+		"strictNullChecks": false,
+		"forceConsistentCasingInFileNames": true,
+		"allowUnreachableCode": false,
+		"alwaysStrict": true,
+		"noUnusedLocals": true,
+		"allowJs": false,
+		"noImplicitAny": false,
+		"allowSyntheticDefaultImports": true,
+		"experimentalDecorators": true,
+		"types": ["@types/node"],
+		"typeRoots": ["node_modules/@types"],
+		"emitDecoratorMetadata": true
+	},
+	"exclude": ["node_modules", "dist", "*.spec.ts"],
+	"files": ["./create.ts"]
+}

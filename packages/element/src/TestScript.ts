@@ -1,6 +1,6 @@
 import { VMScript } from 'vm2'
 import * as ts from 'typescript'
-import { TypescriptTestScript } from './test-script/Typescript'
+import { TypeScriptTestScript } from './test-script/Compiler'
 import { Callsite, callsiteToString } from './test-script/SourceUnmapper'
 
 export class TestScriptError extends Error {
@@ -68,14 +68,14 @@ export async function compileString(
 	filename: string,
 	testScriptOptions?: TestScriptOptions,
 ): Promise<ITestScript> {
-	return new TypescriptTestScript(source, filename, testScriptOptions).compile()
+	return new TypeScriptTestScript(source, filename, testScriptOptions).compile()
 }
 
 export async function compileFile(
 	filename: string,
 	testScriptOptions?: TestScriptOptions,
 ): Promise<ITestScript> {
-	return new TypescriptTestScript(ts.sys.readFile(filename), filename, testScriptOptions).compile()
+	return new TypeScriptTestScript(ts.sys.readFile(filename), filename, testScriptOptions).compile()
 }
 
 export async function mustCompileString(

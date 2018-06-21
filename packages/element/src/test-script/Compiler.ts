@@ -17,16 +17,16 @@ const sandboxRoot = path.join(floodchromeRoot, sandboxPath)
 const sandboxedBasenameTypescript = 'flood-chrome.ts'
 const sandboxedBasenameJavascript = 'flood-chrome.js'
 
-const NoModuleImportedTypescript = `Test scripts must import the module '@flood/chrome'
+const NoModuleImportedTypescript = `Test scripts must import the module '@flood/element'
 Please add an import as follows:
 
-import { step, TestSettings, Until, By, MouseButtons, Device, Driver } from '@flood/chrome'
+import { suite } from '@flood/element'
 `
 
-const NoModuleImportedJavascript = `Test scripts must import the module '@flood/chrome'
+const NoModuleImportedJavascript = `Test scripts must import the module '@flood/element'
 Please add an import as follows:
 
-const { step, TestSettings, Until, By, MouseButtons, Device, Driver } = require('@flood/chrome')
+import { suite } from '@flood/element'
 `
 
 const FloodChromeErrors = {
@@ -40,7 +40,7 @@ const defaultCompilerOptions: ts.CompilerOptions = {
 	noUnusedParameters: false,
 	noUnusedLocals: false,
 	allowSyntheticDefaultImports: true,
-
+	experimentalDecorators: true,
 	allowJs: true,
 	checkJs: true,
 	suppressOutputPathCheck: true,
@@ -64,13 +64,13 @@ const defaultCompilerOptions: ts.CompilerOptions = {
 		'lib.es2016.array.include.d.ts',
 		'lib.es2017.object.d.ts',
 	],
-	types: ['@types/node', '@flood/chrome'],
-	typeRoots: ['node_modules/@types'],
+	types: ['@types/node', '@flood/element'],
+	typeRoots: ['node_modules/@types', 'node_modules/@flood/element'],
 }
 
 type sourceKinds = 'typescript' | 'javascript'
 
-export class TypescriptTestScript implements ITestScript {
+export class TypeScriptTestScript implements ITestScript {
 	public sandboxedBasename: string
 	public sandboxedFilename: string
 	public sandboxedRelativeFilename: string
@@ -129,7 +129,7 @@ export class TypescriptTestScript implements ITestScript {
 		return compilerOptions
 	}
 
-	public async compile(): Promise<TypescriptTestScript> {
+	public async compile(): Promise<TypeScriptTestScript> {
 		if (!this.isFloodChromeCorrectlyImported) {
 			switch (this.sourceKind) {
 				case 'javascript':
@@ -141,6 +141,8 @@ export class TypescriptTestScript implements ITestScript {
 			}
 			return this
 		}
+
+		debugger
 
 		const sandboxedBasename = this.sandboxedBasename
 		const inputSource = this.originalSource
@@ -169,7 +171,6 @@ export class TypescriptTestScript implements ITestScript {
 		}
 
 		const program = ts.createProgram([this.sandboxedBasename], compilerOptions, host)
-
 		const emitResult = program.emit()
 
 		this.diagnostics = new CategorisedDiagnostics(host, this.filenameMapper.bind(this))

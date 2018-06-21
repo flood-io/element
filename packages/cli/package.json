@@ -11,8 +11,10 @@
 	"scripts": {
 		"build": "tsc --outDir dist --project .",
 		"prepublishOnly": "npm run build",
-		"element": "ts-node -- ./index.ts"
+		"element": "ts-node -- ./index.ts",
+		"element:inspect": "nodemon --inspect-brk --ext ts --exec ts-node -- ./index.ts"
 	},
+	"types": "./index.d.ts",
 	"dependencies": {
 		"@flood/element": "^1.0.3-3",
 		"chalk": "^2.4.1",
@@ -28,7 +30,8 @@
 		"@types/ora": "^1.3.4",
 		"@types/yargs": "^11.0.0",
 		"ts-node": "^6.1.1",
-		"typescript": "^2.9.2"
+		"typescript": "^2.9.2",
+		"nodemon": "^1.17.5"
 	},
 	"prettier": {
 		"semi": false,

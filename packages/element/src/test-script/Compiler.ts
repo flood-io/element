@@ -64,8 +64,8 @@ const defaultCompilerOptions: ts.CompilerOptions = {
 		'lib.es2016.array.include.d.ts',
 		'lib.es2017.object.d.ts',
 	],
-	types: ['@types/node', '@flood/element'],
-	typeRoots: ['node_modules/@types', 'node_modules/@flood/element'],
+	types: ['@types/node'],
+	typeRoots: ['node_modules/@types', './typings'],
 }
 
 type sourceKinds = 'typescript' | 'javascript'
@@ -142,7 +142,7 @@ export class TypeScriptTestScript implements ITestScript {
 			return this
 		}
 
-		debugger
+		// debugger
 
 		const sandboxedBasename = this.sandboxedBasename
 		const inputSource = this.originalSource

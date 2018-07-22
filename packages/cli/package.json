@@ -12,7 +12,7 @@
 		"build": "tsc --outDir dist --project .",
 		"prepublishOnly": "npm run build",
 		"element": "ts-node -- ./index.ts",
-		"element:inspect": "nodemon --inspect-brk --ext ts --exec ts-node -- ./index.ts"
+		"element:inspect": "node --inspect-brk -r ts-node/register ./index.ts"
 	},
 	"types": "./index.d.ts",
 	"dependencies": {

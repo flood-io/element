@@ -4,9 +4,13 @@
     "packages/*"
   ],
   "version": "1.0.3-3",
+  "npmClient": "yarn",
   "command": {
     "init": {
       "exact": true
+    },
+    "bootstrap": {
+      "npmClient": "yarn"
     }
   }
 }

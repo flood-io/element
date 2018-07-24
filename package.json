@@ -1,11 +1,25 @@
 {
-  "name": "element",
-  "version": "1.0.0",
-  "main": "index.js",
-  "repository": "git@github.com:flood-io/element.git",
-  "author": "Ivan Vanderbyl <ivanvanderbyl@gmail.com>",
-  "license": "MIT",
-  "dependencies": {
-    "lerna": "2.11.0"
-  }
+	"name": "element",
+	"version": "1.0.0",
+	"main": "index.js",
+	"repository": "git@github.com:flood-io/element.git",
+	"author": "Ivan Vanderbyl <ivanvanderbyl@gmail.com>",
+	"license": "MIT",
+	"dependencies": {
+		"lerna": "2.11.0"
+	},
+	"prettier": {
+		"semi": false,
+		"singleQuote": true,
+		"trailingComma": "all",
+		"printWidth": 100,
+		"useTabs": true,
+		"tabWidth": 2,
+		"bracketSpacing": true,
+		"jsxBracketSameLine": true,
+		"arrowParens": "avoid"
+	},
+	"devDependencies": {
+		"@types/node": "^10.5.2"
+	}
 }

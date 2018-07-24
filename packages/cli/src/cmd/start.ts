@@ -1,25 +1,26 @@
-import * as ora from 'ora'
-import { Loader, PuppeteerDriver } from '@flood/element'
+// import * as ora from "ora";
+import { runCommandLine, ElementOptions } from '@flood/element'
 import { Argv, Arguments } from 'yargs'
 import { existsSync } from 'fs'
-import { error } from '../utils/out/error'
+// import { error } from '../utils/out/error'
+import createLogger from '../utils/Logger'
 
 export const main = async (args: Arguments) => {
 	const { file } = args
-	let spinner
-	if (!args.json) spinner = ora(`Launching test '${file}'`).start()
 
-	let loader = new Loader(file, PuppeteerDriver)
-	await loader
-		.run()
-		.then(() => {
-			if (!args.json) spinner.succeed('Completed')
-		})
-		.catch(err => {
-			console.error(error(err))
-			if (!args.json) spinner.stop()
-			process.exit(1)
-		})
+	const opts: ElementOptions = {
+		logger: createLogger('debug', true, ''),
+		testScript: file,
+		// TODO console reporter
+	}
+
+	await runCommandLine(opts)
+
+	// let spinner
+	// if (!args.json) spinner = ora(`Launching test '${file}'`).start()
+
+	// console.log("awaited");
+	// process.exit(0);
 }
 
 export const command = 'run <file> [options]'

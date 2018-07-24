@@ -1,4 +1,4 @@
-import { Option } from '../runtime/VM'
+import { Option } from '../utils/Option'
 import { knuthShuffle } from 'knuth-shuffle'
 
 export type FeedFilterFunction<Line> = (line: Line, index: number, instanceID: string) => boolean

@@ -1,7 +1,7 @@
 import { ITestRunner, Browser } from './types'
-import Logger from './utils/Logger'
+import { Logger } from 'winston'
 import Test from './runtime/Test'
-import Reporter from './reporter/Influx'
+import { IReporter } from './Reporter'
 import { Factory } from './runtime/VM'
 import { LaunchOptions } from 'puppeteer'
 import { TestScriptError, ITestScript } from './TestScript'
@@ -11,12 +11,15 @@ export default class Runner implements ITestRunner {
 	private timeout: any
 	private testContinue: boolean = true
 	private test: Test
+	private interrupts: number
 
-	constructor(Driver: Factory<Browser>, private logger: Logger) {
+	constructor(Driver: Factory<Browser>, private reporter: IReporter, private logger: Logger) {
 		this.driver = new Driver()
+		this.interrupts = 0
 	}
 
-	private async shutdown(exitCode: number = 0) {
+	async shutdown(): Promise<void> {
+		this.interrupts++
 		this.logger.info('Shutting down...')
 		await this.test.after()
 		clearTimeout(this.timeout)
@@ -27,27 +30,10 @@ export default class Runner implements ITestRunner {
 		} catch (err) {
 			console.error(`Error while closing browser: ${err}`)
 		}
-		process.exit(exitCode)
 	}
 
 	async run(testScript: ITestScript): Promise<void> {
-		let interupts = 0
-
-		process.on('SIGINT', async () => {
-			this.logger.debug('Received SIGINT')
-			interupts++
-			await this.shutdown()
-		})
-
-		process.once('SIGUSR2', async () => {
-			// Usually received by nodemon on file change
-			this.logger.debug('Received SIGUSR2')
-			interupts++
-			this.shutdown().then(() => process.kill(process.pid, 'SIGUSR2'))
-		})
-
-		let reporter = new Reporter(this.logger)
-		let test = new Test(reporter)
+		let test = new Test(this.reporter)
 		this.test = test
 
 		try {
@@ -93,7 +79,7 @@ export default class Runner implements ITestRunner {
 
 			const testLoopContinue = () => {
 				if (this.testContinue === false) return
-				this.testContinue = interupts === 0
+				this.testContinue = this.interrupts === 0
 				if (this.testContinue === false) return
 
 				if (Number(settings.loopCount) > 0) {
@@ -136,7 +122,7 @@ export default class Runner implements ITestRunner {
 			// }
 
 			await test.after()
-			await this.shutdown(1)
+			await this.shutdown()
 		}
 	}
 }

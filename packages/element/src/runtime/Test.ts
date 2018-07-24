@@ -1,5 +1,6 @@
-import { VM, CALLBACK_QUEUES, expect } from './VM'
-import { IReporter, TestEvent, NetworkTraceData } from './../Reporter'
+import { VM, CALLBACK_QUEUES } from './VM'
+import { expect } from '../utils/Expect'
+import { IReporter, TestEvent, NetworkTraceData, CompoundMeasurement } from './../Reporter'
 import { NullReporter } from './../reporter/Null'
 import Observer from './Observer'
 import NetworkRecorder from '../network/Recorder'
@@ -305,7 +306,8 @@ export default class Test {
 
 		let tti = await this.vm.currentSandbox.interactionTiming()
 		let performanceTiming = await this.vm.currentSandbox.performanceTiming()
-		let browserPerformanceTiming = {
+
+		let browserPerformanceTiming: CompoundMeasurement = {
 			time_to_first_interactive: tti,
 			dom_interactive: performanceTiming.domInteractive - performanceTiming.navigationStart,
 			dom_complete: performanceTiming.domComplete - performanceTiming.navigationStart,

@@ -14,13 +14,12 @@ import { ITestScript } from '../TestScript'
 import { DEFAULT_ACTION_WAIT_SECONDS, DEFAULT_STEP_WAIT_SECONDS } from './Test'
 import CustomDeviceDescriptors from '../utils/CustomDeviceDescriptors'
 import { TestData } from '../test-data/TestData'
+import { expect } from '../utils/Expect'
 
 const debugVM = debug('vm')
 const debugVMCallback = debug('vm:callback')
 
 export type Opaque = {} | void | null | undefined
-export type Option<T> = T | null
-export type Maybe<T> = Option<T> | undefined | void
 export type Factory<T> = new (...args: Opaque[]) => T
 export type CallbackFunc = (...args: Opaque[]) => void | Promise<void>
 
@@ -33,11 +32,6 @@ export enum CALLBACK_QUEUES {
 	AfterAction = 'afterAction',
 	Error = 'error',
 	Skip = 'skip',
-}
-
-export function expect<T>(val: Maybe<T>, message: string): T {
-	if (val === null || val === undefined) throw new Error(message)
-	return val as T
 }
 
 export function unreachable(message = 'unreachable'): Error {
@@ -289,7 +283,10 @@ export class VM {
 		 */
 		testFn.apply(null, [step])
 
-		this.settings = { ...DEFAULT_SETTINGS, ...normalizeSettings(this.rawSettings) }
+		this.settings = {
+			...DEFAULT_SETTINGS,
+			...normalizeSettings(this.rawSettings),
+		}
 
 		return this.settings
 	}
@@ -330,6 +327,8 @@ export class VM {
 				// console.log(JSON.stringify(testDataRecord))
 				debugVM(JSON.stringify(testDataRecord))
 			}
+
+			debugger
 
 			debugVM('running steps')
 			for (let step of this.steps) {

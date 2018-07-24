@@ -1,4 +1,4 @@
-import Loader from './src/Loader'
+import { runCommandLine, ElementOptions } from './src/Element'
 import PuppeteerDriver from './src/driver/Puppeteer'
 
-export { Loader, PuppeteerDriver }
+export { ElementOptions, runCommandLine, PuppeteerDriver }

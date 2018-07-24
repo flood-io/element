@@ -21,7 +21,7 @@ export type CompoundMeasurementKind =
 	| 'first_paint'
 	| 'first_contentful_paint'
 
-export type CompoundMeasurement = { [key: string]: number }
+export type CompoundMeasurement = { [key in CompoundMeasurementKind]?: number }
 
 export interface Measurement {
 	measurement: MeasurementKind

@@ -22,6 +22,6 @@
 		"typeRoots": ["node_modules/@types"],
 		"emitDecoratorMetadata": true
 	},
-	"exclude": ["node_modules", "dist", "examples", "*.spec.ts"],
+	"exclude": ["node_modules", "dist", "examples", "*.spec.ts", "*.test.ts"],
 	"files": ["./index.ts"]
 }

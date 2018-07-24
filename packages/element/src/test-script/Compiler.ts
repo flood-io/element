@@ -10,6 +10,9 @@ import * as path from 'path'
 import { VMScript } from 'vm2'
 import * as parseComments from 'comment-parser'
 import { SourceUnmapper } from './SourceUnmapper'
+import * as debugFactory from 'debug'
+
+const debug = debugFactory('element:compiler')
 
 const floodchromeRoot = path.join(__dirname, '../..')
 const sandboxPath = 'test-script-sandbox'
@@ -65,7 +68,7 @@ const defaultCompilerOptions: ts.CompilerOptions = {
 		'lib.es2017.object.d.ts',
 	],
 	types: ['@types/node'],
-	typeRoots: ['node_modules/@types', './typings'],
+	typeRoots: ['node_modules/@types', 'node_modules', './typings'],
 }
 
 type sourceKinds = 'typescript' | 'javascript'
@@ -144,7 +147,8 @@ export class TypeScriptTestScript implements ITestScript {
 
 		// debugger
 
-		const sandboxedBasename = this.sandboxedBasename
+		// const sandboxedBasename = this.sandboxedBasename
+		const sandboxedFilename = this.sandboxedFilename
 		const inputSource = this.originalSource
 
 		const compilerOptions = this.compilerOptions
@@ -162,15 +166,16 @@ export class TypeScriptTestScript implements ITestScript {
 			languageVersion: ts.ScriptTarget,
 			onError?: (message: string) => void,
 		): ts.SourceFile {
+			debug('getSourceFile', fileName)
 			// inject our source string if its the sandboxedBasename
-			if (fileName == sandboxedBasename) {
+			if (fileName == sandboxedFilename) {
 				return ts.createSourceFile(fileName, inputSource, languageVersion, false)
 			} else {
 				return originalGetSourceFile.apply(this, arguments)
 			}
 		}
 
-		const program = ts.createProgram([this.sandboxedBasename], compilerOptions, host)
+		const program = ts.createProgram([this.sandboxedFilename], compilerOptions, host)
 		const emitResult = program.emit()
 
 		this.diagnostics = new CategorisedDiagnostics(host, this.filenameMapper.bind(this))

@@ -3,7 +3,8 @@ import MetricIdentifier from './MetricIdentifier'
 import WorkRoot from './WorkRoot'
 import InfluxReporter from './InfluxReporter'
 import { initFromEnvironment } from './Environment'
-import { createLogger, Logger } from 'winston'
+import { Logger } from 'winston'
+import createLogger from './Logger'
 
 export interface GridConfig {
 	metricIdentifier: MetricIdentifier
@@ -26,7 +27,7 @@ export async function main(argv: string[]): Promise<void> {
 	const influxReporter = initInfluxReporter(gridConfig)
 
 	const opts: ElementOptions = {
-		logger: createLogger(),
+		logger: gridConfig.logger,
 		testScript: file,
 		reporter: influxReporter,
 		// TODO console reporter
@@ -38,7 +39,7 @@ export async function main(argv: string[]): Promise<void> {
 
 function initConfig(): GridConfig {
 	const gridConfig: Partial<GridConfig> = initFromEnvironment()
-	gridConfig.logger = createLogger()
+	gridConfig.logger = createLogger(gridConfig.threadID)
 
 	const completeGridConfig: GridConfig = gridConfig as GridConfig
 

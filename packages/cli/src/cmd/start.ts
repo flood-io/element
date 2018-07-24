@@ -1,12 +1,12 @@
 // import * as ora from "ora";
-import { runCommandLine, ElementOptions } from '@flood/element'
+import { runCommandLine, runUntilExit, ElementOptions } from '@flood/element'
 import { ConsoleReporter } from '@flood/element/ReporterAPI'
 import { Argv, Arguments } from 'yargs'
 import { existsSync } from 'fs'
 // import { error } from '../utils/out/error'
 import createLogger from '../utils/Logger'
 
-export const main = async (args: Arguments) => {
+export const handler = (args: Arguments) => {
 	const { file } = args
 
 	const reporter = new ConsoleReporter()
@@ -18,7 +18,7 @@ export const main = async (args: Arguments) => {
 		// TODO console reporter
 	}
 
-	await runCommandLine(opts)
+	runUntilExit(() => runCommandLine(opts))
 
 	// let spinner
 	// if (!args.json) spinner = ora(`Launching test '${file}'`).start()
@@ -46,4 +46,3 @@ export const builder = (yargs: Argv) => {
 			return true
 		})
 }
-export const handler = main

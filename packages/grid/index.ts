@@ -1,11 +1,4 @@
 import { main } from './src/Grid'
+import { runUntilExit } from '@flood/element'
 
-main(process.argv)
-	.then(() => {
-		console.log('grid finished!')
-		process.exit(0)
-	})
-	.catch(err => {
-		console.error(err)
-		process.exit(1)
-	})
+runUntilExit(() => main(process.argv))

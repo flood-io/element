@@ -13,6 +13,17 @@ export interface ElementOptions {
 	process?: NodeJS.Process
 }
 
+export function runUntilExit(fn: () => Promise<void>) {
+	fn()
+		.then(() => process.exit(0))
+		.catch(err => {
+			console.error(err)
+			process.exit(1)
+		})
+
+	console.log('after')
+}
+
 export async function runCommandLine(opts: ElementOptions): Promise<void> {
 	let { logger, testScript, driver } = opts
 
@@ -28,17 +39,12 @@ export async function runCommandLine(opts: ElementOptions): Promise<void> {
 	process.once('SIGUSR2', async () => {
 		// Usually received by nodemon on file change
 		logger.debug('Received SIGUSR2')
-		runner.shutdown().then(() => process.kill(process.pid, 'SIGUSR2'))
+		await runner.shutdown()
+		process.kill(process.pid, 'SIGUSR2')
 	})
 
 	logger.debug(`Loading test script: ${testScript}`)
 
-	try {
-		const testScriptObj: ITestScript = await mustCompileFile(testScript)
-		await runner.run(testScriptObj)
-		return
-	} catch (err) {
-		console.error(err)
-		process.exit(1)
-	}
+	const testScriptObj: ITestScript = await mustCompileFile(testScript)
+	await runner.run(testScriptObj)
 }

@@ -1,6 +1,6 @@
 // import * as ora from "ora";
 import { runCommandLine, runUntilExit, ElementOptions } from '@flood/element'
-import { ConsoleReporter } from '@flood/element/ReporterAPI'
+import { ConsoleReporter } from '../utils/ConsoleReporter'
 import { Argv, Arguments } from 'yargs'
 import { existsSync } from 'fs'
 // import { error } from '../utils/out/error'
@@ -9,10 +9,11 @@ import createLogger from '../utils/Logger'
 export const handler = (args: Arguments) => {
 	const { file } = args
 
-	const reporter = new ConsoleReporter()
+	const logger = createLogger('debug', true, '')
+	const reporter = new ConsoleReporter(logger)
 
 	const opts: ElementOptions = {
-		logger: createLogger('debug', true, ''),
+		logger: logger,
 		testScript: file,
 		reporter: reporter,
 		// TODO console reporter

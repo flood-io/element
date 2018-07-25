@@ -17,7 +17,7 @@ export class ConsoleReporter implements IReporter {
 	reset(step: string): void {}
 
 	addMeasurement(measurement: string, value: string | number, label?: string): void {
-		this.logger.debug(`> ${measurement} ${label} ${value}`)
+		this.logger.debug(`> ${label} ${measurement} ${value}`)
 	}
 
 	addCompoundMeasurement(
@@ -25,7 +25,7 @@ export class ConsoleReporter implements IReporter {
 		value: CompoundMeasurement,
 		label: string,
 	): void {
-		this.logger.debug(`> ${measurement} ${label} ${value}`)
+		this.logger.debug(`> ${label} ${measurement} ${JSON.stringify(value)}`)
 	}
 
 	addTrace(traceData: TraceData, label: string): void {}

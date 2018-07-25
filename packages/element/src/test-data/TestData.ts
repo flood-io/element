@@ -1,7 +1,6 @@
 import { Feeder, FeedFilterFunction } from './Feeder'
 import { CSVLoader, Loader, JSONLoader, DataLoader } from './Loader'
-import { join } from 'path'
-import { testDataDirectory } from '../runtime/Sandbox'
+import { WorkRoot } from '../types'
 
 export class TestData<T> {
 	public feeder: Feeder<T>
@@ -20,13 +19,17 @@ export class TestData<T> {
 		return new TestData<TRow>(loader)
 	}
 
-	public static fromCSV<TRow>(filename: string, seperator: string = ','): TestData<TRow> {
-		let loader = new CSVLoader<TRow>(join(testDataDirectory, 'files', filename), seperator)
+	public static fromCSV<TRow>(
+		workRoot: WorkRoot,
+		filename: string,
+		seperator: string = ',',
+	): TestData<TRow> {
+		let loader = new CSVLoader<TRow>(workRoot.join('test-data', 'files', filename), seperator)
 		return new TestData<TRow>(loader)
 	}
 
-	public static fromJSON<TRow>(filename: string): TestData<TRow> {
-		let loader = new JSONLoader<TRow>(join(testDataDirectory, 'files', filename))
+	public static fromJSON<TRow>(workRoot: WorkRoot, filename: string): TestData<TRow> {
+		let loader = new JSONLoader<TRow>(workRoot.join('test-data', 'files', filename))
 		return new TestData<TRow>(loader)
 	}
 

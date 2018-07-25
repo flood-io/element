@@ -1,23 +1,30 @@
 import { runCommandLine, ElementOptions } from '@flood/element'
+import { WorkRoot } from '@flood/element/RuntimeEnvironmentAPI'
 import MetricIdentifier from './MetricIdentifier'
-import WorkRoot from './WorkRoot'
 import InfluxReporter from './InfluxReporter'
 import { initFromEnvironment } from './Environment'
 import { Logger } from 'winston'
 import createLogger from './Logger'
+import { FloodProcessEnv } from '@flood/chrome'
 
 export interface GridConfig {
 	metricIdentifier: MetricIdentifier
 	sumpHost: string
 	sumpPort: number
-	workRoot: WorkRoot
 
 	threadID: number
+	gridSequenceID: number
+	gridIndex: number
+	nodeSequenceID: number
+	nodeIndex: number
 
 	testDuration: number
 	testIterations: number
 
 	logger: Logger
+
+	workRoot: WorkRoot
+	stepEnv(): FloodProcessEnv
 }
 
 export async function main(argv: string[]): Promise<void> {
@@ -30,6 +37,7 @@ export async function main(argv: string[]): Promise<void> {
 		logger: gridConfig.logger,
 		testScript: file,
 		reporter: influxReporter,
+		runEnv: gridConfig,
 		// TODO console reporter
 	}
 

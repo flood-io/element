@@ -2,10 +2,8 @@ import { ElementHandle as PElementHandle, ClickOptions, ScreenshotOptions } from
 import { ElementHandle as IElementHandle } from '@flood/chrome'
 import { Locator } from './Locator'
 import { By } from './By'
-import { join } from 'path'
-import { ensureDir } from 'fs-extra'
 import * as cuid from 'cuid'
-import { Sandbox, tracesDirectory } from '../runtime/Sandbox'
+import { Sandbox } from '../runtime/Sandbox'
 import * as debug from 'debug'
 import { Key } from './Enums'
 const debugSandbox = debug('sandbox')
@@ -72,8 +70,7 @@ export class ElementHandle implements IElementHandle {
 	}
 
 	public async takeScreenshot(options?: ScreenshotOptions): Promise<void> {
-		await ensureDir(tracesDirectory)
-		let path = join(tracesDirectory, `${cuid()}.jpg`)
+		let path = this.sandbox.workRoot.join('traces', `${cuid()}.jpg`)
 
 		debugSandbox(`Saving screenshot to: ${path}`)
 		console.log(`Saving screenshot to: ${path}`)

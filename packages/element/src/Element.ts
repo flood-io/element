@@ -1,12 +1,13 @@
 import { Logger } from 'winston'
 import PuppeteerDriver from './driver/Puppeteer'
 import { IReporter } from './Reporter'
-import { Browser } from './types'
+import { Browser, RuntimeEnvironment } from './types'
 import Runner from './Runner'
 import { ITestScript, mustCompileFile } from './TestScript'
 
 export interface ElementOptions {
 	logger: Logger
+	runEnv: RuntimeEnvironment
 	reporter: IReporter
 	testScript: string
 	driver?: { new (): Browser }
@@ -29,7 +30,7 @@ export async function runCommandLine(opts: ElementOptions): Promise<void> {
 
 	if (!driver) driver = PuppeteerDriver
 
-	const runner = new Runner(driver, opts.reporter, logger)
+	const runner = new Runner(opts.runEnv, driver, opts.reporter, logger)
 
 	process.on('SIGINT', async () => {
 		logger.debug('Received SIGINT')

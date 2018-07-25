@@ -2,7 +2,7 @@ import { NodeVM } from 'vm2'
 import { Sandbox } from './Sandbox'
 import { Until } from '../page/Until'
 import { By } from '../page/By'
-import { PuppeteerClient } from '../types'
+import { PuppeteerClient, RuntimeEnvironment } from '../types'
 import { MouseButtons, Device, Key, userAgents } from '../page/Enums'
 import * as debug from 'debug'
 import { TestSettings, StepOptions, Flood } from '@flood/chrome'
@@ -123,7 +123,7 @@ export class VM {
 	private skipAll: boolean = false
 	private testData: TestData<any>
 
-	constructor(private script: ITestScript) {
+	constructor(private runEnv: RuntimeEnvironment, private script: ITestScript) {
 		this.callbacks = new Map()
 		Object.values(CALLBACK_QUEUES).forEach(queueName => this.callbacks.set(queueName, []))
 		this.testData = TestData.fromData([{}]).circular()
@@ -179,28 +179,30 @@ export class VM {
 
 		this.rawSettings = {}
 
-		let {
-			THREAD_ID: BROWSER_ID,
-			FLOOD_GRID_REGION,
-			FLOOD_GRID_SQEUENCE_ID,
-			FLOOD_GRID_INDEX,
-			FLOOD_GRID_NODE_SEQUENCE_ID,
-			FLOOD_NODE_INDEX,
-			FLOOD_SEQUENCE_ID,
-			FLOOD_PROJECT_ID,
-		} = process.env
+		const ENV = this.runEnv.stepEnv()
 
-		let ENV = {
-			BROWSER_ID: Number(BROWSER_ID),
-			FLOOD_GRID_REGION,
-			FLOOD_GRID_SQEUENCE_ID: Number(FLOOD_GRID_SQEUENCE_ID),
-			FLOOD_GRID_INDEX: Number(FLOOD_GRID_INDEX),
-			FLOOD_GRID_NODE_SEQUENCE_ID: Number(FLOOD_GRID_NODE_SEQUENCE_ID),
-			FLOOD_NODE_INDEX: Number(FLOOD_NODE_INDEX),
-			FLOOD_SEQUENCE_ID: Number(FLOOD_SEQUENCE_ID),
-			FLOOD_PROJECT_ID: Number(FLOOD_PROJECT_ID),
-			SEQUENCE: Number(BROWSER_ID) * Number(FLOOD_GRID_INDEX) * Number(FLOOD_NODE_INDEX),
-		}
+		// let {
+		// THREAD_ID: BROWSER_ID,
+		// FLOOD_GRID_REGION,
+		// FLOOD_GRID_SQEUENCE_ID,
+		// FLOOD_GRID_INDEX,
+		// FLOOD_GRID_NODE_SEQUENCE_ID,
+		// FLOOD_NODE_INDEX,
+		// FLOOD_SEQUENCE_ID,
+		// FLOOD_PROJECT_ID,
+		// } = process.env
+
+		// let ENV = {
+		// BROWSER_ID: Number(BROWSER_ID),
+		// FLOOD_GRID_REGION,
+		// FLOOD_GRID_SQEUENCE_ID: Number(FLOOD_GRID_SQEUENCE_ID),
+		// FLOOD_GRID_INDEX: Number(FLOOD_GRID_INDEX),
+		// FLOOD_GRID_NODE_SEQUENCE_ID: Number(FLOOD_GRID_NODE_SEQUENCE_ID),
+		// FLOOD_NODE_INDEX: Number(FLOOD_NODE_INDEX),
+		// FLOOD_SEQUENCE_ID: Number(FLOOD_SEQUENCE_ID),
+		// FLOOD_PROJECT_ID: Number(FLOOD_PROJECT_ID),
+		// SEQUENCE: Number(BROWSER_ID) * Number(FLOOD_GRID_INDEX) * Number(FLOOD_NODE_INDEX),
+		// }
 
 		const step = (...args: any[]) => {
 			// name: string, fn: (driver: Sandbox) => Promise<void>
@@ -300,6 +302,7 @@ export class VM {
 
 		try {
 			let sandbox = new Sandbox(
+				this.runEnv.workRoot,
 				driver,
 				this.settings,
 				this.willRunCommand.bind(this),
@@ -374,6 +377,7 @@ export class VM {
 		)
 		let step = expect(this.steps.find(step => step.name === name), `No step with name "${name}"`)
 		let sandbox = new Sandbox(
+			this.runEnv.workRoot,
 			driver,
 			this.settings,
 			this.willRunCommand.bind(this),

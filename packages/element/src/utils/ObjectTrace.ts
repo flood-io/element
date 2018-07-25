@@ -1,11 +1,9 @@
 import * as cuid from 'cuid'
 import { promisify } from 'util'
 import { writeFile } from 'fs'
-import { join } from 'path'
-import { networkDataDirectory } from '../runtime/Sandbox'
+import { WorkRoot } from '../types'
 import { Assertion } from '../runtime/Test'
 import { NetworkTraceData } from '../Reporter'
-import { ensureDir } from 'fs-extra'
 
 const writeFileAsync = promisify(writeFile)
 
@@ -16,6 +14,7 @@ interface ErrorLike {
 
 export class ObjectTrace {
 	constructor(
+		private workRoot: WorkRoot,
 		public label: string,
 		public errors: ErrorLike[] = [],
 		public assertions: Assertion[] = [],
@@ -32,18 +31,12 @@ export class ObjectTrace {
 	}
 
 	public async addNetworkTrace(trace: NetworkTraceData): Promise<void> {
-		await ensureDir(networkDataDirectory).catch(err => {
-			console.error(err)
-		})
-
-		let fileName = `${cuid()}.json`
-		let filePath = join(networkDataDirectory, fileName)
+		let filePath = this.workRoot.join('network', `${cuid()}.json`)
 		this.networkTraces.push(filePath)
 
-		return writeFileAsync(filePath, JSON.stringify(trace))
-			.catch(err => {
-				console.error(`Object Trace writing ERROR: ${err.message}`)
-			})
+		return writeFileAsync(filePath, JSON.stringify(trace)).catch(err => {
+			console.error(`Object Trace writing ERROR: ${err.message}`)
+		})
 	}
 
 	public addScreenshot(screenshotURL: string) {

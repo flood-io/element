@@ -1,4 +1,4 @@
-import { ITestRunner, Browser } from './types'
+import { ITestRunner, Browser, RuntimeEnvironment } from './types'
 import { Logger } from 'winston'
 import Test from './runtime/Test'
 import { IReporter } from './Reporter'
@@ -13,7 +13,12 @@ export default class Runner implements ITestRunner {
 	private test: Test
 	private interrupts: number
 
-	constructor(Driver: Factory<Browser>, private reporter: IReporter, private logger: Logger) {
+	constructor(
+		private runEnv: RuntimeEnvironment,
+		Driver: Factory<Browser>,
+		private reporter: IReporter,
+		private logger: Logger,
+	) {
 		this.driver = new Driver()
 		this.interrupts = 0
 	}
@@ -33,7 +38,7 @@ export default class Runner implements ITestRunner {
 	}
 
 	async run(testScript: ITestScript): Promise<void> {
-		let test = new Test(this.reporter)
+		let test = new Test(this.runEnv, this.reporter)
 		this.test = test
 
 		try {

@@ -9,7 +9,7 @@ import { readdirSync } from 'fs'
 import { ITestScript } from '../TestScript'
 import { TestSettings } from '@flood/chrome'
 import * as debug from 'debug'
-import { PuppeteerClient } from '../types'
+import { PuppeteerClient, RuntimeEnvironment } from '../types'
 import { ScreenshotOptions } from 'puppeteer'
 import { serializeResponseHeaders, serializeRequestHeaders } from '../utils/headerSerializer'
 
@@ -84,7 +84,7 @@ export default class Test {
 	private thinkTime: number = 0
 	private driver: PuppeteerClient
 
-	constructor(public reporter: IReporter = new NullReporter()) {
+	constructor(private runEnv: RuntimeEnvironment, public reporter: IReporter = new NullReporter()) {
 		this.testTiming = new Timing()
 	}
 
@@ -114,7 +114,10 @@ export default class Test {
 	}
 
 	public prepare(): TestSettings {
-		this.vm = new VM(expect(this.script, `You must call enqueueScript() before prepare()`))
+		this.vm = new VM(
+			this.runEnv,
+			expect(this.script, `You must call enqueueScript() before prepare()`),
+		)
 		this.vm.on(CALLBACK_QUEUES.BeforeStep, (name: string) => this.beforeStep(name))
 		this.vm.on(CALLBACK_QUEUES.StepSuccess, (name: string) => this.stepSucceeded(name))
 		this.vm.on(CALLBACK_QUEUES.AfterStep, (name: string, screenshots: string[]) =>
@@ -366,7 +369,7 @@ export default class Test {
 	}
 
 	private resetState(stepName: string) {
-		this.trace = new ObjectTrace(stepName)
+		this.trace = new ObjectTrace(this.runEnv.workRoot, stepName)
 		this.passed = 0
 		this.failed = 0
 		this.reporter.reset(stepName)

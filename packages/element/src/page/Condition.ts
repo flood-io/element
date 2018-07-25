@@ -89,7 +89,7 @@ export abstract class ElementCondition extends Condition {
 			},
 		})
 
-		let code = prettier.format(recast.print(fnAST).code)
+		let code = prettier.format(recast.print(fnAST).code, { parser: 'babylon' })
 
 		let args = [locator.pageFuncArgs, this.pageFuncArgs]
 		let execFnStr = `${code.trim()}(${args.map(serializeArgument).join(',')})`

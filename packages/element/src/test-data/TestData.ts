@@ -1,36 +1,16 @@
 import { Feeder, FeedFilterFunction } from './Feeder'
-import { CSVLoader, Loader, JSONLoader, DataLoader } from './Loader'
-import { WorkRoot } from '../types'
+import { Loader } from './Loader'
 
 export class TestData<T> {
 	public feeder: Feeder<T>
 	public instanceID: string
 
-	private constructor(private loader: Loader<T>) {
+	constructor(private loader: Loader<T>) {
 		this.feeder = new Feeder<T>()
 	}
 
 	public setInstanceID(id: string) {
 		this.feeder.instanceID = id
-	}
-
-	public static fromData<TRow>(lines: TRow[]): TestData<TRow> {
-		let loader = new DataLoader<TRow>(lines)
-		return new TestData<TRow>(loader)
-	}
-
-	public static fromCSV<TRow>(
-		workRoot: WorkRoot,
-		filename: string,
-		seperator: string = ',',
-	): TestData<TRow> {
-		let loader = new CSVLoader<TRow>(workRoot.join('test-data', 'files', filename), seperator)
-		return new TestData<TRow>(loader)
-	}
-
-	public static fromJSON<TRow>(workRoot: WorkRoot, filename: string): TestData<TRow> {
-		let loader = new JSONLoader<TRow>(workRoot.join('test-data', 'files', filename))
-		return new TestData<TRow>(loader)
 	}
 
 	public async load() {

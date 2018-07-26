@@ -14,6 +14,7 @@ import { ITestScript } from '../TestScript'
 import { DEFAULT_ACTION_WAIT_SECONDS, DEFAULT_STEP_WAIT_SECONDS } from './Test'
 import CustomDeviceDescriptors from '../utils/CustomDeviceDescriptors'
 import { TestData } from '../test-data/TestData'
+import { TestDataLoaders } from '../test-data/TestDataLoaders'
 import { expect } from '../utils/Expect'
 
 const debugVM = debug('vm')
@@ -122,11 +123,13 @@ export class VM {
 	private errors: Error[] = []
 	private skipAll: boolean = false
 	private testData: TestData<any>
+	private testDataLoaders: TestDataLoaders<any>
 
 	constructor(private runEnv: RuntimeEnvironment, private script: ITestScript) {
 		this.callbacks = new Map()
 		Object.values(CALLBACK_QUEUES).forEach(queueName => this.callbacks.set(queueName, []))
-		this.testData = TestData.fromData([{}]).circular()
+		this.testDataLoaders = new TestDataLoaders(runEnv.workRoot)
+		this.testData = this.testDataLoaders.fromData([{}]).circular()
 	}
 
 	private get hasErrors() {
@@ -257,7 +260,7 @@ export class VM {
 			Until,
 			Device,
 			MouseButtons,
-			TestData,
+			TestData: this.testDataLoaders,
 			Key,
 			userAgents,
 

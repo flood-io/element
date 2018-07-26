@@ -31,8 +31,8 @@ export function initFromEnvironment(env: ProcessEnv = process.env): Partial<Grid
 	if (env.NODE_ENV !== 'production') {
 		devDefaults(env)
 		const projectRoot = findRoot(__dirname)
-		root = path.join(projectRoot, 'dev-data')
-		testDataRoot = path.join(projectRoot, 'dev-test-data')
+		root = path.join(projectRoot, 'tmp/data/flood')
+		testDataRoot = path.join(projectRoot, 'tmp/data/flood')
 	} else {
 		root = '/data'
 		testDataRoot = env.TEST_DATA_DIRECTORY || '/data/flood'

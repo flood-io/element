@@ -11,7 +11,7 @@ import createLogger from '../utils/Logger'
 
 export const handler = (args: Arguments) => {
 	const { file } = args
-	const dir = path.dirname(file)
+	const workRoot = getWorkRoot(file, args['work-root'])
 
 	const logger = createLogger('debug', true)
 	const reporter = new ConsoleReporter(logger)
@@ -20,7 +20,7 @@ export const handler = (args: Arguments) => {
 		logger: logger,
 		testScript: file,
 		reporter: reporter,
-		runEnv: initRunEnv(dir),
+		runEnv: initRunEnv(workRoot),
 	}
 
 	runUntilExit(() => runCommandLine(opts))
@@ -30,6 +30,16 @@ export const handler = (args: Arguments) => {
 
 	// console.log("awaited");
 	// process.exit(0);
+}
+
+// TODO use args to get an override work-dir root
+function getWorkRoot(file: string, root?: string): string {
+	const ext = path.extname(file)
+	const bare = path.basename(file, ext)
+
+	root = root || path.dirname(file)
+
+	return path.resolve(root, bare)
 }
 
 function initRunEnv(root: string) {
@@ -66,6 +76,10 @@ export const builder = (yargs: Argv) => {
 		})
 		.option('chrome', {
 			describe: 'Specify a custom Google Chrome executable path',
+		})
+		.option('work-root', {
+			describe:
+				'Specify a custom work root. (Default: a directory named after your test script, and at the same location)',
 		})
 		.check(({ file, chrome }) => {
 			if (!file.length) return new Error('Please provide a test script')

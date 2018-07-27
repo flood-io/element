@@ -4,7 +4,7 @@ import { Locatable } from './Locator'
 import * as recast from 'recast'
 import * as prettier from 'prettier'
 import { locatableToLocator } from './By'
-import { TestSettings } from '@flood/chrome'
+import { TestSettings } from '../../index'
 
 export abstract class Condition {
 	public pageFuncArgs: any[]

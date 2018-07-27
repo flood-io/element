@@ -1,5 +1,5 @@
 import { ElementHandle as PElementHandle, ClickOptions, ScreenshotOptions } from 'puppeteer'
-import { ElementHandle as IElementHandle } from '@flood/chrome'
+import { ElementHandle as IElementHandle } from '../../index'
 import { Locator } from './Locator'
 import { By } from './By'
 import * as cuid from 'cuid'

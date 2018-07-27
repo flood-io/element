@@ -1,7 +1,11 @@
 // import * as ora from "ora";
-import { runCommandLine, runUntilExit, ElementOptions } from '@flood/element'
-import { WorkRoot } from '@flood/element/RuntimeEnvironmentAPI'
-import { FloodProcessEnv } from '@flood/chrome'
+import {
+	runCommandLine,
+	runUntilExit,
+	ElementOptions,
+	WorkRoot,
+} from '@flood/element/RuntimeEnvironmentAPI'
+import { FloodProcessEnv } from '@flood/element'
 import { ConsoleReporter } from '../utils/ConsoleReporter'
 import { Argv, Arguments } from 'yargs'
 import { existsSync } from 'fs'

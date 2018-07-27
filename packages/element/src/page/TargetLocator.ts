@@ -1,6 +1,6 @@
 import { ElementHandle } from './ElementHandle'
 import { Page, Frame } from 'puppeteer'
-import { TargetLocator as ITargetLocator } from '@flood/chrome'
+import { TargetLocator as ITargetLocator } from '../../index'
 import { getFrames } from '../runtime/Sandbox'
 
 export class TargetLocator implements ITargetLocator {

@@ -1,7 +1,7 @@
 import { Condition } from '../Condition'
 import { Frame, Page } from 'puppeteer'
 import { getFrames } from '../../runtime/Sandbox'
-import { Locatable } from '@flood/chrome'
+import { Locatable } from '../../../index'
 
 export class FrameCondition extends Condition {
 	constructor(public id: string | Locatable) {

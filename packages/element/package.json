@@ -3,6 +3,7 @@
 	"version": "1.0.3-3",
 	"description": "Flood Element is a browser based load generation tool for easily testing modern web application performance",
 	"main": "dist/index.js",
+  "types": "./index.ts.d",
 	"scripts": {
 		"build": "tsc --outDir dist --project .",
 		"prepublishOnly": "npm run build",
@@ -28,7 +29,6 @@
 	},
 	"homepage": "https://github.com/flood-io/element#readme",
 	"dependencies": {
-		"@flood/chrome": "^0.3.1",
 		"@types/node": "^8.0.22",
 		"assert": "^1.4.1",
 		"async": "^2.6.0",

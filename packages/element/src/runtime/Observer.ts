@@ -1,5 +1,5 @@
 import NetworkRecorder from '../network/Recorder'
-import { ConsoleMethod } from '@flood/chrome'
+import { ConsoleMethod } from '../../index'
 export default class Observer {
 	public consoleFilters: ConsoleMethod[]
 

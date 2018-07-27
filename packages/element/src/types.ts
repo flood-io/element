@@ -1,5 +1,5 @@
 import { Browser, Page, LaunchOptions } from 'puppeteer'
-import { FloodProcessEnv } from '@flood/chrome'
+import { FloodProcessEnv } from '../index'
 
 export interface PuppeteerClient {
 	browser: Browser

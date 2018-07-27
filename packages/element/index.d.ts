@@ -177,6 +177,7 @@ export interface FloodProcessEnv {
 	BROWSER_ID: number
 	FLOOD_GRID_REGION: string
 	FLOOD_GRID_SQEUENCE_ID: number
+	FLOOD_GRID_SEQUENCE_ID: number
 	FLOOD_GRID_INDEX: number
 	FLOOD_GRID_NODE_SEQUENCE_ID: number
 	FLOOD_NODE_INDEX: number

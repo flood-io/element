@@ -4,8 +4,8 @@ import { Until } from '../page/Until'
 import { By } from '../page/By'
 import { PuppeteerClient, RuntimeEnvironment } from '../types'
 import { MouseButtons, Device, Key, userAgents } from '../page/Enums'
-import * as debug from 'debug'
-import { TestSettings, StepOptions, Flood } from '@flood/chrome'
+import * as debugFactory from 'debug'
+import { TestSettings, StepOptions, Flood } from '../../index'
 import * as Faker from 'faker'
 import * as nodeAssert from 'assert'
 import { IReporter } from '../Reporter'
@@ -17,14 +17,14 @@ import { TestData } from '../test-data/TestData'
 import { TestDataLoaders } from '../test-data/TestDataLoaders'
 import { expect } from '../utils/Expect'
 
-const debugVM = debug('vm')
-const debugVMCallback = debug('vm:callback')
+const debug = debugFactory('element:vm')
+const debugCallback = debugFactory('element:vm:callback')
 
 export type Opaque = {} | void | null | undefined
 export type Factory<T> = new (...args: Opaque[]) => T
 export type CallbackFunc = (...args: Opaque[]) => void | Promise<void>
 
-export enum CALLBACK_QUEUES {
+export enum CallbackQueue {
 	PrepareStep = 'prepareStep',
 	BeforeStep = 'beforeStep',
 	AfterStep = 'afterStep',
@@ -41,7 +41,7 @@ export function unreachable(message = 'unreachable'): Error {
 
 async function runCallback(queueName: string, ...args: any[]) {
 	let callbacks = expect<CallbackFunc[]>(this.callbacks.get(queueName), 'Unknown queue')
-	debugVMCallback(`Run callbacks: ${queueName} with ${args}`)
+	debugCallback(`Run callbacks: ${queueName} with ${args}`)
 	for (const fn of callbacks) {
 		await fn(...args)
 	}
@@ -127,7 +127,7 @@ export class VM {
 
 	constructor(private runEnv: RuntimeEnvironment, private script: ITestScript) {
 		this.callbacks = new Map()
-		Object.values(CALLBACK_QUEUES).forEach(queueName => this.callbacks.set(queueName, []))
+		Object.values(CallbackQueue).forEach(name => this.callbacks.set(name, []))
 		this.testDataLoaders = new TestDataLoaders(runEnv.workRoot)
 		this.testData = this.testDataLoaders.fromData([{}]).circular()
 	}
@@ -140,7 +140,7 @@ export class VM {
 		return this.steps.map(s => s.name)
 	}
 
-	private createVirtualMachine(floodChromeActual) {
+	private createVirtualMachine(floodElementActual) {
 		this.vm = new NodeVM({
 			console: 'redirect',
 			sandbox: {},
@@ -149,7 +149,8 @@ export class VM {
 				builtin: [],
 				context: 'sandbox',
 				mock: {
-					'@flood/chrome': floodChromeActual,
+					'@flood/chrome': floodElementActual,
+					'@flood/element': floodElementActual,
 					faker: Faker,
 					assert: nodeAssert,
 				},
@@ -183,29 +184,6 @@ export class VM {
 		this.rawSettings = {}
 
 		const ENV = this.runEnv.stepEnv()
-
-		// let {
-		// THREAD_ID: BROWSER_ID,
-		// FLOOD_GRID_REGION,
-		// FLOOD_GRID_SQEUENCE_ID,
-		// FLOOD_GRID_INDEX,
-		// FLOOD_GRID_NODE_SEQUENCE_ID,
-		// FLOOD_NODE_INDEX,
-		// FLOOD_SEQUENCE_ID,
-		// FLOOD_PROJECT_ID,
-		// } = process.env
-
-		// let ENV = {
-		// BROWSER_ID: Number(BROWSER_ID),
-		// FLOOD_GRID_REGION,
-		// FLOOD_GRID_SQEUENCE_ID: Number(FLOOD_GRID_SQEUENCE_ID),
-		// FLOOD_GRID_INDEX: Number(FLOOD_GRID_INDEX),
-		// FLOOD_GRID_NODE_SEQUENCE_ID: Number(FLOOD_GRID_NODE_SEQUENCE_ID),
-		// FLOOD_NODE_INDEX: Number(FLOOD_NODE_INDEX),
-		// FLOOD_SEQUENCE_ID: Number(FLOOD_SEQUENCE_ID),
-		// FLOOD_PROJECT_ID: Number(FLOOD_PROJECT_ID),
-		// SEQUENCE: Number(BROWSER_ID) * Number(FLOOD_GRID_INDEX) * Number(FLOOD_NODE_INDEX),
-		// }
 
 		const step = (...args: any[]) => {
 			// name: string, fn: (driver: Sandbox) => Promise<void>
@@ -301,7 +279,7 @@ export class VM {
 		this.skipped = []
 		this.errors = []
 
-		debugVM('execute() start')
+		debug('execute() start')
 
 		try {
 			let sandbox = new Sandbox(
@@ -317,28 +295,29 @@ export class VM {
 			)
 
 			this.currentSandbox = sandbox
-			debugVM('running this.before(sandbox)')
+			debug('running this.before(sandbox)')
 			await this.before(sandbox)
 
 			// An error occurred during sandbox setup
 			// this could be a runtime bug in the flood-chrome code
 			if (this.hasErrors) throw this.errors[0]
 
-			debugVM('Feeding data')
+			debug('Feeding data')
 			let testDataRecord = this.testData.feed()
 			if (testDataRecord === null) {
 				throw new Error('Test data exhausted, consider making it circular?')
 				// console.log('Test data exhausted, consider making it circular?')
 			} else {
 				// console.log(JSON.stringify(testDataRecord))
-				debugVM(JSON.stringify(testDataRecord))
+				debug(JSON.stringify(testDataRecord))
 			}
 
 			debugger
 
-			debugVM('running steps')
+			debug('running steps')
 			for (let step of this.steps) {
 				if (this.hasErrors || this.skipAll) {
+					debug(`Skipping step: ${step.name}`)
 					await this.willRunStep(step.name, step.settings)
 					this.skipped.push(step.name)
 					await this.didRunStep(step.name, sandbox.fetchScreenshots())
@@ -348,7 +327,7 @@ export class VM {
 				await this.willRunStep(step.name, step.settings)
 				let startTime = new Date().valueOf()
 				try {
-					debugVM(`Run step: ${step.name} ${step.fn.toString()}`)
+					debug(`Run step: ${step.name} ${step.fn.toString()}`)
 
 					sandbox.settings = { ...this.settings, ...step.settings }
 					await step.fn.call(null, sandbox, testDataRecord)
@@ -392,11 +371,11 @@ export class VM {
 	}
 
 	private async willRunStep(name: string, settings: StepOptions): Promise<void> {
-		return runCallback.apply(this, [CALLBACK_QUEUES.BeforeStep, name, settings])
+		return runCallback.apply(this, [CallbackQueue.BeforeStep, name, settings])
 	}
 
 	public async loadTestData() {
-		debugVM('Loading test data...')
+		debug('Loading test data...')
 		await this.testData.load()
 	}
 
@@ -420,7 +399,7 @@ export class VM {
 
 	private async didRunStep(name: string, screenshots: string[]): Promise<void> {
 		if (this.skipped.length > 0) {
-			debugVM('didRunStep - skipped', name)
+			debug('didRunStep - skipped', name)
 			try {
 				// Process skip callbacks
 				for (const name of this.skipped) {
@@ -431,7 +410,7 @@ export class VM {
 				console.error(`Error in skip callbacks`, err)
 			}
 		} else if (this.hasErrors) {
-			debugVM('didRunStep - errors', name)
+			debug('didRunStep - errors', name)
 			this.skipAll = true
 			try {
 				// Process error callbacks
@@ -444,32 +423,32 @@ export class VM {
 				console.error(`Error in error callbacks`, err)
 			}
 		} else {
-			debugVM('didRunStep - succeeded', name)
+			debug('didRunStep - succeeded', name)
 			try {
 				await this.didSucceed(name)
 			} catch (err) {
 				console.error(`Error in stepDidSucceed:`, err)
 			}
 		}
-		return runCallback.apply(this, [CALLBACK_QUEUES.AfterStep, name, screenshots])
+		return runCallback.apply(this, [CallbackQueue.AfterStep, name, screenshots])
 	}
 
 	private async willRunCommand(name: string): Promise<void> {
-		return runCallback.apply(this, [CALLBACK_QUEUES.BeforeAction, name])
+		return runCallback.apply(this, [CallbackQueue.BeforeAction, name])
 	}
 
 	private async didRunCommand(name: string): Promise<void> {
-		return runCallback.apply(this, [CALLBACK_QUEUES.AfterAction, name])
+		return runCallback.apply(this, [CallbackQueue.AfterAction, name])
 	}
 
 	private async didError(err: Error, name: string) {
-		return runCallback.apply(this, [CALLBACK_QUEUES.Error, err, name])
+		return runCallback.apply(this, [CallbackQueue.Error, err, name])
 	}
 	private async didSucceed(name: string): Promise<void> {
-		return runCallback.apply(this, [CALLBACK_QUEUES.StepSuccess, name])
+		return runCallback.apply(this, [CallbackQueue.StepSuccess, name])
 	}
 
 	private async didSkip(name: string) {
-		return runCallback.apply(this, [CALLBACK_QUEUES.Skip, name])
+		return runCallback.apply(this, [CallbackQueue.Skip, name])
 	}
 }

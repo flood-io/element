@@ -1,5 +1,5 @@
-import * as debug from 'debug'
-const debugSandbox = debug('sandbox')
+import * as debugFactory from 'debug'
+const debug = debugFactory('element:sandbox:decorators')
 
 /**
  * Defines a Function Decorator which wraps a method with class local before and after
@@ -13,7 +13,7 @@ export function wrapWithCallbacks() {
 			let ret
 
 			if (this.lastError) {
-				debugSandbox(`Skipping driver.${propertyKey}()`)
+				debug(`Skipping driver.${propertyKey}()`)
 				if (this.onSkip instanceof Function) await this.onSkip(propertyKey)
 				return
 			}
@@ -35,7 +35,7 @@ export function wrapWithCallbacks() {
 				ret = await originalFn.apply(this, args)
 				if (this.afterFunc instanceof Function) await this.afterFunc(propertyKey)
 			} catch (err) {
-				debugSandbox(err)
+				debug(err)
 				if (this.onError instanceof Function) {
 					this.lastError = err
 					await this.onError(err, propertyKey)

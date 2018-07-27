@@ -1,4 +1,4 @@
-import { VM, CALLBACK_QUEUES } from './VM'
+import { VM, CallbackQueue } from './VM'
 import { expect } from '../utils/Expect'
 import { IReporter, TestEvent, NetworkTraceData, CompoundMeasurement } from './../Reporter'
 import { NullReporter } from './../reporter/Null'
@@ -7,9 +7,8 @@ import NetworkRecorder from '../network/Recorder'
 import { ObjectTrace } from '../utils/ObjectTrace'
 import { readdirSync } from 'fs'
 import { ITestScript } from '../TestScript'
-import { TestSettings } from '@flood/chrome'
-import * as debug from 'debug'
 import { TestSettings } from '../../index'
+import * as debugFactory from 'debug'
 import { PuppeteerClient, RuntimeEnvironment } from '../types'
 import { ScreenshotOptions } from 'puppeteer'
 import { serializeResponseHeaders, serializeRequestHeaders } from '../utils/headerSerializer'
@@ -18,8 +17,8 @@ import { serializeResponseHeaders, serializeRequestHeaders } from '../utils/head
 export const DEFAULT_STEP_WAIT_SECONDS = 5
 export const DEFAULT_ACTION_WAIT_SECONDS = 0.5
 
-const debugTest = debug('test')
-const debugTestTiming = debug('test:timing')
+const debug = debugFactory('element:test')
+const debugTiming = debugFactory('element:test:timing')
 
 const measurementKeysForDOM = {
 	'first-contentful-paint': 'first_contentful_paint',
@@ -119,16 +118,16 @@ export default class Test {
 			this.runEnv,
 			expect(this.script, `You must call enqueueScript() before prepare()`),
 		)
-		this.vm.on(CALLBACK_QUEUES.BeforeStep, (name: string) => this.beforeStep(name))
-		this.vm.on(CALLBACK_QUEUES.StepSuccess, (name: string) => this.stepSucceeded(name))
-		this.vm.on(CALLBACK_QUEUES.AfterStep, (name: string, screenshots: string[]) =>
+		this.vm.on(CallbackQueue.BeforeStep, (name: string) => this.beforeStep(name))
+		this.vm.on(CallbackQueue.StepSuccess, (name: string) => this.stepSucceeded(name))
+		this.vm.on(CallbackQueue.AfterStep, (name: string, screenshots: string[]) =>
 			this.afterStep(name, screenshots),
 		)
-		this.vm.on(CALLBACK_QUEUES.BeforeAction, this.beforeStepAction.bind(this))
-		this.vm.on(CALLBACK_QUEUES.AfterAction, this.afterStepAction.bind(this))
-		this.vm.on(CALLBACK_QUEUES.Error, this.stepFailure.bind(this))
-		this.vm.on(CALLBACK_QUEUES.PrepareStep, this.prepareStep.bind(this))
-		this.vm.on(CALLBACK_QUEUES.Skip, (name: string) => this.stepSkipped(name))
+		this.vm.on(CallbackQueue.BeforeAction, this.beforeStepAction.bind(this))
+		this.vm.on(CallbackQueue.AfterAction, this.afterStepAction.bind(this))
+		this.vm.on(CallbackQueue.Error, this.stepFailure.bind(this))
+		this.vm.on(CallbackQueue.PrepareStep, this.prepareStep.bind(this))
+		this.vm.on(CallbackQueue.Skip, (name: string) => this.stepSkipped(name))
 
 		try {
 			this.settings = this.vm.evaluate()
@@ -151,7 +150,7 @@ export default class Test {
 	 * @memberof Test
 	 */
 	public async before(): Promise<void> {
-		debugTest('beforeTest')
+		debug('beforeTest')
 		console.assert(this.observer, `You must call attachDriver() before before() hook`)
 		this.resetState(undefined)
 		this.reporter.testLifecycle(TestEvent.BeforeTest, 'test')
@@ -161,14 +160,14 @@ export default class Test {
 
 	public async after(): Promise<void> {
 		if (this.failedSteps > 0) {
-			debugTest('testFailed')
+			debug('testFailed')
 			this.reporter.testLifecycle(TestEvent.TestFailed, 'test')
 		} else {
-			debugTest('TestSucceeded')
+			debug('TestSucceeded')
 			this.reporter.testLifecycle(TestEvent.TestSucceeded, 'test')
 		}
 
-		debugTest('afterTest')
+		debug('afterTest')
 		this.reporter.testLifecycle(TestEvent.AfterTest, 'test')
 
 		if (this.networkRecorder) await this.networkRecorder.pendingTaskQueue.chain
@@ -178,12 +177,10 @@ export default class Test {
 		await this.measureCallback(async () => {
 			this.reporter.testLifecycle(TestEvent.BeforeStepAction, command)
 
-			debugTest(`Before action: '${command}()' waiting on networkRecorder.pendingTaskQueue`)
+			debug(`Before action: '${command}()' waiting on networkRecorder.pendingTaskQueue`)
 			if (this.networkRecorder) await this.networkRecorder.pendingTaskQueue.chain
 			if (this.settings.actionDelay && this.settings.actionDelay > 0 && command !== 'wait') {
-				debugTest(
-					`Before action: '${command}()' waiting on actionDelay: ${this.settings.actionDelay}`,
-				)
+				debug(`Before action: '${command}()' waiting on actionDelay: ${this.settings.actionDelay}`)
 				await new Promise(resolve => {
 					setTimeout(resolve, this.settings.actionDelay * 1e3 || DEFAULT_ACTION_WAIT_SECONDS * 1e3)
 				})
@@ -194,7 +191,7 @@ export default class Test {
 	protected async afterStepAction(name: string): Promise<void> {
 		await this.measureCallback(async () => {
 			this.reporter.testLifecycle(TestEvent.AfterStepAction, name)
-			debugTest(`After action: ${name}`)
+			debug(`After action: ${name}`)
 			// Force reporting concurrency to ensure steps which take >15s don't skew metrics
 			this.reporter.addMeasurement('concurrency', this.numberOfBrowsers, name)
 		})
@@ -208,7 +205,7 @@ export default class Test {
 		this.testTiming.end('beforeStep')
 		this.testTiming.start('step')
 		this.thinkTime = 0
-		debugTest(`Before step: ${name}`)
+		debug(`Before step: ${name}`)
 	}
 
 	protected async afterStep(name: string, screenshots?: string[]) {
@@ -218,7 +215,7 @@ export default class Test {
 		await this.networkRecorder.pendingTaskQueue.chain
 
 		this.reporter.testLifecycle(TestEvent.AfterStep, name)
-		debugTest(`After step: ${name}`)
+		debug(`After step: ${name}`)
 
 		screenshots.forEach(file => this.trace.addScreenshot(file))
 		await this.reportResult(name)
@@ -243,17 +240,17 @@ export default class Test {
 	}
 
 	protected async stepFailure(err: Error, stepName: string) {
-		debugTest('stepFailure', stepName)
+		debug('stepFailure', stepName)
 
 		this.failed++
 		this.failedSteps++
 		this.settings.stepDelay = 0
 
 		if (err.message.includes('Protocol error')) {
-			debugTest('stepFailure - protocol error', stepName, err)
+			debug('stepFailure - protocol error', stepName, err)
 			this.reporter.testInternalError('Protocol Error', err)
 		} else if (err.name.startsWith('AssertionError')) {
-			debugTest('stepFailure - assertion', stepName, err)
+			debug('stepFailure - assertion', stepName, err)
 			// Handles assertions from assert
 			let { message, stack } = err
 
@@ -267,7 +264,7 @@ export default class Test {
 			this.reporter.testAssertionError(this.script.liftError(err))
 			this.trace.addAssertion(assertion)
 		} else {
-			debugTest('stepFailure - other in test step', stepName, err)
+			debug('stepFailure - other in test step', stepName, err)
 			this.reporter.testStepError(this.script.liftError(err))
 
 			let errorPayload = {
@@ -289,7 +286,7 @@ export default class Test {
 
 	protected async stepSkipped(name) {
 		this.reporter.testLifecycle(TestEvent.StepSkipped, name)
-		debugTest(`Skipped step: ${name}`)
+		debug(`Skipped step: ${name}`)
 	}
 
 	private async reportResult(name: string): Promise<void> {
@@ -297,7 +294,7 @@ export default class Test {
 
 		await this.networkRecorder.pendingTaskQueue.chain
 
-		debugTest(`Report Result: ${name}`)
+		debug(`Report Result: ${name}`)
 
 		let responseCode = String(this.networkRecorder.documentResponseCode || 0)
 		let documentResponseTime = this.getResponseTimeMeasurement(this.networkRecorder)
@@ -354,11 +351,11 @@ export default class Test {
 			return networkRecorder.meanResponseTime()
 		} else if (responseTimeMeasurement === 'step') {
 			let value = this.testTiming.getDurationForSegment('step') - this.thinkTime
-			debugTestTiming(`Step Timing: thinking=${this.thinkTime} ms, interaction: ${value} ms`)
+			debugTiming(`Step Timing: thinking=${this.thinkTime} ms, interaction: ${value} ms`)
 			return value
 		} else if (responseTimeMeasurement === 'stepWithThinkTime') {
 			let value = this.testTiming.getDurationForSegment('step')
-			debugTestTiming(`Step Timing: thinking=${this.thinkTime} ms, step: ${value} ms`)
+			debugTiming(`Step Timing: thinking=${this.thinkTime} ms, step: ${value} ms`)
 			return value
 		}
 	}

@@ -3,11 +3,14 @@
 	"version": "1.0.3-3",
 	"description": "Flood Element is a browser based load generation tool for easily testing modern web application performance",
 	"main": "dist/index.js",
-  "types": "./index.ts.d",
+	"types": "./index.ts.d",
 	"scripts": {
 		"build": "tsc --outDir dist --project .",
 		"prepublishOnly": "npm run build",
-		"test": "mocha --trace-warnings -r ts-node/register \\\"src/**/*.spec.ts\\\""
+		"test": "mocha --trace-warnings -r ts-node/register \\\"src/**/*.spec.ts\\\"",
+		"doc": "yarn typedoc && ts-node ./scripts/docs/docs.ts",
+		"docs:watch": "node --trace-warnings $(npm bin)/nodemon --ext ts --exec ts-node -- ./utils/docs.ts",
+		"typedoc": "typedoc --json docs.json --includeDeclarations  ./index.d.ts"
 	},
 	"repository": {
 		"type": "git",
@@ -70,7 +73,11 @@
 		"@types/raven": "^2.1.3",
 		"@types/sinon-chai": "^2.7.29",
 		"chai": "^4.1.2",
+		"commonmark": "^0.28.1",
 		"doctrine": "^2.0.0",
+		"front-matter": "^2.3.0",
+		"lodash.camelcase": "^4.3.0",
+		"markdown-table": "^1.1.2",
 		"markdown-toc": "^1.1.0",
 		"mocha": "^4.0.1",
 		"nodemon": "^1.11.0",
@@ -81,6 +88,7 @@
 		"tslint": "^5.5.0",
 		"tslint-config-prettier": "^1.5.0",
 		"tslint-plugin-prettier": "^1.2.0",
+		"typedoc": "^0.11.1",
 		"typescript-parser": "^1.3.3"
 	},
 	"prettier": {

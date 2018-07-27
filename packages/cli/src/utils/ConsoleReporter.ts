@@ -54,6 +54,7 @@ export class ConsoleReporter implements IReporter {
 	testStepError(err: TestScriptError): void {}
 
 	testScriptConsole(method: string, message?: any, ...optionalParams: any[]): void {
+		if (method == 'log') method = 'info'
 		this.logger[method](message, ...optionalParams)
 	}
 }

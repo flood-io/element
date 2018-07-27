@@ -54,7 +54,7 @@ export interface ITestScript {
 
 	compile(): Promise<ITestScript>
 
-	isFloodChromeCorrectlyImported: boolean
+	isFloodElementCorrectlyImported: boolean
 	testName: string
 	testDescription: string
 

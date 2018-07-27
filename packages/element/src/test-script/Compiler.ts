@@ -14,9 +14,9 @@ import * as debugFactory from 'debug'
 
 const debug = debugFactory('element:compiler')
 
-const floodchromeRoot = path.join(__dirname, '../..')
+const floodelementRoot = path.join(__dirname, '../..')
 const sandboxPath = 'test-script-sandbox'
-const sandboxRoot = path.join(floodchromeRoot, sandboxPath)
+const sandboxRoot = path.join(floodelementRoot, sandboxPath)
 const sandboxedBasenameTypescript = 'flood-chrome.ts'
 const sandboxedBasenameJavascript = 'flood-chrome.js'
 
@@ -67,7 +67,7 @@ const defaultCompilerOptions: ts.CompilerOptions = {
 		'lib.es2016.array.include.d.ts',
 		'lib.es2017.object.d.ts',
 	],
-	types: ['@types/node'],
+	types: ['@types/node', '@flood/element'],
 	typeRoots: ['node_modules/@types', 'node_modules', './typings'],
 }
 
@@ -133,7 +133,7 @@ export class TypeScriptTestScript implements ITestScript {
 	}
 
 	public async compile(): Promise<TypeScriptTestScript> {
-		if (!this.isFloodChromeCorrectlyImported) {
+		if (!this.isFloodElementCorrectlyImported) {
 			switch (this.sourceKind) {
 				case 'javascript':
 					this.floodChromeErrors.push(FloodChromeErrors.NoModuleImportedJavascript)
@@ -173,6 +173,40 @@ export class TypeScriptTestScript implements ITestScript {
 			} else {
 				return originalGetSourceFile.apply(this, arguments)
 			}
+		}
+
+		const moduleResolutionCache = ts.createModuleResolutionCache(host.getCurrentDirectory(), x =>
+			host.getCanonicalFileName(x),
+		)
+
+		host.resolveModuleNames = function(
+			moduleNames: string[],
+			containingFile: string,
+		): ts.ResolvedModule[] {
+			const resolvedModules: ts.ResolvedModule[] = []
+
+			for (let moduleName of moduleNames) {
+				if (moduleName === '@flood/chrome' || moduleName === '@flood/element') {
+					resolvedModules.push({
+						resolvedFileName: path.join(floodelementRoot, 'index.d.ts'),
+						isExternalLibraryImport: true,
+					})
+					continue
+				}
+
+				// TODO manually resolve all the allowed files
+
+				const result = ts.resolveModuleName(
+					moduleName,
+					containingFile,
+					compilerOptions,
+					host,
+					moduleResolutionCache,
+				).resolvedModule! // original-TODO: GH#18217
+
+				resolvedModules.push(result)
+			}
+			return resolvedModules
 		}
 
 		const program = ts.createProgram([this.sandboxedFilename], compilerOptions, host)
@@ -219,7 +253,7 @@ export class TypeScriptTestScript implements ITestScript {
 		return this.vmScriptMemo
 	}
 
-	public get isFloodChromeCorrectlyImported(): boolean {
+	public get isFloodElementCorrectlyImported(): boolean {
 		return (
 			this.originalSource.includes('@flood/chrome') ||
 			this.originalSource.includes('@flood/element')

@@ -1,0 +1,31 @@
+[
+	{
+		"user": 1,
+		"username": "jonny.tester1@loadtest.io"
+	},
+
+	{
+		"user": 2,
+		"username": "jonny.tester2@loadtest.io"
+	},
+
+	{
+		"user": 1,
+		"username": "jonny.tester3@loadtest.io"
+	},
+
+	{
+		"user": 2,
+		"username": "jonny.tester4@loadtest.io"
+	},
+
+	{
+		"user": 1,
+		"username": "jonny.tester5@loadtest.io"
+	},
+
+	{
+		"user": 2,
+		"username": "jonny.tester6@loadtest.io"
+	}
+]

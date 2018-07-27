@@ -3,6 +3,7 @@ import { use, expect } from 'chai'
 import * as Sinon from 'sinon'
 import * as SinonChai from 'sinon-chai'
 import { DogfoodServer } from '../../tests/support/fixture-server'
+import testRunEnv from '../../tests/support/test-run-env'
 import PuppeteerDriver from '../driver/Puppeteer'
 import Test from './Test'
 import { mustCompileFile } from '../TestScript'
@@ -15,6 +16,7 @@ use(SinonChai)
 let dogfoodServer = new DogfoodServer()
 let test: Test, client: PuppeteerClient, driver: PuppeteerDriver
 let testReporter: IReporter
+const runEnv = testRunEnv()
 
 const setupTest = async (scriptName: string) => {
 	let script = await mustCompileFile(join(__dirname, '../../tests/fixtures', scriptName))
@@ -30,7 +32,7 @@ describe('Test', function() {
 	beforeEach(async () => {
 		driver = new PuppeteerDriver()
 		testReporter = new EventEmitterReporter()
-		test = new Test(testReporter)
+		test = new Test(runEnv, testReporter)
 	})
 
 	afterEach(async () => {

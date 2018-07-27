@@ -2,10 +2,11 @@ import * as Sinon from 'sinon'
 import * as sinonChai from 'sinon-chai'
 import { expect, use } from 'chai'
 import 'mocha'
-import { VM, CALLBACK_QUEUES } from './VM'
+import { VM, CallbackQueue } from './VM'
 import { ITestScript, mustCompileFile } from '../TestScript'
 import { join } from 'path'
 import { DogfoodServer } from '../../tests/support/fixture-server'
+import testRunEnv from '../../tests/support/test-run-env'
 import PuppeteerDriver from '../driver/Puppeteer'
 import { PuppeteerClient } from '../types'
 
@@ -13,6 +14,7 @@ let dogfoodServer = new DogfoodServer()
 let vmFeaturesScript: ITestScript
 let dogfoodWaitTest: ITestScript
 let testWithoutSettings: ITestScript
+const runEnv = testRunEnv()
 
 use(sinonChai)
 
@@ -40,7 +42,7 @@ describe('VM', () => {
 
 	describe('evaluate', () => {
 		it('returns default test settings', async () => {
-			let vm = new VM(testWithoutSettings)
+			let vm = new VM(runEnv, testWithoutSettings)
 			let settings = vm.evaluate()
 			await vm.loadTestData()
 
@@ -63,7 +65,7 @@ describe('VM', () => {
 		})
 
 		it('captures test settings', async () => {
-			let vm = new VM(vmFeaturesScript)
+			let vm = new VM(runEnv, vmFeaturesScript)
 			let settings = vm.evaluate()
 
 			expect(settings.name).to.equal('Test Script for evaluating VM features')
@@ -77,14 +79,14 @@ describe('VM', () => {
 		})
 
 		it('allows overriding settings per step', async () => {
-			let vm = new VM(vmFeaturesScript)
+			let vm = new VM(runEnv, vmFeaturesScript)
 			let settings = vm.evaluate()
 			await vm.loadTestData()
 			expect(settings.waitTimeout).to.equal(5)
 			expect(vm.steps[0].settings).to.deep.equal({ waitTimeout: 60 })
 
 			let actionSpy = Sinon.spy()
-			vm.on(CALLBACK_QUEUES.BeforeStep, (name, settings) => {
+			vm.on(CallbackQueue.BeforeStep, (name, settings) => {
 				if (name === 'Step 1') {
 					actionSpy(settings['waitTimeout'])
 				}
@@ -98,13 +100,13 @@ describe('VM', () => {
 
 	describe('execute', () => {
 		it('runs all steps', async () => {
-			let vm = new VM(dogfoodWaitTest)
+			let vm = new VM(runEnv, dogfoodWaitTest)
 			vm.evaluate()
 			await vm.loadTestData()
 			expect(vm.steps.map(step => step.name)).to.deep.equal(['Dogfood Test Step'])
 
 			let actionSpy = Sinon.spy()
-			vm.on(CALLBACK_QUEUES.AfterAction, name => {
+			vm.on(CallbackQueue.AfterAction, name => {
 				actionSpy(name)
 			})
 

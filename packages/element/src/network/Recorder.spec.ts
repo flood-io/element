@@ -7,6 +7,7 @@ import Test from '../runtime/Test'
 import { join } from 'path'
 // import Reporter from '../Reporter'
 import Reporter from '../../tests/support/test-reporter'
+import testRunEnv from '../../tests/support/test-run-env'
 import { Page } from 'puppeteer'
 import { PuppeteerClient } from '../types'
 import NetworkRecorder from './Recorder'
@@ -37,9 +38,10 @@ describe('Recorder', function() {
 	})
 
 	it('records network entries', async () => {
-		let reporter = new Reporter()
+		const reporter = new Reporter()
+		const runEnv = testRunEnv()
 
-		let test = new Test(reporter)
+		let test = new Test(runEnv, reporter)
 		let script = await mustCompileFile(join(__dirname, '../../tests/fixtures/dogfood-test-wait.ts'))
 		test.enqueueScript(script)
 		test.prepare()

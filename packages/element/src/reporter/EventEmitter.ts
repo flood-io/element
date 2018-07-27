@@ -9,7 +9,7 @@ import {
 } from './../Reporter'
 import { EventEmitter } from 'events'
 import { TestScriptError } from './../TestScript'
-import { expect } from '../runtime/VM'
+import { expect } from '../utils/Expect'
 
 export interface TestStepError {
 	message: string

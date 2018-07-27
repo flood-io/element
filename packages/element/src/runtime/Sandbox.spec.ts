@@ -3,6 +3,7 @@ import * as SinonChai from 'sinon-chai'
 import { expect, use } from 'chai'
 import 'mocha'
 import { DogfoodServer } from '../../tests/support/fixture-server'
+import { testWorkRoot } from '../../tests/support/test-run-env'
 import PuppeteerDriver from '../driver/Puppeteer'
 import { Page } from 'puppeteer'
 import { Sandbox } from './Sandbox'
@@ -14,6 +15,7 @@ let dogfoodServer = new DogfoodServer()
 use(SinonChai)
 
 let page: Page, driver: PuppeteerDriver, puppeteer
+const workRoot = testWorkRoot()
 
 describe('Sandbox', function() {
 	this.timeout(30e3)
@@ -36,6 +38,7 @@ describe('Sandbox', function() {
 		let afterSpy = Sinon.spy()
 
 		let sandbox = new Sandbox(
+			workRoot,
 			puppeteer,
 			DEFAULT_SETTINGS,
 			async name => {
@@ -56,6 +59,7 @@ describe('Sandbox', function() {
 		let skipSpy = Sinon.spy()
 
 		let sandbox = new Sandbox(
+			workRoot,
 			puppeteer,
 			DEFAULT_SETTINGS,
 			async name => {},
@@ -77,7 +81,7 @@ describe('Sandbox', function() {
 	})
 
 	it('returns active element', async () => {
-		let sandbox = new Sandbox(puppeteer, DEFAULT_SETTINGS)
+		let sandbox = new Sandbox(workRoot, puppeteer, DEFAULT_SETTINGS)
 		await sandbox.visit('http://localhost:1337/forms_with_input_elements.html')
 		await sandbox.wait(Until.elementIsVisible(By.id('new_user_first_name')))
 		let el1 = await sandbox.switchTo().activeElement()
@@ -86,14 +90,14 @@ describe('Sandbox', function() {
 
 	describe('Frame handling', () => {
 		it('can list all frames', async () => {
-			let sandbox = new Sandbox(puppeteer, DEFAULT_SETTINGS)
+			let sandbox = new Sandbox(workRoot, puppeteer, DEFAULT_SETTINGS)
 			await sandbox.visit('http://localhost:1337/frames.html')
 			let frames = sandbox.frames
 			expect(frames.map(f => f.name())).to.deep.equal(['', 'frame1', 'frame2'])
 		})
 
 		it('can switch frame by index', async () => {
-			let sandbox = new Sandbox(puppeteer, DEFAULT_SETTINGS)
+			let sandbox = new Sandbox(workRoot, puppeteer, DEFAULT_SETTINGS)
 			await sandbox.visit('http://localhost:1337/frames.html')
 			await sandbox.switchTo().frame(0)
 			expect(sandbox.target.name()).to.equal('frame1')
@@ -104,7 +108,7 @@ describe('Sandbox', function() {
 		})
 
 		it('can switch frame by name', async () => {
-			let sandbox = new Sandbox(puppeteer, DEFAULT_SETTINGS)
+			let sandbox = new Sandbox(workRoot, puppeteer, DEFAULT_SETTINGS)
 			await sandbox.visit('http://localhost:1337/frames.html')
 			await sandbox.switchTo().frame('frame1')
 			expect(sandbox.target.name()).to.equal('frame1')
@@ -115,7 +119,7 @@ describe('Sandbox', function() {
 		})
 
 		it('can switch frame using ElementHandle', async () => {
-			let sandbox = new Sandbox(puppeteer, DEFAULT_SETTINGS)
+			let sandbox = new Sandbox(workRoot, puppeteer, DEFAULT_SETTINGS)
 			await sandbox.visit('http://localhost:1337/frames.html')
 			let frame = await sandbox.findElement('frame[name="frame1"]')
 			await sandbox.switchTo().frame(frame)
@@ -123,7 +127,7 @@ describe('Sandbox', function() {
 		})
 
 		it('can interact with another frame', async () => {
-			let sandbox = new Sandbox(puppeteer, DEFAULT_SETTINGS)
+			let sandbox = new Sandbox(workRoot, puppeteer, DEFAULT_SETTINGS)
 			await sandbox.visit('http://localhost:1337/frames.html')
 			await sandbox.switchTo().frame('frame1')
 			expect(sandbox.target.name()).to.equal('frame1')
@@ -137,7 +141,7 @@ describe('Sandbox', function() {
 
 	describe('timing', () => {
 		it('can inject polyfill for TTI', async () => {
-			let sandbox = new Sandbox(puppeteer, DEFAULT_SETTINGS)
+			let sandbox = new Sandbox(workRoot, puppeteer, DEFAULT_SETTINGS)
 			await sandbox.visit('https://www.google.com')
 
 			let result = await sandbox.interactionTiming()

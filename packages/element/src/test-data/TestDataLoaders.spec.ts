@@ -1,13 +1,17 @@
 import 'mocha'
 import { expect } from 'chai'
-import { TestData } from './TestData'
+import { TestDataLoaders } from './TestDataLoaders'
+import { testWorkRoot } from '../../tests/support/test-run-env'
+
+const workRoot = testWorkRoot()
+const loaders = new TestDataLoaders(workRoot)
 
 type Row = { user: string; username: string }
 type JSONRow = { user: number; username: string }
 
-describe('TestData', () => {
+describe('TestDataLoaders', () => {
 	it('can load CSV data', async () => {
-		let data = TestData.fromCSV<Row>('users.csv')
+		let data = loaders.fromCSV<Row>('users.csv')
 		data.circular().filter(line => line.user === '1')
 		await data.load()
 
@@ -16,7 +20,8 @@ describe('TestData', () => {
 	})
 
 	it('can load JSON data', async () => {
-		let data = TestData.fromJSON<JSONRow>('users.json')
+		let data = loaders.fromJSON<JSONRow>('users.json')
+
 		data.circular().filter(line => line.user === 1)
 		await data.load()
 		expect(data.size).to.equal(3)

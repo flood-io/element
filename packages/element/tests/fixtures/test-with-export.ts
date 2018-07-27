@@ -1,4 +1,4 @@
-import { step, setup, By, Until } from '@flood/chrome'
+import { step, setup, By, Until } from '@flood/element'
 
 /**
  * Example Test

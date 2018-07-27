@@ -1,4 +1,4 @@
-import { suite, By, Until } from '@flood/chrome'
+import { suite, By, Until } from '@flood/element'
 
 export default suite(step => {
 	step('Dogfood Test Step', async driver => {

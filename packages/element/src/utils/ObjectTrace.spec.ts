@@ -1,10 +1,13 @@
 import { expect } from 'chai'
 import 'mocha'
 import { ObjectTrace } from './ObjectTrace'
+import { testWorkRoot } from '../../tests/support/test-run-env'
+
+const workRoot = testWorkRoot()
 
 describe('ObjectTrace', () => {
 	it('serializes a trace of multiple resources', async () => {
-		let objectTrace = new ObjectTrace('Test Label')
+		let objectTrace = new ObjectTrace(workRoot, 'Test Label')
 		expect(objectTrace.isEmpty).to.be.true
 
 		objectTrace.addAssertion({

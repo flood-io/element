@@ -1,4 +1,4 @@
-import { step, TestSettings, setup } from '@flood/chrome'
+import { step, TestSettings, setup } from '@flood/element'
 
 export const settings: TestSettings = {
 	duration: 30e3,

@@ -1,4 +1,4 @@
-import { step, setup, By, Until, TestSettings } from '@flood/chrome'
+import { step, setup, By, Until, TestSettings } from '@flood/element'
 import * as assert from 'assert'
 
 export const settings: TestSettings = {

@@ -58,6 +58,6 @@ describe('ObjectTrace', () => {
 		expect(obj.label).to.deep.equal('Test Label')
 		expect(obj.objectTypes).to.deep.equal(['screenshot', 'trace'])
 		expect(obj.objects[0]).to.equal('tmp/data/flood/screenshots/screenshot.png')
-		expect(obj.objects[1]).to.match(/tmp\/data\/flood\/network\/(.+)\.json/)
+		expect(obj.objects[1]).to.match(/data\/flood\/network\/(.+)\.json/)
 	})
 })

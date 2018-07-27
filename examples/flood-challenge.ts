@@ -1,4 +1,4 @@
-import { step, TestSettings, Until, By, MouseButtons, Device, Driver, ENV } from '@flood/chrome'
+import { step, TestSettings, Until, By, MouseButtons, Device, Driver, ENV } from '@flood/element'
 import * as assert from 'assert'
 export const settings: TestSettings = {
 	loopCount: 1,
@@ -16,7 +16,13 @@ export const settings: TestSettings = {
  */
 export default () => {
 	step('Flood Challenge: Start', async (browser: Driver) => {
+		// await browser.visit('https://chortlepig.local')
+
 		await browser.visit('https://challenge.flood.io')
+
+		let noElement = await browser.findElement(By.id('foobar'))
+		console.log('no element', noElement)
+		await browser.wait(Until.elementIsVisible(noElement))
 
 		let locator = By.css('#new_challenger > input.btn.btn-xl.btn-default')
 		await browser.wait(Until.elementIsVisible(locator))

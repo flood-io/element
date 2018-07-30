@@ -54,30 +54,23 @@ describe('Browser', function() {
 		expect(afterSpy).to.have.been.calledWith('visit')
 	})
 
-	it('skips the following commands after an error', async () => {
-		let errorSpy = Sinon.spy()
-		let skipSpy = Sinon.spy()
-
+	it('throws an error', async () => {
 		let browser = new Browser(
 			workRoot,
 			puppeteer,
 			DEFAULT_SETTINGS,
 			async name => {},
 			async name => {},
-			async err => {
-				errorSpy(err.message)
-			},
-			async name => {
-				skipSpy(name)
-			},
 		)
 		await browser.visit('http://localhost:1337/forms_with_input_elements.html')
-		await browser.click('.notanelement')
-		await browser.click('.anotherelement')
-		expect(errorSpy).to.have.been.calledWith(
-			"No element was found on the page using '.notanelement'",
-		)
-		expect(skipSpy).to.have.been.calledWith('click')
+
+		let caughtError: Error = undefined
+		try {
+			await browser.click('.notanelement')
+		} catch (e) {
+			caughtError = e
+		}
+		expect(caughtError).to.be.an('error')
 	})
 
 	it('returns active element', async () => {

@@ -53,12 +53,9 @@ export class Browser implements Driver {
 		public settings: TestSettings = DEFAULT_SETTINGS,
 		private beforeFunc: (name: string) => Promise<void> = async () => {},
 		private afterFunc: (name: string) => Promise<void> = async () => {},
-		private onError: (err: Error, name: string) => Promise<void> = async () => {},
-		private onSkip: (name: string) => Promise<void> = async () => {},
-		private lastError?: Error | null,
 		private activeFrame?: Frame | null,
 	) {
-		this.beforeFunc && this.afterFunc && this.onError && this.onSkip && this.lastError
+		this.beforeFunc && this.afterFunc
 		this.screenshots = []
 	}
 

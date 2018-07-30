@@ -288,10 +288,6 @@ export class VM {
 				this.settings,
 				this.willRunCommand.bind(this),
 				this.didRunCommand.bind(this),
-				async (err: Error): Promise<void> => {
-					console.error('VM: Error running command:', err)
-					this.errors.push(err)
-				},
 			)
 
 			this.currentBrowser = browser
@@ -332,8 +328,6 @@ export class VM {
 					browser.settings = { ...this.settings, ...step.settings }
 					await step.fn.call(null, browser, testDataRecord)
 				} catch (err) {
-					// NOTE: This is probably unreachable now with browser error handling
-					// unreachable('Error handling here should never be reached')
 					console.log(`Error in step "${step.name}"`, err.stack)
 					this.errors.push(err)
 				}
@@ -364,7 +358,6 @@ export class VM {
 			this.settings,
 			this.willRunCommand.bind(this),
 			this.didRunCommand.bind(this),
-			this.didError.bind(this),
 		)
 		browser.settings = { ...this.settings, ...step.settings }
 		return step.fn.call(null, browser)

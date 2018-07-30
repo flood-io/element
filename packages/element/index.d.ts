@@ -121,22 +121,6 @@ export interface TestSettings {
 	ignoreHTTPSErrors?: boolean
 }
 
-export interface ConcreteTestSettings extends TestSettings {
-	duration: number
-	loopCount: number
-	actionDelay: number
-	stepDelay: number
-	screenshotOnFailure: boolean
-	clearCookies: boolean
-	clearCache: boolean
-	waitTimeout: number
-	responseTimeMeasurement: ResponseTiming
-	consoleFilter: ConsoleMethod[]
-	userAgent: string
-	device: string
-	ignoreHTTPSErrors: boolean
-}
-
 /**
  * Specifies an option for how to record response time.
  */

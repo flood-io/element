@@ -15,7 +15,7 @@ import { locatableToLocator } from '../page/By'
 import { ElementHandle } from '../page/ElementHandle'
 import { TargetLocator } from '../page/TargetLocator'
 import * as debugFactory from 'debug'
-import { Driver, ConcreteTestSettings, EvaluateFn } from '../../index'
+import { Driver, EvaluateFn } from '../../index'
 import { PuppeteerClient, WorkRoot } from '../types'
 import { join, resolve } from 'path'
 import * as cuid from 'cuid'
@@ -23,6 +23,7 @@ import { wrapWithCallbacks } from '../utils/Decorators'
 import { Key } from '../page/Enums'
 import { readFileSync } from 'fs'
 import * as termImg from 'term-img'
+import { ConcreteTestSettings } from './Test'
 
 export class ElementNotFound extends Error {
 	constructor(locatable: Locatable) {

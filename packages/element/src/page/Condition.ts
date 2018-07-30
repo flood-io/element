@@ -1,10 +1,12 @@
 import { PageFnOptions, Page, EvaluateFn, Frame } from 'puppeteer'
-import { DEFAULT_SETTINGS } from '../runtime/VM'
+import { Locator } from './Locator'
+import { DEFAULT_SETTINGS, ConcreteTestSettings } from '../runtime/Test'
 import { Locatable } from './Locator'
 import * as recast from 'recast'
 import * as prettier from 'prettier'
 import { locatableToLocator } from './By'
-import { ConcreteTestSettings } from '../../index'
+import * as debugFactory from 'debug'
+const debug = debugFactory('element:page:condition')
 
 export abstract class Condition {
 	public pageFuncArgs: any[]
@@ -39,8 +41,10 @@ export abstract class ElementCondition extends Condition {
 
 	public abstract toString()
 
-	get locatorPageFunc() {
-		let locator = locatableToLocator(this.locator)
+	get locatorPageFunc(): EvaluateFn {
+		debug('loc in', this.locator)
+		let locator: Locator = locatableToLocator(this.locator)
+		debug('locator', locator)
 		return locator.pageFunc
 	}
 

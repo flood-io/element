@@ -5,14 +5,18 @@ import { By } from '../page/By'
 import { PuppeteerClient, RuntimeEnvironment } from '../types'
 import { MouseButtons, Device, Key, userAgents } from '../page/Enums'
 import * as debugFactory from 'debug'
-import { TestSettings, ConcreteTestSettings, StepOptions, Flood } from '../../index'
+import { TestSettings, StepOptions, Flood } from '../../index'
 import * as Faker from 'faker'
 import * as nodeAssert from 'assert'
 import { IReporter } from '../Reporter'
 import { EventEmitter } from 'events'
 import { ITestScript } from '../TestScript'
-import { DEFAULT_ACTION_WAIT_SECONDS, DEFAULT_STEP_WAIT_SECONDS } from './Test'
-import CustomDeviceDescriptors from '../utils/CustomDeviceDescriptors'
+import {
+	DEFAULT_ACTION_WAIT_SECONDS,
+	DEFAULT_STEP_WAIT_SECONDS,
+	DEFAULT_SETTINGS,
+	ConcreteTestSettings,
+} from './Test'
 import { TestData } from '../test-data/TestData'
 import { TestDataLoaders } from '../test-data/TestDataLoaders'
 import { expect } from '../utils/Expect'
@@ -90,22 +94,6 @@ export interface Step {
 }
 
 export type StepFunction = (driver: Browser, data?: any) => Promise<void>
-
-export const DEFAULT_SETTINGS: ConcreteTestSettings = {
-	duration: -1,
-	loopCount: Infinity,
-	actionDelay: 2,
-	stepDelay: 6,
-	screenshotOnFailure: true,
-	clearCookies: true,
-	clearCache: false,
-	waitTimeout: 30,
-	responseTimeMeasurement: 'step',
-	consoleFilter: ['error', 'warn', 'info', 'log'],
-	userAgent: CustomDeviceDescriptors['Chrome Desktop Large'].userAgent,
-	device: 'Chrome Desktop Large',
-	ignoreHTTPSErrors: false,
-}
 
 /**
  * VM is a simpler implementation of the previous stack based VM.

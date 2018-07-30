@@ -7,15 +7,48 @@ import NetworkRecorder from '../network/Recorder'
 import { IObjectTrace, ObjectTrace, NullObjectTrace } from '../utils/ObjectTrace'
 import { readdirSync } from 'fs'
 import { ITestScript } from '../TestScript'
-import { ConcreteTestSettings } from '../../index'
+import { TestSettings, ResponseTiming, ConsoleMethod } from '../../index'
 import * as debugFactory from 'debug'
 import { PuppeteerClient, RuntimeEnvironment } from '../types'
 import { ScreenshotOptions } from 'puppeteer'
 import { serializeResponseHeaders, serializeRequestHeaders } from '../utils/headerSerializer'
+import CustomDeviceDescriptors from '../utils/CustomDeviceDescriptors'
 
 // Waits is seconds
 export const DEFAULT_STEP_WAIT_SECONDS = 5
 export const DEFAULT_ACTION_WAIT_SECONDS = 0.5
+
+export interface ConcreteTestSettings extends TestSettings {
+	duration: number
+	loopCount: number
+	actionDelay: number
+	stepDelay: number
+	screenshotOnFailure: boolean
+	clearCookies: boolean
+	clearCache: boolean
+	waitTimeout: number
+	responseTimeMeasurement: ResponseTiming
+	consoleFilter: ConsoleMethod[]
+	userAgent: string
+	device: string
+	ignoreHTTPSErrors: boolean
+}
+
+export const DEFAULT_SETTINGS: ConcreteTestSettings = {
+	duration: -1,
+	loopCount: Infinity,
+	actionDelay: 2,
+	stepDelay: 6,
+	screenshotOnFailure: true,
+	clearCookies: true,
+	clearCache: false,
+	waitTimeout: 30,
+	responseTimeMeasurement: 'step',
+	consoleFilter: ['error', 'warn', 'info', 'log'],
+	userAgent: CustomDeviceDescriptors['Chrome Desktop Large'].userAgent,
+	device: 'Chrome Desktop Large',
+	ignoreHTTPSErrors: false,
+}
 
 const debug = debugFactory('element:test')
 const debugTiming = debugFactory('element:test:timing')

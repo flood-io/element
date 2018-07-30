@@ -1,6 +1,6 @@
 import { Condition } from '../Condition'
 import { Frame, Page } from 'puppeteer'
-import { getFrames } from '../../runtime/Sandbox'
+import { getFrames } from '../../runtime/Browser'
 import { Locatable } from '../../../index'
 
 export class FrameCondition extends Condition {

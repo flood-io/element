@@ -1,7 +1,7 @@
 import { ElementHandle } from './ElementHandle'
 import { Page, Frame } from 'puppeteer'
 import { TargetLocator as ITargetLocator } from '../../index'
-import { getFrames } from '../runtime/Sandbox'
+import { getFrames } from '../runtime/Browser'
 
 export class TargetLocator implements ITargetLocator {
 	constructor(private page: Page, private apply: (frame: Frame | null) => void) {}

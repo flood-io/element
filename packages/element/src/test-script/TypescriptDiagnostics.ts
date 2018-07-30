@@ -12,6 +12,8 @@ function categoryMap(d: DiagnosticCategory): diagnosticCategory {
 			return 'warnings'
 		case DiagnosticCategory.Message:
 			return 'messages'
+		default:
+			throw new Error(`unknown diagnostic category ${d}`)
 	}
 }
 

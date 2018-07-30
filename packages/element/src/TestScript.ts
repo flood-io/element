@@ -12,7 +12,7 @@ export class TestScriptError extends Error {
 		public unmappedStack: string[],
 	) {
 		super(message)
-		this.stackWhenThrown = this.stack
+		this.stackWhenThrown = this.stack || ''
 		this.stack = originalStack
 		this.message = message
 	}
@@ -60,7 +60,7 @@ export interface ITestScript {
 
 	liftError(error: Error): TestScriptError
 	maybeLiftError(error: Error): Error
-	filterAndUnmapStack(stack: string): string[]
+	filterAndUnmapStack(stack: string | undefined): string[]
 }
 
 export async function compileString(
@@ -74,8 +74,13 @@ export async function compileString(
 export async function compileFile(
 	filename: string,
 	testScriptOptions?: TestScriptOptions,
-): Promise<ITestScript> {
-	return new TypeScriptTestScript(ts.sys.readFile(filename), filename, testScriptOptions).compile()
+): Promise<ITestScript | undefined> {
+	const fileContent = ts.sys.readFile(filename)
+	if (fileContent === undefined) {
+		return undefined
+	}
+
+	return new TypeScriptTestScript(fileContent, filename, testScriptOptions).compile()
 }
 
 export async function mustCompileString(
@@ -97,6 +102,10 @@ export async function mustCompileFile(
 	testScriptOptions?: TestScriptOptions,
 ): Promise<ITestScript> {
 	const testScript = await compileFile(filename)
+
+	if (testScript === undefined) {
+		throw new Error(`errors compiling script ${filename}:\nunable to read`)
+	}
 
 	if (testScript.hasErrors) {
 		throw new Error(`errors compiling script ${filename}:\n${testScript.formattedErrorString}`)

@@ -5,7 +5,7 @@ import { By } from '../page/By'
 import { PuppeteerClient, RuntimeEnvironment } from '../types'
 import { MouseButtons, Device, Key, userAgents } from '../page/Enums'
 import * as debugFactory from 'debug'
-import { TestSettings, StepOptions, Flood } from '../../index'
+import { TestSettings, ConcreteTestSettings, StepOptions, Flood } from '../../index'
 import * as Faker from 'faker'
 import * as nodeAssert from 'assert'
 import { IReporter } from '../Reporter'
@@ -47,6 +47,17 @@ async function runCallback(queueName: string, ...args: any[]) {
 	}
 }
 
+function normalizeStepOptions(stepOpts: StepOptions): StepOptions {
+	// Convert user inputted seconds to milliseconds
+	if (typeof stepOpts.waitTimeout === 'number' && stepOpts.waitTimeout > 1e3) {
+		stepOpts.waitTimeout = stepOpts.waitTimeout / 1e3
+	} else if (Number(stepOpts.waitTimeout) === 0) {
+		stepOpts.waitTimeout = 30
+	}
+
+	return stepOpts
+}
+
 function normalizeSettings(settings: TestSettings): TestSettings {
 	// Convert user inputted seconds to milliseconds
 	if (typeof settings.waitTimeout === 'number' && settings.waitTimeout > 1e3) {
@@ -75,12 +86,12 @@ function normalizeSettings(settings: TestSettings): TestSettings {
 export interface Step {
 	fn: StepFunction
 	name: string
-	settings?: TestSettings
+	stepOptions: StepOptions
 }
 
 export type StepFunction = (driver: Browser, data?: any) => Promise<void>
 
-export const DEFAULT_SETTINGS: TestSettings = {
+export const DEFAULT_SETTINGS: ConcreteTestSettings = {
 	duration: -1,
 	loopCount: Infinity,
 	actionDelay: 2,
@@ -116,8 +127,8 @@ export class VM {
 	public currentBrowser: Browser
 
 	private vm: NodeVM
-	private settings: TestSettings = DEFAULT_SETTINGS
-	private rawSettings: TestSettings = DEFAULT_SETTINGS
+	private settings: ConcreteTestSettings = DEFAULT_SETTINGS
+	private rawSettings: ConcreteTestSettings = DEFAULT_SETTINGS
 	private callbacks: Map<string, CallbackFunc[]> = new Map()
 	private skipped: string[] = []
 	private errors: Error[] = []
@@ -177,11 +188,11 @@ export class VM {
 		)
 	}
 
-	public evaluate(): TestSettings {
+	public evaluate(): ConcreteTestSettings {
 		// Clear existing steps
 		this.steps = []
 
-		this.rawSettings = {}
+		this.rawSettings = DEFAULT_SETTINGS
 
 		const ENV = this.runEnv.stepEnv()
 
@@ -189,11 +200,11 @@ export class VM {
 			// name: string, fn: (driver: Browser) => Promise<void>
 			let name: string,
 				fn: StepFunction,
-				settings: TestSettings = {}
+				stepOptions: StepOptions = {}
 
 			if (args.length === 3) {
-				;[name, settings, fn] = args
-				settings = normalizeSettings(settings)
+				;[name, stepOptions, fn] = args
+				stepOptions = normalizeStepOptions(stepOptions)
 			} else {
 				;[name, fn] = args
 			}
@@ -203,7 +214,7 @@ export class VM {
 				console.warn(`Duplicate step name: ${name}, skipping step`)
 				return
 			}
-			this.steps.push({ fn, name, settings })
+			this.steps.push({ fn, name, stepOptions })
 		}
 
 		let vmScope = this
@@ -314,18 +325,18 @@ export class VM {
 			for (let step of this.steps) {
 				if (this.hasErrors || this.skipAll) {
 					debug(`Skipping step: ${step.name}`)
-					await this.willRunStep(step.name, step.settings)
+					await this.willRunStep(step.name, step.stepOptions)
 					this.skipped.push(step.name)
 					await this.didRunStep(step.name, browser.fetchScreenshots())
 					continue
 				}
 
-				await this.willRunStep(step.name, step.settings)
+				await this.willRunStep(step.name, step.stepOptions)
 				let startTime = new Date().valueOf()
 				try {
 					debug(`Run step: ${step.name} ${step.fn.toString()}`)
 
-					browser.settings = { ...this.settings, ...step.settings }
+					browser.settings = { ...this.settings, ...step.stepOptions }
 					await step.fn.call(null, browser, testDataRecord)
 				} catch (err) {
 					console.log(`Error in step "${step.name}"`, err.stack)
@@ -359,12 +370,12 @@ export class VM {
 			this.willRunCommand.bind(this),
 			this.didRunCommand.bind(this),
 		)
-		browser.settings = { ...this.settings, ...step.settings }
+		browser.settings = { ...this.settings, ...step.stepOptions }
 		return step.fn.call(null, browser)
 	}
 
-	private async willRunStep(name: string, settings: StepOptions): Promise<void> {
-		return runCallback.apply(this, [CallbackQueue.BeforeStep, name, settings])
+	private async willRunStep(name: string, stepOpts: StepOptions): Promise<void> {
+		return runCallback.apply(this, [CallbackQueue.BeforeStep, name, stepOpts])
 	}
 
 	public async loadTestData() {

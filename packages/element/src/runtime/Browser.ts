@@ -6,6 +6,7 @@ import {
 	Frame,
 	Page,
 	ScreenshotOptions,
+	AuthOptions,
 } from 'puppeteer'
 import * as DeviceDescriptors from 'puppeteer/DeviceDescriptors'
 import CustomDeviceDescriptors from '../utils/CustomDeviceDescriptors'
@@ -14,12 +15,11 @@ import { locatableToLocator } from '../page/By'
 import { ElementHandle } from '../page/ElementHandle'
 import { TargetLocator } from '../page/TargetLocator'
 import * as debugFactory from 'debug'
-import { Driver, TestSettings, EvaluateFn } from '../../index'
+import { Driver, ConcreteTestSettings, EvaluateFn } from '../../index'
 import { PuppeteerClient, WorkRoot } from '../types'
 import { join, resolve } from 'path'
 import * as cuid from 'cuid'
 import { wrapWithCallbacks } from '../utils/Decorators'
-import { DEFAULT_SETTINGS } from './VM'
 import { Key } from '../page/Enums'
 import { readFileSync } from 'fs'
 import * as termImg from 'term-img'
@@ -50,7 +50,7 @@ export class Browser implements Driver {
 	constructor(
 		public workRoot: WorkRoot,
 		private client: PuppeteerClient,
-		public settings: TestSettings = DEFAULT_SETTINGS,
+		public settings: ConcreteTestSettings,
 		private beforeFunc: (name: string) => Promise<void> = async () => {},
 		private afterFunc: (name: string) => Promise<void> = async () => {},
 		private activeFrame?: Frame | null,
@@ -97,7 +97,11 @@ export class Browser implements Driver {
 	}
 
 	public async authenticate(username?: string, password?: string): Promise<void> {
-		await this.page.authenticate(username ? { username, password } : null)
+		let authOptions: AuthOptions | null = null
+		if (username !== undefined && password !== undefined) {
+			authOptions = { username, password }
+		}
+		await this.page.authenticate(authOptions)
 	}
 
 	@wrapWithCallbacks()

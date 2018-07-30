@@ -1,3 +1,4 @@
+import { Option } from '../utils/Option'
 import { Feeder, FeedFilterFunction } from './Feeder'
 import { Loader } from './Loader'
 
@@ -33,12 +34,12 @@ export class TestData<T> {
 		return this
 	}
 
-	public feed(): T {
+	public feed(): Option<T> {
 		if (!this.loader.isLoaded) throw new Error(`Test data has not been loaded yet!`)
 		return this.feeder.feed()
 	}
 
-	public peek(): T {
+	public peek(): Option<T> {
 		if (!this.loader.isLoaded) throw new Error(`Test data has not been loaded yet!`)
 		return this.feeder.peek()
 	}

@@ -13,7 +13,7 @@ export abstract class Loader<T> {
 
 export class DataLoader<T> extends Loader<T> {
 	constructor(public lines: T[]) {
-		super(null)
+		super('')
 	}
 	public async load(): Promise<void> {
 		this.isLoaded = true

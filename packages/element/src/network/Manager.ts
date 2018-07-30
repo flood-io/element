@@ -1,8 +1,8 @@
 import { Page } from 'puppeteer'
 
 export class Manager {
-	private lifecycleCompleteCallback: () => void
-	private networkIdlePromise: Promise<any>
+	private lifecycleCompleteCallback: (() => void) | null
+	private networkIdlePromise: Promise<any> | null
 	private maximumTimer: any
 	public timeout = 10e3
 

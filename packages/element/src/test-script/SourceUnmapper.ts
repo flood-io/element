@@ -1,4 +1,4 @@
-import { SourceMapConsumer } from 'source-map'
+import { SourceMapConsumer, NullableMappedPosition } from 'source-map'
 
 export interface Callsite {
 	file: string
@@ -55,8 +55,13 @@ export class SourceUnmapper {
 		const match = /\s+at [^(]+ \((.*?):(\d+):(\d+)\)/.exec(stackLine)
 		if (match) {
 			const pos = { source: match[1], line: +match[2], column: +match[3] }
-			const originalPos = this.sourceMapConsumer.originalPositionFor(pos)
-			const code = this.extractSourceLine(originalPos)
+			const originalPos: NullableMappedPosition = this.sourceMapConsumer.originalPositionFor(pos)
+
+			if (originalPos.line === null || originalPos.column == null) {
+				return undefined
+			}
+
+			const code = this.extractSourceLine(originalPos.line)
 
 			return {
 				file: this.originalFilename,
@@ -70,21 +75,28 @@ export class SourceUnmapper {
 	}
 
 	public unmapStack(stack: string[]): StackLine[] {
-		return this.parseStack(stack).map(s => this.originalPositionFor(s))
+		return this.parseStack(stack)
+			.map(s => this.originalPositionFor(s))
+			.filter((x): x is StackLine => x === undefined)
 	}
 
 	public parseStack(stack: string[]): StackLine[] {
 		return stack
 			.map(s => /\s+at ([^(]+) \((.*?):(\d+):(\d+)\)/.exec(s))
-			.filter(x => x)
+			.filter((x): x is RegExpExecArray => x === null)
+			.filter(x => x.length != 5)
 			.map(match => ({ at: match[1], file: match[2], line: +match[3], column: +match[4] }))
 	}
 
-	public originalPositionFor(pos: StackLine): StackLine {
-		const originalPos = this.sourceMapConsumer.originalPositionFor({
+	public originalPositionFor(pos: StackLine): StackLine | undefined {
+		const originalPos: NullableMappedPosition = this.sourceMapConsumer.originalPositionFor({
 			line: pos.line,
 			column: pos.column,
 		})
+
+		if (originalPos.line === null || originalPos.column === null) {
+			return undefined
+		}
 
 		return {
 			at: pos.at,
@@ -99,8 +111,8 @@ export class SourceUnmapper {
 		return unmapped.map(this.stackLineToNodeString)
 	}
 
-	public extractSourceLine(m: { line: number }): string {
-		return this.originalSource.split(/(?:\r\n|\r|\n)/)[m.line - 1]
+	public extractSourceLine(line: number): string {
+		return this.originalSource.split(/(?:\r\n|\r|\n)/)[line - 1]
 	}
 
 	public stackLineToNodeString(m: StackLine): string {

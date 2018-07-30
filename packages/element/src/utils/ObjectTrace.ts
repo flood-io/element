@@ -3,13 +3,43 @@ import { promisify } from 'util'
 import { writeFile } from 'fs'
 import { WorkRoot } from '../types'
 import { Assertion } from '../runtime/Test'
-import { NetworkTraceData } from '../Reporter'
+import { NetworkTraceData, CompositeTraceData } from '../Reporter'
 
 const writeFileAsync = promisify(writeFile)
 
 interface ErrorLike {
 	message: string
 	stack?: string | string[]
+}
+
+export interface IObjectTrace {
+	addError(error: ErrorLike)
+	addNetworkTrace(trace: NetworkTraceData): Promise<void>
+	addScreenshot(screenshotURL: string)
+	addAssertion(assertion: Assertion)
+	isEmpty: boolean
+	toObject(): CompositeTraceData
+}
+
+export class NullObjectTrace {
+	public addError(error: ErrorLike) {}
+	public async addNetworkTrace(trace: NetworkTraceData): Promise<void> {}
+	public addScreenshot(screenshotURL: string) {}
+	public addAssertion(assertion: Assertion) {}
+	get isEmpty(): boolean {
+		return true
+	}
+
+	public toObject(): CompositeTraceData {
+		return {
+			op: 'object',
+			label: '',
+			objects: [],
+			errors: [],
+			assertions: [],
+			objectTypes: [],
+		}
+	}
 }
 
 export class ObjectTrace {
@@ -57,11 +87,11 @@ export class ObjectTrace {
 		)
 	}
 
-	public toObject() {
+	public toObject(): CompositeTraceData {
 		let { label, screenshots, networkTraces, assertions, errors } = this
 
 		let objectTypes: string[] = []
-		let objects = []
+		let objects: string[] = []
 		screenshots.forEach(screenshot => {
 			objects.push(screenshot)
 			objectTypes.push('screenshot')

@@ -47,7 +47,7 @@ interface BaseTraceData {
 	errors?: TracedScriptError[]
 }
 
-interface CompositeTraceData {
+export interface CompositeTraceData {
 	op: string
 	label: string
 	objects: string[]

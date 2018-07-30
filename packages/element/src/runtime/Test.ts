@@ -4,10 +4,10 @@ import { IReporter, TestEvent, NetworkTraceData, CompoundMeasurement } from './.
 import { NullReporter } from './../reporter/Null'
 import Observer from './Observer'
 import NetworkRecorder from '../network/Recorder'
-import { ObjectTrace } from '../utils/ObjectTrace'
+import { IObjectTrace, ObjectTrace, NullObjectTrace } from '../utils/ObjectTrace'
 import { readdirSync } from 'fs'
 import { ITestScript } from '../TestScript'
-import { TestSettings } from '../../index'
+import { ConcreteTestSettings } from '../../index'
 import * as debugFactory from 'debug'
 import { PuppeteerClient, RuntimeEnvironment } from '../types'
 import { ScreenshotOptions } from 'puppeteer'
@@ -72,12 +72,12 @@ export default class Test {
 	public networkRecorder: NetworkRecorder
 	public observer: Observer
 	public vm: VM
-	public settings: TestSettings
+	public settings: ConcreteTestSettings
 	public iteration: number = 0
 	public testTiming: Timing
 
 	private script: ITestScript
-	public trace: ObjectTrace
+	public trace: IObjectTrace = new NullObjectTrace()
 	public passed: number = 0
 	public failed: number = 0
 	public failedSteps: number = 0
@@ -88,7 +88,7 @@ export default class Test {
 		this.testTiming = new Timing()
 	}
 
-	public enqueueScript(script: ITestScript): TestSettings {
+	public enqueueScript(script: ITestScript): ConcreteTestSettings {
 		this.script = script
 		return this.prepare()
 	}
@@ -113,7 +113,7 @@ export default class Test {
 		return this.vm.execute(this.driver)
 	}
 
-	public prepare(): TestSettings {
+	public prepare(): ConcreteTestSettings {
 		this.vm = new VM(
 			this.runEnv,
 			expect(this.script, `You must call enqueueScript() before prepare()`),
@@ -152,7 +152,7 @@ export default class Test {
 	public async before(): Promise<void> {
 		debug('beforeTest')
 		console.assert(this.observer, `You must call attachDriver() before before() hook`)
-		this.resetState(undefined)
+		this.resetState('<no-step-set>')
 		this.reporter.testLifecycle(TestEvent.BeforeTest, 'test')
 		await this.observer.attach()
 		await this.vm.loadTestData()
@@ -209,6 +209,7 @@ export default class Test {
 	}
 
 	protected async afterStep(name: string, screenshots?: string[]) {
+		screenshots = screenshots || []
 		this.testTiming.end('step')
 		this.testTiming.start('afterStep')
 
@@ -358,6 +359,8 @@ export default class Test {
 			let value = this.testTiming.getDurationForSegment('step')
 			debugTiming(`Step Timing: thinking=${this.thinkTime} ms, step: ${value} ms`)
 			return value
+		} else {
+			return 0
 		}
 	}
 
@@ -432,6 +435,7 @@ export default class Test {
 			await this.vm.currentBrowser.takeScreenshot(options)
 			return this.vm.currentBrowser.fetchScreenshots()
 		}
+		return []
 	}
 
 	private get numberOfBrowsers() {

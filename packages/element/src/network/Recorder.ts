@@ -11,6 +11,14 @@ function round(value: number): number {
 	return Math.round(value * 1000) / 1000
 }
 
+function justNumber(value: number | undefined, defaultValue: number): number {
+	if (value === undefined) {
+		return defaultValue
+	} else {
+		return value
+	}
+}
+
 export default class Recorder {
 	public entries: Entry[]
 	private pages: Page[]
@@ -209,7 +217,7 @@ export default class Recorder {
 	}
 
 	public meanResponseTime(): number {
-		return mean(this.entries.map(({ request }) => request.duration))
+		return justNumber(mean(this.entries.map(({ request }) => request.duration)), 0)
 	}
 
 	public responseTimeForType(type: string) {

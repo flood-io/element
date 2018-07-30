@@ -4,12 +4,13 @@ import { Locatable } from './Locator'
 import * as recast from 'recast'
 import * as prettier from 'prettier'
 import { locatableToLocator } from './By'
-import { TestSettings } from '../../index'
+import { ConcreteTestSettings } from '../../index'
 
 export abstract class Condition {
 	public pageFuncArgs: any[]
 	public hasWaitFor = true
-	public settings: TestSettings = DEFAULT_SETTINGS
+	// TODO decouple this hardcoding
+	public settings: ConcreteTestSettings = DEFAULT_SETTINGS
 
 	constructor(
 		public locator: Locatable | null,
@@ -27,8 +28,7 @@ export abstract class Condition {
 	}
 
 	protected get timeout(): number {
-		let { waitTimeout } = this.settings
-		return waitTimeout * 1e3
+		return this.settings.waitTimeout * 1e3
 	}
 }
 
@@ -45,8 +45,7 @@ export abstract class ElementCondition extends Condition {
 	}
 
 	public async waitFor(frame: Frame): Promise<boolean> {
-		let { waitTimeout } = this.settings
-		let options: PageFnOptions = { polling: 'raf', timeout: waitTimeout * 1e3 }
+		let options: PageFnOptions = { polling: 'raf', timeout: this.timeout }
 		let locator = locatableToLocator(this.locator)
 		let locatorFunc = this.locatorPageFunc
 		let conditionFunc = this.pageFunc

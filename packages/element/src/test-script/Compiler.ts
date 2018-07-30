@@ -73,6 +73,12 @@ const defaultCompilerOptions: ts.CompilerOptions = {
 
 type sourceKinds = 'typescript' | 'javascript'
 
+interface OutputFile {
+	name: string
+	text: string
+	writeByteOrderMark: boolean
+}
+
 export class TypeScriptTestScript implements ITestScript {
 	public sandboxedBasename: string
 	public sandboxedFilename: string
@@ -109,7 +115,7 @@ export class TypeScriptTestScript implements ITestScript {
 	}
 
 	public get formattedErrorString(): string {
-		let errors = []
+		let errors: string[] = []
 
 		if (this.floodChromeErrors.length > 0) {
 			errors = errors.concat(this.floodChromeErrors)
@@ -155,7 +161,7 @@ export class TypeScriptTestScript implements ITestScript {
 
 		const host = ts.createCompilerHost(compilerOptions)
 
-		const outputFiles = []
+		const outputFiles: OutputFile[] = []
 		host.writeFile = function(name, text, writeByteOrderMark) {
 			outputFiles.push({ name, text, writeByteOrderMark })
 		}
@@ -227,8 +233,9 @@ export class TypeScriptTestScript implements ITestScript {
 
 		console.assert(outputFiles.length == 2, 'There should only be two output files')
 
-		this.source = outputFiles.find(f => f.name.endsWith('.js')).text
-		this.sourceMap = outputFiles.find(f => f.name.endsWith('.js.map')).text
+		// XXX tidy
+		this.source = (outputFiles.find(f => f.name.endsWith('.js')) || { text: '' }).text
+		this.sourceMap = (outputFiles.find(f => f.name.endsWith('.js.map')) || { text: '' }).text
 
 		this.sourceUnmapper = await SourceUnmapper.init(
 			this.originalSource,
@@ -292,16 +299,18 @@ export class TypeScriptTestScript implements ITestScript {
 	}
 
 	public liftError(error: Error): TestScriptError {
-		const filteredStack = error.stack.split('\n').filter(s => s.includes(this.sandboxedFilename))
+		let stack = error.stack || ''
+
+		const filteredStack = stack.split('\n').filter(s => s.includes(this.sandboxedFilename))
 		let callsite
-		let unmappedStack = []
+		let unmappedStack: string[] = []
 
 		if (filteredStack.length > 0) {
 			callsite = this.sourceUnmapper.unmapCallsite(filteredStack[0])
 			unmappedStack = this.sourceUnmapper.unmapStackNodeStrings(filteredStack)
 		}
 
-		return new TestScriptError(error.message, error.stack, callsite, unmappedStack)
+		return new TestScriptError(error.message, stack, callsite, unmappedStack)
 	}
 
 	public maybeLiftError(error: Error): Error {
@@ -313,7 +322,8 @@ export class TypeScriptTestScript implements ITestScript {
 		}
 	}
 
-	public filterAndUnmapStack(stack: string): string[] {
+	public filterAndUnmapStack(stack: string | undefined): string[] {
+		stack = stack || ''
 		const filteredStack = stack.split('\n').filter(s => s.includes(this.sandboxedFilename))
 
 		return this.sourceUnmapper.unmapStackNodeStrings(filteredStack)

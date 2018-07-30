@@ -17,6 +17,7 @@
  * @export
  * @interface TestSettings
  */
+// TODO provide ConcreteTestSettings
 export interface TestSettings {
 	/**
 	 * Maximum duration to run this for, regardless of other timeouts specified on Flood.
@@ -118,6 +119,22 @@ export interface TestSettings {
 	 * Whether to ignore HTTPS errors during navigation. Defaults to `false`
 	 */
 	ignoreHTTPSErrors?: boolean
+}
+
+export interface ConcreteTestSettings extends TestSettings {
+	duration: number
+	loopCount: number
+	actionDelay: number
+	stepDelay: number
+	screenshotOnFailure: boolean
+	clearCookies: boolean
+	clearCache: boolean
+	waitTimeout: number
+	responseTimeMeasurement: ResponseTiming
+	consoleFilter: ConsoleMethod[]
+	userAgent: string
+	device: string
+	ignoreHTTPSErrors: boolean
 }
 
 /**
@@ -238,20 +255,12 @@ export interface TestDataRow {
  * @param {(driver: Driver) => Promise<void>} fn Actual implementation of step
  */
 export declare function step(name: string, fn: StepFunction<any>): void
-export declare function step(
-	name: string,
-	options: StepOptions,
-	fn: StepFunction<any>,
-): void
+export declare function step(name: string, options: StepOptions, fn: StepFunction<any>): void
 
 /**
  * The standard interface for defining the callback for a <[step]>.
  */
-export type StepFunction<T> = (
-	this: null,
-	browser: Driver,
-	data?: T,
-) => Promise<void>
+export type StepFunction<T> = (this: null, browser: Driver, data?: T) => Promise<void>
 
 /**
  * Use this to load test data which will be iterated over with each iteration of your test.
@@ -312,17 +321,9 @@ export declare class TestData<T> {
 /**
  * FeedFilterFunction behaves exactly like the standard Javascript `Array.prototype.filter`, except that is supplies a 3rd argument which is set to the browser index on this grid.
  */
-export type FeedFilterFunction<T> = (
-	line: T,
-	index: number,
-	instanceID: string,
-) => boolean
+export type FeedFilterFunction<T> = (line: T, index: number, instanceID: string) => boolean
 
-
-export type StepDefinition<T> = (
-	name: string,
-	fn: StepFunction<T>,
-) => PromiseLike<any>
+export type StepDefinition<T> = (name: string, fn: StepFunction<T>) => PromiseLike<any>
 
 /**
  * Defines a test suite of steps to run.
@@ -343,13 +344,9 @@ declare const suite: Flood.ISuiteDefinition
 export namespace Flood {
 	interface ISuiteDefinition {
 		(callback: (this: null, step: StepDefinition<null>) => void)
-		withData<T>(
-			data: TestData<T>,
-			callback: (this: null, step: StepDefinition<T>) => void,
-		)
+		withData<T>(data: TestData<T>, callback: (this: null, step: StepDefinition<T>) => void)
 	}
 }
-
 
 /**
  * Browser (also called Driver) is the main entry point in each <[step]>, it's your direct connection to the browser running the test.
@@ -450,18 +447,12 @@ export declare class Browser {
 	 * Sends a double-click event to the element located by the supplied Locator or `selector`. If the element is
 	 * currently outside the viewport it will first scroll to that element.
 	 */
-	public doubleClick(
-		locatable: Locatable,
-		options?: ClickOptions,
-	): Promise<void>
+	public doubleClick(locatable: Locatable, options?: ClickOptions): Promise<void>
 
 	/**
 	 * Selects an option within a `<select>` tag using the value of the `<option>` element.
 	 */
-	public selectByValue(
-		locatable: Locatable,
-		...values: string[]
-	): Promise<string[]>
+	public selectByValue(locatable: Locatable, ...values: string[]): Promise<string[]>
 
 	/**
 	 * Selects an option within a `<select>` tag by its index in the list.
@@ -489,11 +480,7 @@ export declare class Browser {
 	 * ```
 	 *
 	 */
-	public type(
-		locatable: Locatable,
-		text: string,
-		options?: { delay: number },
-	): Promise<void>
+	public type(locatable: Locatable, text: string, options?: { delay: number }): Promise<void>
 
 	/**
 	 * Removes focus from the specified DOM element.

@@ -67,8 +67,8 @@ const defaultCompilerOptions: ts.CompilerOptions = {
 		'lib.es2016.array.include.d.ts',
 		'lib.es2017.object.d.ts',
 	],
-	types: ['@types/node', '@flood/element'],
-	typeRoots: ['node_modules/@types', 'node_modules', './typings'],
+	types: ['@types/node'],
+	typeRoots: ['node_modules/@types'],
 }
 
 type sourceKinds = 'typescript' | 'javascript'
@@ -186,7 +186,9 @@ export class TypeScriptTestScript implements ITestScript {
 			const resolvedModules: ts.ResolvedModule[] = []
 
 			for (let moduleName of moduleNames) {
+				debug('resolve', moduleName)
 				if (moduleName === '@flood/chrome' || moduleName === '@flood/element') {
+					debug('resolving @flood/element as %s', path.join(floodelementRoot, 'index.d.ts'))
 					resolvedModules.push({
 						resolvedFileName: path.join(floodelementRoot, 'index.d.ts'),
 						isExternalLibraryImport: true,

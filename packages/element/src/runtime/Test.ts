@@ -305,8 +305,9 @@ export default class Test {
 		// console.log(`Report: Document Response Time: ${documentResponseTime}ms`)
 		// console.log(`Report: Document Latency: ${documentLatency}ms`)
 
-		let tti = await this.vm.currentSandbox.interactionTiming()
-		let performanceTiming = await this.vm.currentSandbox.performanceTiming()
+		// TODO decouple
+		let tti = await this.vm.currentBrowser.interactionTiming()
+		let performanceTiming = await this.vm.currentBrowser.performanceTiming()
 
 		let browserPerformanceTiming: CompoundMeasurement = {
 			time_to_first_interactive: tti,
@@ -314,7 +315,7 @@ export default class Test {
 			dom_complete: performanceTiming.domComplete - performanceTiming.navigationStart,
 		}
 
-		let paintTimingEntries = await this.vm.currentSandbox.paintTiming()
+		let paintTimingEntries = await this.vm.currentBrowser.paintTiming()
 		paintTimingEntries.forEach(entry => {
 			if (measurementKeysForDOM[entry.name]) {
 				browserPerformanceTiming[measurementKeysForDOM[entry.name]] = Math.round(entry.startTime)
@@ -392,7 +393,7 @@ export default class Test {
 			endTime = new Date().valueOf(),
 			responseData = ''
 
-		let url = this.vm.currentSandbox.url
+		let url = this.vm.currentBrowser.url
 
 		if (document) {
 			responseHeaders = serializeResponseHeaders(document)
@@ -427,9 +428,9 @@ export default class Test {
 		await this.trace.addNetworkTrace(traceData)
 	}
 	private async takeScreenshot(options?: ScreenshotOptions): Promise<string[]> {
-		if (this.vm.currentSandbox) {
-			await this.vm.currentSandbox.takeScreenshot(options)
-			return this.vm.currentSandbox.fetchScreenshots()
+		if (this.vm.currentBrowser) {
+			await this.vm.currentBrowser.takeScreenshot(options)
+			return this.vm.currentBrowser.fetchScreenshots()
 		}
 	}
 

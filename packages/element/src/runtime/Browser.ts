@@ -41,10 +41,10 @@ export const getFrames = (childFrames: Frame[]): Frame[] => {
 	return Array.from(framesMap.values())
 }
 
-// const debug = debugFactory("element:sandbox");
-const debugSandboxScreenshot = debugFactory('element:sandbox:screenshot')
+// const debug = debugFactory("element:browser");
+const debugScreenshot = debugFactory('element:browser:screenshot')
 
-export class Sandbox implements Driver {
+export class Browser implements Driver {
 	public screenshots: string[]
 
 	constructor(
@@ -326,7 +326,7 @@ export class Sandbox implements Driver {
 	public async takeScreenshot(options?: ScreenshotOptions): Promise<void> {
 		const path = this.workRoot.join('traces', `${cuid()}.jpg`)
 
-		debugSandboxScreenshot(`Saving screenshot to: ${path}`)
+		debugScreenshot(`Saving screenshot to: ${path}`)
 		console.log(`Saving screenshot to: ${path}`)
 		await this.page.screenshot({ path, ...options })
 		this.screenshots.push(path)
@@ -350,14 +350,14 @@ export class Sandbox implements Driver {
 		let context = await this.context
 		let element = await locator.find(context)
 		if (!element) return null
-		element.sandbox = this
+		element.browser = this
 		return element
 	}
 
 	public async findElements(locatable: Locatable): Promise<ElementHandle[]> {
 		let locator = locatableToLocator(locatable)
 		let elements = await locator.findMany(await this.context)
-		elements.forEach(element => (element.sandbox = this))
+		elements.forEach(element => (element.browser = this))
 		return elements
 	}
 

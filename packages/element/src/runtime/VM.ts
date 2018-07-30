@@ -1,5 +1,5 @@
 import { NodeVM } from 'vm2'
-import { Sandbox } from './Sandbox'
+import { Browser } from './Browser'
 import { Until } from '../page/Until'
 import { By } from '../page/By'
 import { PuppeteerClient, RuntimeEnvironment } from '../types'
@@ -78,7 +78,7 @@ export interface Step {
 	settings?: TestSettings
 }
 
-export type StepFunction = (driver: Sandbox, data?: any) => Promise<void>
+export type StepFunction = (driver: Browser, data?: any) => Promise<void>
 
 export const DEFAULT_SETTINGS: TestSettings = {
 	duration: -1,
@@ -113,7 +113,7 @@ export const DEFAULT_SETTINGS: TestSettings = {
 export class VM {
 	public callDuration: number = 0
 	public steps: Step[] = []
-	public currentSandbox: Sandbox
+	public currentBrowser: Browser
 
 	private vm: NodeVM
 	private settings: TestSettings = DEFAULT_SETTINGS
@@ -186,7 +186,7 @@ export class VM {
 		const ENV = this.runEnv.stepEnv()
 
 		const step = (...args: any[]) => {
-			// name: string, fn: (driver: Sandbox) => Promise<void>
+			// name: string, fn: (driver: Browser) => Promise<void>
 			let name: string,
 				fn: StepFunction,
 				settings: TestSettings = {}
@@ -282,7 +282,7 @@ export class VM {
 		debug('execute() start')
 
 		try {
-			let sandbox = new Sandbox(
+			let browser = new Browser(
 				this.runEnv.workRoot,
 				driver,
 				this.settings,
@@ -294,11 +294,11 @@ export class VM {
 				},
 			)
 
-			this.currentSandbox = sandbox
-			debug('running this.before(sandbox)')
-			await this.before(sandbox)
+			this.currentBrowser = browser
+			debug('running this.before(browser)')
+			await this.before(browser)
 
-			// An error occurred during sandbox setup
+			// An error occurred during browser setup
 			// this could be a runtime bug in the flood-chrome code
 			if (this.hasErrors) throw this.errors[0]
 
@@ -320,7 +320,7 @@ export class VM {
 					debug(`Skipping step: ${step.name}`)
 					await this.willRunStep(step.name, step.settings)
 					this.skipped.push(step.name)
-					await this.didRunStep(step.name, sandbox.fetchScreenshots())
+					await this.didRunStep(step.name, browser.fetchScreenshots())
 					continue
 				}
 
@@ -329,10 +329,10 @@ export class VM {
 				try {
 					debug(`Run step: ${step.name} ${step.fn.toString()}`)
 
-					sandbox.settings = { ...this.settings, ...step.settings }
-					await step.fn.call(null, sandbox, testDataRecord)
+					browser.settings = { ...this.settings, ...step.settings }
+					await step.fn.call(null, browser, testDataRecord)
 				} catch (err) {
-					// NOTE: This is probably unreachable now with Sandbox error handling
+					// NOTE: This is probably unreachable now with browser error handling
 					// unreachable('Error handling here should never be reached')
 					console.log(`Error in step "${step.name}"`, err.stack)
 					this.errors.push(err)
@@ -340,7 +340,7 @@ export class VM {
 				let duration = new Date().valueOf() - startTime
 				this.callDuration += duration
 
-				await this.didRunStep(step.name, sandbox.fetchScreenshots())
+				await this.didRunStep(step.name, browser.fetchScreenshots())
 			}
 		} catch (err) {
 			// TODO: Cancel future steps if we reach here
@@ -358,7 +358,7 @@ export class VM {
 			'runStepByName(driver, stepName: string) requires a driver as first argument',
 		)
 		let step = expect(this.steps.find(step => step.name === name), `No step with name "${name}"`)
-		let sandbox = new Sandbox(
+		let browser = new Browser(
 			this.runEnv.workRoot,
 			driver,
 			this.settings,
@@ -366,8 +366,8 @@ export class VM {
 			this.didRunCommand.bind(this),
 			this.didError.bind(this),
 		)
-		sandbox.settings = { ...this.settings, ...step.settings }
-		return step.fn.call(null, sandbox)
+		browser.settings = { ...this.settings, ...step.settings }
+		return step.fn.call(null, browser)
 	}
 
 	private async willRunStep(name: string, settings: StepOptions): Promise<void> {
@@ -384,17 +384,17 @@ export class VM {
 	 *
 	 * This is called by execute()
 	 */
-	public async before(sandbox: Sandbox): Promise<void> {
+	public async before(browser: Browser): Promise<void> {
 		// TODO: Test these hooks!
-		if (this.settings.clearCache) await sandbox.clearBrowserCache()
-		if (this.settings.clearCookies) await sandbox.clearBrowserCookies()
-		if (this.settings.device) await sandbox.emulateDevice(this.settings.device)
-		if (this.settings.userAgent) await sandbox.setUserAgent(this.settings.userAgent)
-		if (this.settings.disableCache) await sandbox.setCacheDisabled(true)
+		if (this.settings.clearCache) await browser.clearBrowserCache()
+		if (this.settings.clearCookies) await browser.clearBrowserCookies()
+		if (this.settings.device) await browser.emulateDevice(this.settings.device)
+		if (this.settings.userAgent) await browser.setUserAgent(this.settings.userAgent)
+		if (this.settings.disableCache) await browser.setCacheDisabled(true)
 
 		this.skipAll = false
 		this.skipped = []
-		// NOTE that sandbox itself can add errors, so we shouldn't set this.errors=[] here
+		// NOTE that browser itself can add errors, so we shouldn't set this.errors=[] here
 	}
 
 	private async didRunStep(name: string, screenshots: string[]): Promise<void> {

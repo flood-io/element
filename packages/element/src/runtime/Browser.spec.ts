@@ -6,7 +6,7 @@ import { DogfoodServer } from '../../tests/support/fixture-server'
 import { testWorkRoot } from '../../tests/support/test-run-env'
 import PuppeteerDriver from '../driver/Puppeteer'
 import { Page } from 'puppeteer'
-import { Sandbox } from './Sandbox'
+import { Browser } from './Browser'
 import { Until } from '../page/Until'
 import { By } from '../page/By'
 import { DEFAULT_SETTINGS } from './VM'
@@ -17,7 +17,7 @@ use(SinonChai)
 let page: Page, driver: PuppeteerDriver, puppeteer
 const workRoot = testWorkRoot()
 
-describe('Sandbox', function() {
+describe('Browser', function() {
 	this.timeout(30e3)
 	before(async () => {
 		await dogfoodServer.start()
@@ -37,7 +37,7 @@ describe('Sandbox', function() {
 		let beforeSpy = Sinon.spy()
 		let afterSpy = Sinon.spy()
 
-		let sandbox = new Sandbox(
+		let browser = new Browser(
 			workRoot,
 			puppeteer,
 			DEFAULT_SETTINGS,
@@ -48,7 +48,7 @@ describe('Sandbox', function() {
 				afterSpy(name)
 			},
 		)
-		await sandbox.visit('http://localhost:1337/forms_with_input_elements.html')
+		await browser.visit('http://localhost:1337/forms_with_input_elements.html')
 
 		expect(beforeSpy).to.have.been.calledWith('visit')
 		expect(afterSpy).to.have.been.calledWith('visit')
@@ -58,7 +58,7 @@ describe('Sandbox', function() {
 		let errorSpy = Sinon.spy()
 		let skipSpy = Sinon.spy()
 
-		let sandbox = new Sandbox(
+		let browser = new Browser(
 			workRoot,
 			puppeteer,
 			DEFAULT_SETTINGS,
@@ -71,9 +71,9 @@ describe('Sandbox', function() {
 				skipSpy(name)
 			},
 		)
-		await sandbox.visit('http://localhost:1337/forms_with_input_elements.html')
-		await sandbox.click('.notanelement')
-		await sandbox.click('.anotherelement')
+		await browser.visit('http://localhost:1337/forms_with_input_elements.html')
+		await browser.click('.notanelement')
+		await browser.click('.anotherelement')
 		expect(errorSpy).to.have.been.calledWith(
 			"No element was found on the page using '.notanelement'",
 		)
@@ -81,58 +81,58 @@ describe('Sandbox', function() {
 	})
 
 	it('returns active element', async () => {
-		let sandbox = new Sandbox(workRoot, puppeteer, DEFAULT_SETTINGS)
-		await sandbox.visit('http://localhost:1337/forms_with_input_elements.html')
-		await sandbox.wait(Until.elementIsVisible(By.id('new_user_first_name')))
-		let el1 = await sandbox.switchTo().activeElement()
+		let browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
+		await browser.visit('http://localhost:1337/forms_with_input_elements.html')
+		await browser.wait(Until.elementIsVisible(By.id('new_user_first_name')))
+		let el1 = await browser.switchTo().activeElement()
 		expect(await el1.getId()).to.equal('new_user_first_name')
 	})
 
 	describe('Frame handling', () => {
 		it('can list all frames', async () => {
-			let sandbox = new Sandbox(workRoot, puppeteer, DEFAULT_SETTINGS)
-			await sandbox.visit('http://localhost:1337/frames.html')
-			let frames = sandbox.frames
+			let browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
+			await browser.visit('http://localhost:1337/frames.html')
+			let frames = browser.frames
 			expect(frames.map(f => f.name())).to.deep.equal(['', 'frame1', 'frame2'])
 		})
 
 		it('can switch frame by index', async () => {
-			let sandbox = new Sandbox(workRoot, puppeteer, DEFAULT_SETTINGS)
-			await sandbox.visit('http://localhost:1337/frames.html')
-			await sandbox.switchTo().frame(0)
-			expect(sandbox.target.name()).to.equal('frame1')
-			await sandbox.switchTo().frame(1)
-			expect(sandbox.target.name()).to.equal('frame2')
-			await sandbox.switchTo().defaultContent()
-			expect(sandbox.target.name()).to.equal('')
+			let browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
+			await browser.visit('http://localhost:1337/frames.html')
+			await browser.switchTo().frame(0)
+			expect(browser.target.name()).to.equal('frame1')
+			await browser.switchTo().frame(1)
+			expect(browser.target.name()).to.equal('frame2')
+			await browser.switchTo().defaultContent()
+			expect(browser.target.name()).to.equal('')
 		})
 
 		it('can switch frame by name', async () => {
-			let sandbox = new Sandbox(workRoot, puppeteer, DEFAULT_SETTINGS)
-			await sandbox.visit('http://localhost:1337/frames.html')
-			await sandbox.switchTo().frame('frame1')
-			expect(sandbox.target.name()).to.equal('frame1')
-			await sandbox.switchTo().frame('frame2')
-			expect(sandbox.target.name()).to.equal('frame2')
-			await sandbox.switchTo().defaultContent()
-			expect(sandbox.target.name()).to.equal('')
+			let browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
+			await browser.visit('http://localhost:1337/frames.html')
+			await browser.switchTo().frame('frame1')
+			expect(browser.target.name()).to.equal('frame1')
+			await browser.switchTo().frame('frame2')
+			expect(browser.target.name()).to.equal('frame2')
+			await browser.switchTo().defaultContent()
+			expect(browser.target.name()).to.equal('')
 		})
 
 		it('can switch frame using ElementHandle', async () => {
-			let sandbox = new Sandbox(workRoot, puppeteer, DEFAULT_SETTINGS)
-			await sandbox.visit('http://localhost:1337/frames.html')
-			let frame = await sandbox.findElement('frame[name="frame1"]')
-			await sandbox.switchTo().frame(frame)
-			expect(sandbox.target.name()).to.equal('frame1')
+			let browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
+			await browser.visit('http://localhost:1337/frames.html')
+			let frame = await browser.findElement('frame[name="frame1"]')
+			await browser.switchTo().frame(frame)
+			expect(browser.target.name()).to.equal('frame1')
 		})
 
 		it('can interact with another frame', async () => {
-			let sandbox = new Sandbox(workRoot, puppeteer, DEFAULT_SETTINGS)
-			await sandbox.visit('http://localhost:1337/frames.html')
-			await sandbox.switchTo().frame('frame1')
-			expect(sandbox.target.name()).to.equal('frame1')
+			let browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
+			await browser.visit('http://localhost:1337/frames.html')
+			await browser.switchTo().frame('frame1')
+			expect(browser.target.name()).to.equal('frame1')
 
-			let input = await sandbox.findElement('input[name="senderElement"]')
+			let input = await browser.findElement('input[name="senderElement"]')
 			await input.clear()
 			await input.type('Hello World')
 			expect(await input.getProperty('value')).to.equal('Hello World')
@@ -141,10 +141,10 @@ describe('Sandbox', function() {
 
 	describe('timing', () => {
 		it('can inject polyfill for TTI', async () => {
-			let sandbox = new Sandbox(workRoot, puppeteer, DEFAULT_SETTINGS)
-			await sandbox.visit('https://www.google.com')
+			let browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
+			await browser.visit('https://www.google.com')
 
-			let result = await sandbox.interactionTiming()
+			let result = await browser.interactionTiming()
 			expect(result).to.be.greaterThan(10)
 		})
 	})

@@ -3,10 +3,10 @@ import { ElementHandle as IElementHandle } from '../../index'
 import { Locator } from './Locator'
 import { By } from './By'
 import * as cuid from 'cuid'
-import { Sandbox } from '../runtime/Sandbox'
-import * as debug from 'debug'
+import { Browser } from '../runtime/Browser'
+import * as debugFactory from 'debug'
 import { Key } from './Enums'
-const debugSandbox = debug('sandbox')
+const debug = debugFactory('element:page:element-handle')
 
 async function getProperty<T>(element: PElementHandle, prop: string): Promise<T | null> {
 	if (!element) {
@@ -19,8 +19,10 @@ async function getProperty<T>(element: PElementHandle, prop: string): Promise<T 
 	}
 }
 
+// TODO decouple Browser
+
 export class ElementHandle implements IElementHandle {
-	public sandbox: Sandbox
+	public browser: Browser
 	constructor(private element: PElementHandle) {}
 
 	public async click(options?: ClickOptions): Promise<void> {
@@ -70,16 +72,16 @@ export class ElementHandle implements IElementHandle {
 	}
 
 	public async takeScreenshot(options?: ScreenshotOptions): Promise<void> {
-		let path = this.sandbox.workRoot.join('traces', `${cuid()}.jpg`)
+		let path = this.browser.workRoot.join('traces', `${cuid()}.jpg`)
 
-		debugSandbox(`Saving screenshot to: ${path}`)
+		debug(`Saving screenshot to: ${path}`)
 		console.log(`Saving screenshot to: ${path}`)
 
 		let handle = this.element.asElement()
 		if (!handle) return
 
 		await handle.screenshot({ path, ...options })
-		if (this.sandbox) this.sandbox.screenshots.push(path)
+		if (this.browser) this.browser.screenshots.push(path)
 	}
 
 	public async findElement(locator: string | Locator): Promise<IElementHandle | null> {

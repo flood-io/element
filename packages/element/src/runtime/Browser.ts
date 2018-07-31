@@ -322,18 +322,9 @@ export class Browser implements BrowserInterface {
 	 */
 	// @wrapWithCallbacks()
 	public async takeScreenshot(options?: ScreenshotOptions): Promise<void> {
-		const path = this.workRoot.join('traces', `${cuid()}.jpg`)
-
-		debugScreenshot(`Saving screenshot to: ${path}`)
-		console.log(`Saving screenshot to: ${path}`)
-		await this.page.screenshot({ path, ...options })
-		this.screenshots.push(path)
-
-		termImg(path, {
-			width: '40%',
-			fallback: () => {
-				return `Screenshot path: ${path}`
-			},
+		this.saveScreenshot(async path => {
+			await this.page.screenshot({ path, ...options })
+			return true
 		})
 	}
 
@@ -349,7 +340,7 @@ export class Browser implements BrowserInterface {
 		let element = await locator.find(await this.context)
 		if (!element) throw new ElementNotFound(locatable)
 
-		element.browser = this
+		element.bindBrowser(this)
 
 		return element
 	}
@@ -364,14 +355,14 @@ export class Browser implements BrowserInterface {
 		let element = await locator.find(context)
 		if (!element) return null
 
-		element.browser = this
+		element.bindBrowser(this)
 		return element
 	}
 
 	public async findElements(locatable: NullableLocatable): Promise<ElementHandle[]> {
 		let locator = locatableToLocator(locatable)
 		let elements = await locator.findMany(await this.context)
-		elements.forEach(element => (element.browser = this))
+		elements.forEach(element => element.bindBrowser(this))
 		return elements
 	}
 
@@ -442,5 +433,22 @@ export class Browser implements BrowserInterface {
 		let screenshots = [...this.screenshots]
 		this.screenshots = []
 		return screenshots
+	}
+
+	public async saveScreenshot(fn: (path: string) => Promise<boolean>): Promise<void> {
+		const path = this.workRoot.join('objects', `${cuid()}.jpg`)
+		debugScreenshot(`Saving screenshot to: ${path}`)
+
+		if (await fn(path)) {
+			this.screenshots.push(path)
+			debugScreenshot(`Saved screenshot to: ${path}`)
+
+			termImg(path, {
+				width: '40%',
+				fallback: () => {
+					return `Screenshot path: ${path}`
+				},
+			})
+		}
 	}
 }

@@ -2,8 +2,6 @@ import { ElementHandle as PElementHandle, ClickOptions, ScreenshotOptions } from
 import { ElementHandle as IElementHandle } from '../../index'
 import { Locator } from './Locator'
 import { By } from './By'
-import * as cuid from 'cuid'
-import { Browser } from '../runtime/Browser'
 import * as debugFactory from 'debug'
 import { Key } from './Enums'
 const debug = debugFactory('element:page:element-handle')
@@ -19,14 +17,21 @@ async function getProperty<T>(element: PElementHandle, prop: string): Promise<T 
 	}
 }
 
-// TODO decouple Browser
+
+interface ScreenshotSaver {
+	saveScreenshot(fn: (path: string) => Promise<boolean>)
+}
 
 export class ElementHandle implements IElementHandle {
-	public browser: Browser
+	public screenshotSaver: ScreenshotSaver
 	constructor(private element: PElementHandle) {}
 
 	public async click(options?: ClickOptions): Promise<void> {
 		return this.element.click(options)
+	}
+
+	public bindBrowser(sss: ScreenshotSaver) {
+		this.screenshotSaver = sss
 	}
 
 	public async clear(): Promise<void> {
@@ -72,16 +77,16 @@ export class ElementHandle implements IElementHandle {
 	}
 
 	public async takeScreenshot(options?: ScreenshotOptions): Promise<void> {
-		let path = this.browser.workRoot.join('traces', `${cuid()}.jpg`)
+		return this.screenshotSaver.saveScreenshot(async path => {
+			debug(`Saving screenshot to: ${path}`)
+			console.log(`Saving screenshot to: ${path}`)
 
-		debug(`Saving screenshot to: ${path}`)
-		console.log(`Saving screenshot to: ${path}`)
+			const handle = this.element.asElement()
+			if (!handle) return false
 
-		let handle = this.element.asElement()
-		if (!handle) return
-
-		await handle.screenshot({ path, ...options })
-		if (this.browser) this.browser.screenshots.push(path)
+			await handle.screenshot({ path, ...options })
+			return true
+		})
 	}
 
 	public async findElement(locator: string | Locator): Promise<IElementHandle | null> {

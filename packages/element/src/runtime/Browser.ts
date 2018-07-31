@@ -349,6 +349,8 @@ export class Browser implements BrowserInterface {
 		let element = await locator.find(await this.context)
 		if (!element) throw new ElementNotFound(locatable)
 
+		element.browser = this
+
 		return element
 	}
 

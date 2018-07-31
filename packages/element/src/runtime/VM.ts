@@ -327,7 +327,7 @@ export class VM {
 					browser.settings = { ...this.settings, ...step.stepOptions }
 					await step.fn.call(null, browser, testDataRecord)
 				} catch (err) {
-					console.log(`Error in step "${step.name}"`, err.stack)
+					// console.log(`Error in step "${step.name}"`, err.stack)
 					this.errors.push(err)
 				}
 				let duration = new Date().valueOf() - startTime

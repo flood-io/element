@@ -692,6 +692,7 @@ export type NullableCondition = Condition | null
 declare class Locator {}
 
 export type NullableLocator = Locator | null
+
 /**
  * By is used to create <[Locator]>'s to find Elements or use in any place which accepts a Locator or <[Locatable]>.
  *
@@ -804,25 +805,25 @@ declare class Until {
 	 * Creates a condition that will wait for the given element to be disabled
 	 * @param selectorOrLocator A <[Locatable]> to use to find the element.
 	 */
-	static elementIsDisabled(locatable: Locatable): Condition
+	static elementIsDisabled(locatable: NullableLocatable): Condition
 
 	/**
 	 * Creates a condition that will wait for the given element to be enabled
 	 * @param selectorOrLocator A <[Locatable]> to use to find the element.
 	 */
-	static elementIsEnabled(locatable: Locatable): Condition
+	static elementIsEnabled(locatable: NullableLocatable): Condition
 
 	/**
 	 * Creates a condition that will wait for the given element to be deselected.
 	 * @param selectorOrLocator A <[Locatable]> to use to find the element.
 	 */
-	static elementIsSelected(locatable: Locatable): Condition
+	static elementIsSelected(locatable: NullableLocatable): Condition
 
 	/**
 	 * Creates a condition that will wait for the given element to be in the DOM, yet not visible to the user
 	 * @param selectorOrLocator A <[Locatable]> to use to find the element.
 	 */
-	static elementIsNotSelected(locatable: Locatable): Condition
+	static elementIsNotSelected(locatable: NullableLocatable): Condition
 
 	/**
 	 * Creates a condition that will wait for the given element to be selected.
@@ -836,7 +837,7 @@ declare class Until {
 	 *
 	 * @param selectorOrLocator A <[Locatable]> to use to find the element.
 	 */
-	static elementIsVisible(locatable: Locatable): Condition
+	static elementIsVisible(locatable: NullableLocatable): Condition
 
 	/**
 	 * Creates a condition that will wait for the given element to become visible.
@@ -851,27 +852,27 @@ declare class Until {
 	 *
 	 * @param selectorOrLocator A <[Locatable]> to use to find the element.
 	 */
-	static elementIsNotVisible(locatable: Locatable): Condition
+	static elementIsNotVisible(locatable: NullableLocatable): Condition
 
 	/**
 	 * Creates a condition which will wait until the element is located on the page.
 	 */
-	static elementLocated(locatable: Locatable): Condition
+	static elementLocated(locatable: NullableLocatable): Condition
 
 	/**
 	 * Creates a condition which will wait until the element's text content contains the target text.
 	 */
-	static elementTextContains(locatable: Locatable, text: string): Condition
+	static elementTextContains(locatable: NullableLocatable, text: string): Condition
 
 	/**
 	 * Creates a condition which will wait until the element's text exactly matches the target text, excluding leading and trailing whitespace.
 	 */
-	static elementTextIs(locatable: Locatable, text: string): Condition
+	static elementTextIs(locatable: NullableLocatable, text: string): Condition
 
 	/**
 	 * Creates a condition which will wait until the element's text matches the target Regular Expression.
 	 */
-	static elementTextMatches(locatable: Locatable, regex: RegExp): Condition
+	static elementTextMatches(locatable: NullableLocatable, regex: RegExp): Condition
 
 	/**
 	 * Creates a condition that will loop until at least one element is found with the given locator.

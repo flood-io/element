@@ -1,12 +1,17 @@
 import NetworkRecorder from '../network/Recorder'
 import { ConsoleMethod } from '../../index'
+import { IReporter } from './../Reporter'
+
+// import * as debugFactory from 'debug'
+// const debug = debugFactory('element:observer')
+
 export default class Observer {
 	public consoleFilters: ConsoleMethod[]
 
 	private failedRequests: string[]
 	private requests: Set<string> = new Set()
 
-	constructor(public networkRecorder: NetworkRecorder) {}
+	constructor(private reporter: IReporter, public networkRecorder: NetworkRecorder) {}
 
 	public attach() {
 		this.failedRequests = []
@@ -46,8 +51,8 @@ export default class Observer {
 		)
 
 		this.networkRecorder.attachEvent('console', msg => {
-			if (this.consoleFilters && this.consoleFilters.includes(msg.type)) {
-				console.log(`>>> console.${msg.type()}: ${msg.text()}`)
+			if (this.consoleFilters.length == 0 || !this.consoleFilters.includes(msg.type())) {
+				this.reporter.testScriptConsole(msg.type(), msg.text())
 			}
 		})
 	}

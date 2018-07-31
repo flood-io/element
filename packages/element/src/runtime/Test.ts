@@ -44,7 +44,7 @@ export const DEFAULT_SETTINGS: ConcreteTestSettings = {
 	clearCache: false,
 	waitTimeout: 30,
 	responseTimeMeasurement: 'step',
-	consoleFilter: ['error', 'warn', 'info', 'log'],
+	consoleFilter: [],
 	userAgent: CustomDeviceDescriptors['Chrome Desktop Large'].userAgent,
 	device: 'Chrome Desktop Large',
 	ignoreHTTPSErrors: false,
@@ -132,7 +132,7 @@ export default class Test {
 
 		this.driver = driver
 		this.networkRecorder = new NetworkRecorder(driver.page)
-		this.observer = new Observer(this.networkRecorder)
+		this.observer = new Observer(this.reporter, this.networkRecorder)
 		// Adds filter for console messages emitted by the browser
 		this.observer.consoleFilters = this.settings.consoleFilter || []
 	}

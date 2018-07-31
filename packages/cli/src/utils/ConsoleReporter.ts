@@ -51,7 +51,9 @@ export class ConsoleReporter implements IReporter {
 
 	testInternalError(message: string, err: Error): void {}
 	testAssertionError(err: TestScriptError): void {}
-	testStepError(err: TestScriptError): void {}
+	testStepError(err: TestScriptError): void {
+		this.logger.error(err.toStringNodeFormat())
+	}
 
 	testScriptConsole(method: string, message?: any, ...optionalParams: any[]): void {
 		if (method == 'log') method = 'info'

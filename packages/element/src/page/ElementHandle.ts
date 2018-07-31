@@ -47,15 +47,16 @@ export class ElementHandle implements IElementHandle {
 	public screenshotSaver: ScreenshotSaver
 	constructor(private element: PElementHandle) {}
 
+	public bindBrowser(sss: ScreenshotSaver) {
+		this.screenshotSaver = sss
+	}
+
 	@wrapDescriptiveError()
 	public async click(options?: ClickOptions): Promise<void> {
 		return this.element.click(options)
 	}
 
-	public bindBrowser(sss: ScreenshotSaver) {
-		this.screenshotSaver = sss
-	}
-
+	@wrapDescriptiveError()
 	public async clear(): Promise<void> {
 		let tagName = await this.tagName()
 		if (tagName === 'SELECT') {
@@ -69,16 +70,19 @@ export class ElementHandle implements IElementHandle {
 		}
 	}
 
+	@wrapDescriptiveError()
 	public async focus(): Promise<void> {
 		return await this.element.focus()
 	}
 
+	@wrapDescriptiveError()
 	public async blur(): Promise<void> {
 		return await this.element
 			.executionContext()
 			.evaluate((node: HTMLElement) => node.blur(), this.element)
 	}
 
+	@wrapDescriptiveError()
 	public async sendKeys(...keys: string[]): Promise<void> {
 		let handle = this.element.asElement()
 		if (!handle) return
@@ -92,12 +96,14 @@ export class ElementHandle implements IElementHandle {
 		}
 	}
 
+	@wrapDescriptiveError()
 	public async type(text: string): Promise<void> {
 		let handle = this.element.asElement()
 		if (!handle) return
 		return handle.type(text)
 	}
 
+	@wrapDescriptiveError()
 	public async takeScreenshot(options?: ScreenshotOptions): Promise<void> {
 		return this.screenshotSaver.saveScreenshot(async path => {
 			debug(`Saving screenshot to: ${path}`)

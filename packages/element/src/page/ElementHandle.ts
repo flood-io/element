@@ -17,6 +17,27 @@ async function getProperty<T>(element: PElementHandle, prop: string): Promise<T 
 	}
 }
 
+export function wrapDescriptiveError() {
+	return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+		let originalFn = descriptor.value
+
+		descriptor.value = async function(...args: any[]) {
+			// capture the stack trace at call-time
+			const calltimeError = new Error()
+			Error.captureStackTrace(calltimeError)
+			const calltimeStack = calltimeError.stack
+
+			try {
+				return await originalFn.apply(this, args)
+			} catch (e) {
+				let newError = new Error(`error performing element.${propertyKey}: ${e}`)
+				// attach the call-time stack
+				newError.stack = calltimeStack
+				throw newError
+			}
+		}
+	}
+}
 
 interface ScreenshotSaver {
 	saveScreenshot(fn: (path: string) => Promise<boolean>)
@@ -26,6 +47,7 @@ export class ElementHandle implements IElementHandle {
 	public screenshotSaver: ScreenshotSaver
 	constructor(private element: PElementHandle) {}
 
+	@wrapDescriptiveError()
 	public async click(options?: ClickOptions): Promise<void> {
 		return this.element.click(options)
 	}

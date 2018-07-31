@@ -425,33 +425,33 @@ export declare class Browser {
 	 * In this example we're constructing a <[Locatable]> using the `By.partialLinkText()` Locator, which will match the first `<a>` tag which contains the text "Start".
 	 *
 	 */
-	public click(locatable: Locatable, options?: ClickOptions): Promise<void>
+	public click(locatable: NullableLocatable, options?: ClickOptions): Promise<void>
 
 	/**
 	 * Sends a double-click event to the element located by the supplied Locator or `selector`. If the element is
 	 * currently outside the viewport it will first scroll to that element.
 	 */
-	public doubleClick(locatable: Locatable, options?: ClickOptions): Promise<void>
+	public doubleClick(locatable: NullableLocatable, options?: ClickOptions): Promise<void>
 
 	/**
 	 * Selects an option within a `<select>` tag using the value of the `<option>` element.
 	 */
-	public selectByValue(locatable: Locatable, ...values: string[]): Promise<string[]>
+	public selectByValue(locatable: NullableLocatable, ...values: string[]): Promise<string[]>
 
 	/**
 	 * Selects an option within a `<select>` tag by its index in the list.
 	 */
-	public selectByIndex(locatable: Locatable, index: string): Promise<string[]>
+	public selectByIndex(locatable: NullableLocatable, index: string): Promise<string[]>
 
 	/**
 	 * Selects an option within a `<select>` tag by matching its visible text.
 	 */
-	public selectByText(locatable: Locatable, text: string): Promise<string[]>
+	public selectByText(locatable: NullableLocatable, text: string): Promise<string[]>
 
 	/**
 	 * Clears the selected value of an input or select control.
 	 */
-	public clear(locatable: Locatable): Promise<void>
+	public clear(locatable: NullableLocatable): Promise<void>
 
 	/**
 	 * Types a string into an `<input>` control, key press by key press. Use this to fill inputs as though it was typed by the user.
@@ -464,16 +464,20 @@ export declare class Browser {
 	 * ```
 	 *
 	 */
-	public type(locatable: Locatable, text: string, options?: { delay: number }): Promise<void>
+	public type(
+		locatable: NullableLocatable,
+		text: string,
+		options?: { delay: number },
+	): Promise<void>
 
 	/**
 	 * Removes focus from the specified DOM element.
 	 *
-	 * @param {Locatable} locator
+	 * @param {NullableLocatable} locator
 	 * @returns {Promise<void>}
 	 * @memberof Driver
 	 */
-	public blur(locator: Locatable): Promise<void>
+	public blur(locator: NullableLocatable): Promise<void>
 
 	/**
 	 * Makes the element located by the first argument the receiver of future input.
@@ -482,7 +486,7 @@ export declare class Browser {
 	 * @returns {Promise<void>}
 	 * @memberof Driver
 	 */
-	public focus(locator: Locatable): Promise<void>
+	public focus(locator: NullableLocatable): Promise<void>
 
 	/**
 	 * Presses a key on the keyboard specified by key code. For example, <[Key.ALT]>
@@ -511,12 +515,18 @@ export declare class Browser {
 	/**
 	 * Uses the provided locator to find the first element it matches, returning an ElementHandle.
 	 */
-	public findElement(locator: string | Locator): Promise<ElementHandle | null>
+	public findElement(locator: NullableLocatable): Promise<ElementHandle | null>
+
+	/**
+	 * Uses the provided locator to find the first element it matches, returning an ElementHandle.
+	 * If no element is found throws an error.
+	 */
+	public mustFindElement(locator: NullableLocatable): Promise<ElementHandle>
 
 	/**
 	 * Uses the provided locator to find all elements matching the locator condition, returning an array of ElementHandles
 	 */
-	public findElements(locator: string | Locator): Promise<ElementHandle[]>
+	public findElements(locator: NullableLocatable): Promise<ElementHandle[]>
 
 	/**
 	 * Switch the focus of the browser to another frame, tab, or window.
@@ -672,6 +682,8 @@ declare class TargetLocator {
  */
 declare class Condition {}
 
+export type NullableCondition = Condition | null
+
 /**
  * A Locator is a generic class constructed from a <[By]> method which can be used to find an Element or Elements on a page.
  *
@@ -679,6 +691,7 @@ declare class Condition {}
  */
 declare class Locator {}
 
+export type NullableLocator = Locator | null
 /**
  * By is used to create <[Locator]>'s to find Elements or use in any place which accepts a Locator or <[Locatable]>.
  *
@@ -906,7 +919,12 @@ declare class Until {
 /**
  * Locatable is the default type to use in place of a <[Locator]>. It can be a Locator or a CSS selector string.
  */
-export type Locatable = Locator | string
+export type Locatable = Locator | ElementHandle | string
+
+/**
+ * NullableLocatable is a locatable that could also be null.
+ */
+export type NullableLocatable = Locatable | null
 
 /**
  * Lists all available keyboard control keys which can be used when sending a key press combination.

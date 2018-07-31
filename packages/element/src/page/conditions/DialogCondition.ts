@@ -7,8 +7,8 @@ import { clearTimeout } from 'timers'
  * handler.
  */
 export class DialogCondition extends Condition {
-	constructor() {
-		super(null, null)
+	constructor(desc: string) {
+		super(desc, null, null)
 	}
 
 	toString() {

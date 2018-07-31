@@ -2,8 +2,8 @@ import { Condition } from '../Condition'
 import { Frame } from 'puppeteer'
 
 export class URLCondition extends Condition {
-	constructor(public url: string, public partial: boolean = false) {
-		super(null, null)
+	constructor(desc: string, public url: string, public partial: boolean = false) {
+		super(desc, null, null)
 	}
 
 	toString() {

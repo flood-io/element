@@ -2,8 +2,8 @@ import { Condition } from '../Condition'
 import { Frame } from 'puppeteer'
 
 export class TitleCondition extends Condition {
-	constructor(public expectedTitle: string, public partial: boolean = false) {
-		super(null, null)
+	constructor(desc: string, public expectedTitle: string, public partial: boolean = false) {
+		super(desc, null, null)
 	}
 
 	toString() {

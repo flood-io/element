@@ -1,11 +1,10 @@
 import { ElementCondition } from '../Condition'
 import { EvaluateFn } from 'puppeteer'
-import { Locatable } from '../Locator'
-import { locatableToLocator } from '../By'
+import { NullableLocatable } from '../../../index'
 
 export class ElementVisibilityCondition extends ElementCondition {
-	constructor(locator: Locatable, ...args: any[]) {
-		super(locator)
+	constructor(desc: string, locator: NullableLocatable, ...args: any[]) {
+		super(desc, locator)
 		this.pageFuncArgs = args
 	}
 
@@ -30,8 +29,8 @@ export class ElementVisibilityCondition extends ElementCondition {
 }
 
 export class ElementLocatedCondition extends ElementCondition {
-	constructor(locator: Locatable, ...args: any[]) {
-		super(locator)
+	constructor(desc: string, locator: NullableLocatable, ...args: any[]) {
+		super(desc, locator)
 		this.pageFuncArgs = args
 	}
 
@@ -45,8 +44,8 @@ export class ElementLocatedCondition extends ElementCondition {
 }
 
 export class ElementsLocatedCondition extends ElementCondition {
-	constructor(locator: Locatable, ...args: any[]) {
-		super(locator)
+	constructor(public desc: string, locator: NullableLocatable, ...args: any[]) {
+		super(desc, locator)
 
 		this.pageFuncArgs = args
 	}
@@ -57,8 +56,7 @@ export class ElementsLocatedCondition extends ElementCondition {
 	}
 
 	get locatorPageFunc() {
-		let locator = locatableToLocator(this.locator)
-		return locator.pageFuncMany
+		return this.locator.pageFuncMany
 	}
 
 	pageFunc: EvaluateFn = (nodes: HTMLElement[], count: number = 1) => {

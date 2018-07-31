@@ -1,25 +1,36 @@
 import { PageFnOptions, Page, EvaluateFn, Frame } from 'puppeteer'
 import { Locator } from './Locator'
 import { DEFAULT_SETTINGS, ConcreteTestSettings } from '../runtime/Test'
-import { Locatable } from './Locator'
+import { NullableLocatable } from '../../index'
 import * as recast from 'recast'
 import * as prettier from 'prettier'
-import { locatableToLocator } from './By'
-import * as debugFactory from 'debug'
-const debug = debugFactory('element:page:condition')
+import { locatableToLocator } from '../runtime/Browser'
+// import * as debugFactory from 'debug'
+// const debug = debugFactory('element:page:condition')
 
 export abstract class Condition {
 	public pageFuncArgs: any[]
 	public hasWaitFor = true
 	// TODO decouple this hardcoding
 	public settings: ConcreteTestSettings = DEFAULT_SETTINGS
+	public locator: Locator
 
 	constructor(
-		public locator: Locatable | null,
+		public desc: string = '*BASE CONDITION',
+		locator: NullableLocatable,
 		public pageFunc: EvaluateFn | null,
 		...pageFuncArgs: any[]
 	) {
+		this.locator = this.locatableToLocator(locator)
 		this.pageFuncArgs = pageFuncArgs
+	}
+
+	protected locatableToLocator(el: NullableLocatable): Locator {
+		try {
+			return locatableToLocator(el)
+		} catch (e) {
+			throw new Error(`condition '${this.desc}' unable to use locator: ${e}`)
+		}
 	}
 
 	public abstract toString()
@@ -35,22 +46,18 @@ export abstract class Condition {
 }
 
 export abstract class ElementCondition extends Condition {
-	constructor(public locator: Locatable) {
-		super(locator, null)
+	constructor(desc: string = '*BASE ELEMENT CONDITION', locator: NullableLocatable) {
+		super(desc, locator, null)
 	}
 
 	public abstract toString()
 
 	get locatorPageFunc(): EvaluateFn {
-		debug('loc in', this.locator)
-		let locator: Locator = locatableToLocator(this.locator)
-		debug('locator', locator)
-		return locator.pageFunc
+		return this.locator.pageFunc
 	}
 
 	public async waitFor(frame: Frame): Promise<boolean> {
 		let options: PageFnOptions = { polling: 'raf', timeout: this.timeout }
-		let locator = locatableToLocator(this.locator)
 		let locatorFunc = this.locatorPageFunc
 		let conditionFunc = this.pageFunc
 
@@ -94,7 +101,7 @@ export abstract class ElementCondition extends Condition {
 
 		let code = prettier.format(recast.print(fnAST).code, { parser: 'babylon' })
 
-		let args = [locator.pageFuncArgs, this.pageFuncArgs]
+		let args = [this.locator.pageFuncArgs, this.pageFuncArgs]
 		let execFnStr = `${code.trim()}(${args.map(serializeArgument).join(',')})`
 		// console.log(code, locator.pageFuncArgs, this.pageFuncArgs)
 

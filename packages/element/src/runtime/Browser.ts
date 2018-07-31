@@ -25,6 +25,9 @@ import { readFileSync } from 'fs'
 import * as termImg from 'term-img'
 import { ConcreteTestSettings } from './Test'
 
+// const debug = debugFactory('element:browser')
+const debugScreenshot = debugFactory('element:browser:screenshot')
+
 export class ElementNotFound extends Error {
 	constructor(locatable: NullableLocatable) {
 		let desc: string
@@ -50,8 +53,8 @@ export const getFrames = (childFrames: Frame[]): Frame[] => {
 }
 
 export function locatableToLocator(el: NullableLocatable): Locator {
-	if (typeof el === null) {
-		throw new ElementNotFound(el)
+	if (el === null) {
+		throw new Error('locatable is null')
 	} else if (typeof el === 'string') {
 		return By.css(el)
 	} else {
@@ -59,9 +62,6 @@ export function locatableToLocator(el: NullableLocatable): Locator {
 		return el as Locator
 	}
 }
-
-// const debug = debugFactory("element:browser");
-const debugScreenshot = debugFactory('element:browser:screenshot')
 
 export class Browser implements BrowserInterface {
 	public screenshots: string[]

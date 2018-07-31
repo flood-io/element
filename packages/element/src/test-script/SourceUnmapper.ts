@@ -1,4 +1,6 @@
 import { SourceMapConsumer, NullableMappedPosition } from 'source-map'
+// import * as debugFactory from 'debug'
+// const debug = debugFactory('element:test-script:source-unmapper')
 
 export interface Callsite {
 	file: string
@@ -77,14 +79,22 @@ export class SourceUnmapper {
 	public unmapStack(stack: string[]): StackLine[] {
 		return this.parseStack(stack)
 			.map(s => this.originalPositionFor(s))
-			.filter((x): x is StackLine => x === undefined)
+			.filter((x): x is StackLine => x !== undefined)
 	}
 
+	// XXX Error.prepareStackTrace
 	public parseStack(stack: string[]): StackLine[] {
+		// const tapp = tag => x => {
+		// debug(tag, x)
+		// return x
+		// }
+
 		return stack
 			.map(s => /\s+at ([^(]+) \((.*?):(\d+):(\d+)\)/.exec(s))
-			.filter((x): x is RegExpExecArray => x === null)
-			.filter(x => x.length != 5)
+			.filter((x): x is RegExpExecArray => x !== null)
+			.filter(x => {
+				return x && x[1] && x[2] && x[3] && x[4]
+			})
 			.map(match => ({ at: match[1], file: match[2], line: +match[3], column: +match[4] }))
 	}
 

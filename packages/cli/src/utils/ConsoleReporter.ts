@@ -28,7 +28,9 @@ export class ConsoleReporter implements IReporter {
 		this.logger.debug(`> ${label} ${measurement} ${JSON.stringify(value)}`)
 	}
 
-	addTrace(traceData: TraceData, label: string): void {}
+	addTrace(traceData: TraceData, label: string): void {
+		this.logger.debug(`> ${label} trace:\n${JSON.stringify(traceData)}`)
+	}
 
 	async flushMeasurements(): Promise<void> {}
 
@@ -49,8 +51,12 @@ export class ConsoleReporter implements IReporter {
 		}
 	}
 
-	testInternalError(message: string, err: Error): void {}
-	testAssertionError(err: TestScriptError): void {}
+	testInternalError(message: string, err: Error): void {
+		this.logger.error('flood-element error:\n' + err)
+	}
+	testAssertionError(err: TestScriptError): void {
+		this.logger.error('assertion failed \n' + err.toStringNodeFormat())
+	}
 	testStepError(err: TestScriptError): void {
 		this.logger.error(err.toStringNodeFormat())
 	}

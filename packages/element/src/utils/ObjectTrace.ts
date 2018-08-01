@@ -21,16 +21,15 @@ export interface IObjectTrace {
 	toObject(): CompositeTraceData
 }
 
-export class NullObjectTrace {
-	public addError(error: ErrorLike) {}
-	public async addNetworkTrace(trace: NetworkTraceData): Promise<void> {}
-	public addScreenshot(screenshotURL: string) {}
-	public addAssertion(assertion: Assertion) {}
-	get isEmpty(): boolean {
-		return true
-	}
+export const NullObjectTrace = {
+	isEmpty: true,
 
-	public toObject(): CompositeTraceData {
+	addError(error: ErrorLike) {},
+	async addNetworkTrace(trace: NetworkTraceData): Promise<void> {},
+	addScreenshot(screenshotURL: string) {},
+	addAssertion(assertion: Assertion) {},
+
+	toObject(): CompositeTraceData {
 		return {
 			op: 'object',
 			label: '',
@@ -39,7 +38,7 @@ export class NullObjectTrace {
 			assertions: [],
 			objectTypes: [],
 		}
-	}
+	},
 }
 
 export class ObjectTrace {

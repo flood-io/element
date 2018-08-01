@@ -19,7 +19,6 @@ import { Browser as BrowserInterface, EvaluateFn, NullableLocatable } from '../.
 import { PuppeteerClient, WorkRoot } from '../types'
 import { join, resolve } from 'path'
 import * as cuid from 'cuid'
-import { wrapWithCallbacks } from '../utils/Decorators'
 import { Key } from '../page/Enums'
 import { readFileSync } from 'fs'
 import * as termImg from 'term-img'
@@ -63,15 +62,37 @@ export function locatableToLocator(el: NullableLocatable): Locator {
 	}
 }
 
-export class Browser implements BrowserInterface {
+/**
+ * Defines a Function Decorator which wraps a method with class local before and after
+ */
+function wrapWithCallbacks() {
+	return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+		let originalFn = descriptor.value
+
+		descriptor.value = async function(...args: any[]) {
+			let ret
+
+			if (this.beforeFunc instanceof Function) await this.beforeFunc(this, propertyKey)
+
+			ret = await originalFn.apply(this, args)
+			if (this.afterFunc instanceof Function) await this.afterFunc(this, propertyKey)
+			return ret
+		}
+
+		return descriptor
+	}
+}
+
+export class Browser<T> implements BrowserInterface {
 	public screenshots: string[]
+	customContext: T
 
 	constructor(
 		public workRoot: WorkRoot,
 		private client: PuppeteerClient,
 		public settings: ConcreteTestSettings,
-		private beforeFunc: (name: string) => Promise<void> = async () => {},
-		private afterFunc: (name: string) => Promise<void> = async () => {},
+		private beforeFunc: (b: Browser<T>, name: string) => Promise<void> = async () => {},
+		private afterFunc: (b: Browser<T>, name: string) => Promise<void> = async () => {},
 		private activeFrame?: Frame | null,
 	) {
 		this.beforeFunc && this.afterFunc

@@ -42,6 +42,10 @@ export default class Recorder {
 		}
 	}
 
+	public async sync() {
+		await this.pendingTaskQueue.chain
+	}
+
 	public async recordRequest(payload: any) {
 		// let pageRef = this.nextPageId
 		let pageRef = payload.frameId

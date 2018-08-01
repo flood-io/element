@@ -17,12 +17,10 @@ import {
 	DEFAULT_SETTINGS,
 	ConcreteTestSettings,
 } from './Test'
-import { TestData } from '../test-data/TestData'
-import { TestDataLoaders } from '../test-data/TestDataLoaders'
 import { expect } from '../utils/Expect'
+import { Step, StepFunction, normalizeStepOptions } from './Step'
 
 const debug = debugFactory('element:vm')
-const debugCallback = debugFactory('element:vm:callback')
 
 export type Opaque = {} | void | null | undefined
 export type Factory<T> = new (...args: Opaque[]) => T
@@ -41,25 +39,6 @@ export enum CallbackQueue {
 
 export function unreachable(message = 'unreachable'): Error {
 	return new Error(message)
-}
-
-async function runCallback(queueName: string, ...args: any[]) {
-	let callbacks = expect<CallbackFunc[]>(this.callbacks.get(queueName), 'Unknown queue')
-	debugCallback(`Run callbacks: ${queueName} with ${args}`)
-	for (const fn of callbacks) {
-		await fn(...args)
-	}
-}
-
-function normalizeStepOptions(stepOpts: StepOptions): StepOptions {
-	// Convert user inputted seconds to milliseconds
-	if (typeof stepOpts.waitTimeout === 'number' && stepOpts.waitTimeout > 1e3) {
-		stepOpts.waitTimeout = stepOpts.waitTimeout / 1e3
-	} else if (Number(stepOpts.waitTimeout) === 0) {
-		stepOpts.waitTimeout = 30
-	}
-
-	return stepOpts
 }
 
 function normalizeSettings(settings: TestSettings): TestSettings {
@@ -87,14 +66,6 @@ function normalizeSettings(settings: TestSettings): TestSettings {
 	return settings
 }
 
-export interface Step {
-	fn: StepFunction
-	name: string
-	stepOptions: StepOptions
-}
-
-export type StepFunction = (driver: Browser, data?: any) => Promise<void>
-
 /**
  * VM is a simpler implementation of the previous stack based VM.
  *
@@ -115,20 +86,13 @@ export class VM {
 	public currentBrowser: Browser
 
 	private vm: NodeVM
-	private settings: ConcreteTestSettings = DEFAULT_SETTINGS
-	private rawSettings: ConcreteTestSettings = DEFAULT_SETTINGS
-	private callbacks: Map<string, CallbackFunc[]> = new Map()
 	private skipped: string[] = []
 	private errors: Error[] = []
 	private skipAll: boolean = false
-	private testData: TestData<any>
-	private testDataLoaders: TestDataLoaders<any>
 
 	constructor(private runEnv: RuntimeEnvironment, private script: ITestScript) {
 		this.callbacks = new Map()
 		Object.values(CallbackQueue).forEach(name => this.callbacks.set(name, []))
-		this.testDataLoaders = new TestDataLoaders(runEnv.workRoot)
-		this.testData = this.testDataLoaders.fromData([{}]).circular()
 	}
 
 	private get hasErrors() {
@@ -157,16 +121,7 @@ export class VM {
 		})
 	}
 
-	public on(queueName: string, callbackFn: CallbackFunc) {
-		let queue = expect(this.callbacks.get(queueName), `Unknown callback queue: ${queueName}`)
-		queue.push(callbackFn)
-	}
-
-	public off(queueName: string) {
-		this.callbacks.delete(queueName)
-	}
-
-	public attachReporterToConsole(reporter: IReporter): void {
+	public bindReporter(reporter: IReporter): void {
 		// hack because the vm2 typings don't include their EventEmitteryness
 		let eevm = (this.vm as any) as EventEmitter
 		;['log', 'info', 'error', 'dir', 'trace'].forEach(key =>
@@ -176,11 +131,11 @@ export class VM {
 		)
 	}
 
-	public evaluate(): ConcreteTestSettings {
+	public evaluate(): { settings: ConcreteTestSettings; steps: Step[] } {
 		// Clear existing steps
-		this.steps = []
+		const steps: Step[] = []
 
-		this.rawSettings = DEFAULT_SETTINGS
+		let rawSettings = DEFAULT_SETTINGS
 
 		const ENV = this.runEnv.stepEnv()
 
@@ -198,11 +153,11 @@ export class VM {
 			}
 
 			console.assert(typeof name === 'string', 'Step name must be a string')
-			if (this.steps.find(({ name: stepName }) => name === stepName)) {
+			if (steps.find(({ name: stepName }) => name === stepName)) {
 				console.warn(`Duplicate step name: ${name}, skipping step`)
 				return
 			}
-			this.steps.push({ fn, name, stepOptions })
+			steps.push({ fn, name, stepOptions })
 		}
 
 		let vmScope = this
@@ -224,7 +179,7 @@ export class VM {
 
 		let context = {
 			setup: settings => {
-				this.rawSettings = { ...{}, ...settings, ...this.rawSettings }
+				rawSettings = { ...{}, ...settings, ...rawSettings }
 			},
 
 			ENV,
@@ -248,14 +203,14 @@ export class VM {
 
 		this.createVirtualMachine(context)
 
-		this.rawSettings.name = this.script.testName
-		this.rawSettings.description = this.script.testDescription
+		rawSettings.name = this.script.testName
+		rawSettings.description = this.script.testDescription
 
 		let result = this.vm.run(this.script.vmScript)
 
 		let { settings } = result
 		if (settings) {
-			this.rawSettings = { ...this.rawSettings, ...settings }
+			rawSettings = { ...rawSettings, ...settings }
 		}
 
 		let testFn = expect(result.default, 'Test script must export a default function')
@@ -265,80 +220,12 @@ export class VM {
 		 */
 		testFn.apply(null, [step])
 
-		this.settings = {
+		settings = {
 			...DEFAULT_SETTINGS,
-			...normalizeSettings(this.rawSettings),
+			...normalizeSettings(rawSettings),
 		}
 
-		return this.settings
-	}
-
-	public async execute(driver: PuppeteerClient): Promise<any> {
-		this.callDuration = 0
-		this.skipped = []
-		this.errors = []
-
-		debug('execute() start')
-
-		try {
-			let browser = new Browser(
-				this.runEnv.workRoot,
-				driver,
-				this.settings,
-				this.willRunCommand.bind(this),
-				this.didRunCommand.bind(this),
-			)
-
-			this.currentBrowser = browser
-			debug('running this.before(browser)')
-			await this.before(browser)
-
-			// An error occurred during browser setup
-			// this could be a runtime bug in the flood-chrome code
-			if (this.hasErrors) throw this.errors[0]
-
-			debug('Feeding data')
-			let testDataRecord = this.testData.feed()
-			if (testDataRecord === null) {
-				throw new Error('Test data exhausted, consider making it circular?')
-				// console.log('Test data exhausted, consider making it circular?')
-			} else {
-				// console.log(JSON.stringify(testDataRecord))
-				debug(JSON.stringify(testDataRecord))
-			}
-
-			debugger
-
-			debug('running steps')
-			for (let step of this.steps) {
-				if (this.hasErrors || this.skipAll) {
-					debug(`Skipping step: ${step.name}`)
-					await this.willRunStep(step.name, step.stepOptions)
-					this.skipped.push(step.name)
-					await this.didRunStep(step.name, browser.fetchScreenshots())
-					continue
-				}
-
-				await this.willRunStep(step.name, step.stepOptions)
-				let startTime = new Date().valueOf()
-				try {
-					debug(`Run step: ${step.name} ${step.fn.toString()}`)
-
-					browser.settings = { ...this.settings, ...step.stepOptions }
-					await step.fn.call(null, browser, testDataRecord)
-				} catch (err) {
-					// console.log(`Error in step "${step.name}"`, err.stack)
-					this.errors.push(err)
-				}
-				let duration = new Date().valueOf() - startTime
-				this.callDuration += duration
-
-				await this.didRunStep(step.name, browser.fetchScreenshots())
-			}
-		} catch (err) {
-			// TODO: Cancel future steps if we reach here
-			throw err
-		}
+		return { settings, steps }
 	}
 
 	/**

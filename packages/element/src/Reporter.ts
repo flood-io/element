@@ -1,4 +1,4 @@
-import { Assertion } from './runtime/Test'
+import { Assertion } from './runtime/Assertion'
 import { TestScriptError } from './TestScript'
 
 export type MeasurementKind =

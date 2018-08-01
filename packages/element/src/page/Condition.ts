@@ -1,6 +1,6 @@
 import { PageFnOptions, Page, EvaluateFn, Frame } from 'puppeteer'
 import { Locator } from './Locator'
-import { DEFAULT_SETTINGS, ConcreteTestSettings } from '../runtime/Test'
+import { DEFAULT_SETTINGS } from '../runtime/Settings'
 import { NullableLocatable } from '../../index'
 import * as recast from 'recast'
 import * as prettier from 'prettier'
@@ -8,11 +8,15 @@ import { locatableToLocator } from '../runtime/Browser'
 // import * as debugFactory from 'debug'
 // const debug = debugFactory('element:page:condition')
 
+interface ConditionSettings {
+	waitTimeout: number
+}
+
 export abstract class Condition {
 	public pageFuncArgs: any[]
 	public hasWaitFor = true
 	// TODO decouple this hardcoding
-	public settings: ConcreteTestSettings = DEFAULT_SETTINGS
+	public settings: ConditionSettings = DEFAULT_SETTINGS
 	public locator: Locator
 
 	constructor(

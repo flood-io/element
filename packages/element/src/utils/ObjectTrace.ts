@@ -2,7 +2,7 @@ import * as cuid from 'cuid'
 import { promisify } from 'util'
 import { writeFile } from 'fs'
 import { WorkRoot } from '../types'
-import { Assertion } from '../runtime/Test'
+import { Assertion } from '../runtime/Assertion'
 import { NetworkTraceData, CompositeTraceData } from '../Reporter'
 
 const writeFileAsync = promisify(writeFile)

@@ -1,69 +1,29 @@
 import { NodeVM } from 'vm2'
-import { Browser } from './Browser'
 import { Until } from '../page/Until'
 import { By } from '../page/By'
-import { PuppeteerClient, RuntimeEnvironment } from '../types'
+import { RuntimeEnvironment } from '../types'
 import { MouseButtons, Device, Key, userAgents } from '../page/Enums'
-import * as debugFactory from 'debug'
-import { TestSettings, StepOptions, Flood } from '../../index'
+import { StepOptions, Flood } from '../../index'
 import * as Faker from 'faker'
 import * as nodeAssert from 'assert'
 import { IReporter } from '../Reporter'
 import { EventEmitter } from 'events'
 import { ITestScript } from '../TestScript'
-import {
-	DEFAULT_ACTION_WAIT_SECONDS,
-	DEFAULT_STEP_WAIT_SECONDS,
-	DEFAULT_SETTINGS,
-	ConcreteTestSettings,
-} from './Test'
+import { DEFAULT_SETTINGS, ConcreteTestSettings, normalizeSettings } from './Settings'
 import { expect } from '../utils/Expect'
 import { Step, StepFunction, normalizeStepOptions } from './Step'
+import { TestData } from '../test-data/TestData'
+import Test from './Test'
 
-const debug = debugFactory('element:vm')
+// import * as debugFactory from 'debug'
+// const debug = debugFactory('element:vm')
 
 export type Opaque = {} | void | null | undefined
 export type Factory<T> = new (...args: Opaque[]) => T
 export type CallbackFunc = (...args: Opaque[]) => void | Promise<void>
 
-export enum CallbackQueue {
-	PrepareStep = 'prepareStep',
-	BeforeStep = 'beforeStep',
-	AfterStep = 'afterStep',
-	StepSuccess = 'stepSuccess',
-	BeforeAction = 'beforeAction',
-	AfterAction = 'afterAction',
-	Error = 'error',
-	Skip = 'skip',
-}
-
 export function unreachable(message = 'unreachable'): Error {
 	return new Error(message)
-}
-
-function normalizeSettings(settings: TestSettings): TestSettings {
-	// Convert user inputted seconds to milliseconds
-	if (typeof settings.waitTimeout === 'number' && settings.waitTimeout > 1e3) {
-		settings.waitTimeout = settings.waitTimeout / 1e3
-	} else if (Number(settings.waitTimeout) === 0) {
-		settings.waitTimeout = 30
-	}
-
-	// Ensure action delay is stored in seconds (assuming any value greater than 60 seconds would be ms)
-	if (typeof settings.actionDelay === 'number' && settings.actionDelay > 60) {
-		settings.actionDelay = settings.actionDelay / 1e3
-	} else if (Number(settings.actionDelay) === 0) {
-		settings.actionDelay = DEFAULT_ACTION_WAIT_SECONDS
-	}
-
-	// Ensure step delay is stored in seconds
-	if (typeof settings.stepDelay === 'number' && settings.stepDelay > 60) {
-		settings.stepDelay = settings.stepDelay / 1e3
-	} else if (Number(settings.stepDelay) === 0) {
-		settings.actionDelay = DEFAULT_STEP_WAIT_SECONDS
-	}
-
-	return settings
 }
 
 /**
@@ -81,27 +41,9 @@ function normalizeSettings(settings: TestSettings): TestSettings {
  * @template Specifier
  */
 export class VM {
-	public callDuration: number = 0
-	public steps: Step[] = []
-	public currentBrowser: Browser
-
 	private vm: NodeVM
-	private skipped: string[] = []
-	private errors: Error[] = []
-	private skipAll: boolean = false
 
-	constructor(private runEnv: RuntimeEnvironment, private script: ITestScript) {
-		this.callbacks = new Map()
-		Object.values(CallbackQueue).forEach(name => this.callbacks.set(name, []))
-	}
-
-	private get hasErrors() {
-		return this.errors.length > 0
-	}
-
-	public get stepNames(): string[] {
-		return this.steps.map(s => s.name)
-	}
+	constructor(private runEnv: RuntimeEnvironment, private script: ITestScript) {}
 
 	private createVirtualMachine(floodElementActual) {
 		this.vm = new NodeVM({
@@ -131,7 +73,7 @@ export class VM {
 		)
 	}
 
-	public evaluate(): { settings: ConcreteTestSettings; steps: Step[] } {
+	public evaluate(test: Test): { settings: ConcreteTestSettings; steps: Step[] } {
 		// Clear existing steps
 		const steps: Step[] = []
 
@@ -139,6 +81,7 @@ export class VM {
 
 		const ENV = this.runEnv.stepEnv()
 
+		// closes over steps: Step[]
 		const step = (...args: any[]) => {
 			// name: string, fn: (driver: Browser) => Promise<void>
 			let name: string,
@@ -160,15 +103,14 @@ export class VM {
 			steps.push({ fn, name, stepOptions })
 		}
 
-		let vmScope = this
-
+		// closes over test
 		function createSuite(): Flood.ISuiteDefinition {
 			let suite = function(callback) {
 				return callback
 			} as Flood.ISuiteDefinition
 			suite.withData = <T>(data: TestData<T>, callback) => {
-				vmScope.testData = expect(data, 'TestData is not present')
-				vmScope.testData.setInstanceID(ENV.SEQUENCE.toString())
+				test.testData = expect(data, 'TestData is not present')
+				test.testData.setInstanceID(ENV.SEQUENCE.toString())
 				return callback
 			}
 
@@ -192,7 +134,7 @@ export class VM {
 			Until,
 			Device,
 			MouseButtons,
-			TestData: this.testDataLoaders,
+			TestData: test.testDataLoaders,
 			Key,
 			userAgents,
 
@@ -232,7 +174,7 @@ export class VM {
 	 * Utility method for running a step by name
 	 * @param name
 	 */
-	public async runStepByName<T>(driver: PuppeteerClient, name: string): Promise<T> {
+	/* public async runStepByName<T>(driver: PuppeteerClient, name: string): Promise<T> {
 		console.assert(
 			arguments.length === 2,
 			'runStepByName(driver, stepName: string) requires a driver as first argument',
@@ -247,87 +189,5 @@ export class VM {
 		)
 		browser.settings = { ...this.settings, ...step.stepOptions }
 		return step.fn.call(null, browser)
-	}
-
-	private async willRunStep(name: string, stepOpts: StepOptions): Promise<void> {
-		return runCallback.apply(this, [CallbackQueue.BeforeStep, name, stepOpts])
-	}
-
-	public async loadTestData() {
-		debug('Loading test data...')
-		await this.testData.load()
-	}
-
-	/**
-	 * Before hook which runs before all test operations, for setting up environment
-	 *
-	 * This is called by execute()
-	 */
-	public async before(browser: Browser): Promise<void> {
-		// TODO: Test these hooks!
-		if (this.settings.clearCache) await browser.clearBrowserCache()
-		if (this.settings.clearCookies) await browser.clearBrowserCookies()
-		if (this.settings.device) await browser.emulateDevice(this.settings.device)
-		if (this.settings.userAgent) await browser.setUserAgent(this.settings.userAgent)
-		if (this.settings.disableCache) await browser.setCacheDisabled(true)
-
-		this.skipAll = false
-		this.skipped = []
-		// NOTE that browser itself can add errors, so we shouldn't set this.errors=[] here
-	}
-
-	private async didRunStep(name: string, screenshots: string[]): Promise<void> {
-		if (this.skipped.length > 0) {
-			debug('didRunStep - skipped', name)
-			try {
-				// Process skip callbacks
-				for (const name of this.skipped) {
-					await this.didSkip(name)
-				}
-				this.skipped = []
-			} catch (err) {
-				console.error(`Error in skip callbacks`, err)
-			}
-		} else if (this.hasErrors) {
-			debug('didRunStep - errors', name)
-			this.skipAll = true
-			try {
-				// Process error callbacks
-				for (const err of this.errors) {
-					await this.didError(err, name)
-				}
-
-				this.errors = []
-			} catch (err) {
-				console.error(`Error in error callbacks`, err)
-			}
-		} else {
-			debug('didRunStep - succeeded', name)
-			try {
-				await this.didSucceed(name)
-			} catch (err) {
-				console.error(`Error in stepDidSucceed:`, err)
-			}
-		}
-		return runCallback.apply(this, [CallbackQueue.AfterStep, name, screenshots])
-	}
-
-	private async willRunCommand(name: string): Promise<void> {
-		return runCallback.apply(this, [CallbackQueue.BeforeAction, name])
-	}
-
-	private async didRunCommand(name: string): Promise<void> {
-		return runCallback.apply(this, [CallbackQueue.AfterAction, name])
-	}
-
-	private async didError(err: Error, name: string) {
-		return runCallback.apply(this, [CallbackQueue.Error, err, name])
-	}
-	private async didSucceed(name: string): Promise<void> {
-		return runCallback.apply(this, [CallbackQueue.StepSuccess, name])
-	}
-
-	private async didSkip(name: string) {
-		return runCallback.apply(this, [CallbackQueue.Skip, name])
-	}
+	} */
 }

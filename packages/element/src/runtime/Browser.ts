@@ -22,7 +22,7 @@ import * as cuid from 'cuid'
 import { Key } from '../page/Enums'
 import { readFileSync } from 'fs'
 import * as termImg from 'term-img'
-import { ConcreteTestSettings } from './Test'
+import { ConcreteTestSettings } from './Settings'
 
 // const debug = debugFactory('element:browser')
 const debugScreenshot = debugFactory('element:browser:screenshot')

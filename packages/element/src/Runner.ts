@@ -26,7 +26,7 @@ export default class Runner implements ITestRunner {
 	async shutdown(): Promise<void> {
 		this.interrupts++
 		this.logger.info('Shutting down...')
-		await this.test.after()
+		await this.test.shutdown()
 		clearTimeout(this.timeout)
 		this.testContinue = false
 		this.logger.debug('Closing driver: Google Chrome...')
@@ -76,12 +76,6 @@ export default class Runner implements ITestRunner {
 				this.logger.debug(`Settings: ${JSON.stringify(settings, null, 2)}`)
 			}
 
-			// for (let [k, v] of Object.entries(settings)) {
-			// 	this.logger.debug(`Setting: ${k}: ${v}`)
-			// }
-
-			await test.before()
-
 			const testLoopContinue = () => {
 				if (this.testContinue === false) return
 				this.testContinue = this.interrupts === 0
@@ -113,7 +107,7 @@ export default class Runner implements ITestRunner {
 			}
 
 			this.logger.info(`Test completed after ${iterations} iterations`)
-			await test.after()
+			await test.shutdown()
 			return
 		} catch (err) {
 			if (err instanceof TestScriptError) {
@@ -126,7 +120,7 @@ export default class Runner implements ITestRunner {
 			this.logger.debug(err.stack)
 			// }
 
-			await test.after()
+			await test.shutdown()
 			await this.shutdown()
 		}
 	}

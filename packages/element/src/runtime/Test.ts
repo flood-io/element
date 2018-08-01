@@ -7,7 +7,7 @@ import { IReporter } from './../Reporter'
 import { NullReporter } from './../reporter/Null'
 import { ObjectTrace } from '../utils/ObjectTrace'
 
-import { TestObserver, ComposedTestObserver } from './test-observers/Observer'
+import { TestObserver, NullTestObserver } from './test-observers/Observer'
 import TimingObserver from './test-observers/Timing'
 import TracingObserver from './test-observers/Tracing'
 
@@ -15,8 +15,12 @@ import { Step } from './Step'
 
 import { PuppeteerClient, RuntimeEnvironment } from '../types'
 import { ITestScript } from '../TestScript'
-import { TestSettings, ResponseTiming, ConsoleMethod } from '../../index'
-import CustomDeviceDescriptors from '../utils/CustomDeviceDescriptors'
+import { ScreenshotOptions } from '../../index'
+import {
+	ConcreteTestSettings,
+	DEFAULT_ACTION_WAIT_SECONDS,
+	DEFAULT_STEP_WAIT_SECONDS,
+} from './Settings'
 // import { ScreenshotOptions } from 'puppeteer'
 
 import { TestData } from '../test-data/TestData'
@@ -25,55 +29,14 @@ import { TestDataLoaders } from '../test-data/TestDataLoaders'
 // import { readdirSync } from 'fs'
 import * as debugFactory from 'debug'
 
-// Waits is seconds
-export const DEFAULT_STEP_WAIT_SECONDS = 5
-export const DEFAULT_ACTION_WAIT_SECONDS = 0.5
-
-export interface ConcreteTestSettings extends TestSettings {
-	duration: number
-	loopCount: number
-	actionDelay: number
-	stepDelay: number
-	screenshotOnFailure: boolean
-	clearCookies: boolean
-	clearCache: boolean
-	waitTimeout: number
-	responseTimeMeasurement: ResponseTiming
-	consoleFilter: ConsoleMethod[]
-	userAgent: string
-	device: string
-	ignoreHTTPSErrors: boolean
-}
-
-export const DEFAULT_SETTINGS: ConcreteTestSettings = {
-	duration: -1,
-	loopCount: Infinity,
-	actionDelay: 2,
-	stepDelay: 6,
-	screenshotOnFailure: true,
-	clearCookies: true,
-	clearCache: false,
-	waitTimeout: 30,
-	responseTimeMeasurement: 'step',
-	consoleFilter: [],
-	userAgent: CustomDeviceDescriptors['Chrome Desktop Large'].userAgent,
-	device: 'Chrome Desktop Large',
-	ignoreHTTPSErrors: false,
-}
-
 const debug = debugFactory('element:test')
-
-export interface Assertion {
-	message: string
-	assertionName: string
-	stack?: string[]
-	isFailure: boolean
-}
 
 export default class Test {
 	public vm: VM
 	public settings: ConcreteTestSettings
 	public steps: Step[]
+
+	public runningBrowser: Browser<Step> | null
 
 	public networkRecorder: NetworkRecorder
 	public observer: Observer
@@ -87,18 +50,22 @@ export default class Test {
 
 	private driver: PuppeteerClient
 
-	private testData: TestData<any>
-	private testDataLoaders: TestDataLoaders<any>
+	public testData: TestData<any>
+	public testDataLoaders: TestDataLoaders<any>
 
 	get skipping(): boolean {
 		return this.failed
 	}
 
 	constructor(private runEnv: RuntimeEnvironment, public reporter: IReporter = new NullReporter()) {
-		this.testObserver = new ComposedTestObserver(new TimingObserver(), new TracingObserver())
+		this.testObserver = new TimingObserver(new TracingObserver(new NullTestObserver()))
 
 		this.testDataLoaders = new TestDataLoaders(runEnv.workRoot)
 		this.testData = this.testDataLoaders.fromData([{}]).circular()
+	}
+
+	public async shutdown() {
+		await this.testObserver.after(this)
 	}
 
 	public enqueueScript(script: ITestScript): ConcreteTestSettings {
@@ -107,7 +74,7 @@ export default class Test {
 		this.vm = new VM(this.runEnv, script)
 
 		try {
-			let { settings, steps } = this.vm.evaluate()
+			let { settings, steps } = this.vm.evaluate(this)
 			this.settings = settings
 			this.steps = steps
 
@@ -145,7 +112,7 @@ export default class Test {
 		// let errors: Error[] = []
 
 		debug('run() start')
-		await this.vm.loadTestData()
+		await this.testData.load()
 
 		try {
 			const browser = new Browser<Step>(
@@ -155,6 +122,14 @@ export default class Test {
 				this.willRunCommand.bind(this),
 				this.didRunCommand.bind(this),
 			)
+
+			this.runningBrowser = browser
+
+			if (this.settings.clearCache) await browser.clearBrowserCache()
+			if (this.settings.clearCookies) await browser.clearBrowserCookies()
+			if (this.settings.device) await browser.emulateDevice(this.settings.device)
+			if (this.settings.userAgent) await browser.setUserAgent(this.settings.userAgent)
+			if (this.settings.disableCache) await browser.setCacheDisabled(true)
 
 			await this.observer.attach()
 
@@ -187,6 +162,14 @@ export default class Test {
 		await this.testObserver.after(this)
 	}
 
+	get currentURL(): string {
+		if (this.runningBrowser == null) {
+			return ''
+		} else {
+			return this.runningBrowser.url
+		}
+	}
+
 	async runStep(browser: Browser<Step>, step: Step, testDataRecord: any) {
 		let error: Error | null = null
 		await this.testObserver.beforeStep(this, step)
@@ -209,16 +192,55 @@ export default class Test {
 		}
 	}
 
+	/* 
+	private async didRunStep(name: string, screenshots: string[]): Promise<void> {
+		if (this.skipped.length > 0) {
+			debug('didRunStep - skipped', name)
+			try {
+				// Process skip callbacks
+				for (const name of this.skipped) {
+					await this.didSkip(name)
+				}
+				this.skipped = []
+			} catch (err) {
+				console.error(`Error in skip callbacks`, err)
+			}
+		} else if (this.hasErrors) {
+			debug('didRunStep - errors', name)
+			this.skipAll = true
+			try {
+				// Process error callbacks
+				for (const err of this.errors) {
+					await this.didError(err, name)
+				}
+
+				this.errors = []
+			} catch (err) {
+				console.error(`Error in error callbacks`, err)
+			}
+		} else {
+			debug('didRunStep - succeeded', name)
+			try {
+				await this.didSucceed(name)
+			} catch (err) {
+				console.error(`Error in stepDidSucceed:`, err)
+			}
+		}
+		return runCallback.apply(this, [CallbackQueue.AfterStep, name, screenshots])
+	}
+ */
+
 	async runStepAsSkipped(step: Step) {
 		debug(`Skipping step: ${step.name}`)
 		await this.testObserver.beforeStep(this, step)
 		// this.skipped.push(step.name)
 		await this.testObserver.afterStep(this, step)
+		// XXX run all skips at end?
 		await this.testObserver.onStepSkipped(this, step)
 	}
 
 	public get stepNames(): string[] {
-		return this.vm.stepNames
+		return this.steps.map(s => s.name)
 	}
 
 	public async doStepDelay() {
@@ -254,13 +276,14 @@ export default class Test {
 		this.testObserver.afterStepAction(this, browser.customContext, command)
 	}
 
-	// private async takeScreenshot(options?: ScreenshotOptions): Promise<string[]> {
-	// if (this.vm.currentBrowser) {
-	// await this.vm.currentBrowser.takeScreenshot(options)
-	// return this.vm.currentBrowser.fetchScreenshots()
-	// }
-	// return []
-	// }
+	public async takeScreenshot(options?: ScreenshotOptions): Promise<string[]> {
+		if (this.runningBrowser === null) {
+			return []
+		}
+
+		await this.runningBrowser.takeScreenshot(options)
+		return this.runningBrowser.fetchScreenshots()
+	}
 
 	// private get numberOfBrowsers() {
 	// try {

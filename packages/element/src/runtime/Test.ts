@@ -10,6 +10,7 @@ import { ObjectTrace } from '../utils/ObjectTrace'
 import { TestObserver, NullTestObserver } from './test-observers/Observer'
 import TimingObserver from './test-observers/Timing'
 import TracingObserver from './test-observers/Tracing'
+import LifecycleObserver from './test-observers/Lifecycle'
 
 import { Step } from './Step'
 
@@ -58,7 +59,9 @@ export default class Test {
 	}
 
 	constructor(private runEnv: RuntimeEnvironment, public reporter: IReporter = new NullReporter()) {
-		this.testObserver = new TimingObserver(new TracingObserver(new NullTestObserver()))
+		this.testObserver = new TimingObserver(
+			new LifecycleObserver(new TracingObserver(new NullTestObserver())),
+		)
 
 		this.testDataLoaders = new TestDataLoaders(runEnv.workRoot)
 		this.testData = this.testDataLoaders.fromData([{}]).circular()

@@ -1,7 +1,7 @@
 import { expect } from '../../utils/Expect'
 import Test from '../Test'
 import { Step } from '../Step'
-import { ComposableTestObserver, NextFunction } from './Observer'
+import { TestObserver } from './Observer'
 import NetworkRecorder from '../../network/Recorder'
 import { CompoundMeasurement } from '../../Reporter'
 import { ResponseTiming } from '../../../index'
@@ -69,27 +69,27 @@ class Timing {
 	}
 }
 
-export default class TimingObserver implements ComposableTestObserver {
+export default class TimingObserver implements TestObserver {
 	private passed: number = 0
 	private failed: number = 0
 	private t: Timing = new Timing()
 
-	constructor() {}
+	constructor(private next: TestObserver) {}
 
 	/**
 	 * Public callback before all steps are run
 	 *
 	 * @memberof Test
 	 */
-	async before(test: Test, next: NextFunction): Promise<void> {
-		return next()
+	async before(test: Test): Promise<void> {
+		return this.next.before(test)
 	}
 
-	public async after(test: Test, next: NextFunction): Promise<void> {
-		return next()
+	public async after(test: Test): Promise<void> {
+		return this.next.after(test)
 	}
 
-	async beforeStep(test: Test, step: Step, next: NextFunction) {
+	async beforeStep(test: Test, step: Step) {
 		this.t.reset()
 		this.passed = 0
 		this.failed = 0
@@ -106,34 +106,34 @@ export default class TimingObserver implements ComposableTestObserver {
 		reporter.addMeasurement('passed', 1, name)
 		reporter.addMeasurement('failed', 0, name)
 
-		await next()
+		await this.next.beforeStep(test, step)
 
 		this.t.end('beforeStep')
 		this.t.start('step')
 		debug(`Before step: ${name}`)
 	}
 
-	async afterStep(test: Test, step: Step, next: NextFunction) {
+	async afterStep(test: Test, step: Step) {
 		this.t.end('step')
 		this.t.start('afterStep')
 
 		await test.syncNetworkRecorder()
 
-		await next()
+		await this.next.afterStep(test, step)
 
-		debug(`After step: ${name}`)
+		debug(`After step: ${step.name}`)
 
 		await this.reportResult(test, step)
 
 		this.t.end('afterStep')
 	}
 
-	async onStepPassed(test: Test, step: Step, next: NextFunction): Promise<void> {
+	async onStepPassed(test: Test, step: Step): Promise<void> {
 		this.passed++
-		return next()
+		return this.next.onStepPassed(test, step)
 	}
 
-	async onStepError(test: Test, step: Step, err: Error, next: NextFunction) {
+	async onStepError(test: Test, step: Step, err: Error) {
 		debug('stepFailure', step.name)
 
 		this.failed++
@@ -146,37 +146,37 @@ export default class TimingObserver implements ComposableTestObserver {
 			test.reporter.testStepError(test.script.liftError(err))
 		}
 
-		return next()
+		return this.next.onStepError(test, step, err)
 	}
 
-	async beforeStepAction(
-		test: Test,
-		step: Step,
-		action: string,
-		next: NextFunction,
-	): Promise<void> {
+	async beforeStepAction(test: Test, step: Step, action: string): Promise<void> {
 		await this.t.measureThinkTime('step', async () => {
 			debug(`Before action: '${action}()' waiting on networkRecorder sync`)
 			await test.syncNetworkRecorder()
-			await next()
+			await this.next.beforeStepAction(test, step, action)
 		})
 	}
 
-	async afterStepAction(test: Test, step: Step, action: string, next: NextFunction): Promise<void> {
+	async afterStepAction(test: Test, step: Step, action: string): Promise<void> {
 		await this.t.measureThinkTime('step', async () => {
 			debug(`After action: ${action}`)
 			// Force reporting concurrency to ensure steps which take >15s don't skew metrics
 			// this.reporter.addMeasurement('concurrency', this.numberOfBrowsers, name)
-			await next()
+			await this.next.afterStepAction(test, step, action)
 		})
 	}
 
-	async onStepSkipped(test: Test, step: Step, next: NextFunction) {
+	async onStepSkipped(test: Test, step: Step) {
 		debug(`Skipped step: ${step.name}`)
-		return next()
+		return this.next.onStepSkipped(test, step)
 	}
 
 	private async reportResult(test: Test, step: Step): Promise<void> {
+		if (test.runningBrowser === null) {
+			return
+		}
+		const browser = test.runningBrowser
+
 		const reporter = test.reporter
 		const name = step.name
 
@@ -199,8 +199,8 @@ export default class TimingObserver implements ComposableTestObserver {
 		// console.log(`Report: Document Latency: ${documentLatency}ms`)
 
 		// TODO decouple
-		let tti = await test.vm.currentBrowser.interactionTiming()
-		let performanceTiming = await test.vm.currentBrowser.performanceTiming()
+		let tti = await browser.interactionTiming()
+		let performanceTiming = await browser.performanceTiming()
 
 		let browserPerformanceTiming: CompoundMeasurement = {
 			time_to_first_interactive: tti,
@@ -208,7 +208,7 @@ export default class TimingObserver implements ComposableTestObserver {
 			dom_complete: performanceTiming.domComplete - performanceTiming.navigationStart,
 		}
 
-		let paintTimingEntries = await test.vm.currentBrowser.paintTiming()
+		let paintTimingEntries = await browser.paintTiming()
 		paintTimingEntries.forEach(entry => {
 			if (measurementKeysForDOM[entry.name]) {
 				browserPerformanceTiming[measurementKeysForDOM[entry.name]] = Math.round(entry.startTime)

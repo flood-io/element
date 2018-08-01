@@ -1,66 +1,87 @@
 import Test from '../Test'
 import { Step } from '../Step'
-import { NoOpTestObserver, NextFunction } from './Observer'
+import { NoOpTestObserver, TestObserver } from './Observer'
 import { serializeResponseHeaders, serializeRequestHeaders } from '../../utils/headerSerializer'
 import { NetworkTraceData } from '../../Reporter'
 import { IObjectTrace, NullObjectTrace } from '../../utils/ObjectTrace'
+import NetworkRecorder from '../../network/Recorder'
+import { Assertion } from '../Assertion'
+
+import * as debugFactory from 'debug'
+const debug = debugFactory('element:test:tracing')
 
 export default class TracingObserver extends NoOpTestObserver {
 	private trace: IObjectTrace = NullObjectTrace
 	private failed: number = 0
 
-	async beforeStep(test: Test, step: Step, next: NextFunction) {
-		this.failed = 0
-		this.trace = test.newTrace(step)
-		return next()
+	constructor(next: TestObserver) {
+		super(next)
 	}
 
-	async afterStep(test: Test, step: Step, next: NextFunction) {
-		screenshots.forEach(file => this.trace.addScreenshot(file))
+	async beforeStep(test: Test, step: Step) {
+		this.failed = 0
+		this.trace = test.newTrace(step)
+		return this.next.beforeStep(test, step)
+	}
 
-		await this.addNetworkTrace(name, test.networkRecorder)
+	async afterStep(test: Test, step: Step) {
+		// TODO
+		// screenshots.forEach(file => this.trace.addScreenshot(file))
+
+		await this.addNetworkTrace(test, step, test.networkRecorder)
+
+		await this.flushTrace(test, step)
+
+		return this.next.afterStep(test, step)
+	}
+
+	async flushTrace(test: Test, step: Step) {
 		// console.log('Trace', this.trace.toObject())
 		if (this.trace.isEmpty) {
 		} else {
-			await this.reporter.addTrace(this.trace.toObject(), name)
+			await test.reporter.addTrace(this.trace.toObject(), step.name)
 		}
+
+		this.trace = NullObjectTrace
 	}
 
 	async onStepError(test: Test, step: Step, err: Error) {
 		this.failed++
 
 		if (err.name.startsWith('AssertionError')) {
-			debug('stepFailure - assertion', stepName, err)
+			debug('stepFailure - assertion', step.name, err)
 			// Handles assertions from assert
 			let { message, stack } = err
 
 			let assertion: Assertion = {
 				assertionName: 'AssertionError',
 				message,
-				stack: this.script.filterAndUnmapStack(stack),
+				stack: test.script.filterAndUnmapStack(stack),
 				isFailure: true,
 			}
 
-			this.reporter.testAssertionError(this.script.liftError(err))
+			test.reporter.testAssertionError(test.script.liftError(err))
 			this.trace.addAssertion(assertion)
 		} else {
 			let errorPayload = {
 				message: err.message,
-				stack: this.script.filterAndUnmapStack(err.stack).join('\n'),
+				stack: test.script.filterAndUnmapStack(err.stack).join('\n'),
 			}
 
 			this.trace.addError(errorPayload)
 		}
 
 		// Take a screenshot on failure
-		// TODO
-		if (this.settings.screenshotOnFailure) {
-			let screenshots = await this.takeScreenshot()
+		// TODO add screenshots to step
+		if (test.settings.screenshotOnFailure) {
+			let screenshots = await test.takeScreenshot()
 			screenshots.forEach(file => this.trace.addScreenshot(file))
 		}
+
+		return this.next.onStepError(test, step, err)
 	}
 
-	private async addNetworkTrace(label: string, networkRecorder: NetworkRecorder) {
+	private async addNetworkTrace(test: Test, step: Step, networkRecorder: NetworkRecorder) {
 		let [document] = networkRecorder.entriesForType('Document')
 
 		let responseHeaders = '',
@@ -70,7 +91,8 @@ export default class TracingObserver extends NoOpTestObserver {
 			endTime = new Date().valueOf(),
 			responseData = ''
 
-		let url = this.vm.currentBrowser.url
+		// TODO wrap
+		let url = test.currentURL
 
 		if (document) {
 			responseHeaders = serializeResponseHeaders(document)
@@ -90,7 +112,7 @@ export default class TracingObserver extends NoOpTestObserver {
 
 		let traceData: NetworkTraceData = {
 			op: 'network',
-			label,
+			label: step.name,
 			sampleCount: 1,
 			errorCount: this.failed,
 			startTime,

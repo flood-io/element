@@ -31,14 +31,19 @@ export type Locatable = Locator | string
 
 export type NullableLocatable = Locatable | null
 
-class BrowserError extends Error {
+class BrowserError {
 	errorDoc: string
-	constructor(message: string, doc: string, callContext?: string) {
+	originalError: Error
+	name: string
+	stack?: string
+	constructor(public message: string, doc: string, callContext?: string) {
+		debug('constructing browser error', ...arguments)
 		if (callContext !== undefined) {
-			message = `${callContext}: ${message}`
+			this.message = `${callContext}: ${this.message}`
 		}
-		super(message)
-		this.name = this.constructor.name
+		// super(message)
+		// Object.setPrototypeOf(this, BrowserError.prototype)
+		this.name = 'BrowserError' // this.constructor.name
 		this.errorDoc = doc
 	}
 }
@@ -90,20 +95,41 @@ export const getFrames = (childFrames: Frame[]): Frame[] => {
 	return Array.from(framesMap.values())
 }
 
+interface errorDef {
+	message: string
+	doc: string
+}
+
 /**
  * Defines a Function Decorator which wraps a method with class local before and after
  */
-function wrapWithCallbacks() {
+function wrapWithCallbacks<T>() {
 	return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
 		let originalFn = descriptor.value
 
 		descriptor.value = async function(...args: any[]) {
 			let ret
+			const browser: Browser<T> = this
 
-			if (this.beforeFunc instanceof Function) await this.beforeFunc(this, propertyKey)
+			// capture the stack trace at call-time
+			const calltimeError = new Error()
+			Error.captureStackTrace(calltimeError)
+			const calltimeStack = calltimeError.stack
 
-			ret = await originalFn.apply(this, args)
-			if (this.afterFunc instanceof Function) await this.afterFunc(this, propertyKey)
+			if (browser.beforeFunc instanceof Function) await browser.beforeFunc(browser, propertyKey)
+
+			try {
+				ret = await originalFn.apply(browser, args)
+			} catch (e) {
+				const callCtx = `browser.${propertyKey}()`
+				const errDef = browser.errorFor(propertyKey as keyof Browser<T>, e)
+				let newError = new BrowserError(errDef.message, errDef.doc, callCtx)
+				// attach the call-time stack
+				newError.stack = calltimeStack
+				newError.originalError = e
+				throw newError
+			}
+			if (browser.afterFunc instanceof Function) await browser.afterFunc(browser, propertyKey)
 			return ret
 		}
 
@@ -119,12 +145,30 @@ export class Browser<T> implements BrowserInterface {
 		public workRoot: WorkRoot,
 		private client: PuppeteerClient,
 		public settings: ConcreteTestSettings,
-		private beforeFunc: (b: Browser<T>, name: string) => Promise<void> = async () => {},
-		private afterFunc: (b: Browser<T>, name: string) => Promise<void> = async () => {},
+		public beforeFunc: (b: Browser<T>, name: string) => Promise<void> = async () => {},
+		public afterFunc: (b: Browser<T>, name: string) => Promise<void> = async () => {},
 		private activeFrame?: Frame | null,
 	) {
 		this.beforeFunc && this.afterFunc
 		this.screenshots = []
+	}
+
+	public errorFor(key: keyof Browser<T>, err: Error): errorDef {
+		if (typeof this.errorInterpreters[key] === 'function') {
+			return this.errorInterpreters[key].apply(this, [err, key])
+		} else {
+			return { message: err.message, doc: '' }
+		}
+	}
+
+	errorInterpreters = {
+		visit(err: Error, key: string): errorDef {
+			if (err.message.includes('net::ERR_NAME_NOT_RESOLVED')) {
+				return { message: 'its a real net error', doc: 'unable to resolve your dns, man' }
+			} else {
+				return { message: 'its a shame ' + key, doc: 'a real shame' }
+			}
+		},
 	}
 
 	private get context(): Promise<ExecutionContext> {
@@ -467,6 +511,7 @@ export class Browser<T> implements BrowserInterface {
 		return this.page.waitForNavigation({ waitUntil: 'domcontentloaded' })
 	}
 
+	// TODO fix this
 	public async interactionTiming(): Promise<number> {
 		try {
 			let polyfill = readFileSync(

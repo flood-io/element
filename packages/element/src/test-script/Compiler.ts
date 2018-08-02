@@ -3,6 +3,8 @@ import {
 	TestScriptError,
 	TestScriptOptions,
 	TestScriptDefaultOptions,
+	ErrorWrapper,
+	unwrapError,
 } from '../TestScript'
 import { CategorisedDiagnostics } from './TypescriptDiagnostics'
 import * as ts from 'typescript'
@@ -12,7 +14,7 @@ import * as parseComments from 'comment-parser'
 import { SourceUnmapper } from './SourceUnmapper'
 import * as debugFactory from 'debug'
 
-const debug = debugFactory('element:compiler')
+const debug = debugFactory('element:test-script:compiler')
 
 const floodelementRoot = path.join(__dirname, '../..')
 const sandboxPath = 'test-script-sandbox'
@@ -40,6 +42,7 @@ const FloodChromeErrors = {
 const defaultCompilerOptions: ts.CompilerOptions = {
 	noEmitOnError: true,
 	noImplicitAny: false,
+	strictNullChecks: true,
 	noUnusedParameters: false,
 	noUnusedLocals: false,
 	allowSyntheticDefaultImports: true,
@@ -298,8 +301,15 @@ export class TypeScriptTestScript implements ITestScript {
 		return this.parsedCommentsMemo[key]
 	}
 
-	public liftError(error: Error): TestScriptError {
-		let stack = error.stack || ''
+	public isScriptError(e: Error | ErrorWrapper): boolean {
+		const error: Error = unwrapError(e)
+		const stack = error.stack || ''
+		return stack.split('\n').filter(s => s.includes(this.sandboxedFilename)).length > 0
+	}
+
+	public liftError(e: Error | ErrorWrapper): TestScriptError {
+		const error: Error = unwrapError(e)
+		const stack = error.stack || ''
 
 		const filteredStack = stack.split('\n').filter(s => s.includes(this.sandboxedFilename))
 		let callsite
@@ -310,20 +320,34 @@ export class TypeScriptTestScript implements ITestScript {
 			unmappedStack = this.sourceUnmapper.unmapStackNodeStrings(filteredStack)
 		}
 
-		return new TestScriptError(error.message, stack, callsite, unmappedStack)
+		return new TestScriptError(error.message, stack, callsite, unmappedStack, error)
 	}
 
-	public maybeLiftError(error: Error): Error {
-		const lifted: TestScriptError = this.liftError(error)
-		if (lifted.callsite) {
-			return lifted
+	public maybeLiftError(e: Error | ErrorWrapper): Error {
+		const error: Error = unwrapError(e)
+		if (this.isScriptError(error)) {
+			return this.liftError(error)
 		} else {
 			return error
 		}
 	}
 
-	public filterAndUnmapStack(stack: string | undefined): string[] {
-		stack = stack || ''
+	public filterAndUnmapStack(input: string | Error | ErrorWrapper | undefined): string[] {
+		let stack: string
+
+		if (input === undefined) {
+			return []
+		} else if (typeof input === 'string') {
+			stack = input
+		} else {
+			const maybeStack = unwrapError(input).stack
+			if (maybeStack === undefined) {
+				return []
+			} else {
+				stack = maybeStack
+			}
+		}
+
 		const filteredStack = stack.split('\n').filter(s => s.includes(this.sandboxedFilename))
 
 		return this.sourceUnmapper.unmapStackNodeStrings(filteredStack)

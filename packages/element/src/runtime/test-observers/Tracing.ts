@@ -52,21 +52,21 @@ export default class TracingObserver extends NoOpTestObserver {
 		if (err.source === 'testScript' && err.kind === 'assertion') {
 			debug('stepFailure - assertion', step.name, err)
 			// Handles assertions from assert
-			let { message } = err.originalError
+			let { message } = err.sourceError
 
 			let assertion: Assertion = {
 				assertionName: 'AssertionError',
 				message,
-				stack: test.script.filterAndUnmapStack(err),
+				stack: test.script.filterAndUnmapStack(err.sourceError),
 				isFailure: true,
 			}
 
-			test.reporter.testAssertionError(test.script.liftError(err))
+			test.reporter.testAssertionError(test.script.liftError(err.sourceError))
 			this.trace.addAssertion(assertion)
 		} else {
 			let errorPayload = {
-				message: err.originalError.message,
-				stack: test.script.filterAndUnmapStack(err).join('\n'),
+				message: err.sourceError.message,
+				stack: test.script.filterAndUnmapStack(err.sourceError).join('\n'),
 			}
 
 			this.trace.addError(errorPayload)

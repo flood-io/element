@@ -138,17 +138,18 @@ export default class TimingObserver implements TestObserver {
 		debug('stepFailure', step.name)
 
 		this.failed++
+		const { sourceError } = err
 
 		if (err.kind === 'protocol') {
 			debug('stepFailure - protocol error', step.name, err)
-			test.reporter.testInternalError('Protocol Error', err.originalError)
+			test.reporter.testInternalError('Protocol Error', sourceError)
 		} else if (err.kind == 'browser') {
 			debug('stepFailure - browser error in test step', step.name, err)
-			test.reporter.testStepError(test.script.liftError(err))
+			test.reporter.testStepError(test.script.liftError(sourceError))
 		} else {
 			debug('stepFailure - internal in test step', step.name, err)
 			// TODO add new reporter method
-			test.reporter.testStepError(test.script.liftError(err))
+			test.reporter.testStepError(test.script.liftError(sourceError))
 		}
 
 		return this.next.onStepError(test, step, err)

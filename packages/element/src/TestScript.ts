@@ -4,12 +4,12 @@ import { TypeScriptTestScript } from './test-script/Compiler'
 import { Callsite, callsiteToString } from './test-script/SourceUnmapper'
 
 export interface ErrorWrapper {
-	originalError: Error
+	wrappedError: Error
 }
 
 export function unwrapError(e: Error | ErrorWrapper): Error {
-	if ((<ErrorWrapper>e).originalError !== undefined) {
-		return (<ErrorWrapper>e).originalError
+	if ((<ErrorWrapper>e).wrappedError !== undefined) {
+		return (<ErrorWrapper>e).wrappedError
 	} else {
 		return e as Error
 	}

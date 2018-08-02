@@ -1,4 +1,4 @@
-import { ITestScript, ErrorWrapper } from '../../TestScript'
+import { ITestScript } from '../../TestScript'
 
 import * as debugFactory from 'debug'
 const debug = debugFactory('element:test:error')
@@ -6,10 +6,10 @@ const debug = debugFactory('element:test:error')
 export type ErrorKind = 'assertion' | 'protocol' | 'browser' | 'internal'
 export type ErrorSource = 'element' | 'testScript'
 
-export interface ClassifiedError extends ErrorWrapper {
+export interface ClassifiedError {
 	kind: ErrorKind
 	source: ErrorSource
-	originalError: Error
+	sourceError: Error
 }
 
 export function classifyError(error: Error, testScript?: ITestScript): ClassifiedError {
@@ -33,6 +33,6 @@ export function classifyError(error: Error, testScript?: ITestScript): Classifie
 	return {
 		kind,
 		source,
-		originalError: error,
+		sourceError: error,
 	}
 }

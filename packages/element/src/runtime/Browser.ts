@@ -24,20 +24,40 @@ import { readFileSync } from 'fs'
 import * as termImg from 'term-img'
 import { ConcreteTestSettings } from './Settings'
 
-// const debug = debugFactory('element:browser')
+const debug = debugFactory('element:browser')
 const debugScreenshot = debugFactory('element:browser:screenshot')
 
+class BrowserError extends Error {
+	errorDoc: string
+	constructor(message: string, doc: string, callContext?: string) {
+		if (callContext !== undefined) {
+			message = `${callContext}: ${message}`
+		}
+		super(message)
+		this.name = this.constructor.name
+		this.errorDoc = doc
+	}
+}
+
 export class ElementNotFound extends Error {
+	errorDoc: string
 	constructor(locatable: NullableLocatable) {
 		let desc: string
+		let doc: string
 		if (locatable === null) {
 			desc = 'null locator'
+			doc = `The Locatable was null. Check whether the locatable was set.`
 		} else if (typeof locatable === 'string') {
 			desc = locatable
+			doc = `The Locatable was '${locatable}' but didn't match anything on the page.`
 		} else {
-			desc = locatable.toString()
+			desc = locatable.toErrorString()
+			doc = `The Locatable was '${desc}' but didn't match anything on the page.`
 		}
 		super(`No element was found on the page using '${desc}'`)
+		// Object.setPrototypeOf(this, ElementNotFound.prototype)
+		this.name = 'ElementNotFound'
+		this.errorDoc = doc
 	}
 }
 
@@ -51,9 +71,13 @@ export const getFrames = (childFrames: Frame[]): Frame[] => {
 	return Array.from(framesMap.values())
 }
 
-export function locatableToLocator(el: NullableLocatable): Locator {
+export function locatableToLocator(el: NullableLocatable, callCtx: string): Locator {
 	if (el === null) {
-		throw new Error('locatable is null')
+		throw new BrowserError(
+			'locatable is null',
+			`In a call to ${callCtx} the locatable parameter was null.`,
+			callCtx,
+		)
 	} else if (typeof el === 'string') {
 		return By.css(el)
 	} else {
@@ -176,7 +200,7 @@ export class Browser<T> implements BrowserInterface {
 	 */
 	@wrapWithCallbacks()
 	public async click(selectorOrLocator: NullableLocatable, options?: ClickOptions): Promise<void> {
-		const element = await this.mustFindElement(selectorOrLocator)
+		const element = await this.findElement(selectorOrLocator)
 		return element.click(options)
 	}
 
@@ -189,13 +213,13 @@ export class Browser<T> implements BrowserInterface {
 		selectorOrLocator: NullableLocatable,
 		options?: ClickOptions,
 	): Promise<void> {
-		const element = await this.mustFindElement(selectorOrLocator)
+		const element = await this.findElement(selectorOrLocator)
 		return element.click({ clickCount: 2, ...options })
 	}
 
 	@wrapWithCallbacks()
 	public async selectByValue(locatable: NullableLocatable, ...values: string[]): Promise<string[]> {
-		const element = await this.mustFindElement(locatable)
+		const element = await this.findElement(locatable)
 		const context = await this.context
 
 		return context.evaluate(
@@ -218,7 +242,7 @@ export class Browser<T> implements BrowserInterface {
 	@wrapWithCallbacks()
 	public async selectByIndex(locatable: NullableLocatable, index: string): Promise<string[]> {
 		// TODO: Write tests for this
-		const element = await this.mustFindElement(locatable)
+		const element = await this.findElement(locatable)
 		const context = await this.context
 
 		return context.evaluate(
@@ -241,7 +265,7 @@ export class Browser<T> implements BrowserInterface {
 
 	@wrapWithCallbacks()
 	public async selectByText(locatable: NullableLocatable, text: string): Promise<string[]> {
-		const element = await this.mustFindElement(locatable)
+		const element = await this.findElement(locatable)
 		const context = await this.context
 
 		return context.evaluate(
@@ -266,7 +290,7 @@ export class Browser<T> implements BrowserInterface {
 
 	@wrapWithCallbacks()
 	public async clear(locatable: NullableLocatable | string): Promise<void> {
-		let locator = locatableToLocator(locatable)
+		let locator = locatableToLocator(locatable, 'browser.clear(locatable)')
 		let elements = await locator.findMany(await this.context)
 		for (const element of elements) {
 			await element.clear()
@@ -279,7 +303,7 @@ export class Browser<T> implements BrowserInterface {
 		text: string,
 		options?: { delay: number },
 	): Promise<void> {
-		let element = await this.mustFindElement(locatable)
+		let element = await this.findElement(locatable)
 
 		await element.focus()
 		return this.page.keyboard.type(text, options)
@@ -304,13 +328,13 @@ export class Browser<T> implements BrowserInterface {
 
 	@wrapWithCallbacks()
 	public async blur(locatable: NullableLocatable): Promise<void> {
-		const element = await this.mustFindElement(locatable)
+		const element = await this.findElement(locatable)
 		return element.blur()
 	}
 
 	@wrapWithCallbacks()
 	public async focus(locatable: NullableLocatable): Promise<void> {
-		const element = await this.mustFindElement(locatable)
+		const element = await this.findElement(locatable)
 		return element.focus()
 	}
 
@@ -355,23 +379,31 @@ export class Browser<T> implements BrowserInterface {
 		return element.highlight()
 	}
 
-	public async mustFindElement(locatable: NullableLocatable): Promise<ElementHandle> {
-		let locator = locatableToLocator(locatable)
+	public async findElement(locatable: NullableLocatable): Promise<ElementHandle> {
+		let locator = locatableToLocator(locatable, 'browser.findElement(locatable)')
+
+		debug('locator %o', locator)
+		// TODO handle ElementHandle
+		// if (locator is a ElementHandle) {
+		// return locator
+		// }
 
 		let element = await locator.find(await this.context)
-		if (!element) throw new ElementNotFound(locatable)
+		if (!element) {
+			throw new ElementNotFound(locatable)
+		}
 
 		element.bindBrowser(this)
 
 		return element
 	}
 
-	public async findElement(locatable: NullableLocatable): Promise<ElementHandle | null> {
+	public async maybeFindElement(locatable: NullableLocatable): Promise<ElementHandle | null> {
 		if (locatable === null) {
 			return null
 		}
 
-		const locator = locatableToLocator(locatable)
+		const locator = locatableToLocator(locatable, 'browser.maybeFindElement(locatable)')
 		const context = await this.context
 		let element = await locator.find(context)
 		if (!element) return null
@@ -381,7 +413,7 @@ export class Browser<T> implements BrowserInterface {
 	}
 
 	public async findElements(locatable: NullableLocatable): Promise<ElementHandle[]> {
-		let locator = locatableToLocator(locatable)
+		let locator = locatableToLocator(locatable, 'browser.findElemts(locatable)')
 		let elements = await locator.findMany(await this.context)
 		elements.forEach(element => element.bindBrowser(this))
 		return elements
@@ -393,7 +425,7 @@ export class Browser<T> implements BrowserInterface {
 
 	public async extractText(locatable: NullableLocatable): Promise<string> {
 		console.warn(`DEPRECATED: Driver.extractText() is deprecated, please use ElementHandle.text()`)
-		let locator = locatableToLocator(locatable)
+		let locator = locatableToLocator(locatable, 'browser.extractText(locatable) (DEPRECATED)')
 		let element = await locator.find(await this.context)
 		if (!element) throw new ElementNotFound(locatable)
 		return element.text()

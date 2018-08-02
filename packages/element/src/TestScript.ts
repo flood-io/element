@@ -3,6 +3,22 @@ import * as ts from 'typescript'
 import { TypeScriptTestScript } from './test-script/Compiler'
 import { Callsite, callsiteToString } from './test-script/SourceUnmapper'
 
+export interface ErrorWrapper {
+	originalError: Error
+}
+
+export function unwrapError(e: Error | ErrorWrapper): Error {
+	if ((<ErrorWrapper>e).originalError !== undefined) {
+		return (<ErrorWrapper>e).originalError
+	} else {
+		return e as Error
+	}
+}
+
+interface errorWithDoc extends Error {
+	errorDoc: string
+}
+
 export class TestScriptError extends Error {
 	public stackWhenThrown: string
 	constructor(
@@ -10,6 +26,7 @@ export class TestScriptError extends Error {
 		originalStack: string,
 		public callsite: Callsite,
 		public unmappedStack: string[],
+		public originalError: Error,
 	) {
 		super(message)
 		this.stackWhenThrown = this.stack || ''
@@ -17,8 +34,26 @@ export class TestScriptError extends Error {
 		this.message = message
 	}
 
+	get hasDoc(): boolean {
+		return (<errorWithDoc>this.originalError).errorDoc !== undefined
+	}
+
+	get errorDoc(): string {
+		if ((<errorWithDoc>this.originalError).errorDoc !== undefined) {
+			return (<errorWithDoc>this.originalError).errorDoc
+		} else {
+			return ''
+		}
+	}
+
 	toStringNodeFormat(): string {
-		return this.callsiteString() + '\n\n' + this.toString() + '\n' + this.unmappedStack.join('\n')
+		console.log('in toStringNodeFormat', this.originalError, this.hasDoc, this.errorDoc)
+		let str =
+			this.callsiteString() + '\n\n' + this.toString() + '\n' + this.unmappedStack.join('\n')
+		if (this.hasDoc) {
+			str = str + '\n\n' + this.errorDoc
+		}
+		return str
 	}
 
 	callsiteString(): string {
@@ -58,9 +93,10 @@ export interface ITestScript {
 	testName: string
 	testDescription: string
 
-	liftError(error: Error): TestScriptError
-	maybeLiftError(error: Error): Error
-	filterAndUnmapStack(stack: string | undefined): string[]
+	isScriptError(error: Error | ErrorWrapper): boolean
+	liftError(error: Error | ErrorWrapper): TestScriptError
+	maybeLiftError(error: Error | ErrorWrapper): Error
+	filterAndUnmapStack(stack: string | Error | ErrorWrapper | undefined): string[]
 }
 
 export async function compileString(

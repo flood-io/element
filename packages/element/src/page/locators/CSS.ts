@@ -1,7 +1,7 @@
-import { Locator } from '../Locator'
+import { BaseLocator } from '../Locator'
 import { EvaluateFn } from 'puppeteer'
 
-export class CSSLocator extends Locator {
+export class CSSLocator extends BaseLocator {
 	constructor(public selector: string, debugString: string) {
 		super(debugString)
 	}

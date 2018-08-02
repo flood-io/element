@@ -4,16 +4,8 @@ import { VisibleTextLocator } from './locators/VisibleTextLocator'
 import { CSSLocator } from './locators/CSS'
 import { TagNameLocator } from './locators/TagName'
 import { XPathLocator } from './locators/XPath'
-import { Locator, Locatable } from './Locator'
+import { Locator, BaseLocator } from './Locator'
 import { EvaluateFn } from 'puppeteer'
-
-export function locatableToLocator(el: Locatable): Locator {
-	if (typeof el === 'string') {
-		return By.css(el, el)
-	} else {
-		return el as Locator
-	}
-}
 
 export class By {
 	public readonly command: string
@@ -90,7 +82,7 @@ export class By {
 	 * @param {...*} var_args The arguments to pass to the script.
 	 */
 	static js(script: EvaluateFn, ...args): Locator {
-		let locator = new Locator('By.js(function)')
+		let locator = new BaseLocator('By.js(function)')
 		locator.pageFunc = script
 		locator.pageFuncMany = script
 		locator.pageFuncArgs = args

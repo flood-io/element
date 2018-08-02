@@ -1,7 +1,7 @@
-import { Locator } from '../Locator'
+import { BaseLocator } from '../Locator'
 import { EvaluateFn } from 'puppeteer'
 
-export class LinkTextLocator extends Locator {
+export class LinkTextLocator extends BaseLocator {
 	constructor(public linkText: string, public partial: boolean = false, desc: string) {
 		super(desc)
 	}

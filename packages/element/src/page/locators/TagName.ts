@@ -1,7 +1,7 @@
-import { Locator } from '../Locator'
+import { BaseLocator } from '../Locator'
 import { EvaluateFn } from 'puppeteer'
 
-export class TagNameLocator extends Locator {
+export class TagNameLocator extends BaseLocator {
 	constructor(public tagName: string) {
 		super(`<${tagName}>`)
 	}

@@ -1,7 +1,6 @@
-import { Condition } from '../Condition'
+import { Condition, NullableLocatable } from '../Condition'
 import { Frame, Page } from 'puppeteer'
 import { getFrames } from '../../runtime/Browser'
-import { NullableLocatable } from '../../../index'
 
 export class FrameCondition extends Condition {
 	constructor(desc: string, public id: NullableLocatable) {

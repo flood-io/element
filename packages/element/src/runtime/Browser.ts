@@ -15,7 +15,7 @@ import { ElementHandle } from '../page/ElementHandle'
 import { TargetLocator } from '../page/TargetLocator'
 import { By } from '../page/By'
 import * as debugFactory from 'debug'
-import { Browser as BrowserInterface, EvaluateFn, NullableLocatable } from '../../index'
+import { Browser as BrowserInterface, EvaluateFn } from '../../index'
 import { PuppeteerClient, WorkRoot } from '../types'
 import { join, resolve } from 'path'
 import * as cuid from 'cuid'
@@ -26,6 +26,10 @@ import { ConcreteTestSettings } from './Settings'
 
 const debug = debugFactory('element:browser')
 const debugScreenshot = debugFactory('element:browser:screenshot')
+
+export type Locatable = Locator | string
+
+export type NullableLocatable = Locatable | null
 
 class BrowserError extends Error {
 	errorDoc: string
@@ -61,16 +65,6 @@ export class ElementNotFound extends Error {
 	}
 }
 
-export const getFrames = (childFrames: Frame[]): Frame[] => {
-	let framesMap = new Map<string, Frame>()
-	for (const f of childFrames) {
-		framesMap.set(f.name(), f)
-		getFrames(f.childFrames()).forEach(f => framesMap.set(f.name(), f))
-	}
-
-	return Array.from(framesMap.values())
-}
-
 export function locatableToLocator(el: NullableLocatable, callCtx: string): Locator {
 	if (el === null) {
 		throw new BrowserError(
@@ -84,6 +78,16 @@ export function locatableToLocator(el: NullableLocatable, callCtx: string): Loca
 		// TODO proerly handle ElementHandle here...
 		return el as Locator
 	}
+}
+
+export const getFrames = (childFrames: Frame[]): Frame[] => {
+	let framesMap = new Map<string, Frame>()
+	for (const f of childFrames) {
+		framesMap.set(f.name(), f)
+		getFrames(f.childFrames()).forEach(f => framesMap.set(f.name(), f))
+	}
+
+	return Array.from(framesMap.values())
 }
 
 /**

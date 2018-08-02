@@ -1,12 +1,13 @@
 import { PageFnOptions, Page, EvaluateFn, Frame } from 'puppeteer'
 import { Locator } from './Locator'
 import { DEFAULT_SETTINGS } from '../runtime/Settings'
-import { NullableLocatable } from '../../index'
 import * as recast from 'recast'
 import * as prettier from 'prettier'
-import { locatableToLocator } from '../runtime/Browser'
+import { locatableToLocator, NullableLocatable } from '../runtime/Browser'
 // import * as debugFactory from 'debug'
 // const debug = debugFactory('element:page:condition')
+
+export { NullableLocatable } from '../runtime/Browser'
 
 interface ConditionSettings {
 	waitTimeout: number
@@ -33,6 +34,7 @@ export abstract class Condition {
 		try {
 			return locatableToLocator(el, `${this.desc}(locatable)`)
 		} catch (e) {
+			// TODO
 			throw new Error(`condition '${this.desc}' unable to use locator: ${e}`)
 		}
 	}

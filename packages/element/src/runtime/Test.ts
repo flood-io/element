@@ -12,6 +12,8 @@ import TimingObserver from './test-observers/Timing'
 import TracingObserver from './test-observers/Tracing'
 import LifecycleObserver from './test-observers/Lifecycle'
 
+import { classifyError } from './errors/Error'
+
 import { Step } from './Step'
 
 import { PuppeteerClient, RuntimeEnvironment } from '../types'
@@ -174,6 +176,8 @@ export default class Test {
 	}
 
 	async runStep(browser: Browser<Step>, step: Step, testDataRecord: any) {
+		this.networkRecorder.reset()
+
 		let error: Error | null = null
 		await this.testObserver.beforeStep(this, step)
 		try {
@@ -187,12 +191,14 @@ export default class Test {
 
 		await this.testObserver.afterStep(this, step)
 		if (error !== null) {
+			debug('step error')
 			this.failed = true
-			await this.testObserver.onStepError(this, step, error)
+			await this.testObserver.onStepError(this, step, classifyError(error, this.script))
 		} else {
 			await this.testObserver.onStepPassed(this, step)
 			await this.doStepDelay()
 		}
+		debug('step done')
 	}
 
 	/* 

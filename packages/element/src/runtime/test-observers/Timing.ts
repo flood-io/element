@@ -5,6 +5,7 @@ import { TestObserver } from './Observer'
 import NetworkRecorder from '../../network/Recorder'
 import { CompoundMeasurement } from '../../Reporter'
 import { ResponseTiming } from '../../../index'
+import { ClassifiedError } from '../errors/Error'
 
 import * as debugFactory from 'debug'
 const debug = debugFactory('element:test:timing')
@@ -90,12 +91,11 @@ export default class TimingObserver implements TestObserver {
 	}
 
 	async beforeStep(test: Test, step: Step) {
+		debug('beforeStep')
 		this.t.reset()
 		this.passed = 0
 		this.failed = 0
 		this.t.start('beforeStep')
-
-		test.networkRecorder.reset()
 
 		const name = step.name
 		const reporter = test.reporter
@@ -133,16 +133,21 @@ export default class TimingObserver implements TestObserver {
 		return this.next.onStepPassed(test, step)
 	}
 
-	async onStepError(test: Test, step: Step, err: Error) {
+	async onStepError(test: Test, step: Step, err: ClassifiedError) {
+		// TODO these don't fit here
 		debug('stepFailure', step.name)
 
 		this.failed++
 
-		if (err.message.includes('Protocol error')) {
+		if (err.kind === 'protocol') {
 			debug('stepFailure - protocol error', step.name, err)
-			test.reporter.testInternalError('Protocol Error', err)
+			test.reporter.testInternalError('Protocol Error', err.originalError)
+		} else if (err.kind == 'browser') {
+			debug('stepFailure - browser error in test step', step.name, err)
+			test.reporter.testStepError(test.script.liftError(err))
 		} else {
-			debug('stepFailure - other in test step', step.name, err)
+			debug('stepFailure - internal in test step', step.name, err)
+			// TODO add new reporter method
 			test.reporter.testStepError(test.script.liftError(err))
 		}
 

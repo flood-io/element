@@ -6,6 +6,7 @@ import { NetworkTraceData } from '../../Reporter'
 import { IObjectTrace, NullObjectTrace } from '../../utils/ObjectTrace'
 import NetworkRecorder from '../../network/Recorder'
 import { Assertion } from '../Assertion'
+import { ClassifiedError } from '../errors/Error'
 
 import * as debugFactory from 'debug'
 const debug = debugFactory('element:test:tracing')
@@ -45,18 +46,18 @@ export default class TracingObserver extends NoOpTestObserver {
 		this.trace = NullObjectTrace
 	}
 
-	async onStepError(test: Test, step: Step, err: Error) {
+	async onStepError(test: Test, step: Step, err: ClassifiedError) {
 		this.failed++
 
-		if (err.name.startsWith('AssertionError')) {
+		if (err.source === 'testScript' && err.kind === 'assertion') {
 			debug('stepFailure - assertion', step.name, err)
 			// Handles assertions from assert
-			let { message, stack } = err
+			let { message } = err.originalError
 
 			let assertion: Assertion = {
 				assertionName: 'AssertionError',
 				message,
-				stack: test.script.filterAndUnmapStack(stack),
+				stack: test.script.filterAndUnmapStack(err),
 				isFailure: true,
 			}
 
@@ -64,8 +65,8 @@ export default class TracingObserver extends NoOpTestObserver {
 			this.trace.addAssertion(assertion)
 		} else {
 			let errorPayload = {
-				message: err.message,
-				stack: test.script.filterAndUnmapStack(err.stack).join('\n'),
+				message: err.originalError.message,
+				stack: test.script.filterAndUnmapStack(err).join('\n'),
 			}
 
 			this.trace.addError(errorPayload)
@@ -84,6 +85,12 @@ export default class TracingObserver extends NoOpTestObserver {
 	private async addNetworkTrace(test: Test, step: Step, networkRecorder: NetworkRecorder) {
 		let [document] = networkRecorder.entriesForType('Document')
 
+		// there may be no document if e.g. the step didn't cause any network activity
+		if (!document) {
+			debug('tracing.addNetworkTrace() - no document')
+			return
+		}
+
 		let responseHeaders = '',
 			requestHeaders = '',
 			sourceHost = '',
@@ -91,24 +98,17 @@ export default class TracingObserver extends NoOpTestObserver {
 			endTime = new Date().valueOf(),
 			responseData = ''
 
-		// TODO wrap
 		let url = test.currentURL
 
-		if (document) {
-			responseHeaders = serializeResponseHeaders(document)
-			requestHeaders = serializeRequestHeaders(document)
-			sourceHost = document.serverIPAddress
+		responseHeaders = serializeResponseHeaders(document)
+		requestHeaders = serializeRequestHeaders(document)
+		sourceHost = document.serverIPAddress
 
-			startTime = document.request.timestamp
-			endTime = document.response.timestamp
-			// url = document.request.url
+		startTime = document.request.timestamp
+		endTime = document.response.timestamp
+		// url = document.request.url
 
-			if (document.response.content)
-				responseData = document.response.content.text.slice(0, 32 * 1024)
-		} else {
-			// Don't do anything if we don't have a document to trace
-			return
-		}
+		if (document.response.content) responseData = document.response.content.text.slice(0, 32 * 1024)
 
 		let traceData: NetworkTraceData = {
 			op: 'network',

@@ -515,13 +515,13 @@ export declare class Browser {
 	/**
 	 * Uses the provided locator to find the first element it matches, returning an ElementHandle.
 	 */
-	public findElement(locator: NullableLocatable): Promise<ElementHandle | null>
+	public maybeFindElement(locator: NullableLocatable): Promise<ElementHandle | null>
 
 	/**
 	 * Uses the provided locator to find the first element it matches, returning an ElementHandle.
 	 * If no element is found throws an error.
 	 */
-	public mustFindElement(locator: NullableLocatable): Promise<ElementHandle>
+	public findElement(locator: NullableLocatable): Promise<ElementHandle>
 
 	/**
 	 * Uses the provided locator to find all elements matching the locator condition, returning an array of ElementHandles
@@ -641,6 +641,8 @@ declare class ElementHandle {
 	 * Fetches the remote elements physical location as `x` and `y`.
 	 */
 	public location(): Promise<{ x: number; y: number }>
+
+	public toErrorString(): string
 }
 
 /**
@@ -689,7 +691,9 @@ export type NullableCondition = Condition | null
  *
  * @class Locator
  */
-declare class Locator {}
+declare class Locator {
+	toErrorString(): string
+}
 
 export type NullableLocator = Locator | null
 

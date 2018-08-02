@@ -1,5 +1,5 @@
 import { ElementHandle as PElementHandle, ClickOptions, ScreenshotOptions } from 'puppeteer'
-import { ElementHandle as IElementHandle } from '../../index'
+import { ElementHandle as IElementHandle, EvaluateFn } from '../../index'
 import { Locator } from './Locator'
 import { By } from './By'
 import * as debugFactory from 'debug'
@@ -43,7 +43,7 @@ interface ScreenshotSaver {
 	saveScreenshot(fn: (path: string) => Promise<boolean>)
 }
 
-export class ElementHandle implements IElementHandle {
+export class ElementHandle implements IElementHandle, Locator {
 	public screenshotSaver: ScreenshotSaver
 	constructor(private element: PElementHandle) {}
 
@@ -53,6 +53,26 @@ export class ElementHandle implements IElementHandle {
 
 	public toErrorString() {
 		return this.toString()
+	}
+
+	async find(context: never, node?: never): Promise<ElementHandle | null> {
+		return this
+	}
+
+	async findMany(context: never, node?: never): Promise<ElementHandle[]> {
+		return [this]
+	}
+
+	get pageFuncArgs(): PElementHandle[] {
+		return [this.element]
+	}
+
+	get pageFunc(): EvaluateFn {
+		return (element: HTMLElement, node?: HTMLElement) => element
+	}
+
+	get pageFuncMany(): EvaluateFn {
+		return (element: HTMLElement, node?: HTMLElement) => [element]
 	}
 
 	@wrapDescriptiveError()

@@ -21,14 +21,21 @@ function evaluationString(fun, ...args) {
 	return `(${fun})(${args.map(serializeArgument).join(',')})`
 }
 
-export type Locatable = Locator | ElementHandle | string
+export interface Locator {
+	pageFunc: EvaluateFn
+	pageFuncMany: EvaluateFn
+	pageFuncArgs: any[]
+	toErrorString(): string
+	find(context: ExecutionContext, node?: PElementHandle): Promise<ElementHandle | null>
+	findMany(context: ExecutionContext, node?: PElementHandle): Promise<ElementHandle[]>
+}
 
-export class Locator {
+export class BaseLocator implements Locator {
 	public pageFunc: EvaluateFn
 	public pageFuncMany: EvaluateFn
 	public pageFuncArgs: any[]
 
-	constructor(public errorString: string) {}
+	constructor(protected errorString: string) {}
 
 	public toErrorString(): string {
 		return this.errorString

@@ -9,7 +9,7 @@ import { EvaluateFn } from 'puppeteer'
 
 export function locatableToLocator(el: Locatable): Locator {
 	if (typeof el === 'string') {
-		return By.css(el)
+		return By.css(el, el)
 	} else {
 		return el as Locator
 	}
@@ -24,8 +24,11 @@ export class By {
 		this.args = args
 	}
 
-	public static css(selector: string): Locator {
-		return new CSSLocator(selector)
+	public static css(selector: string, debugString?: string): Locator {
+		if (debugString === undefined) {
+			debugString = selector
+		}
+		return new CSSLocator(selector, debugString)
 	}
 
 	/**
@@ -36,7 +39,7 @@ export class By {
 	 */
 	public static id(id: string): Locator {
 		if (id.startsWith('#')) id = id.slice(1)
-		return this.css(`*[id="${escapeCss(id)}"]`)
+		return this.css(`*[id="${escapeCss(id)}"]`, `By.id(${id})`)
 	}
 
 	/**
@@ -46,7 +49,7 @@ export class By {
 	 * @param {string} text The link text to search for.
 	 */
 	static linkText(text): Locator {
-		return new LinkTextLocator(text)
+		return new LinkTextLocator(text, false, `By.linkText('${text}')`)
 	}
 
 	/**
@@ -56,7 +59,7 @@ export class By {
 	 * @param {string} text The substring to check for in a link's visible text.
 	 */
 	static partialLinkText(text): Locator {
-		return new LinkTextLocator(text, true)
+		return new LinkTextLocator(text, true, `By.partialLinkText('${text}')`)
 	}
 
 	/**
@@ -66,7 +69,7 @@ export class By {
 	 * @param {string} text The string to check for in a elements's visible text.
 	 */
 	static visibleText(text: string): Locator {
-		return new VisibleTextLocator(text, false)
+		return new VisibleTextLocator(text, false, `By.visibleText('${text}')`)
 	}
 
 	/**
@@ -76,7 +79,7 @@ export class By {
 	 * @param {string} text The substring to check for in a elements's visible text.
 	 */
 	static partialVisibleText(text: string): Locator {
-		return new VisibleTextLocator(text, true)
+		return new VisibleTextLocator(text, true, `By.partialVisibleText('${text}')`)
 	}
 
 	/**
@@ -87,7 +90,7 @@ export class By {
 	 * @param {...*} var_args The arguments to pass to the script.
 	 */
 	static js(script: EvaluateFn, ...args): Locator {
-		let locator = new Locator()
+		let locator = new Locator('By.js(function)')
 		locator.pageFunc = script
 		locator.pageFuncMany = script
 		locator.pageFuncArgs = args
@@ -101,7 +104,7 @@ export class By {
 	 * @return {!By} The new locator.
 	 */
 	public static nameAttr(value: string): Locator {
-		return By.css(`*[name="${escapeCss(value)}"]`)
+		return By.css(`*[name="${escapeCss(value)}"]`, `By.nameAttr(${value})`)
 	}
 
 	/**
@@ -113,6 +116,7 @@ export class By {
 	public static attr(tagName: string, attrName: string, attrValue: string): Locator {
 		return By.css(
 			`${escapeCss(tagName).toLowerCase()}[${escapeCss(attrName)}="${escapeCss(attrValue)}"]`,
+			`By.attr$(tagName},${attrName},${attrValue})`,
 		)
 	}
 

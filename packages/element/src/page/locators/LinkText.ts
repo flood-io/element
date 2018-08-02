@@ -2,8 +2,8 @@ import { Locator } from '../Locator'
 import { EvaluateFn } from 'puppeteer'
 
 export class LinkTextLocator extends Locator {
-	constructor(public linkText: string, public partial: boolean = false) {
-		super()
+	constructor(public linkText: string, public partial: boolean = false, desc: string) {
+		super(desc)
 	}
 
 	get pageFuncArgs(): any[] {

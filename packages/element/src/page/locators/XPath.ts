@@ -3,7 +3,7 @@ import { EvaluateFn } from 'puppeteer'
 
 export class XPathLocator extends Locator {
 	constructor(public selector: string) {
-		super()
+		super(`xpath==${selector}`)
 	}
 
 	get pageFuncArgs(): string[] {

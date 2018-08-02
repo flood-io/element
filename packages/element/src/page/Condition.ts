@@ -31,7 +31,7 @@ export abstract class Condition {
 
 	protected locatableToLocator(el: NullableLocatable): Locator {
 		try {
-			return locatableToLocator(el)
+			return locatableToLocator(el, `${this.desc}(locatable)`)
 		} catch (e) {
 			throw new Error(`condition '${this.desc}' unable to use locator: ${e}`)
 		}

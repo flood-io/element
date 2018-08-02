@@ -51,6 +51,10 @@ export class ElementHandle implements IElementHandle {
 		this.screenshotSaver = sss
 	}
 
+	public toErrorString() {
+		return this.toString()
+	}
+
 	@wrapDescriptiveError()
 	public async click(options?: ClickOptions): Promise<void> {
 		return this.element.click(options)

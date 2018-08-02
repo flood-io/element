@@ -3,7 +3,7 @@ import { EvaluateFn } from 'puppeteer'
 
 export class TagNameLocator extends Locator {
 	constructor(public tagName: string) {
-		super()
+		super(`<${tagName}>`)
 	}
 
 	get pageFuncArgs(): string[] {

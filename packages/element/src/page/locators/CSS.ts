@@ -2,8 +2,8 @@ import { Locator } from '../Locator'
 import { EvaluateFn } from 'puppeteer'
 
 export class CSSLocator extends Locator {
-	constructor(public selector: string) {
-		super()
+	constructor(public selector: string, debugString: string) {
+		super(debugString)
 	}
 
 	get pageFuncArgs(): string[] {

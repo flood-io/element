@@ -28,6 +28,12 @@ export class Locator {
 	public pageFuncMany: EvaluateFn
 	public pageFuncArgs: any[]
 
+	constructor(public errorString: string) {}
+
+	public toErrorString(): string {
+		return this.errorString
+	}
+
 	async find(context: ExecutionContext, node?: PElementHandle): Promise<ElementHandle | null> {
 		let handle = await context.evaluateHandle(this.pageFunc, ...this.pageFuncArgs, node)
 		const element = handle.asElement()

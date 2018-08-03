@@ -12,6 +12,8 @@ export default class LifecycleObserver implements TestObserver {
 	}
 
 	async after(test: Test) {
+		await this.next.after(test)
+
 		if (test.failed) {
 			test.reporter.testLifecycle(TestEvent.TestFailed, 'test')
 		} else {
@@ -19,7 +21,6 @@ export default class LifecycleObserver implements TestObserver {
 		}
 
 		test.reporter.testLifecycle(TestEvent.AfterTest, 'test')
-		return this.next.after(test)
 	}
 
 	async beforeStep(test: Test, step: Step) {
@@ -27,20 +28,20 @@ export default class LifecycleObserver implements TestObserver {
 		return this.next.beforeStep(test, step)
 	}
 	async onStepPassed(test: Test, step: Step) {
+		await this.next.onStepPassed(test, step)
 		test.reporter.testLifecycle(TestEvent.StepSucceeded, step.name)
-		return this.next.onStepPassed(test, step)
 	}
 	async onStepError(test: Test, step: Step, error: ClassifiedError) {
+		await this.next.onStepError(test, step, error)
 		test.reporter.testLifecycle(TestEvent.StepFailed, step.name)
-		return this.next.onStepError(test, step, error)
 	}
 	async onStepSkipped(test: Test, step: Step) {
+		await this.next.onStepSkipped(test, step)
 		test.reporter.testLifecycle(TestEvent.StepSkipped, step.name)
-		return this.next.onStepSkipped(test, step)
 	}
 	async afterStep(test: Test, step: Step) {
+		await this.next.afterStep(test, step)
 		test.reporter.testLifecycle(TestEvent.AfterStep, step.name)
-		return this.next.afterStep(test, step)
 	}
 
 	async beforeStepAction(test: Test, step: Step, command: string) {
@@ -48,7 +49,7 @@ export default class LifecycleObserver implements TestObserver {
 		return this.next.beforeStepAction(test, step, command)
 	}
 	async afterStepAction(test: Test, step: Step, command: string) {
+		await this.next.afterStepAction(test, step, command)
 		test.reporter.testLifecycle(TestEvent.AfterStepAction, command)
-		return this.next.afterStepAction(test, step, command)
 	}
 }

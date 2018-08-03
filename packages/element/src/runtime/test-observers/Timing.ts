@@ -119,13 +119,14 @@ export default class TimingObserver implements TestObserver {
 
 		await test.syncNetworkRecorder()
 
-		await this.next.afterStep(test, step)
-
 		debug(`After step: ${step.name}`)
 
 		await this.reportResult(test, step)
 
 		this.t.end('afterStep')
+
+		// XXX order??
+		return this.next.afterStep(test, step)
 	}
 
 	async onStepPassed(test: Test, step: Step): Promise<void> {

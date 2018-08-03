@@ -23,6 +23,7 @@ import { Key } from '../page/Enums'
 import { readFileSync } from 'fs'
 import * as termImg from 'term-img'
 import { ConcreteTestSettings } from './Settings'
+import { StructuredError, DocumentedError } from './Error'
 
 const debug = debugFactory('element:browser')
 const debugScreenshot = debugFactory('element:browser:screenshot')
@@ -31,48 +32,32 @@ export type Locatable = Locator | string
 
 export type NullableLocatable = Locatable | null
 
-class BrowserError {
-	errorDoc: string
-	originalError: Error
-	name: string
-	stack?: string
-	constructor(public message: string, doc: string, callContext?: string) {
-		debug('constructing browser error', ...arguments)
-		if (callContext !== undefined) {
-			this.message = `${callContext}: ${this.message}`
-		}
-		// super(message)
-		// Object.setPrototypeOf(this, BrowserError.prototype)
-		this.name = 'BrowserError' // this.constructor.name
-		this.errorDoc = doc
-	}
-}
+type NetworkErrorKind = 'net' | 'http'
+type NetworkErrorData = { kind: NetworkErrorKind; subKind: string; reason?: string; code?: string }
 
-export class ElementNotFound extends Error {
-	errorDoc: string
-	constructor(locatable: NullableLocatable) {
+export class ElementNotFound extends DocumentedError {
+	constructor(locatable: NullableLocatable, callCtx?: string) {
 		let desc: string
 		let doc: string
 		if (locatable === null) {
 			desc = 'null locator'
-			doc = `The Locatable was null. Check whether the locatable was set.`
+			doc = `The requested location was null. Check whether the locatable was set.`
 		} else if (typeof locatable === 'string') {
 			desc = locatable
-			doc = `The Locatable was '${locatable}' but didn't match anything on the page.`
+			doc = `The requested location was '${locatable}' but didn't match anything on the page.`
 		} else {
 			desc = locatable.toErrorString()
-			doc = `The Locatable was '${desc}' but didn't match anything on the page.`
+			doc = `The requested location was '${desc}' but didn't match anything on the page.`
 		}
-		super(`No element was found on the page using '${desc}'`)
+		super(`No element was found on the page using '${desc}'`, doc, callCtx)
 		// Object.setPrototypeOf(this, ElementNotFound.prototype)
 		this.name = 'ElementNotFound'
-		this.errorDoc = doc
 	}
 }
 
 export function locatableToLocator(el: NullableLocatable, callCtx: string): Locator {
 	if (el === null) {
-		throw new BrowserError(
+		throw new DocumentedError(
 			'locatable is null',
 			`In a call to ${callCtx} the locatable parameter was null.`,
 			callCtx,
@@ -93,11 +78,6 @@ export const getFrames = (childFrames: Frame[]): Frame[] => {
 	}
 
 	return Array.from(framesMap.values())
-}
-
-interface errorDef {
-	message: string
-	doc: string
 }
 
 /**
@@ -121,12 +101,9 @@ function wrapWithCallbacks<T>() {
 			try {
 				ret = await originalFn.apply(browser, args)
 			} catch (e) {
-				const callCtx = `browser.${propertyKey}()`
-				const errDef = browser.errorFor(propertyKey as keyof Browser<T>, e)
-				let newError = new BrowserError(errDef.message, errDef.doc, callCtx)
+				const newError = browser.interpretError(propertyKey as keyof Browser<T>, e, args)
 				// attach the call-time stack
 				newError.stack = calltimeStack
-				newError.originalError = e
 				throw newError
 			}
 			if (browser.afterFunc instanceof Function) await browser.afterFunc(browser, propertyKey)
@@ -137,9 +114,23 @@ function wrapWithCallbacks<T>() {
 	}
 }
 
+function errorInterpreter<T>(...targets: string[]) {
+	return function(target: Browser<T>, propertyKey: string, descriptor: PropertyDescriptor) {
+		if (target.errorInterpreters === undefined) {
+			target.errorInterpreters = {}
+		}
+		for (const t of targets) {
+			target.errorInterpreters[t] = descriptor.value
+		}
+	}
+}
+
+type errorInterp = (err: Error, key: string, ...args: any[]) => DocumentedError
+
 export class Browser<T> implements BrowserInterface {
 	public screenshots: string[]
 	customContext: T
+	errorInterpreters: { [K in keyof Browser<T>]?: errorInterp }
 
 	constructor(
 		public workRoot: WorkRoot,
@@ -153,22 +144,14 @@ export class Browser<T> implements BrowserInterface {
 		this.screenshots = []
 	}
 
-	public errorFor(key: keyof Browser<T>, err: Error): errorDef {
-		if (typeof this.errorInterpreters[key] === 'function') {
-			return this.errorInterpreters[key].apply(this, [err, key])
+	interpretError(key: keyof Browser<T>, err: Error, originalArgs: any[]): DocumentedError {
+		const interp = this.errorInterpreters[key]
+		if (interp !== undefined && typeof interp === 'function') {
+			return interp.apply(this, [err, key, ...originalArgs])
 		} else {
-			return { message: err.message, doc: '' }
+			debug('wrapping unhandled error %O', err)
+			return DocumentedError.wrapUnhandledError(err)
 		}
-	}
-
-	errorInterpreters = {
-		visit(err: Error, key: string): errorDef {
-			if (err.message.includes('net::ERR_NAME_NOT_RESOLVED')) {
-				return { message: 'its a real net error', doc: 'unable to resolve your dns, man' }
-			} else {
-				return { message: 'its a shame ' + key, doc: 'a real shame' }
-			}
-		},
 	}
 
 	private get context(): Promise<ExecutionContext> {
@@ -234,12 +217,76 @@ export class Browser<T> implements BrowserInterface {
 	@wrapWithCallbacks()
 	public async visit(url: string, options: NavigationOptions = {}): Promise<void> {
 		let timeout = this.settings.waitTimeout * 1e3
-		await this.page.goto(url, {
-			timeout,
-			waitUntil: 'domcontentloaded',
-			...options,
-		})
+		let response
+		try {
+			response = await this.page.goto(url, {
+				timeout,
+				waitUntil: 'domcontentloaded',
+				...options,
+			})
+		} catch (e) {
+			if (e.message.includes('net::ERR_NAME_NOT_RESOLVED')) {
+				e = new StructuredError<NetworkErrorData>(
+					'dns name not resolved',
+					{
+						kind: 'net',
+						subKind: 'not-resolved',
+					},
+					e,
+				)
+			}
+			throw e
+		}
+
+		if (response === null) {
+			throw new StructuredError<NetworkErrorData>('no response', {
+				kind: 'http',
+				subKind: 'no-response',
+			})
+		}
+		if (!response.ok()) {
+			throw new StructuredError<NetworkErrorData>('http response code not OK', {
+				kind: 'http',
+				subKind: 'not-ok',
+				code: response.status().toString(),
+			})
+		}
+
 		return
+	}
+
+	@errorInterpreter('visit')
+	public visitError(
+		err: Error,
+		key: string,
+		url: string,
+		options: NavigationOptions = {},
+	): DocumentedError {
+		const callCtx = 'browser.visit()'
+		debug('visitError', err)
+		const sErr = StructuredError.cast<NetworkErrorData>(err)
+		if (sErr) {
+			const { kind, subKind } = sErr.data
+			if (kind === 'net' && subKind == 'not-resolved') {
+				return new DocumentedError(
+					`Unable to resolve DNS for ${url}`,
+					`Element tried to visit The URL ${url} but it didn't resolve in DNS. This may be due to TODO`,
+					callCtx,
+					err,
+				)
+			} else if (kind === 'http' && subKind == 'not-ok') {
+				return new DocumentedError(
+					`Unable to visit ${url}`,
+					`Element tried to visit The URL ${url} but it responded with status code ${
+						sErr.data.code
+					}. We expected a response code 200-299.`,
+					callCtx,
+					err,
+				)
+			}
+		}
+
+		return DocumentedError.wrapUnhandledError(err, `Unable to visit ${url}`, callCtx)
 	}
 
 	/**
@@ -338,7 +385,7 @@ export class Browser<T> implements BrowserInterface {
 
 	@wrapWithCallbacks()
 	public async clear(locatable: NullableLocatable | string): Promise<void> {
-		let locator = locatableToLocator(locatable, 'browser.clear(locatable)')
+		let locator = locatableToLocator(locatable, 'browser.clear()')
 		let elements = await locator.findMany(await this.context)
 		for (const element of elements) {
 			await element.clear()
@@ -431,14 +478,10 @@ export class Browser<T> implements BrowserInterface {
 		let locator = locatableToLocator(locatable, 'browser.findElement(locatable)')
 
 		debug('locator %o', locator)
-		// TODO handle ElementHandle
-		// if (locator is a ElementHandle) {
-		// return locator
-		// }
 
 		let element = await locator.find(await this.context)
 		if (!element) {
-			throw new ElementNotFound(locatable)
+			throw new ElementNotFound(locatable, 'browser.findElement()')
 		}
 
 		element.bindBrowser(this)
@@ -475,7 +518,7 @@ export class Browser<T> implements BrowserInterface {
 		console.warn(`DEPRECATED: Driver.extractText() is deprecated, please use ElementHandle.text()`)
 		let locator = locatableToLocator(locatable, 'browser.extractText(locatable) (DEPRECATED)')
 		let element = await locator.find(await this.context)
-		if (!element) throw new ElementNotFound(locatable)
+		if (!element) throw new ElementNotFound(locatable, 'browser.extractText()')
 		return element.text()
 	}
 

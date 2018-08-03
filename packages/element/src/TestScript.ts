@@ -15,8 +15,19 @@ export function unwrapError(e: Error | ErrorWrapper): Error {
 	}
 }
 
+function originalError(e: Error): Error {
+	if ((<errorWithOriginalError>e).originalError !== undefined) {
+		return originalError((<errorWithOriginalError>e).originalError)
+	} else {
+		return e
+	}
+}
+
 interface errorWithDoc extends Error {
 	errorDoc: string
+}
+interface errorWithOriginalError extends Error {
+	originalError: Error
 }
 
 export class TestScriptError extends Error {
@@ -46,14 +57,25 @@ export class TestScriptError extends Error {
 		}
 	}
 
+	get cause(): Error {
+		return originalError(this.originalError)
+	}
+
 	toStringNodeFormat(): string {
-		console.log('in toStringNodeFormat', this.originalError, this.hasDoc, this.errorDoc)
 		let str =
 			this.callsiteString() + '\n\n' + this.toString() + '\n' + this.unmappedStack.join('\n')
 		if (this.hasDoc) {
-			str = str + '\n\n' + this.errorDoc
+			str = str + '\nDetail:\n' + this.errorDoc
 		}
 		return str
+	}
+
+	toVerboseString(): string {
+		const baseString = this.toStringNodeFormat()
+
+		// TODO report top->cause chain
+
+		return baseString + '\n\nExtra detail:\n' + this.cause.toString() + '\n' + this.cause.stack
 	}
 
 	callsiteString(): string {

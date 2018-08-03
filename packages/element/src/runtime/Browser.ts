@@ -23,7 +23,14 @@ import { Key } from '../page/Enums'
 import { readFileSync } from 'fs'
 import * as termImg from 'term-img'
 import { ConcreteTestSettings } from './Settings'
-import { StructuredError, DocumentedError } from './Error'
+import {
+	StructuredError,
+	DocumentedError,
+	// errorInterpreter,
+	// interpretErrorsFor,
+	// interpretError,
+	// canInterpretErrors,
+} from './Error'
 
 const debug = debugFactory('element:browser')
 const debugScreenshot = debugFactory('element:browser:screenshot')
@@ -55,6 +62,17 @@ export class ElementNotFound extends DocumentedError {
 	}
 }
 
+function locatorToString(locatable: NullableLocatable): string {
+	debug('loca', locatable)
+	if (locatable === null) {
+		return 'null locator'
+	} else if (typeof locatable === 'string') {
+		return locatable
+	} else {
+		return locatable.toErrorString()
+	}
+}
+
 export function locatableToLocator(el: NullableLocatable, callCtx: string): Locator {
 	if (el === null) {
 		throw new DocumentedError(
@@ -80,10 +98,18 @@ export const getFrames = (childFrames: Frame[]): Frame[] => {
 	return Array.from(framesMap.values())
 }
 
+export type errorInterpreter<T> = (
+	err: Error,
+	key: string,
+	callCtx: string,
+	target: T,
+	...args: any[]
+) => DocumentedError
+
 /**
  * Defines a Function Decorator which wraps a method with class local before and after
  */
-function wrapWithCallbacks<T>() {
+function wrapWithCallbacks<T>(...errorInterpreters: errorInterpreter<T>[]) {
 	return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
 		let originalFn = descriptor.value
 
@@ -101,7 +127,9 @@ function wrapWithCallbacks<T>() {
 			try {
 				ret = await originalFn.apply(browser, args)
 			} catch (e) {
-				const newError = browser.interpretError(propertyKey as keyof Browser<T>, e, args)
+				const callCtx = `browser.${propertyKey}()`
+				const newError = errorInterpreters[0](e, propertyKey, callCtx, this, ...args)
+				// const newError = browser.interpretError(propertyKey as keyof Browser<T>, e, args)
 				// attach the call-time stack
 				newError.stack = calltimeStack
 				throw newError
@@ -114,23 +142,67 @@ function wrapWithCallbacks<T>() {
 	}
 }
 
-function errorInterpreter<T>(...targets: string[]) {
-	return function(target: Browser<T>, propertyKey: string, descriptor: PropertyDescriptor) {
-		if (target.errorInterpreters === undefined) {
-			target.errorInterpreters = {}
-		}
-		for (const t of targets) {
-			target.errorInterpreters[t] = descriptor.value
+function visitError<T>(
+	err: Error,
+	browser: any,
+	key: string,
+	callCtx: string,
+	url: string,
+	options: NavigationOptions = {},
+): DocumentedError {
+	debug('visitError', err)
+	const sErr = StructuredError.cast<NetworkErrorData>(err)
+	if (sErr) {
+		const { kind, subKind } = sErr.data
+		if (kind === 'net' && subKind == 'not-resolved') {
+			return new DocumentedError(
+				`Unable to resolve DNS for ${url}`,
+				`Element tried to visit The URL ${url} but it didn't resolve in DNS. This may be due to TODO`,
+				callCtx,
+				err,
+			)
+		} else if (kind === 'http' && subKind == 'not-ok') {
+			return new DocumentedError(
+				`Unable to visit ${url}`,
+				`Element tried to visit The URL ${url} but it responded with status code ${
+					sErr.data.code
+				}. We expected a response code 200-299.`,
+				callCtx,
+				err,
+			)
 		}
 	}
+
+	return DocumentedError.wrapUnhandledError(err, `Unable to visit ${url}`, callCtx)
 }
 
-type errorInterp = (err: Error, key: string, ...args: any[]) => DocumentedError
+function clickError(
+	err: Error,
+	browser: any,
+	key: string,
+	callCtx: string,
+	selectorOrLocator: NullableLocatable,
+	options?: ClickOptions,
+): DocumentedError {
+	debug('clickError', ...arguments)
+	if (err.message.includes('Node is detached from document')) {
+		return new DocumentedError(
+			`Unable to click selector ${locatorToString(selectorOrLocator)}`,
+			'node disappeared TODO',
+			callCtx,
+			err,
+		)
+	}
+	return DocumentedError.wrapUnhandledError(
+		err,
+		`Unable to click selector ${locatorToString(selectorOrLocator)}`,
+		callCtx,
+	)
+}
 
 export class Browser<T> implements BrowserInterface {
 	public screenshots: string[]
 	customContext: T
-	errorInterpreters: { [K in keyof Browser<T>]?: errorInterp }
 
 	constructor(
 		public workRoot: WorkRoot,
@@ -142,16 +214,6 @@ export class Browser<T> implements BrowserInterface {
 	) {
 		this.beforeFunc && this.afterFunc
 		this.screenshots = []
-	}
-
-	interpretError(key: keyof Browser<T>, err: Error, originalArgs: any[]): DocumentedError {
-		const interp = this.errorInterpreters[key]
-		if (interp !== undefined && typeof interp === 'function') {
-			return interp.apply(this, [err, key, ...originalArgs])
-		} else {
-			debug('wrapping unhandled error %O', err)
-			return DocumentedError.wrapUnhandledError(err)
-		}
 	}
 
 	private get context(): Promise<ExecutionContext> {
@@ -214,7 +276,7 @@ export class Browser<T> implements BrowserInterface {
 		}
 	}
 
-	@wrapWithCallbacks()
+	@wrapWithCallbacks(visitError)
 	public async visit(url: string, options: NavigationOptions = {}): Promise<void> {
 		let timeout = this.settings.waitTimeout * 1e3
 		let response
@@ -255,45 +317,11 @@ export class Browser<T> implements BrowserInterface {
 		return
 	}
 
-	@errorInterpreter('visit')
-	public visitError(
-		err: Error,
-		key: string,
-		url: string,
-		options: NavigationOptions = {},
-	): DocumentedError {
-		const callCtx = 'browser.visit()'
-		debug('visitError', err)
-		const sErr = StructuredError.cast<NetworkErrorData>(err)
-		if (sErr) {
-			const { kind, subKind } = sErr.data
-			if (kind === 'net' && subKind == 'not-resolved') {
-				return new DocumentedError(
-					`Unable to resolve DNS for ${url}`,
-					`Element tried to visit The URL ${url} but it didn't resolve in DNS. This may be due to TODO`,
-					callCtx,
-					err,
-				)
-			} else if (kind === 'http' && subKind == 'not-ok') {
-				return new DocumentedError(
-					`Unable to visit ${url}`,
-					`Element tried to visit The URL ${url} but it responded with status code ${
-						sErr.data.code
-					}. We expected a response code 200-299.`,
-					callCtx,
-					err,
-				)
-			}
-		}
-
-		return DocumentedError.wrapUnhandledError(err, `Unable to visit ${url}`, callCtx)
-	}
-
 	/**
 	 * Sends a click event to the element located at `selector`. If the element is
 	 * currently outside the viewport it will first scroll to that element.
 	 */
-	@wrapWithCallbacks()
+	@wrapWithCallbacks(clickError)
 	public async click(selectorOrLocator: NullableLocatable, options?: ClickOptions): Promise<void> {
 		const element = await this.findElement(selectorOrLocator)
 		return element.click(options)

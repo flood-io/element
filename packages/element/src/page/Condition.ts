@@ -4,6 +4,7 @@ import { DEFAULT_SETTINGS } from '../runtime/Settings'
 import * as recast from 'recast'
 import * as prettier from 'prettier'
 import { locatableToLocator, NullableLocatable } from '../runtime/Browser'
+
 // import * as debugFactory from 'debug'
 // const debug = debugFactory('element:page:condition')
 
@@ -63,11 +64,27 @@ export abstract class ElementCondition extends Condition {
 	}
 
 	public async waitFor(frame: Frame): Promise<boolean> {
+		const argSeparator = '-SEP-'
 		let options: PageFnOptions = { polling: 'raf', timeout: this.timeout }
 		let locatorFunc = this.locatorPageFunc
 		let conditionFunc = this.pageFunc
 
-		let fn = function predicate(args1: any[], args2: any[]) {
+		let fn = function predicate(...args: any[]) {
+			let args1: any[] = []
+			let args2: any[] = []
+			let foundSep = false
+			for (const a of args) {
+				if (!foundSep) {
+					if (a === argSeparator) {
+						foundSep = true
+					} else {
+						args1.push(a)
+					}
+				} else {
+					args2.push(a)
+				}
+			}
+
 			let locatorFunc: EvaluateFn = function() {
 				return null
 			}
@@ -107,17 +124,10 @@ export abstract class ElementCondition extends Condition {
 
 		let code = prettier.format(recast.print(fnAST).code, { parser: 'babylon' })
 
-		let args = [this.locator.pageFuncArgs, this.pageFuncArgs]
-		let execFnStr = `${code.trim()}(${args.map(serializeArgument).join(',')})`
-		// console.log(code, locator.pageFuncArgs, this.pageFuncArgs)
+		let args = Array.prototype.concat(this.locator.pageFuncArgs, argSeparator, this.pageFuncArgs)
 
-		await frame.waitForFunction(execFnStr, options)
+		await frame.waitForFunction(code, options, ...args)
 
 		return true
-
-		function serializeArgument(arg) {
-			if (Object.is(arg, undefined)) return 'undefined'
-			return JSON.stringify(arg)
-		}
 	}
 }

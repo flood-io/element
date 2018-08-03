@@ -30,6 +30,7 @@ export function wrapDescriptiveError() {
 			try {
 				return await originalFn.apply(this, args)
 			} catch (e) {
+				// TODO originalError
 				let newError = new Error(`error performing element.${propertyKey}: ${e}`)
 				// attach the call-time stack
 				newError.stack = calltimeStack
@@ -52,7 +53,7 @@ export class ElementHandle implements IElementHandle, Locator {
 	}
 
 	public toErrorString() {
-		return this.toString()
+		return '<element-handle>'
 	}
 
 	async find(context: never, node?: never): Promise<ElementHandle | null> {

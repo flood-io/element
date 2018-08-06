@@ -45,29 +45,31 @@ function wrapDescriptiveError<T>(...errorInterpreters: ErrorInterpreter<T>[]) {
 	}
 }
 
-export function clickError(
-	err: Error,
-	target: ElementHandle,
-	key: string,
-	callCtx: string,
-	options?: ClickOptions,
-): DocumentedError {
-	debug('clickError', err.message)
-	if (err.message.includes('Node is detached from document')) {
-		return new DocumentedError(
-			`Unable to click ${target.toErrorString()} as it is no longer in the DOM`,
-			`The DOM node you tried to click was no longer attached to the browser's DOM tree.
-This may have been caused by:
-- TODO`,
-			callCtx,
+function domError(action: string) {
+	return function(
+		err: Error,
+		target: ElementHandle,
+		key: string,
+		callCtx: string,
+		options?: ClickOptions,
+	): DocumentedError {
+		if (err.message.includes('Node is detached from document')) {
+			return new DocumentedError(
+				`Unable to ${action} ${target.toErrorString()} as it is no longer in the DOM`,
+				`The DOM node you tried to ${action} was no longer attached to the browser's DOM tree.
+
+  This may have been caused by:
+  - Changes to the DOM between the time you located the element and ${action}ed it.`,
+				callCtx,
+				err,
+			)
+		}
+		return DocumentedError.wrapUnhandledError(
 			err,
+			`Unable to ${action} selector ${target.toErrorString()}`,
+			callCtx,
 		)
 	}
-	return DocumentedError.wrapUnhandledError(
-		err,
-		`Unable to click selector ${target.toErrorString()}`,
-		callCtx,
-	)
 }
 
 interface ScreenshotSaver {
@@ -127,9 +129,8 @@ export class ElementHandle implements IElementHandle, Locator {
 		return (element: HTMLElement, node?: HTMLElement) => [element]
 	}
 
-	@wrapDescriptiveError(clickError)
+	@wrapDescriptiveError(domError('click'))
 	public async click(options?: ClickOptions): Promise<void> {
-		debug('EHPROP', await this.element.getProperties())
 		return this.element.click(options)
 	}
 

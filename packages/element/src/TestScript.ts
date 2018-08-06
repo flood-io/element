@@ -30,6 +30,15 @@ interface errorWithDoc extends Error {
 interface errorWithOriginalError extends Error {
 	originalError: Error
 }
+export interface Detail {
+	callsite: string
+	callContext: string | null
+	asString: string
+	unmappedStack: string[]
+	doc: string | null
+	causeAsString: string | undefined
+	causeStack: string | undefined
+}
 
 export class TestScriptError extends Error {
 	public stackWhenThrown: string
@@ -50,19 +59,19 @@ export class TestScriptError extends Error {
 		return (<errorWithDoc>this.originalError).errorDoc !== undefined
 	}
 
-	get errorDoc(): string {
+	get errorDoc(): string | null {
 		if ((<errorWithDoc>this.originalError).errorDoc !== undefined) {
 			return (<errorWithDoc>this.originalError).errorDoc
 		} else {
-			return ''
+			return null
 		}
 	}
 
-	get callContext(): string {
+	get callContext(): string | null {
 		if ((<errorWithDoc>this.originalError).callContext !== undefined) {
 			return (<errorWithDoc>this.originalError).callContext
 		} else {
-			return ''
+			return null
 		}
 	}
 
@@ -70,19 +79,26 @@ export class TestScriptError extends Error {
 		return originalError(this.originalError)
 	}
 
+	toDetailObject(includeVerbose = false): Detail {
+		let output: Detail = {
+			callsite: this.callsiteString(),
+			callContext: this.callContext,
+			asString: this.toString(),
+			unmappedStack: this.unmappedStack,
+			doc: this.errorDoc,
+			causeAsString: undefined,
+			causeStack: undefined,
+		}
+		if (includeVerbose) {
+			output.causeAsString = this.cause.toString()
+			output.causeStack = this.cause.stack
+		}
+
+		return output
+	}
+
 	toStringNodeFormat(): string {
-		let str = this.callsiteString() + '\n\n'
-
-		if (this.callContext !== '') {
-			str += this.callContext + ': '
-		}
-
-		str += this.toString() + '\n' + this.unmappedStack.join('\n')
-
-		if (this.hasDoc) {
-			str += '\nDetail:\n' + this.errorDoc
-		}
-		return str
+		return this.callsiteString() + '\n\n' + this.toString() + '\n' + this.unmappedStack.join('\n')
 	}
 
 	toVerboseString(): string {

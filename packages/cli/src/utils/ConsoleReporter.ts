@@ -7,12 +7,17 @@ import {
 } from '@flood/element/ReporterAPI'
 import { TestScriptError } from '@flood/element/TestScriptAPI'
 import { Logger } from 'winston'
+import chalk from 'chalk'
 
 export class ConsoleReporter implements IReporter {
 	public responseCode: string
 	public stepName: string
+	public verbose: boolean = false
 
-	constructor(private logger: Logger) {}
+	constructor(private logger: Logger) {
+		// TODO Get from flag
+		this.verbose = !!process.env.VERBOSE
+	}
 
 	reset(step: string): void {}
 
@@ -58,13 +63,26 @@ export class ConsoleReporter implements IReporter {
 		this.logger.error('assertion failed \n' + err.toStringNodeFormat())
 	}
 	testStepError(err: TestScriptError): void {
-		console.log('step error', err)
-		// TODO move into config
-		if (process.env.VERBOSE) {
-			console.log('verby step error')
-			this.logger.error(err.toVerboseString())
-		} else {
-			this.logger.error(err.toStringNodeFormat())
+		const detail = err.toDetailObject(this.verbose)
+
+		let str = detail.callsite + '\n\n'
+
+		if (detail.callContext !== '') {
+			str += 'in call ' + chalk.blue(detail.callContext) + '():\n'
+		}
+
+		str += detail.asString + '\n' + detail.unmappedStack.join('\n')
+
+		if (detail.doc) {
+			str += '\n\nDetail:\n' + detail.doc + '\n'
+		}
+
+		this.logger.error('\n' + str)
+
+		if (this.verbose) {
+			this.logger.error(`Verbose detail: 
+cause.asString(): ${detail.causeAsString}
+cause.stack: ${detail.causeStack}`)
 		}
 	}
 

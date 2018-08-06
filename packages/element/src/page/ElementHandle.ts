@@ -1,5 +1,8 @@
 import { ElementHandle as PElementHandle, ClickOptions, ScreenshotOptions } from 'puppeteer'
 import { ElementHandle as IElementHandle, EvaluateFn } from '../../index'
+import { ErrorInterpreter } from '../runtime/errors/Types'
+import { DocumentedError } from '../utils/DocumentedError'
+
 import { Locator } from './Locator'
 import { By } from './By'
 import * as debugFactory from 'debug'
@@ -17,7 +20,7 @@ async function getProperty<T>(element: PElementHandle, prop: string): Promise<T 
 	}
 }
 
-export function wrapDescriptiveError() {
+function wrapDescriptiveError<T>(...errorInterpreters: ErrorInterpreter<T>[]) {
 	return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
 		let originalFn = descriptor.value
 
@@ -30,8 +33,10 @@ export function wrapDescriptiveError() {
 			try {
 				return await originalFn.apply(this, args)
 			} catch (e) {
-				// TODO originalError
-				let newError = new Error(`error performing element.${propertyKey}: ${e}`)
+				const callCtx = `${this.toErrorString()}.${propertyKey}`
+				debug('interpreting error EH', propertyKey)
+				// TODO support multiple possible errorInterpreters
+				const newError = errorInterpreters[0](e, this, propertyKey, callCtx, ...args)
 				// attach the call-time stack
 				newError.stack = calltimeStack
 				throw newError
@@ -40,20 +45,66 @@ export function wrapDescriptiveError() {
 	}
 }
 
+export function clickError(
+	err: Error,
+	target: ElementHandle,
+	key: string,
+	callCtx: string,
+	options?: ClickOptions,
+): DocumentedError {
+	debug('clickError', err.message)
+	if (err.message.includes('Node is detached from document')) {
+		return new DocumentedError(
+			`Unable to click ${target.toErrorString()} as it is no longer in the DOM`,
+			`The DOM node you tried to click was no longer attached to the browser's DOM tree.
+This may have been caused by:
+- TODO`,
+			callCtx,
+			err,
+		)
+	}
+	return DocumentedError.wrapUnhandledError(
+		err,
+		`Unable to click selector ${target.toErrorString()}`,
+		callCtx,
+	)
+}
+
 interface ScreenshotSaver {
 	saveScreenshot(fn: (path: string) => Promise<boolean>)
 }
 
 export class ElementHandle implements IElementHandle, Locator {
 	public screenshotSaver: ScreenshotSaver
+	public errorString = '<element-handle>'
 	constructor(private element: PElementHandle) {}
+
+	public async initErrorString(foundVia?: string): Promise<ElementHandle> {
+		let tag = await this.tagName()
+		const id = await this.getId()
+
+		if (tag === null) tag = 'element-tag'
+
+		let estr = `<${tag.toLowerCase()}`
+		if (id !== null) {
+			estr += ` id='#${id}'`
+		}
+
+		if (foundVia !== null) {
+			estr += ` found using '${foundVia}'`
+		}
+
+		estr += '>'
+		this.errorString = estr
+		return this
+	}
 
 	public bindBrowser(sss: ScreenshotSaver) {
 		this.screenshotSaver = sss
 	}
 
-	public toErrorString() {
-		return '<element-handle>'
+	public toErrorString(): string {
+		return this.errorString
 	}
 
 	async find(context: never, node?: never): Promise<ElementHandle | null> {
@@ -76,8 +127,9 @@ export class ElementHandle implements IElementHandle, Locator {
 		return (element: HTMLElement, node?: HTMLElement) => [element]
 	}
 
-	@wrapDescriptiveError()
+	@wrapDescriptiveError(clickError)
 	public async click(options?: ClickOptions): Promise<void> {
+		debug('EHPROP', await this.element.getProperties())
 		return this.element.click(options)
 	}
 

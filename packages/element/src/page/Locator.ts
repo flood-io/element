@@ -28,6 +28,7 @@ export interface Locator {
 	toErrorString(): string
 	find(context: ExecutionContext, node?: PElementHandle): Promise<ElementHandle | null>
 	findMany(context: ExecutionContext, node?: PElementHandle): Promise<ElementHandle[]>
+	toErrorString(): string
 }
 
 export class BaseLocator implements Locator {
@@ -44,7 +45,7 @@ export class BaseLocator implements Locator {
 	async find(context: ExecutionContext, node?: PElementHandle): Promise<ElementHandle | null> {
 		let handle = await context.evaluateHandle(this.pageFunc, ...this.pageFuncArgs, node)
 		const element = handle.asElement()
-		if (element) return new ElementHandle(element)
+		if (element) return new ElementHandle(element).initErrorString(this.toErrorString())
 		return null
 	}
 
@@ -52,12 +53,18 @@ export class BaseLocator implements Locator {
 		const arrayHandle = await context.evaluateHandle(this.pageFuncMany, ...this.pageFuncArgs, node)
 		const properties = await arrayHandle.getProperties()
 		await arrayHandle.dispose()
-		const result: ElementHandle[] = []
+
+		const thisErrorString = this.toErrorString()
+
+		const elements: Promise<ElementHandle>[] = []
+
 		for (const property of properties.values()) {
 			const elementHandle = property.asElement()
-			if (elementHandle) result.push(new ElementHandle(elementHandle))
+			if (elementHandle)
+				elements.push(new ElementHandle(elementHandle).initErrorString(thisErrorString))
 		}
-		return result
+
+		return Promise.all(elements)
 	}
 
 	async wait(

@@ -18,7 +18,7 @@ export class TargetLocator implements ITargetLocator {
 		let element = jsHandle.asElement()
 		if (!element) return null
 
-		return new ElementHandle(element)
+		return new ElementHandle(element).initErrorString()
 	}
 
 	/**

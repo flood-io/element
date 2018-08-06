@@ -25,6 +25,7 @@ function originalError(e: Error): Error {
 
 interface errorWithDoc extends Error {
 	errorDoc: string
+	callContext: string
 }
 interface errorWithOriginalError extends Error {
 	originalError: Error
@@ -57,15 +58,29 @@ export class TestScriptError extends Error {
 		}
 	}
 
+	get callContext(): string {
+		if ((<errorWithDoc>this.originalError).callContext !== undefined) {
+			return (<errorWithDoc>this.originalError).callContext
+		} else {
+			return ''
+		}
+	}
+
 	get cause(): Error {
 		return originalError(this.originalError)
 	}
 
 	toStringNodeFormat(): string {
-		let str =
-			this.callsiteString() + '\n\n' + this.toString() + '\n' + this.unmappedStack.join('\n')
+		let str = this.callsiteString() + '\n\n'
+
+		if (this.callContext !== '') {
+			str += this.callContext + ': '
+		}
+
+		str += this.toString() + '\n' + this.unmappedStack.join('\n')
+
 		if (this.hasDoc) {
-			str = str + '\nDetail:\n' + this.errorDoc
+			str += '\nDetail:\n' + this.errorDoc
 		}
 		return str
 	}
@@ -75,7 +90,13 @@ export class TestScriptError extends Error {
 
 		// TODO report top->cause chain
 
-		return baseString + '\n\nExtra detail:\n' + this.cause.toString() + '\n' + this.cause.stack
+		return (
+			baseString +
+			'\n\nVerbose detail:\ncause.toString():\n' +
+			this.cause.toString() +
+			'\ncause.stack:\n' +
+			this.cause.stack
+		)
 	}
 
 	callsiteString(): string {

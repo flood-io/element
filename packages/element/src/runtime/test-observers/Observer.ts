@@ -1,6 +1,6 @@
 import Test from '../Test'
 import { Step } from '../Step'
-import { ClassifiedError } from '../errors/ErrorClassification'
+import { StructuredError } from '../../utils/StructuredError'
 
 // import * as debugFactory from 'debug'
 // const debug = debugFactory('element:test:observer')
@@ -13,7 +13,7 @@ export interface TestObserver {
 
 	beforeStep(test: Test, step: Step): Promise<void>
 	onStepPassed(test: Test, step: Step): Promise<void>
-	onStepError(test: Test, step: Step, error: ClassifiedError): Promise<void>
+	onStepError<T>(test: Test, step: Step, error: StructuredError<T>): Promise<void>
 	onStepSkipped(test: Test, step: Step): Promise<void>
 	afterStep(test: Test, step: Step): Promise<void>
 
@@ -37,7 +37,7 @@ export class NoOpTestObserver implements TestObserver {
 	async onStepPassed(test: Test, step: Step): Promise<void> {
 		return this.next.onStepPassed(test, step)
 	}
-	async onStepError(test: Test, step: Step, error: ClassifiedError): Promise<void> {
+	async onStepError<T>(test: Test, step: Step, error: StructuredError<T>): Promise<void> {
 		return this.next.onStepError(test, step, error)
 	}
 	async onStepSkipped(test: Test, step: Step): Promise<void> {
@@ -69,7 +69,7 @@ export class NullTestObserver implements TestObserver {
 	async onStepPassed(test: Test, step: Step): Promise<void> {
 		return
 	}
-	async onStepError(test: Test, step: Step, error: ClassifiedError): Promise<void> {
+	async onStepError<T>(test: Test, step: Step, error: StructuredError<T>): Promise<void> {
 		return
 	}
 	async onStepSkipped(test: Test, step: Step): Promise<void> {

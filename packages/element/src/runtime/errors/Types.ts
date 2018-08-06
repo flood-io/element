@@ -1,9 +1,9 @@
-import { DocumentedError } from '../../utils/DocumentedError'
+import { StructuredError } from '../../utils/StructuredError'
 
-export type ErrorInterpreter<T> = (
+export type ErrorInterpreter<T, U> = (
 	err: Error,
 	target: T,
 	key: string,
 	callCtx: string,
 	...args: any[]
-) => DocumentedError
+) => StructuredError<U>

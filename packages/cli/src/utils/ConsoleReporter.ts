@@ -67,7 +67,7 @@ export class ConsoleReporter implements IReporter {
 
 		let str = detail.callsite + '\n\n'
 
-		if (detail.callContext !== '') {
+		if (detail.callContext) {
 			str += 'in call ' + chalk.blue(detail.callContext) + '():\n'
 		}
 

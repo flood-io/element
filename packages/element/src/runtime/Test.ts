@@ -11,8 +11,9 @@ import { TestObserver, NullTestObserver } from './test-observers/Observer'
 import TimingObserver from './test-observers/Timing'
 import TracingObserver from './test-observers/Tracing'
 import LifecycleObserver from './test-observers/Lifecycle'
+import ErrorObserver from './test-observers/Errors'
 
-import { classifyError } from './errors/ErrorClassification'
+import liftError from './errors/liftError'
 
 import { Step } from './Step'
 
@@ -61,8 +62,8 @@ export default class Test {
 	}
 
 	constructor(private runEnv: RuntimeEnvironment, public reporter: IReporter = new NullReporter()) {
-		this.testObserver = new TimingObserver(
-			new LifecycleObserver(new TracingObserver(new NullTestObserver())),
+		this.testObserver = new ErrorObserver(
+			new TimingObserver(new LifecycleObserver(new TracingObserver(new NullTestObserver()))),
 		)
 
 		this.testDataLoaders = new TestDataLoaders(runEnv.workRoot)
@@ -86,6 +87,7 @@ export default class Test {
 			// Adds output for console in script
 			this.vm.bindReporter(this.reporter)
 		} catch (err) {
+			// XXX parsing errors. Lift to StructuredError?
 			throw this.script.maybeLiftError(err)
 		}
 
@@ -193,7 +195,8 @@ export default class Test {
 		if (error !== null) {
 			debug('step error')
 			this.failed = true
-			await this.testObserver.onStepError(this, step, classifyError(error, this.script))
+			// TODO bottleneck
+			await this.testObserver.onStepError(this, step, liftError(error, 'test', this.script))
 		} else {
 			await this.testObserver.onStepPassed(this, step)
 			await this.doStepDelay()

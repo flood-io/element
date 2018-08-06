@@ -5,7 +5,7 @@ import { TestObserver } from './Observer'
 import NetworkRecorder from '../../network/Recorder'
 import { CompoundMeasurement } from '../../Reporter'
 import { ResponseTiming } from '../../../index'
-import { ClassifiedError } from '../errors/ErrorClassification'
+import { StructuredError } from '../../utils/StructuredError'
 
 import * as debugFactory from 'debug'
 const debug = debugFactory('element:test:timing')
@@ -134,25 +134,7 @@ export default class TimingObserver implements TestObserver {
 		return this.next.onStepPassed(test, step)
 	}
 
-	async onStepError(test: Test, step: Step, err: ClassifiedError) {
-		// TODO these don't fit here
-		debug('stepFailure', step.name)
-
-		this.failed++
-		const { sourceError } = err
-
-		if (err.kind === 'protocol') {
-			debug('stepFailure - protocol error', step.name, err)
-			test.reporter.testInternalError('Protocol Error', sourceError)
-		} else if (err.kind == 'browser') {
-			debug('stepFailure - browser error in test step', step.name, err)
-			test.reporter.testStepError(test.script.liftError(sourceError))
-		} else {
-			debug('stepFailure - internal in test step', step.name, err)
-			// TODO add new reporter method
-			test.reporter.testStepError(test.script.liftError(sourceError))
-		}
-
+	async onStepError<T>(test: Test, step: Step, err: StructuredError<T>) {
 		return this.next.onStepError(test, step, err)
 	}
 

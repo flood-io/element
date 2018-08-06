@@ -2,7 +2,7 @@ import Test from '../Test'
 import { TestObserver } from './Observer'
 import { Step } from '../Step'
 import { TestEvent } from '../../Reporter'
-import { ClassifiedError } from '../errors/ErrorClassification'
+import { StructuredError } from '../../utils/StructuredError'
 
 export default class LifecycleObserver implements TestObserver {
 	constructor(private next: TestObserver) {}
@@ -31,7 +31,7 @@ export default class LifecycleObserver implements TestObserver {
 		await this.next.onStepPassed(test, step)
 		test.reporter.testLifecycle(TestEvent.StepSucceeded, step.name)
 	}
-	async onStepError(test: Test, step: Step, error: ClassifiedError) {
+	async onStepError<T>(test: Test, step: Step, error: StructuredError<T>) {
 		await this.next.onStepError(test, step, error)
 		test.reporter.testLifecycle(TestEvent.StepFailed, step.name)
 	}

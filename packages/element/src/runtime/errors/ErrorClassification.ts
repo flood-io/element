@@ -6,13 +6,14 @@ const debug = debugFactory('element:test:error')
 export type ErrorKind = 'assertion' | 'protocol' | 'browser' | 'internal'
 export type ErrorSource = 'element' | 'testScript'
 
-export interface ClassifiedError {
+export interface ErrorClassification {
 	kind: ErrorKind
 	source: ErrorSource
-	sourceError: Error
 }
 
-export function classifyError(error: Error, testScript?: ITestScript): ClassifiedError {
+type ClassifiedError<T> = T & ErrorClassification
+
+export function classifyError<T>(error: Error, testScript?: ITestScript): ClassifiedError<T> {
 	debug('input %O', error)
 	debug('error.name %s', error.name)
 

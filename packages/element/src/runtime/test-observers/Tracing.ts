@@ -6,10 +6,19 @@ import { NetworkTraceData } from '../../Reporter'
 import { IObjectTrace, NullObjectTrace } from '../../utils/ObjectTrace'
 import NetworkRecorder from '../../network/Recorder'
 import { Assertion } from '../Assertion'
-import { ClassifiedError } from '../errors/ErrorClassification'
+import { ITestScript } from '../../TestScript'
+import { StructuredError } from '../../utils/StructuredError'
 
 import * as debugFactory from 'debug'
 const debug = debugFactory('element:test:tracing')
+
+function isAssertionError(error: Error, testScript?: ITestScript): boolean {
+	return (
+		testScript !== undefined &&
+		testScript.isScriptError(error) &&
+		error.name.startsWith('AssertionError')
+	)
+}
 
 export default class TracingObserver extends NoOpTestObserver {
 	private trace: IObjectTrace = NullObjectTrace
@@ -46,27 +55,26 @@ export default class TracingObserver extends NoOpTestObserver {
 		this.trace = NullObjectTrace
 	}
 
-	async onStepError(test: Test, step: Step, err: ClassifiedError) {
+	async onStepError<T>(test: Test, step: Step, err: StructuredError<T>) {
 		this.failed++
 
-		if (err.source === 'testScript' && err.kind === 'assertion') {
+		if (isAssertionError(err, test.script)) {
 			debug('stepFailure - assertion', step.name, err)
 			// Handles assertions from assert
-			let { message } = err.sourceError
 
 			let assertion: Assertion = {
 				assertionName: 'AssertionError',
-				message,
-				stack: test.script.filterAndUnmapStack(err.sourceError),
+				message: err.message,
+				stack: test.script.filterAndUnmapStack(err),
 				isFailure: true,
 			}
 
-			test.reporter.testAssertionError(test.script.liftError(err.sourceError))
 			this.trace.addAssertion(assertion)
+			// TODO should return after handling
 		} else {
 			let errorPayload = {
-				message: err.sourceError.message,
-				stack: test.script.filterAndUnmapStack(err.sourceError).join('\n'),
+				message: err.message,
+				stack: test.script.filterAndUnmapStack(err).join('\n'),
 			}
 
 			this.trace.addError(errorPayload)

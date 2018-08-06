@@ -6,7 +6,7 @@ import { NetworkTraceData } from '../../Reporter'
 import { IObjectTrace, NullObjectTrace } from '../../utils/ObjectTrace'
 import NetworkRecorder from '../../network/Recorder'
 import { Assertion } from '../Assertion'
-import { ClassifiedError } from '../errors/Error'
+import { ClassifiedError } from '../errors/ErrorClassification'
 
 import * as debugFactory from 'debug'
 const debug = debugFactory('element:test:tracing')

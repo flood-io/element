@@ -2,7 +2,7 @@ import Test from '../Test'
 import { TestObserver } from './Observer'
 import { Step } from '../Step'
 import { TestEvent } from '../../Reporter'
-import { ClassifiedError } from '../errors/Error'
+import { ClassifiedError } from '../errors/ErrorClassification'
 
 export default class LifecycleObserver implements TestObserver {
 	constructor(private next: TestObserver) {}

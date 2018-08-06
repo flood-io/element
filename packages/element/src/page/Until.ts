@@ -11,7 +11,7 @@ import { URLCondition } from './conditions/URLCondition'
 import { DialogCondition } from './conditions/DialogCondition'
 import { FrameCondition } from './conditions/FrameCondition'
 import { Condition } from './Condition'
-import { NullableLocatable, Locatable } from '../../index'
+import { NullableLocatable, Locatable } from '../runtime/Browser'
 
 export class Until {
 	static ableToSwitchToFrame(frame: Locatable): Condition {

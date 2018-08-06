@@ -5,7 +5,7 @@ import { TestObserver } from './Observer'
 import NetworkRecorder from '../../network/Recorder'
 import { CompoundMeasurement } from '../../Reporter'
 import { ResponseTiming } from '../../../index'
-import { ClassifiedError } from '../errors/Error'
+import { ClassifiedError } from '../errors/ErrorClassification'
 
 import * as debugFactory from 'debug'
 const debug = debugFactory('element:test:timing')

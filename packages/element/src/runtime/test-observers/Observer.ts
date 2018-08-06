@@ -1,6 +1,6 @@
 import Test from '../Test'
 import { Step } from '../Step'
-import { ClassifiedError } from '../errors/Error'
+import { ClassifiedError } from '../errors/ErrorClassification'
 
 // import * as debugFactory from 'debug'
 // const debug = debugFactory('element:test:observer')

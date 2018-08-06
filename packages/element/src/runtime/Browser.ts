@@ -14,7 +14,6 @@ import { Locator } from '../page/Locator'
 import { ElementHandle } from '../page/ElementHandle'
 import { TargetLocator } from '../page/TargetLocator'
 import { By } from '../page/By'
-import * as debugFactory from 'debug'
 import { Browser as BrowserInterface, EvaluateFn } from '../../index'
 import { PuppeteerClient, WorkRoot } from '../types'
 import { join, resolve } from 'path'
@@ -23,15 +22,11 @@ import { Key } from '../page/Enums'
 import { readFileSync } from 'fs'
 import * as termImg from 'term-img'
 import { ConcreteTestSettings } from './Settings'
-import {
-	StructuredError,
-	DocumentedError,
-	// errorInterpreter,
-	// interpretErrorsFor,
-	// interpretError,
-	// canInterpretErrors,
-} from './Error'
+import { ErrorInterpreter } from './errors/Types'
+import { DocumentedError } from '../utils/DocumentedError'
+import { StructuredError } from '../utils/StructuredError'
 
+import * as debugFactory from 'debug'
 const debug = debugFactory('element:browser')
 const debugScreenshot = debugFactory('element:browser:screenshot')
 
@@ -62,17 +57,6 @@ export class ElementNotFound extends DocumentedError {
 	}
 }
 
-function locatorToString(locatable: NullableLocatable): string {
-	debug('loca', locatable)
-	if (locatable === null) {
-		return 'null locator'
-	} else if (typeof locatable === 'string') {
-		return locatable
-	} else {
-		return locatable.toErrorString()
-	}
-}
-
 export function locatableToLocator(el: NullableLocatable, callCtx: string): Locator {
 	if (el === null) {
 		throw new DocumentedError(
@@ -98,18 +82,10 @@ export const getFrames = (childFrames: Frame[]): Frame[] => {
 	return Array.from(framesMap.values())
 }
 
-export type errorInterpreter<T> = (
-	err: Error,
-	key: string,
-	callCtx: string,
-	target: T,
-	...args: any[]
-) => DocumentedError
-
 /**
  * Defines a Function Decorator which wraps a method with class local before and after
  */
-function wrapWithCallbacks<T>(...errorInterpreters: errorInterpreter<T>[]) {
+function wrapWithCallbacks<T>(...errorInterpreters: ErrorInterpreter<T>[]) {
 	return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
 		let originalFn = descriptor.value
 
@@ -128,8 +104,16 @@ function wrapWithCallbacks<T>(...errorInterpreters: errorInterpreter<T>[]) {
 				ret = await originalFn.apply(browser, args)
 			} catch (e) {
 				const callCtx = `browser.${propertyKey}()`
-				const newError = errorInterpreters[0](e, propertyKey, callCtx, this, ...args)
-				// const newError = browser.interpretError(propertyKey as keyof Browser<T>, e, args)
+				debug('interpreting error browser', propertyKey)
+
+				let newError: Error
+				const interp = errorInterpreters[0]
+				if (interp) {
+					// TODO support multiple possible errorInterpreters
+					newError = errorInterpreters[0](e, this, propertyKey, callCtx, ...args)
+				} else {
+					newError = DocumentedError.liftAddingCallContext(e, callCtx)
+				}
 				// attach the call-time stack
 				newError.stack = calltimeStack
 				throw newError
@@ -174,30 +158,6 @@ function visitError<T>(
 	}
 
 	return DocumentedError.wrapUnhandledError(err, `Unable to visit ${url}`, callCtx)
-}
-
-function clickError(
-	err: Error,
-	browser: any,
-	key: string,
-	callCtx: string,
-	selectorOrLocator: NullableLocatable,
-	options?: ClickOptions,
-): DocumentedError {
-	debug('clickError', ...arguments)
-	if (err.message.includes('Node is detached from document')) {
-		return new DocumentedError(
-			`Unable to click selector ${locatorToString(selectorOrLocator)}`,
-			'node disappeared TODO',
-			callCtx,
-			err,
-		)
-	}
-	return DocumentedError.wrapUnhandledError(
-		err,
-		`Unable to click selector ${locatorToString(selectorOrLocator)}`,
-		callCtx,
-	)
 }
 
 export class Browser<T> implements BrowserInterface {
@@ -321,7 +281,7 @@ export class Browser<T> implements BrowserInterface {
 	 * Sends a click event to the element located at `selector`. If the element is
 	 * currently outside the viewport it will first scroll to that element.
 	 */
-	@wrapWithCallbacks(clickError)
+	@wrapWithCallbacks()
 	public async click(selectorOrLocator: NullableLocatable, options?: ClickOptions): Promise<void> {
 		const element = await this.findElement(selectorOrLocator)
 		return element.click(options)

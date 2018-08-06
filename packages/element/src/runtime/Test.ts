@@ -12,7 +12,7 @@ import TimingObserver from './test-observers/Timing'
 import TracingObserver from './test-observers/Tracing'
 import LifecycleObserver from './test-observers/Lifecycle'
 
-import { classifyError } from './errors/Error'
+import { classifyError } from './errors/ErrorClassification'
 
 import { Step } from './Step'
 

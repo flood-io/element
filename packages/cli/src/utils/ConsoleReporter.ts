@@ -46,7 +46,7 @@ export class ConsoleReporter implements IReporter {
 				this.logger.info(`---> Step '${label}' finished`)
 				break
 			case TestEvent.StepSkipped:
-				this.logger.info(`---- Step '${label}'`)
+				this.logger.info(`---- Step '${label}' skipped`)
 				break
 		}
 	}
@@ -58,7 +58,14 @@ export class ConsoleReporter implements IReporter {
 		this.logger.error('assertion failed \n' + err.toStringNodeFormat())
 	}
 	testStepError(err: TestScriptError): void {
-		this.logger.error(err.toStringNodeFormat())
+		console.log('step error', err)
+		// TODO move into config
+		if (process.env.VERBOSE) {
+			console.log('verby step error')
+			this.logger.error(err.toVerboseString())
+		} else {
+			this.logger.error(err.toStringNodeFormat())
+		}
 	}
 
 	testScriptConsole(method: string, message?: any, ...optionalParams: any[]): void {

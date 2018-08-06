@@ -18,7 +18,7 @@ export class By {
 
 	public static css(selector: string, debugString?: string): Locator {
 		if (debugString === undefined) {
-			debugString = selector
+			debugString = `By.css(${selector})`
 		}
 		return new CSSLocator(selector, debugString)
 	}

@@ -31,4 +31,5 @@ export interface NetworkErrorData {
 export interface ActionErrorData {
 	_kind: 'action'
 	kind: string
+	action: string
 }

@@ -74,6 +74,7 @@ function domError(
 			'dom error during action',
 			{
 				_kind: 'action',
+				action: key,
 				kind: 'node-detached',
 			},
 			err,
@@ -86,12 +87,12 @@ function domError(
 			'puppeteer error during action',
 			{
 				_kind: 'action',
+				action: key,
 				kind: 'execution-context-destroyed',
 			},
 			err,
 		)
 	}
-	debug('domError wrapping bare')
 	return StructuredError.wrapBareError<EmptyErrorData>(err, { _kind: 'empty' })
 }
 

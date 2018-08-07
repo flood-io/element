@@ -13,7 +13,8 @@ import TracingObserver from './test-observers/Tracing'
 import LifecycleObserver from './test-observers/Lifecycle'
 import ErrorObserver from './test-observers/Errors'
 
-import liftToStructuredError from './errors/liftError'
+import { AnyErrorData, EmptyErrorData } from './errors/Types'
+import { StructuredError } from '../utils/StructuredError'
 
 import { Step } from './Step'
 
@@ -40,7 +41,7 @@ export default class Test {
 	public settings: ConcreteTestSettings
 	public steps: Step[]
 
-	public runningBrowser: Browser<Step, any> | null
+	public runningBrowser: Browser<Step> | null
 
 	public networkRecorder: NetworkRecorder
 	public observer: Observer
@@ -122,7 +123,7 @@ export default class Test {
 		await this.testData.load()
 
 		try {
-			const browser = new Browser<Step, any>(
+			const browser = new Browser<Step>(
 				this.runEnv.workRoot,
 				this.driver,
 				this.settings,
@@ -177,7 +178,7 @@ export default class Test {
 		}
 	}
 
-	async runStep(browser: Browser<Step, any>, step: Step, testDataRecord: any) {
+	async runStep(browser: Browser<Step>, step: Step, testDataRecord: any) {
 		this.networkRecorder.reset()
 
 		let error: Error | null = null
@@ -195,12 +196,17 @@ export default class Test {
 		if (error !== null) {
 			debug('step error')
 			this.failed = true
-			// TODO bottleneck
-			await this.testObserver.onStepError(
-				this,
-				step,
-				liftToStructuredError(error, 'test', this.script),
-			)
+
+			let sErr: StructuredError<AnyErrorData>
+
+			if ((<StructuredError<AnyErrorData>>error)._structured === 'yes') {
+				sErr = <StructuredError<AnyErrorData>>error
+			} else {
+				// catchall - this should trigger a documentation request further up the chain
+				sErr = StructuredError.wrapBareError<EmptyErrorData>(error, { _kind: 'empty' }, 'test')
+			}
+
+			await this.testObserver.onStepError(this, step, sErr)
 		} else {
 			await this.testObserver.onStepPassed(this, step)
 			await this.doStepDelay()
@@ -273,7 +279,7 @@ export default class Test {
 		})
 	}
 
-	public async willRunCommand(browser: Browser<Step, any>, command: string) {
+	public async willRunCommand(browser: Browser<Step>, command: string) {
 		if (this.settings.actionDelay <= 0 || command === 'wait') {
 			return
 		}
@@ -288,7 +294,7 @@ export default class Test {
 		})
 	}
 
-	async didRunCommand(browser: Browser<Step, any>, command: string) {
+	async didRunCommand(browser: Browser<Step>, command: string) {
 		this.testObserver.afterStepAction(this, browser.customContext, command)
 	}
 

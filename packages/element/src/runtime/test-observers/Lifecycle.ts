@@ -31,7 +31,7 @@ export default class LifecycleObserver implements TestObserver {
 		await this.next.onStepPassed(test, step)
 		test.reporter.testLifecycle(TestEvent.StepSucceeded, step.name)
 	}
-	async onStepError<T>(test: Test, step: Step, error: StructuredError<T>) {
+	async onStepError(test: Test, step: Step, error: StructuredError<any>) {
 		await this.next.onStepError(test, step, error)
 		test.reporter.testLifecycle(TestEvent.StepFailed, step.name)
 	}

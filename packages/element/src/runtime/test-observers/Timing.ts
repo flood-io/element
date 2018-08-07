@@ -134,7 +134,7 @@ export default class TimingObserver implements TestObserver {
 		return this.next.onStepPassed(test, step)
 	}
 
-	async onStepError<T>(test: Test, step: Step, err: StructuredError<T>) {
+	async onStepError(test: Test, step: Step, err: StructuredError<any>) {
 		return this.next.onStepError(test, step, err)
 	}
 

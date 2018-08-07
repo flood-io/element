@@ -1,3 +1,7 @@
+interface maybeHasCallContext {
+	callContext?: string
+}
+
 export class DocumentedError extends Error {
 	_documented = 'yes'
 	public callContext?: string
@@ -19,6 +23,9 @@ export class DocumentedError extends Error {
 		doc: string,
 		callContext?: string,
 	): DocumentedError {
+		if (callContext === undefined && (<maybeHasCallContext>err).callContext !== undefined) {
+			callContext = (<maybeHasCallContext>err).callContext
+		}
 		return new DocumentedError(message, doc, callContext, err).copyStackFromOriginalError()
 	}
 

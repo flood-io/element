@@ -13,6 +13,22 @@ export class DocumentedError extends Error {
 		Error.captureStackTrace(this, this.constructor)
 	}
 
+	static documented(
+		err: Error,
+		message: string,
+		doc: string,
+		callContext?: string,
+	): DocumentedError {
+		return new DocumentedError(message, doc, callContext, err).copyStackFromOriginalError()
+	}
+
+	copyStackFromOriginalError(): DocumentedError {
+		if (this.originalError) {
+			this.stack = this.originalError.stack
+		}
+		return this
+	}
+
 	static liftAddingCallContext(err: Error, callCtx: string): Error {
 		if ((<DocumentedError>err)._documented === 'yes') {
 			;(<DocumentedError>err).callContext = callCtx

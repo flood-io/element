@@ -22,25 +22,17 @@ import { Key } from '../page/Enums'
 import { readFileSync } from 'fs'
 import * as termImg from 'term-img'
 import { ConcreteTestSettings } from './Settings'
-import { ErrorInterpreter } from './errors/Types'
+import { ErrorInterpreter, NetworkErrorData } from './errors/Types'
 import { DocumentedError } from '../utils/DocumentedError'
 import { StructuredError } from '../utils/StructuredError'
 
 import * as debugFactory from 'debug'
-const debug = debugFactory('element:browser')
-const debugScreenshot = debugFactory('element:browser:screenshot')
+const debug = debugFactory('element:runtme:browser')
+const debugScreenshot = debugFactory('element:runtime:browser:screenshot')
 
 export type Locatable = Locator | string
 
 export type NullableLocatable = Locatable | null
-
-type NetworkErrorKind = 'net' | 'http'
-interface NetworkErrorData {
-	kind: NetworkErrorKind
-	subKind: string
-	reason?: string
-	code?: string
-}
 
 export class ElementNotFound extends DocumentedError {
 	constructor(locatable: NullableLocatable, callCtx?: string) {
@@ -100,13 +92,13 @@ export const getFrames = (childFrames: Frame[]): Frame[] => {
 /**
  * Defines a Function Decorator which wraps a method with class local before and after
  */
-function wrapWithCallbacks<T, U>(...errorInterpreters: ErrorInterpreter<T, U>[]) {
+function wrapWithCallbacks<T>(...errorInterpreters: ErrorInterpreter<T, NetworkErrorData>[]) {
 	return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
 		let originalFn = descriptor.value
 
 		descriptor.value = async function(...args: any[]) {
 			let ret
-			const browser: Browser<T, U> = this
+			const browser: Browser<T> = this
 
 			// capture the stack trace at call-time
 			const calltimeError = new Error()
@@ -126,21 +118,6 @@ function wrapWithCallbacks<T, U>(...errorInterpreters: ErrorInterpreter<T, U>[])
 				debug('error now', e)
 
 				throw e
-
-				// let newError = StructuredError.newFromError<U>(e, {
-				// callContext: ,
-				// })
-
-				// newError.callContext =
-				// const interp = errorInterpreters[0]
-				// if (interp) {
-				// // TODO support multiple possible errorInterpreters
-				// newError = errorInterpreters[0](e, this, propertyKey, callCtx, ...args)
-				// } else {
-				// newError = DocumentedError.liftAddingCallContext(e, callCtx)
-				// }
-				// attach the call-time stack
-				// throw newError
 			}
 			if (browser.afterFunc instanceof Function) await browser.afterFunc(browser, propertyKey)
 			return ret
@@ -150,41 +127,7 @@ function wrapWithCallbacks<T, U>(...errorInterpreters: ErrorInterpreter<T, U>[])
 	}
 }
 
-// function visitError<T, U>(
-// err: Error,
-// browser: any,
-// key: string,
-// callCtx: string,
-// url: string,
-// options: NavigationOptions = {},
-// ): StructuredError<U> {
-// debug('visitError', err)
-// const sErr = StructuredError.cast<NetworkErrorData>(err)
-// if (sErr) {
-// const { kind, subKind } = sErr.data
-// if (kind === 'net' && subKind == 'not-resolved') {
-// return new StructuredError<U>(
-// `Unable to resolve DNS for ${url}`,
-// `Element tried to visit The URL ${url} but it didn't resolve in DNS. This may be due to TODO`,
-// callCtx,
-// err,
-// )
-// } else if (kind === 'http' && subKind == 'not-ok') {
-// return new DocumentedError(
-// `Unable to visit ${url}`,
-// `Element tried to visit The URL ${url} but it responded with status code ${
-// sErr.data.code
-// }. We expected a response code 200-299.`,
-// callCtx,
-// err,
-// )
-// }
-// }
-
-// return DocumentedError.wrapUnhandledError(err, `Unable to visit ${url}`, callCtx)
-// }
-
-export class Browser<T, U> implements BrowserInterface {
+export class Browser<T> implements BrowserInterface {
 	public screenshots: string[]
 	customContext: T
 
@@ -192,8 +135,8 @@ export class Browser<T, U> implements BrowserInterface {
 		public workRoot: WorkRoot,
 		private client: PuppeteerClient,
 		public settings: ConcreteTestSettings,
-		public beforeFunc: (b: Browser<T, U>, name: string) => Promise<void> = async () => {},
-		public afterFunc: (b: Browser<T, U>, name: string) => Promise<void> = async () => {},
+		public beforeFunc: (b: Browser<T>, name: string) => Promise<void> = async () => {},
+		public afterFunc: (b: Browser<T>, name: string) => Promise<void> = async () => {},
 		private activeFrame?: Frame | null,
 	) {
 		this.beforeFunc && this.afterFunc
@@ -275,6 +218,8 @@ export class Browser<T, U> implements BrowserInterface {
 				e = new StructuredError<NetworkErrorData>(
 					'dns name not resolved',
 					{
+						_kind: 'net',
+						url,
 						kind: 'net',
 						subKind: 'not-resolved',
 					},
@@ -286,12 +231,16 @@ export class Browser<T, U> implements BrowserInterface {
 
 		if (response === null) {
 			throw new StructuredError<NetworkErrorData>('no response', {
+				url,
+				_kind: 'net',
 				kind: 'http',
 				subKind: 'no-response',
 			})
 		}
 		if (!response.ok()) {
 			throw new StructuredError<NetworkErrorData>('http response code not OK', {
+				url,
+				_kind: 'net',
 				kind: 'http',
 				subKind: 'not-ok',
 				code: response.status().toString(),

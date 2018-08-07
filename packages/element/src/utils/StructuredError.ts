@@ -3,6 +3,7 @@
 export class StructuredError<T> extends Error {
 	_structured = 'yes'
 
+	public wrappedUnstructured = false
 	public kind: string
 	public source: string = 'unknown'
 	public callContext?: string
@@ -53,13 +54,14 @@ export class StructuredError<T> extends Error {
 
 	static wrapBareError<TT>(
 		err: Error,
-		source: string,
-		kind: string,
 		data: TT,
+		source?: string,
+		kind?: string,
 	): StructuredError<TT> {
 		const serr = new StructuredError<TT>(err.message, data, err)
-		serr.source = source
-		serr.kind = kind
+		if (source) serr.source = source
+		serr.kind = kind || 'unknown'
+		serr.wrappedUnstructured = true
 		return serr
 	}
 }

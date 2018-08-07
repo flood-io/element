@@ -1,3 +1,1 @@
-import { TestScriptError } from './src/TestScript'
-
-export { TestScriptError }
+export { TestScriptError, ITestScript } from './src/TestScript'

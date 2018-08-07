@@ -1,7 +1,12 @@
 import { ElementHandle as PElementHandle, ClickOptions, ScreenshotOptions } from 'puppeteer'
 import { ElementHandle as IElementHandle, EvaluateFn } from '../../index'
-import { ErrorInterpreter } from '../runtime/errors/Types'
-import { DocumentedError } from '../utils/DocumentedError'
+import {
+	ErrorInterpreter,
+	ErrorData,
+	ActionErrorData,
+	EmptyErrorData,
+} from '../runtime/errors/Types'
+import { StructuredError } from '../utils/StructuredError'
 
 import { Locator } from './Locator'
 import { By } from './By'
@@ -20,7 +25,9 @@ async function getProperty<T>(element: PElementHandle, prop: string): Promise<T 
 	}
 }
 
-function wrapDescriptiveError<T>(...errorInterpreters: ErrorInterpreter<T>[]) {
+function wrapDescriptiveError<ElementHandle, U extends ErrorData>(
+	...errorInterpreters: ErrorInterpreter<ElementHandle, U>[]
+) {
 	return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
 		let originalFn = descriptor.value
 
@@ -30,46 +37,62 @@ function wrapDescriptiveError<T>(...errorInterpreters: ErrorInterpreter<T>[]) {
 			Error.captureStackTrace(calltimeError)
 			const calltimeStack = calltimeError.stack
 
+			// const elementHandle = this
+
 			try {
 				return await originalFn.apply(this, args)
 			} catch (e) {
-				const callCtx = `${this.toErrorString()}.${propertyKey}`
-				debug('interpreting error EH', propertyKey)
+				debug('interpreting', propertyKey, e)
+				// TODO allow multiple
 				// TODO support multiple possible errorInterpreters
-				const newError = errorInterpreters[0](e, this, propertyKey, callCtx, ...args)
+				const newError = errorInterpreters[0](e, this, propertyKey, ...args)
+
+				const sErr = StructuredError.liftWithSource(
+					newError,
+					'elementHandle',
+					`${this.toErrorString()}.${propertyKey}`,
+				)
+				sErr.stack = calltimeStack
+
 				// attach the call-time stack
-				newError.stack = calltimeStack
-				throw newError
+				// newError.stack = calltimeStack
+				throw sErr
 			}
 		}
 	}
 }
 
-function domError(action: string) {
-	return function(
-		err: Error,
-		target: ElementHandle,
-		key: string,
-		callCtx: string,
-		options?: ClickOptions,
-	): DocumentedError {
-		if (err.message.includes('Node is detached from document')) {
-			return new DocumentedError(
-				`Unable to ${action} ${target.toErrorString()} as it is no longer in the DOM`,
-				`The DOM node you tried to ${action} was no longer attached to the browser's DOM tree.
-
-  This may have been caused by:
-  - Changes to the DOM between the time you located the element and ${action}ed it.`,
-				callCtx,
-				err,
-			)
-		}
-		return DocumentedError.wrapUnhandledError(
+function domError(
+	err: Error,
+	target: ElementHandle,
+	key: string,
+	callCtx: string,
+	options?: ClickOptions,
+): StructuredError<ActionErrorData | EmptyErrorData> {
+	if (err.message.includes('Node is detached from document')) {
+		return new StructuredError<ActionErrorData>(
+			'dom error during action',
+			{
+				_kind: 'action',
+				kind: 'node-detached',
+			},
 			err,
-			`Unable to ${action} selector ${target.toErrorString()}`,
-			callCtx,
 		)
 	}
+	if (
+		err.message.includes('Execution context was destroyed, most likely because of a navigation')
+	) {
+		return new StructuredError<ActionErrorData>(
+			'puppeteer error during action',
+			{
+				_kind: 'action',
+				kind: 'execution-context-destroyed',
+			},
+			err,
+		)
+	}
+	debug('domError wrapping bare')
+	return StructuredError.wrapBareError<EmptyErrorData>(err, { _kind: 'empty' })
 }
 
 interface ScreenshotSaver {
@@ -82,6 +105,7 @@ export class ElementHandle implements IElementHandle, Locator {
 	constructor(private element: PElementHandle) {}
 
 	public async initErrorString(foundVia?: string): Promise<ElementHandle> {
+		debug('initErrorString', foundVia)
 		let tag = await this.tagName()
 		const id = await this.getId()
 
@@ -129,7 +153,7 @@ export class ElementHandle implements IElementHandle, Locator {
 		return (element: HTMLElement, node?: HTMLElement) => [element]
 	}
 
-	@wrapDescriptiveError(domError('click'))
+	@wrapDescriptiveError(domError)
 	public async click(options?: ClickOptions): Promise<void> {
 		return this.element.click(options)
 	}

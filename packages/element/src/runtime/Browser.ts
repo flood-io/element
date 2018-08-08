@@ -237,7 +237,11 @@ export class Browser<T> implements BrowserInterface {
 				subKind: 'no-response',
 			})
 		}
-		if (!response.ok()) {
+
+		// response needs to be 2xx or 3xx
+		// TODO make configurable
+		const status = response.status()
+		if (!response.ok() && !(status >= 300 && status <= 399)) {
 			throw new StructuredError<NetworkErrorData>('http response code not OK', {
 				url,
 				_kind: 'net',

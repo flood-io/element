@@ -63,6 +63,8 @@ describe('Browser', function() {
 	})
 
 	it('throws an error', async () => {
+		let noErrorSpy = Sinon.spy()
+
 		let browser = new Browser(
 			workRoot,
 			puppeteer,
@@ -75,9 +77,11 @@ describe('Browser', function() {
 		let caughtError: Error | undefined
 		try {
 			await browser.click('.notanelement')
+			noErrorSpy()
 		} catch (e) {
 			caughtError = e
 		}
+		expect(noErrorSpy).to.not.have.been.called
 		expect(ensureDefined(caughtError)).to.be.an('error')
 	})
 

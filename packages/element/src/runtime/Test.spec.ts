@@ -72,7 +72,7 @@ describe('Test', function() {
 			screenshotOnFailure: true,
 			waitTimeout: 30,
 			responseTimeMeasurement: 'step',
-			consoleFilter: ['error', 'warn', 'info', 'log'],
+			consoleFilter: [],
 		})
 	})
 
@@ -121,6 +121,8 @@ describe('Test', function() {
 			// expect(stackLine).to.include(':21:9')
 		}).timeout(30e3)
 	})
+
+	// TODO error handling
 
 	describe('Timing', () => {
 		describe('step', () => {

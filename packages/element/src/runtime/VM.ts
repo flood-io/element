@@ -122,7 +122,7 @@ export class VM {
 
 		let context = {
 			setup: settings => {
-				rawSettings = { ...{}, ...settings, ...rawSettings }
+				Object.assign(rawSettings, settings)
 			},
 
 			ENV,

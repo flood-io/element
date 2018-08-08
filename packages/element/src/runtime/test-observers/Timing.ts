@@ -100,11 +100,6 @@ export default class TimingObserver implements TestObserver {
 		const name = step.name
 		const reporter = test.reporter
 		reporter.reset(name)
-		reporter.addMeasurement('response_time', 0, name)
-		reporter.addMeasurement('latency', 0, name)
-		reporter.addMeasurement('concurrency', 1, name) //TODO re-examine this.numberOfBrowsers
-		reporter.addMeasurement('passed', 1, name)
-		reporter.addMeasurement('failed', 0, name)
 
 		await this.next.beforeStep(test, step)
 
@@ -135,6 +130,7 @@ export default class TimingObserver implements TestObserver {
 	}
 
 	async onStepError(test: Test, step: Step, err: StructuredError<any>) {
+		this.failed++
 		return this.next.onStepError(test, step, err)
 	}
 

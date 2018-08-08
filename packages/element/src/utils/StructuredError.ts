@@ -30,6 +30,13 @@ export class StructuredError<T> extends Error {
 		Error.captureStackTrace(this, this.constructor)
 	}
 
+	copyStackFromOriginalError(): StructuredError<T> {
+		if (this.originalError) {
+			this.stack = this.originalError.stack
+		}
+		return this
+	}
+
 	static liftWithSource<TT>(err: Error, source: string, callContext: string): StructuredError<TT> {
 		if ((<StructuredError<TT>>err)._structured === 'yes') {
 			;(<StructuredError<TT>>err).callContext = callContext

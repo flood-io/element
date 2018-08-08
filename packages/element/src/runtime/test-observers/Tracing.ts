@@ -6,19 +6,12 @@ import { NetworkTraceData } from '../../Reporter'
 import { IObjectTrace, NullObjectTrace } from '../../utils/ObjectTrace'
 import NetworkRecorder from '../../network/Recorder'
 import { Assertion } from '../Assertion'
-import { ITestScript } from '../../TestScript'
+// import { ITestScript } from '../../TestScript'
 import { StructuredError } from '../../utils/StructuredError'
+import { AssertionErrorData, castStructuredError } from '../errors/Types'
 
 import * as debugFactory from 'debug'
 const debug = debugFactory('element:test:tracing')
-
-function isAssertionError(error: Error, testScript?: ITestScript): boolean {
-	return (
-		testScript !== undefined &&
-		testScript.isScriptError(error) &&
-		error.name.startsWith('AssertionError')
-	)
-}
 
 export default class TracingObserver extends NoOpTestObserver {
 	private trace: IObjectTrace = NullObjectTrace
@@ -40,9 +33,9 @@ export default class TracingObserver extends NoOpTestObserver {
 
 		await this.addNetworkTrace(test, step, test.networkRecorder)
 
-		await this.flushTrace(test, step)
+		this.next.afterStep(test, step)
 
-		return this.next.afterStep(test, step)
+		return this.flushTrace(test, step)
 	}
 
 	async flushTrace(test: Test, step: Step) {
@@ -58,14 +51,15 @@ export default class TracingObserver extends NoOpTestObserver {
 	async onStepError<T>(test: Test, step: Step, err: StructuredError<T>) {
 		this.failed++
 
-		if (isAssertionError(err, test.script)) {
+		const sErr = castStructuredError<AssertionErrorData>(err, 'assertion')
+		if (sErr) {
 			debug('stepFailure - assertion', step.name, err)
 			// Handles assertions from assert
 
 			let assertion: Assertion = {
 				assertionName: 'AssertionError',
-				message: err.message,
-				stack: test.script.filterAndUnmapStack(err),
+				message: sErr.message,
+				stack: test.script.filterAndUnmapStack(sErr.stack),
 				isFailure: true,
 			}
 

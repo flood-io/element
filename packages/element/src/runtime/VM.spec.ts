@@ -6,8 +6,10 @@ import { join } from 'path'
 import testRunEnv from '../../tests/support/test-run-env'
 import Test from './Test'
 import { NullReporter } from '../reporter/Null'
+import { DEFAULT_SETTINGS } from './Settings'
 
 let vmFeaturesTestScript: ITestScript
+let noSettingsTestScript: ITestScript
 
 const runEnv = testRunEnv()
 const test = new Test(runEnv, new NullReporter())
@@ -26,10 +28,9 @@ describe('VM', () => {
 		vmFeaturesTestScript = await mustCompileFile(
 			join(__dirname, '../../tests/fixtures/vm-features.ts'),
 		)
-
-		// noSettingsTestScript = await mustCompileFile(
-		// join(__dirname, '../../tests/fixtures/test-without-settings.ts'),
-		// )
+		noSettingsTestScript = await mustCompileFile(
+			join(__dirname, '../../tests/fixtures/test-without-settings.ts'),
+		)
 		// dogfoodWaitTestScript = await mustCompileFile(
 		// join(__dirname, '../../tests/fixtures/dogfood-test-wait.ts'),
 		// )
@@ -37,25 +38,23 @@ describe('VM', () => {
 
 	describe('evaluate', () => {
 		it('returns default test settings', async () => {
-			let vm = new VM(runEnv, ensureDefined(vmFeaturesTestScript))
+			let vm = new VM(runEnv, ensureDefined(noSettingsTestScript))
 			let { settings } = vm.evaluate(test)
 
 			expect(settings.name).to.equal('Empty test for evaluating defaults')
 			expect(settings.description).to.equal('Use this in the test environment.')
-			expect(settings.duration).to.equal(-1)
-			expect(settings.loopCount).to.equal(Infinity)
-			expect(settings.actionDelay).to.equal(2)
-			expect(settings.stepDelay).to.equal(6)
-			expect(settings.screenshotOnFailure).to.equal(true)
-			expect(settings.clearCookies).to.equal(true)
-			expect(settings.waitTimeout).to.equal(30)
-			expect(settings.responseTimeMeasurement).to.equal('step')
-			expect(settings.userAgent).to.equal(
-				'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36',
-			)
+			expect(settings.duration).to.equal(DEFAULT_SETTINGS.duration)
+			expect(settings.loopCount).to.equal(DEFAULT_SETTINGS.loopCount)
+			expect(settings.actionDelay).to.equal(DEFAULT_SETTINGS.actionDelay)
+			expect(settings.stepDelay).to.equal(DEFAULT_SETTINGS.stepDelay)
+			expect(settings.screenshotOnFailure).to.equal(DEFAULT_SETTINGS.screenshotOnFailure)
+			expect(settings.clearCookies).to.equal(DEFAULT_SETTINGS.clearCookies)
+			expect(settings.waitTimeout).to.equal(DEFAULT_SETTINGS.waitTimeout)
+			expect(settings.responseTimeMeasurement).to.equal(DEFAULT_SETTINGS.responseTimeMeasurement)
+			expect(settings.userAgent).to.equal(DEFAULT_SETTINGS.userAgent)
 
-			expect(settings.device).to.equal('Chrome Desktop Large')
-			expect(settings.ignoreHTTPSErrors).to.equal(false)
+			expect(settings.device).to.equal(DEFAULT_SETTINGS.device)
+			expect(settings.ignoreHTTPSErrors).to.equal(DEFAULT_SETTINGS.ignoreHTTPSErrors)
 		})
 
 		it('captures test settings', async () => {

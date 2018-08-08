@@ -13,7 +13,7 @@ import TracingObserver from './test-observers/Tracing'
 import LifecycleObserver from './test-observers/Lifecycle'
 import ErrorObserver from './test-observers/Errors'
 
-import { AnyErrorData, EmptyErrorData } from './errors/Types'
+import { AnyErrorData, EmptyErrorData, AssertionErrorData } from './errors/Types'
 import { StructuredError } from '../utils/StructuredError'
 
 import { Step } from './Step'
@@ -192,26 +192,36 @@ export default class Test {
 			error = err
 		}
 
-		await this.testObserver.afterStep(this, step)
 		if (error !== null) {
 			debug('step error')
 			this.failed = true
 
-			let sErr: StructuredError<AnyErrorData>
-
-			if ((<StructuredError<AnyErrorData>>error)._structured === 'yes') {
-				sErr = <StructuredError<AnyErrorData>>error
-			} else {
-				// catchall - this should trigger a documentation request further up the chain
-				sErr = StructuredError.wrapBareError<EmptyErrorData>(error, { _kind: 'empty' }, 'test')
-			}
-
-			await this.testObserver.onStepError(this, step, sErr)
+			await this.testObserver.onStepError(this, step, this.liftToStructuredError(error))
 		} else {
 			await this.testObserver.onStepPassed(this, step)
+		}
+
+		await this.testObserver.afterStep(this, step)
+
+		if (error === null) {
 			await this.doStepDelay()
 		}
 		debug('step done')
+	}
+
+	liftToStructuredError(error: Error): StructuredError<AnyErrorData> {
+		if (error.name.startsWith('AssertionError')) {
+			return new StructuredError<AssertionErrorData>(
+				error.message,
+				{ _kind: 'assertion' },
+				error,
+			).copyStackFromOriginalError()
+		} else if ((<StructuredError<AnyErrorData>>error)._structured === 'yes') {
+			return <StructuredError<AnyErrorData>>error
+		} else {
+			// catchall - this should trigger a documentation request further up the chain
+			return StructuredError.wrapBareError<EmptyErrorData>(error, { _kind: 'empty' }, 'test')
+		}
 	}
 
 	/* 

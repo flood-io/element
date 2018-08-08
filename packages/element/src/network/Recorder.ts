@@ -3,9 +3,10 @@ import { ResourceType, Page as PuppeteerPage, PageEvents } from 'puppeteer'
 import { Entry, RawResponse, EntryRequest, Page, EntryResponse } from './Protocol'
 // import * as NetworkManager from 'puppeteer/lib/NetworkManager'
 import { AsyncQueue } from '../utils/AsyncQueue'
-import debug from 'debug'
-const debugNetwork = debug('test:network')
 import { Manager } from './Manager'
+
+import * as debugFactory from 'debug'
+const debug = debugFactory('element:network:recorder')
 
 function round(value: number): number {
 	return Math.round(value * 1000) / 1000
@@ -47,6 +48,8 @@ export default class Recorder {
 	}
 
 	public async recordRequest(payload: any) {
+		debug('recordRequest(%o)', payload)
+
 		// let pageRef = this.nextPageId
 		let pageRef = payload.frameId
 		let timestamp = payload.wallTime * 1e3
@@ -136,7 +139,7 @@ export default class Recorder {
 	}
 
 	public async recordResponseCompleted({ requestId, encodedDataLength, timestamp }) {
-		debugNetwork(`Response Completed: ${requestId}`)
+		debug(`Response Completed: ${requestId}`)
 		let entry = this.getEntryForRequestId(requestId)
 		if (!entry) {
 			return
@@ -283,7 +286,7 @@ export default class Recorder {
 	}
 
 	public async getResponseData(requestId: string): Promise<Buffer> {
-		debugNetwork(`Get Response Body: ${requestId}`)
+		debug(`Get Response Body: ${requestId}`)
 		try {
 			// console.log(`Network.getResponseBody(${requestId})`)
 

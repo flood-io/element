@@ -8,7 +8,7 @@ import { ResponseTiming } from '../../../index'
 import { StructuredError } from '../../utils/StructuredError'
 
 import * as debugFactory from 'debug'
-const debug = debugFactory('element:test:timing')
+const debug = debugFactory('element:runtime:test:timing')
 
 const measurementKeysForDOM = {
 	'first-contentful-paint': 'first_contentful_paint',
@@ -158,6 +158,7 @@ export default class TimingObserver implements TestObserver {
 
 	private async reportResult(test: Test, step: Step): Promise<void> {
 		if (test.runningBrowser === null) {
+			debug('reportResult: no running browser')
 			return
 		}
 		const browser = test.runningBrowser

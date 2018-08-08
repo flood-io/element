@@ -2,12 +2,8 @@ import { expect } from 'chai'
 import 'mocha'
 import { DogfoodServer } from '../../tests/support/fixture-server'
 import PuppeteerDriver from '../driver/Puppeteer'
-import { mustCompileFile } from '../TestScript'
-import Test from '../runtime/Test'
-import { join } from 'path'
 // import Reporter from '../Reporter'
 import Reporter from '../../tests/support/test-reporter'
-import testRunEnv from '../../tests/support/test-run-env'
 import { Page } from 'puppeteer'
 import { PuppeteerClient } from '../types'
 import NetworkRecorder from './Recorder'
@@ -36,29 +32,6 @@ describe('Recorder', function() {
 	after(async () => {
 		await dogfoodServer.close()
 	})
-
-	it('records network entries', async () => {
-		const reporter = new Reporter()
-		const runEnv = testRunEnv()
-
-		let test = new Test(runEnv, reporter)
-		let script = await mustCompileFile(join(__dirname, '../../tests/fixtures/dogfood-test-wait.ts'))
-		test.enqueueScript(script)
-		test.attachDriver(puppeteer)
-
-		await test.run()
-
-		let responseTimeMeasurements = reporter.measurements.filter(
-			({ measurement }) => measurement === 'response_time',
-		)
-		let responseTime = responseTimeMeasurements
-			.map(m => Number(m.value))
-			.reduce((sum, n) => sum + n, 0)
-		expect(responseTime).to.be.greaterThan(1)
-
-		// Network recorder should now be reset
-		expect(test.networkRecorder.entries.length).to.equal(0)
-	}).timeout(30e3)
 
 	describe('Recorder', () => {
 		let recorder: NetworkRecorder

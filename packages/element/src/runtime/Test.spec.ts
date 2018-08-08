@@ -196,6 +196,30 @@ describe('Test', function() {
 
 				await test.run()
 			})
+
+			it('records network entries', async () => {
+				await setupTest('dogfood-test-wait.ts')
+				test.settings.responseTimeMeasurement = 'network'
+
+				console.log('running')
+				let responseTimeMeasurements: Measurement[] = []
+				testReporter.on('measurement', (measurement: Measurement) => {
+					console.log('measurement', measurement)
+					if (measurement.measurement === 'response_time') {
+						responseTimeMeasurements.push(measurement)
+					}
+				})
+
+				await test.run()
+
+				let responseTime = responseTimeMeasurements
+					.map(m => Number(m.value))
+					.reduce((sum, n) => sum + n, 0)
+				expect(responseTime).to.be.greaterThan(1)
+
+				// Network recorder should now be reset
+				// expect(test.networkRecorder.entries.length).to.equal(0)
+			}).timeout(30e3)
 		})
 	})
 })

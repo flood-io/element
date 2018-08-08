@@ -10,12 +10,13 @@ let dogfoodServer = new DogfoodServer()
 
 let page: Page, driver: PuppeteerDriver, puppeteer: PuppeteerClient
 
-async function locateEl(selector: string): Promise<PElementHandle> {
-	const maybeEl = page.$(selector)
-	if (maybeEl !== null) {
+async function locateEl(selector: string): Promise<PElementHandle | never> {
+	const maybeEl = await page.$(selector)
+	if (maybeEl === null || maybeEl === undefined) {
 		throw new Error(`unable to find element via selector ${selector}`)
+	} else {
+		return maybeEl
 	}
-	return maybeEl
 }
 
 describe('ElementHandle', function() {
@@ -42,7 +43,7 @@ describe('ElementHandle', function() {
 	})
 
 	beforeEach(async () => {
-		await page.goto('http://localhost:1337/wait.html')
+		await page.goto('http://localhost:1337/wait.html', { waitUntil: 'domcontentloaded' })
 	})
 
 	it('getAttribute(id)', async () => {

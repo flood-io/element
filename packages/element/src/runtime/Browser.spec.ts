@@ -49,11 +49,11 @@ describe('Browser', function() {
 			workRoot,
 			puppeteer,
 			DEFAULT_SETTINGS,
-			async name => {
-				beforeSpy(name)
+			async (_browser, actionName) => {
+				beforeSpy(actionName)
 			},
-			async name => {
-				afterSpy(name)
+			async (_browser, actionName) => {
+				afterSpy(actionName)
 			},
 		)
 		await browser.visit('http://localhost:1337/forms_with_input_elements.html')

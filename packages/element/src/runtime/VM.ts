@@ -73,6 +73,7 @@ export class VM {
 		)
 	}
 
+	// TODO switch to testData/loaders
 	public evaluate(test: Test): { settings: ConcreteTestSettings; steps: Step[] } {
 		// Clear existing steps
 		const steps: Step[] = []

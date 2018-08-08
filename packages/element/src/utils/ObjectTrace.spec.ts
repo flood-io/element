@@ -18,7 +18,7 @@ describe('ObjectTrace', () => {
 		})
 
 		let err = new Error('This is an Error')
-		err.stack = err.stack
+		err.stack = (err.stack || '')
 			.split('\n')
 			.slice(0, 1)
 			.join('\n')

@@ -9,13 +9,21 @@ import { Page } from 'puppeteer'
 import { Browser } from './Browser'
 import { Until } from '../page/Until'
 import { By } from '../page/By'
-import { DEFAULT_SETTINGS } from './VM'
+import { DEFAULT_SETTINGS } from './Settings'
 let dogfoodServer = new DogfoodServer()
 
 use(SinonChai)
 
 let page: Page, driver: PuppeteerDriver, puppeteer
 const workRoot = testWorkRoot()
+
+function ensureDefined<T>(value: T | undefined | null): T | never {
+	if (value === undefined || value === null) {
+		throw new Error('value was not defined')
+	} else {
+		return value
+	}
+}
 
 describe('Browser', function() {
 	this.timeout(30e3)
@@ -64,20 +72,20 @@ describe('Browser', function() {
 		)
 		await browser.visit('http://localhost:1337/forms_with_input_elements.html')
 
-		let caughtError: Error = undefined
+		let caughtError: Error | undefined
 		try {
 			await browser.click('.notanelement')
 		} catch (e) {
 			caughtError = e
 		}
-		expect(caughtError).to.be.an('error')
+		expect(ensureDefined(caughtError)).to.be.an('error')
 	})
 
 	it('returns active element', async () => {
 		let browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
 		await browser.visit('http://localhost:1337/forms_with_input_elements.html')
 		await browser.wait(Until.elementIsVisible(By.id('new_user_first_name')))
-		let el1 = await browser.switchTo().activeElement()
+		let el1 = ensureDefined(await browser.switchTo().activeElement())
 		expect(await el1.getId()).to.equal('new_user_first_name')
 	})
 

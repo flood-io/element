@@ -3,11 +3,25 @@ import 'mocha'
 import { DogfoodServer } from '../../tests/support/fixture-server'
 import PuppeteerDriver from '../driver/Puppeteer'
 import { Page } from 'puppeteer'
+import { Locator } from './Locator'
 import { By } from './By'
+import { ElementHandle } from './ElementHandle'
 
 let dogfoodServer = new DogfoodServer()
 
 let page: Page, driver: PuppeteerDriver, puppeteer
+
+function ensureElement(value: ElementHandle | undefined | null): ElementHandle | never {
+	if (value !== null && value !== undefined) {
+		return value
+	} else {
+		throw new Error("value isn't an element")
+	}
+}
+
+async function findEl(locator: Locator): Promise<ElementHandle> {
+	return ensureElement(await locator.find(await page.mainFrame().executionContext()))
+}
 
 describe('Locator', function() {
 	this.timeout(30e3)
@@ -34,7 +48,7 @@ describe('Locator', function() {
 		it('find()', async () => {
 			let locator = By.linkText('show bar')
 
-			let element = await locator.find(await page.mainFrame().executionContext())
+			let element = await findEl(locator)
 			expect(await element.getAttribute('id')).to.deep.equal('show_bar')
 			await element.dispose()
 		})
@@ -53,7 +67,7 @@ describe('Locator', function() {
 		it('find()', async () => {
 			let locator = By.linkText('show bar')
 
-			let element = await locator.find(await page.mainFrame().executionContext())
+			let element = await findEl(locator)
 			expect(await element.getAttribute('id')).to.deep.equal('show_bar')
 			await element.dispose()
 		})
@@ -73,7 +87,7 @@ describe('Locator', function() {
 		it('find()', async () => {
 			let locator = By.css('a:first-child')
 
-			let element = await locator.find(await page.mainFrame().executionContext())
+			let element = await findEl(locator)
 			expect(await element.getAttribute('id')).to.deep.equal('change_select')
 			await element.dispose()
 		})
@@ -92,7 +106,7 @@ describe('Locator', function() {
 	describe('By.visibleText', () => {
 		it('find()', async () => {
 			let locator = By.visibleText('show bar')
-			let element = await locator.find(await page.mainFrame().executionContext())
+			let element = await findEl(locator)
 			expect(element).to.not.be.null
 			expect(await element.getAttribute('id')).to.deep.equal('show_bar')
 			expect(await element.text()).to.deep.equal('show bar')
@@ -114,7 +128,7 @@ describe('Locator', function() {
 		it('find()', async () => {
 			let locator = By.partialVisibleText('change select list')
 
-			let element = await locator.find(await page.mainFrame().executionContext())
+			let element = await findEl(locator)
 			expect(element).to.not.be.null
 			await element.dispose()
 		})
@@ -135,7 +149,7 @@ describe('Locator', function() {
 		it('find()', async () => {
 			let locator = By.js(() => document.querySelector('a[href]'))
 
-			let element = await locator.find(await page.mainFrame().executionContext())
+			let element = await findEl(locator)
 			expect(element).to.not.be.null
 			expect(await element.getId()).to.equal('show_bar')
 			await element.dispose()
@@ -157,7 +171,7 @@ describe('Locator', function() {
 		it('find()', async () => {
 			let locator = By.nameAttr('add_select')
 
-			let element = await locator.find(await page.mainFrame().executionContext())
+			let element = await findEl(locator)
 			expect(element).to.not.be.null
 			expect(await element.getId()).to.equal('add_select')
 			await element.dispose()
@@ -179,7 +193,7 @@ describe('Locator', function() {
 		it('find()', async () => {
 			let locator = By.tagName('a')
 
-			let element = await locator.find(await page.mainFrame().executionContext())
+			let element = await findEl(locator)
 			expect(element).to.not.be.null
 			expect(await element.getId()).to.equal('show_bar')
 			await element.dispose()
@@ -201,7 +215,7 @@ describe('Locator', function() {
 		it('find()', async () => {
 			let locator = By.xpath('//a')
 
-			let element = await locator.find(await page.mainFrame().executionContext())
+			let element = await findEl(locator)
 			expect(element).to.not.be.null
 			expect(await element.getId()).to.equal('show_bar')
 			await element.dispose()

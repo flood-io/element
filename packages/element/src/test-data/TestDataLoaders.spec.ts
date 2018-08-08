@@ -3,6 +3,14 @@ import { expect } from 'chai'
 import { TestDataLoaders } from './TestDataLoaders'
 import { testWorkRoot } from '../../tests/support/test-run-env'
 
+function ensureDefined<T>(value: T | undefined | null): T | never {
+	if (value === undefined || value === null) {
+		throw new Error('value was not defined')
+	} else {
+		return value
+	}
+}
+
 const workRoot = testWorkRoot()
 const loaders = new TestDataLoaders(workRoot)
 
@@ -15,8 +23,10 @@ describe('TestDataLoaders', () => {
 		data.circular().filter(line => line.user === '1')
 		await data.load()
 
-		expect(data.feed().user).to.equal('1')
-		expect(data.feed().username).to.equal('samantha3@loadtest.io')
+		const mustFeed = () => ensureDefined(data.feed())
+
+		expect(mustFeed().user).to.equal('1')
+		expect(mustFeed().username).to.equal('samantha3@loadtest.io')
 	})
 
 	it('can load JSON data', async () => {
@@ -26,8 +36,10 @@ describe('TestDataLoaders', () => {
 		await data.load()
 		expect(data.size).to.equal(3)
 
-		expect(data.feed().user).to.equal(1)
-		expect(data.feed().username).to.equal('jonny.tester3@loadtest.io')
-		expect(data.feed().username).to.equal('jonny.tester5@loadtest.io')
+		const mustFeed = () => ensureDefined(data.feed())
+
+		expect(mustFeed().user).to.equal(1)
+		expect(mustFeed().username).to.equal('jonny.tester3@loadtest.io')
+		expect(mustFeed().username).to.equal('jonny.tester5@loadtest.io')
 	})
 })

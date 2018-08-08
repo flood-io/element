@@ -9,14 +9,22 @@ import Test from './Test'
 import { mustCompileFile } from '../TestScript'
 import { join } from 'path'
 import { PuppeteerClient } from '../types'
-import { IReporter, Measurement } from '../Reporter'
+import { Measurement, TraceData } from '../Reporter'
 import { EventEmitterReporter } from '../reporter/EventEmitter'
 use(SinonChai)
 
 let dogfoodServer = new DogfoodServer()
 let test: Test, client: PuppeteerClient, driver: PuppeteerDriver
-let testReporter: IReporter
+let testReporter: EventEmitterReporter = new EventEmitterReporter()
 const runEnv = testRunEnv()
+
+function ensureDefined(value: any | undefined | null): any | never {
+	if (value === undefined || value === null) {
+		throw new Error('value was not defined')
+	} else {
+		return value
+	}
+}
 
 const setupTest = async (scriptName: string) => {
 	let script = await mustCompileFile(join(__dirname, '../../tests/fixtures', scriptName))
@@ -24,7 +32,6 @@ const setupTest = async (scriptName: string) => {
 	await driver.launch()
 	client = await driver.client()
 	test.attachDriver(client)
-	await test.before()
 }
 
 describe('Test', function() {
@@ -36,7 +43,6 @@ describe('Test', function() {
 	})
 
 	afterEach(async () => {
-		await test.after()
 		await driver.close()
 	})
 
@@ -73,7 +79,7 @@ describe('Test', function() {
 	it('parses steps', async () => {
 		await setupTest('test-with-export.ts')
 
-		expect(test.vm.steps.map(step => step.name)).to.deep.equal(['Invalid Step', 'Test Step'])
+		expect(test.steps.map(step => step.name)).to.deep.equal(['Invalid Step', 'Test Step'])
 	})
 
 	it('runs steps', async () => {
@@ -84,12 +90,24 @@ describe('Test', function() {
 
 	describe('Assertion handling', () => {
 		it('captures assertions from assert', async () => {
+			let traces: TraceData[] = []
+
+			testReporter.on('trace', (label, responseCode, traceData) => {
+				traces.push(traceData)
+			})
+
 			let scriptFilename = join(__dirname, '../../tests/fixtures/test-with-assert.ts')
 			await setupTest('test-with-assert.ts')
 			await test.run()
 
-			expect(test.trace.assertions.length).to.equal(1)
-			let [assertion] = test.trace.assertions
+			expect(traces.length).to.equal(1)
+
+			const trace: TraceData = ensureDefined(traces[0])
+			const assertions = ensureDefined(trace.assertions)
+
+			expect(assertions.length).to.equal(1)
+			let [assertion] = assertions
+
 			expect(assertion.assertionName).to.equal('AssertionError')
 			expect(assertion.message).to.equal("'show bar' == 'foobarlink'")
 
@@ -126,7 +144,8 @@ describe('Test', function() {
 				})
 
 				testReporter.on('trace', (label, responseCode, traceData) => {
-					objectSpy(traceData.objectTypes)
+					const objTypes = ensureDefined(traceData).objectTypes
+					objectSpy(objTypes)
 				})
 
 				await test.run()

@@ -44,10 +44,8 @@ describe('Recorder', function() {
 		let test = new Test(runEnv, reporter)
 		let script = await mustCompileFile(join(__dirname, '../../tests/fixtures/dogfood-test-wait.ts'))
 		test.enqueueScript(script)
-		test.prepare()
 		test.attachDriver(puppeteer)
 
-		await test.before()
 		await test.run()
 
 		let responseTimeMeasurements = reporter.measurements.filter(
@@ -66,8 +64,9 @@ describe('Recorder', function() {
 		let recorder: NetworkRecorder
 
 		beforeEach(async () => {
+			const reporter = new Reporter()
 			recorder = new NetworkRecorder(page)
-			let observer = new Observer(recorder)
+			let observer = new Observer(reporter, recorder)
 			await observer.attach()
 			await page.goto('http://localhost:1337/wait.html')
 			await recorder.pendingTaskQueue.chain

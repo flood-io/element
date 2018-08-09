@@ -1,7 +1,6 @@
 import { join } from 'path'
-import { RuntimeEnvironment } from '../../src/types'
+import { RuntimeEnvironment, FloodProcessEnv } from '../../src/runtime-environment/types'
 import WorkRoot from '../../src/runtime-environment/WorkRoot'
-import { FloodProcessEnv } from '../../index'
 
 const testDataRoot = join(__dirname, '../fixtures/data')
 const packageTmp = join(__dirname, '../../tmp')

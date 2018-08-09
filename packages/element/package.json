@@ -5,7 +5,7 @@
 	"main": "./dist/index.js",
 	"types": "./dist/index.ts.d",
 	"scripts": {
-		"build": "tsc",
+		"build": "tsc --project .",
 		"prepublishOnly": "npm run build",
 		"test": "mocha --trace-warnings -r ts-node/register src/**/*.spec.ts",
 		"doc": "yarn typedoc && ts-node ./scripts/docs/docs.ts",

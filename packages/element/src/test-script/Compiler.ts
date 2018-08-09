@@ -9,6 +9,7 @@ import {
 import { CategorisedDiagnostics } from './TypescriptDiagnostics'
 import * as ts from 'typescript'
 import * as path from 'path'
+import { existsSync } from 'fs'
 import { VMScript } from 'vm2'
 import * as parseComments from 'comment-parser'
 import { SourceUnmapper } from './SourceUnmapper'
@@ -21,6 +22,19 @@ const sandboxPath = 'test-script-sandbox'
 const sandboxRoot = path.join(floodelementRoot, sandboxPath)
 const sandboxedBasenameTypescript = 'flood-chrome.ts'
 const sandboxedBasenameJavascript = 'flood-chrome.js'
+
+// handle e.g. during dev/test vs built/dist mode
+let indexModuleFile: string
+const indexTypescriptFile = path.join(floodelementRoot, 'index.ts')
+const indexDeclarationsFile = path.join(floodelementRoot, 'index.d.ts')
+
+if (existsSync(indexTypescriptFile)) {
+	indexModuleFile = indexTypescriptFile
+} else if (existsSync(indexDeclarationsFile)) {
+	indexModuleFile = indexDeclarationsFile
+} else {
+	throw new Error('unable to find index.ts or index.d.ts')
+}
 
 const NoModuleImportedTypescript = `Test scripts must import the module '@flood/element'
 Please add an import as follows:
@@ -197,9 +211,9 @@ export class TypeScriptTestScript implements ITestScript {
 			for (let moduleName of moduleNames) {
 				debug('resolve', moduleName)
 				if (moduleName === '@flood/chrome' || moduleName === '@flood/element') {
-					debug('resolving @flood/element as %s', path.join(floodelementRoot, 'index.d.ts'))
+					debug('resolving @flood/element as %s', indexModuleFile)
 					resolvedModules.push({
-						resolvedFileName: path.join(floodelementRoot, 'index.d.ts'),
+						resolvedFileName: indexModuleFile,
 						isExternalLibraryImport: true,
 					})
 					continue

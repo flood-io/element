@@ -51,13 +51,26 @@ export class Until {
 		return new ElementStateCondition('elementIsDisabled', selectorOrLocator, true)
 	}
 
+	/**
+	 * Creates a condition that will wait for the given element to be enabled
+	 * @param selectorOrLocator A <[Locatable]> to use to find the element.
+	 */
 	static elementIsEnabled(selectorOrLocator: NullableLocatable): Condition {
 		return new ElementStateCondition('elementIsEnabled', selectorOrLocator, false)
 	}
 
+	/**
+	 * Creates a condition that will wait for the given element to be deselected.
+	 * @param selectorOrLocator A <[Locatable]> to use to find the element.
+	 */
 	static elementIsSelected(selectorOrLocator: NullableLocatable): Condition {
 		return new ElementSelectedCondition('elementIsSelected', selectorOrLocator, true)
 	}
+
+	/**
+	 * Creates a condition that will wait for the given element to be in the DOM, yet not visible to the user
+	 * @param selectorOrLocator A <[Locatable]> to use to find the element.
+	 */
 	static elementIsNotSelected(selectorOrLocator: NullableLocatable): Condition {
 		return new ElementSelectedCondition('elementIsNotSelected', selectorOrLocator, false)
 	}
@@ -78,22 +91,47 @@ export class Until {
 		return new ElementVisibilityCondition('elementIsVisible', selectorOrLocator, true, false)
 	}
 
+	/**
+	 * Creates a condition that will wait for the given element to become visible.
+	 *
+	 * Example:
+	 * ```typescript
+	 * step("Step 1", async browser => {
+	 * 	 await browser.click(By.css('.hide-panel'))
+	 *   await browser.wait(Until.elementIsNotVisible(By.id("btn")))
+	 * })
+	 * ```
+	 *
+	 * @param selectorOrLocator A <[Locatable]> to use to find the element.
+	 */
 	static elementIsNotVisible(selectorOrLocator: NullableLocatable): Condition {
 		return new ElementVisibilityCondition('elementIsNotVisible', selectorOrLocator, false, true)
 	}
 
+	/**
+	 * Creates a condition which will wait until the element is located on the page.
+	 */
 	static elementLocated(selectorOrLocator: NullableLocatable): Condition {
 		return new ElementLocatedCondition('elementLocated', selectorOrLocator, true)
 	}
 
+	/**
+	 * Creates a condition which will wait until the element's text exactly matches the target text, excluding leading and trailing whitespace.
+	 */
 	static elementTextIs(selectorOrLocator: NullableLocatable, text: string): Condition {
 		return new ElementTextCondition('elementTextIs', selectorOrLocator, text, false)
 	}
 
+	/**
+	 * Creates a condition which will wait until the element's text content contains the target text.
+	 */
 	static elementTextContains(selectorOrLocator: NullableLocatable, text: string): Condition {
 		return new ElementTextCondition('elementTextContains', selectorOrLocator, text, true)
 	}
 
+	/**
+	 * Creates a condition which will wait until the element's text matches the target Regular Expression.
+	 */
 	static elementTextMatches(selectorOrLocator: NullableLocatable, regex: RegExp): Condition {
 		return new ElementTextCondition('elementTextMatches', selectorOrLocator, regex.toString())
 	}
@@ -116,24 +154,44 @@ export class Until {
 	// 	return
 	// }
 
+	/**
+	 * Creates a condition which waits until the page title contains the expected text.
+	 */
 	static titleContains(title: string): Condition {
 		return new TitleCondition('titleContains', title, true)
 	}
 
+	/**
+	 * Creates a condition which waits until the page title exactly matches the expected text.
+	 */
 	static titleIs(title: string): Condition {
 		return new TitleCondition('titleIs', title, false)
 	}
 
+	/**
+	 * Creates a condition which waits until the page title matches the title `RegExp`.
+	 */
 	static titleMatches(title: RegExp): Condition {
 		return new TitleCondition('titleMatches', `${title}`, false)
 	}
 
+	/**
+	 * Creates a condition which waits until the page URL contains the expected path.
+	 */
 	static urlContains(url: string): Condition {
 		return new URLCondition('urlContains', url, true)
 	}
+
+	/**
+	 * Creates a condition which waits until the page URL exactly matches the expected URL.
+	 */
 	static urlIs(url: string): Condition {
 		return new URLCondition('urlIs', url, false)
 	}
+
+	/**
+	 * Creates a condition which waits until the page URL matches the supplied `RegExp`.
+	 */
 	static urlMatches(url: RegExp): Condition {
 		return new URLCondition('urlMatches', url.toString(), true)
 	}

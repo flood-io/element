@@ -1,12 +1,58 @@
-import { Browser, StepOptions } from '../../index'
+import { Browser } from './types'
+
+/**
+ * Declares each step in your test. This must go within your main test expression.
+ *
+ * **Example:**
+ *
+ * ```typescript
+ * export default () => {
+ *   step("Step 1", async browser => {
+ *     await browser.visit("https://example.com")
+ *   })
+ *
+ *   step("Step 2", async browser => {})
+ *
+ *   step("Step 3", async browser => {})
+ * }
+ * ```
+ *
+ * @export
+ * @param {string} name Step Name
+ * @param {(driver: Driver) => Promise<void>} fn Actual implementation of step
+ */
+export declare function step(name: string, fn: StepFunction<any>): void
+export declare function step(name: string, options: StepOptions, fn: StepFunction<any>): void
+
+/**
+ * Specifies the available options which can be supplied to a step to override global settings.
+ *
+ * **Example:**
+ *
+ * ```typescript
+ * step("Step 1", { waitTimeout: 300 }, async browser => {
+ * 	await browser.click(...)
+ * })
+ * ```
+ *
+ * @export
+ * @interface StepOptions
+ */
+export interface StepOptions {
+	/**
+	 * Timeout in seconds for all wait and navigation operations within this <[step]>.
+	 * @default `30` seconds
+	 */
+	waitTimeout?: number
+}
 
 export interface Step {
-	fn: StepFunction
+	fn: StepFunction<any>
 	name: string
 	stepOptions: StepOptions
 }
 
-export type StepFunction = (driver: Browser, data?: any) => Promise<void>
+export type StepFunction<T> = (driver: Browser, data?: T) => Promise<void>
 
 export function normalizeStepOptions(stepOpts: StepOptions): StepOptions {
 	// Convert user inputted seconds to milliseconds

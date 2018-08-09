@@ -1,6 +1,6 @@
 import * as path from 'path'
 import { sync as mkdirpSync } from 'mkdirp'
-import { WorkRoot as IWorkRoot, SubRoot, SpecialSubRoot, WorkRootKind } from '../types'
+import { WorkRoot as IWorkRoot, SubRoot, SpecialSubRoot, WorkRootKind } from './types'
 
 export default class WorkRoot implements IWorkRoot {
 	root: string

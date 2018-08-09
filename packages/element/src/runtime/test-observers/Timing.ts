@@ -4,7 +4,7 @@ import { Step } from '../Step'
 import { TestObserver } from './Observer'
 import NetworkRecorder from '../../network/Recorder'
 import { CompoundMeasurement } from '../../Reporter'
-import { ResponseTiming } from '../../../index'
+import { ResponseTiming } from '../Settings'
 import { StructuredError } from '../../utils/StructuredError'
 
 import * as debugFactory from 'debug'

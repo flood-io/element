@@ -1,5 +1,5 @@
 import NetworkRecorder from '../network/Recorder'
-import { ConsoleMethod } from '../../index'
+import { ConsoleMethod } from '../runtime/Settings'
 import { IReporter } from './../Reporter'
 
 // import * as debugFactory from 'debug'

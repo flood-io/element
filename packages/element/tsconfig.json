@@ -5,6 +5,8 @@
 		"moduleResolution": "node",
 		"inlineSourceMap": true,
 		"outDir": "dist",
+    "declaration": true,
+    "removeComments": false,
 		"lib": ["DOM", "DOM.Iterable", "ES2015", "ES7", "ES2017", "ES2016.Array.Include", "ES2017.Object"],
 		"pretty": true,
 		"rootDir": ".",
@@ -21,5 +23,5 @@
 		"emitDecoratorMetadata": true
 	},
 	"exclude": ["node_modules", "dist", "examples", "*.spec.ts", "*.test.ts"],
-	"files": ["./index.d.ts","./ReporterAPI.ts", "./RuntimeEnvironmentAPI.ts", "./TestScriptAPI.ts", "./expect.ts"]
+	"files": ["./index.ts","./ReporterAPI.ts", "./RuntimeEnvironmentAPI.ts", "./TestScriptAPI.ts", "./expect.ts"]
 }

@@ -1,7 +1,8 @@
 import { Logger } from 'winston'
 import PuppeteerDriver from './driver/Puppeteer'
 import { IReporter } from './Reporter'
-import { Browser, RuntimeEnvironment } from './types'
+import { RuntimeEnvironment } from './runtime-environment/types'
+import { Browser } from './types'
 import Runner from './Runner'
 import { ITestScript, mustCompileFile } from './TestScript'
 

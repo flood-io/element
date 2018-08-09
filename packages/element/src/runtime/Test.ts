@@ -18,9 +18,10 @@ import { StructuredError } from '../utils/StructuredError'
 
 import { Step } from './Step'
 
-import { PuppeteerClient, RuntimeEnvironment } from '../types'
+import { PuppeteerClient } from '../types'
+import { RuntimeEnvironment } from '../runtime-environment/types'
 import { ITestScript } from '../TestScript'
-import { ScreenshotOptions } from '../../index'
+import { ScreenshotOptions } from 'puppeteer'
 import {
 	ConcreteTestSettings,
 	DEFAULT_ACTION_WAIT_SECONDS,

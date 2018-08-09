@@ -1,6 +1,6 @@
 import { ElementHandle } from './ElementHandle'
 import { Page, Frame } from 'puppeteer'
-import { TargetLocator as ITargetLocator } from '../../index'
+import { TargetLocator as ITargetLocator } from './types'
 import { getFrames } from '../runtime/Browser'
 
 export class TargetLocator implements ITargetLocator {

@@ -1,7 +1,7 @@
 import * as cuid from 'cuid'
 import { promisify } from 'util'
 import { writeFile } from 'fs'
-import { WorkRoot } from '../types'
+import { WorkRoot } from '../runtime-environment/types'
 import { Assertion } from '../runtime/Assertion'
 import { NetworkTraceData, CompositeTraceData } from '../Reporter'
 

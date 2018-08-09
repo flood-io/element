@@ -63,6 +63,12 @@ export enum Device {
 	'nokiaN9Landscape' = 'Nokia N9 landscape',
 }
 
+/**
+ * Lists all available keyboard control keys which can be used when sending a key press combination.
+ *
+ * @export
+ * @enum {number}
+ */
 export const Key = {
 	NULL: null,
 	CANCEL: 'Cancel', // ^break

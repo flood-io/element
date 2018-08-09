@@ -7,6 +7,11 @@ import { XPathLocator } from './locators/XPath'
 import { Locator, BaseLocator } from './Locator'
 import { EvaluateFn } from 'puppeteer'
 
+/**
+ * By is used to create <[Locator]>'s to find Elements or use in any place which accepts a Locator or <[Locatable]>.
+ *
+ * @class By
+ */
 export class By {
 	public readonly command: string
 	public readonly args: string[]
@@ -16,6 +21,10 @@ export class By {
 		this.args = args
 	}
 
+	/**
+	 * Locates an element using a CSS (jQuery) style selector
+	 * @param selector
+	 */
 	public static css(selector: string, debugString?: string): Locator {
 		if (debugString === undefined) {
 			debugString = `By.css(${selector})`

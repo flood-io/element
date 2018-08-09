@@ -1,5 +1,6 @@
 import { ElementHandle as PElementHandle, ClickOptions, ScreenshotOptions } from 'puppeteer'
-import { ElementHandle as IElementHandle, EvaluateFn } from '../../index'
+import { ElementHandle as IElementHandle } from './types'
+import { EvaluateFn } from '../runtime/types'
 import {
 	ErrorInterpreter,
 	ErrorData,

@@ -3,12 +3,13 @@ import { Locator } from './Locator'
 import { DEFAULT_SETTINGS } from '../runtime/Settings'
 import * as recast from 'recast'
 import * as prettier from 'prettier'
-import { locatableToLocator, NullableLocatable } from '../runtime/Browser'
+import { locatableToLocator } from '../runtime/Browser'
+import { NullableLocatable } from '../runtime/types'
 
 // import * as debugFactory from 'debug'
 // const debug = debugFactory('element:page:condition')
 
-export { NullableLocatable } from '../runtime/Browser'
+export { NullableLocatable }
 
 interface ConditionSettings {
 	waitTimeout: number

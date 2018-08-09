@@ -1,4 +1,5 @@
-import { ITestRunner, Browser, RuntimeEnvironment } from './types'
+import { ITestRunner, Browser } from './types'
+import { RuntimeEnvironment } from './runtime-environment/types'
 import { Logger } from 'winston'
 import Test from './runtime/Test'
 import { IReporter } from './Reporter'

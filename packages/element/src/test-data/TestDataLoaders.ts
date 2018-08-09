@@ -1,6 +1,6 @@
 import { CSVLoader, JSONLoader, DataLoader } from './Loader'
 import { TestData } from './TestData'
-import { WorkRoot } from '../types'
+import { WorkRoot } from '../runtime-environment/types'
 
 export class TestDataLoaders<TRow> {
 	constructor(private workRoot: WorkRoot) {}

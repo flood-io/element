@@ -1,23 +1,8 @@
 import { Browser, Page, LaunchOptions } from 'puppeteer'
-import { FloodProcessEnv } from '../index'
 
 export interface PuppeteerClient {
 	browser: Browser
 	page: Page
-}
-
-export interface RuntimeEnvironment {
-	stepEnv(): FloodProcessEnv
-	workRoot: WorkRoot
-}
-
-export type SpecialSubRoot = 'test-data'
-export type SubRoot = 'objects' | 'screenshots' | 'files' | 'results' | 'network' | 'traces'
-export type WorkRootKind = SubRoot | SpecialSubRoot
-export interface WorkRoot {
-	ensureCreated(): void
-
-	join(kind: WorkRootKind, ...segments: string[]): string
 }
 
 export interface Browser {

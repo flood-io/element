@@ -1,9 +1,9 @@
 import { NodeVM } from 'vm2'
 import { Until } from '../page/Until'
 import { By } from '../page/By'
-import { RuntimeEnvironment } from '../types'
+import { RuntimeEnvironment } from '../runtime-environment/types'
 import { MouseButtons, Device, Key, userAgents } from '../page/Enums'
-import { StepOptions, Flood } from '../../index'
+import { StepOptions } from './Step'
 import * as Faker from 'faker'
 import * as nodeAssert from 'assert'
 import { IReporter } from '../Reporter'
@@ -12,7 +12,7 @@ import { ITestScript } from '../TestScript'
 import { DEFAULT_SETTINGS, ConcreteTestSettings, normalizeSettings } from './Settings'
 import { expect } from '../utils/Expect'
 import { Step, StepFunction, normalizeStepOptions } from './Step'
-import { TestData } from '../test-data/TestData'
+// import { TestData } from '../test-data/TestData'
 import Test from './Test'
 
 // import * as debugFactory from 'debug'
@@ -86,7 +86,7 @@ export class VM {
 		const step = (...args: any[]) => {
 			// name: string, fn: (driver: Browser) => Promise<void>
 			let name: string,
-				fn: StepFunction,
+				fn: StepFunction<any>,
 				stepOptions: StepOptions = {}
 
 			if (args.length === 3) {
@@ -105,20 +105,20 @@ export class VM {
 		}
 
 		// closes over test
-		function createSuite(): Flood.ISuiteDefinition {
-			let suite = function(callback) {
-				return callback
-			} as Flood.ISuiteDefinition
-			suite.withData = <T>(data: TestData<T>, callback) => {
-				test.testData = expect(data, 'TestData is not present')
-				test.testData.setInstanceID(ENV.SEQUENCE.toString())
-				return callback
-			}
+		// function createSuite(): Flood.ISuiteDefinition {
+		// let suite = function(callback) {
+		// return callback
+		// } as Flood.ISuiteDefinition
+		// suite.withData = <T>(data: TestData<T>, callback) => {
+		// test.testData = expect(data, 'TestData is not present')
+		// test.testData.setInstanceID(ENV.SEQUENCE.toString())
+		// return callback
+		// }
 
-			return suite
-		}
+		// return suite
+		// }
 
-		let suite = createSuite()
+		// let suite = createSuite()
 
 		let context = {
 			setup: settings => {
@@ -127,7 +127,7 @@ export class VM {
 
 			ENV,
 
-			suite,
+			// suite,
 			// Supports either 2 or 3 args
 			step,
 			// Actual implementation of @flood/chrome

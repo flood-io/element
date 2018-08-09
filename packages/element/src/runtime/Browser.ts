@@ -8,14 +8,15 @@ import {
 	ScreenshotOptions,
 	AuthOptions,
 } from 'puppeteer'
+import { Browser as BrowserInterface, NullableLocatable, EvaluateFn } from './types'
 import * as DeviceDescriptors from 'puppeteer/DeviceDescriptors'
 import CustomDeviceDescriptors from '../utils/CustomDeviceDescriptors'
 import { Locator } from '../page/Locator'
 import { ElementHandle } from '../page/ElementHandle'
 import { TargetLocator } from '../page/TargetLocator'
 import { By } from '../page/By'
-import { Browser as BrowserInterface, EvaluateFn } from '../../index'
-import { PuppeteerClient, WorkRoot } from '../types'
+import { PuppeteerClient } from '../types'
+import { WorkRoot } from '../runtime-environment/types'
 import { join, resolve } from 'path'
 import * as cuid from 'cuid'
 import { Key } from '../page/Enums'
@@ -29,10 +30,6 @@ import { StructuredError } from '../utils/StructuredError'
 import * as debugFactory from 'debug'
 const debug = debugFactory('element:runtme:browser')
 const debugScreenshot = debugFactory('element:runtime:browser:screenshot')
-
-export type Locatable = Locator | string
-
-export type NullableLocatable = Locatable | null
 
 export class ElementNotFound extends DocumentedError {
 	constructor(locatable: NullableLocatable, callCtx?: string) {

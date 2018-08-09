@@ -1,13 +1,13 @@
 {
 	"name": "create-element-test",
-	"version": "1.0.3-4",
+	"version": "1.0.3-5",
 	"license": "Apache-2.0",
 	"description": "Generates a test environment for running Flood Element scripts",
 	"repository": "flood-io/element",
 	"bin": {
 		"create-element-test": "./dist/create.js"
 	},
-	"private": false,
+	"private": true,
 	"scripts": {
 		"build": "tsc --outDir dist --project .",
 		"prepublishOnly": "npm run build"

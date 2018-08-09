@@ -3,6 +3,8 @@ import { resolve } from 'path'
 
 let instance = null
 
+const dogfoodRoot = resolve(__dirname, '../../../../extern/dogfood')
+
 export class DogfoodServer {
 	app: express.Application
 	server: any
@@ -10,7 +12,7 @@ export class DogfoodServer {
 	constructor() {
 		this.app = express()
 		// this.app.use(morgan('tiny'))
-		this.app.use(express.static(resolve(__dirname, '../../dogfood/dockerfiles/watirspec/html')))
+		this.app.use(express.static(resolve(dogfoodRoot, 'dockerfiles/watirspec/html')))
 	}
 
 	async start() {

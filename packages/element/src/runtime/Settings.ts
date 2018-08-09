@@ -1,5 +1,23 @@
 import CustomDeviceDescriptors from '../utils/CustomDeviceDescriptors'
 
+/**
+ * Declares the settings for the test, overriding settings exported at the top of the test.
+ *
+ * _This is a secondary syntax to `export const settings = {}` which functions exactly the same way.
+ *
+ * **Example:**
+ *
+ * ```typescript
+ * export default () => {
+ *  setup({ waitTimeout: 60 })
+ * }
+ * ```
+
+ * @export
+ * @param {TestSettings} settings
+ */
+export declare function setup(settings: TestSettings): void
+
 // Waits is seconds
 export const DEFAULT_STEP_WAIT_SECONDS = 5
 export const DEFAULT_ACTION_WAIT_SECONDS = 0.5

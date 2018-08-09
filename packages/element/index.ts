@@ -1,14 +1,17 @@
-import { TestSettings } from './src/runtime/Settings'
-import { FloodProcessEnv, nullFloodProcessEnv } from './src/runtime-environment/types'
-import { Until } from './src/page/Until'
-import { Device, MouseButtons } from './src/page/Enums'
-import { TestData } from './src/test-data/TestData'
+/**
+ * Provide an api for Element test scripts
+ */
+export { Until } from './src/page/Until'
+export { Device, MouseButtons } from './src/page/Enums'
+export { TestData } from './src/test-data/TestData'
 
-export { TestSettings, Until, Device, MouseButtons, TestData }
-
+export { TestSettings, setup } from './src/runtime/Settings'
 export { By } from './src/page/By'
 
-export function setup(s: TestSettings) {}
+import { FloodProcessEnv, nullFloodProcessEnv } from './src/runtime-environment/types'
+/**
+ * A subset of process.env available to this test.
+ */
 export const ENV: FloodProcessEnv = nullFloodProcessEnv
 
 export { Browser, Browser as Driver } from './src/runtime/types'

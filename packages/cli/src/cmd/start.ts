@@ -4,8 +4,8 @@ import {
 	runUntilExit,
 	ElementOptions,
 	WorkRoot,
+	FloodProcessEnv,
 } from '@flood/element/RuntimeEnvironmentAPI'
-import { FloodProcessEnv } from '@flood/element'
 import { ConsoleReporter } from '../utils/ConsoleReporter'
 import { Argv, Arguments } from 'yargs'
 import { existsSync } from 'fs'

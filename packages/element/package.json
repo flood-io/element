@@ -1,6 +1,6 @@
 {
 	"name": "@flood/element",
-	"version": "1.0.3-4",
+	"version": "1.0.3-6",
 	"description": "Flood Element is a browser based load generation tool for easily testing modern web application performance",
 	"main": "./dist/index.js",
 	"types": "./dist/index.ts.d",
@@ -10,7 +10,7 @@
 		"test": "mocha --trace-warnings -r ts-node/register src/**/*.spec.ts",
 		"doc": "yarn typedoc && ts-node ./scripts/docs/docs.ts",
 		"docs:watch": "node --trace-warnings $(npm bin)/nodemon --ext ts --exec ts-node -- ./utils/docs.ts",
-		"typedoc": "typedoc --json docs.json --includeDeclarations  ./index.d.ts"
+		"typedoc": "typedoc --json docs.json --includeDeclarations  ./index.ts"
 	},
 	"repository": {
 		"type": "git",

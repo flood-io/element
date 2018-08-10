@@ -3,7 +3,7 @@
 		"module": "commonjs",
 		"target": "ES2015",
 		"moduleResolution": "node",
-		"removeComments": true,
+		"removeComments": false,
 		"outDir": "dist",
 		"lib": ["dom", "dom.iterable", "esnext", "es2016.array.include", "es2017.object"],
 		"pretty": false,
@@ -18,11 +18,18 @@
 		"noImplicitAny": false,
 		"allowSyntheticDefaultImports": true,
 		"experimentalDecorators": true,
-		"types": ["@types/node"],
 		"typeRoots": ["node_modules/@types"],
-		"emitDecoratorMetadata": true
+		"emitDecoratorMetadata": true,
+    "baseUrl": "./",
+    "paths": {
+      "*": ["node_modules/@types/*", "*"],
+      //"@flood/element/node_modules/@types/node": ["node_modules/@types/node"],
+      "@flood/element/RuntimeEnvironmentAPI": [ "node_modules/@flood/element/lib/RuntimeEnvironmentAPI" ],
+      "@flood/element/ReporterAPI": [ "node_modules/@flood/element/lib/ReporterAPI" ],
+      "@flood/element/TestScriptAPI": [ "node_modules/@flood/element/lib/TestScriptAPI" ]
+    }
 	},
-	"exclude": ["node_modules", "dist", "*.spec.ts"],
+	"exclude": ["node_modules", "dist", "lib", "*.spec.ts"],
 	"files": ["./index.ts"],
 	"include": ["./src/**/*.ts"]
 }

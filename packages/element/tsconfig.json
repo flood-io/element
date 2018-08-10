@@ -4,7 +4,7 @@
 		"target": "ES2017",
 		"moduleResolution": "node",
 		"inlineSourceMap": true,
-		"outDir": "dist",
+		"outDir": "lib",
     "declaration": true,
     "removeComments": false,
 		"lib": ["DOM", "DOM.Iterable", "ES2015", "ES7", "ES2017", "ES2016.Array.Include", "ES2017.Object"],
@@ -18,10 +18,10 @@
 		"noImplicitAny": false,
 		"allowSyntheticDefaultImports": true,
 		"experimentalDecorators": true,
-		"types": ["@types/node"],
 		"typeRoots": ["node_modules/@types"],
-		"emitDecoratorMetadata": true
-	},
-	"exclude": ["node_modules", "dist", "examples", "*.spec.ts", "*.test.ts"],
+		"emitDecoratorMetadata": true	
+  },
+	"exclude": ["node_modules", "lib", "examples", "*.spec.ts", "*.test.ts"],
+	//"include": ["./src/**/*.ts"],
 	"files": ["./index.ts","./ReporterAPI.ts", "./RuntimeEnvironmentAPI.ts", "./TestScriptAPI.ts", "./expect.ts"]
 }

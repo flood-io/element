@@ -2,5 +2,5 @@ src
 tmp
 logs
 *.ts
-!dist
-!dist/**/*.ts
+!lib
+!lib/**/*.ts

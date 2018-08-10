@@ -20,6 +20,10 @@
 		"arrowParens": "avoid"
 	},
 	"devDependencies": {
-		"@types/node": "^10.5.2"
+		"nodemon": "^1.17.5",
+		"@types/node": "^10.5.2",
+		"ts-node": "^6.1.1",
+		"typescript": "^2.9.0",
+		"typescript-collections": "^1.2.5"
 	}
 }

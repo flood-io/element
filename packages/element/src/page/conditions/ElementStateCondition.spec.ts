@@ -46,10 +46,16 @@ describe('Condition', function() {
 		}).timeout(31e3)
 
 		it('waits Until.elementIsDisabled', async () => {
-			await page.evaluate(() => document.querySelector('#btn').removeAttribute('disabled'))
+			await page.evaluate(() => {
+				const btn = document.querySelector('#btn')
+				if (btn) {
+					btn.removeAttribute('disabled')
+				}
+			})
 			let btn = await page.$('#btn')
 
 			expect(btn).to.not.be.null
+			if (!btn) throw new Error('#btn was null')
 
 			expect(
 				await btn.executionContext().evaluate(el => el.hasAttribute('disabled'), btn),

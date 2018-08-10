@@ -37,7 +37,7 @@ describe('Condition', function() {
 			// Wait until Sweden is selected
 			let condition = Until.elementIsSelected(By.css('select#new_user_country option[value="3"]'))
 			page.select('select#new_user_country', '3')
-			let found = await condition.waitFor(page.mainFrame(), null)
+			let found = await condition.waitFor(page.mainFrame(), undefined)
 			expect(found).to.equal(true)
 		}).timeout(31e3)
 
@@ -46,7 +46,7 @@ describe('Condition', function() {
 				By.css('select#new_user_country option[value="2"]'),
 			)
 			page.select('select#new_user_country', '3')
-			let found = await condition.waitFor(page.mainFrame(), null)
+			let found = await condition.waitFor(page.mainFrame(), undefined)
 			expect(found).to.equal(true)
 		}).timeout(31e3)
 	})

@@ -30,18 +30,20 @@ describe('Condition', function() {
 			await page.goto('http://localhost:1337/nested_frames.html')
 		})
 
+		const trimSafe = x => (x ? x.trim() : '')
+
 		it('waits Until.ableToSwitchToFrame with frame name', async () => {
 			let condition = Until.ableToSwitchToFrame('one')
 			let frame: Frame = await condition.waitFor(page.mainFrame(), page)
 			expect(frame.name()).to.equal('one')
-			expect(await frame.$eval('body', body => body.textContent.trim())).to.equal('frame 1')
+			expect(await frame.$eval('body', body => trimSafe(body.textContent))).to.equal('frame 1')
 		})
 
 		it.skip('waits Until.ableToSwitchToFrame with Locatable', async () => {
 			let condition = Until.ableToSwitchToFrame(By.id('one'))
 			let frame: Frame = await condition.waitFor(page.mainFrame(), page)
 			expect(frame.name()).to.equal('one')
-			expect(await frame.$eval('body', body => body.textContent.trim())).to.equal('frame 1')
+			expect(await frame.$eval('body', body => trimSafe(body.textContent))).to.equal('frame 1')
 		})
 
 		it.skip('waits Until.ableToSwitchToFrame with frame index', async () => {

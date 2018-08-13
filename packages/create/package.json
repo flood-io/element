@@ -1,6 +1,6 @@
 {
 	"name": "create-element-test",
-	"version": "1.0.3-10",
+	"version": "1.0.3-11",
 	"license": "Apache-2.0",
 	"description": "Generates a test environment for running Flood Element scripts",
 	"repository": "flood-io/element",

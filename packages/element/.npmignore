@@ -3,4 +3,5 @@ tmp
 logs
 *.ts
 !lib
+!lib/**/*.js
 !lib/**/*.ts

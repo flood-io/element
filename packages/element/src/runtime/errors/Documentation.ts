@@ -1,7 +1,12 @@
 import { StructuredError } from '../../utils/StructuredError'
 import { ITestScript, TestScriptError } from '../../TestScript'
 import { DocumentedError } from '../../utils/DocumentedError'
-import { AnyErrorData, NetworkErrorData, ActionErrorData } from '../../runtime/errors/Types'
+import {
+	AnyErrorData,
+	NetworkErrorData,
+	ActionErrorData,
+	LocatorErrorData,
+} from '../../runtime/errors/Types'
 import chalk from 'chalk'
 
 import * as debugFactory from 'debug'
@@ -39,6 +44,9 @@ export function structuredErrorToDocumentedError(
 	}
 	if (sErr.data._kind === 'action') {
 		return script.liftError(actionError(<StructuredError<ActionErrorData>>sErr))
+	}
+	if (sErr.data._kind === 'locator') {
+		return script.liftError(locatorError(<StructuredError<LocatorErrorData>>sErr))
 	}
 
 	// nothing else worked
@@ -106,6 +114,27 @@ Things to try to fix:
 	return DocumentedError.documented(
 		err,
 		`An unknown action error occurred: ${err.message} (kind: ${kind})`,
+		documentationNeeded,
+	)
+}
+
+function locatorError(err: StructuredError<LocatorErrorData>): DocumentedError {
+	const { kind, locator } = err.data
+	if (kind === 'element-not-found') {
+		return DocumentedError.documented(
+			err,
+			`Unable to find element using ${locator}.`,
+			chalk`The test script tried to locate an element using {blue ${locator}} but it couldn't be found on the page.
+
+Things to try to fix:
+- TODO
+`,
+		)
+	}
+
+	return DocumentedError.documented(
+		err,
+		`An unknown locator error occurred: ${err.message} (kind: ${kind})`,
 		documentationNeeded,
 	)
 }

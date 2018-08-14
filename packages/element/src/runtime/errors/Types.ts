@@ -45,6 +45,7 @@ export interface AssertionErrorData {
 
 export interface LocatorErrorData {
 	_kind: 'locator'
+	kind: string
 	locator: string
 }
 

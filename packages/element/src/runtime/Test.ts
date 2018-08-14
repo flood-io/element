@@ -157,16 +157,18 @@ export default class Test {
 			for (let step of this.steps) {
 				browser.customContext = step
 
-				if (this.skipping) {
-					await this.runStepAsSkipped(step)
-				} else {
-					await this.runStep(browser, step, testDataRecord)
+				await this.runStep(browser, step, testDataRecord)
+
+				if (this.failed) {
+					break
 				}
 			}
 		} catch (err) {
-			// TODO: Cancel future steps if we reach here
+			this.failed = true
 			throw err
 		}
+
+		// TODO report skipped steps
 
 		await this.testObserver.after(this)
 	}
@@ -262,15 +264,6 @@ export default class Test {
 		return runCallback.apply(this, [CallbackQueue.AfterStep, name, screenshots])
 	}
  */
-
-	async runStepAsSkipped(step: Step) {
-		debug(`Skipping step: ${step.name}`)
-		await this.testObserver.beforeStep(this, step)
-		// this.skipped.push(step.name)
-		await this.testObserver.afterStep(this, step)
-		// XXX run all skips at end?
-		await this.testObserver.onStepSkipped(this, step)
-	}
 
 	public get stepNames(): string[] {
 		return this.steps.map(s => s.name)

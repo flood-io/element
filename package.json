@@ -5,6 +5,7 @@
 	"repository": "git@github.com:flood-io/element.git",
 	"author": "Ivan Vanderbyl <ivanvanderbyl@gmail.com>",
 	"license": "MIT",
+  "private": true,
 	"dependencies": {
 		"lerna": "2.11.0"
 	},
@@ -21,9 +22,10 @@
 	},
 	"devDependencies": {
 		"nodemon": "^1.17.5",
-		"@types/node": "^10.5.2",
+		"@types/node": "10.7.0",
 		"ts-node": "^6.1.1",
 		"typescript": "^2.9.0",
 		"typescript-collections": "^1.2.5"
-	}
+	},
+  "workspaces": ["packages/cli", "packages/element"]
 }

@@ -52,6 +52,7 @@
 		"source-map": "^0.7.0",
 		"strftime": "^0.10.0",
 		"term-img": "^2.1.0",
+		"typescript": "^2.9.0",
 		"tti-polyfill": "^0.2.2",
 		"vm2": "^3.5.2",
 		"winston": "^3.0.0"

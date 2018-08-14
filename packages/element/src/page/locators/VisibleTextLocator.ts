@@ -13,29 +13,34 @@ export class VisibleTextLocator extends BaseLocator {
 	get pageFunc(): EvaluateFn {
 		return (targetText: string, partial: boolean = true) => {
 			// TODO: Switch expressions if not partial
-			let expression = `//*[contains(text(), '${targetText}')]`
-			let node = document.evaluate(
+			const expression = `//*[contains(text(), '${targetText}')]`
+			const iterator = document.evaluate(
 				expression,
 				document,
 				null,
-				XPathResult.FIRST_ORDERED_NODE_TYPE,
+				XPathResult.ORDERED_NODE_ITERATOR_TYPE,
 				null,
-			).singleNodeValue
+			)
 
-			if (node && node.nodeType === Node.ELEMENT_NODE) {
-				let element: HTMLElement = node as HTMLElement
-				const style = window.getComputedStyle(element)
-				const isVisible = style && style.visibility !== 'hidden' && hasVisibleBoundingBox()
+			let node = iterator.iterateNext()
 
-				if (isVisible) return node
+			while (node) {
+				node = iterator.iterateNext()
+				if (node && node.nodeType === Node.ELEMENT_NODE) {
+					let element: HTMLElement = node as HTMLElement
+					const style = window.getComputedStyle(element)
+					const isVisible = style && style.visibility !== 'hidden' && hasVisibleBoundingBox()
 
-				function hasVisibleBoundingBox() {
-					const rect = element.getBoundingClientRect()
-					return !!(rect.top || rect.bottom || rect.width || rect.height)
+					if (isVisible) return node
+
+					function hasVisibleBoundingBox() {
+						const rect = element.getBoundingClientRect()
+						return !!(rect.top || rect.bottom || rect.width || rect.height)
+					}
 				}
-			} else {
-				return null
 			}
+
+			return null
 		}
 	}
 

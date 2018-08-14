@@ -27,7 +27,7 @@ export class By {
 	 */
 	public static css(selector: string, debugString?: string): Locator {
 		if (debugString === undefined) {
-			debugString = `By.css(${selector})`
+			debugString = `By.css('${selector}')`
 		}
 		return new CSSLocator(selector, debugString)
 	}
@@ -40,7 +40,7 @@ export class By {
 	 */
 	public static id(id: string): Locator {
 		if (id.startsWith('#')) id = id.slice(1)
-		return this.css(`*[id="${escapeCss(id)}"]`, `By.id(${id})`)
+		return this.css(`*[id="${escapeCss(id)}"]`, `By.id('#${id}')`)
 	}
 
 	/**

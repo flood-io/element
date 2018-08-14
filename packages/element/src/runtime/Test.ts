@@ -33,8 +33,8 @@ import { TestData } from '../test-data/TestData'
 import { TestDataLoaders } from '../test-data/TestDataLoaders'
 
 // import { readdirSync } from 'fs'
-import * as debugFactory from 'debug'
 
+import * as debugFactory from 'debug'
 const debug = debugFactory('element:test')
 
 export default class Test {

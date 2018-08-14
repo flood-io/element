@@ -9,6 +9,9 @@ import { TestScriptError } from '@flood/element/TestScriptAPI'
 import { Logger } from 'winston'
 import chalk from 'chalk'
 
+import * as debugFactory from 'debug'
+const debug = debugFactory('element-cli:console-reporter')
+
 export class ConsoleReporter implements IReporter {
 	public responseCode: string
 	public stepName: string
@@ -87,7 +90,9 @@ cause.stack: ${detail.causeStack}`)
 	}
 
 	testScriptConsole(method: string, message?: any, ...optionalParams: any[]): void {
-		if (method == 'log') method = 'info'
-		this.logger[method](message, ...optionalParams)
+		debug('testScriptConsole', method, message)
+		if (method === 'log') method = 'info'
+		if (method === 'warning') method = 'warn'
+		this.logger[method](`page console.${method}: ${message}`, ...optionalParams)
 	}
 }

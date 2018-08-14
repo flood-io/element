@@ -6,8 +6,8 @@ import * as prettier from 'prettier'
 import { locatableToLocator } from '../runtime/Browser'
 import { NullableLocatable } from '../runtime/types'
 
-// import * as debugFactory from 'debug'
-// const debug = debugFactory('element:page:condition')
+import * as debugFactory from 'debug'
+const debug = debugFactory('element:page:condition')
 
 export { NullableLocatable }
 
@@ -64,13 +64,15 @@ export abstract class ElementCondition extends Condition {
 		return this.locator.pageFunc
 	}
 
-	public async waitFor(frame: Frame): Promise<boolean> {
+	public async waitFor(frame: Frame, page?: Page): Promise<boolean> {
 		const argSeparator = '-SEP-'
 		let options: PageFnOptions = { polling: 'raf', timeout: this.timeout }
 		let locatorFunc = this.locatorPageFunc
 		let conditionFunc = this.pageFunc
 
 		let fn = function predicate(...args: any[]) {
+			const argSeparator = '-SEP-'
+
 			let args1: any[] = []
 			let args2: any[] = []
 			let foundSep = false
@@ -95,6 +97,7 @@ export abstract class ElementCondition extends Condition {
 			let conditionFunc = function(node, ...args2) {
 				return false
 			}
+
 			return conditionFunc(node, ...args2)
 		}
 
@@ -125,7 +128,12 @@ export abstract class ElementCondition extends Condition {
 
 		let code = prettier.format(recast.print(fnAST).code, { parser: 'babylon' })
 
+		debug('waitFor code', code)
+
 		let args = Array.prototype.concat(this.locator.pageFuncArgs, argSeparator, this.pageFuncArgs)
+		debug('waitFor args', args)
+
+		code = `(${code})(...args)`
 
 		await frame.waitForFunction(code, options, ...args)
 

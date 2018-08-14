@@ -27,7 +27,7 @@ import { NetworkErrorData, LocatorErrorData } from './errors/Types'
 import { StructuredError } from '../utils/StructuredError'
 
 import * as debugFactory from 'debug'
-const debug = debugFactory('element:runtme:browser')
+const debug = debugFactory('element:runtime:browser')
 const debugScreenshot = debugFactory('element:runtime:browser:screenshot')
 
 function toLocatorError(
@@ -98,14 +98,14 @@ function addCallbacks<T>() {
 			try {
 				ret = await originalFn.apply(browser, args)
 			} catch (e) {
-				debug('interpreting error browser', propertyKey, e)
+				debug('addCallbacks lifting to StructuredError', propertyKey, e)
 
 				const sErr = StructuredError.liftWithSource(e, 'browser', `browser.${propertyKey}`)
 				sErr.stack = calltimeStack
 
-				debug('error now', e)
+				debug('error now', sErr)
 
-				throw e
+				throw sErr
 			}
 			if (browser.afterFunc instanceof Function) await browser.afterFunc(browser, propertyKey)
 			return ret
@@ -131,14 +131,14 @@ function rewriteError<T>() {
 			try {
 				ret = await originalFn.apply(browser, args)
 			} catch (e) {
-				debug('interpreting error browser', propertyKey, e)
+				debug('rewriteError lifting to StructuredError', propertyKey, e)
 
 				const sErr = StructuredError.liftWithSource(e, 'browser', `browser.${propertyKey}`)
 				sErr.stack = calltimeStack
 
-				debug('error now', e)
+				debug('error now', sErr)
 
-				throw e
+				throw sErr
 			}
 			return ret
 		}
@@ -161,6 +161,8 @@ export class Browser<T> implements BrowserInterface {
 	) {
 		this.beforeFunc && this.afterFunc
 		this.screenshots = []
+
+		// this.page.on('console', msg => console.log(msg))
 	}
 
 	private get context(): Promise<ExecutionContext> {
@@ -214,6 +216,7 @@ export class Browser<T> implements BrowserInterface {
 			await new Promise((yeah, nah) => setTimeout(yeah, Number(timeoutOrCondition) * 1e3))
 			return true
 		}
+		debug('wait')
 		let condition = timeoutOrCondition as Condition
 		condition.settings = this.settings
 		if (condition.hasWaitFor) {

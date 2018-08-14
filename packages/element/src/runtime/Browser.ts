@@ -23,41 +23,46 @@ import { Key } from '../page/Enums'
 import { readFileSync } from 'fs'
 import * as termImg from 'term-img'
 import { ConcreteTestSettings } from './Settings'
-import { ErrorInterpreter, NetworkErrorData } from './errors/Types'
-import { DocumentedError } from '../utils/DocumentedError'
+import { ErrorInterpreter, NetworkErrorData, LocatorErrorData } from './errors/Types'
 import { StructuredError } from '../utils/StructuredError'
 
 import * as debugFactory from 'debug'
 const debug = debugFactory('element:runtme:browser')
 const debugScreenshot = debugFactory('element:runtime:browser:screenshot')
 
-export class ElementNotFound extends DocumentedError {
-	constructor(locatable: NullableLocatable, callCtx?: string) {
-		let desc: string
-		let doc: string
-		if (locatable === null) {
-			desc = 'null locator'
-			doc = `The requested location was null. Check whether the locatable was set.`
-		} else if (typeof locatable === 'string') {
-			desc = locatable
-			doc = `The requested location was '${locatable}' but didn't match anything on the page.`
-		} else {
-			desc = locatable.toErrorString()
-			doc = `The requested location was '${desc}' but didn't match anything on the page.`
-		}
-		super(`No element was found on the page using '${desc}'`, doc, callCtx)
-		// Object.setPrototypeOf(this, ElementNotFound.prototype)
-		this.name = 'ElementNotFound'
+function toLocatorError(
+	locatable: NullableLocatable,
+	callContext: string,
+): StructuredError<LocatorErrorData> {
+	let locatorString: string
+	if (locatable === null) {
+		locatorString = 'null locator'
+	} else if (typeof locatable === 'string') {
+		locatorString = locatable
+	} else {
+		locatorString = locatable.toErrorString()
 	}
+
+	return new StructuredError<LocatorErrorData>(
+		`No element was found on the page using '${locatorString}'`,
+		{
+			_kind: 'locator',
+			locator: locatorString,
+		},
+		undefined,
+		'browser',
+		callContext,
+	)
 }
 
-export function locatableToLocator(el: NullableLocatable, callCtx: string): Locator {
+export function locatableToLocator(el: NullableLocatable, callCtx: string): Locator | never {
 	if (el === null) {
-		throw new DocumentedError(
-			'locatable is null',
-			`In a call to ${callCtx} the locatable parameter was null.`,
-			callCtx,
-		)
+		throw toLocatorError(el, callCtx)
+		// new DocumentedError(
+		// 'locatable is null',
+		// `In a call to ${callCtx} the locatable parameter was null.`,
+		// callCtx,
+		// )
 	} else if (typeof el === 'string') {
 		return By.css(el)
 	} else {
@@ -117,6 +122,38 @@ function wrapWithCallbacks<T>(...errorInterpreters: ErrorInterpreter<T, NetworkE
 				throw e
 			}
 			if (browser.afterFunc instanceof Function) await browser.afterFunc(browser, propertyKey)
+			return ret
+		}
+
+		return descriptor
+	}
+}
+
+function rewriteError<T>() {
+	return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+		let originalFn = descriptor.value
+
+		descriptor.value = async function(...args: any[]) {
+			let ret
+			const browser: Browser<T> = this
+
+			// capture the stack trace at call-time
+			const calltimeError = new Error()
+			Error.captureStackTrace(calltimeError)
+			const calltimeStack = calltimeError.stack
+
+			try {
+				ret = await originalFn.apply(browser, args)
+			} catch (e) {
+				debug('interpreting error browser', propertyKey, e)
+
+				const sErr = StructuredError.liftWithSource(e, 'browser', `browser.${propertyKey}`)
+				sErr.stack = calltimeStack
+
+				debug('error now', e)
+
+				throw e
+			}
 			return ret
 		}
 
@@ -436,6 +473,7 @@ export class Browser<T> implements BrowserInterface {
 		return element.highlight()
 	}
 
+	@rewriteError()
 	public async findElement(locatable: NullableLocatable): Promise<ElementHandle> {
 		let locator = locatableToLocator(locatable, 'browser.findElement(locatable)')
 
@@ -443,7 +481,7 @@ export class Browser<T> implements BrowserInterface {
 
 		let element = await locator.find(await this.context)
 		if (!element) {
-			throw new ElementNotFound(locatable, 'browser.findElement()')
+			throw toLocatorError(locatable, 'browser.findElement()')
 		}
 
 		element.bindBrowser(this)
@@ -480,7 +518,7 @@ export class Browser<T> implements BrowserInterface {
 		console.warn(`DEPRECATED: Driver.extractText() is deprecated, please use ElementHandle.text()`)
 		let locator = locatableToLocator(locatable, 'browser.extractText(locatable) (DEPRECATED)')
 		let element = await locator.find(await this.context)
-		if (!element) throw new ElementNotFound(locatable, 'browser.extractText()')
+		if (!element) throw toLocatorError(locatable, 'browser.extractText()')
 		return element.text()
 	}
 

@@ -7,8 +7,13 @@ export type ErrorInterpreter<T, U extends ErrorData> = (
 	...args: any[]
 ) => StructuredError<U>
 
-export type AnyErrorData = EmptyErrorData | NetworkErrorData | ActionErrorData | AssertionErrorData
-type ErrorDataKind = 'net' | 'action' | 'empty' | 'assertion'
+export type AnyErrorData =
+	| EmptyErrorData
+	| NetworkErrorData
+	| ActionErrorData
+	| AssertionErrorData
+	| LocatorErrorData
+type ErrorDataKind = 'net' | 'action' | 'empty' | 'assertion' | 'locator'
 export interface ErrorData {
 	_kind: ErrorDataKind
 }
@@ -36,6 +41,11 @@ export interface ActionErrorData {
 
 export interface AssertionErrorData {
 	_kind: 'assertion'
+}
+
+export interface LocatorErrorData {
+	_kind: 'locator'
+	locator: string
 }
 
 export function castStructuredError<T extends ErrorData>(

@@ -1,6 +1,6 @@
 {
 	"name": "@flood/element-cli",
-	"version": "1.0.3-15",
+	"version": "1.0.3-16",
 	"license": "Apache-2.0",
 	"description": "The command line interface for Flood Element",
 	"repository": "flood-io/element",
@@ -10,13 +10,14 @@
 	"private": false,
 	"scripts": {
 		"build": "tsc --outDir dist --project .",
+		"build:watch": "tsc --watch --outDir dist --project .",
 		"prepublishOnly": "npm run build",
 		"element": "ts-node -- ./index.ts",
 		"element:inspect": "node --inspect-brk -r ts-node/register ./index.ts"
 	},
 	"types": "./index.d.ts",
 	"dependencies": {
-		"@flood/element": "^1.0.3-15",
+		"@flood/element": "^1.0.3-16",
 		"chalk": "^2.4.1",
 		"debug": "^3.1.0",
 		"ms": "^2.1.1",

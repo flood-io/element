@@ -2,3 +2,5 @@ src
 tmp
 logs
 *.ts
+!dist
+!dist/**/*.js

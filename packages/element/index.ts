@@ -2,7 +2,7 @@
  * Provide an api for Element test scripts
  */
 export { Until } from './src/page/Until'
-export { Device, MouseButtons } from './src/page/Enums'
+export { Device, MouseButtons, Key } from './src/page/Enums'
 export { TestData } from './src/test-data/TestData'
 
 export { TestSettings, setup } from './src/runtime/Settings'

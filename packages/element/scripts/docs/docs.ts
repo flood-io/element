@@ -293,7 +293,7 @@ class DocsParser {
 	 * @memberof DocsParser
 	 */
 	process() {
-		let mainModule = docsJSON.children.find(n => n.name === '"index.d"')
+		let mainModule = docsJSON.children.find(n => n.name === '"index"')
 		mainModule.children.forEach(child => {
 			let doc = new MarkdownDocument(filePathForNameAndType(child.kindString, child.name))
 			if (!this.docs.has(child.kindString)) this.docs.set(child.kindString, [])

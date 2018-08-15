@@ -2,24 +2,24 @@ import * as argv from 'yargs'
 import chalk from 'chalk'
 const debug = require('debug')('element:main')
 import { error } from './utils/out/error'
-import { info } from './utils/out/info'
-import { existsSync } from 'fs'
-import { resolve } from 'path'
-import * as checkForUpdate from 'update-check'
-import * as ms from 'ms'
+// import { info } from './utils/out/info'
+// import { existsSync } from 'fs'
+// import { resolve } from 'path'
+// import * as checkForUpdate from 'update-check'
+// import * as ms from 'ms'
 
-const pkg = (() => {
-	let paths = ['../../package.json', '../package.json']
+// const pkg = (() => {
+// let paths = ['../../package.json', '../package.json']
 
-	let pkgPath = paths.map(p => resolve(p)).find(p => {
-		try {
-			return existsSync(p)
-		} catch {
-			return false
-		}
-	})
-	return require(pkgPath)
-})()
+// let pkgPath = paths.map(p => resolve(p)).find(p => {
+// try {
+// return existsSync(p)
+// } catch {
+// return false
+// }
+// })
+// return require(pkgPath)
+// })()
 
 export const handleUnexpected = err => {
 	debug('handling unexpected error')
@@ -49,28 +49,28 @@ process.on('unhandledRejection', handleRejection)
 process.on('uncaughtException', handleUnexpected)
 
 export async function main() {
-	const { isTTY } = process.stdout
-	let update = null
+	// const { isTTY } = process.stdout
+	// let update = null
 
-	try {
-		update = await checkForUpdate(pkg, {
-			interval: ms('1d'),
-			distTag: pkg.version.includes('canary') ? 'canary' : 'latest',
-		})
-	} catch (err) {
-		console.error(error(`Checking for updates failed`))
-		console.error(err)
-	}
+	// try {
+	// update = await checkForUpdate(pkg, {
+	// interval: ms('1d'),
+	// distTag: pkg.version.includes('canary') ? 'canary' : 'latest',
+	// })
+	// } catch (err) {
+	// console.error(error(`Checking for updates failed`))
+	// console.error(err)
+	// }
 
-	if (update && isTTY) {
-		console.log(
-			info(
-				`${chalk.bgRed('UPDATE AVAILABLE')} The latest version of Element CLI is ${update &&
-					update.latest}`,
-			),
-		)
-		console.log(info(`Get it by running ${chalk.greenBright('yarn add @flood/cli@latest')}`))
-	}
+	// if (update && isTTY) {
+	// console.log(
+	// info(
+	// `${chalk.bgRed('UPDATE AVAILABLE')} The latest version of Element CLI is ${update &&
+	// update.latest}`,
+	// ),
+	// )
+	// console.log(info(`Get it by running ${chalk.greenBright('yarn add @flood/cli@latest')}`))
+	// }
 
 	return argv
 		.usage(`${chalk.bold(chalk.blueBright('element'))} subcommand [options]`)
@@ -83,7 +83,7 @@ export async function main() {
 			'Commands:': chalk.grey('Commands:\n'),
 			'Options:': chalk.grey('Options:\n'),
 		})
-		.version(pkg.version)
+		.version('1.0') // (pkg.version)
 		.showHelpOnFail(true)
 		.recommendCommands()
 		.example(

@@ -14,7 +14,7 @@ import * as path from 'path'
 import createLogger from '../utils/Logger'
 
 export const handler = (args: Arguments) => {
-	const { file } = args
+	const { file, verbose } = args
 	const workRoot = getWorkRoot(file, args['work-root'])
 
 	const logger = createLogger('debug', true)
@@ -24,6 +24,7 @@ export const handler = (args: Arguments) => {
 		logger: logger,
 		testScript: file,
 		reporter: reporter,
+		verbose: verbose,
 		runEnv: initRunEnv(workRoot),
 	}
 
@@ -84,6 +85,9 @@ export const builder = (yargs: Argv) => {
 		.option('work-root', {
 			describe:
 				'Specify a custom work root. (Default: a directory named after your test script, and at the same location)',
+		})
+		.option('verbose', {
+			describe: 'Verbose mode',
 		})
 		.check(({ file, chrome }) => {
 			if (!file.length) return new Error('Please provide a test script')

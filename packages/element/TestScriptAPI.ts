@@ -1,1 +1,1 @@
-export { TestScriptError, ITestScript } from './src/TestScript'
+export { TestScriptError, ITestScript, TestScriptOptions } from './src/TestScript'

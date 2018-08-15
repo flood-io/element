@@ -67,8 +67,8 @@ const defaultCompilerOptions: ts.CompilerOptions = {
 
 	sourceMap: true,
 
-	// useful for our debugging
-	// traceResolution: true,
+	// tracing useful for our debugging
+	traceResolution: false,
 
 	rootDirs: [sandboxRoot],
 
@@ -150,6 +150,10 @@ export class TypeScriptTestScript implements ITestScript {
 
 		if (this.testScriptOptions.stricterTypeChecking) {
 			compilerOptions.noImplicitAny = true
+		}
+
+		if (this.testScriptOptions.traceResolution) {
+			compilerOptions.traceResolution = true
 		}
 
 		return compilerOptions

@@ -4,7 +4,7 @@ import { IReporter } from './Reporter'
 import { RuntimeEnvironment } from './runtime-environment/types'
 import { Browser } from './types'
 import Runner from './Runner'
-import { ITestScript, mustCompileFile } from './TestScript'
+import { ITestScript, TestScriptOptions, mustCompileFile } from './TestScript'
 
 export interface ElementOptions {
 	logger: Logger
@@ -13,6 +13,7 @@ export interface ElementOptions {
 	testScript: string
 	driver?: { new (): Browser }
 	process?: NodeJS.Process
+	verbose: boolean
 }
 
 export function runUntilExit(fn: () => Promise<void>) {
@@ -47,6 +48,15 @@ export async function runCommandLine(opts: ElementOptions): Promise<void> {
 
 	logger.debug(`Loading test script: ${testScript}`)
 
-	const testScriptObj: ITestScript = await mustCompileFile(testScript)
+	let testScriptOptions: TestScriptOptions = {
+		stricterTypeChecking: false,
+		traceResolution: false,
+	}
+
+	if (opts.verbose) {
+		testScriptOptions.traceResolution = true
+	}
+
+	const testScriptObj: ITestScript = await mustCompileFile(testScript, testScriptOptions)
 	await runner.run(testScriptObj)
 }

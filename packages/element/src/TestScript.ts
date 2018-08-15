@@ -131,10 +131,12 @@ export class TestScriptError extends Error {
 
 export interface TestScriptOptions {
 	stricterTypeChecking: boolean
+	traceResolution: boolean
 }
 
 export const TestScriptDefaultOptions: TestScriptOptions = {
 	stricterTypeChecking: false,
+	traceResolution: false,
 }
 
 export interface ITestScript {

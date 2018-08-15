@@ -33,6 +33,7 @@
 	},
 	"homepage": "https://github.com/flood-io/element#readme",
 	"dependencies": {
+		"@types/node": "10.7.0",
 		"assert": "^1.4.1",
 		"async": "^2.6.0",
 		"comment-parser": "^0.5.0",

@@ -15,12 +15,8 @@ const debug = debugFactory('element-cli:console-reporter')
 export class ConsoleReporter implements IReporter {
 	public responseCode: string
 	public stepName: string
-	public verbose: boolean = false
 
-	constructor(private logger: Logger) {
-		// TODO Get from flag
-		this.verbose = !!process.env.VERBOSE
-	}
+	constructor(private logger: Logger, private verbose: boolean) {}
 
 	reset(step: string): void {}
 

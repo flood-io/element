@@ -17,14 +17,17 @@ export const handler = (args: Arguments) => {
 	const { file, verbose } = args
 	const workRoot = getWorkRoot(file, args['work-root'])
 
+	const verboseBool: boolean = !!verbose
+
+	// TODO set level from verbose
 	const logger = createLogger('debug', true)
-	const reporter = new ConsoleReporter(logger)
+	const reporter = new ConsoleReporter(logger, verboseBool)
 
 	const opts: ElementOptions = {
 		logger: logger,
 		testScript: file,
 		reporter: reporter,
-		verbose: verbose,
+		verbose: verboseBool,
 		runEnv: initRunEnv(workRoot),
 	}
 

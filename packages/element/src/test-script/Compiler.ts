@@ -114,7 +114,7 @@ export class TypeScriptTestScript implements ITestScript {
 		public originalFilename: string,
 		options: TestScriptOptions = TestScriptDefaultOptions,
 	) {
-		this.testScriptOptions = { ...TestScriptDefaultOptions, ...options }
+		this.testScriptOptions = Object.assign({}, TestScriptDefaultOptions, options)
 
 		if (this.originalFilename.endsWith('.js')) {
 			this.sourceKind = 'javascript'

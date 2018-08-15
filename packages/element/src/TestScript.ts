@@ -185,7 +185,7 @@ export async function mustCompileString(
 	filename: string,
 	testScriptOptions?: TestScriptOptions,
 ): Promise<ITestScript> {
-	const testScript = await compileString(source, filename)
+	const testScript = await compileString(source, filename, testScriptOptions)
 
 	if (testScript.hasErrors) {
 		throw new Error(`errors compiling script ${filename}:\n${testScript.formattedErrorString}`)
@@ -198,7 +198,7 @@ export async function mustCompileFile(
 	filename: string,
 	testScriptOptions?: TestScriptOptions,
 ): Promise<ITestScript> {
-	const testScript = await compileFile(filename)
+	const testScript = await compileFile(filename, testScriptOptions)
 
 	if (testScript === undefined) {
 		throw new Error(`errors compiling script ${filename}:\nunable to read`)

@@ -53,10 +53,6 @@ export async function runCommandLine(opts: ElementOptions): Promise<void> {
 		traceResolution: false,
 	}
 
-	if (opts.verbose) {
-		testScriptOptions.traceResolution = true
-	}
-
 	const testScriptObj: ITestScript = await mustCompileFile(testScript, testScriptOptions)
 	await runner.run(testScriptObj)
 }

@@ -174,7 +174,7 @@ export class TypeScriptTestScript implements ITestScript {
 			compilerOptions.noImplicitAny = true
 		}
 
-		if (this.testScriptOptions.traceResolution) {
+		if (this.testScriptOptions.traceResolution || debug.enabled) {
 			compilerOptions.traceResolution = true
 		}
 

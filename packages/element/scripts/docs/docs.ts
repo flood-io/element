@@ -6,6 +6,9 @@ import * as frontMatter from 'front-matter'
 import * as yaml from 'js-yaml'
 import { mkdirpSync, copySync, createFileSync, writeFileSync, readFileSync } from 'fs-extra'
 
+import * as debugFactory from 'debug'
+const debug = debugFactory('element:docs')
+
 const root = join(__dirname, '../..')
 const bookDir = join(root, 'docs')
 
@@ -90,7 +93,9 @@ class ParamTypeFormatter {
 			return new ReflectedDeclarationFormatter(this.input.declaration).toString()
 		} else if (this.input.type === 'reference') {
 			if (this.input.name === 'Promise') {
-				let formattedArgs = this.input.typeArguments.map(t => new ParamTypeFormatter(t).toString())
+				let formattedArgs = (this.input.typeArguments || []).map(t =>
+					new ParamTypeFormatter(t).toString(),
+				)
 				return `[Promise]<${formattedArgs.join('|')}>`
 			} else {
 				return `[${this.input.name}]`
@@ -220,6 +225,7 @@ class MarkdownDocument {
 				if (!target.startsWith('http')) {
 					target = relative(join(bookDir, 'api'), target)
 				}
+				if (title === null) title = undefined
 				if (references.has(ref)) refs.set(ref, { target, title })
 			}
 		})
@@ -293,10 +299,14 @@ class DocsParser {
 	 * @memberof DocsParser
 	 */
 	process() {
+		debug('process', docsJSON.children)
 		let mainModule = docsJSON.children.find(n => n.name === '"index"')
+		debug('mm', mainModule)
 		mainModule.children.forEach(child => {
 			let doc = new MarkdownDocument(filePathForNameAndType(child.kindString, child.name))
 			if (!this.docs.has(child.kindString)) this.docs.set(child.kindString, [])
+
+			debug('child.kindString', child.kindString)
 
 			if (child.kindString === 'Module') {
 				this.processClass(doc, child)
@@ -312,15 +322,15 @@ class DocsParser {
 				this.processAlias(doc, child)
 			}
 
-			this.docs.get(child.kindString).push(doc)
+			const kind = this.docs.get(child.kindString)
+			if (kind) kind.push(doc)
 			// let relativePath = filePathForNameAndType(node.kindString, name)
 
 			this.addReference(child.name, `${join(bookDir, doc.path)}#${generateAnchor(child.name)}`)
 
 			if (!this.summaryParts.has(child.name)) this.summaryParts.set(child.name, [])
-			this.summaryParts
-				.get(child.name)
-				.push(`[${child.name}](${doc.path}#${generateAnchor(child.name)})`)
+			const part = this.summaryParts.get(child.name)
+			if (part) part.push(`[${child.name}](${doc.path}#${generateAnchor(child.name)})`)
 		})
 
 		this.createSummary()
@@ -345,7 +355,9 @@ class DocsParser {
 				doc.applyReferences(this.references)
 				let absPath = join(bookDir, doc.path)
 				if (!contents.has(absPath)) contents.set(absPath, [])
-				contents.get(absPath).push(doc.toString())
+
+				const content = contents.get(absPath)
+				if (content) content.push(doc.toString())
 			})
 		})
 		contents.forEach((content, absPath) => {
@@ -383,7 +395,7 @@ class DocsParser {
 		doc.writeHeading('Flood Chrome API', 2)
 		doc.writeLine('')
 
-		let sortedMethods = []
+		let sortedMethods: string[] = []
 
 		this.summaryParts.forEach((methods, name) => {
 			methods.forEach(m => {
@@ -405,7 +417,8 @@ class DocsParser {
 		doc.writeLine(
 			'Here you will find a list of all the possible values for fields which accept a typed enumerated property, such as `userAgent` or `click()`',
 		)
-		this.docs.get('Enumeration').unshift(doc)
+		const enumDoc = this.docs.get('Enumeration')
+		if (enumDoc) enumDoc.unshift(doc)
 	}
 
 	private processCallSignature(doc, sig, prefix?) {
@@ -413,7 +426,7 @@ class DocsParser {
 
 		if (prefix) name = `${camelcase(prefix)}.${name}`
 
-		let params = []
+		let params: any[] = []
 		parameters.forEach(p => {
 			let { name, type, flags: { isOptional = false } } = p
 			let desc = commentFromNode(p)
@@ -570,8 +583,8 @@ const internalRefs = {
 	Device: 'Enumerations.md/#device',
 }
 
-let docsJSON = require(__dirname + '/../../docs.json')
-let parser = new DocsParser(docsJSON)
+const docsJSON = require(__dirname + '/../../docs.json')
+const parser = new DocsParser(docsJSON)
 try {
 	parser.process()
 } catch (err) {

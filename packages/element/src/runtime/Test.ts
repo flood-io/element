@@ -35,7 +35,7 @@ import { TestDataLoaders } from '../test-data/TestDataLoaders'
 // import { readdirSync } from 'fs'
 
 import * as debugFactory from 'debug'
-const debug = debugFactory('element:test')
+const debug = debugFactory('element:runtime:test')
 
 export default class Test {
 	public vm: VM
@@ -120,6 +120,8 @@ export default class Test {
 		// let skipped: Step[] = []
 		// let errors: Error[] = []
 
+		await this.observer.attachToNetworkRecorder()
+
 		debug('run() start')
 		await this.testData.load()
 
@@ -139,8 +141,6 @@ export default class Test {
 			if (this.settings.device) await browser.emulateDevice(this.settings.device)
 			if (this.settings.userAgent) await browser.setUserAgent(this.settings.userAgent)
 			if (this.settings.disableCache) await browser.setCacheDisabled(true)
-
-			await this.observer.attach()
 
 			debug('running this.before(browser)')
 			await this.testObserver.before(this)
@@ -182,8 +182,6 @@ export default class Test {
 	}
 
 	async runStep(browser: Browser<Step>, step: Step, testDataRecord: any) {
-		this.networkRecorder.reset()
-
 		let error: Error | null = null
 		await this.testObserver.beforeStep(this, step)
 		try {
@@ -209,6 +207,9 @@ export default class Test {
 		if (error === null) {
 			await this.doStepDelay()
 		}
+
+		await this.syncNetworkRecorder()
+		this.networkRecorder.reset()
 		debug('step done')
 	}
 

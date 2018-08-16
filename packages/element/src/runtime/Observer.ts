@@ -2,18 +2,22 @@ import NetworkRecorder from '../network/Recorder'
 import { ConsoleMethod } from '../runtime/Settings'
 import { IReporter } from './../Reporter'
 
-// import * as debugFactory from 'debug'
-// const debug = debugFactory('element:observer')
+import * as debugFactory from 'debug'
+const debug = debugFactory('element:runtime:observer')
 
 export default class Observer {
 	public consoleFilters: ConsoleMethod[]
 
 	private failedRequests: string[]
 	private requests: Set<string> = new Set()
+	private attached = false
 
 	constructor(private reporter: IReporter, public networkRecorder: NetworkRecorder) {}
 
-	public attach() {
+	public attachToNetworkRecorder() {
+		if (this.attached) return
+		debug('attachToNetworkRecorder()')
+		this.attached = true
 		this.failedRequests = []
 		this.requests = new Set()
 		this.attachPageEvents()
@@ -58,16 +62,19 @@ export default class Observer {
 	}
 
 	private onRawNetworkRequestWillBeSent(payload) {
+		debug('onRawNetworkRequestWillBeSent', payload.requestId)
 		this.requests.add(payload.requestId)
 		this.networkRecorder.addPendingTask(this.networkRecorder.recordRequest(payload))
 	}
 
 	private onRawNetworkResponse(payload) {
+		debug('onRawNetworkResponse', payload.requestId)
 		if (this.requests.has(payload.requestId))
 			this.networkRecorder.addPendingTask(this.networkRecorder.recordResponse(payload))
 	}
 
 	private onRawNetworkLoadingFinished({ requestId, encodedDataLength, timestamp }) {
+		debug('onRawNetworkLoadingFinished', requestId)
 		// console.log(`onRawNetworkLoadingFinished: ${requestId}`)
 		if (!this.requests.has(requestId)) {
 			console.error(`Unknown request: ${requestId}`)
@@ -90,6 +97,7 @@ export default class Observer {
 
 	private async onRawNetworkLoadingFailed(event) {
 		let { requestId /*, errorText*/ } = event
+		debug('onRawNetworkLoadingFailed', requestId)
 		this.removePendingRequest(requestId)
 		this.failedRequests.push(requestId)
 

@@ -44,11 +44,12 @@ export default class Recorder {
 	}
 
 	public async sync() {
+		debug('Recorder.sync() (pendingTaskQueue.chain)')
 		await this.pendingTaskQueue.chain
 	}
 
 	public async recordRequest(payload: any) {
-		debug('recordRequest(%o)', payload)
+		debug('Recorder.recordRequest(%o)', payload)
 
 		// let pageRef = this.nextPageId
 		let pageRef = payload.frameId
@@ -139,7 +140,7 @@ export default class Recorder {
 	}
 
 	public async recordResponseCompleted({ requestId, encodedDataLength, timestamp }) {
-		debug(`Response Completed: ${requestId}`)
+		debug(`Recorder.recordResponseCompleted: ${requestId}`)
 		let entry = this.getEntryForRequestId(requestId)
 		if (!entry) {
 			return
@@ -243,6 +244,7 @@ export default class Recorder {
 	}
 
 	public reset() {
+		debug('Recorder.reset()')
 		this.entries = []
 		this.pages = []
 	}
@@ -286,7 +288,7 @@ export default class Recorder {
 	}
 
 	public async getResponseData(requestId: string): Promise<Buffer> {
-		debug(`Get Response Body: ${requestId}`)
+		debug(`Recorder.getResponseData: ${requestId}`)
 		try {
 			// console.log(`Network.getResponseBody(${requestId})`)
 

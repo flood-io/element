@@ -25,7 +25,6 @@ export class VisibleTextLocator extends BaseLocator {
 			let node = iterator.iterateNext()
 
 			while (node) {
-				node = iterator.iterateNext()
 				if (node && node.nodeType === Node.ELEMENT_NODE) {
 					let element: HTMLElement = node as HTMLElement
 					const style = window.getComputedStyle(element)
@@ -38,6 +37,7 @@ export class VisibleTextLocator extends BaseLocator {
 						return !!(rect.top || rect.bottom || rect.width || rect.height)
 					}
 				}
+				node = iterator.iterateNext()
 			}
 
 			return null

@@ -9,7 +9,7 @@ import {
 import { CategorisedDiagnostics } from './TypescriptDiagnostics'
 import * as ts from 'typescript'
 import * as path from 'path'
-import { existsSync } from 'fs'
+import { existsSync, readFileSync } from 'fs'
 import { VMScript } from 'vm2'
 import * as parseComments from 'comment-parser'
 import { SourceUnmapper } from './SourceUnmapper'
@@ -34,6 +34,28 @@ if (existsSync(indexTypescriptFile)) {
 	indexModuleFile = indexDeclarationsFile
 } else {
 	throw new Error('unable to find index.ts or index.d.ts')
+}
+
+// manually find @types/node
+const nodeTypesPath = (require.resolve.paths('@types/node') || [])
+	.map(p => path.resolve(p, '@types/node'))
+	.find(existsSync)
+
+if (nodeTypesPath === undefined) {
+	throw new Error('unable to find @types/node')
+}
+
+const nodeTypesPkg = JSON.parse(readFileSync(path.resolve(nodeTypesPath, 'package.json'), 'utf8'))
+const nodeTypesVersion = nodeTypesPkg.version
+
+const nodeTypeReference = {
+	primary: false,
+	resolvedFileName: path.join(nodeTypesPath, 'index.d.ts'),
+	packageId: {
+		name: '@types/node',
+		subModuleName: 'index.d.ts',
+		version: nodeTypesVersion,
+	},
 }
 
 const NoModuleImportedTypescript = `Test scripts must import the module '@flood/element'
@@ -236,6 +258,26 @@ export class TypeScriptTestScript implements ITestScript {
 				resolvedModules.push(result)
 			}
 			return resolvedModules
+		}
+
+		host.resolveTypeReferenceDirectives = (
+			typeReferenceDirectiveNames: string[],
+			containingFile: string,
+		): ts.ResolvedTypeReferenceDirective[] => {
+			debug('resolveTypeReferenceDirectives', typeReferenceDirectiveNames, containingFile)
+			return typeReferenceDirectiveNames
+				.map(typeRef => {
+					if (typeRef === '@types/node') {
+						return nodeTypeReference
+					} else {
+						return ts.resolveTypeReferenceDirective(typeRef, containingFile, compilerOptions, host)
+							.resolvedTypeReferenceDirective!
+					}
+				})
+				.map(t => {
+					debug('res', t)
+					return t
+				})
 		}
 
 		const program = ts.createProgram([this.sandboxedFilename], compilerOptions, host)

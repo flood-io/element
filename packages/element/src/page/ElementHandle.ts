@@ -101,6 +101,13 @@ interface ScreenshotSaver {
 	saveScreenshot(fn: (path: string) => Promise<boolean>)
 }
 
+/**
+ * Example Handle represents a remote element in the DOM of the browser. It implements useful methods for querying and interacting with this DOM element.
+ *
+ * All methids on this class are asynchronous and must be used with `await` to wait for the result to fulfill from the browser.
+ *
+ * @class ElementHandle
+ */
 export class ElementHandle implements IElementHandle, Locator {
 	public screenshotSaver: ScreenshotSaver
 	public errorString = '<element-handle>'
@@ -155,11 +162,19 @@ export class ElementHandle implements IElementHandle, Locator {
 		return (element: HTMLElement, node?: HTMLElement) => [element]
 	}
 
+	/**
+	 * Sends a click event to the element attached to this handle. If the element is
+	 * currently outside the viewport it will first scroll to that element.
+	 */
 	@wrapDescriptiveError(domError)
 	public async click(options?: ClickOptions): Promise<void> {
 		return this.element.click(options)
 	}
-
+	/**
+	 * Schedules a command to clear the value of this element.
+	 * This command has no effect if the underlying DOM element is neither a text
+	 * INPUT, SELECT, or a TEXTAREA element.
+	 */
 	@wrapDescriptiveError()
 	public async clear(): Promise<void> {
 		let tagName = await this.tagName()
@@ -174,11 +189,17 @@ export class ElementHandle implements IElementHandle, Locator {
 		}
 	}
 
+	/**
+	 * Sends focus to this element so that it receives keyboard inputs.
+	 */
 	@wrapDescriptiveError()
 	public async focus(): Promise<void> {
 		return await this.element.focus()
 	}
 
+	/**
+	 * Clears focus from this element so that it will no longer receive keyboard inputs.
+	 */
 	@wrapDescriptiveError()
 	public async blur(): Promise<void> {
 		return await this.element
@@ -186,6 +207,9 @@ export class ElementHandle implements IElementHandle, Locator {
 			.evaluate((node: HTMLElement) => node.blur(), this.element)
 	}
 
+	/**
+	 * Sends a series of key modifiers to the element.
+	 */
 	@wrapDescriptiveError()
 	public async sendKeys(...keys: string[]): Promise<void> {
 		let handle = this.element.asElement()
@@ -200,6 +224,9 @@ export class ElementHandle implements IElementHandle, Locator {
 		}
 	}
 
+	/**
+	 * Sends a series of key presses to the element to simulate a user typing on the keyboard. Use this to fill in input fields.
+	 */
 	@wrapDescriptiveError()
 	public async type(text: string): Promise<void> {
 		let handle = this.element.asElement()
@@ -207,6 +234,9 @@ export class ElementHandle implements IElementHandle, Locator {
 		return handle.type(text)
 	}
 
+	/**
+	 * Takes a screenshot of this element and saves it to the results folder with a random name.
+	 */
 	@wrapDescriptiveError()
 	public async takeScreenshot(options?: ScreenshotOptions): Promise<void> {
 		return this.screenshotSaver.saveScreenshot(async path => {
@@ -221,6 +251,10 @@ export class ElementHandle implements IElementHandle, Locator {
 		})
 	}
 
+	/**
+	 * Locates an element using the supplied <[Locator]>, returning an <[ElementHandle]>
+	 */
+	// TODO wrap
 	public async findElement(locator: string | Locator): Promise<IElementHandle | null> {
 		if (typeof locator === 'string') {
 			locator = By.css(locator)
@@ -228,6 +262,9 @@ export class ElementHandle implements IElementHandle, Locator {
 		return locator.find(this.element.executionContext(), this.element)
 	}
 
+	/**
+	 * Locates all elements using the supplied <[Locator]>, returning an array of <[ElementHandle]>'s
+	 */
 	public async findElements(locator: string | Locator): Promise<IElementHandle[]> {
 		if (typeof locator === 'string') {
 			locator = By.css(locator)
@@ -236,18 +273,21 @@ export class ElementHandle implements IElementHandle, Locator {
 	}
 
 	/**
-	 * Returns a promise that will be resolved with the element's tag name.
+	 * Fetches the remote elements `tagName` property.
 	 */
 	public async tagName(): Promise<string | null> {
 		return getProperty<string>(this.element, 'tagName')
 	}
 
+	/**
+	 * Fetches the remote elements `id` attribute.
+	 */
 	public async getId(): Promise<string | null> {
 		return this.getAttribute('id')
 	}
 
 	/**
-	 * getAttribute
+	 * Fetches the value of an attribute on this element
 	 */
 	public async getAttribute(key: string): Promise<string | null> {
 		let handle = this.element.asElement()
@@ -266,7 +306,7 @@ export class ElementHandle implements IElementHandle, Locator {
 	}
 
 	/**
-	 * Returns whether the element is checked or selected
+	 * If the remote element is selectable (such as an `<option>` or `input[type="checkbox"]`) this methos will indicate whether it is selected.
 	 */
 	public async isSelected(): Promise<boolean> {
 		if (await !this.isSelectable()) {
@@ -285,6 +325,9 @@ export class ElementHandle implements IElementHandle, Locator {
 		return !!value
 	}
 
+	/**
+	 * Checks whether the remote element is selectable. An element is selectable if it is an `<option>` or `input[type="checkbox"]` or radio button.
+	 */
 	public async isSelectable(): Promise<boolean> {
 		let tagName = await this.tagName()
 
@@ -300,11 +343,17 @@ export class ElementHandle implements IElementHandle, Locator {
 		return false
 	}
 
+	/**
+	 * Checks whether the remote element is displayed in the DOM and is visible to the user without being hidden by CSS or occluded by another element.
+	 */
 	public async isDisplayed(): Promise<boolean> {
 		let box = await this.element.boundingBox()
 		return box !== null
 	}
 
+	/**
+	 * Checks whether the remote element is enabled. Typically this means it does not have a `disabled` property or attribute applied.
+	 */
 	public async isEnabled(): Promise<boolean> {
 		let disabled = await this.getAttribute('disabled')
 		return disabled === null
@@ -316,7 +365,6 @@ export class ElementHandle implements IElementHandle, Locator {
 	 * @returns {Promise<string>}
 	 * @memberof ElementHandle
 	 */
-
 	public async text(): Promise<string> {
 		return this.element
 			.executionContext()

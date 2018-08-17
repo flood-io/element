@@ -19,16 +19,37 @@ export class TestData<T> {
 		this.feeder.append(this.loader.lines)
 	}
 
+	/**
+	 * Instructs the data feeder to repeat the data set when it reaches the end.
+	 * @param circular optional, pass `false` to disable
+	 */
 	public circular(circular = true): TestData<T> {
 		this.feeder.circular(circular)
 		return this
 	}
 
+	/**
+	 * Shuffles the data set using the Fisher-Yates method. Use this to randomise the order of your data. This will always be applied after filtering.
+	 * @param shuffle optional, pass `false` to disable
+	 */
 	public shuffle(shuffle = true): TestData<T> {
 		this.feeder.shuffle(shuffle)
 		return this
 	}
 
+	/**
+	 * Adds a filter to apply against each line in the data set.
+	 *
+	 * Filters can be chained, and will be run in order only if the previous ffilter passed.
+	 *
+	 * Example:
+	 * 	```
+	 * 		type Row = { browser: string, email: string }
+	 * 		TestData.fromCSV("users.csv").filter((line, index, browserID) => line.browser === browserID)
+	 *  ```
+	 *
+	 * @param func filter function to compare each line
+	 */
 	public filter(func: FeedFilterFunction<T>): TestData<T> {
 		this.feeder.filter(func)
 		return this

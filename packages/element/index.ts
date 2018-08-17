@@ -3,10 +3,12 @@
  */
 export { Until } from './src/page/Until'
 export { Device, MouseButtons, Key } from './src/page/Enums'
+export { By } from './src/page/By'
+export { ElementHandle } from './src/page/ElementHandle'
+
 export { TestData } from './src/test-data/TestData'
 
 export { TestSettings, setup } from './src/runtime/Settings'
-export { By } from './src/page/By'
 
 import { FloodProcessEnv, nullFloodProcessEnv } from './src/runtime-environment/types'
 /**

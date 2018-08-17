@@ -3,17 +3,18 @@ import Test from '../Test'
 import { Step } from '../Step'
 import { TestObserver } from './Observer'
 import NetworkRecorder from '../../network/Recorder'
-import { CompoundMeasurement } from '../../Reporter'
 import { ResponseTiming } from '../Settings'
 import { StructuredError } from '../../utils/StructuredError'
 
 import * as debugFactory from 'debug'
 const debug = debugFactory('element:runtime:test:timing')
 
-const measurementKeysForDOM = {
-	'first-contentful-paint': 'first_contentful_paint',
-	'first-paint': 'first_paint',
-}
+// TODO re-enable when browser_performance decoupled
+// import { CompoundMeasurement } from '../../Reporter'
+// const measurementKeysForDOM = {
+// 'first-contentful-paint': 'first_contentful_paint',
+// 'first-paint': 'first_paint',
+// }
 
 type TimingRec = { start: number; end: number; thinkTime: number }
 type TimingSegmentName = 'beforeStep' | 'step' | 'afterStep'
@@ -161,7 +162,6 @@ export default class TimingObserver implements TestObserver {
 			debug('reportResult: no running browser')
 			return
 		}
-		const browser = test.runningBrowser
 
 		const reporter = test.reporter
 		const name = step.name
@@ -184,24 +184,27 @@ export default class TimingObserver implements TestObserver {
 		// console.log(`Report: Document Response Time: ${documentResponseTime}ms`)
 		// console.log(`Report: Document Latency: ${documentLatency}ms`)
 
+		// NOTE all browser_performance metrics will be decoupled
 		// TODO decouple
-		let tti = await browser.interactionTiming()
-		let performanceTiming = await browser.performanceTiming()
+		// const browser = test.runningBrowser
+		// let tti = await browser.interactionTiming()
+		// let performanceTiming = await browser.performanceTiming()
 
-		let browserPerformanceTiming: CompoundMeasurement = {
-			time_to_first_interactive: tti,
-			dom_interactive: performanceTiming.domInteractive - performanceTiming.navigationStart,
-			dom_complete: performanceTiming.domComplete - performanceTiming.navigationStart,
-		}
+		// let browserPerformanceTiming: CompoundMeasurement = {
+		// time_to_first_interactive: tti,
+		// dom_interactive: performanceTiming.domInteractive - performanceTiming.navigationStart,
+		// dom_complete: performanceTiming.domComplete - performanceTiming.navigationStart,
+		// }
 
-		let paintTimingEntries = await browser.paintTiming()
-		paintTimingEntries.forEach(entry => {
-			if (measurementKeysForDOM[entry.name]) {
-				browserPerformanceTiming[measurementKeysForDOM[entry.name]] = Math.round(entry.startTime)
-			}
-		})
+		// let paintTimingEntries = await browser.paintTiming()
+		// paintTimingEntries.forEach(entry => {
+		// if (measurementKeysForDOM[entry.name]) {
+		// browserPerformanceTiming[measurementKeysForDOM[entry.name]] = Math.round(entry.startTime)
+		// }
+		// })
 
-		reporter.addCompoundMeasurement('browser_performance', browserPerformanceTiming, name)
+		// reporter.addCompoundMeasurement('browser_performance', browserPerformanceTiming, name)
+
 		reporter.addMeasurement('throughput', test.networkRecorder.networkThroughput(), name)
 		reporter.addMeasurement('transaction_rate', 1, name)
 		reporter.addMeasurement('concurrency', 1, name) //TODO see whether concurrency changes in go grid work with this

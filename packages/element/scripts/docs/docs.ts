@@ -12,6 +12,37 @@ const debug = debugFactory('element:docs')
 const root = join(__dirname, '../..')
 const bookDir = join(root, 'docs')
 
+// import * as recast from 'recast'
+import * as ts from 'typescript'
+
+const fileName = join(root, 'index.ts')
+
+const s = ts.createSourceFile(
+	fileName,
+	readFileSync(fileName).toString(),
+	ts.ScriptTarget.ES2015,
+	/* setParentNodes */ true,
+)
+
+const indexMap: { [key: string]: string[] } = {}
+
+function getExport(node) {
+	let srcFile = node.moduleSpecifier.text
+	if (srcFile.startsWith('./')) srcFile = srcFile.slice(2)
+
+	if (!indexMap[srcFile]) indexMap[srcFile] = []
+
+	const defs = node.exportClause.elements.map(x => x.name.escapedText)
+
+	indexMap[srcFile] = indexMap[srcFile].concat(defs)
+}
+
+ts.forEachChild(s, node => {
+	if (node.kind === ts.SyntaxKind.ExportDeclaration) {
+		getExport(node)
+	}
+})
+
 function commentFromNode(node) {
 	let { comment: { shortText, text } = { shortText: null, text: null } } = node
 	return [shortText, text].filter(t => t && t.length).join('\n\n')
@@ -35,28 +66,64 @@ function generateAnchor(name: string): string {
 		.replace(/[^a-z0-9-]/gi, '')
 }
 
+function stripQuotes(name: string): string {
+	if (name.startsWith('"') && name.endsWith('"')) {
+		return name.slice(1, name.length - 1)
+	} else {
+		return name
+	}
+}
+
 /**
  * Translates the node type and name to a relative file path, and ensures the file exists
  */
-function filePathForNameAndType(kind: string, name: string): string {
-	let paths = {
-		Class: name => join('api', `${name}.md`),
-		Interface: name => join('api', `Interfaces.md`),
-		Module: name => join('api', `${name}.md`),
-		Function: name => join('api', `Functions.md`),
-		'Type alias': name => join('api', `Interfaces.md`),
-		Enumeration: name => join('api', `Interfaces.md`),
-		Variable: name => join('api', `Interfaces.md`),
-		Index: name => name,
+function maybeFilePathForNameAndType(kind: string, name: string): string | undefined {
+	// debug('maybeFilePathForNameAndType(%s, %s)', kind, name)
+	name = stripQuotes(name)
+
+	const unmapped = indexMap[name]
+	if (!unmapped) {
+		return undefined
 	}
 
-	if (!paths[kind]) {
-		throw new Error(`Unknown language construct: ${kind}`)
+	const paths = {
+		'src/page/By': 'api/By.md',
+		'src/page/Until': 'api/Until.md',
+		'src/page/ElementHandle': 'api/ElementHandle.md',
+		'src/runtime/types': 'api/Browser.md',
+		'src/test-data/TestData': 'api/TestData.md',
+		'src/test-data/TestDataLoaders': 'api/TestData.md',
 	}
 
-	let relativePath = paths[kind](name)
-	return relativePath
+	// let paths = {
+	// Class: name => join('api', `${name}.md`),
+	// Interface: name => join('api', `Interfaces.md`),
+	// Module: name => join('api', `${name}.md`),
+	// Function: name => join('api', `Functions.md`),
+	// 'Type alias': name => join('api', `Interfaces.md`),
+	// Enumeration: name => join('api', `Interfaces.md`),
+	// Variable: name => join('api', `Interfaces.md`),
+	// Index: name => name,
+	// }
+
+	if (!paths[name]) {
+		return undefined
+	}
+
+	return paths[name]
+
+	// let relativePath = paths[kind](name)
+	// debug('relativePath', relativePath)
+	// return relativePath
 }
+
+// function filePathForNameAndType(kind: string, name: string): string {
+// const path = maybeFilePathForNameAndType(kind, name)
+// if (path === undefined) {
+// throw new Error(`unable to find file path for kind: ${kind}`)
+// }
+// return path
+// }
 
 interface Comment {
 	shortText: string
@@ -279,7 +346,7 @@ class DocsParser {
 
 	docs: Map<string, MarkdownDocument[]> = new Map()
 
-	constructor(public docsJSON: string) {
+	constructor(public docsJSON: any) {
 		mkdirpSync(bookDir)
 		copySync(join(root, 'README.md'), join(bookDir, 'README.md'))
 
@@ -299,42 +366,69 @@ class DocsParser {
 	 * @memberof DocsParser
 	 */
 	process() {
-		debug('process', docsJSON.children)
-		let mainModule = docsJSON.children.find(n => n.name === '"index"')
-		debug('mm', mainModule)
-		mainModule.children.forEach(child => {
-			let doc = new MarkdownDocument(filePathForNameAndType(child.kindString, child.name))
-			if (!this.docs.has(child.kindString)) this.docs.set(child.kindString, [])
+		// const topMods = this.docsJSON.children.map(n => [n.name, n.kindString])
 
-			debug('child.kindString', child.kindString)
+		// const secondLevel = this.docsJSON.children
+		// .reduce((secondLevel, c) => secondLevel.concat(c.children), [])
+		// .filter(x => x)
 
-			if (child.kindString === 'Module') {
-				this.processClass(doc, child)
-			} else if (child.kindString === 'Enumeration') {
-				this.processClass(doc, child)
-			} else if (child.kindString === 'Class') {
-				this.processClass(doc, child)
-			} else if (child.kindString === 'Interface') {
-				this.processClass(doc, child)
-			} else if (child.kindString === 'Function') {
-				this.processFunction(doc, child)
-			} else if (child.kindString === 'Type alias') {
-				this.processAlias(doc, child)
-			}
-
-			const kind = this.docs.get(child.kindString)
-			if (kind) kind.push(doc)
-			// let relativePath = filePathForNameAndType(node.kindString, name)
-
-			this.addReference(child.name, `${join(bookDir, doc.path)}#${generateAnchor(child.name)}`)
-
-			if (!this.summaryParts.has(child.name)) this.summaryParts.set(child.name, [])
-			const part = this.summaryParts.get(child.name)
-			if (part) part.push(`[${child.name}](${doc.path}#${generateAnchor(child.name)})`)
-		})
+		// let mainModule = this.docsJSON.children.find(n => n.name === '"index"')
+		// debug('mm', mainModule)
+		// mainModule.children.forEach(child => {
+		this.docsJSON.children.forEach(child => this.processNode(child))
 
 		this.createSummary()
 		this.writeDocsToFiles()
+	}
+
+	private processNode(node) {
+		const { name, kindString } = node
+
+		// debug('c', child)
+		const path = maybeFilePathForNameAndType(kindString, name)
+		if (path === undefined) return
+		debug('resolved path', path)
+
+		let doc = new MarkdownDocument(path)
+		if (!this.docs.has(kindString)) this.docs.set(kindString, [])
+
+		this.processNodeWithDoc(node, doc)
+
+		const kind = this.docs.get(kindString)
+		if (kind) kind.push(doc)
+		// let relativePath = filePathForNameAndType(node.kindString, name)
+
+		this.addReference(name, `${join(bookDir, doc.path)}#${generateAnchor(name)}`)
+
+		if (!this.summaryParts.has(name)) this.summaryParts.set(name, [])
+
+		const part = this.summaryParts.get(name)
+		if (part) part.push(`[${name}](${doc.path}#${generateAnchor(name)})`)
+	}
+
+	private processNodeWithDoc(node, doc) {
+		debug('child.kindString', node.kindString)
+
+		switch (node.kindString) {
+			case 'Module':
+			case 'Enumeration':
+			case 'Class':
+			case 'Interface':
+				this.processClass(doc, node)
+				break
+			case 'Function':
+				debug('found a function ', node.name)
+				// this.processFunction(doc, node)
+				break
+			case 'Type alias':
+				this.processAlias(doc, node)
+				break
+			case 'External module':
+				this.processExternalModule(doc, node)
+			default:
+				console.warn(`unknown kind ${node.kindString}`)
+				return
+		}
 	}
 
 	public applyReferencesToHandWrittenDocs() {
@@ -348,8 +442,10 @@ class DocsParser {
 	}
 
 	public writeDocsToFiles() {
+		debug('writeDocsToFiles()')
 		this.applyReferencesToHandWrittenDocs()
 		let contents: Map<string, string[]> = new Map()
+		debug('docs', this.docs)
 		this.docs.forEach((docs, path) => {
 			docs.forEach(doc => {
 				doc.applyReferences(this.references)
@@ -472,17 +568,17 @@ class DocsParser {
 		doc.writeComment(comment)
 	}
 
-	private processFunction(doc, node) {
-		node.signatures.forEach(sig => {
-			this.addReference(
-				sig.name,
-				`${join(bookDir, filePathForNameAndType('Function', node.name))}#${generateAnchor(
-					sig.name,
-				)}`,
-			)
-			this.processCallSignature(doc, sig, null)
-		})
-	}
+	// private processFunction(doc, node) {
+	// node.signatures.forEach(sig => {
+	// this.addReference(
+	// sig.name,
+	// `${join(bookDir, filePathForNameAndType('Function', node.name))}#${generateAnchor(
+	// sig.name,
+	// )}`,
+	// )
+	// this.processCallSignature(doc, sig, null)
+	// })
+	// }
 
 	private processAlias(doc: MarkdownDocument, node) {
 		// console.log(node)
@@ -495,8 +591,14 @@ class DocsParser {
 		// })
 	}
 
+	private processExternalModule(doc, node) {
+		// debug('processExternalModule', node)
+		node.children.forEach(node => this.processNodeWithDoc(node, doc))
+	}
+
 	private processClass(doc, node) {
 		let { name, children } = node
+		debug('processClass', name, children)
 
 		// 1. Create file and reference
 		doc.writeSection(`\`${name}\``)

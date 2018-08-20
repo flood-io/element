@@ -11,8 +11,8 @@ import {
 import { Browser as BrowserInterface, NullableLocatable, EvaluateFn } from './types'
 import * as DeviceDescriptors from 'puppeteer/DeviceDescriptors'
 import CustomDeviceDescriptors from '../utils/CustomDeviceDescriptors'
-import { Locator } from '../page/Locator'
-import { ElementHandle } from '../page/ElementHandle'
+import { Locator, ElementHandle } from '../page/types'
+// import { ElementHandle } from '../page/types'
 import { TargetLocator } from '../page/TargetLocator'
 import { By } from '../page/By'
 import { PuppeteerClient } from '../types'
@@ -468,10 +468,11 @@ export class Browser<T> implements BrowserInterface {
 
 		debug('locator %o', locator)
 
-		let element = await locator.find(await this.context)
-		if (!element) {
+		let maybeElement = await locator.find(await this.context)
+		if (!maybeElement) {
 			throw toLocatorError(locatable, 'browser.findElement()')
 		}
+		const element = maybeElement as ElementHandle
 
 		element.bindBrowser(this)
 
@@ -485,8 +486,10 @@ export class Browser<T> implements BrowserInterface {
 
 		const locator = locatableToLocator(locatable, 'browser.maybeFindElement(locatable)')
 		const context = await this.context
-		let element = await locator.find(context)
-		if (!element) return null
+		let maybeElement = await locator.find(context)
+		if (!maybeElement) return null
+
+		const element = maybeElement as ElementHandle
 
 		element.bindBrowser(this)
 		return element

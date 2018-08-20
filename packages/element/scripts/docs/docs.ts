@@ -1,4 +1,4 @@
-import { join, relative } from 'path'
+import { join, relative, basename } from 'path'
 import * as table from 'markdown-table'
 import * as camelcase from 'lodash.camelcase'
 import * as glob from 'glob'
@@ -11,6 +11,7 @@ const debug = debugFactory('element:docs')
 
 const root = join(__dirname, '../..')
 const bookDir = join(root, 'docs')
+const apiDir = join(bookDir, 'api')
 
 // import * as recast from 'recast'
 import * as ts from 'typescript'
@@ -43,9 +44,19 @@ ts.forEachChild(s, node => {
 	}
 })
 
+debug('indexMap', indexMap)
+
 function commentFromNode(node) {
 	let { comment: { shortText, text } = { shortText: null, text: null } } = node
 	return [shortText, text].filter(t => t && t.length).join('\n\n')
+}
+function isNodeInternal(node) {
+	if (node && node.comment && node.comment.tags) {
+		return node.comment.tags.find(t => t.tag === 'internal')
+	} else if (node && node.signatures) {
+		return node.signatures.some(isNodeInternal)
+	}
+	return false
 }
 
 function findReferences(text: string): string[] {
@@ -74,49 +85,6 @@ function stripQuotes(name: string): string {
 	}
 }
 
-/**
- * Translates the node type and name to a relative file path, and ensures the file exists
- */
-function maybeFilePathForNameAndType(kind: string, name: string): string | undefined {
-	// debug('maybeFilePathForNameAndType(%s, %s)', kind, name)
-	name = stripQuotes(name)
-
-	const unmapped = indexMap[name]
-	if (!unmapped) {
-		return undefined
-	}
-
-	const paths = {
-		'src/page/By': 'api/By.md',
-		'src/page/Until': 'api/Until.md',
-		'src/page/ElementHandle': 'api/ElementHandle.md',
-		'src/runtime/types': 'api/Browser.md',
-		'src/test-data/TestData': 'api/TestData.md',
-		'src/test-data/TestDataLoaders': 'api/TestData.md',
-	}
-
-	// let paths = {
-	// Class: name => join('api', `${name}.md`),
-	// Interface: name => join('api', `Interfaces.md`),
-	// Module: name => join('api', `${name}.md`),
-	// Function: name => join('api', `Functions.md`),
-	// 'Type alias': name => join('api', `Interfaces.md`),
-	// Enumeration: name => join('api', `Interfaces.md`),
-	// Variable: name => join('api', `Interfaces.md`),
-	// Index: name => name,
-	// }
-
-	if (!paths[name]) {
-		return undefined
-	}
-
-	return paths[name]
-
-	// let relativePath = paths[kind](name)
-	// debug('relativePath', relativePath)
-	// return relativePath
-}
-
 // function filePathForNameAndType(kind: string, name: string): string {
 // const path = maybeFilePathForNameAndType(kind, name)
 // if (path === undefined) {
@@ -130,7 +98,7 @@ interface Comment {
 	text: string
 }
 
-type RefsMap = Map<string, { target: string; title?: string }>
+type RefsMap = Map<string, { target: string }>
 
 type ParamType =
 	| { type: 'intrinsic'; name: string }
@@ -146,29 +114,30 @@ class ParamTypeFormatter {
 	public toString() {
 		let { type } = this.input
 
-		if (this.input.type === 'intrinsic') {
-			return `${this.input.name}`
-		} else if (this.input.type === 'stringLiteral') {
-			return this.input.value
-		} else if (this.input.type === 'array') {
-			let formatter = new ParamTypeFormatter(this.input.elementType)
-			return `${formatter.toString()}[]`
-		} else if (this.input.type === 'union') {
-			let formattedArgs = this.input.types.map(t => new ParamTypeFormatter(t).toString())
-			return `${formattedArgs.join('|')}`
-		} else if (this.input.type === 'reflection') {
-			return new ReflectedDeclarationFormatter(this.input.declaration).toString()
-		} else if (this.input.type === 'reference') {
-			if (this.input.name === 'Promise') {
-				let formattedArgs = (this.input.typeArguments || []).map(t =>
-					new ParamTypeFormatter(t).toString(),
-				)
-				return `[Promise]<${formattedArgs.join('|')}>`
-			} else {
-				return `[${this.input.name}]`
-			}
-		} else {
-			console.assert(true, `Found unknown type: "${type}"`)
+		switch (this.input.type) {
+			case 'intrinsic':
+				return `${this.input.name}`
+			case 'stringLiteral':
+				return this.input.value
+			case 'array':
+				let formatter = new ParamTypeFormatter(this.input.elementType)
+				return `${formatter.toString()}[]`
+			case 'union':
+				let formattedArgs = this.input.types.map(t => new ParamTypeFormatter(t).toString())
+				return `${formattedArgs.join('|')}`
+			case 'reflection':
+				return new ReflectedDeclarationFormatter(this.input.declaration).toString()
+			case 'reference':
+				if (this.input.name === 'Promise') {
+					let formattedArgs = (this.input.typeArguments || []).map(t =>
+						new ParamTypeFormatter(t).toString(),
+					)
+					return `[Promise]&lt;${formattedArgs.join('|')}&gt;`
+				} else {
+					return `[${this.input.name}]`
+				}
+			default:
+				console.assert(true, `Found unknown type: "${type}"`)
 		}
 	}
 }
@@ -223,6 +192,7 @@ interface FrontMatter {
 class MarkdownDocument {
 	constructor(
 		public path: string,
+		public symbolicName: string,
 		public lines: string[] = [],
 		public referencesNeeded: string[] = [],
 		public enableReferences = true,
@@ -230,7 +200,7 @@ class MarkdownDocument {
 	) {}
 
 	static fromFile(path: string) {
-		let doc = new MarkdownDocument(path)
+		let doc = new MarkdownDocument(path, basename(path, '.md'))
 		let content = readFileSync(path).toString('utf8')
 
 		let matter = frontMatter<FrontMatter>(content)
@@ -257,12 +227,12 @@ class MarkdownDocument {
 
 	public writeParameterLine(name: string, type: ParamType, desc: string = '', isOptional = false) {
 		let formattedType = new ParamTypeFormatter(type).toString()
-		let t = `<${formattedType}>`
+		let t = `&lt;${formattedType}&gt;`
 
 		if (name.startsWith('returns')) {
-			this.writeLine(`* ${name} ${t} ${desc.trim()}`)
+			this.writeLine(`* ${name} ${t} ${desc}`)
 		} else {
-			this.writeLine(`* \`${name}\` ${t} ${isOptional ? '(Optional)' : ''} ${desc.trim()}`)
+			this.writeLine(`* \`${name}\` ${t} ${isOptional ? '(Optional)' : ''} ${desc}`)
 		}
 	}
 
@@ -285,16 +255,21 @@ class MarkdownDocument {
 		if (!this.enableReferences) return
 		let refs: RefsMap = new Map()
 
-		this.referencesNeeded.forEach(ref => {
-			let { target, title } = references.get(ref) || { target: '', title: null }
+		this.referencesNeeded.forEach(name => {
+			// debug('applyReferences -> ', name)
+			let link: string
+			const ref = references.get(name)
+			if (!ref) return
+			const { target } = ref
 
-			if (target.length > 0) {
-				if (!target.startsWith('http')) {
-					target = relative(join(bookDir, 'api'), target)
-				}
-				if (title === null) title = undefined
-				if (references.has(ref)) refs.set(ref, { target, title })
+			if (target.startsWith('http')) {
+				link = target
+			} else {
+				link = `${relative(apiDir, target)}#${generateAnchor(name)}`
 			}
+
+			// if (title === null) title = undefined
+			refs.set(name, { target: link })
 		})
 
 		this.writeReferences(refs)
@@ -337,6 +312,11 @@ class MarkdownDocument {
 	}
 }
 
+// function exportKey(node): string {
+// return `${stripQuotes(node.name)}.${node.name}`
+// }
+// }
+
 class DocsParser {
 	title: string
 
@@ -344,14 +324,15 @@ class DocsParser {
 	summaryParts: Map<string, string[]> = new Map()
 	enumerations: MarkdownDocument[] = []
 
-	docs: Map<string, MarkdownDocument[]> = new Map()
+	docs: Map<string, MarkdownDocument> = new Map()
+	// seenModule: Map<string, boolean> = new Map()
 
 	constructor(public docsJSON: any) {
 		mkdirpSync(bookDir)
 		copySync(join(root, 'README.md'), join(bookDir, 'README.md'))
 
 		for (const [key, target] of Object.entries(internalRefs)) {
-			this.references.set(key, { target })
+			this.addReference(key, target)
 		}
 	}
 
@@ -375,39 +356,102 @@ class DocsParser {
 		// let mainModule = this.docsJSON.children.find(n => n.name === '"index"')
 		// debug('mm', mainModule)
 		// mainModule.children.forEach(child => {
-		this.docsJSON.children.forEach(child => this.processNode(child))
+		this.docsJSON.children.forEach(child => this.processTopLevelNode(child))
 
-		this.createSummary()
+		// TODO ASSEMBLE SUMMARY
+		// let relativePath = filePathForNameAndType(node.kindString, name)
+
+		// if (!this.summaryParts.has(resolvedName)) this.summaryParts.set(resolvedName, [])
+
+		// const part = this.summaryParts.get(resolvedName)
+		// if (part) part.push(`[${resolvedName}](${resolvedPath}#${generateAnchor(resolvedName)})`)
+
+		// this.createSummary()
 		this.writeDocsToFiles()
 	}
 
-	private processNode(node) {
+	private processTopLevelNode(node) {
+		debug('processTopLevelNode')
 		const { name, kindString } = node
 
-		// debug('c', child)
-		const path = maybeFilePathForNameAndType(kindString, name)
-		if (path === undefined) return
-		debug('resolved path', path)
+		debug('name: %s, kind: %s', name, kindString)
+		// if (this.seenModule(node)) return
 
-		let doc = new MarkdownDocument(path)
-		if (!this.docs.has(kindString)) this.docs.set(kindString, [])
+		const doc = this.docForNode(node)
+		if (doc === undefined) return
 
-		this.processNodeWithDoc(node, doc)
-
-		const kind = this.docs.get(kindString)
-		if (kind) kind.push(doc)
-		// let relativePath = filePathForNameAndType(node.kindString, name)
-
-		this.addReference(name, `${join(bookDir, doc.path)}#${generateAnchor(name)}`)
-
-		if (!this.summaryParts.has(name)) this.summaryParts.set(name, [])
-
-		const part = this.summaryParts.get(name)
-		if (part) part.push(`[${name}](${doc.path}#${generateAnchor(name)})`)
+		debug('doc', doc.path, doc.symbolicName)
+		this.processNodeWithDoc([], node, doc)
 	}
 
-	private processNodeWithDoc(node, doc) {
-		debug('child.kindString', node.kindString)
+	// seenModule(node): boolean {
+	// return node.kindString === 'External module' &&
+	// }
+
+	/**
+	 * Translates the node type and name to a relative file path, and ensures the file exists
+	 */
+	docForNode(node): MarkdownDocument | undefined {
+		let { name } = node
+		// debug('maybeFilePathForNameAndType(%s, %s)', kind, name)
+		name = stripQuotes(name)
+
+		// const unmapped = indexMap[name]
+		// if (!unmapped) {
+		// return undefined
+		// }
+
+		const paths = {
+			'src/page/Enums': 'api/Constants.md',
+
+			'src/page/By': 'api/By.md',
+			'src/page/Until': 'api/Until.md',
+
+			'src/runtime/types': 'api/Browser.md',
+			'src/page/types': 'api/Page.md',
+			'src/page/TargetLocator': 'api/Page.md',
+
+			'src/runtime/Step': 'api/DSL.md',
+			'src/runtime/Settings': 'api/DSL.md',
+			'src/runtime-environment/types': 'api/DSL.md',
+
+			'src/test-data/TestData': 'api/TestData.md',
+			'src/test-data/TestDataFactory': 'api/TestData.md',
+		}
+
+		if (!paths[name]) {
+			return undefined
+		}
+
+		const docPath = paths[name]
+
+		if (!this.docs.has(docPath)) this.docs.set(docPath, new MarkdownDocument(docPath, name))
+
+		return this.docs.get(docPath)
+
+		// debug('n', node)
+		// const resolved = maybeFilePathForNameAndType(kindString, name)
+		// if (resolved === undefined) return
+		// const [resolvedName, resolvedPath] = resolved
+		// debug('resolved as path %s and name %s', resolvedPath, name)
+
+		// let doc = new MarkdownDocument(resolvedPath)
+		// if (!this.docs.has(resolvedPath)) this.docs.set(resolvedPath, [])
+
+		// const docsForPath = this.docs.get(resolvedPath)
+		// if (docsForPath) docsForPath.push(doc)
+		// return paths[name]
+
+		// let relativePath = paths[kind](name)
+		// debug('relativePath', relativePath)
+		// return relativePath
+	}
+
+	private processNodeWithDoc(stack: string[], node, doc, resolvedName = node.name) {
+		debug('processNodeWithDoc', stack, node.kindString, node.name, resolvedName)
+		if (isNodeInternal(node)) {
+			return
+		}
 
 		switch (node.kindString) {
 			case 'Module':
@@ -418,17 +462,22 @@ class DocsParser {
 				break
 			case 'Function':
 				debug('found a function ', node.name)
-				// this.processFunction(doc, node)
+				this.processFunction(doc, node)
 				break
 			case 'Type alias':
 				this.processAlias(doc, node)
 				break
 			case 'External module':
-				this.processExternalModule(doc, node)
+				this.processExternalModule(stack, doc, node)
+				break
+			case 'Object literal':
+				this.processObjectLiteral(doc, node)
 			default:
 				console.warn(`unknown kind ${node.kindString}`)
 				return
 		}
+
+		this.addReference(resolvedName, doc.path)
 	}
 
 	public applyReferencesToHandWrittenDocs() {
@@ -445,16 +494,16 @@ class DocsParser {
 		debug('writeDocsToFiles()')
 		this.applyReferencesToHandWrittenDocs()
 		let contents: Map<string, string[]> = new Map()
-		debug('docs', this.docs)
-		this.docs.forEach((docs, path) => {
-			docs.forEach(doc => {
-				doc.applyReferences(this.references)
-				let absPath = join(bookDir, doc.path)
-				if (!contents.has(absPath)) contents.set(absPath, [])
+		// debug('docs', this.docs)
+		this.docs.forEach((doc, path) => {
+			// docs.forEach(doc => {
+			doc.applyReferences(this.references)
+			let absPath = join(bookDir, path)
+			if (!contents.has(absPath)) contents.set(absPath, [])
 
-				const content = contents.get(absPath)
-				if (content) content.push(doc.toString())
-			})
+			const content = contents.get(absPath)
+			if (content) content.push(doc.toString())
+			// })
 		})
 		contents.forEach((content, absPath) => {
 			createFileSync(absPath)
@@ -462,60 +511,59 @@ class DocsParser {
 		})
 	}
 
-	private addReference(name, target, title?) {
-		if (!name) return
-		if (!target) return
-		this.references.set(name, { target, title })
+	private addReference(name: string, target: string) {
+		debug('addReference', name, target)
+		this.references.set(name, { target })
 	}
 
-	private createSummary() {
-		let doc = new MarkdownDocument('SUMMARY.md')
-		doc.enableReferences = false
-		doc.writeHeading('Documentation', 2)
-		doc.writeLine('')
-		doc.writeBullet('[Quick Start](README.md)')
+	// private createSummary() {
+	// let doc = new MarkdownDocument('SUMMARY.md')
+	// doc.enableReferences = false
+	// doc.writeHeading('Documentation', 2)
+	// doc.writeLine('')
+	// doc.writeBullet('[Quick Start](README.md)')
 
-		// Adds everything in the examples directory
-		let examples = glob.sync('docs/examples/**/*.md')
-		examples.forEach(file => {
-			let content = readFileSync(file).toString('utf8')
-			let { title } = frontMatter<FrontMatter>(content).attributes
-			if (title) {
-				let relativePath = relative(bookDir, file)
-				doc.writeBullet(`[${title}](${relativePath})`)
-			}
-		})
+	// // Adds everything in the examples directory
+	// let examples = glob.sync('docs/examples/**/*.md')
+	// examples.forEach(file => {
+	// let content = readFileSync(file).toString('utf8')
+	// let { title } = frontMatter<FrontMatter>(content).attributes
+	// if (title) {
+	// let relativePath = relative(bookDir, file)
+	// doc.writeBullet(`[${title}](${relativePath})`)
+	// }
+	// })
 
-		doc.writeLine('')
+	// doc.writeLine('')
 
-		doc.writeHeading('Flood Chrome API', 2)
-		doc.writeLine('')
+	// doc.writeHeading('Flood Chrome API', 2)
+	// doc.writeLine('')
 
-		let sortedMethods: string[] = []
+	// let sortedMethods: string[] = []
 
-		this.summaryParts.forEach((methods, name) => {
-			methods.forEach(m => {
-				sortedMethods.push(m)
-			})
-		})
+	// this.summaryParts.forEach((methods, name) => {
+	// methods.forEach(m => {
+	// sortedMethods.push(m)
+	// })
+	// })
 
-		sortedMethods
-			.sort()
-			// .sort((a, b) => a.toLowerCase() - b.toLowerCase())
-			.forEach(m => {
-				doc.writeBullet(m, 2)
-			})
+	// sortedMethods
+	// .sort()
+	// // .sort((a, b) => a.toLowerCase() - b.toLowerCase())
+	// .forEach(m => {
+	// doc.writeBullet(m, 2)
+	// })
 
-		this.docs.set('Index', [doc])
+	// this.docs.set('Index', [doc])
 
-		doc = new MarkdownDocument('Enumerations.md')
-		doc.writeHeading('Enumerations')
-		doc.writeLine(
-			'Here you will find a list of all the possible values for fields which accept a typed enumerated property, such as `userAgent` or `click()`',
-		)
-		const enumDoc = this.docs.get('Enumeration')
-		if (enumDoc) enumDoc.unshift(doc)
-	}
+	// doc = new MarkdownDocument('Enumerations.md')
+	// doc.writeHeading('Enumerations')
+	// doc.writeLine(
+	// 'Here you will find a list of all the possible values for fields which accept a typed enumerated property, such as `userAgent` or `click()`',
+	// )
+	// const enumDoc = this.docs.get('Enumeration')
+	// if (enumDoc) enumDoc.unshift(doc)
+	// }
 
 	private processCallSignature(doc, sig, prefix?) {
 		let { name, type, parameters = [] } = sig
@@ -568,22 +616,27 @@ class DocsParser {
 		doc.writeComment(comment)
 	}
 
-	// private processFunction(doc, node) {
-	// node.signatures.forEach(sig => {
-	// this.addReference(
-	// sig.name,
-	// `${join(bookDir, filePathForNameAndType('Function', node.name))}#${generateAnchor(
-	// sig.name,
-	// )}`,
-	// )
-	// this.processCallSignature(doc, sig, null)
-	// })
-	// }
+	private processFunction(doc, node) {
+		node.signatures.forEach(sig => {
+			this.addReference(
+				sig.name,
+				doc.path,
+				// '', // TODO
+				// `${join(bookDir, filePathForNameAndType('Function', node.name))}#${generateAnchor(
+				// sig.name,
+				// )}`,
+			)
+			this.processCallSignature(doc, sig, null)
+		})
+	}
 
 	private processAlias(doc: MarkdownDocument, node) {
 		// console.log(node)
 
 		doc.writeHeading(`\`${node.name}\``)
+		doc.writeComment(node.comment)
+
+		this.addReference(node.name, doc.path)
 
 		// node.signatures.forEach(sig => {
 		// 	this.addReference(sig.name, join(bookDir, filePathForNameAndType('Type alias', node.name)))
@@ -591,9 +644,18 @@ class DocsParser {
 		// })
 	}
 
-	private processExternalModule(doc, node) {
-		// debug('processExternalModule', node)
-		node.children.forEach(node => this.processNodeWithDoc(node, doc))
+	private processObjectLiteral(doc: MarkdownDocument, node) {
+		debug('processObjectLiteral', node)
+		doc.writeHeading(`\`${node.name}\``)
+		doc.writeComment(node.comment)
+		this.processObject(node.name, node.children, doc)
+		this.addReference(node.name, doc.path)
+	}
+
+	private processExternalModule(stack, doc, node) {
+		debug('processExternalModule', node)
+		const nextStack = stack.concat(node.name)
+		node.children.forEach(node => this.processNodeWithDoc(nextStack, node, doc))
 	}
 
 	private processClass(doc, node) {
@@ -619,7 +681,7 @@ class DocsParser {
 		let members = children.filter(node => node.kindString === 'Enumeration member')
 
 		if (members.length) {
-			this.processMembers(name, members, doc)
+			this.processObject(name, members, doc, 'Member')
 			// doc.writeTableHeader('Member', 'Default Value', 'Comment')
 			// members.forEach(node => this.processMember(name, node, doc))
 		}
@@ -628,24 +690,32 @@ class DocsParser {
 	}
 
 	private processMethod(parent, node, doc) {
+		if (isNodeInternal(node)) return
+
 		node.signatures.forEach(sig => {
 			this.processCallSignature(doc, sig, parent)
 			if (doc.filePath) {
 				let name = `${camelcase(parent)}.${sig.name}`
-				this.addReference(name, `${join(bookDir, doc.filePath)}#${generateAnchor(name)}`)
+				this.addReference(name, doc.path)
 			}
 		})
 	}
 
 	private processProperty(parent, node, doc) {
+		if (isNodeInternal(node)) return
+
 		let { name, flags, type } = node
 		let comment = commentFromNode(node)
-		doc.writeParameterLine(name, type, comment, flags.isOptional === true)
+
+		// comment rendered as part of an unordered list, so indent
+		comment = '  ' + comment.replace(/\n/g, '  \n  ') + '  '
+
+		doc.writeParameterLine(name, type, comment, !!flags.isOptional)
 	}
 
-	private processMembers(parent, members, doc: MarkdownDocument) {
+	private processObject(parent, members, doc: MarkdownDocument, thing = 'Name') {
 		doc.writeTable([
-			['Member', 'Default Value', 'Comment'],
+			[thing, 'Default Value', 'Comment'],
 			...members.map(node => {
 				let { name, defaultValue } = node
 				let comment = commentFromNode(node)

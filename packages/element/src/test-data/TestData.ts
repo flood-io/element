@@ -2,6 +2,30 @@ import { Option } from '../utils/Option'
 import { Feeder, FeedFilterFunction } from './Feeder'
 import { Loader } from './Loader'
 
+/**
+ * Use this to load test data which will be iterated over with each iteration of your test.
+ *
+ * @export
+ * @class TestData
+ * @template T
+ */
+export interface TestDataFactory<TRow> {
+	/**
+	 * Loads a standard Javascript array of data objects
+	 */
+	fromData<TRow>(lines: TRow[]): TestData<TRow>
+
+	/**
+	 * Loads test data from a CSV file, returning a `TestData` instance.
+	 */
+	fromCSV<TRow>(filename: string, seperator: string): TestData<TRow>
+
+	/**
+	 * Loads data from a JSON ffile
+	 */
+	fromJSON<TRow>(filename: string): TestData<TRow>
+}
+
 export class TestData<T> {
 	public feeder: Feeder<T>
 	public instanceID: string

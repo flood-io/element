@@ -1,6 +1,43 @@
 import { ClickOptions, ScreenshotOptions } from 'puppeteer'
 // import { Key } from './Enums'
-import { Locator } from './Locator'
+// import { Locator } from './Locator'
+import { EvaluateFn, ExecutionContext, ElementHandle as PElementHandle } from 'puppeteer'
+
+/**
+ * A Locator represents an object used to locate elements on the page. It is usually constructed using the helper methods of <[By]>.
+ * An <[ElementHandle]> can also be used as a Locator which finds itself.
+ */
+export interface Locator {
+	/**
+	 * @internal
+	 */
+	pageFunc: EvaluateFn
+
+	/**
+	 * @internal
+	 */
+	pageFuncMany: EvaluateFn
+
+	/**
+	 * @internal
+	 */
+	pageFuncArgs: any[]
+
+	/**
+	 * @internal
+	 */
+	toErrorString(): string
+
+	/**
+	 * @internal
+	 */
+	find(context: ExecutionContext, node?: PElementHandle): Promise<ElementHandle | null>
+
+	/**
+	 * @internal
+	 */
+	findMany(context: ExecutionContext, node?: PElementHandle): Promise<ElementHandle[]>
+}
 
 /**
  * Example Handle represents a remote element in the DOM of the browser. It implements useful methods for querying and interacting with this DOM element.
@@ -10,6 +47,11 @@ import { Locator } from './Locator'
  * @class ElementHandle
  */
 export interface ElementHandle {
+	/**
+	 * internal
+	 */
+	bindBrowser(browser: any): void
+
 	/**
 	 * Fetches the value of an attribute on this element
 	 */
@@ -47,6 +89,8 @@ export interface ElementHandle {
 	 * Clears focus from this element so that it will no longer receive keyboard inputs.
 	 */
 	blur(): Promise<void>
+
+	highlight(): Promise<void>
 
 	/**
 	 * Takes a screenshot of this element and saves it to the results folder with a random name.

@@ -18,10 +18,20 @@ import { Browser } from './types'
  * ```
  *
  * @export
- * @param {string} name Step Name
- * @param {(driver: Driver) => Promise<void>} fn Actual implementation of step
+ * @param name Step Name
+ * @param fn Actual implementation of step
  */
 export declare function step(name: string, fn: StepFunction<any>): void
+/**
+ * `step` can also be called with an overridden subset of Test settings (`options`) valid for just this step.
+ *
+ * ```typescript
+ *   // Step 1 takes longer than the default `waitTimeout` of 30s.
+ *   step("Step 1", { waitTimeout: 90 }, async browser => {
+ *     ...
+ *   }
+ * ```
+ */
 export declare function step(name: string, options: StepOptions, fn: StepFunction<any>): void
 
 /**
@@ -46,14 +56,23 @@ export interface StepOptions {
 	waitTimeout?: number
 }
 
+/**
+ * StepFunction represents the function to be called as a Test step.
+ */
+export type StepFunction<T> = (driver: Browser, data?: T) => Promise<void>
+
+/**
+ * @internal
+ */
 export interface Step {
 	fn: StepFunction<any>
 	name: string
 	stepOptions: StepOptions
 }
 
-export type StepFunction<T> = (driver: Browser, data?: T) => Promise<void>
-
+/**
+ * @internal
+ */
 export function normalizeStepOptions(stepOpts: StepOptions): StepOptions {
 	// Convert user inputted seconds to milliseconds
 	if (typeof stepOpts.waitTimeout === 'number' && stepOpts.waitTimeout > 1e3) {

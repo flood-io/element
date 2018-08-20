@@ -1,5 +1,6 @@
 import { EvaluateFn, ExecutionContext, ElementHandle as PElementHandle, Frame } from 'puppeteer'
 import { ElementHandle } from './ElementHandle'
+import { Locator } from './types'
 
 export class NotImplementedError extends Error {
 	constructor(public message = 'Method not implemented in DSL') {
@@ -19,21 +20,6 @@ function serializeArgument(arg) {
 
 function evaluationString(fun, ...args) {
 	return `(${fun})(${args.map(serializeArgument).join(',')})`
-}
-
-/**
- * A Locator is a generic class constructed from a <[By]> method which can be used to find an Element or Elements on a page.
- *
- * @class Locator
- */
-export interface Locator {
-	pageFunc: EvaluateFn
-	pageFuncMany: EvaluateFn
-	pageFuncArgs: any[]
-	toErrorString(): string
-	find(context: ExecutionContext, node?: PElementHandle): Promise<ElementHandle | null>
-	findMany(context: ExecutionContext, node?: PElementHandle): Promise<ElementHandle[]>
-	toErrorString(): string
 }
 
 export class BaseLocator implements Locator {

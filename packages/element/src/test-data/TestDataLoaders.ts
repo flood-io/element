@@ -1,5 +1,5 @@
 import { CSVLoader, JSONLoader, DataLoader } from './Loader'
-import { TestData } from './TestData'
+import { TestData, TestDataFactory } from './TestData'
 import { WorkRoot } from '../runtime-environment/types'
 
 /**
@@ -9,7 +9,7 @@ import { WorkRoot } from '../runtime-environment/types'
  * @class TestData
  * @template T
  */
-export class TestDataLoaders<TRow> {
+export class TestDataLoaders<TRow> implements TestDataFactory<TRow> {
 	constructor(private workRoot: WorkRoot) {}
 
 	/**

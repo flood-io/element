@@ -63,6 +63,8 @@ export type ConsoleMethod = 'log' | 'info' | 'debug' | 'warn' | 'error'
  * }
  * ```
  *
+ * See [DEFAULT_SETTINGS] for a list of the default value for each setting.
+ *
  * @export
  * @interface TestSettings
  */
@@ -170,6 +172,37 @@ export interface TestSettings {
 	ignoreHTTPSErrors?: boolean
 }
 
+/**
+ * The default settings for a Test. Any settings you provide are merged into these defaults.
+ */
+export const DEFAULT_SETTINGS: ConcreteTestSettings = {
+	duration: -1,
+	loopCount: Infinity,
+	actionDelay: 2,
+	stepDelay: 6,
+	screenshotOnFailure: true,
+	clearCookies: true,
+	clearCache: false,
+	waitTimeout: 30,
+	responseTimeMeasurement: 'step',
+	/**
+	 * by default, don't filter any console messages from the browser
+	 */
+	consoleFilter: [],
+	userAgent: CustomDeviceDescriptors['Chrome Desktop Large'].userAgent,
+	device: 'Chrome Desktop Large',
+	ignoreHTTPSErrors: false,
+}
+
+/**
+ * ConcreteTestSettings represents the minimal set of mandatory settings for a Test to run.
+ *
+ * Users provide settings in their script via <TestSettings>, which is ultimately merged with DEFAULT_SETTINGS to yield ConcreteTestSettings.
+ *
+ * From the Test's perspective, this means that `undefined` checking is front-loaded and  we can simply use settings as-is without having to check values for definedness.
+ *
+ * @internal
+ */
 export interface ConcreteTestSettings extends TestSettings {
 	duration: number
 	loopCount: number
@@ -186,22 +219,9 @@ export interface ConcreteTestSettings extends TestSettings {
 	ignoreHTTPSErrors: boolean
 }
 
-export const DEFAULT_SETTINGS: ConcreteTestSettings = {
-	duration: -1,
-	loopCount: Infinity,
-	actionDelay: 2,
-	stepDelay: 6,
-	screenshotOnFailure: true,
-	clearCookies: true,
-	clearCache: false,
-	waitTimeout: 30,
-	responseTimeMeasurement: 'step',
-	consoleFilter: [],
-	userAgent: CustomDeviceDescriptors['Chrome Desktop Large'].userAgent,
-	device: 'Chrome Desktop Large',
-	ignoreHTTPSErrors: false,
-}
-
+/**
+ * @internal
+ */
 export function normalizeSettings(settings: TestSettings): TestSettings {
 	// Convert user inputted seconds to milliseconds
 	if (typeof settings.waitTimeout === 'number' && settings.waitTimeout > 1e3) {

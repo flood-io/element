@@ -1,5 +1,5 @@
 import { PageFnOptions, Page, EvaluateFn, Frame } from 'puppeteer'
-import { Locator } from './Locator'
+import { Locator } from './types'
 import { DEFAULT_SETTINGS } from '../runtime/Settings'
 import * as recast from 'recast'
 import * as prettier from 'prettier'

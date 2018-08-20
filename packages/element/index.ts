@@ -4,7 +4,7 @@
 export { Until } from './src/page/Until'
 export { Device, MouseButtons, Key } from './src/page/Enums'
 export { By } from './src/page/By'
-export { ElementHandle } from './src/page/ElementHandle'
+export { Locator, ElementHandle } from './src/page/types'
 
 export { TestData } from './src/test-data/TestData'
 

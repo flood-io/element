@@ -1,17 +1,28 @@
 import { Device } from '../page/Enums'
 import { Condition } from '../page/Condition'
 import { NavigationOptions, ClickOptions, ScreenshotOptions } from 'puppeteer'
-import { Locator } from '../page/Locator'
-import { ElementHandle } from '../page/ElementHandle'
+import { ElementHandle, Locator } from '../page/types'
 import { TargetLocator } from '../page/TargetLocator'
 
+export { NavigationOptions }
+
+/**
+ * EvaluateFn represents a function which can be evaluated on the browser.
+ * It can either be a [string] or a function.
+ */
 export type EvaluateFn = string | ((...args: any[]) => any)
 
+/**
+ * Locatable represents anything able to be located, either a string selector or a <[Locator]>. <[Locator]>s are generally created using <[By]> methods.
+ */
 export type Locatable = Locator | string
 
+/**
+ * NullableLocatable represents a <[Locatable]> which could also be null.
+ *
+ * Note that most Element location API methods accept a NullableLocatable but will throw an <[Error]> if its actually <[null]>.
+ */
 export type NullableLocatable = Locatable | null
-
-export { NavigationOptions }
 
 /**
  * Defines a test suite of steps to run.
@@ -37,7 +48,7 @@ export { NavigationOptions }
  * Browser (also called Driver) is the main entry point in each <[step]>, it's your direct connection to the browser running the test.
  *
  * ```typescript
- * import { step } from "@flood/chrome"
+ * import { step } from "@flood/element"
  * export default () => {
  *   step("Start", async browser => {
  *     await browser.visit("https://challenge.flood.io")
@@ -87,9 +98,8 @@ export interface Browser {
 	 * })
 	 * ```
 	 *
-	 * @param {string} url
-	 * @returns {Promise<void>}
-	 * @memberof Driver
+	 * @param url  url to visit
+	 * @param options  puppeteer navigation options
 	 */
 	visit(url: string, options?: NavigationOptions): Promise<void>
 
@@ -170,7 +180,7 @@ export interface Browser {
 	/**
 	 * Removes focus from the specified DOM element.
 	 *
-	 * @param {NullableLocatable} locator
+	 * @param  locator
 	 * @returns {Promise<void>}
 	 * @memberof Driver
 	 */
@@ -179,7 +189,7 @@ export interface Browser {
 	/**
 	 * Makes the element located by the first argument the receiver of future input.
 	 *
-	 * @param {Locatable} locator The <[Locator]> to use to find an element to send focus to.
+	 * @param locator The <[Locator]> to use to find an element to send focus to.
 	 * @returns {Promise<void>}
 	 * @memberof Driver
 	 */
@@ -231,4 +241,7 @@ export interface Browser {
 	switchTo(): TargetLocator
 }
 
+/**
+ * Driver is an alias to Browser. Please use Browser when possible.
+ */
 export type Driver = Browser

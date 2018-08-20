@@ -1,5 +1,5 @@
 import { ElementHandle as PElementHandle, ClickOptions, ScreenshotOptions } from 'puppeteer'
-import { ElementHandle as IElementHandle } from './types'
+import { ElementHandle as IElementHandle, Locator } from './types'
 import { EvaluateFn } from '../runtime/types'
 import {
 	ErrorInterpreter,
@@ -9,12 +9,14 @@ import {
 } from '../runtime/errors/Types'
 import { StructuredError } from '../utils/StructuredError'
 
-import { Locator } from './Locator'
 import { By } from './By'
 import * as debugFactory from 'debug'
 import { Key } from './Enums'
 const debug = debugFactory('element:page:element-handle')
 
+/**
+ * @internal
+ */
 async function getProperty<T>(element: PElementHandle, prop: string): Promise<T | null> {
 	if (!element) {
 		return null
@@ -26,6 +28,9 @@ async function getProperty<T>(element: PElementHandle, prop: string): Promise<T 
 	}
 }
 
+/**
+ * @internal
+ */
 function wrapDescriptiveError<ElementHandle, U extends ErrorData>(
 	...errorInterpreters: ErrorInterpreter<ElementHandle, U>[]
 ) {
@@ -63,6 +68,9 @@ function wrapDescriptiveError<ElementHandle, U extends ErrorData>(
 	}
 }
 
+/**
+ * @internal
+ */
 function domError(
 	err: Error,
 	target: ElementHandle,
@@ -97,21 +105,36 @@ function domError(
 	return StructuredError.wrapBareError<EmptyErrorData>(err, { _kind: 'empty' })
 }
 
+/**
+ * @internal
+ */
 interface ScreenshotSaver {
 	saveScreenshot(fn: (path: string) => Promise<boolean>)
 }
 
 /**
- * Example Handle represents a remote element in the DOM of the browser. It implements useful methods for querying and interacting with this DOM element.
+ * ElementHandle represents a remote element in the DOM of the browser. It implements useful methods for querying and interacting with this DOM element.
  *
  * All methids on this class are asynchronous and must be used with `await` to wait for the result to fulfill from the browser.
  *
  * @class ElementHandle
  */
 export class ElementHandle implements IElementHandle, Locator {
-	public screenshotSaver: ScreenshotSaver
+	/**
+	 * @internal
+	 */
+	private screenshotSaver: ScreenshotSaver
+	/**
+	 * @internal
+	 */
 	public errorString = '<element-handle>'
-	constructor(private element: PElementHandle) {}
+	/**
+	 * @internal
+	 */
+	private element: PElementHandle
+	constructor(elt: PElementHandle) {
+		this.element = elt
+	}
 
 	public async initErrorString(foundVia?: string): Promise<ElementHandle> {
 		debug('initErrorString', foundVia)

@@ -3,14 +3,12 @@ import { Page, Frame } from 'puppeteer'
 import { TargetLocator as ITargetLocator } from './types'
 import { getFrames } from '../runtime/Browser'
 
+/**
+ * @internal
+ */
 export class TargetLocator implements ITargetLocator {
 	constructor(private page: Page, private apply: (frame: Frame | null) => void) {}
 
-	/**
-	 * Locates the DOM element on the current page that corresponds to
-	 * `document.activeElement` or `document.body` if the active element is not
-	 * available.
-	 */
 	public async activeElement(): Promise<ElementHandle | null> {
 		let jsHandle = await this.page.evaluateHandle(() => document.activeElement || document.body)
 		if (!jsHandle) return null
@@ -28,6 +26,17 @@ export class TargetLocator implements ITargetLocator {
 		this.apply(null)
 	}
 
+	/**
+	 * Changes the active target to another frame.
+	 *
+	 * Accepts either:
+	 *
+	 * number: Switch to frame by index in window.frames,
+	 * string: Switch to frame by frame.name or frame.id, whichever matches first,
+	 * ElementHandle: Switch to a frame using the supplied ElementHandle of a frame.
+	 *
+	 * @param id number | string | ElementHandle
+	 */
 	public async frame(id: number | string | ElementHandle) {
 		let nextFrame: Frame | null
 

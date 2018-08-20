@@ -4,7 +4,8 @@ import { VisibleTextLocator } from './locators/VisibleTextLocator'
 import { CSSLocator } from './locators/CSS'
 import { TagNameLocator } from './locators/TagName'
 import { XPathLocator } from './locators/XPath'
-import { Locator, BaseLocator } from './Locator'
+import { Locator } from './types'
+import { BaseLocator } from './Locator'
 import { EvaluateFn } from 'puppeteer'
 
 /**

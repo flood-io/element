@@ -15,6 +15,10 @@ interface ConditionSettings {
 	waitTimeout: number
 }
 
+/**
+ * A Condition represents a predicate which can be used to wait for an <[ElementHandle]>. They are generally created by using <[Until]>'s helper methods.
+ * @opaque
+ */
 export abstract class Condition {
 	public pageFuncArgs: any[]
 	public hasWaitFor = true
@@ -32,6 +36,9 @@ export abstract class Condition {
 		this.pageFuncArgs = pageFuncArgs
 	}
 
+	/**
+	 * @internal
+	 */
 	protected locatableToLocator(el: NullableLocatable): Locator {
 		try {
 			return locatableToLocator(el, `${this.desc}(locatable)`)
@@ -41,13 +48,25 @@ export abstract class Condition {
 		}
 	}
 
+	/**
+	 * @internal
+	 */
 	public abstract toString()
+	/**
+	 * @internal
+	 */
 	public abstract async waitFor(frame: Frame, page?: Page): Promise<any>
 
+	/**
+	 * @internal
+	 */
 	public async waitForEvent(page: Page): Promise<any> {
 		return
 	}
 
+	/**
+	 * @internal
+	 */
 	protected get timeout(): number {
 		return this.settings.waitTimeout * 1e3
 	}

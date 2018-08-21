@@ -12,7 +12,6 @@ import { Browser as BrowserInterface, NullableLocatable, EvaluateFn } from './ty
 import * as DeviceDescriptors from 'puppeteer/DeviceDescriptors'
 import CustomDeviceDescriptors from '../utils/CustomDeviceDescriptors'
 import { Locator, ElementHandle } from '../page/types'
-// import { ElementHandle } from '../page/types'
 import { TargetLocator } from '../page/TargetLocator'
 import { By } from '../page/By'
 import { PuppeteerClient } from '../types'

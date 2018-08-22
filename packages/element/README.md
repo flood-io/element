@@ -10,29 +10,19 @@ Flood Element works by spinning up hundreds or even thousands of instances of Go
 
 # Quickstart
 
-First, make sure you have installed the [latest version of NodeJS](https://nodejs.org) for your platform.
-
 #### 1. Download Flood CLI
 
 **On macOS**, install using homebrew:
 
 ```bash
-brew install flood-io/taps/flood
+brew install flood-io/taps/element
 ```
 
-**On linux**, download the [latest release](https://github.com/flood-io/cli/releases/latest) for your platform, then extract and install it:
-
+If you're familiar with node.js development and already have it installed:
 ```bash
-# assuming you're installing version 1.0.0 on linux
-cd ~/Downloads
-mkdir flood
-tar zxvf flood-1.0.0-linux-amd64.zip -C flood
-
-# move the file to somewhere on your $PATH:
-mv flood/flood /usr/local/bin/flood
-
-# optionally, tidy up:
-rm -rf flood
+npm install -g @flood/element-cli
+# or
+yarn global add @flood/element-cli
 ```
 
 **On Windows:**
@@ -41,14 +31,9 @@ We're still working on a Windows build, stay tuned.
 
 #### 2. Initialize Project
 
-The very first thing you should do is authenticate the `flood` tool with your Flood account. _If you don't have an account, you can sign up for free at [Flood](https://flood.io)._
-
 ```bash
-# Login
-flood login
-
 # Initialize a new project
-flood init my-flood-element-test
+element init my-flood-element-test
 
 # Change to this directory and install dependencies
 cd my-flood-element-test
@@ -57,17 +42,24 @@ yarn install
 
 #### 3. Write and validate your script
 
-Edit `test.ts` in your editor of choice. To learn more about the scripting capabilities we've put together a detailed tutorial on [testing the "Flood Merchandice Store"](examples/scenario_1_wordpress.md).
+Edit `test.ts` in your editor of choice. To learn more about the scripting capabilities we've put together a detailed tutorial on [testing the "Flood Merchandise Store"](examples/scenario_1_wordpress.md).
 
 As you're writing your script, you can validate it by running it on the Flood validation service:
 
 ```bash
-flood verify test.ts
+element run test.ts
 ```
 
 This will output a detailed list of steps and configuration options it has read from your script, then execute it within the Flood Element Environment.
 
 #### 4. Run a real Load Test on [Flood](https://flood.io)
+
+The very first thing you should do is authenticate the `flood` tool with your Flood account. _If you don't have an account, you can sign up for free at [Flood](https://flood.io)._
+
+```bash
+# Login
+element login
+```
 
 Now that you have a test script, upload it to [Flood](https://flood.io/app) as a new Stream and launch a Flood (a test).
 

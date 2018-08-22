@@ -1,13 +1,9 @@
 import { CSVLoader, JSONLoader, DataLoader } from './Loader'
-import { TestData, TestDataFactory } from './TestData'
+import { TestData as TestDataFactory, TestDataImpl as TestData } from './TestData'
 import { WorkRoot } from '../runtime-environment/types'
 
 /**
  * Use this to load test data which will be iterated over with each iteration of your test.
- *
- * @export
- * @class TestData
- * @template T
  */
 export class TestDataLoaders<TRow> implements TestDataFactory<TRow> {
 	constructor(private workRoot: WorkRoot) {}

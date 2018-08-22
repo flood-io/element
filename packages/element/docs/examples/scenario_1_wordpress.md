@@ -6,23 +6,23 @@ title: Deep Dive Tutorial
 
 ## Overview
 
-This detailed example will show you how to actually build a working Flood Chrome script that uses a variety of different classes to identify objects you would like to interact with in order to successfully simulate a typical business process.
+This detailed example will show you how to actually build a working Flood Element script that uses a variety of different classes to identify objects you would like to interact with in order to successfully simulate a typical business process.
 
 The example uses a site called 'The Flood Store' - a fictional online shopping store that sells Tricentis Flood branded apparel and other clothing items. It is fairly representative of a typical online store that customers may require to be load tested but is complex enough that using a traditional load test tool such as Jmeter or Gatling requires a lot of work in scripting against.
 
 It is built using Wordpress and the Woocommerce plug-in.
 
-We'll show you how you can achieve creating a full user item purchase scenario quickly and easily using Flood Chrome.
+We'll show you how you can achieve creating a full user item purchase scenario quickly and easily using Flood Element.
 
 ## Tools Used
 
-1. **A Tricentis Flood Account** - You will need a Flood account in order to run Flood Chrome scripts with more than 1 concurrent user.
-2. **Flood CLI (optional)** - The CLI tool is a great way to verify your script compiles correctly before running it on the Flood platform.
-3. **Google Chrome (optional)** - Flood Chrome identifies page objects by individual properties or identifiers. The Google Chrome browser contains the ability to inspect object properties in realtime. These properties are used by the Flood Chrome script in order to interact with the given page object.
+1. **A Tricentis Flood Account** - You will need a Flood account in order to run Flood Element scripts with more than 1 concurrent user.
+2. **Flood Element CLI (optional)** - The CLI tool is a great way to verify your script compiles correctly before running it on the Flood platform.
+3. **Google Chrome (optional)** - Flood Element identifies page objects by individual properties or identifiers. The Google Chrome browser contains the ability to inspect object properties in realtime. These properties are used by the Flood Element script in order to interact with the given page object.
 
 ## Download the entire script
 
-Please find the script used in this detailed scenario here: [link](https://gist.github.com/jrizio/630d8914e4c25bac4c8cea7cc3541b31/archive/fef4ea1bbb1dcb08bffd292c899f2bc9634d1c1f.zip)
+Please find the script used in this detailed scenario here: [link](./scenario_1_wordpress.ts)
 
 ## Overview of script configuration settings
 
@@ -31,7 +31,7 @@ Some initial script parameters need to be stated at the very start of the script
 a. **import { ... }**
 
 ```typescript
-import { step, TestSettings, Until, By } from '@flood/chrome'
+import { step, TestSettings, Until, By } from '@flood/element'
 import * as assert from 'assert'
 }
 ```
@@ -61,15 +61,15 @@ This export block allows you to specify constants related to typical Test Settin
 
 * description: A simple description sentence describing the aim of the test scenario.
 
-* screenshotOnFailure: A screenshot of the current page will automatically be generated when Flood Chrome detects a failure has occurred. These are viewable in the captured results for each Flood.
+* screenshotOnFailure: A screenshot of the current page will automatically be generated when Flood Element detects a failure has occurred. These are viewable in the captured results for each Flood.
 
 * disableCache / clearCache: No caching is done if this is set to true.
 
 * clearCookies: Any cookies detected will be cleared for each iteration if this is set to true.
 
-* actionDelay: the amount of time in seconds that the Flood Chrome replay engine will wait in between actions contained within a step.
+* actionDelay: the amount of time in seconds that the Flood Element replay engine will wait in between actions contained within a step.
 
-* stepDelay: the amount of time in seconds that the Flood Chrome replay engine will wait in between steps.
+* stepDelay: the amount of time in seconds that the Flood Element replay engine will wait in between steps.
 
 c. **export default() => { ... }**
 
@@ -77,7 +77,7 @@ The export default() function is the main area housing all the steps for your bu
 
 ## Step 1 - Navigation and page verification
 
-The first step we will use contains the step to tell Flood Chrome to visit the initial target URL and to do some page verification to ensure we have successfully landed on the correct page and the page contents is returned as expected.
+The first step we will use contains the step to tell Flood Element to visit the initial target URL and to do some page verification to ensure we have successfully landed on the correct page and the page contents is returned as expected.
 
 ![The Flood Store - Homepage](https://raw.githubusercontent.com/flood-io/flood-chrome-docs/master/examples/images/step-1-homepage.png)
 
@@ -94,7 +94,7 @@ The first step we will use contains the step to tell Flood Chrome to visit the i
 
 Every step should be named appropriately to tell us what functionality is taking place (and how long does it take) within the step contents. So for this step we are timing how long the target URL takes to load from a user's perspective and also the verification that we are on the correct page.
 
-The page text verification is purely just telling Flood Chrome to wait for a specific visible text element to appear before the step completes.
+The page text verification is purely just telling Flood Element to wait for a specific visible text element to appear before the step completes.
 
 It serves two important purposes for load testing:
 
@@ -124,11 +124,11 @@ step('The Flood Store: Click Hoodies', async browser => {
 
 This step represents the actual click and subsequent page load of the user interaction of your end user clicking on the 'Hoodies' link and waiting for the next page to load.
 
-Here we have the unique step name (aka. the Transaction name) - but also a new findElement function which is used by Flood Chrome to identify the object we need to interact with. Inside this function we can use a number of By.xxx sub functions that will allow us to be more specific in identifying the particular object we want.
+Here we have the unique step name (aka. the Transaction name) - but also a new findElement function which is used by Flood Element to identify the object we need to interact with. Inside this function we can use a number of By.xxx sub functions that will allow us to be more specific in identifying the particular object we want.
 
 For text links, we can use partialLinkText and also linkText. linkText needs to be the exact link string specified within the A HREF link tags. partialLinkText only needs a partial match of the link text to be able to identify the object.
 
-Using the Developer Tools feature in Google Chrome, we are able to view the exact text of a hyperlink. Simply right-click or hold down the CTRL button while clicking on the link and then select Inspect. The Developer Tools sidebar will appear which will automatically highlight the link code for you, as follows:
+Using the Developer Tools feature in Google Element, we are able to view the exact text of a hyperlink. Simply right-click or hold down the CTRL button while clicking on the link and then select Inspect. The Developer Tools sidebar will appear which will automatically highlight the link code for you, as follows:
 
 ![Hoodies - Link Text](https://raw.githubusercontent.com/flood-io/flood-chrome-docs/master/examples/images/step-3-hoodies-link-code.png)
 
@@ -136,7 +136,7 @@ As you can see the link is fairly ugly as it contains a carriage return and a nu
 
 ## Step 3 - Using XPath
 
-XPath notation is a popular way of identifying objects that you would like to interact with. Flood Chrome fully supports XPath definitions which can be very helpful and an alternate way of object interaction.
+XPath notation is a popular way of identifying objects that you would like to interact with. Flood Element fully supports XPath definitions which can be very helpful and an alternate way of object interaction.
 
 ```typescript
 step('The Flood Store: Add To Cart', async (browser: Driver) => {
@@ -163,9 +163,9 @@ So using the above step XPath example we can use the following XPath expression:
 
 So we are able to narrow down from the entire page what exact object we wish to interact with. We start by looking at the entire document object model (denoted by the //), all links on the page (denoted by the 'a' html tag), any links that have the data-product_id parameter, and lastly only the link that has the data-product_id parameter equal to the value 39.
 
-Flood Chrome now knows exactly what object it needs to select.
+Flood Element now knows exactly what object it needs to select.
 
-After Flood Chrome adds this item to the cart, we can navigate to the Cart page where we should see the item we just added.
+After Flood Element adds this item to the cart, we can navigate to the Cart page where we should see the item we just added.
 
 ```typescript
 step('The Flood Store: View Cart', async (browser: Driver) => {
@@ -220,7 +220,7 @@ In this case our Selector produced: '#post-14 > div > div > div > div > div > a'
 
 ## Step 5 - Text entry & form field input
 
-Filling out a form with a number of text entry fields can be very easily achieved with Flood Chrome. All we need to do is to find out the CSS or unique input ID of the field we would like to enter text into and include it in a step as follows:
+Filling out a form with a number of text entry fields can be very easily achieved with Flood Element. All we need to do is to find out the CSS or unique input ID of the field we would like to enter text into and include it in a step as follows:
 
 ```typescript
 	step('The Flood Store: Checkout Data Entry', async browser => {
@@ -267,9 +267,167 @@ This step is almost identicial to the one in Step 4 except the usage of the id i
 
 ## Conclusion
 
-So we have completed scripting a full end-to-end purchase of an item in a typical online store using a number of different methods with Flood Chrome. This is quite a comprehensive and complex task using a protocol level user that is more common in popular load test tools such as Jmeter and Gatling.
+So we have completed scripting a full end-to-end purchase of an item in a typical online store using a number of different methods with Flood Element. This is quite a comprehensive and complex task using a protocol level user that is more common in popular load test tools such as Jmeter and Gatling.
 
-Usage of a Browser Level User such as Flood Chrome takes a lot of the complexity out of scripting these types of dynamic sites.
+Usage of a Browser Level User such as Flood Element takes a lot of the complexity out of scripting these types of dynamic sites.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

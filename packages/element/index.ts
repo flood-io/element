@@ -31,7 +31,7 @@ export { ElementHandle } from './src/page/types'
 /**
  * @docPage TestData
  */
-export { TestData, TestDataFactory } from './src/test-data/TestData'
+export { TestData, TestDataImpl } from './src/test-data/TestData'
 
 /**
  * @docPage DSL
@@ -39,6 +39,7 @@ export { TestData, TestDataFactory } from './src/test-data/TestData'
 export { TestSettings, setup, DEFAULT_SETTINGS } from './src/runtime/Settings'
 
 import { FloodProcessEnv, nullFloodProcessEnv } from './src/runtime-environment/types'
+
 /**
  * A subset of process.env available to this test.
  * @docPage DSL

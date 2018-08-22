@@ -4,29 +4,25 @@ import { Loader } from './Loader'
 
 /**
  * Use this to load test data which will be iterated over with each iteration of your test.
- *
- * @export
- * @class TestData
- * @template T
  */
-export interface TestDataFactory<TRow> {
+export interface TestData<TRow> {
 	/**
 	 * Loads a standard Javascript array of data objects
 	 */
-	fromData<TRow>(lines: TRow[]): TestData<TRow>
+	fromData<TRow>(lines: TRow[]): TestDataImpl<TRow>
 
 	/**
 	 * Loads test data from a CSV file, returning a `TestData` instance.
 	 */
-	fromCSV<TRow>(filename: string, seperator: string): TestData<TRow>
+	fromCSV<TRow>(filename: string, seperator: string): TestDataImpl<TRow>
 
 	/**
 	 * Loads data from a JSON ffile
 	 */
-	fromJSON<TRow>(filename: string): TestData<TRow>
+	fromJSON<TRow>(filename: string): TestDataImpl<TRow>
 }
 
-export class TestData<T> {
+export class TestDataImpl<T> {
 	public feeder: Feeder<T>
 	public instanceID: string
 
@@ -47,7 +43,7 @@ export class TestData<T> {
 	 * Instructs the data feeder to repeat the data set when it reaches the end.
 	 * @param circular optional, pass `false` to disable
 	 */
-	public circular(circular = true): TestData<T> {
+	public circular(circular = true): TestDataImpl<T> {
 		this.feeder.circular(circular)
 		return this
 	}
@@ -56,7 +52,7 @@ export class TestData<T> {
 	 * Shuffles the data set using the Fisher-Yates method. Use this to randomise the order of your data. This will always be applied after filtering.
 	 * @param shuffle optional, pass `false` to disable
 	 */
-	public shuffle(shuffle = true): TestData<T> {
+	public shuffle(shuffle = true): TestDataImpl<T> {
 		this.feeder.shuffle(shuffle)
 		return this
 	}
@@ -67,14 +63,14 @@ export class TestData<T> {
 	 * Filters can be chained, and will be run in order only if the previous ffilter passed.
 	 *
 	 * Example:
-	 * 	```
-	 * 		type Row = { browser: string, email: string }
-	 * 		TestData.fromCSV("users.csv").filter((line, index, browserID) => line.browser === browserID)
-	 *  ```
+	 * ```typescript
+	 * type Row = { browser: string, email: string }
+	 * TestData.fromCSV("users.csv").filter((line, index, browserID) => line.browser === browserID)
+	 * ```
 	 *
 	 * @param func filter function to compare each line
 	 */
-	public filter(func: FeedFilterFunction<T>): TestData<T> {
+	public filter(func: FeedFilterFunction<T>): TestDataImpl<T> {
 		this.feeder.filter(func)
 		return this
 	}

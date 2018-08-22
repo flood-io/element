@@ -64,7 +64,7 @@ ts.forEachChild(s, node => {
 })
 
 debug('indexMap', indexMap)
-// process.exit()
+debug('indexExports', indexExports)
 
 function commentFromNode(node) {
 	let { comment: { shortText, text } = { shortText: null, text: null } } = node
@@ -373,7 +373,7 @@ class DocsParser {
 	title: string
 
 	references: Map<string, { target: string; title?: string }> = new Map()
-	summaryParts: Map<string, string[]> = new Map()
+	summaryParts: string[] = []
 	enumerations: MarkdownDocument[] = []
 
 	public docs: Map<string, MarkdownDocument> = new Map()
@@ -388,6 +388,7 @@ class DocsParser {
 	// seenModule: Map<string, boolean> = new Map()
 
 	constructor(public docsJSON: any) {
+		debug('README', join(root, 'README.md'), join(bookDir, 'README.md'))
 		mkdirpSync(bookDir)
 		copySync(join(root, 'README.md'), join(bookDir, 'README.md'))
 
@@ -396,7 +397,10 @@ class DocsParser {
 		}
 
 		for (const [key, target] of Object.entries(indexExports)) {
-			this.addReference(key, `api/${target}.md`)
+			const path = `api/${target}.md`
+			this.addReference(key, path)
+			console.log('adding', key, path, `[${key}](${path}#${generateAnchor(key)})`)
+			this.summaryParts.push(`[${key}](${path}#${generateAnchor(key)})`)
 		}
 	}
 
@@ -411,26 +415,9 @@ class DocsParser {
 	 * @memberof DocsParser
 	 */
 	process() {
-		// const topMods = this.docsJSON.children.map(n => [n.name, n.kindString])
-
-		// const secondLevel = this.docsJSON.children
-		// .reduce((secondLevel, c) => secondLevel.concat(c.children), [])
-		// .filter(x => x)
-
-		// let mainModule = this.docsJSON.children.find(n => n.name === '"index"')
-		// debug('mm', mainModule)
-		// mainModule.children.forEach(child => {
 		this.docsJSON.children.forEach(child => this.processTopLevelNode(child))
 
-		// TODO ASSEMBLE SUMMARY
-		// let relativePath = filePathForNameAndType(node.kindString, name)
-
-		// if (!this.summaryParts.has(resolvedName)) this.summaryParts.set(resolvedName, [])
-
-		// const part = this.summaryParts.get(resolvedName)
-		// if (part) part.push(`[${resolvedName}](${resolvedPath}#${generateAnchor(resolvedName)})`)
-
-		// this.createSummary()
+		this.createSummary()
 		this.writeDocsToFiles()
 	}
 
@@ -587,54 +574,56 @@ class DocsParser {
 		this.references.set(name, { target })
 	}
 
-	// private createSummary() {
-	// let doc = new MarkdownDocument('SUMMARY.md')
-	// doc.enableReferences = false
-	// doc.writeHeading('Documentation', 2)
-	// doc.writeLine('')
-	// doc.writeBullet('[Quick Start](README.md)')
+	private createSummary() {
+		const doc = this.getDoc('SUMMARY.md')
+		// const doc = this.getDoc(new MarkdownDocument('SUMMARY.md')
+		doc.enableReferences = false
+		doc.writeHeading('Documentation', 2)
+		doc.writeLine('')
+		doc.writeBullet('[Quick Start](README.md)')
 
-	// // Adds everything in the examples directory
-	// let examples = glob.sync('docs/examples/**/*.md')
-	// examples.forEach(file => {
-	// let content = readFileSync(file).toString('utf8')
-	// let { title } = frontMatter<FrontMatter>(content).attributes
-	// if (title) {
-	// let relativePath = relative(bookDir, file)
-	// doc.writeBullet(`[${title}](${relativePath})`)
-	// }
-	// })
+		// Adds everything in the examples directory
+		let examples = glob.sync('docs/examples/**/*.md')
+		examples.forEach(file => {
+			let content = readFileSync(file).toString('utf8')
+			let { title } = frontMatter<FrontMatter>(content).attributes
+			if (title) {
+				let relativePath = relative(bookDir, file)
+				doc.writeBullet(`[${title}](${relativePath})`)
+			}
+		})
 
-	// doc.writeLine('')
+		doc.writeLine('')
 
-	// doc.writeHeading('Flood Chrome API', 2)
-	// doc.writeLine('')
+		doc.writeHeading('Flood Chrome API', 2)
+		doc.writeLine('')
 
-	// let sortedMethods: string[] = []
+		// let sortedMethods: string[] = this.summaryParts
 
-	// this.summaryParts.forEach((methods, name) => {
-	// methods.forEach(m => {
-	// sortedMethods.push(m)
-	// })
-	// })
+		// debug('createSummary %O', this.summaryParts)
+		// this.summaryParts.forEach((links, name) => {
+		// links.forEach(m => {
+		// sortedMethods.push(m)
+		// })
+		// })
 
-	// sortedMethods
-	// .sort()
-	// // .sort((a, b) => a.toLowerCase() - b.toLowerCase())
-	// .forEach(m => {
-	// doc.writeBullet(m, 2)
-	// })
+		this.summaryParts
+			.sort()
+			// .sort((a, b) => a.toLowerCase() - b.toLowerCase())
+			.forEach(m => {
+				doc.writeBullet(m, 2)
+			})
 
-	// this.docs.set('Index', [doc])
+		// this.docs.set('Index', doc)
 
-	// doc = new MarkdownDocument('Enumerations.md')
-	// doc.writeHeading('Enumerations')
-	// doc.writeLine(
-	// 'Here you will find a list of all the possible values for fields which accept a typed enumerated property, such as `userAgent` or `click()`',
-	// )
-	// const enumDoc = this.docs.get('Enumeration')
-	// if (enumDoc) enumDoc.unshift(doc)
-	// }
+		// doc = new MarkdownDocument('Enumerations.md')
+		// doc.writeHeading('Enumerations')
+		// doc.writeLine(
+		// 'Here you will find a list of all the possible values for fields which accept a typed enumerated property, such as `userAgent` or `click()`',
+		// )
+		// const enumDoc = this.docs.get('Enumeration')
+		// if (enumDoc) enumDoc.unshift(doc)
+	}
 
 	private processCallSignature(doc, sig, prefix?) {
 		let { name, type, parameters = [] } = sig
@@ -748,8 +737,6 @@ class DocsParser {
 		// 1. Create file and reference
 		doc.writeSection(`\`${name}\``)
 		doc.writeComment(node.comment)
-
-		// this.summaryParts.set(name, [])
 
 		if (isNodeOpaque(node)) return
 

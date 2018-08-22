@@ -29,7 +29,7 @@ import {
 } from './Settings'
 // import { ScreenshotOptions } from 'puppeteer'
 
-import { TestData } from '../test-data/TestData'
+import { TestDataImpl } from '../test-data/TestData'
 import { TestDataLoaders } from '../test-data/TestDataLoaders'
 
 // import { readdirSync } from 'fs'
@@ -56,7 +56,7 @@ export default class Test {
 
 	private driver: PuppeteerClient
 
-	public testData: TestData<any>
+	public testData: TestDataImpl<any>
 	public testDataLoaders: TestDataLoaders<any>
 
 	get skipping(): boolean {

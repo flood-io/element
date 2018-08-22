@@ -1,0 +1,102 @@
+import * as Generator from 'yeoman-generator'
+import * as path from 'path'
+import * as findRoot from 'find-root'
+import * as commandExists from 'command-exists'
+
+const packageRoot = findRoot(__dirname)
+
+export default class TestEnv extends Generator {
+	default() {
+		this.sourceRoot(path.join(packageRoot, 'templates'))
+	}
+
+	answers: { [key: string]: string }
+
+	async prompting() {
+		this.answers = await this.prompt([
+			{
+				type: 'input',
+				name: 'url',
+				message: 'The title of this test.',
+				default: this.appname,
+			},
+			{
+				type: 'input',
+				name: 'url',
+				message: 'A URL to use in the generated test script.',
+				default: 'http://challenge.flood.io',
+			},
+		])
+	}
+	writing() {
+		console.log(this.templatePath('test.ts'))
+		this.fs.write(this.destinationPath('package.json'), this._packageJSON)
+		this.fs.write(this.destinationPath('tsconfig.json'), this._tsConfigJSON)
+		this.fs.copyTpl(this.templatePath('test.ts'), this.destinationPath('test.ts'), {
+			title: this.appname,
+			url: this.answers.url,
+		})
+	}
+
+	installing() {
+		commandExists('yarn', (err, yes) => {
+			if (yes) {
+				this.yarnInstall()
+			} else {
+				this.npmInstall()
+			}
+		})
+	}
+
+	get _packageJSON(): string {
+		const pkg = {
+			name: this.appname,
+			version: '0.0.0',
+			description: 'flood element test script',
+
+			prettier: {
+				semi: false,
+				singleQuote: true,
+				trailingComma: 'all',
+				printWidth: 100,
+				useTabs: true,
+				tabWidth: 2,
+				bracketSpacing: true,
+				jsxBracketSameLine: true,
+				arrowParens: 'avoid',
+			},
+			dependencies: {
+				'@flood/element': '^1.0.3-25',
+				prettier: '^1.10.2',
+			},
+		}
+
+		return JSON.stringify(pkg, null, '  ')
+	}
+
+	get _tsConfigJSON(): string {
+		const config = {
+			compilerOptions: {
+				module: 'commonjs',
+				target: 'ES2017',
+				moduleResolution: 'node',
+				lib: ['dom', 'dom.iterable', 'es7', 'es2017', 'es2016.array.include', 'es2017.object'],
+				pretty: true,
+				strictNullChecks: false,
+				allowUnreachableCode: false,
+				alwaysStrict: true,
+				noUnusedLocals: false,
+				noUnusedParameters: false,
+				allowJs: true,
+				checkJs: true,
+				noImplicitAny: false,
+				allowSyntheticDefaultImports: true,
+				types: ['@types/node'],
+				typeRoots: ['node_modules/@types'],
+			},
+			exclude: ['node_modules', 'node_modules/**'],
+		}
+
+		return JSON.stringify(config, null, '  ')
+	}
+}

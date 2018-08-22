@@ -2,6 +2,7 @@ import { ITestRunner, Browser } from './types'
 import { RuntimeEnvironment } from './runtime-environment/types'
 import { Logger } from 'winston'
 import Test from './runtime/Test'
+import { TestSettings } from './runtime/Settings'
 import { IReporter } from './Reporter'
 import { Factory } from './runtime/VM'
 import { LaunchOptions } from 'puppeteer'
@@ -19,6 +20,7 @@ export default class Runner implements ITestRunner {
 		Driver: Factory<Browser>,
 		private reporter: IReporter,
 		private logger: Logger,
+		private testSettingOverrides: TestSettings,
 	) {
 		this.driver = new Driver()
 		this.interrupts = 0
@@ -43,7 +45,7 @@ export default class Runner implements ITestRunner {
 		this.test = test
 
 		try {
-			let settings = test.enqueueScript(testScript)
+			let settings = test.enqueueScript(testScript, this.testSettingOverrides)
 			let options: LaunchOptions = {
 				ignoreHTTPSErrors: settings.ignoreHTTPSErrors,
 			}

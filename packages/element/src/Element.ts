@@ -5,6 +5,7 @@ import { RuntimeEnvironment } from './runtime-environment/types'
 import { Browser } from './types'
 import Runner from './Runner'
 import { ITestScript, TestScriptOptions, mustCompileFile } from './TestScript'
+import { TestSettings } from './runtime/Settings'
 
 export interface ElementOptions {
 	logger: Logger
@@ -14,6 +15,7 @@ export interface ElementOptions {
 	driver?: { new (): Browser }
 	process?: NodeJS.Process
 	verbose: boolean
+	testSettingOverrides: TestSettings
 }
 
 export function runUntilExit(fn: () => Promise<void>) {
@@ -32,7 +34,7 @@ export async function runCommandLine(opts: ElementOptions): Promise<void> {
 
 	if (!driver) driver = PuppeteerDriver
 
-	const runner = new Runner(opts.runEnv, driver, opts.reporter, logger)
+	const runner = new Runner(opts.runEnv, driver, opts.reporter, logger, opts.testSettingOverrides)
 
 	process.on('SIGINT', async () => {
 		logger.debug('Received SIGINT')

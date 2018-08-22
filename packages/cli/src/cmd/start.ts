@@ -29,6 +29,9 @@ export const handler = (args: Arguments) => {
 		reporter: reporter,
 		verbose: verboseBool,
 		runEnv: initRunEnv(workRoot),
+		testSettingOverrides: {
+			loopCount: 1,
+		},
 	}
 
 	runUntilExit(() => runCommandLine(opts))

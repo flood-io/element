@@ -23,6 +23,7 @@ import { RuntimeEnvironment } from '../runtime-environment/types'
 import { ITestScript } from '../TestScript'
 import { ScreenshotOptions } from 'puppeteer'
 import {
+	TestSettings,
 	ConcreteTestSettings,
 	DEFAULT_ACTION_WAIT_SECONDS,
 	DEFAULT_STEP_WAIT_SECONDS,
@@ -76,7 +77,7 @@ export default class Test {
 		await this.testObserver.after(this)
 	}
 
-	public enqueueScript(script: ITestScript): ConcreteTestSettings {
+	public enqueueScript(script: ITestScript, settingsOverride: TestSettings): ConcreteTestSettings {
 		this.script = script
 
 		this.vm = new VM(this.runEnv, script)
@@ -92,6 +93,8 @@ export default class Test {
 			// XXX parsing errors. Lift to StructuredError?
 			throw this.script.maybeLiftError(err)
 		}
+
+		Object.assign(this.settings, settingsOverride)
 
 		return this.settings
 	}

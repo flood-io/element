@@ -50,7 +50,7 @@ function getWorkRoot(file: string, root?: string): string {
 
 	root = root || path.dirname(file)
 
-	return path.resolve(root, bare)
+	return path.resolve(root, bare, new Date().toISOString())
 }
 
 function initRunEnv(root: string) {

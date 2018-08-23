@@ -1,13 +1,34 @@
 import * as Generator from 'yeoman-generator'
 import * as path from 'path'
+import * as fs from 'fs'
 import * as findRoot from 'find-root'
 import * as commandExists from 'command-exists'
 
 const packageRoot = findRoot(__dirname)
 
+// parse current element version
+const elementPackageFile = path.join(findRoot(require.resolve('@flood/element')), 'package.json')
+const elementPackage = JSON.parse(fs.readFileSync(elementPackageFile, 'utf8'))
+const elementVersion = elementPackage.version
+
 export default class TestEnv extends Generator {
+	public options: { [key: string]: string }
+
+	constructor(args, opts) {
+		super(args, opts)
+
+		// This makes `appname` a required argument.
+		this.argument('dir', { type: String, required: true })
+	}
+
 	default() {
 		this.sourceRoot(path.join(packageRoot, 'templates'))
+
+		if (path.isAbsolute(this.options.dir)) {
+			this.destinationRoot(this.options.dir)
+		} else {
+			this.destinationRoot(this.destinationPath(this.options.dir))
+		}
 	}
 
 	answers: { [key: string]: string }
@@ -29,7 +50,6 @@ export default class TestEnv extends Generator {
 		])
 	}
 	writing() {
-		console.log(this.templatePath('test.ts'))
 		this.fs.write(this.destinationPath('package.json'), this._packageJSON)
 		this.fs.write(this.destinationPath('tsconfig.json'), this._tsConfigJSON)
 		this.fs.copyTpl(this.templatePath('test.ts'), this.destinationPath('test.ts'), {
@@ -66,7 +86,7 @@ export default class TestEnv extends Generator {
 				arrowParens: 'avoid',
 			},
 			dependencies: {
-				'@flood/element': '^1.0.3-25',
+				'@flood/element': `^${elementVersion}`,
 				prettier: '^1.10.2',
 			},
 		}

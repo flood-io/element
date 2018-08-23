@@ -1,5 +1,6 @@
 import * as argv from 'yargs'
 import chalk from 'chalk'
+import { join } from 'path'
 const debug = require('debug')('element:main')
 import { error } from './utils/out/error'
 // import { info } from './utils/out/info'
@@ -20,6 +21,8 @@ import { error } from './utils/out/error'
 // })
 // return require(pkgPath)
 // })()
+
+const cmdRoot = join(__dirname, 'cmd')
 
 export const handleUnexpected = err => {
 	debug('handling unexpected error')
@@ -74,7 +77,7 @@ export async function main() {
 
 	return argv
 		.usage(`${chalk.bold(chalk.blueBright('element'))} subcommand [options]`)
-		.commandDir('cmd', {
+		.commandDir(cmdRoot, {
 			extensions: ['js', 'ts'],
 		})
 		.demandCommand()

@@ -28,6 +28,7 @@ export const handler = (args: Arguments) => {
 		testScript: file,
 		reporter: reporter,
 		verbose: verboseBool,
+		headless: args.headless,
 		runEnv: initRunEnv(workRoot),
 		testSettingOverrides: {
 			loopCount: 1,
@@ -91,6 +92,10 @@ export const builder = (yargs: Argv) => {
 		.option('work-root', {
 			describe:
 				'Specify a custom work root. (Default: a directory named after your test script, and at the same location)',
+		})
+		.option('no-headless', {
+			describe:
+				'Run in non-headless mode so that you can see what the browser is doing as it runs the test',
 		})
 		.option('verbose', {
 			describe: 'Verbose mode',

@@ -13,6 +13,7 @@ export interface ElementOptions {
 	reporter: IReporter
 	testScript: string
 	driver?: { new (): Browser }
+	headless: boolean
 	process?: NodeJS.Process
 	verbose: boolean
 	testSettingOverrides: TestSettings
@@ -34,7 +35,9 @@ export async function runCommandLine(opts: ElementOptions): Promise<void> {
 
 	if (!driver) driver = PuppeteerDriver
 
-	const runner = new Runner(opts.runEnv, driver, opts.reporter, logger, opts.testSettingOverrides)
+	const runner = new Runner(opts.runEnv, driver, opts.reporter, logger, opts.testSettingOverrides, {
+		headless: opts.headless,
+	})
 
 	process.on('SIGINT', async () => {
 		logger.debug('Received SIGINT')

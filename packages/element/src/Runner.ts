@@ -21,6 +21,7 @@ export default class Runner implements ITestRunner {
 		private reporter: IReporter,
 		private logger: Logger,
 		private testSettingOverrides: TestSettings,
+		private launchOptionOverrides: LaunchOptions,
 	) {
 		this.driver = new Driver()
 		this.interrupts = 0
@@ -46,9 +47,9 @@ export default class Runner implements ITestRunner {
 
 		try {
 			let settings = test.enqueueScript(testScript, this.testSettingOverrides)
-			let options: LaunchOptions = {
-				ignoreHTTPSErrors: settings.ignoreHTTPSErrors,
-			}
+
+			let options: LaunchOptions = this.launchOptionOverrides
+			options.ignoreHTTPSErrors = settings.ignoreHTTPSErrors
 
 			this.driver.launch(options)
 			test.attachDriver(await this.driver.client())

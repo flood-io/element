@@ -21,7 +21,7 @@ export default class TestEnv extends Generator {
 		this.argument('dir', { type: String, required: true })
 	}
 
-	default() {
+	initializing() {
 		this.sourceRoot(path.join(packageRoot, 'templates'))
 
 		if (path.isAbsolute(this.options.dir)) {
@@ -34,12 +34,13 @@ export default class TestEnv extends Generator {
 	answers: { [key: string]: string }
 
 	async prompting() {
+		const basename = path.basename(this.destinationPath())
 		this.answers = await this.prompt([
 			{
 				type: 'input',
 				name: 'url',
 				message: 'The title of this test.',
-				default: this.appname,
+				default: basename,
 			},
 			{
 				type: 'input',
@@ -59,6 +60,8 @@ export default class TestEnv extends Generator {
 	}
 
 	installing() {
+		const prevValue = process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD
+		process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = '1'
 		commandExists('yarn', (err, yes) => {
 			if (yes) {
 				this.yarnInstall()
@@ -66,6 +69,7 @@ export default class TestEnv extends Generator {
 				this.npmInstall()
 			}
 		})
+		process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = prevValue
 	}
 
 	get _packageJSON(): string {

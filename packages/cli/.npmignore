@@ -5,3 +5,4 @@ logs
 *.ts
 !dist
 !dist/**/*.js
+!templates/**/*

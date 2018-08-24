@@ -1,0 +1,15 @@
+{
+  "name": "publish-brew-tap",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@types/node": "^10.9.1",
+    "find-root": "^1.1.0",
+    "mkdirp": "^0.5.1",
+    "semver": "^5.5.1",
+    "simple-git": "^1.96.0",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.0.1"
+  }
+}

@@ -14,6 +14,9 @@ export interface ElementOptions {
 	testScript: string
 	driver?: { new (): Browser }
 	headless: boolean
+	devtools: boolean
+	chrome: string | boolean
+	sandbox: boolean
 	process?: NodeJS.Process
 	verbose: boolean
 	testSettingOverrides: TestSettings
@@ -26,8 +29,6 @@ export function runUntilExit(fn: () => Promise<void>) {
 			console.error(err)
 			process.exit(1)
 		})
-
-	console.log('after')
 }
 
 export async function runCommandLine(opts: ElementOptions): Promise<void> {
@@ -37,6 +38,9 @@ export async function runCommandLine(opts: ElementOptions): Promise<void> {
 
 	const runner = new Runner(opts.runEnv, driver, opts.reporter, logger, opts.testSettingOverrides, {
 		headless: opts.headless,
+		devtools: opts.devtools,
+		sandbox: opts.sandbox,
+		chrome: opts.chrome,
 	})
 
 	process.on('SIGINT', async () => {

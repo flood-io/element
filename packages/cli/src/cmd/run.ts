@@ -29,9 +29,13 @@ export const handler = (args: Arguments) => {
 		reporter: reporter,
 		verbose: verboseBool,
 		headless: args.headless,
+		devtools: args.devtools,
+		chrome: args.chrome,
+		sandbox: args.sandbox,
+
 		runEnv: initRunEnv(workRoot),
 		testSettingOverrides: {
-			loopCount: 1,
+			loopCount: args.loopCount,
 		},
 	}
 
@@ -97,14 +101,26 @@ export const builder = (yargs: Argv) => {
 			describe:
 				'Run in non-headless mode so that you can see what the browser is doing as it runs the test',
 		})
+		.option('devtools', {
+			describe: 'Run in non-headless mode and also open devtools',
+		})
+		.option('no-sandbox', {
+			describe: 'Disable the chrome sandbox - advanced option, mostly necessary on linux',
+		})
+		.option('loop-count', {
+			describe:
+				'Override the loopCount setting in the test script. For verification purposes, we override this to 1.',
+			type: 'number',
+			default: 1,
+		})
 		.option('verbose', {
 			describe: 'Verbose mode',
 		})
 		.check(({ file, chrome }) => {
 			if (!file.length) return new Error('Please provide a test script')
 			if (!existsSync(file)) return new Error(`File does not exist '${file}'`)
-			if (chrome && !existsSync(chrome))
-				return new Error(`Chrome executable path does not exist '${chrome}'`)
+			// if (chrome && !existsSync(chrome))
+			// return new Error(`Chrome executable path does not exist '${chrome}'`)
 			return true
 		})
 }

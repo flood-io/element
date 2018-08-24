@@ -5,7 +5,7 @@ import Test from './runtime/Test'
 import { TestSettings } from './runtime/Settings'
 import { IReporter } from './Reporter'
 import { Factory } from './runtime/VM'
-import { LaunchOptions } from 'puppeteer'
+import { ConcreteLaunchOptions } from './driver/Puppeteer'
 import { TestScriptError, ITestScript } from './TestScript'
 
 export default class Runner implements ITestRunner {
@@ -21,7 +21,7 @@ export default class Runner implements ITestRunner {
 		private reporter: IReporter,
 		private logger: Logger,
 		private testSettingOverrides: TestSettings,
-		private launchOptionOverrides: LaunchOptions,
+		private launchOptionOverrides: Partial<ConcreteLaunchOptions>,
 	) {
 		this.driver = new Driver()
 		this.interrupts = 0
@@ -48,7 +48,7 @@ export default class Runner implements ITestRunner {
 		try {
 			let settings = test.enqueueScript(testScript, this.testSettingOverrides)
 
-			let options: LaunchOptions = this.launchOptionOverrides
+			let options: Partial<ConcreteLaunchOptions> = this.launchOptionOverrides
 			options.ignoreHTTPSErrors = settings.ignoreHTTPSErrors
 
 			this.driver.launch(options)

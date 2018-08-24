@@ -1,58 +1,65 @@
 import { launch, LaunchOptions } from 'puppeteer'
 import { PuppeteerClient, Browser } from '../types'
 
-type ConcreteLaunchOptions = LaunchOptions & {
+export type ConcreteLaunchOptions = LaunchOptions & {
 	args: string[]
+	chrome: boolean | string
+	sandbox: boolean
 }
 
 const defaultLaunchOptions: ConcreteLaunchOptions = {
 	args: [],
 	handleSIGINT: false,
-	headless: parseInt(process.env.HEADLESS || '1') === 1,
-	devtools: parseInt(process.env.DEVTOOLS || '0') === 1,
+	headless: true,
+	devtools: false,
+	chrome: false,
+	sandbox: true,
 	timeout: 60e3,
 	ignoreHTTPSErrors: false,
+}
+
+function setupSystemChrome(options: ConcreteLaunchOptions): ConcreteLaunchOptions {
+	if (typeof options.chrome === 'boolean') {
+		if (options.chrome) {
+			switch (process.platform) {
+				case 'darwin':
+					options.executablePath = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+					break
+				default:
+					// TODO search PATH for chrome
+					options.executablePath = '/usr/bin/google-chrome-stable'
+			}
+		}
+	} else {
+		options.executablePath = options.chrome
+	}
+
+	options.args.push('--disable-gpu')
+	options.args.push('--disable-dev-shm-usage')
+
+	return options
 }
 
 export default class Puppeteer implements Browser {
 	private isClosed = false
 	private clientInitializationPromise: Promise<PuppeteerClient>
 
-	async launch(options: LaunchOptions = {}) {
-		let launchArgs: ConcreteLaunchOptions = { args: <string[]>[] }
+	async launch(options: ConcreteLaunchOptions = defaultLaunchOptions) {
+		options = {
+			...defaultLaunchOptions,
+			...options,
+		}
 
-		const noSandbox = process.env.NO_CHROME_SANDBOX === '1'
-		if (noSandbox) {
-			launchArgs.args.push('--no-sandbox')
+		if (!options.sandbox) {
+			options.args.push('--no-sandbox')
 			// launchArgs.args.push("--disable-setuid-sandbox");
 		}
 
-		// In docker
-		if (process.env.USE_SYSTEM_CHROMIUM) {
-			launchArgs = {
-				...launchArgs,
-				executablePath: '/usr/bin/google-chrome-stable',
-			}
-			launchArgs.args.push('--disable-gpu')
-			launchArgs.args.push('--disable-dev-shm-usage')
-		}
+		options = setupSystemChrome(options)
 
-		if (process.env.USE_SYSTEM_CHROME_MAC) {
-			launchArgs = {
-				...launchArgs,
-				executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-			}
-			launchArgs.args.push('--disable-gpu')
-			launchArgs.args.push('--disable-dev-shm-usage')
-		}
+		// console.log(JSON.stringify(options, null, 2))
 
-		let finalOptions = {
-			...defaultLaunchOptions,
-			...options,
-			...launchArgs,
-		}
-		// console.log(JSON.stringify(finalOptions, null, 2))
-		this.clientInitializationPromise = this.initClient(finalOptions)
+		this.clientInitializationPromise = this.initClient(options)
 
 		return this.clientInitializationPromise
 	}

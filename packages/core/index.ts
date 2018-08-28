@@ -18,3 +18,6 @@ import * as types from './src/types'
 export { WorkRoot, PuppeteerDriver, types }
 
 export { TestScriptError, ITestScript, TestScriptOptions } from './src/TestScript'
+
+import { expect } from './src/utils/Expect'
+export { expect }

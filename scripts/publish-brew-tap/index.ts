@@ -3,12 +3,15 @@ import * as path from 'path'
 import * as fs from 'fs'
 import * as child_process from 'child_process'
 import * as semver from 'semver'
-import * as gitP from 'simple-git/promise'
+import { sync as which } from 'which'
 import { sync as mkdirp } from 'mkdirp'
+import * as gitP from 'simple-git/promise'
 
 const packageJSONFile = path.join(findRoot(path.join(__dirname, '..')), 'packages/cli/package.json')
 const packageJSON = JSON.parse(fs.readFileSync(packageJSONFile, 'utf8'))
 const version = packageJSON.version
+
+const git = which('git')
 
 const major = semver.major(version)
 const minor = semver.minor(version)
@@ -61,25 +64,27 @@ const writeBrew = root => {
 
 async function update() {
 	if (!fs.existsSync(tap)) {
-		mkdirp(tap)
+		child_process.execSync(`${git} clone ${repo} -- ${tap}`, {
+			cwd: tap,
+			stdio: 'inherit',
+		})
+	} else {
+		child_process.execSync(`${git} pull`, { cwd: tap, stdio: 'inherit' })
 	}
-
-	const git = gitP(tap)
-	if (!await git.checkIsRepo()) {
-		// await git.init(false)
-		// await git.addRemote('origin', repo)
-		// await git.branch(['master', '-u', 'origin/master'])
-		await git.checkout([repo, '--', tap])
-	}
-	await git.pull()
 
 	const root = path.join(tap, 'Formula')
 	mkdirp(root)
 
 	writeBrew(root)
 
-	await git.add(['Formula'])
-	// await git.commit(
+	const sgit = gitP(tap)
+
+	await sgit.add('Formula')
+	const status = await sgit.status()
+	if (status.files.length > 0) {
+		await sgit.commit('published element brew tap')
+		await sgit.push()
+	}
 }
 
 update()

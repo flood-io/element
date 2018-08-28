@@ -1,0 +1,22 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"target": "ES2015",
+		"moduleResolution": "node",
+		"removeComments": false,
+		"outDir": "lib",
+		"lib": ["dom", "dom.iterable", "esnext", "es2016.array.include", "es2017.object"],
+		"pretty": true,
+		"strictNullChecks": false,
+		"forceConsistentCasingInFileNames": true,
+		"allowUnreachableCode": false,
+		"alwaysStrict": true,
+		"noUnusedLocals": true,
+		"allowJs": true,
+		"checkJs": true,
+		"noImplicitAny": false,
+		"allowSyntheticDefaultImports": true,
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true
+	}
+}

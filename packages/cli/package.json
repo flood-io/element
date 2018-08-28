@@ -7,9 +7,13 @@
 	"bin": {
 		"element": "./dist/index.js"
 	},
+	"bugs": {
+		"url": "https://github.com/flood-io/element/issues"
+	},
 	"private": false,
 	"scripts": {
-		"build": "tsc --outDir dist --project .",
+		"build": "tsc",
+		"start": "tsc -w",
 		"build:watch": "tsc --watch --outDir dist --project .",
 		"prepublishOnly": "npm run build",
 		"element": "ts-node -- ./index.ts",

@@ -22,6 +22,5 @@
 		"emitDecoratorMetadata": true	
   },
 	"exclude": ["node_modules", "lib", "examples", "*.spec.ts", "*.test.ts"],
-	//"include": ["./src/**/*.ts"],
-	"files": ["./index.ts","./ReporterAPI.ts", "./RuntimeEnvironmentAPI.ts", "./TestScriptAPI.ts", "./expect.ts"]
+	"files": ["./index.ts"]
 }

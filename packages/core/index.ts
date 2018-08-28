@@ -1,57 +1,20 @@
-/**
- * @docPage Until
- */
-export { Until } from './src/page/Until'
+export {
+	IReporter,
+	MeasurementKind,
+	TraceData,
+	TestEvent,
+	CompoundMeasurement,
+} from './src/Reporter'
+export { ConsoleReporter } from './src/reporter/Console'
 
-/**
- * @docPage Until
- */
-export { Condition } from './src/page/Condition'
+export { runCommandLine, runUntilExit, ElementOptions } from './src/Element'
 
-/**
- * @docPage Constants
- */
-export { Device, MouseButtons, Key } from './src/page/Enums'
+export { TestSettings } from './src/runtime/Settings'
+export { RuntimeEnvironment, FloodProcessEnv } from './src/runtime-environment/types'
+import WorkRoot from './src/runtime-environment/WorkRoot'
+import PuppeteerDriver from './src/driver/Puppeteer'
+import * as types from './src/types'
 
-/**
- * @docPage By
- */
-export { By } from './src/page/By'
+export { WorkRoot, PuppeteerDriver, types }
 
-/**
- * @docPage By
- */
-export { Locator } from './src/page/types'
-
-/**
- * @docPage ElementHandle
- */
-export { ElementHandle } from './src/page/types'
-
-/**
- * @docPage TestData
- */
-export { TestData, TestDataImpl } from './src/test-data/TestData'
-
-/**
- * @docPage DSL
- */
-export { TestSettings, setup, DEFAULT_SETTINGS } from './src/runtime/Settings'
-
-import { FloodProcessEnv, nullFloodProcessEnv } from './src/runtime-environment/types'
-
-/**
- * A subset of process.env available to this test.
- * @docPage DSL
- */
-export const ENV: FloodProcessEnv = nullFloodProcessEnv
-
-/**
- * @docPage Browser
- */
-export { Browser, Browser as Driver, Locatable, NullableLocatable } from './src/runtime/types'
-
-/**
- * @docPage DSL
- */
-export { step } from './src/runtime/Step'
+export { TestScriptError, ITestScript, TestScriptOptions } from './src/TestScript'

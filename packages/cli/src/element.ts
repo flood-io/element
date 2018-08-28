@@ -3,26 +3,16 @@ import chalk from 'chalk'
 import { join } from 'path'
 const debug = require('debug')('element:main')
 import { error } from './utils/out/error'
+import ownPackage from './utils/ownPackage'
+
 // import { info } from './utils/out/info'
 // import { existsSync } from 'fs'
 // import { resolve } from 'path'
 // import * as checkForUpdate from 'update-check'
 // import * as ms from 'ms'
 
-// const pkg = (() => {
-// let paths = ['../../package.json', '../package.json']
-
-// let pkgPath = paths.map(p => resolve(p)).find(p => {
-// try {
-// return existsSync(p)
-// } catch {
-// return false
-// }
-// })
-// return require(pkgPath)
-// })()
-
 const cmdRoot = join(__dirname, 'cmd')
+const pkg = ownPackage()
 
 export const handleUnexpected = err => {
 	debug('handling unexpected error')
@@ -86,7 +76,7 @@ export async function main() {
 			'Commands:': chalk.grey('Commands:\n'),
 			'Options:': chalk.grey('Options:\n'),
 		})
-		.version('1.0') // (pkg.version)
+		.version(pkg.version)
 		.showHelpOnFail(true)
 		.recommendCommands()
 		.example(

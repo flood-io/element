@@ -1,0 +1,8 @@
+src
+tmp
+logs
+*.ts
+scripts/docs/node_modules
+!lib
+!lib/**/*.js
+!lib/**/*.ts

@@ -86,7 +86,7 @@ export async function main() {
 			'Commands:': chalk.grey('Commands:\n'),
 			'Options:': chalk.grey('Options:\n'),
 		})
-		.version('1.0') // (pkg.version)
+		.version('Flood Element CLI: v1.0')
 		.showHelpOnFail(true)
 		.recommendCommands()
 		.example(

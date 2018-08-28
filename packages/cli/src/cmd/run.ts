@@ -5,7 +5,7 @@ import {
 	ElementOptions,
 	WorkRoot,
 	FloodProcessEnv,
-} from '@flood/element/lib/RuntimeEnvironmentAPI'
+} from '@flood/element/RuntimeEnvironmentAPI'
 import { ConsoleReporter } from '../utils/ConsoleReporter'
 import { Argv, Arguments } from 'yargs'
 import { existsSync } from 'fs'

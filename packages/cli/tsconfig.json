@@ -20,14 +20,10 @@
 		"experimentalDecorators": true,
 		"typeRoots": ["node_modules/@types"],
 		"emitDecoratorMetadata": true,
-    "baseUrl": "./",
-    "paths": {
-      "*": ["node_modules/@types/*", "*"],
-      //"@flood/element/node_modules/@types/node": ["node_modules/@types/node"],
-      "@flood/element/RuntimeEnvironmentAPI": [ "node_modules/@flood/element/lib/RuntimeEnvironmentAPI" ],
-      "@flood/element/ReporterAPI": [ "node_modules/@flood/element/lib/ReporterAPI" ],
-      "@flood/element/TestScriptAPI": [ "node_modules/@flood/element/lib/TestScriptAPI" ]
-    }
+		"baseUrl": "./",
+		"paths": {
+			"*": ["node_modules/@types/*", "*"]
+		}
 	},
 	"exclude": ["node_modules", "dist", "lib", "*.spec.ts"],
 	"files": ["./index.ts"],

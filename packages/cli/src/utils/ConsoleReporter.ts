@@ -4,8 +4,8 @@ import {
 	TestEvent,
 	CompoundMeasurement,
 	MeasurementKind,
-} from '@flood/element/lib/ReporterAPI'
-import { TestScriptError } from '@flood/element/TestScriptAPI'
+	TestScriptError,
+} from '@flood/element-core'
 import { Logger } from 'winston'
 import chalk from 'chalk'
 

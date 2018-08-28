@@ -12,48 +12,32 @@ Flood Element works by spinning up hundreds or even thousands of instances of Go
 
 First, make sure you have installed the [latest version of NodeJS](https://nodejs.org) for your platform.
 
-#### 1. Download Flood CLI
+#### Using the Flood `element` CLI
 
-**On macOS**, install using homebrew:
+Element ships with a useful command line tool to running your tests locally before scaling them up on Flood.
 
-```bash
-brew install flood-io/taps/flood
-```
-
-**On linux**, download the [latest release](https://github.com/flood-io/cli/releases/latest) for your platform, then extract and install it:
+Install using yarn or NPM:
 
 ```bash
-# assuming you're installing version 1.0.0 on linux
-cd ~/Downloads
-mkdir flood
-tar zxvf flood-1.0.0-linux-amd64.zip -C flood
+yarn global add @flood/element-cli
 
-# move the file to somewhere on your $PATH:
-mv flood/flood /usr/local/bin/flood
-
-# optionally, tidy up:
-rm -rf flood
+# or using NPM
+npm install @flood/element-cli -g
 ```
 
-**On Windows:**
+Verify that you have it in your `PATH`:
 
-We're still working on a Windows build, stay tuned.
+```bash
+$ element --version
+
+Flood Element CLI: v1.0
+```
 
 #### 2. Initialize Project
 
 The very first thing you should do is authenticate the `flood` tool with your Flood account. _If you don't have an account, you can sign up for free at [Flood](https://flood.io)._
 
-```bash
-# Login
-flood login
-
-# Initialize a new project
-flood init my-flood-element-test
-
-# Change to this directory and install dependencies
-cd my-flood-element-test
-yarn install
-```
+TBD
 
 #### 3. Write and validate your script
 
@@ -90,6 +74,23 @@ Over the years, countless customers have mentioned that getting started with Loa
 
 * [Deep dive tutorial](examples/scenario_1_wordpress.md)
 * [API Documentation](api/Browser.md)
+
+## Developing
+
+Element is a monorepo, using Lerna and Yarn to bootstrap dependencies between packages.
+
+Ensure you have the latest version of `yarn` installed and workspaces enabled:
+
+```
+yarn config set workspaces-experimental true
+```
+
+Then bootstrap everything by running `yarn install` in the root of the project. This will install and symlink all the dependencies between all packages in `./packages/*`.
+
+#### Run the `element` command from source:
+
+You can now run the `element` command from source using `yarn element`.
+
 
 ## Reporting Issues
 

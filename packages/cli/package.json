@@ -1,6 +1,6 @@
 {
 	"name": "@flood/element-cli",
-	"version": "1.0.3-31",
+	"version": "1.0.3-32",
 	"license": "Apache-2.0",
 	"description": "The command line interface for Flood Element",
 	"repository": "flood-io/element",
@@ -17,7 +17,7 @@
 	},
 	"types": "./index.d.ts",
 	"dependencies": {
-		"@flood/element": "^1.0.3-31",
+		"@flood/element": "^1.0.3-32",
 		"chalk": "^2.4.1",
 		"command-exists": "^1.2.7",
 		"debug": "^3.1.0",

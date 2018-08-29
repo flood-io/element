@@ -9,6 +9,10 @@
 	"dependencies": {
 		"lerna": "2.11.0"
 	},
+  "scripts": {
+    "build:watch": "lerna run build:watch --parallel",
+    "publish:brew": "./scripts/publish-brew-tap/publish.sh"
+  },
 	"prettier": {
 		"semi": false,
 		"singleQuote": true,

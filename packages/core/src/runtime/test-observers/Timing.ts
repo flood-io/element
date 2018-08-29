@@ -100,9 +100,10 @@ export default class TimingObserver implements TestObserver {
 
 		const name = step.name
 		const reporter = test.reporter
-		reporter.reset(name)
 
 		await this.next.beforeStep(test, step)
+
+		reporter.reset(name)
 
 		this.t.end('beforeStep')
 		this.t.start('step')
@@ -117,12 +118,11 @@ export default class TimingObserver implements TestObserver {
 
 		debug(`After step: ${step.name}`)
 
+		await this.next.afterStep(test, step)
+
 		await this.reportResult(test, step)
 
 		this.t.end('afterStep')
-
-		// XXX order??
-		return this.next.afterStep(test, step)
 	}
 
 	async onStepPassed(test: Test, step: Step): Promise<void> {

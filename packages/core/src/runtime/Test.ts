@@ -296,12 +296,19 @@ export default class Test {
 		this.testObserver.afterStepAction(this, browser.customContext, command)
 	}
 
-	public async takeScreenshot(options?: ScreenshotOptions): Promise<string[]> {
+	public async takeScreenshot(options?: ScreenshotOptions) {
 		if (this.runningBrowser === null) {
 			return []
 		}
 
 		await this.runningBrowser.takeScreenshot(options)
+	}
+
+	public async fetchScreenshots(): Promise<string[]> {
+		if (this.runningBrowser === null) {
+			return []
+		}
+
 		return this.runningBrowser.fetchScreenshots()
 	}
 

@@ -28,8 +28,8 @@ export default class TracingObserver extends NoOpTestObserver {
 	}
 
 	async afterStep(test: Test, step: Step) {
-		// TODO
-		// screenshots.forEach(file => this.trace.addScreenshot(file))
+		let screenshots = await test.fetchScreenshots()
+		screenshots.forEach(file => this.trace.addScreenshot(file))
 
 		await this.addNetworkTrace(test, step, test.networkRecorder)
 
@@ -39,9 +39,8 @@ export default class TracingObserver extends NoOpTestObserver {
 	}
 
 	async flushTrace(test: Test, step: Step) {
-		// console.log('Trace', this.trace.toObject())
-		if (this.trace.isEmpty) {
-		} else {
+		console.log('flushing trace', this.trace.toObject())
+		if (!this.trace.isEmpty) {
 			await test.reporter.addTrace(this.trace.toObject(), step.name)
 		}
 
@@ -77,8 +76,7 @@ export default class TracingObserver extends NoOpTestObserver {
 		// Take a screenshot on failure
 		// TODO add screenshots to step
 		if (test.settings.screenshotOnFailure) {
-			let screenshots = await test.takeScreenshot()
-			screenshots.forEach(file => this.trace.addScreenshot(file))
+			await test.takeScreenshot()
 		}
 
 		return this.next.onStepError(test, step, err)

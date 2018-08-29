@@ -15,7 +15,7 @@ export type EvaluateFn = string | ((...args: any[]) => any)
 /**
  * Locatable represents anything able to be located, either a string selector or a <[Locator]>. <[Locator]>s are generally created using <[By]> methods.
  */
-export type Locatable = Locator | string
+export type Locatable = Locator | ElementHandle | string
 
 /**
  * NullableLocatable represents a <[Locatable]> which could also be null.

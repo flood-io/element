@@ -12,6 +12,7 @@ import TimingObserver from './test-observers/Timing'
 import TracingObserver from './test-observers/Tracing'
 import LifecycleObserver from './test-observers/Lifecycle'
 import ErrorObserver from './test-observers/Errors'
+import InnerObserver from './test-observers/Inner'
 
 import { AnyErrorData, EmptyErrorData, AssertionErrorData } from './errors/Types'
 import { StructuredError } from '../utils/StructuredError'
@@ -22,12 +23,7 @@ import { PuppeteerClient } from '../types'
 import { RuntimeEnvironment } from '../runtime-environment/types'
 import { ITestScript } from '../TestScript'
 import { ScreenshotOptions } from 'puppeteer'
-import {
-	TestSettings,
-	ConcreteTestSettings,
-	DEFAULT_ACTION_WAIT_SECONDS,
-	DEFAULT_STEP_WAIT_SECONDS,
-} from './Settings'
+import { TestSettings, ConcreteTestSettings, DEFAULT_STEP_WAIT_SECONDS } from './Settings'
 // import { ScreenshotOptions } from 'puppeteer'
 
 import { TestDataImpl } from '../test-data/TestData'
@@ -66,7 +62,9 @@ export default class Test {
 
 	constructor(private runEnv: RuntimeEnvironment, public reporter: IReporter = new NullReporter()) {
 		this.testObserver = new ErrorObserver(
-			new TimingObserver(new LifecycleObserver(new TracingObserver(new NullTestObserver()))),
+			new TimingObserver(
+				new LifecycleObserver(new TracingObserver(new InnerObserver(new NullTestObserver()))),
+			),
 		)
 
 		this.testDataLoaders = new TestDataLoaders(runEnv.workRoot)
@@ -288,18 +286,10 @@ export default class Test {
 	}
 
 	public async willRunCommand(browser: Browser<Step>, command: string) {
-		if (this.settings.actionDelay <= 0 || command === 'wait') {
-			return
-		}
-
 		const step: Step = browser.customContext
 		this.testObserver.beforeStepAction(this, step, command)
 
 		debug(`Before action: '${command}()' waiting on actionDelay: ${this.settings.actionDelay}`)
-		await new Promise(resolve => {
-			// TODO fix default
-			setTimeout(resolve, this.settings.actionDelay * 1e3 || DEFAULT_ACTION_WAIT_SECONDS * 1e3)
-		})
 	}
 
 	async didRunCommand(browser: Browser<Step>, command: string) {

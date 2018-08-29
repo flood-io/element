@@ -11,7 +11,8 @@
 	},
   "scripts": {
     "build:watch": "lerna run build:watch --parallel",
-    "publish:brew": "./scripts/publish-brew-tap/publish.sh"
+    "publish:brew": "./scripts/publish-brew-tap/publish.sh",
+    "publish:pre": "lerna publish --force-publish=* --cd-version prerelease && yarn publish:brew"
   },
 	"prettier": {
 		"semi": false,

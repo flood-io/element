@@ -449,7 +449,7 @@ export class Browser<T> implements BrowserInterface {
 	 */
 	// @wrapWithCallbacks()
 	public async takeScreenshot(options?: ScreenshotOptions): Promise<void> {
-		this.saveScreenshot(async path => {
+		await this.saveScreenshot(async path => {
 			await this.page.screenshot({ path, ...options })
 			return true
 		})

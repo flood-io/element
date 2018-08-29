@@ -220,22 +220,25 @@ export default class TimingObserver implements TestObserver {
 		responseTimeMeasurement: ResponseTiming,
 		networkRecorder: NetworkRecorder,
 	): number {
-		if (responseTimeMeasurement === 'page') {
-			return networkRecorder.responseTimeForType('Document')
-		} else if (responseTimeMeasurement === 'network') {
-			return networkRecorder.meanResponseTime()
-		} else if (responseTimeMeasurement === 'step') {
-			const value = this.t.getDurationWithoutThinkTimeForSegment('step')
-			const thinkTime = this.t.getThinkTimeForSegment('step')
-			debug(`Step Timing: thinking=${thinkTime} ms, interaction: ${value} ms`)
-			return value
-		} else if (responseTimeMeasurement === 'stepWithThinkTime') {
-			const value = this.t.getDurationForSegment('step')
-			const thinkTime = this.t.getThinkTimeForSegment('step')
-			debug(`Step Timing: thinking=${thinkTime} ms, step: ${value} ms`)
-			return value
-		} else {
-			return 0
+		switch (responseTimeMeasurement) {
+			case 'page':
+				return networkRecorder.responseTimeForType('Document')
+			case 'network':
+				return networkRecorder.meanResponseTime()
+			case 'step': {
+				const value = this.t.getDurationWithoutThinkTimeForSegment('step')
+				const thinkTime = this.t.getThinkTimeForSegment('step')
+				debug(`Step Timing: thinking=${thinkTime} ms, interaction: ${value} ms`)
+				return value
+			}
+			case 'stepWithThinkTime': {
+				const value = this.t.getDurationForSegment('step')
+				const thinkTime = this.t.getThinkTimeForSegment('step')
+				debug(`Step Timing: thinking=${thinkTime} ms, step: ${value} ms`)
+				return value
+			}
+			default:
+				return 0
 		}
 	}
 }

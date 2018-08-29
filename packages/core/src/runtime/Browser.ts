@@ -574,7 +574,7 @@ export class Browser<T> implements BrowserInterface {
 	}
 
 	public async saveScreenshot(fn: (path: string) => Promise<boolean>): Promise<void> {
-		const path = this.workRoot.join('objects', `${cuid()}.jpg`)
+		const path = this.workRoot.join('screenshots', `${cuid()}.jpg`)
 		debugScreenshot(`Saving screenshot to: ${path}`)
 
 		if (await fn(path)) {

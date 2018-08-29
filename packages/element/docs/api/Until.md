@@ -165,3 +165,5 @@ Creates a condition which waits until the page URL matches the supplied `RegExp`
 [Condition]: ../../api/Until.md#condition
 [Locatable]: ../../api/Browser.md#locatable
 [NullableLocatable]: ../../api/Browser.md#nullablelocatable
+
+[ElementHandle]: ../../api/ElementHandle.md#elementhandle

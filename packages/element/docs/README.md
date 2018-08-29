@@ -80,7 +80,7 @@ For now, please use the [Flood site](https://app.flood.io) to execute your test 
 
 ![Upload your script to Tricentis Flood](examples/images/upload-script.png)
 
-Continue learning more Flood Element techniques by starting with our API documentation. The main entry point to all tests is the <[Browser]> class and a great place to get a feel for the capabilities of each test.
+Continue learning more Flood Element techniques by starting with our API documentation. The main entry point to all tests is the <[Browser]> class and it's a great place to get a feel for the capabilities of each test.
 
 # Why?
 

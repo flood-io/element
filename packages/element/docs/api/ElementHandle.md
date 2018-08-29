@@ -127,3 +127,5 @@ Sends a series of key presses to the element to simulate a user typing on the ke
 
 [Promise]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
 [Locator]: ../../api/By.md#locator
+
+[Promise]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise

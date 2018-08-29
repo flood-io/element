@@ -76,3 +76,5 @@ Loads data from a JSON ffile
 [Option]: ../..#option
 [FeedFilterFunction]: ../..#feedfilterfunction
 [Promise]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
+
+[TestDataImpl]: ../../api/TestData.md#testdataimpl

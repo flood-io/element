@@ -226,3 +226,5 @@ Note that most Element location API methods accept a NullableLocatable but will 
 [Condition]: ../../api/Until.md#condition
 [Locator]: ../../api/By.md#locator
 [Error]: https://nodejs.org/api/errors.html#errors_class_error
+
+[step]: ../..#step

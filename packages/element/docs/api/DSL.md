@@ -126,3 +126,5 @@ export default () => {
 [ResponseTiming]: ../..#responsetiming
 [TestSettings]: ../../api/DSL.md#testsettings
 [StepFunction]: ../..#stepfunction
+
+[DEFAULT_SETTINGS]: ../..#defaultsettings

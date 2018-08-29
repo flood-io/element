@@ -105,3 +105,5 @@ An <[ElementHandle]> can also be used as a Locator which finds itself.
 [Locator]: ../../api/By.md#locator
 [EvaluateFn]: ../..#evaluatefn
 [By]: ../../api/By.md#by
+
+[Locator]: ../../api/By.md#locator

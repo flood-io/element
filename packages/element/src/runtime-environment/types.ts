@@ -13,6 +13,8 @@ export interface FloodProcessEnv {
 	 * Globally unique sequence number for this browser instance.
 	 */
 	SEQUENCE: number
+
+	IN_GRID: boolean
 }
 
 export const nullFloodProcessEnv: FloodProcessEnv = {
@@ -26,6 +28,7 @@ export const nullFloodProcessEnv: FloodProcessEnv = {
 	FLOOD_SEQUENCE_ID: 0,
 	FLOOD_PROJECT_ID: 0,
 	SEQUENCE: 0,
+	IN_GRID: false,
 }
 
 export interface RuntimeEnvironment {

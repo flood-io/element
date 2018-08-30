@@ -5,7 +5,7 @@ import {
 	ElementOptions,
 	WorkRoot,
 	FloodProcessEnv,
-} from '@flood/element-core'
+} from '@flood/element/api'
 import { ConsoleReporter } from '../utils/ConsoleReporter'
 import { Argv, Arguments } from 'yargs'
 import { existsSync } from 'fs'
@@ -26,6 +26,7 @@ export const handler = (args: Arguments) => {
 	const opts: ElementOptions = {
 		logger: logger,
 		testScript: file,
+		strictCompilation: args.strict,
 		reporter: reporter,
 		verbose: verboseBool,
 		headless: args.headless,
@@ -62,6 +63,8 @@ function initRunEnv(root: string) {
 	const workRoot = new WorkRoot(root, {
 		'test-data': root,
 	})
+
+	console.info('workRoot', workRoot.root)
 
 	return {
 		workRoot,
@@ -112,6 +115,9 @@ export const builder = (yargs: Argv) => {
 				'Override the loopCount setting in the test script. For verification purposes, we override this to 1.',
 			type: 'number',
 			default: 1,
+		})
+		.option('strict', {
+			describe: 'Compile the script in strict mode. This can be helpful in diagnosing problems.',
 		})
 		.option('verbose', {
 			describe: 'Verbose mode',

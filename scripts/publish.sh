@@ -7,12 +7,14 @@ root=$HERE/..
 
 yarn exec lerna version --force-publish --no-push --ignore-changes scripts/publish.sh prerelease 
 
+version=$(cat $root/lerna.json | jq .version)
+
 cd $root/packages/element
 ./scripts/build.sh
-yarn publish dist
+yarn publish --new-version $version dist
 
 cd $root/packages/cli
-yarn publish
+yarn publish --new-version $version
 
 git push
 

@@ -14,15 +14,15 @@ import { VMScript } from 'vm2'
 import * as parseComments from 'comment-parser'
 import { SourceUnmapper } from './SourceUnmapper'
 import * as debugFactory from 'debug'
+import { tmpdir } from 'os'
+import * as findRoot from 'find-root'
 
 const debug = debugFactory('element:test-script:compiler')
 
-const elementRoot = require.resolve('@flood/element')
-debug('elementRoot', elementRoot)
+const floodelementRoot = findRoot(__dirname)
 
-const floodelementRoot = path.join(__dirname, '../..')
 const sandboxPath = 'test-script-sandbox'
-const sandboxRoot = path.join(floodelementRoot, sandboxPath)
+const sandboxRoot = path.join(tmpdir(), 'flood-element-tmp', sandboxPath)
 const sandboxedBasenameTypescript = 'flood-chrome.ts'
 const sandboxedBasenameJavascript = 'flood-chrome.js'
 
@@ -111,6 +111,9 @@ const defaultCompilerOptions: ts.CompilerOptions = {
 	],
 	types: ['@types/node'],
 	typeRoots: ['node_modules/@types'],
+
+	baseUrl: './',
+	paths: { '*': ['node_modules/@types/*', '*'] },
 }
 
 type sourceKinds = 'typescript' | 'javascript'

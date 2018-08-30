@@ -5,7 +5,7 @@ import { Loader } from './Loader'
 /**
  * Use this to load test data which will be iterated over with each iteration of your test.
  */
-export interface TestData<TRow> {
+export interface TestData {
 	/**
 	 * Loads a standard Javascript array of data objects
 	 */

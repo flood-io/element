@@ -6,6 +6,7 @@ import { Browser } from './types'
 import Runner from './Runner'
 import { ITestScript, TestScriptOptions, mustCompileFile } from './TestScript'
 import { TestSettings } from './runtime/Settings'
+import { TestObserver } from './runtime/test-observers/Observer'
 
 export interface ElementOptions {
 	logger: Logger
@@ -20,6 +21,7 @@ export interface ElementOptions {
 	process?: NodeJS.Process
 	verbose: boolean
 	testSettingOverrides: TestSettings
+	testObserverFactory?: (t: TestObserver) => TestObserver
 }
 
 export function runUntilExit(fn: () => Promise<void>) {
@@ -36,12 +38,20 @@ export async function runCommandLine(opts: ElementOptions): Promise<void> {
 
 	if (!driver) driver = PuppeteerDriver
 
-	const runner = new Runner(opts.runEnv, driver, opts.reporter, logger, opts.testSettingOverrides, {
-		headless: opts.headless,
-		devtools: opts.devtools,
-		sandbox: opts.sandbox,
-		chrome: opts.chrome,
-	})
+	const runner = new Runner(
+		opts.runEnv,
+		driver,
+		opts.reporter,
+		logger,
+		opts.testSettingOverrides,
+		{
+			headless: opts.headless,
+			devtools: opts.devtools,
+			sandbox: opts.sandbox,
+			chrome: opts.chrome,
+		},
+		opts.testObserverFactory,
+	)
 
 	process.on('SIGINT', async () => {
 		logger.debug('Received SIGINT')

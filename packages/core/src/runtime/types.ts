@@ -3,6 +3,8 @@ import { Condition } from '../page/Condition'
 import { NavigationOptions, ClickOptions, ScreenshotOptions } from 'puppeteer'
 import { ElementHandle, Locator } from '../page/types'
 import { TargetLocator } from '../page/TargetLocator'
+import { StepDefinition } from './Step'
+import { TestDataImpl as TestData } from '../test-data/TestData'
 
 export { NavigationOptions }
 
@@ -38,11 +40,12 @@ export type NullableLocatable = Locatable | null
  *
  * @param testDefinition
  */
-// export interface ISuiteDefinition {
-// (callback: (this: null, step: StepDefinition<null>) => void)
-// withData<T>(data: TestData<T>, callback: (this: null, step: StepDefinition<T>) => void)
-// }
-// }
+export declare const suite: SuiteDefinition
+
+export interface SuiteDefinition {
+	(callback: (this: null, s: StepDefinition<null>) => void)
+	withData<T>(data: TestData<T>, callback: (this: null, step: StepDefinition<T>) => void)
+}
 
 /**
  * Browser (also called Driver) is the main entry point in each <[step]>, it's your direct connection to the browser running the test.

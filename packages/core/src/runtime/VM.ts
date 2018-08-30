@@ -2,6 +2,7 @@ import { NodeVM } from 'vm2'
 import { Until } from '../page/Until'
 import { By } from '../page/By'
 import { RuntimeEnvironment } from '../runtime-environment/types'
+import { SuiteDefinition } from './types'
 import { MouseButtons, Device, Key, userAgents } from '../page/Enums'
 import { StepOptions } from './Step'
 import * as Faker from 'faker'
@@ -12,7 +13,7 @@ import { ITestScript } from '../TestScript'
 import { DEFAULT_SETTINGS, ConcreteTestSettings, normalizeSettings } from './Settings'
 import { expect } from '../utils/Expect'
 import { Step, StepFunction, normalizeStepOptions } from './Step'
-// import { TestData } from '../test-data/TestData'
+import { TestDataImpl } from '../test-data/TestData'
 import Test from './Test'
 
 // import * as debugFactory from 'debug'
@@ -105,18 +106,18 @@ export class VM {
 		}
 
 		// closes over test
-		// function createSuite(): Flood.ISuiteDefinition {
-		// let suite = function(callback) {
-		// return callback
-		// } as Flood.ISuiteDefinition
-		// suite.withData = <T>(data: TestData<T>, callback) => {
-		// test.testData = expect(data, 'TestData is not present')
-		// test.testData.setInstanceID(ENV.SEQUENCE.toString())
-		// return callback
-		// }
+		function createSuite(): SuiteDefinition {
+			const suite = function(callback) {
+				return callback
+			} as SuiteDefinition
+			suite.withData = <T>(data: TestDataImpl<T>, callback) => {
+				test.testData = expect(data, 'TestData is not present')
+				test.testData.setInstanceID(ENV.SEQUENCE.toString())
+				return callback
+			}
 
-		// return suite
-		// }
+			return suite
+		}
 
 		// let suite = createSuite()
 
@@ -127,7 +128,7 @@ export class VM {
 
 			ENV,
 
-			// suite,
+			suite: createSuite(),
 			// Supports either 2 or 3 args
 			step,
 			// Actual implementation of @flood/chrome

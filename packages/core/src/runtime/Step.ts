@@ -21,7 +21,7 @@ import { Browser } from './types'
  * @param name Step Name
  * @param fn Actual implementation of step
  */
-export declare function step(name: string, fn: StepFunction<any>): void
+export declare function step<T>(name: string, fn: StepFunction<T>): void
 /**
  * `step` can also be called with an overridden subset of Test settings (`options`) valid for just this step.
  *
@@ -32,7 +32,9 @@ export declare function step(name: string, fn: StepFunction<any>): void
  *   }
  * ```
  */
-export declare function step(name: string, options: StepOptions, fn: StepFunction<any>): void
+export declare function step<T>(name: string, options: StepOptions, fn: StepFunction<T>): void
+
+export type StepDefinition<T> = (name: string, fn: StepFunction<T>) => Promise<any>
 
 /**
  * Specifies the available options which can be supplied to a step to override global settings.

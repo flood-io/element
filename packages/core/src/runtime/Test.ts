@@ -8,8 +8,6 @@ import { NullReporter } from './../reporter/Null'
 import { ObjectTrace } from '../utils/ObjectTrace'
 
 import { TestObserver, NullTestObserver } from './test-observers/Observer'
-import TimingObserver from './test-observers/Timing'
-import TracingObserver from './test-observers/Tracing'
 import LifecycleObserver from './test-observers/Lifecycle'
 import ErrorObserver from './test-observers/Errors'
 import InnerObserver from './test-observers/Inner'
@@ -54,17 +52,19 @@ export default class Test {
 	private driver: PuppeteerClient
 
 	public testData: TestDataImpl<any>
-	public testDataLoaders: TestDataLoaders<any>
+	public testDataLoaders: TestDataLoaders
 
 	get skipping(): boolean {
 		return this.failed
 	}
 
-	constructor(private runEnv: RuntimeEnvironment, public reporter: IReporter = new NullReporter()) {
+	constructor(
+		private runEnv: RuntimeEnvironment,
+		public reporter: IReporter = new NullReporter(),
+		testObserverFactory: (t: TestObserver) => TestObserver = x => x,
+	) {
 		this.testObserver = new ErrorObserver(
-			new TimingObserver(
-				new LifecycleObserver(new TracingObserver(new InnerObserver(new NullTestObserver()))),
-			),
+			new LifecycleObserver(testObserverFactory(new InnerObserver(new NullTestObserver()))),
 		)
 
 		this.testDataLoaders = new TestDataLoaders(runEnv.workRoot)

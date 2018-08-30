@@ -17,6 +17,9 @@ import * as debugFactory from 'debug'
 
 const debug = debugFactory('element:test-script:compiler')
 
+const elementRoot = require.resolve('@flood/element')
+debug('elementRoot', elementRoot)
+
 const floodelementRoot = path.join(__dirname, '../..')
 const sandboxPath = 'test-script-sandbox'
 const sandboxRoot = path.join(floodelementRoot, sandboxPath)

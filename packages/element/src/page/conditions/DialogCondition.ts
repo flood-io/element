@@ -7,10 +7,6 @@ import { clearTimeout } from 'timers'
  * handler.
  */
 export class DialogCondition extends Condition {
-	constructor(desc: string) {
-		super(desc, null, null)
-	}
-
 	toString() {
 		return 'waiting for dialog to appear'
 	}

@@ -197,6 +197,10 @@ export class Browser<T> implements BrowserInterface {
 		return this.page.url()
 	}
 
+	public get title(): Promise<string> {
+		return this.page.title()
+	}
+
 	public async evaluate(fn: EvaluateFn, ...args: any[]): Promise<any> {
 		return this.target.evaluate(fn, ...args)
 	}

@@ -5,7 +5,7 @@ import {
 	CompoundMeasurement,
 	MeasurementKind,
 	TestScriptError,
-} from '@flood/element-core'
+} from '@flood/element/api'
 import { Logger } from 'winston'
 import chalk from 'chalk'
 

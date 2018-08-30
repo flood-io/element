@@ -20,33 +20,10 @@ interface ConditionSettings {
  * @opaque
  */
 export abstract class Condition {
-	public pageFuncArgs: any[]
 	public hasWaitFor = true
-	// TODO decouple this hardcoding
 	public settings: ConditionSettings = DEFAULT_SETTINGS
-	public locator: Locator
 
-	constructor(
-		public desc: string = '*BASE CONDITION',
-		locator: NullableLocatable,
-		public pageFunc: EvaluateFn | null,
-		...pageFuncArgs: any[]
-	) {
-		this.locator = this.locatableToLocator(locator)
-		this.pageFuncArgs = pageFuncArgs
-	}
-
-	/**
-	 * @internal
-	 */
-	protected locatableToLocator(el: NullableLocatable): Locator {
-		try {
-			return locatableToLocator(el, `${this.desc}(locatable)`)
-		} catch (e) {
-			// TODO
-			throw new Error(`condition '${this.desc}' unable to use locator: ${e}`)
-		}
-	}
+	constructor(public desc: string = '*BASE CONDITION') {}
 
 	/**
 	 * @internal
@@ -72,7 +49,39 @@ export abstract class Condition {
 	}
 }
 
-export abstract class ElementCondition extends Condition {
+export abstract class LocatorCondition extends Condition {
+	public pageFuncArgs: any[]
+	public locator: Locator
+
+	constructor(
+		public desc: string = '*BASE CONDITION',
+		locator: NullableLocatable,
+		public pageFunc: EvaluateFn | null,
+		...pageFuncArgs: any[]
+	) {
+		super(desc)
+		this.locator = this.locatableToLocator(locator)
+		this.pageFuncArgs = pageFuncArgs
+	}
+
+	/**
+	 * @internal
+	 */
+	protected locatableToLocator(el: NullableLocatable): Locator {
+		const e = new Error()
+		Error.captureStackTrace(e)
+		debug('e', e.stack)
+
+		try {
+			return locatableToLocator(el, `${this.desc}(locatable)`)
+		} catch (e) {
+			// TODO
+			throw new Error(`condition '${this.desc}' unable to use locator: ${e}`)
+		}
+	}
+}
+
+export abstract class ElementCondition extends LocatorCondition {
 	constructor(desc: string = '*BASE ELEMENT CONDITION', locator: NullableLocatable) {
 		super(desc, locator, null)
 	}

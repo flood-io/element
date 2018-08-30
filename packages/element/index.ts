@@ -1,63 +1,63 @@
 /**
  * @docPage Until
  */
-export { Until } from '@flood/element-core'
+export { Until } from './src/page/Until'
 
 /**
  * @docPage Until
  */
-export { Condition } from '@flood/element-core'
+export { Condition } from './src/page/Condition'
 
 /**
  * @docPage Constants
  */
-export { Device, MouseButtons, Key } from '@flood/element-core'
+export { Device, MouseButtons, Key } from './src/page/Enums'
 
 /**
  * @docPage By
  */
-export { By } from '@flood/element-core'
+export { By } from './src/page/By'
 
 /**
  * @docPage By
  */
-export { Locator } from '@flood/element-core'
+export { Locator } from './src/page/types'
 
 /**
  * @docPage ElementHandle
  */
-export { ElementHandle } from '@flood/element-core'
+export { ElementHandle } from './src/page/types'
 
 /**
  * @docPage TestData
  */
-import { NullTestDataLoaders } from '@flood/element-core'
+import { NullTestDataLoaders } from './src/test-data/TestDataLoaders'
 export const TestData = new NullTestDataLoaders()
 
 /**
  * @docPage DSL
  */
-export { TestSettings, setup, DEFAULT_SETTINGS } from '@flood/element-core'
+export { TestSettings, setup, DEFAULT_SETTINGS } from './src/runtime/Settings'
 
-import { ENV } from '@flood/element-core'
+import { FloodProcessEnv, nullFloodProcessEnv } from './src/runtime-environment/types'
 
 /**
  * A subset of process.env available to this test.
  * @docPage DSL
  */
-export { ENV } //const ENV: FloodProcessEnv = nullFloodProcessEnv
+export const ENV: FloodProcessEnv = nullFloodProcessEnv
 
 /**
  * @docPage Browser
  */
-export { Browser, Browser as Driver, Locatable, NullableLocatable } from '@flood/element-core'
+export { Browser, Browser as Driver, Locatable, NullableLocatable } from './src/runtime/types'
 
 /**
  * @docPage DSL
  */
-export { step } from '@flood/element-core'
+export { step } from './src/runtime/Step'
 
 /**
  * @docPage DSL
  */
-export { suite } from '@flood/element-core'
+export { suite } from './src/runtime/types'

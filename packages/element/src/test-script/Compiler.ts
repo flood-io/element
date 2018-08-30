@@ -81,7 +81,7 @@ const FloodChromeErrors = {
 const defaultCompilerOptions: ts.CompilerOptions = {
 	noEmitOnError: true,
 	noImplicitAny: false,
-	strictNullChecks: true,
+	strictNullChecks: false,
 	noUnusedParameters: false,
 	noUnusedLocals: false,
 	allowSyntheticDefaultImports: true,
@@ -174,6 +174,7 @@ export class TypeScriptTestScript implements ITestScript {
 		const compilerOptions = Object.assign({}, defaultCompilerOptions)
 
 		if (this.testScriptOptions.stricterTypeChecking) {
+			compilerOptions.strictNullChecks = true
 			compilerOptions.noImplicitAny = true
 		}
 

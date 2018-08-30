@@ -13,6 +13,7 @@ export interface ElementOptions {
 	runEnv: RuntimeEnvironment
 	reporter: IReporter
 	testScript: string
+	strictCompilation: boolean
 	driver?: { new (): Browser }
 	headless: boolean
 	devtools: boolean
@@ -68,7 +69,7 @@ export async function runCommandLine(opts: ElementOptions): Promise<void> {
 	logger.debug(`Loading test script: ${testScript}`)
 
 	let testScriptOptions: TestScriptOptions = {
-		stricterTypeChecking: false,
+		stricterTypeChecking: opts.strictCompilation,
 		traceResolution: false,
 	}
 

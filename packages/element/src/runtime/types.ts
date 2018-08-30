@@ -61,6 +61,8 @@ export interface SuiteDefinition {
  *
  */
 export interface Browser {
+	title: Promise<string>
+
 	/**
 	 * Sets the HTTP Authentication details to use if the page is presented with an authentication prompt.
 	 *

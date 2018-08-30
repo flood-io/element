@@ -4,7 +4,7 @@ import { getFrames } from '../../runtime/Browser'
 
 export class FrameCondition extends Condition {
 	constructor(desc: string, public id: NullableLocatable) {
-		super(desc, null, null)
+		super(desc)
 	}
 
 	toString() {

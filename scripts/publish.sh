@@ -11,10 +11,10 @@ version=$(cat $root/lerna.json | jq .version)
 
 cd $root/packages/element
 ./scripts/build.sh
-yarn publish --new-version $version dist
+npm publish --access public dist
 
 cd $root/packages/cli
-yarn publish --new-version $version
+npm publish --access public
 
 git push
 

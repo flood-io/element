@@ -41,7 +41,6 @@
 	},
 	"workspaces": [
 		"packages/cli",
-		"packages/core",
 		"packages/element"
 	]
 }

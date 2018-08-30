@@ -5,7 +5,7 @@ set -euo pipefail
 HERE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" > /dev/null && pwd )"
 root=$HERE/..
 
-yarn exec lerna version --force-publish --no-push --yes prerelease
+yarn exec lerna version --force-publish --no-push --ignore-changes scripts/publish.sh prerelease 
 
 cd $root/packages/element
 ./scripts/build.sh

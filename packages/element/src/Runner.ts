@@ -32,12 +32,14 @@ export default class Runner implements ITestRunner {
 	async shutdown(): Promise<void> {
 		this.interrupts++
 		this.logger.info('Shutting down...')
-		await this.test.shutdown()
+		if (this.test) {
+			await this.test.shutdown()
+		}
 		clearTimeout(this.timeout)
 		this.testContinue = false
 		this.logger.debug('Closing driver: Google Chrome...')
 		try {
-			;(await this.driver) && this.driver.close()
+			await this.driver.close()
 		} catch (err) {
 			console.error(`Error while closing browser: ${err}`)
 		}

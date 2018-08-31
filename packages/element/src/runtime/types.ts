@@ -61,7 +61,7 @@ export interface SuiteDefinition {
  *
  */
 export interface Browser {
-	title: Promise<string>
+	title(): Promise<string>
 
 	/**
 	 * Sets the HTTP Authentication details to use if the page is presented with an authentication prompt.
@@ -223,6 +223,11 @@ export interface Browser {
 	 * Takes a screenshot of the whole page and saves it to the `flood/results` folder with a random sequential name. You can download the archive of your test results at the end of the test to retrieve these screenshots.
 	 */
 	takeScreenshot(options?: ScreenshotOptions): Promise<void>
+
+	/**
+	 * Highlight an element. Useful in concert with takeScreenshot to tweak your locators.
+	 */
+	highlightElement(element: ElementHandle): Promise<void>
 
 	/**
 	 * Uses the provided locator to find the first element it matches, returning an ElementHandle.

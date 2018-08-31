@@ -6,6 +6,7 @@ import {
 	NetworkErrorData,
 	ActionErrorData,
 	LocatorErrorData,
+	PuppeteerErrorData,
 } from '../../runtime/errors/Types'
 import chalk from 'chalk'
 
@@ -39,18 +40,50 @@ export function structuredErrorToDocumentedError(
 	}
 
 	// delegate out to the various type handlers
-	if (sErr.data._kind === 'net') {
-		return script.liftError(netError(<StructuredError<NetworkErrorData>>sErr))
-	}
-	if (sErr.data._kind === 'action') {
-		return script.liftError(actionError(<StructuredError<ActionErrorData>>sErr))
-	}
-	if (sErr.data._kind === 'locator') {
-		return script.liftError(locatorError(<StructuredError<LocatorErrorData>>sErr))
+	switch (sErr.data._kind) {
+		case 'net':
+			return script.liftError(netError(<StructuredError<NetworkErrorData>>sErr))
+		case 'action':
+			return script.liftError(actionError(<StructuredError<ActionErrorData>>sErr))
+		case 'locator':
+			return script.liftError(locatorError(<StructuredError<LocatorErrorData>>sErr))
+		case 'puppeteer':
+			return script.liftError(puppeteerError(<StructuredError<PuppeteerErrorData>>sErr))
 	}
 
 	// nothing else worked
 	return liftWithDoc(script, sErr, sErr.message, documentationNeeded, sErr.callContext)
+}
+
+function puppeteerError(err: StructuredError<PuppeteerErrorData>): DocumentedError {
+	const { kind } = err.data
+
+	if (kind === 'execution-context-destroyed') {
+		return DocumentedError.documented(
+			err,
+			`Element tried to perform an action while the browser was navigating.`,
+			`Sometimes your script may attempt to perform an action while the page isn't ready to process it (e.g. before the page has loaded).
+
+Consider using browser.wait(Until.<condition>()) to ensure the page is in the state you expect before performing your action.
+
+Example:
+await browser.visit('example.com')
+// Fetching the page title right after a visit may cause an error because the page title may not yet be loaded
+// Worse, it may work sometimes and fail sometimes (known as a race condition)
+// console.log(await browser.title())
+//
+// instead try:
+await browser.wait(Until.titleContains('example corp'))
+console.log('page title:', await browser.title())
+      `,
+		)
+	}
+
+	return DocumentedError.documented(
+		err,
+		`An unknown puppeteer error occurred: ${err.message} (kind: ${kind})`,
+		documentationNeeded,
+	)
 }
 
 function netError(err: StructuredError<NetworkErrorData>): DocumentedError {

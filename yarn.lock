@@ -4627,7 +4627,7 @@ punycode@^2.1.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
 
-puppeteer@^1.6:
+puppeteer@^1.7:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-1.7.0.tgz#edcba2300a50847202c0f19fd15e7a96171ff3bd"
   dependencies:

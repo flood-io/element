@@ -106,7 +106,6 @@ function addCallbacks<T>() {
 
 				throw sErr
 			}
-			if (browser.afterFunc instanceof Function) await browser.afterFunc(browser, propertyKey)
 			return ret
 		}
 
@@ -197,14 +196,17 @@ export class Browser<T> implements BrowserInterface {
 		return this.page.url()
 	}
 
-	public get title(): Promise<string> {
+	@rewriteError()
+	public title(): Promise<string> {
 		return this.page.title()
 	}
 
+	@rewriteError()
 	public async evaluate(fn: EvaluateFn, ...args: any[]): Promise<any> {
 		return this.target.evaluate(fn, ...args)
 	}
 
+	@rewriteError()
 	public async authenticate(username?: string, password?: string): Promise<void> {
 		let authOptions: AuthOptions | null = null
 		if (username !== undefined && password !== undefined) {
@@ -424,26 +426,26 @@ export class Browser<T> implements BrowserInterface {
 		return element.focus()
 	}
 
-	// @wrapWithCallbacks()
+	@rewriteError()
 	public async clearBrowserCookies(): Promise<any> {
 		const client = await this.page['target']().createCDPSession()
 		await client.send('Network.clearBrowserCookies')
 	}
 
-	// @wrapWithCallbacks()
+	@rewriteError()
 	public async clearBrowserCache(): Promise<any> {
 		const client = await this.page['target']().createCDPSession()
 		await client.send('Network.clearBrowserCache')
 	}
 
-	// @wrapWithCallbacks()
+	@rewriteError()
 	public async emulateDevice(deviceName: string): Promise<void> {
 		let device = DeviceDescriptors[deviceName] || CustomDeviceDescriptors[deviceName]
 		if (!device) throw new Error(`Unknown device descriptor: ${deviceName}`)
 		return this.page.emulate(device)
 	}
 
-	// @wrapWithCallbacks()
+	@rewriteError()
 	public async setUserAgent(userAgent: string): Promise<void> {
 		return this.page.setUserAgent(userAgent)
 	}
@@ -451,7 +453,7 @@ export class Browser<T> implements BrowserInterface {
 	/**
 	 * Takes a screenshot of this element and saves it to the results folder with a random name.
 	 */
-	// @wrapWithCallbacks()
+	@rewriteError()
 	public async takeScreenshot(options?: ScreenshotOptions): Promise<void> {
 		await this.saveScreenshot(async path => {
 			await this.page.screenshot({ path, ...options })
@@ -459,6 +461,7 @@ export class Browser<T> implements BrowserInterface {
 		})
 	}
 
+	@rewriteError()
 	public async highlightElement(element: ElementHandle): Promise<void> {
 		// let session = await this.page.target().createCDPSession()
 		// session.send('DOM.highlightNode', { nodeId: element })

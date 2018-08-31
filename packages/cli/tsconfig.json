@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
 		"module": "commonjs",
-		"target": "ES2015",
+		"target": "ES2017",
 		"moduleResolution": "node",
 		"removeComments": false,
 		"outDir": "dist",
@@ -22,11 +22,7 @@
 		"emitDecoratorMetadata": true,
     "baseUrl": "./",
     "paths": {
-      "*": ["node_modules/@types/*", "*"],
-      //"@flood/element/node_modules/@types/node": ["node_modules/@types/node"],
-      "@flood/element/RuntimeEnvironmentAPI": [ "node_modules/@flood/element/lib/RuntimeEnvironmentAPI" ],
-      "@flood/element/ReporterAPI": [ "node_modules/@flood/element/lib/ReporterAPI" ],
-      "@flood/element/TestScriptAPI": [ "node_modules/@flood/element/lib/TestScriptAPI" ]
+      "*": ["node_modules/@types/*", "*"]
     }
 	},
 	"exclude": ["node_modules", "dist", "lib", "*.spec.ts"],

@@ -22,7 +22,9 @@ import { Key } from '../page/Enums'
 import { readFileSync } from 'fs'
 import * as termImg from 'term-img'
 import { ConcreteTestSettings } from './Settings'
-import { NetworkErrorData, LocatorErrorData } from './errors/Types'
+import { NetworkErrorData, LocatorErrorData, AnyErrorData, interpretError } from './errors/Types'
+import interpretPuppeteerError from './errors/interpretPuppeteerError'
+
 import { StructuredError } from '../utils/StructuredError'
 
 import * as debugFactory from 'debug'
@@ -80,6 +82,8 @@ export const getFrames = (childFrames: Frame[]): Frame[] => {
  * Defines a Function Decorator which wraps a method with class local before and after
  */
 function addCallbacks<T>() {
+	const errorInterpreters = [interpretPuppeteerError]
+
 	return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
 		let originalFn = descriptor.value
 
@@ -99,7 +103,15 @@ function addCallbacks<T>() {
 			} catch (e) {
 				debug('addCallbacks lifting to StructuredError', propertyKey, e)
 
-				const sErr = StructuredError.liftWithSource(e, 'browser', `browser.${propertyKey}`)
+				const newError = interpretError<Browser<T>, AnyErrorData>(
+					errorInterpreters,
+					e,
+					this,
+					propertyKey,
+					args,
+				)
+
+				const sErr = StructuredError.liftWithSource(newError, 'browser', `browser.${propertyKey}`)
 				sErr.stack = calltimeStack
 
 				debug('error now', sErr)
@@ -114,6 +126,7 @@ function addCallbacks<T>() {
 }
 
 function rewriteError<T>() {
+	const errorInterpreters = [interpretPuppeteerError]
 	return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
 		let originalFn = descriptor.value
 
@@ -131,7 +144,15 @@ function rewriteError<T>() {
 			} catch (e) {
 				debug('rewriteError lifting to StructuredError', propertyKey, e)
 
-				const sErr = StructuredError.liftWithSource(e, 'browser', `browser.${propertyKey}`)
+				const newError = interpretError<Browser<T>, AnyErrorData>(
+					errorInterpreters,
+					e,
+					this,
+					propertyKey,
+					args,
+				)
+
+				const sErr = StructuredError.liftWithSource(newError, 'browser', `browser.${propertyKey}`)
 				sErr.stack = calltimeStack
 
 				debug('error now', sErr)

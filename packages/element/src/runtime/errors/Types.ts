@@ -5,7 +5,7 @@ export type ErrorInterpreter<T, U extends ErrorData> = (
 	target: T,
 	key: string,
 	...args: any[]
-) => StructuredError<U>
+) => StructuredError<U> | undefined
 
 export type AnyErrorData =
 	| EmptyErrorData
@@ -13,7 +13,10 @@ export type AnyErrorData =
 	| ActionErrorData
 	| AssertionErrorData
 	| LocatorErrorData
-type ErrorDataKind = 'net' | 'action' | 'empty' | 'assertion' | 'locator'
+	| PuppeteerErrorData
+
+type ErrorDataKind = 'net' | 'action' | 'empty' | 'assertion' | 'locator' | 'puppeteer'
+
 export interface ErrorData {
 	_kind: ErrorDataKind
 }
@@ -47,6 +50,26 @@ export interface LocatorErrorData {
 	_kind: 'locator'
 	kind: string
 	locator: string
+}
+
+export interface PuppeteerErrorData {
+	_kind: 'puppeteer'
+	kind: 'execution-context-destroyed'
+}
+
+export function interpretError<T, U extends ErrorData>(
+	interpreters: ErrorInterpreter<T, U>[],
+	inputError: Error,
+	target: T,
+	propertyKey: string,
+	args: any[],
+): StructuredError<U> | Error {
+	for (const interp of interpreters) {
+		const outputErr = interp(inputError, target, propertyKey, ...args)
+		if (outputErr !== undefined) return outputErr
+	}
+
+	return inputError
 }
 
 export function castStructuredError<T extends ErrorData>(

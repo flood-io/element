@@ -3,10 +3,12 @@ import { ElementHandle as IElementHandle, Locator } from './types'
 import { EvaluateFn } from '../runtime/types'
 import {
 	ErrorInterpreter,
-	ErrorData,
+	AnyErrorData,
 	ActionErrorData,
 	EmptyErrorData,
+	interpretError,
 } from '../runtime/errors/Types'
+import interpretPuppeteerError from '../runtime/errors/interpretPuppeteerError'
 import { StructuredError } from '../utils/StructuredError'
 
 import { By } from './By'
@@ -31,9 +33,11 @@ async function getProperty<T>(element: PElementHandle, prop: string): Promise<T 
 /**
  * @internal
  */
-function wrapDescriptiveError<ElementHandle, U extends ErrorData>(
-	...errorInterpreters: ErrorInterpreter<ElementHandle, U>[]
+function wrapDescriptiveError(
+	...errorInterpreters: ErrorInterpreter<ElementHandle, AnyErrorData>[]
 ) {
+	errorInterpreters.push(interpretPuppeteerError)
+
 	return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
 		let originalFn = descriptor.value
 
@@ -49,13 +53,17 @@ function wrapDescriptiveError<ElementHandle, U extends ErrorData>(
 				return await originalFn.apply(this, args)
 			} catch (e) {
 				debug('interpreting', propertyKey, e)
-				// TODO allow multiple
-				// TODO support multiple possible errorInterpreters
-				let newError: Error = e
-				const interp = errorInterpreters[0]
-				if (interp) {
-					newError = interp(e, this, propertyKey, ...args)
-				}
+
+				const newError = interpretError<ElementHandle, AnyErrorData>(
+					errorInterpreters,
+					e,
+					this,
+					propertyKey,
+					args,
+				)
+				// errorInterpreters.reduce((err, interp) => {
+				// return err ? err : interp(e, this, propertyKey, ...args)
+				// }, undefined) || e
 
 				const sErr = StructuredError.liftWithSource(
 					newError,
@@ -81,7 +89,7 @@ function domError(
 	key: string,
 	callCtx: string,
 	options?: ClickOptions,
-): StructuredError<ActionErrorData | EmptyErrorData> {
+): StructuredError<ActionErrorData | EmptyErrorData> | undefined {
 	if (err.message.includes('Node is detached from document')) {
 		return new StructuredError<ActionErrorData>(
 			'dom error during action',
@@ -93,20 +101,6 @@ function domError(
 			err,
 		)
 	}
-	if (
-		err.message.includes('Execution context was destroyed, most likely because of a navigation')
-	) {
-		return new StructuredError<ActionErrorData>(
-			'puppeteer error during action',
-			{
-				_kind: 'action',
-				action: key,
-				kind: 'execution-context-destroyed',
-			},
-			err,
-		)
-	}
-	return StructuredError.wrapBareError<EmptyErrorData>(err, { _kind: 'empty' })
 }
 
 /**

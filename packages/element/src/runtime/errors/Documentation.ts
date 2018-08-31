@@ -1,8 +1,10 @@
 import { StructuredError } from '../../utils/StructuredError'
 import { ITestScript, TestScriptError } from '../../TestScript'
 import { DocumentedError } from '../../utils/DocumentedError'
+import { AssertionError } from 'assert'
 import {
 	AnyErrorData,
+	AssertionErrorData,
 	NetworkErrorData,
 	ActionErrorData,
 	LocatorErrorData,
@@ -41,6 +43,8 @@ export function structuredErrorToDocumentedError(
 
 	// delegate out to the various type handlers
 	switch (sErr.data._kind) {
+		case 'assertion':
+			return script.liftError(assertionError(<StructuredError<AssertionErrorData>>sErr))
 		case 'net':
 			return script.liftError(netError(<StructuredError<NetworkErrorData>>sErr))
 		case 'action':
@@ -53,6 +57,21 @@ export function structuredErrorToDocumentedError(
 
 	// nothing else worked
 	return liftWithDoc(script, sErr, sErr.message, documentationNeeded, sErr.callContext)
+}
+
+function assertionError(err: StructuredError<AssertionErrorData>): DocumentedError {
+	const assertionErr = err.originalError as AssertionError
+
+	return DocumentedError.documented(
+		err,
+		`Assertion failed`,
+		`An assertion in the test script failed.
+
+operator: ${assertionErr.operator}
+expected: ${assertionErr.expected}
+actual  : ${assertionErr.actual}
+    `,
+	)
 }
 
 function puppeteerError(err: StructuredError<PuppeteerErrorData>): DocumentedError {
@@ -93,7 +112,9 @@ function netError(err: StructuredError<NetworkErrorData>): DocumentedError {
 		return DocumentedError.documented(
 			err,
 			`Unable to resolve DNS for ${url}`,
-			`Element tried to load The URL ${url} but it didn't resolve in DNS. This may be due to TODO`,
+			`Element tried to load The URL ${url} but it didn't resolve in DNS. This may be due to
+- a transient networking issue.
+- misconfiguration of DNS, either locally or on your site.`,
 		)
 	}
 
@@ -103,7 +124,7 @@ function netError(err: StructuredError<NetworkErrorData>): DocumentedError {
 			`Unable to visit ${url}`,
 			`Element tried to visit The URL ${url} but it responded with status code ${
 				err.data.code
-			}. Element expected a response code 200-299.`,
+			}. Element expected a response code 200-299 or 300-399.`,
 		)
 	}
 
@@ -138,8 +159,12 @@ Things to try to fix:
       
 This can occur when the page changes between the time you locate the element and when you use it.
 
-Things to try to fix:
-- TODO
+Consider using {blue browser.wait(Until.<condition>)} to ensure the page is in a known state before performing the action
+
+Example:
+let locator = By.css('.button')
+await browser.wait(Until.elementIsVisible(locator))
+await browser.click(locator, { button: MouseButtons.LEFT })
       `,
 		)
 	}
@@ -159,8 +184,7 @@ function locatorError(err: StructuredError<LocatorErrorData>): DocumentedError {
 			`Unable to find element using ${locator}.`,
 			chalk`The test script tried to locate an element using {blue ${locator}} but it couldn't be found on the page.
 
-Things to try to fix:
-- TODO
+Consider running your test script with --devtools to explore the page and determine the correct selector.
 `,
 		)
 	}

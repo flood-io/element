@@ -51,7 +51,11 @@ function wrapDescriptiveError<ElementHandle, U extends ErrorData>(
 				debug('interpreting', propertyKey, e)
 				// TODO allow multiple
 				// TODO support multiple possible errorInterpreters
-				const newError = errorInterpreters[0](e, this, propertyKey, ...args)
+				let newError: Error = e
+				const interp = errorInterpreters[0]
+				if (interp) {
+					newError = interp(e, this, propertyKey, ...args)
+				}
 
 				const sErr = StructuredError.liftWithSource(
 					newError,

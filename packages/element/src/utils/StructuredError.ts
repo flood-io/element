@@ -1,4 +1,6 @@
-// interface EmptyData {}
+interface EmptyErrorData {
+	_kind: 'empty'
+}
 
 export class StructuredError<T> extends Error {
 	_structured = 'yes'
@@ -37,13 +39,23 @@ export class StructuredError<T> extends Error {
 		return this
 	}
 
-	static liftWithSource<TT>(err: Error, source: string, callContext: string): StructuredError<TT> {
+	static liftWithSource<TT>(
+		err: Error,
+		source: string,
+		callContext: string,
+	): StructuredError<TT | EmptyErrorData> {
 		if ((<StructuredError<TT>>err)._structured === 'yes') {
 			;(<StructuredError<TT>>err).callContext = callContext
 			;(<StructuredError<TT>>err).source = source
 			return <StructuredError<TT>>err
 		} else {
-			return new StructuredError<TT>(err.message, {} as TT, err, source, callContext)
+			return new StructuredError<EmptyErrorData>(
+				err.message,
+				{ _kind: 'empty' } as EmptyErrorData,
+				err,
+				source,
+				callContext,
+			)
 		}
 	}
 

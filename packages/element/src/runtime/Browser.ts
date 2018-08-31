@@ -92,10 +92,10 @@ function addCallbacks<T>() {
 			Error.captureStackTrace(calltimeError)
 			const calltimeStack = calltimeError.stack
 
-			if (browser.beforeFunc instanceof Function) await browser.beforeFunc(browser, propertyKey)
-
 			try {
+				if (browser.beforeFunc instanceof Function) await browser.beforeFunc(browser, propertyKey)
 				ret = await originalFn.apply(browser, args)
+				if (browser.afterFunc instanceof Function) await browser.afterFunc(browser, propertyKey)
 			} catch (e) {
 				debug('addCallbacks lifting to StructuredError', propertyKey, e)
 

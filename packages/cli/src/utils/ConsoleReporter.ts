@@ -44,6 +44,7 @@ export class ConsoleReporter implements IReporter {
 				this.logger.info(`---> ${label}()`)
 				break
 			case TestEvent.BeforeStep:
+				this.logger.info('')
 				this.logger.info(`===> Step '${label}'`)
 				break
 			case TestEvent.AfterStep:
@@ -89,6 +90,6 @@ cause.stack: ${detail.causeStack}`)
 		debug('testScriptConsole', method, message)
 		if (method === 'log') method = 'info'
 		if (method === 'warning') method = 'warn'
-		this.logger[method](`page console.${method}: ${message}`, ...optionalParams)
+		this.logger[method](`page console.${method}: ${message} ${optionalParams.join(' ')}`)
 	}
 }

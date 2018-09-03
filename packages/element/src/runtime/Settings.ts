@@ -1,9 +1,9 @@
 import CustomDeviceDescriptors from '../utils/CustomDeviceDescriptors'
 
 /**
- * Declares the settings for the test, overriding settings exported at the top of the test.
+ * Declares the settings for the test, overriding the settings constant exported in the test script.
  *
- * _This is a secondary syntax to `export const settings = {}` which functions exactly the same way.
+ * _This is a secondary syntax for `export const settings = {}` which functions exactly the same way._
  *
  * **Example:**
  *
@@ -23,28 +23,16 @@ export const DEFAULT_STEP_WAIT_SECONDS = 5
 export const DEFAULT_ACTION_WAIT_SECONDS = 0.5
 
 /**
- * Specifies an option for how to record response time.
+ * Specifies a method for recording response times.
+ *
+ * literal | description
+ * --------|------------
+ * step | (Default) Records the wall clock time of a step. This is useful for Single Page Application which don't actually trigger a navigation.
+ * page | Record the document loading response time. This is usually what you consider response time on paged web apps.
+ * network | (Experimental) Takes the mean response time of all network requests which occur during a step. This is useful for Single Page Application which don't actually trigger a navigation.
+ * stepWithThinkTime | `"stepWithThinkTime"`: Records the wall clock time of a step including `actionDelay` time.
  */
-export type ResponseTiming =
-	/**
-	 * Record the document loading response time. This is usually what you consider response time on paged web apps.
-	 */
-	| 'page'
-
-	/**
-	 * (Experimental) Takes the mean response time of all network requests which occur during a step. This is useful for Single Page Application which don't actually trigger a navigation.
-	 */
-	| 'network'
-
-	/**
-	 * (Default) Records the wall clock time of a step. This is useful for Single Page Application which don't actually trigger a navigation.
-	 */
-	| 'step'
-
-	/**
-	 * `"stepWithThinkTime"`: Records the wall clock time of a step including `actionDelay` time.
-	 */
-	| 'stepWithThinkTime'
+export type ResponseTiming = 'page' | 'network' | 'step' | 'stepWithThinkTime'
 
 /**
  * Specifies a `console` method
@@ -52,26 +40,25 @@ export type ResponseTiming =
 export type ConsoleMethod = 'log' | 'info' | 'debug' | 'warn' | 'error'
 
 /**
- * This interface specifies the available options you can use to configure how your test runs. These properties should be exported using the property `settings`.
+ * The TestSettings interface specifies the available settings you have to configure how your test runs. These properties should be exported using the property `settings`.
  *
  * **Example:**
  *
  * ```typescript
- * export const settings = {
+ * export const settings: TestSettings = {
  *   loopCount: Infinity,
  *   clearCache: true
  * }
  * ```
  *
  * See [DEFAULT_SETTINGS] for a list of the default value for each setting.
- *
- * @export
- * @interface TestSettings
  */
 // TODO provide ConcreteTestSettings
 export interface TestSettings {
 	/**
-	 * Maximum duration to run this for, regardless of other timeouts specified on Flood.
+	 * Maximum duration to run the test for.
+	 *
+	 * Note that when running a load test via https://flood.io, the duration of the load test takes precedence over this setting.
 	 *
 	 * Defaults to `-1` for no timeout.
 	 */
@@ -79,13 +66,15 @@ export interface TestSettings {
 
 	/**
 	 * Number of times to run this test.
-	 * Defaults to `-1` for infinite.
+	 *
+	 * Defaults to `-1` for an unlimited number of loops.
 	 */
 	loopCount?: number
 
 	/**
-	 * Specifies the time (in seconds) to wait between each action call, to simulate a normal user
-	 * thinking about what to do next.
+	 * Specifies the time (in seconds) to wait between each action call.
+	 *
+	 * Waiting between actions simulates the behaviour of a real user as they read, think and act on the page's content.
 	 */
 	actionDelay?: number
 
@@ -105,19 +94,19 @@ export interface TestSettings {
 	device?: string
 
 	/**
-	 * Global wait timeout applied to all wait tasks
+	 * Global wait timeout applied to all wait tasks.
 	 */
 	waitTimeout?: number
 
 	/**
-	 * Specifies whether cookies should be cleared after each loop.
+	 * Specifies whether cookies should be cleared after each test loop.
 	 *
 	 * @default true
 	 */
 	clearCookies?: boolean
 
 	/**
-	 * Specifies whether Brwoser cache should be cleared after each loop.
+	 * Specifies whether Brwoser cache should be cleared after each test loop.
 	 *
 	 * @default false
 	 */
@@ -162,7 +151,9 @@ export interface TestSettings {
 	responseTimeMeasurement?: ResponseTiming
 
 	/**
-	 * Filters the console output from the target site to log output. Useful for very noisy tests. This won't affect console output from within your script.
+	 * Specify which console methods to filter out. By default no console methods are filtered.
+	 *
+	 * This setting can be useful for very noisy tests. When a method is filtered, it still works as normal but the message will be omitted from the Element output.
 	 */
 	consoleFilter?: ConsoleMethod[]
 

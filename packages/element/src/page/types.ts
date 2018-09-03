@@ -6,49 +6,31 @@ import { EvaluateFn, ExecutionContext, ElementHandle as PElementHandle } from 'p
 /**
  * A Locator represents an object used to locate elements on the page. It is usually constructed using the helper methods of <[By]>.
  * An <[ElementHandle]> can also be used as a Locator which finds itself.
+ *
+ * @docOpaque
  */
 export interface Locator {
-	/**
-	 * @internal
-	 */
 	pageFunc: EvaluateFn
 
-	/**
-	 * @internal
-	 */
 	pageFuncMany: EvaluateFn
 
-	/**
-	 * @internal
-	 */
 	pageFuncArgs: any[]
 
-	/**
-	 * @internal
-	 */
 	toErrorString(): string
 
-	/**
-	 * @internal
-	 */
 	find(context: ExecutionContext, node?: PElementHandle): Promise<ElementHandle | null>
 
-	/**
-	 * @internal
-	 */
 	findMany(context: ExecutionContext, node?: PElementHandle): Promise<ElementHandle[]>
 }
 
 /**
  * Example Handle represents a remote element in the DOM of the browser. It implements useful methods for querying and interacting with this DOM element.
  *
- * All methids on this class are asynchronous and must be used with `await` to wait for the result to fulfill from the browser.
- *
- * @class ElementHandle
+ * All methods on this class are asynchronous and must be used with `await` to wait for the result to fulfill from the browser.
  */
 export interface ElementHandle {
 	/**
-	 * internal
+	 * @internal
 	 */
 	bindBrowser(browser: any): void
 
@@ -98,12 +80,12 @@ export interface ElementHandle {
 	takeScreenshot(options?: ScreenshotOptions): Promise<void>
 
 	/**
-	 * Locates an element using the supplied <[Locator]>, returning an <[ElementHandle]>
+	 * Locates an element using the supplied <[Locator]>, returning an <[ElementHandle]>.
 	 */
 	findElement(locator: string | Locator): Promise<ElementHandle | null>
 
 	/**
-	 * Locates all elements using the supplied <[Locator]>, returning an array of <[ElementHandle]>'s
+	 * Locates all elements using the supplied <[Locator]>, returning an array of <[ElementHandle]>s.
 	 */
 	findElements(locator: Locator | string): Promise<ElementHandle[]>
 
@@ -152,6 +134,9 @@ export interface ElementHandle {
 	 */
 	location(): Promise<{ x: number; y: number }>
 
+	/**
+	 * @internal
+	 */
 	toErrorString(): string
 }
 

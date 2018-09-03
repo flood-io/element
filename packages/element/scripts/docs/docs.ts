@@ -1,67 +1,22 @@
 import { join, relative } from 'path'
-import * as table from 'markdown-table'
 import * as camelcase from 'lodash.camelcase'
+// import * as upperFirst from 'lodash.upperfirst'
 import * as glob from 'glob'
-import * as frontMatter from 'front-matter'
-import * as yaml from 'js-yaml'
 import { mkdirpSync, copySync, createFileSync, writeFileSync, readFileSync } from 'fs-extra'
+import * as frontMatter from 'front-matter'
+
+import { preParseIndex } from './preParseIndex'
+import { generateAnchor } from './generateAnchor'
+import { MarkdownDocument, FrontMatter, Comment } from './MarkdownDocument'
+import { ParamType } from './Formatters'
 
 import * as debugFactory from 'debug'
 const debug = debugFactory('element:docs')
 
 const root = join(__dirname, '../..')
 const bookDir = join(root, 'docs')
-const apiDir = join(bookDir, 'api')
 
-// import * as recast from 'recast'
-import * as ts from 'typescript'
-
-const fileName = join(root, 'index.ts')
-
-const s = ts.createSourceFile(
-	fileName,
-	readFileSync(fileName).toString(),
-	ts.ScriptTarget.ES2015,
-	/* setParentNodes */ true,
-)
-
-let indexMap: { [key: string]: string } = {}
-const indexExports: { [key: string]: string } = {}
-
-function getDocTag(node): string | undefined {
-	const tag = node.jsDoc && node.jsDoc[0] && node.jsDoc[0].tags && node.jsDoc[0].tags[0]
-	if (tag === undefined) return
-
-	if (tag.tagName.escapedText === 'docPage') {
-		return tag.comment
-	}
-}
-
-function getExport(node) {
-	const docPage = getDocTag(node)
-	if (docPage === undefined) return
-
-	let srcFile = node.moduleSpecifier.text
-	if (srcFile.startsWith('./')) srcFile = srcFile.slice(2)
-
-	// if (!indexMap[srcFile]) indexMap[srcFile] = []
-
-	indexMap = node.exportClause.elements.reduce((indexMap, exportDef) => {
-		const name = exportDef.name.escapedText
-		if (name === undefined) return indexMap
-
-		indexMap[`${srcFile}.${name}`] = docPage
-		indexExports[name] = docPage
-
-		return indexMap
-	}, indexMap)
-}
-
-ts.forEachChild(s, node => {
-	if (node.kind === ts.SyntaxKind.ExportDeclaration) {
-		getExport(node)
-	}
-})
+const { indexMap, indexExports } = preParseIndex(join(root, 'index.ts'))
 
 debug('indexMap', indexMap)
 debug('indexExports', indexExports)
@@ -80,27 +35,9 @@ function isNodeInternal(node) {
 }
 function isNodeOpaque(node) {
 	if (node && node.comment && node.comment.tags) {
-		return node.comment.tags.find(t => t.tag === 'opaque')
+		return node.comment.tags.find(t => t.tag === 'docOpaque')
 	}
 	return false
-}
-
-function findReferences(text: string): string[] {
-	let r = /\[(\w+)\]/gi
-	let matches = r.exec(text)
-	if (matches) {
-		let [, ...rest] = matches
-		return rest
-	}
-
-	return []
-}
-
-function generateAnchor(name: string): string {
-	return name
-		.toLowerCase()
-		.replace(/\s+/gi, '-')
-		.replace(/[^a-z0-9-]/gi, '')
 }
 
 function stripQuotes(name: string): string {
@@ -118,231 +55,6 @@ function stripQuotes(name: string): string {
 // }
 // return path
 // }
-
-interface Comment {
-	shortText: string
-	text: string
-}
-
-type RefsMap = Map<string, { target: string }>
-
-type ParamType =
-	| { type: 'intrinsic'; name: string }
-	| { type: 'reference'; name: string | 'Promise'; typeArguments?: ParamType[] }
-	| { type: 'stringLiteral'; value: string }
-	| { type: 'reflection'; declaration: any }
-	| { type: 'array'; elementType: ParamType }
-	| { type: 'union'; types: ParamType[] }
-
-class ParamTypeFormatter {
-	constructor(public input: ParamType) {}
-
-	public toString() {
-		let { type } = this.input
-
-		switch (this.input.type) {
-			case 'intrinsic':
-				return `${this.input.name}`
-			case 'stringLiteral':
-				return this.input.value
-			case 'array':
-				let formatter = new ParamTypeFormatter(this.input.elementType)
-				return `${formatter.toString()}[]`
-			case 'union':
-				let formattedArgs = this.input.types.map(t => new ParamTypeFormatter(t).toString())
-				return `${formattedArgs.join('|')}`
-			case 'reflection':
-				return new ReflectedDeclarationFormatter(this.input.declaration).toString()
-			case 'reference':
-				if (this.input.name === 'Promise') {
-					let formattedArgs = (this.input.typeArguments || []).map(t =>
-						new ParamTypeFormatter(t).toString(),
-					)
-					return `[Promise]&lt;${formattedArgs.join('|')}&gt;`
-				} else {
-					return `[${this.input.name}]`
-				}
-			default:
-				console.assert(true, `Found unknown type: "${type}"`)
-		}
-	}
-}
-
-type Variable = {
-	id: string
-	name: string
-	kindString: 'Variable'
-	flags: object
-	type: ParamType
-}
-type CallSignature = {
-	name: '__call'
-	kindString: 'Call signature'
-	type: ParamType
-}
-type ReflectedDeclaration = {
-	name: '__type'
-	kindString: 'Type literal'
-	children?: Variable[]
-	signatures?: CallSignature[]
-}
-
-class ReflectedDeclarationFormatter {
-	constructor(public declaration: ReflectedDeclaration | Variable | CallSignature) {}
-
-	toString() {
-		if (this.declaration.kindString === 'Type literal') {
-			if (this.declaration.children) {
-				let children = this.declaration.children
-					.map(child => new ReflectedDeclarationFormatter(child).toString())
-					.reduce((memo, obj) => {
-						memo = { ...obj, ...memo }
-						return memo
-					}, {})
-				return JSON.stringify(children)
-			}
-		} else if (this.declaration.kindString === 'Variable') {
-			let { name, type } = this.declaration
-			let formattedType = new ParamTypeFormatter(type)
-			let obj = {}
-			obj[name] = formattedType.toString()
-			return obj
-		}
-	}
-}
-
-interface FrontMatter {
-	title: string
-}
-
-class MarkdownDocument {
-	public shouldWrite = true
-	constructor(
-		public path: string,
-		public lines: string[] = [],
-		public referencesNeeded: string[] = [],
-		public enableReferences = true,
-		public frontMatter: FrontMatter = { title: '' },
-	) {}
-
-	static nullDoc(): MarkdownDocument {
-		const doc = new MarkdownDocument('')
-		doc.shouldWrite = false
-		return doc
-	}
-
-	static fromFile(path: string) {
-		let doc = new MarkdownDocument(path)
-		let content = readFileSync(path).toString('utf8')
-
-		let matter = frontMatter<FrontMatter>(content)
-		doc.frontMatter = matter.attributes
-		doc.lines = matter.body.split('\n')
-
-		doc.referencesNeeded = findReferences(matter.body)
-		return doc
-	}
-
-	public writeLine(text: string = '') {
-		this.referencesNeeded = [...this.referencesNeeded, ...findReferences(text)]
-		this.writeLineRaw(text)
-	}
-
-	public writeHeading(text: string, depth: number = 1) {
-		this.writeLine(`${'#'.repeat(depth)} ${text}`)
-	}
-
-	public writeBullet(text: string, depth: number = 1) {
-		let b = ` `.repeat(depth)
-		this.writeLine(`${b}* ${text}`)
-	}
-
-	public writeParameterLine(name: string, type: ParamType, desc: string = '', isOptional = false) {
-		let formattedType = new ParamTypeFormatter(type).toString()
-		let t = `&lt;${formattedType}&gt;`
-
-		if (name.startsWith('returns')) {
-			this.writeLine(`* ${name} ${t} ${desc}`)
-		} else {
-			this.writeLine(`* \`${name}\` ${t} ${isOptional ? '(Optional)' : ''} ${desc}`)
-		}
-	}
-
-	public writeComment(comment: Comment) {
-		let { shortText, text } = comment || { shortText: null, text: null }
-		if (shortText) {
-			this.writeLine(shortText)
-			this.writeLine()
-		}
-		if (text) this.writeLine(text)
-	}
-
-	public writeSection(name: string) {
-		// this.writeLine(`-------`)
-		this.writeHeading(name, 1)
-		this.writeLine()
-	}
-
-	public applyReferences(references: RefsMap) {
-		if (!this.enableReferences) return
-		let refs: RefsMap = new Map()
-
-		this.referencesNeeded.forEach(name => {
-			// debug('applyReferences -> ', name)
-			let link: string
-			const ref = references.get(name)
-			if (!ref) return
-			const { target } = ref
-
-			if (target.startsWith('http')) {
-				link = target
-			} else {
-				link = `${relative(apiDir, target)}#${generateAnchor(name)}`
-			}
-
-			// if (title === null) title = undefined
-			refs.set(name, { target: link })
-		})
-
-		this.writeReferences(refs)
-	}
-
-	public writeTable(rows: string[][]) {
-		let md = table(rows)
-		this.writeLineRaw(md)
-	}
-
-	public writeTableHeader(...cols: string[]) {
-		let str = cols.map(col => `| ${col} `).join('')
-		this.writeLineRaw(str)
-		this.writeLineRaw('-'.repeat(str.length))
-	}
-
-	public writeTableRow(...cols: string[]) {
-		let str = cols.map(col => `| ${col} `).join('')
-		this.writeLineRaw(str)
-	}
-
-	private writeReferences(references) {
-		this.writeLineRaw('')
-		references.forEach(({ title, target }, name) => {
-			this.writeLineRaw(`[${name}]: ${target}${title ? `"${title}"` : ''}`)
-		})
-	}
-
-	private writeLineRaw(text: string) {
-		this.lines.push(text)
-	}
-
-	toString() {
-		let { frontMatter, lines } = this
-		if (Object.keys(frontMatter).length) {
-			let matter = `---\n${yaml.safeDump(frontMatter)}---`
-			lines = [matter, ...lines]
-		}
-		return lines.join(`\n`)
-	}
-}
 
 // function exportKey(node): string {
 // return `${stripQuotes(node.name)}.${node.name}`
@@ -392,7 +104,7 @@ class DocsParser {
 		mkdirpSync(bookDir)
 		copySync(join(root, 'README.md'), join(bookDir, 'README.md'))
 
-		for (const [key, target] of Object.entries(internalRefs)) {
+		for (const [key, target] of Object.entries(externalRefs)) {
 			this.addReference(key, target)
 		}
 
@@ -415,9 +127,13 @@ class DocsParser {
 	 * @memberof DocsParser
 	 */
 	process() {
+		console.log('processing')
 		this.docsJSON.children.forEach(child => this.processTopLevelNode(child))
 
+		console.log('creating summary')
 		this.createSummary()
+
+		console.log('writing')
 		this.writeDocsToFiles()
 	}
 
@@ -521,8 +237,12 @@ class DocsParser {
 				break
 			case 'Object literal':
 				this.processObjectLiteral(ctx, node)
+				break
+			case 'Variable':
+				this.processVariable(ctx, node)
+				break
 			default:
-				console.warn(`unknown kind ${node.kindString}`)
+				console.warn(`unknown kind ${node.kindString} (${node.name})`)
 				return
 		}
 	}
@@ -628,11 +348,15 @@ class DocsParser {
 	private processCallSignature(doc, sig, prefix?) {
 		let { name, type, parameters = [] } = sig
 
-		if (prefix) name = `${camelcase(prefix)}.${name}`
+		if (prefix) name = `${prefix}.${name}`
 
 		let params: any[] = []
 		parameters.forEach(p => {
-			let { name, type, flags: { isOptional = false } } = p
+			let {
+				name,
+				type,
+				flags: { isOptional = false },
+			} = p
 			let desc = commentFromNode(p)
 			params.push({ name, desc, type, isOptional })
 		})
@@ -693,18 +417,36 @@ class DocsParser {
 	}
 
 	private processAlias(ctx, node) {
-		// console.log(node)
+		debug('processAlias', node.name, ctx.mod, node)
 		const doc = ctx.docForKey(node.name)
 
-		doc.writeHeading(`\`${node.name}\``)
+		doc.writeHeading(`\`${node.name}\``, 2)
 		doc.writeComment(node.comment)
 
 		this.addReference(node.name, doc)
 
-		// node.signatures.forEach(sig => {
-		// 	this.addReference(sig.name, join(bookDir, filePathForNameAndType('Type alias', node.name)))
-		// 	this.processCallSignature(doc, sig, null)
+		// console.dir(node, { depth: null })
+		// const f = new ReflectedDeclarationFormatter(node)
+		// debug('f', f.toString())
+
+		// switch (node.type.type) {
+		// case 'reflection':
+		// debug('sigs %O', node.type.declaration.signatures)
+		// if (node.type.declaration.signatures) {
+		// node.type.declaration.signatures.forEach(sig => {
+		// // this.addReference(sig.name, join(bookDir, filePathForNameAndType('Type alias', node.name)))
+		// this.processCallSignature(doc, sig, null)
 		// })
+		// }
+		// break
+		// }
+
+		// if (node.signatures) {
+		// node.signatures.forEach(sig => {
+		// // this.addReference(sig.name, join(bookDir, filePathForNameAndType('Type alias', node.name)))
+		// this.processCallSignature(doc, sig, null)
+		// })
+		// }
 	}
 
 	private processObjectLiteral(ctx, node) {
@@ -715,6 +457,17 @@ class DocsParser {
 		doc.writeComment(node.comment)
 		this.processObject(doc, node.name, node.children)
 		this.addReference(node.name, doc)
+	}
+
+	private processVariable(ctx, node) {
+		debug('processVariable', node)
+		const { name } = node
+
+		const doc = ctx.docForKey(name)
+
+		// 1. Create file and reference
+		doc.writeSection(`\`${name}\``)
+		doc.writeComment(node.comment)
 	}
 
 	private processExternalModule(ctx, node) {
@@ -742,16 +495,19 @@ class DocsParser {
 
 		if (!children) children = []
 
-		children
-			.filter(node => node.kindString === 'Method')
-			.forEach(node => this.processClass_Method(doc, name, node))
+		const methods = children.filter(node => node.kindString === 'Method')
+		if (methods.length) {
+			doc.writeHeading('methods', 4)
+			methods.forEach(node => this.processClass_Method(doc, name, node))
+		}
 
-		children
-			.filter(node => node.kindString === 'Property')
-			.forEach(node => this.processClass_Property(doc, name, node))
+		const properties = children.filter(node => node.kindString === 'Property')
+		if (properties.length) {
+			doc.writeHeading('properties', 4)
+			properties.forEach(node => this.processClass_Property(doc, name, node))
+		}
 
 		let members = children.filter(node => node.kindString === 'Enumeration member')
-
 		if (members.length) {
 			this.processObject(doc, name, members, 'Member')
 			// doc.writeTableHeader('Member', 'Default Value', 'Comment')
@@ -797,7 +553,7 @@ class DocsParser {
 	}
 }
 
-const internalRefs = {
+const externalRefs = {
 	void: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/void',
 	null: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/null',
 	Array: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array',

@@ -29,15 +29,29 @@ export { Locator } from './src/page/types'
 export { ElementHandle } from './src/page/types'
 
 /**
- * @docPage TestData
+ * @docPage TargetLocator
  */
+export { TargetLocator } from './src/page/types'
+
+/**
+ * @docPage TestData
+ * @docAlias TestDataFactory TestData
+ */
+export { TestDataFactory, TestDataSource } from './src/test-data/TestData'
+
 import { NullTestDataLoaders } from './src/test-data/TestDataLoaders'
 export const TestData = new NullTestDataLoaders()
 
 /**
- * @docPage DSL
+ * @docPage Settings
  */
-export { TestSettings, setup, DEFAULT_SETTINGS } from './src/runtime/Settings'
+export {
+	TestSettings,
+	setup,
+	DEFAULT_SETTINGS,
+	ConsoleMethod,
+	ResponseTiming,
+} from './src/runtime/Settings'
 
 import { FloodProcessEnv, nullFloodProcessEnv } from './src/runtime-environment/types'
 
@@ -55,7 +69,7 @@ export { Browser, Browser as Driver, Locatable, NullableLocatable } from './src/
 /**
  * @docPage DSL
  */
-export { step } from './src/runtime/Step'
+export { step, StepFunction, StepOptions } from './src/runtime/Step'
 
 /**
  * @docPage DSL

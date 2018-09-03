@@ -17,7 +17,7 @@ interface ConditionSettings {
 
 /**
  * A Condition represents a predicate which can be used to wait for an <[ElementHandle]>. They are generally created by using <[Until]>'s helper methods.
- * @opaque
+ * @docOpaque
  */
 export abstract class Condition {
 	public hasWaitFor = true
@@ -25,25 +25,13 @@ export abstract class Condition {
 
 	constructor(public desc: string = '*BASE CONDITION') {}
 
-	/**
-	 * @internal
-	 */
 	public abstract toString()
-	/**
-	 * @internal
-	 */
 	public abstract async waitFor(frame: Frame, page?: Page): Promise<any>
 
-	/**
-	 * @internal
-	 */
 	public async waitForEvent(page: Page): Promise<any> {
 		return
 	}
 
-	/**
-	 * @internal
-	 */
 	protected get timeout(): number {
 		return this.settings.waitTimeout * 1e3
 	}

@@ -7,17 +7,16 @@ import { Browser } from './types'
  *
  * ```typescript
  * export default () => {
- *   step("Step 1", async browser => {
+ *   step("Step 1", async (browser: Browser) => {
  *     await browser.visit("https://example.com")
  *   })
  *
- *   step("Step 2", async browser => {})
+ *   step("Step 2", async (browser: Browser) => {})
  *
- *   step("Step 3", async browser => {})
+ *   step("Step 3", async (browser: Browser) => {})
  * }
  * ```
  *
- * @export
  * @param name Step Name
  * @param fn Actual implementation of step
  */
@@ -42,13 +41,10 @@ export type StepDefinition<T> = (name: string, fn: StepFunction<T>) => Promise<a
  * **Example:**
  *
  * ```typescript
- * step("Step 1", { waitTimeout: 300 }, async browser => {
+ * step("Step 1", { waitTimeout: 300 }, async (browser: Browser) => {
  * 	await browser.click(...)
  * })
  * ```
- *
- * @export
- * @interface StepOptions
  */
 export interface StepOptions {
 	/**
@@ -59,7 +55,18 @@ export interface StepOptions {
 }
 
 /**
- * StepFunction represents the function to be called as a Test step.
+ * The `StepFunction` type represents a function to be called as a Test step.
+ *
+ * - `browser` <[Browser]> the browser
+ * - `data` <`T`> (Optional) a row of test data of type <`T`>. Only available when the test is set up using <[suite]>.
+ *
+ * **Example:**
+ *
+ * ```typescript
+ * const step1: StepFunction = async (browser: Browser) => {
+ * 	await browser.click(...)
+ * }
+ * ```
  */
 export type StepFunction<T> = (driver: Browser, data?: T) => Promise<void>
 

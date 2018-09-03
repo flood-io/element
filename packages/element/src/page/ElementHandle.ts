@@ -113,9 +113,7 @@ interface ScreenshotSaver {
 /**
  * ElementHandle represents a remote element in the DOM of the browser. It implements useful methods for querying and interacting with this DOM element.
  *
- * All methids on this class are asynchronous and must be used with `await` to wait for the result to fulfill from the browser.
- *
- * @class ElementHandle
+ * All methods on this class are asynchronous and must be used with `await` to wait for the result to fulfill from the browser.
  */
 export class ElementHandle implements IElementHandle, Locator {
 	/**
@@ -272,9 +270,6 @@ export class ElementHandle implements IElementHandle, Locator {
 		})
 	}
 
-	/**
-	 * Locates an element using the supplied <[Locator]>, returning an <[ElementHandle]>
-	 */
 	// TODO wrap
 	public async findElement(locator: string | Locator): Promise<IElementHandle | null> {
 		if (typeof locator === 'string') {

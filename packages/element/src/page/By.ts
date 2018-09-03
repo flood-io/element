@@ -106,7 +106,7 @@ export class By {
 	 * @return {!By} The new locator.
 	 */
 	public static nameAttr(value: string): Locator {
-		return By.css(`*[name="${escapeCss(value)}"]`, `By.nameAttr(${value})`)
+		return By.css(`*[name="${escapeCss(value)}"]`, `By.nameAttr('${value}')`)
 	}
 
 	/**
@@ -118,7 +118,7 @@ export class By {
 	public static attr(tagName: string, attrName: string, attrValue: string): Locator {
 		return By.css(
 			`${escapeCss(tagName).toLowerCase()}[${escapeCss(attrName)}="${escapeCss(attrValue)}"]`,
-			`By.attr$(tagName},${attrName},${attrValue})`,
+			`By.attr('${tagName}','${attrName}','${attrValue}')`,
 		)
 	}
 

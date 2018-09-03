@@ -14,11 +14,13 @@ import { Condition } from './Condition'
 import { NullableLocatable, Locatable } from '../runtime/types'
 
 /**
- * Until is used to create wait <[Condition]>s which are used to wait for a predicate to become true.
+ * Until contains a wealth of useful <Condition>s.
  *
- * Predicates include waiting for elements to become active, visible, invisible or disabled on the page.
+ * <[Condition]>s represent predicates used to wait for something to become true.
  *
- * You would typically use these to control the flow of you test.
+ * These predicates include waiting for elements to become active, visible, invisible or disabled on the page.
+ *
+ * You typically use these to control the flow of you test.
  *
  */
 export class Until {

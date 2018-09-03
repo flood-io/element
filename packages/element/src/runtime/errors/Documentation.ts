@@ -65,11 +65,11 @@ function assertionError(err: StructuredError<AssertionErrorData>): DocumentedErr
 	return DocumentedError.documented(
 		err,
 		`Assertion failed`,
-		`An assertion in the test script failed.
+		chalk`An assertion in the test script failed.
 
-operator: ${assertionErr.operator}
-expected: ${assertionErr.expected}
-actual  : ${assertionErr.actual}
+operator: {blue ${assertionErr.operator}}
+expected: {green ${assertionErr.expected}}
+actual  : {red ${assertionErr.actual}}
     `,
 	)
 }

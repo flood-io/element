@@ -62,8 +62,11 @@ export class TestDataSource<T> {
 	/**
 	 * @internal
 	 */
-	constructor(private loader: Loader<T>) {
+	private loader: Loader<T>
+
+	constructor(loader: Loader<T>) {
 		this.feeder = new Feeder<T>()
+		this.loader = loader
 	}
 
 	/**

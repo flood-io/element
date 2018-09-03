@@ -16,5 +16,13 @@ export default () => {
 		await browser.visit('<%= url %>')
 
 		assert(true, 'congratulations!')
+
+		// let buttonLocator = By.css('#my-button')
+		// await browser.wait(Until.elementIsVisible(buttonLocator))
+		//
+		// const button = await browser.find(buttonLocator)
+		// await button.click()
+		//
+		// await browser.takeScreenshot()
 	})
 }

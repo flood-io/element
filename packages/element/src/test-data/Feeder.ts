@@ -13,7 +13,7 @@ export class Feeder<T> {
 		private pointer: number = -1,
 		private filters: FeedFilterFunction<T>[] = [],
 	) {
-		this.resetOnEnd = false
+		this.resetOnEnd = true
 		this.shuffleAfterLoad = false
 		this.reset()
 	}

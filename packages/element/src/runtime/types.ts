@@ -4,7 +4,7 @@ import { NavigationOptions, ClickOptions, ScreenshotOptions } from 'puppeteer'
 import { ElementHandle, Locator } from '../page/types'
 import { TargetLocator } from '../page/TargetLocator'
 import { StepDefinition } from './Step'
-import { TestDataImpl as TestData } from '../test-data/TestData'
+import { TestDataSource } from '../test-data/TestData'
 
 export { NavigationOptions }
 
@@ -31,9 +31,16 @@ export type NullableLocatable = Locatable | null
  *
  * **Example:**
  * ```
- *   export default suite(step => {
- *     step("Step 1", async browser => {
- *       await browser.visit('...')
+ *   import { TestData } from '@flood/element'
+ *   interface Row {
+ *     user: string
+ *     systemID: number
+ *   }
+ *   const testData = TestData.withCSV<Row>(...)
+ *
+ *   export default suite.withData((testData, step) => {
+ *     step("Step 1", async (row: Row, browser: Browser) => {
+ *       await browser.visit(`http://example.com/user-${row.systemID}.html`)
  *     })
  *   })
  * ```
@@ -44,7 +51,7 @@ export declare const suite: SuiteDefinition
 
 export interface SuiteDefinition {
 	(callback: (this: null, s: StepDefinition<null>) => void)
-	withData<T>(data: TestData<T>, callback: (this: null, step: StepDefinition<T>) => void)
+	withData<T>(data: TestDataSource<T>, callback: (this: null, step: StepDefinition<T>) => void)
 }
 
 /**
@@ -212,7 +219,8 @@ export interface Browser {
 			/**
 			 * A string of text to type
 			 */
-			text?: string /**
+			text?: string
+			/**
 			 * Delay between key presses, in milliseconds.
 			 */
 			delay?: number

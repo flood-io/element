@@ -18,19 +18,39 @@ import { StructuredError } from '../utils/StructuredError'
 import { Step } from './Step'
 
 import { PuppeteerClient } from '../types'
-import { RuntimeEnvironment } from '../runtime-environment/types'
+import { RuntimeEnvironment, WorkRoot } from '../runtime-environment/types'
 import { ITestScript } from '../TestScript'
 import { ScreenshotOptions } from 'puppeteer'
 import { TestSettings, ConcreteTestSettings, DEFAULT_STEP_WAIT_SECONDS } from './Settings'
 // import { ScreenshotOptions } from 'puppeteer'
 
-import { TestDataImpl } from '../test-data/TestData'
+import { TestDataSource, TestDataFactory } from '../test-data/TestData'
 import { TestDataLoaders } from '../test-data/TestDataLoaders'
 
 // import { readdirSync } from 'fs'
 
 import * as debugFactory from 'debug'
 const debug = debugFactory('element:runtime:test')
+
+export class TestBoundTestDataLoaders implements TestDataFactory {
+	private innerLoaders: TestDataFactory
+
+	constructor(private test: Test, workRoot: WorkRoot) {
+		this.innerLoaders = new TestDataLoaders(workRoot)
+	}
+
+	public fromData<TRow>(lines: TRow[]): TestDataSource<TRow> {
+		return (this.test.testData = this.innerLoaders.fromData(lines))
+	}
+
+	public fromCSV<TRow>(filename: string, separator: string = ','): TestDataSource<TRow> {
+		return (this.test.testData = this.innerLoaders.fromCSV(filename, separator))
+	}
+
+	public fromJSON<TRow>(filename: string): TestDataSource<TRow> {
+		return (this.test.testData = this.innerLoaders.fromJSON(filename))
+	}
+}
 
 export default class Test {
 	public vm: VM
@@ -51,8 +71,8 @@ export default class Test {
 
 	private driver: PuppeteerClient
 
-	public testData: TestDataImpl<any>
-	public testDataLoaders: TestDataLoaders
+	public testData: TestDataSource<any>
+	public testDataLoaders: TestDataFactory
 
 	get skipping(): boolean {
 		return this.failed
@@ -67,8 +87,10 @@ export default class Test {
 			new LifecycleObserver(testObserverFactory(new InnerObserver(new NullTestObserver()))),
 		)
 
-		this.testDataLoaders = new TestDataLoaders(runEnv.workRoot)
-		this.testData = this.testDataLoaders.fromData([{}]).circular()
+		this.testDataLoaders = new TestBoundTestDataLoaders(this, runEnv.workRoot)
+		this.testDataLoaders.fromData([{}]).circular()
+
+		// this.testData = this.testDataLoaders.fromData([{}]).circular()
 	}
 
 	public async shutdown() {
@@ -112,6 +134,11 @@ export default class Test {
 		this.observer.consoleFilters = this.settings.consoleFilter || []
 	}
 
+	public async beforeRun(): Promise<void> {
+		debug('beforeRun()')
+		await this.testData.load()
+	}
+
 	/**
 	 * Runs the group of steps
 	 * @return {Promise<void|Error>}
@@ -124,7 +151,6 @@ export default class Test {
 		await this.observer.attachToNetworkRecorder()
 
 		debug('run() start')
-		await this.testData.load()
 
 		try {
 			const browser = new Browser<Step>(

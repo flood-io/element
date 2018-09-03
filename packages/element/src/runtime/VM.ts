@@ -2,7 +2,6 @@ import { NodeVM } from 'vm2'
 import { Until } from '../page/Until'
 import { By } from '../page/By'
 import { RuntimeEnvironment } from '../runtime-environment/types'
-import { SuiteDefinition } from './types'
 import { MouseButtons, Device, Key, userAgents } from '../page/Enums'
 import { StepOptions } from './Step'
 import * as Faker from 'faker'
@@ -13,8 +12,10 @@ import { ITestScript } from '../TestScript'
 import { DEFAULT_SETTINGS, ConcreteTestSettings, normalizeSettings } from './Settings'
 import { expect } from '../utils/Expect'
 import { Step, StepFunction, normalizeStepOptions } from './Step'
-import { TestDataImpl } from '../test-data/TestData'
 import Test from './Test'
+
+// import { SuiteDefinition } from './types'
+// import { TestDataImpl } from '../test-data/TestData'
 
 // import * as debugFactory from 'debug'
 // const debug = debugFactory('element:vm')
@@ -74,7 +75,6 @@ export class VM {
 		)
 	}
 
-	// TODO switch to testData/loaders
 	public evaluate(test: Test): { settings: ConcreteTestSettings; steps: Step[] } {
 		// Clear existing steps
 		const steps: Step[] = []
@@ -106,18 +106,24 @@ export class VM {
 		}
 
 		// closes over test
-		function createSuite(): SuiteDefinition {
-			const suite = function(callback) {
-				return callback
-			} as SuiteDefinition
-			suite.withData = <T>(data: TestDataImpl<T>, callback) => {
-				test.testData = expect(data, 'TestData is not present')
-				test.testData.setInstanceID(ENV.SEQUENCE.toString())
-				return callback
-			}
+		// function createSuite(): SuiteDefinition {
+		// const suite = function(callback) {
+		// return callback
+		// } as SuiteDefinition
+		// suite.withData = <T>(data: TestDataImpl<T>, callback) => {
+		// test.testData = expect(data, 'TestData is not present')
+		// test.testData.setInstanceID(ENV.SEQUENCE.toString())
+		// return callback
+		// }
 
-			return suite
-		}
+		// return suite
+		// }
+
+		// const registerTestData = <T>(testData: TestDataImpl<T>): TestDataImpl<T> => {
+		// test.testData = expect(data, 'TestData is not present')
+		// test.testData.setInstanceID(ENV.SEQUENCE.toString())
+		// return testData
+		// }
 
 		// let suite = createSuite()
 
@@ -128,7 +134,7 @@ export class VM {
 
 			ENV,
 
-			suite: createSuite(),
+			// suite: createSuite(),
 			// Supports either 2 or 3 args
 			step,
 			// Actual implementation of @flood/chrome

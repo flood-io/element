@@ -84,6 +84,8 @@ export default class Runner implements ITestRunner {
 				this.logger.debug(`Settings: ${JSON.stringify(settings, null, 2)}`)
 			}
 
+			await test.beforeRun()
+
 			const testLoopContinue = () => {
 				if (this.testContinue === false) return
 				this.testContinue = this.interrupts === 0

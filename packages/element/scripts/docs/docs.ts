@@ -6,6 +6,7 @@ import { mkdirpSync, copySync, createFileSync, writeFileSync, readFileSync } fro
 import * as frontMatter from 'front-matter'
 
 import { preParseIndex } from './preParseIndex'
+import { parsePuppeteer } from './puppeteer'
 import { generateAnchor } from './generateAnchor'
 import { MarkdownDocument, FrontMatter, Comment } from './MarkdownDocument'
 import { ParamType } from './Formatters'
@@ -17,6 +18,8 @@ const root = join(__dirname, '../..')
 const bookDir = join(root, 'docs')
 
 const { indexMap, indexExports } = preParseIndex(join(root, 'index.ts'))
+
+const puppeteerJSON = parsePuppeteer()
 
 debug('indexMap', indexMap)
 debug('indexExports', indexExports)
@@ -35,7 +38,7 @@ function isNodeInternal(node) {
 }
 function isNodeOpaque(node) {
 	if (node && node.comment && node.comment.tags) {
-		return node.comment.tags.find(t => t.tag === 'docOpaque')
+		return node.comment.tags.find(t => t.tag === 'docopaque')
 	}
 	return false
 }
@@ -99,7 +102,9 @@ class DocsParser {
 
 	// seenModule: Map<string, boolean> = new Map()
 
-	constructor(public docsJSON: any) {
+	public puppeteerTypes: any
+
+	constructor(public docsJSON: any, public puppeteerJSON: any) {
 		debug('README', join(root, 'README.md'), join(bookDir, 'README.md'))
 		mkdirpSync(bookDir)
 		copySync(join(root, 'README.md'), join(bookDir, 'README.md'))
@@ -129,6 +134,9 @@ class DocsParser {
 	process() {
 		console.log('processing')
 		this.docsJSON.children.forEach(child => this.processTopLevelNode(child))
+
+		const ctx = new parseCtx('puppeteer', this)
+		this.puppeteerJSON.forEach(child => this.processNode(ctx, child)) //, this.puppeteerJSON)
 
 		console.log('creating summary')
 		this.createSummary()
@@ -565,6 +573,7 @@ const externalRefs = {
 	Object: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object',
 	Promise:
 		'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise',
+	RegExp: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp',
 	string: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#String_type',
 	'stream.Readable': 'https://nodejs.org/api/stream.html#stream_class_stream_readable',
 	Error: 'https://nodejs.org/api/errors.html#errors_class_error',
@@ -584,7 +593,8 @@ const externalRefs = {
 }
 
 const docsJSON = require(__dirname + '/../../docs.json')
-const parser = new DocsParser(docsJSON)
+
+const parser = new DocsParser(docsJSON, puppeteerJSON)
 try {
 	parser.process()
 } catch (err) {

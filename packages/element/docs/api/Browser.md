@@ -15,7 +15,8 @@ export default () => {
 ```
 
 
-#### `browser.authenticate([, username, password])`
+#### methods
+#### `Browser.authenticate([, username, password])`
 * `username` &lt;undefined|string&gt; (Optional) 
 * `password` &lt;undefined|string&gt; (Optional) 
 * returns: &lt;[Promise]&lt;void&gt;&gt; 
@@ -24,29 +25,29 @@ Sets the HTTP Authentication details to use if the page is presented with an aut
 
 Call without any args to disable authentication.
 
-#### `browser.blur(locator)`
+#### `Browser.blur(locator)`
 * `locator` &lt;[NullableLocatable]&gt;  
 * returns: &lt;[Promise]&lt;void&gt;&gt; 
 
 Removes focus from the specified DOM element.
 
-#### `browser.clear(locatable)`
+#### `Browser.clear(locatable)`
 * `locatable` &lt;[NullableLocatable]&gt;  
 * returns: &lt;[Promise]&lt;void&gt;&gt; 
 
 Clears the selected value of an input or select control.
 
-#### `browser.clearBrowserCache()`
+#### `Browser.clearBrowserCache()`
 * returns: &lt;[Promise]&lt;any&gt;&gt; 
 
 Clear browser cache.
 
-#### `browser.clearBrowserCookies()`
+#### `Browser.clearBrowserCookies()`
 * returns: &lt;[Promise]&lt;any&gt;&gt; 
 
 Clear browser cookies.
 
-#### `browser.click(locatable[, options])`
+#### `Browser.click(locatable[, options])`
 * `locatable` &lt;[NullableLocatable]&gt;  
 * `options` &lt;[ClickOptions]&gt; (Optional) 
 * returns: &lt;[Promise]&lt;void&gt;&gt; 
@@ -65,7 +66,7 @@ step("Start", async browser => {
 In this example we're constructing a <[Locatable]> using the `By.partialLinkText()` Locator, which will match the first `<a>` tag which contains the text "Start".
 
 
-#### `browser.doubleClick(locatable[, options])`
+#### `Browser.doubleClick(locatable[, options])`
 * `locatable` &lt;[NullableLocatable]&gt;  
 * `options` &lt;[ClickOptions]&gt; (Optional) 
 * returns: &lt;[Promise]&lt;void&gt;&gt; 
@@ -73,88 +74,97 @@ In this example we're constructing a <[Locatable]> using the `By.partialLinkText
 Sends a double-click event to the element located by the supplied Locator or `selector`. If the element is
 currently outside the viewport it will first scroll to that element.
 
-#### `browser.emulateDevice(deviceName)`
+#### `Browser.emulateDevice(deviceName)`
 * `deviceName` &lt;[Device]&gt;  
 * returns: &lt;[Promise]&lt;void&gt;&gt; 
 
 Configure Browser to emulate a given device
 
-#### `browser.evaluate(fn, args)`
+#### `Browser.evaluate(fn, args)`
 * `fn` &lt;[EvaluateFn]&gt;  
 * `args` &lt;any[]&gt;  
 * returns: &lt;[Promise]&lt;any&gt;&gt; 
 
-#### `browser.findElement(locator)`
+#### `Browser.findElement(locator)`
 * `locator` &lt;[NullableLocatable]&gt;  
 * returns: &lt;[Promise]&lt;[ElementHandle]&gt;&gt; 
 
 Uses the provided locator to find the first element it matches, returning an ElementHandle.
 If no element is found throws an error.
 
-#### `browser.findElements(locator)`
+#### `Browser.findElements(locator)`
 * `locator` &lt;[NullableLocatable]&gt;  
 * returns: &lt;[Promise]&lt;[ElementHandle][]&gt;&gt; 
 
 Uses the provided locator to find all elements matching the locator condition, returning an array of ElementHandles
 
-#### `browser.focus(locator)`
+#### `Browser.focus(locator)`
 * `locator` &lt;[NullableLocatable]&gt;  The <[Locator]> to use to find an element to send focus to.
 * returns: &lt;[Promise]&lt;void&gt;&gt; 
 
 Makes the element located by the first argument the receiver of future input.
 
-#### `browser.maybeFindElement(locator)`
+#### `Browser.highlightElement(element)`
+* `element` &lt;[ElementHandle]&gt;  
+* returns: &lt;[Promise]&lt;void&gt;&gt; 
+
+Highlight an element. Useful in concert with takeScreenshot to tweak your locators.
+
+#### `Browser.maybeFindElement(locator)`
 * `locator` &lt;[NullableLocatable]&gt;  
 * returns: &lt;[Promise]&lt;[ElementHandle]|null&gt;&gt; 
 
 Uses the provided locator to find the first element it matches, returning an ElementHandle.
 
-#### `browser.press(keyCode[, options])`
+#### `Browser.press(keyCode[, options])`
 * `keyCode` &lt;string&gt;  
 * `options` &lt;undefined|{"text":"undefined|string","delay":"undefined|number"}&gt; (Optional) 
 * returns: &lt;[Promise]&lt;void&gt;&gt; 
 
 Presses a key on the keyboard specified by key code. For example, <[Key.ALT]>
 
-#### `browser.selectByIndex(locatable, index)`
+#### `Browser.selectByIndex(locatable, index)`
 * `locatable` &lt;[NullableLocatable]&gt;  
 * `index` &lt;string&gt;  
 * returns: &lt;[Promise]&lt;string[]&gt;&gt; 
 
 Selects an option within a `<select>` tag by its index in the list.
 
-#### `browser.selectByText(locatable, text)`
+#### `Browser.selectByText(locatable, text)`
 * `locatable` &lt;[NullableLocatable]&gt;  
 * `text` &lt;string&gt;  
 * returns: &lt;[Promise]&lt;string[]&gt;&gt; 
 
 Selects an option within a `<select>` tag by matching its visible text.
 
-#### `browser.selectByValue(locatable, values)`
+#### `Browser.selectByValue(locatable, values)`
 * `locatable` &lt;[NullableLocatable]&gt;  
 * `values` &lt;string[]&gt;  
 * returns: &lt;[Promise]&lt;string[]&gt;&gt; 
 
 Selects an option within a `<select>` tag using the value of the `<option>` element.
 
-#### `browser.setUserAgent(userAgent)`
+#### `Browser.setUserAgent(userAgent)`
 * `userAgent` &lt;string&gt;  
 * returns: &lt;[Promise]&lt;void&gt;&gt; 
 
 Set Browser to send a custom User Agent (UA) string
 
-#### `browser.switchTo()`
+#### `Browser.switchTo()`
 * returns: &lt;[TargetLocator]&gt; 
 
 Switch the focus of the browser to another frame, tab, or window.
 
-#### `browser.takeScreenshot([, options])`
+#### `Browser.takeScreenshot([, options])`
 * `options` &lt;[ScreenshotOptions]&gt; (Optional) 
 * returns: &lt;[Promise]&lt;void&gt;&gt; 
 
 Takes a screenshot of the whole page and saves it to the `flood/results` folder with a random sequential name. You can download the archive of your test results at the end of the test to retrieve these screenshots.
 
-#### `browser.type(locatable, text[, options])`
+#### `Browser.title()`
+* returns: &lt;[Promise]&lt;string&gt;&gt; 
+
+#### `Browser.type(locatable, text[, options])`
 * `locatable` &lt;[NullableLocatable]&gt;  
 * `text` &lt;string&gt;  
 * `options` &lt;undefined|{"delay":"number"}&gt; (Optional) 
@@ -170,7 +180,7 @@ step("Step 1", async browser => {
 ```
 
 
-#### `browser.visit(url[, options])`
+#### `Browser.visit(url[, options])`
 * `url` &lt;string&gt;  url to visit
 * `options` &lt;[NavigationOptions]&gt; (Optional) puppeteer navigation options
 
@@ -188,7 +198,7 @@ step("Start", async browser => {
 })
 ```
 
-#### `browser.wait(timeoutOrCondition)`
+#### `Browser.wait(timeoutOrCondition)`
 * `timeoutOrCondition` &lt;[Condition]|number&gt;  
 * returns: &lt;[Promise]&lt;boolean&gt;&gt; 
 
@@ -205,13 +215,13 @@ step("Start", async browser => {
 You can use either a numeric value in seconds to wait for a specific time,
 or a <[Condition]>, for more flexible conditions.
 
-# `Driver`
+## `Driver`
 Driver is an alias to Browser. Please use Browser when possible.
 
-# `Locatable`
+## `Locatable`
 Locatable represents anything able to be located, either a string selector or a <[Locator]>. <[Locator]>s are generally created using <[By]> methods.
 
-# `NullableLocatable`
+## `NullableLocatable`
 NullableLocatable represents a <[Locatable]> which could also be null.
 
 Note that most Element location API methods accept a NullableLocatable but will throw an <[Error]> if its actually <[null]>.
@@ -223,8 +233,10 @@ Note that most Element location API methods accept a NullableLocatable but will 
 [Locatable]: ../../api/Browser.md#locatable
 [Device]: ../../api/Constants.md#device
 [EvaluateFn]: ../..#evaluatefn
-[Condition]: ../../api/Until.md#condition
+[ElementHandle]: ../../api/ElementHandle.md#elementhandle
 [Locator]: ../../api/By.md#locator
+[TargetLocator]: ../../api/TargetLocator.md#targetlocator
+[Condition]: ../../api/Until.md#condition
+[By]: ../../api/By.md#by
 [Error]: https://nodejs.org/api/errors.html#errors_class_error
-
-[step]: ../..#step
+[null]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/null

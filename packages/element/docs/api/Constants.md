@@ -132,4 +132,3 @@ Lists all available keyboard control keys which can be used when sending a key p
 | `SUBTRACT`    | "NumpadSubtract" |         |
 | `TAB`         | "Tab"            |         |
 | `UP`          | "ArrowUp"        |         |
-

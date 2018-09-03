@@ -103,28 +103,9 @@ regardless of whether the locator was used with a WebElement.
 A Locator represents an object used to locate elements on the page. It is usually constructed using the helper methods of <[By]>.
 An <[ElementHandle]> can also be used as a Locator which finds itself.
 
-#### methods
-#### `Locator.find(context[, node])`
-* `context` &lt;[ExecutionContext]&gt;  
-* `node` &lt;[PElementHandle]&gt; (Optional) 
-* returns: &lt;[Promise]&lt;[ElementHandle]|null&gt;&gt; 
-
-#### `Locator.findMany(context[, node])`
-* `context` &lt;[ExecutionContext]&gt;  
-* `node` &lt;[PElementHandle]&gt; (Optional) 
-* returns: &lt;[Promise]&lt;[ElementHandle][]&gt;&gt; 
-
-#### `Locator.toErrorString()`
-* returns: &lt;string&gt; 
-
-#### properties
-* `pageFunc` &lt;[EvaluateFn]&gt;      
-* `pageFuncArgs` &lt;any[]&gt;      
-* `pageFuncMany` &lt;[EvaluateFn]&gt;      
 
 [Locator]: ../../api/By.md#locator
 [Locatable]: ../../api/Browser.md#locatable
 [EvaluateFn]: ../..#evaluatefn
 [By]: ../../api/By.md#by
 [ElementHandle]: ../../api/ElementHandle.md#elementhandle
-[Promise]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise

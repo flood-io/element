@@ -60,10 +60,9 @@ TestData.fromCSV("users.csv").filter((line, index, browserID) => line.browser ==
 Shuffles the data set using the Fisher-Yates method. Use this to randomise the order of your data. This will always be applied after filtering.
 
 #### properties
-* `loader` &lt;[Loader]&gt;      
 # `TestDataFactory`
 
-A `TestDataFactory` is available to be imported into your test script as `TestData`. Use this to load a <[TestDataSource> which provides new test data to each iteration of your test.
+A `TestDataFactory` is available to be imported into your test script as `TestData`. Use this to load a <[TestDataSource]> which provides new test data to each iteration of your test.
 
 #### methods
 #### `TestDataFactory.fromCSV(filename, seperator)`

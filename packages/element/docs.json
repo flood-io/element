@@ -35549,21 +35549,13 @@
 					],
 					"children": [
 						{
-							"id": 930,
+							"id": 931,
 							"name": "constructor",
 							"kind": 512,
 							"kindString": "Constructor",
 							"flags": {
 								"isExported": true,
 								"isExternal": true
-							},
-							"comment": {
-								"tags": [
-									{
-										"tag": "internal",
-										"text": "\n"
-									}
-								]
 							},
 							"signatures": [
 								{
@@ -35572,14 +35564,6 @@
 									"kind": 16384,
 									"kindString": "Constructor signature",
 									"flags": {},
-									"comment": {
-										"tags": [
-											{
-												"tag": "internal",
-												"text": "\n"
-											}
-										]
-									},
 									"parameters": [
 										{
 											"id": 933,
@@ -35610,7 +35594,7 @@
 							"sources": [
 								{
 									"fileName": "src/test-data/TestData.ts",
-									"line": 60,
+									"line": 65,
 									"character": 26
 								}
 							]
@@ -35683,21 +35667,28 @@
 							}
 						},
 						{
-							"id": 931,
+							"id": 930,
 							"name": "loader",
 							"kind": 1024,
 							"kindString": "Property",
 							"flags": {
 								"isPrivate": true,
-								"isConstructorProperty": true,
 								"isExported": true,
 								"isExternal": true
+							},
+							"comment": {
+								"tags": [
+									{
+										"tag": "internal",
+										"text": "\n"
+									}
+								]
 							},
 							"sources": [
 								{
 									"fileName": "src/test-data/TestData.ts",
 									"line": 65,
-									"character": 27
+									"character": 15
 								}
 							],
 							"type": {
@@ -35752,7 +35743,7 @@
 							"sources": [
 								{
 									"fileName": "src/test-data/TestData.ts",
-									"line": 147,
+									"line": 150,
 									"character": 22
 								}
 							]
@@ -35797,7 +35788,7 @@
 							"sources": [
 								{
 									"fileName": "src/test-data/TestData.ts",
-									"line": 154,
+									"line": 157,
 									"character": 19
 								}
 							]
@@ -35842,7 +35833,7 @@
 							"sources": [
 								{
 									"fileName": "src/test-data/TestData.ts",
-									"line": 161,
+									"line": 164,
 									"character": 19
 								}
 							]
@@ -35887,7 +35878,7 @@
 							"sources": [
 								{
 									"fileName": "src/test-data/TestData.ts",
-									"line": 140,
+									"line": 143,
 									"character": 16
 								}
 							]
@@ -35945,7 +35936,7 @@
 							"sources": [
 								{
 									"fileName": "src/test-data/TestData.ts",
-									"line": 89,
+									"line": 92,
 									"character": 16
 								}
 							]
@@ -35991,7 +35982,7 @@
 							"sources": [
 								{
 									"fileName": "src/test-data/TestData.ts",
-									"line": 124,
+									"line": 127,
 									"character": 12
 								}
 							]
@@ -36056,7 +36047,7 @@
 							"sources": [
 								{
 									"fileName": "src/test-data/TestData.ts",
-									"line": 116,
+									"line": 119,
 									"character": 14
 								}
 							]
@@ -36101,7 +36092,7 @@
 							"sources": [
 								{
 									"fileName": "src/test-data/TestData.ts",
-									"line": 79,
+									"line": 82,
 									"character": 18
 								}
 							]
@@ -36147,7 +36138,7 @@
 							"sources": [
 								{
 									"fileName": "src/test-data/TestData.ts",
-									"line": 132,
+									"line": 135,
 									"character": 12
 								}
 							]
@@ -36199,7 +36190,7 @@
 							"sources": [
 								{
 									"fileName": "src/test-data/TestData.ts",
-									"line": 72,
+									"line": 75,
 									"character": 21
 								}
 							]
@@ -36257,7 +36248,7 @@
 							"sources": [
 								{
 									"fileName": "src/test-data/TestData.ts",
-									"line": 98,
+									"line": 101,
 									"character": 15
 								}
 							]
@@ -36268,7 +36259,7 @@
 							"title": "Constructors",
 							"kind": 512,
 							"children": [
-								930
+								931
 							]
 						},
 						{
@@ -36277,7 +36268,7 @@
 							"children": [
 								928,
 								929,
-								931
+								930
 							]
 						},
 						{
@@ -36322,7 +36313,7 @@
 						"isExternal": true
 					},
 					"comment": {
-						"shortText": "A `TestDataFactory` is available to be imported into your test script as `TestData`. Use this to load a <[TestDataSource> which provides new test data to each iteration of your test."
+						"shortText": "A `TestDataFactory` is available to be imported into your test script as `TestData`. Use this to load a <[TestDataSource]> which provides new test data to each iteration of your test."
 					},
 					"children": [
 						{

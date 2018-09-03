@@ -226,17 +226,58 @@ NullableLocatable represents a <[Locatable]> which could also be null.
 
 Note that most Element location API methods accept a NullableLocatable but will throw an <[Error]> if its actually <[null]>.
 
+# `BoundingBox`
+
+#### properties
+* `height` &lt;number&gt;    The height.  
+* `width` &lt;number&gt;    The width.  
+* `x` &lt;number&gt;    The x-coordinate of top-left corner.  
+* `y` &lt;number&gt;    The y-coordinate of top-left corner.  
+# `ClickOptions`
+
+#### properties
+* `button` &lt;[MouseButtons]&gt; (Optional)   defaults to left  
+* `clickCount` &lt;number&gt; (Optional)   defaults to 1  
+* `delay` &lt;number&gt; (Optional)   Time to wait between mousedown and mouseup in milliseconds.  
+  Defaults to 0.  
+# `NavigationOptions`
+
+The navigation options.
+
+#### properties
+* `timeout` &lt;number&gt; (Optional)   Maximum navigation time in milliseconds, pass 0 to disable timeout.  
+* `waitUntil` &lt;[LoadEvent]|[LoadEvent][]&gt; (Optional)   When to consider navigation succeeded.  
+# `ScreenshotOptions`
+
+Defines the screenshot options.
+
+#### properties
+* `clip` &lt;[BoundingBox]&gt; (Optional)   An object which specifies clipping region of the page.  
+* `fullPage` &lt;boolean&gt; (Optional)   When true, takes a screenshot of the full scrollable page.  
+* `omitBackground` &lt;boolean&gt; (Optional)   Hides default white background and allows capturing screenshots with transparency.  
+* `path` &lt;string&gt; (Optional)   The file path to save the image to. The screenshot type will be inferred from file extension.  
+  If `path` is a relative path, then it is resolved relative to current working directory.  
+  If no path is provided, the image won't be saved to the disk.  
+* `quality` &lt;number&gt; (Optional)   The quality of the image, between 0-100. Not applicable to png images.  
+* `type` &lt;jpeg|png&gt; (Optional)   The screenshot type.  
+## `LoadEvent`
 
 [step]: ../../api/DSL.md#step
 [Promise]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
 [NullableLocatable]: ../../api/Browser.md#nullablelocatable
+[ClickOptions]: ../../api/Browser.md#clickoptions
 [Locatable]: ../../api/Browser.md#locatable
 [Device]: ../../api/Constants.md#device
 [EvaluateFn]: ../..#evaluatefn
 [ElementHandle]: ../../api/ElementHandle.md#elementhandle
 [Locator]: ../../api/By.md#locator
 [TargetLocator]: ../../api/TargetLocator.md#targetlocator
+[ScreenshotOptions]: ../../api/Browser.md#screenshotoptions
+[NavigationOptions]: ../../api/Browser.md#navigationoptions
 [Condition]: ../../api/Until.md#condition
 [By]: ../../api/By.md#by
 [Error]: https://nodejs.org/api/errors.html#errors_class_error
 [null]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/null
+[MouseButtons]: ../..#mousebuttons
+[LoadEvent]: ../../api/Browser.md#loadevent
+[BoundingBox]: ../../api/Browser.md#boundingbox

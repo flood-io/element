@@ -5,23 +5,6 @@ title: ''
 
 A Condition represents a predicate which can be used to wait for an <[ElementHandle]>. They are generally created by using <[Until]>'s helper methods.
 
-#### methods
-#### `Condition.toString()`
-* returns: &lt;any&gt; 
-
-#### `Condition.waitFor(frame[, page])`
-* `frame` &lt;[Frame]&gt;  
-* `page` &lt;[Page]&gt; (Optional) 
-* returns: &lt;[Promise]&lt;any&gt;&gt; 
-
-#### `Condition.waitForEvent(page)`
-* `page` &lt;[Page]&gt;  
-* returns: &lt;[Promise]&lt;any&gt;&gt; 
-
-#### properties
-* `desc` &lt;string&gt;      
-* `hasWaitFor` &lt;boolean&gt;      
-* `settings` &lt;[ConditionSettings]&gt;      
 # `Until`
 
 Until contains a wealth of useful <Condition>s.
@@ -183,7 +166,7 @@ Creates a condition which waits until the page URL matches the supplied `RegExp`
 
 [ElementHandle]: ../../api/ElementHandle.md#elementhandle
 [Until]: ../../api/Until.md#until
-[Promise]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
 [Condition]: ../../api/Until.md#condition
 [Locatable]: ../../api/Browser.md#locatable
 [NullableLocatable]: ../../api/Browser.md#nullablelocatable
+[RegExp]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp

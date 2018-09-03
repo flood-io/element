@@ -14,8 +14,10 @@ title: ''
 
 ## Flood Chrome API
 
+  * [BoundingBox](api/Browser.md#boundingbox)
   * [Browser](api/Browser.md#browser)
   * [By](api/By.md#by)
+  * [ClickOptions](api/Browser.md#clickoptions)
   * [Condition](api/Until.md#condition)
   * [ConsoleMethod](api/Settings.md#consolemethod)
   * [DEFAULT_SETTINGS](api/Settings.md#default_settings)
@@ -24,11 +26,14 @@ title: ''
   * [ENV](api/DSL.md#env)
   * [ElementHandle](api/ElementHandle.md#elementhandle)
   * [Key](api/Constants.md#key)
+  * [LoadEvent](api/Browser.md#loadevent)
   * [Locatable](api/Browser.md#locatable)
   * [Locator](api/By.md#locator)
   * [MouseButtons](api/Constants.md#mousebuttons)
+  * [NavigationOptions](api/Browser.md#navigationoptions)
   * [NullableLocatable](api/Browser.md#nullablelocatable)
   * [ResponseTiming](api/Settings.md#responsetiming)
+  * [ScreenshotOptions](api/Browser.md#screenshotoptions)
   * [StepFunction](api/DSL.md#stepfunction)
   * [StepOptions](api/DSL.md#stepoptions)
   * [TargetLocator](api/TargetLocator.md#targetlocator)

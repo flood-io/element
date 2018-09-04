@@ -16,8 +16,8 @@ export class TestDataLoaders implements TestDataFactory {
 	/**
 	 * Loads test data from a CSV file, returning a `<[TestDataSource]>` instance.
 	 */
-	public fromCSV<TRow>(filename: string, seperator: string = ','): TestDataSource<TRow> {
-		let loader = new CSVLoader<TRow>(this.workRoot.join('test-data', 'files', filename), seperator)
+	public fromCSV<TRow>(filename: string, separator: string = ','): TestDataSource<TRow> {
+		let loader = new CSVLoader<TRow>(this.workRoot.testData(filename), separator)
 		return new TestDataSource<TRow>(loader)
 	}
 
@@ -25,7 +25,7 @@ export class TestDataLoaders implements TestDataFactory {
 	 * Loads data from a JSON ffile
 	 */
 	public fromJSON<TRow>(filename: string): TestDataSource<TRow> {
-		let loader = new JSONLoader<TRow>(this.workRoot.join('test-data', 'files', filename))
+		let loader = new JSONLoader<TRow>(this.workRoot.testData(filename))
 		return new TestDataSource<TRow>(loader)
 	}
 }
@@ -34,7 +34,7 @@ export class NullTestDataLoaders implements TestDataFactory {
 	public fromData<TRow>(lines: TRow[]): TestDataSource<TRow> {
 		return new TestDataSource<TRow>(new NullLoader())
 	}
-	public fromCSV<TRow>(filename: string, seperator: string = ','): TestDataSource<TRow> {
+	public fromCSV<TRow>(filename: string, separator: string = ','): TestDataSource<TRow> {
 		return new TestDataSource<TRow>(new NullLoader())
 	}
 	public fromJSON<TRow>(filename: string): TestDataSource<TRow> {

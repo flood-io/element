@@ -9,7 +9,7 @@ import * as nodeAssert from 'assert'
 import { IReporter } from '../Reporter'
 import { EventEmitter } from 'events'
 import { ITestScript } from '../TestScript'
-import { DEFAULT_SETTINGS, ConcreteTestSettings, normalizeSettings } from './Settings'
+import { DEFAULT_SETTINGS, ConcreteTestSettings, normalizeSettings, TestSettings } from './Settings'
 import { expect } from '../utils/Expect'
 import { Step, StepFunction, normalizeStepOptions } from './Step'
 import Test from './Test'
@@ -27,6 +27,20 @@ export type CallbackFunc = (...args: Opaque[]) => void | Promise<void>
 export function unreachable(message = 'unreachable'): Error {
 	return new Error(message)
 }
+
+// interface FloodElement {
+// setup: (settings: TestSettings) => void
+// ENV: FloodProcessEnv
+// step: stepDefinerType
+// By: By
+// Until: Until
+// Device: Device
+// MouseButtons: MouseButtons
+// Key: Key
+// userAgents: userAgents
+
+// TestData: TestDataFactory
+// }
 
 /**
  * VM is a simpler implementation of the previous stack based VM.
@@ -47,7 +61,8 @@ export class VM {
 
 	constructor(private runEnv: RuntimeEnvironment, private script: ITestScript) {}
 
-	private createVirtualMachine(floodElementActual) {
+	// TODO work out the right type for floodElementActual
+	private createVirtualMachine(floodElementActual: any) {
 		this.vm = new NodeVM({
 			console: 'redirect',
 			sandbox: {},
@@ -128,7 +143,7 @@ export class VM {
 		// let suite = createSuite()
 
 		let context = {
-			setup: settings => {
+			setup: (settings: TestSettings) => {
 				Object.assign(rawSettings, settings)
 			},
 

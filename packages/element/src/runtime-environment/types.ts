@@ -50,4 +50,6 @@ export interface WorkRoot {
 	ensureCreated(): void
 
 	join(kind: WorkRootKind, ...segments: string[]): string
+
+	testData(filename: string): string
 }

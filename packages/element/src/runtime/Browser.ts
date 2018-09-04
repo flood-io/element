@@ -343,7 +343,7 @@ export class Browser<T> implements BrowserInterface {
 				element.dispatchEvent(new Event('change', { bubbles: true }))
 				return options.filter(option => option.selected).map(option => option.value)
 			},
-			element['element'],
+			element.element,
 			values,
 		)
 	}
@@ -367,7 +367,7 @@ export class Browser<T> implements BrowserInterface {
 				element.dispatchEvent(new Event('change', { bubbles: true }))
 				return options.filter(option => option.selected).map(option => option.value)
 			},
-			element['element'],
+			element.element,
 			index,
 		)
 	}
@@ -392,7 +392,7 @@ export class Browser<T> implements BrowserInterface {
 				element.dispatchEvent(new Event('change', { bubbles: true }))
 				return options.filter(option => option.selected).map(option => option.value)
 			},
-			element['element'],
+			element.element,
 			text,
 		)
 	}

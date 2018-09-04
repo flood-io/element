@@ -14,6 +14,6 @@ export class ElementStateCondition extends ElementCondition {
 
 	pageFunc: EvaluateFn = (node: HTMLElement, waitForDisabled: boolean) => {
 		if (!node) return false
-		return node['disabled'] === waitForDisabled
+		return (node as any)['disabled'] === waitForDisabled
 	}
 }

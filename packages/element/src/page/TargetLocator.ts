@@ -50,7 +50,9 @@ export class TargetLocator implements ITargetLocator {
 		if (typeof id === 'number') {
 			// Assume frame index
 			let frameElementName = await this.page.evaluate((index: number) => {
-				let frame = window.frames[Number(index)]
+				// NOTE typescript lib.dom lacks proper index signature for frames: Window to work
+				let frame = (window as any).frames[Number(index)]
+
 				if (!frame) throw Error(`No frame found at index: ${index}`)
 				return frame.name || frame.id
 			}, id)

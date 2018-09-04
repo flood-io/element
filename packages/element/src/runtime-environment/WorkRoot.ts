@@ -21,7 +21,7 @@ export default class WorkRoot implements IWorkRoot {
 	// handles special cases
 	rootFor(root: WorkRootKind): string {
 		if (this.specialSubRoots.hasOwnProperty(root)) {
-			return this.specialSubRoots[root]
+			return this.specialSubRoots[root as SpecialSubRoot]
 		} else {
 			return path.join(this.root, root)
 		}
@@ -29,6 +29,10 @@ export default class WorkRoot implements IWorkRoot {
 
 	join(root: WorkRootKind, ...segments: string[]): string {
 		return path.join(this.rootFor(root), ...segments)
+	}
+
+	testData(filename: string): string {
+		return path.join(this.rootFor('test-data'), filename)
 	}
 }
 

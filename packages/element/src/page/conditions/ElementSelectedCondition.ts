@@ -22,7 +22,7 @@ export class ElementSelectedCondition extends ElementCondition {
 			propertyName = 'checked'
 		}
 
-		let value = !!node[propertyName]
+		let value = !!(node as any)[propertyName]
 		return value === waitForSelected
 
 		function isSelectable(node: HTMLElement) {

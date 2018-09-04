@@ -45,7 +45,7 @@ export class TestScriptError extends Error {
 	constructor(
 		message: string,
 		originalStack: string,
-		public callsite: Callsite,
+		public callsite: Callsite | undefined,
 		public unmappedStack: string[],
 		public originalError: Error,
 	) {

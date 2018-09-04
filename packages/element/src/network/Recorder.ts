@@ -139,7 +139,15 @@ export default class Recorder {
 		}
 	}
 
-	public async recordResponseCompleted({ requestId, encodedDataLength, timestamp }) {
+	public async recordResponseCompleted({
+		requestId,
+		encodedDataLength,
+		timestamp,
+	}: {
+		requestId: string
+		encodedDataLength: number
+		timestamp: number
+	}) {
 		debug(`Recorder.recordResponseCompleted: ${requestId}`)
 		let entry = this.getEntryForRequestId(requestId)
 		if (!entry) {
@@ -263,7 +271,7 @@ export default class Recorder {
 	 */
 	public attachEvent(pageEvent: string | PageEvents, handler: (event: any) => void) {
 		if (pageEvent.includes('.')) {
-			this.page['_client'].on(pageEvent, handler)
+			;(this.page as any)['_client'].on(pageEvent, handler)
 		} else {
 			this.page.on(pageEvent as PageEvents, handler)
 		}
@@ -277,7 +285,7 @@ export default class Recorder {
 		return this.entries.find(entry => entry.requestId === requestId)
 	}
 
-	private async privateClientSend(method: string, ...args): Promise<any> {
+	private async privateClientSend(method: string, ...args: any[]): Promise<any> {
 		// let promise = this.page['_client'].send(method, ...args)
 		const client = await this.page['target']().createCDPSession()
 		return client.send(method, ...args)

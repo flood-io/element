@@ -17,7 +17,7 @@ export class By {
 	public readonly command: string
 	public readonly args: string[]
 
-	constructor(command: string, ...args) {
+	constructor(command: string, ...args: any[]) {
 		this.command = command
 		this.args = args
 	}
@@ -50,7 +50,7 @@ export class By {
 	 *
 	 * @param {string} text The link text to search for.
 	 */
-	static linkText(text): Locator {
+	static linkText(text: string): Locator {
 		return new LinkTextLocator(text, false, `By.linkText('${text}')`)
 	}
 
@@ -60,7 +60,7 @@ export class By {
 	 *
 	 * @param {string} text The substring to check for in a link's visible text.
 	 */
-	static partialLinkText(text): Locator {
+	static partialLinkText(text: string): Locator {
 		return new LinkTextLocator(text, true, `By.partialLinkText('${text}')`)
 	}
 
@@ -91,7 +91,7 @@ export class By {
 	 * @param {!(string|Function)} script The script to execute.
 	 * @param {...*} var_args The arguments to pass to the script.
 	 */
-	static js(script: EvaluateFn, ...args): Locator {
+	static js(script: EvaluateFn, ...args: any[]): Locator {
 		let locator = new BaseLocator('By.js(function)')
 		locator.pageFunc = script
 		locator.pageFuncMany = script
@@ -143,7 +143,7 @@ export class By {
 	 * @return {!By} The new locator.
 	 * @see http://www.w3.org/TR/xpath/
 	 */
-	static xpath(xpath): Locator {
+	static xpath(xpath: string): Locator {
 		return new XPathLocator(xpath)
 	}
 }

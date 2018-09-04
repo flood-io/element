@@ -25,7 +25,7 @@ export abstract class Condition {
 
 	constructor(public desc: string = '*BASE CONDITION') {}
 
-	public abstract toString()
+	public abstract toString(): string
 	public abstract async waitFor(frame: Frame, page?: Page): Promise<any>
 
 	public async waitForEvent(page: Page): Promise<any> {
@@ -74,7 +74,7 @@ export abstract class ElementCondition extends LocatorCondition {
 		super(desc, locator, null)
 	}
 
-	public abstract toString()
+	public abstract toString(): string
 
 	get locatorPageFunc(): EvaluateFn {
 		return this.locator.pageFunc
@@ -110,7 +110,7 @@ export abstract class ElementCondition extends LocatorCondition {
 			let node: HTMLElement | null = locatorFunc(...args1)
 			if (node === null) return false
 
-			let conditionFunc = function(node, ...args2) {
+			let conditionFunc = function(node: HTMLElement, ...args2: any[]) {
 				return false
 			}
 
@@ -125,7 +125,7 @@ export abstract class ElementCondition extends LocatorCondition {
 		let conditionFuncAST = recast.parse(conditionFunc.toString()).program.body[0]
 
 		recast.visit(fnAST, {
-			visitVariableDeclaration(path) {
+			visitVariableDeclaration(path: any) {
 				if (path.node.declarations[0].id.name === 'locatorFunc') {
 					path
 						.get('declarations', 0)

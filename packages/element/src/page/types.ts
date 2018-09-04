@@ -32,6 +32,11 @@ export interface ElementHandle {
 	/**
 	 * @internal
 	 */
+	element: PElementHandle
+
+	/**
+	 * @internal
+	 */
 	bindBrowser(browser: any): void
 
 	/**

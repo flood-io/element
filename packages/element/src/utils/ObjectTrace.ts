@@ -13,10 +13,10 @@ interface ErrorLike {
 }
 
 export interface IObjectTrace {
-	addError(error: ErrorLike)
+	addError(error: ErrorLike): void
 	addNetworkTrace(trace: NetworkTraceData): Promise<void>
-	addScreenshot(screenshotURL: string)
-	addAssertion(assertion: Assertion)
+	addScreenshot(screenshotURL: string): void
+	addAssertion(assertion: Assertion): void
 	isEmpty: boolean
 	toObject(): CompositeTraceData
 }

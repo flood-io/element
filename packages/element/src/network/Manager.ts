@@ -1,4 +1,21 @@
 import { Page } from 'puppeteer'
+import { EventEmitter } from 'events'
+
+// interface PagePrivateAccess {
+// [key: '_client']: EventEmitter
+// }
+
+interface RequestEvent {
+	requestId: string
+}
+
+interface Event extends RequestEvent {
+	request: { url: string }
+	type: string
+	frameId: string
+
+	redirectResponse: any
+}
 
 export class Manager {
 	private lifecycleCompleteCallback: (() => void) | null
@@ -47,14 +64,15 @@ export class Manager {
 	}
 
 	private attachEvents() {
-		this.page['_client'].on('Network.requestWillBeSent', this.onRequestWillBeSent.bind(this))
-		this.page['_client'].on('Network.requestIntercepted', this.onRequestIntercepted.bind(this))
-		this.page['_client'].on('Network.responseReceived', this.onResponseReceived.bind(this))
-		this.page['_client'].on('Network.loadingFinished', this.onLoadingFinished.bind(this))
-		this.page['_client'].on('Network.loadingFailed', this.onLoadingFailed.bind(this))
+		const client: EventEmitter = (this.page as any)['_client']
+		client.on('Network.requestWillBeSent', this.onRequestWillBeSent.bind(this))
+		client.on('Network.requestIntercepted', this.onRequestIntercepted.bind(this))
+		client.on('Network.responseReceived', this.onResponseReceived.bind(this))
+		client.on('Network.loadingFinished', this.onLoadingFinished.bind(this))
+		client.on('Network.loadingFailed', this.onLoadingFailed.bind(this))
 	}
 
-	private onRequestWillBeSent(event) {
+	private onRequestWillBeSent(event: Event): void {
 		if (event.redirectResponse) {
 		}
 
@@ -67,11 +85,17 @@ export class Manager {
 		)
 	}
 
-	private handleRequestStart(requestId, url, resourceType, requestPayload, frameId) {
+	private handleRequestStart(
+		requestId: string,
+		url: string,
+		resourceType: string,
+		requestPayload: any,
+		frameId: string,
+	) {
 		if (requestId) this.requestIdToRequest.set(requestId, null)
 	}
 
-	private onRequestIntercepted() {
+	private onRequestIntercepted(): void {
 		console.log('RequestIntercepted')
 		this.updateIdlePromise()
 	}
@@ -87,7 +111,7 @@ export class Manager {
 		// console.log(`Pending requests: ${this.pendingRequestCount}`)
 	}
 
-	private onLoadingFailed(event) {
+	private onLoadingFailed(event: RequestEvent) {
 		const request = this.requestIdToRequest.get(event.requestId)
 		// For certain requestIds we never receive requestWillBeSent event.
 		// @see https://crbug.com/750469

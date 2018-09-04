@@ -15,7 +15,7 @@
 		"allowUnreachableCode": false,
 		"alwaysStrict": true,
 		"noUnusedLocals": true,
-		"noImplicitAny": false,
+		"noImplicitAny": true,
 		"allowSyntheticDefaultImports": true,
 		"experimentalDecorators": true,
 		"typeRoots": ["node_modules/@types"],

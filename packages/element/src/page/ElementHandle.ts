@@ -107,7 +107,7 @@ function domError(
  * @internal
  */
 interface ScreenshotSaver {
-	saveScreenshot(fn: (path: string) => Promise<boolean>)
+	saveScreenshot(fn: (path: string) => Promise<boolean>): void
 }
 
 /**
@@ -127,7 +127,7 @@ export class ElementHandle implements IElementHandle, Locator {
 	/**
 	 * @internal
 	 */
-	private element: PElementHandle
+	public element: PElementHandle
 	constructor(elt: PElementHandle) {
 		this.element = elt
 	}
@@ -414,13 +414,22 @@ export class ElementHandle implements IElementHandle, Locator {
 		return { x, y }
 	}
 
+	// TODO fix with better typings
+	private get elementClient(): any {
+		return (this.element as any)['_client']
+	}
+
+	// TODO fix with better typings
+	private get elementRemoteObject(): any {
+		return (this.element as any)['_remoteObject']
+	}
+
 	public async dispose(): Promise<void> {
 		return this.element.dispose()
 	}
 
 	public async highlight() {
-		let client = this.element['_client']
-		await client.send('Overlay.highlightNode', {
+		await this.elementClient.send('Overlay.highlightNode', {
 			highlightConfig: {
 				showInfo: true,
 				displayAsMaterial: true,
@@ -428,12 +437,11 @@ export class ElementHandle implements IElementHandle, Locator {
 				contentColor: { r: 76, g: 175, b: 80, a: 0.24 },
 				shapeColor: { r: 76, g: 175, b: 80, a: 0.24 },
 			},
-			objectId: this.element['_remoteObject'].objectId,
+			objectId: this.elementRemoteObject.objectId,
 		})
 	}
 
 	public async clearHighlights() {
-		let client = this.element['_client']
-		await client.send('Overlay.hideHighlight', {})
+		await this.elementClient.send('Overlay.hideHighlight', {})
 	}
 }

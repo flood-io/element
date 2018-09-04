@@ -50,8 +50,11 @@ export type NullableLocatable = Locatable | null
 export declare const suite: SuiteDefinition
 
 export interface SuiteDefinition {
-	(callback: (this: null, s: StepDefinition<null>) => void)
-	withData<T>(data: TestDataSource<T>, callback: (this: null, step: StepDefinition<T>) => void)
+	(callback: (this: null, s: StepDefinition<null>) => void): void
+	withData<T>(
+		data: TestDataSource<T>,
+		callback: (this: null, step: StepDefinition<T>) => void,
+	): void
 }
 
 /**
@@ -118,6 +121,8 @@ export interface Browser {
 	/**
 	 * Creates a waiter which will pause the test until a condition is met or a timeout is reached. This can be used for validation or control flow.
 	 *
+	 * Check out <[Until]> for a rich set of wait <[Condition]>s.
+	 *
 	 * **Example:**
 	 *
 	 * ```typescript
@@ -130,6 +135,8 @@ export interface Browser {
 	 * or a <[Condition]>, for more flexible conditions.
 	 */
 	wait(timeoutOrCondition: Condition | number): Promise<boolean>
+
+	waitForNavigation(): Promise<any>
 
 	evaluate(fn: EvaluateFn, ...args: any[]): Promise<any>
 

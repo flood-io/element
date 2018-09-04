@@ -67,6 +67,7 @@ function assertionError(err: StructuredError<AssertionErrorData>): DocumentedErr
 		`Assertion failed`,
 		chalk`An assertion in the test script failed.
 
+message : ${assertionErr.message}
 operator: {blue ${assertionErr.operator}}
 expected: {green ${assertionErr.expected}}
 actual  : {red ${assertionErr.actual}}

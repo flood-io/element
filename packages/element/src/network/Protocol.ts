@@ -1,4 +1,5 @@
 import { ResourceType } from 'puppeteer'
+
 export interface RawResponse {
 	timestamp: number
 	wallTime: number
@@ -77,9 +78,13 @@ export class Entry {
 	constructor(attrs = {}) {
 		this.request = new EntryRequest()
 		this.response = new EntryResponse()
-		for (let [k, v] of Object.entries(attrs)) {
-			this[k] = v
-		}
+		Object.assign(this, attrs)
+		// let k: keyof this
+		// let v: any
+		// for (let [k, v] of Object.entries(attrs)) {
+		// this.set(k, v)
+		// // this[k: keyof this] = v
+		// }
 	}
 
 	public toJSON() {
@@ -126,7 +131,7 @@ export class EntryRequest {
 		secure: boolean
 	}[]
 
-	setIssueTime(monotonicTime, wallTime) {
+	setIssueTime(monotonicTime: number, wallTime: number) {
 		this._issueTime = monotonicTime
 		this._wallIssueTime = wallTime
 		this._startTime = monotonicTime

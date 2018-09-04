@@ -8,17 +8,13 @@ export class NotImplementedError extends Error {
 	}
 }
 
-/**
- * @param {*} arg
- * @return {string}
- */
-function serializeArgument(arg) {
+function serializeArgument(arg: any | undefined): string {
 	if (Object.is(arg, undefined)) return 'undefined'
 	// if (typeof arg === 'function') return evaluationString(arg)
 	return JSON.stringify(arg)
 }
 
-function evaluationString(fun, ...args) {
+function evaluationString(fun: any, ...args: any[]): string {
 	return `(${fun})(${args.map(serializeArgument).join(',')})`
 }
 

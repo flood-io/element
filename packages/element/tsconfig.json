@@ -22,5 +22,5 @@
 		"emitDecoratorMetadata": true	
   },
 	"exclude": ["node_modules", "lib", "examples", "*.spec.ts", "*.test.ts"],
-	"files": ["./index.ts", "./api.ts"]
+	"files": ["./index.ts", "./api.ts", "./ambient.d.ts"]
 }

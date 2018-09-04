@@ -31,6 +31,8 @@ let indexModuleFile: string
 const indexTypescriptFile = path.join(floodelementRoot, 'index.ts')
 const indexDeclarationsFile = path.join(floodelementRoot, 'index.d.ts')
 
+const ambientDeclarationsFile = path.join(floodelementRoot, 'ambient.d.ts')
+
 if (existsSync(indexTypescriptFile)) {
 	indexModuleFile = indexTypescriptFile
 } else if (existsSync(indexDeclarationsFile)) {
@@ -224,7 +226,7 @@ export class TypeScriptTestScript implements ITestScript {
 		): ts.SourceFile {
 			debug('getSourceFile', fileName)
 			// inject our source string if its the sandboxedBasename
-			if (fileName == sandboxedFilename) {
+			if (fileName === sandboxedFilename) {
 				return ts.createSourceFile(fileName, inputSource, languageVersion, false)
 			} else {
 				return originalGetSourceFile.apply(this, arguments)
@@ -287,7 +289,11 @@ export class TypeScriptTestScript implements ITestScript {
 				})
 		}
 
-		const program = ts.createProgram([this.sandboxedFilename], compilerOptions, host)
+		const program = ts.createProgram(
+			[ambientDeclarationsFile, this.sandboxedFilename],
+			compilerOptions,
+			host,
+		)
 		const emitResult = program.emit()
 
 		this.diagnostics = new CategorisedDiagnostics(host, this.filenameMapper.bind(this))
@@ -347,7 +353,7 @@ export class TypeScriptTestScript implements ITestScript {
 		return this.parsedComments('description')
 	}
 
-	private parsedCommentsMemo: { name: string; description: string }
+	private parsedCommentsMemo: { [index: string]: string; name: string; description: string }
 	private parsedComments(key: string) {
 		if (!this.parsedCommentsMemo) {
 			let comments = parseComments(this.originalSource)
@@ -358,7 +364,7 @@ export class TypeScriptTestScript implements ITestScript {
 				let [line1, ...lines] = body.split('\n')
 				name = line1
 				description = lines
-					.filter(l => l.length)
+					.filter((l: string) => l.length)
 					.join('\n')
 					.trim()
 			}

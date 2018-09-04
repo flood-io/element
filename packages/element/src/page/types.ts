@@ -140,9 +140,16 @@ export interface ElementHandle {
 	location(): Promise<{ x: number; y: number }>
 
 	/**
+	 * getProperty
+	 */
+	getProperty(key: string): Promise<string | null>
+
+	/**
 	 * @internal
 	 */
 	toErrorString(): string
+
+	dispose(): Promise<void>
 }
 
 /**

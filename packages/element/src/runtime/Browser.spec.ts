@@ -4,8 +4,7 @@ import { expect, use } from 'chai'
 import 'mocha'
 import { DogfoodServer } from '../../tests/support/fixture-server'
 import { testWorkRoot } from '../../tests/support/test-run-env'
-import PuppeteerDriver from '../driver/Puppeteer'
-import { Page } from 'puppeteer'
+import { launchPuppeteer, testPuppeteer } from '../../tests/support/launch-browser'
 import { Browser } from './Browser'
 import { Until } from '../page/Until'
 import { By } from '../page/By'
@@ -14,7 +13,7 @@ let dogfoodServer = new DogfoodServer()
 
 use(SinonChai)
 
-let page: Page, driver: PuppeteerDriver, puppeteer
+let puppeteer: testPuppeteer
 const workRoot = testWorkRoot()
 
 function ensureDefined<T>(value: T | undefined | null): T | never {
@@ -29,16 +28,16 @@ describe('Browser', function() {
 	this.timeout(30e3)
 	before(async () => {
 		await dogfoodServer.start()
-		driver = new PuppeteerDriver()
-		await driver.launch()
-		puppeteer = await driver.client()
-		page = puppeteer.page
-		page.on('console', msg => console.log(`>> remote console.${msg.type()}: ${msg.text()}`))
+		puppeteer = await launchPuppeteer()
+
+		puppeteer.page.on('console', msg =>
+			console.log(`>> remote console.${msg.type()}: ${msg.text()}`),
+		)
 	})
 
 	after(async () => {
 		await dogfoodServer.close()
-		await driver.close()
+		await puppeteer.close()
 	})
 
 	it('fires callbacks on action command calls', async () => {

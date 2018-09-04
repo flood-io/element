@@ -3,9 +3,8 @@ import 'mocha'
 import { DogfoodServer } from '../../tests/support/fixture-server'
 import PuppeteerDriver from '../driver/Puppeteer'
 import { Page } from 'puppeteer'
-import { Locator } from './Locator'
+import { Locator, ElementHandle } from './types'
 import { By } from './By'
-import { ElementHandle } from './ElementHandle'
 
 let dogfoodServer = new DogfoodServer()
 

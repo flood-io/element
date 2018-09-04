@@ -1,7 +1,8 @@
 import * as express from 'express'
 import { resolve } from 'path'
+import { Server } from 'http'
 
-let instance = null
+let instance: Server | null = null
 
 const dogfoodRoot = resolve(__dirname, '../../../../extern/dogfood')
 

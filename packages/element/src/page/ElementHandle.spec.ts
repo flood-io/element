@@ -2,16 +2,15 @@ import { ElementHandle } from './ElementHandle'
 import { expect } from 'chai'
 import 'mocha'
 import { DogfoodServer } from '../../tests/support/fixture-server'
-import PuppeteerDriver from '../driver/Puppeteer'
-import { ElementHandle as PElementHandle, Page } from 'puppeteer'
-import { PuppeteerClient } from '../types'
+import { ElementHandle as PElementHandle } from 'puppeteer'
+import { launchPuppeteer, testPuppeteer } from '../../tests/support/launch-browser'
 
 let dogfoodServer = new DogfoodServer()
 
-let page: Page, driver: PuppeteerDriver, puppeteer: PuppeteerClient
+let puppeteer: testPuppeteer
 
 async function locateEl(selector: string): Promise<PElementHandle | never> {
-	const maybeEl = await page.$(selector)
+	const maybeEl = await puppeteer.page.$(selector)
 	if (maybeEl === null || maybeEl === undefined) {
 		throw new Error(`unable to find element via selector ${selector}`)
 	} else {
@@ -23,9 +22,8 @@ describe('ElementHandle', function() {
 	this.timeout(30e3)
 	before(async () => {
 		await dogfoodServer.start()
-		driver = new PuppeteerDriver()
-		await driver.launch()
-		puppeteer = await driver.client()
+
+		puppeteer = await launchPuppeteer()
 		puppeteer.page.setViewport({
 			height: 600,
 			width: 800,
@@ -34,16 +32,15 @@ describe('ElementHandle', function() {
 			isLandscape: true,
 			isMobile: false,
 		})
-		page = puppeteer.page
 	})
 
 	after(async () => {
 		await dogfoodServer.close()
-		await driver.close()
+		await puppeteer.close()
 	})
 
 	beforeEach(async () => {
-		await page.goto('http://localhost:1337/wait.html', { waitUntil: 'domcontentloaded' })
+		await puppeteer.page.goto('http://localhost:1337/wait.html', { waitUntil: 'domcontentloaded' })
 	})
 
 	it('getAttribute(id)', async () => {
@@ -118,7 +115,7 @@ describe('ElementHandle', function() {
 	})
 
 	it('clear() input', async () => {
-		await page.goto('http://localhost:1337/forms_with_input_elements.html')
+		await puppeteer.page.goto('http://localhost:1337/forms_with_input_elements.html')
 		const handle: PElementHandle = await locateEl('input[name="new_user_first_name"]')
 		let element = await new ElementHandle(handle)
 
@@ -161,8 +158,8 @@ describe('ElementHandle', function() {
 
 		expect(await element.isDisplayed()).to.be.false
 
-		await page.click('#show_bar')
-		await page.waitForSelector('#bar', { visible: true, timeout: 5e3 })
+		await puppeteer.page.click('#show_bar')
+		await puppeteer.page.waitForSelector('#bar', { visible: true, timeout: 5e3 })
 
 		expect(await element.isDisplayed()).to.be.true
 
@@ -175,8 +172,8 @@ describe('ElementHandle', function() {
 
 		expect(await element.isEnabled()).to.be.false
 
-		await page.click('#enable_btn')
-		await page.waitForFunction(
+		await puppeteer.page.click('#enable_btn')
+		await puppeteer.page.waitForFunction(
 			(selector: string) => {
 				let element = document.querySelector(selector) as HTMLButtonElement
 				return !element.disabled
@@ -191,7 +188,7 @@ describe('ElementHandle', function() {
 	})
 
 	it('findElement()', async () => {
-		await page.goto('http://localhost:1337/forms_with_input_elements.html')
+		await puppeteer.page.goto('http://localhost:1337/forms_with_input_elements.html')
 		const handle: PElementHandle = await locateEl('form')
 		let element = await new ElementHandle(handle)
 		let element2 = await element.findElement('input[name="new_user_first_name"]')
@@ -206,7 +203,7 @@ describe('ElementHandle', function() {
 	})
 
 	it('findElements()', async () => {
-		await page.goto('http://localhost:1337/forms_with_input_elements.html')
+		await puppeteer.page.goto('http://localhost:1337/forms_with_input_elements.html')
 		const handle: PElementHandle = await locateEl('form')
 		let element = await new ElementHandle(handle)
 		let elementsList1 = await element.findElements('input')

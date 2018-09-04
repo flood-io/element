@@ -29,6 +29,7 @@ export default function testRunEnv(
 					FLOOD_SEQUENCE_ID: 1,
 					FLOOD_PROJECT_ID: 1,
 					SEQUENCE: 1,
+					FLOOD_LOAD_TEST: false,
 				},
 				...stepEnv,
 			}

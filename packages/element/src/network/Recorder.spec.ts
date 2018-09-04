@@ -1,28 +1,23 @@
 import { expect } from 'chai'
 import 'mocha'
 import { DogfoodServer } from '../../tests/support/fixture-server'
-import PuppeteerDriver from '../driver/Puppeteer'
 // import Reporter from '../Reporter'
 import Reporter from '../../tests/support/test-reporter'
-import { Page } from 'puppeteer'
-import { PuppeteerClient } from '../types'
 import NetworkRecorder from './Recorder'
 import Observer from '../runtime/Observer'
+import { launchPuppeteer, testPuppeteer } from '../../tests/support/launch-browser'
 
 let dogfoodServer: DogfoodServer = new DogfoodServer()
-let driver: PuppeteerDriver, puppeteer: PuppeteerClient, page: Page
+let puppeteer: testPuppeteer
 describe('Recorder', function() {
 	this.timeout(30e3)
 
 	beforeEach(async () => {
-		driver = new PuppeteerDriver()
-		await driver.launch()
-		puppeteer = await driver.client()
-		page = puppeteer.page
+		puppeteer = await launchPuppeteer()
 	})
 
 	afterEach(async () => {
-		await driver.close()
+		await puppeteer.close()
 	})
 
 	before(async () => {
@@ -38,10 +33,10 @@ describe('Recorder', function() {
 
 		beforeEach(async () => {
 			const reporter = new Reporter()
-			recorder = new NetworkRecorder(page)
+			recorder = new NetworkRecorder(puppeteer.page)
 			let observer = new Observer(reporter, recorder)
-			await observer.attach()
-			await page.goto('http://localhost:1337/wait.html')
+			await observer.attachToNetworkRecorder()
+			await puppeteer.page.goto('http://localhost:1337/wait.html')
 			await recorder.pendingTaskQueue.chain
 		})
 
@@ -49,7 +44,7 @@ describe('Recorder', function() {
 			expect(recorder.entries.length).to.equal(1)
 			expect(recorder.documentResponseCode).to.equal(200)
 			recorder.reset()
-			await page.goto('http://localhost:1337/notfound.html')
+			await puppeteer.page.goto('http://localhost:1337/notfound.html')
 			await recorder.pendingTaskQueue.chain
 			expect(recorder.documentResponseCode).to.equal(404)
 		})

@@ -16,7 +16,7 @@ interface RequestEvent extends Event {
 }
 
 export default class Observer {
-	public consoleFilters: ConsoleMethod[]
+	public consoleFilters: ConsoleMethod[] = []
 
 	private failedRequests: string[]
 	private requests: Set<string> = new Set()

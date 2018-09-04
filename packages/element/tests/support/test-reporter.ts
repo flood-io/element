@@ -44,6 +44,6 @@ export default class TestReporter implements IReporter {
 	testInternalError(message: string, err: Error): void {}
 
 	testScriptConsole(method: string, message?: any, ...optionalParams: any[]): void {
-		console[method](message, ...optionalParams)
+		;(console as any)[method](message, ...optionalParams)
 	}
 }

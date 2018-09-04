@@ -4,17 +4,17 @@ import * as Sinon from 'sinon'
 import * as SinonChai from 'sinon-chai'
 import { DogfoodServer } from '../../tests/support/fixture-server'
 import testRunEnv from '../../tests/support/test-run-env'
-import PuppeteerDriver from '../driver/Puppeteer'
+import { launchPuppeteer, testPuppeteer } from '../../tests/support/launch-browser'
 import Test from './Test'
 import { mustCompileFile } from '../TestScript'
 import { join } from 'path'
-import { PuppeteerClient } from '../types'
 import { Measurement, TraceData } from '../Reporter'
 import { EventEmitterReporter } from '../reporter/EventEmitter'
 use(SinonChai)
 
 let dogfoodServer = new DogfoodServer()
-let test: Test, client: PuppeteerClient, driver: PuppeteerDriver
+let test: Test
+let puppeteer: testPuppeteer
 let testReporter: EventEmitterReporter = new EventEmitterReporter()
 const runEnv = testRunEnv()
 
@@ -28,22 +28,23 @@ function ensureDefined(value: any | undefined | null): any | never {
 
 const setupTest = async (scriptName: string) => {
 	let script = await mustCompileFile(join(__dirname, '../../tests/fixtures', scriptName))
-	test.enqueueScript(script)
-	await driver.launch()
-	client = await driver.client()
-	test.attachDriver(client)
+	test.enqueueScript(script, {})
+
+	test.attachDriver(puppeteer)
+
+	await test.beforeRun()
 }
 
 describe('Test', function() {
 	this.timeout(30e3)
 	beforeEach(async () => {
-		driver = new PuppeteerDriver()
+		puppeteer = await launchPuppeteer()
 		testReporter = new EventEmitterReporter()
 		test = new Test(runEnv, testReporter)
 	})
 
 	afterEach(async () => {
-		await driver.close()
+		await puppeteer.close()
 	})
 
 	before(async () => {
@@ -183,7 +184,7 @@ describe('Test', function() {
 			it.skip('measures network network response time', async () => {
 				let scriptFilename = join(__dirname, '../../tests/fixtures/test-with-assert.ts')
 				let script = await mustCompileFile(scriptFilename)
-				test.enqueueScript(script)
+				test.enqueueScript(script, {})
 				test.settings.responseTimeMeasurement = 'network'
 				test.settings.actionDelay = 0.25
 

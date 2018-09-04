@@ -1,6 +1,6 @@
 import { ElementHandle } from './ElementHandle'
 import { Page, Frame } from 'puppeteer'
-import { TargetLocator as ITargetLocator } from './types'
+import { TargetLocator as ITargetLocator, ElementHandle as IElementHandle } from './types'
 import { getFrames } from '../runtime/Browser'
 
 /**
@@ -37,7 +37,7 @@ export class TargetLocator implements ITargetLocator {
 	 *
 	 * @param id number | string | ElementHandle
 	 */
-	public async frame(id: number | string | ElementHandle) {
+	public async frame(id: number | string | IElementHandle) {
 		let nextFrame: Frame | null
 
 		if (id === null) {

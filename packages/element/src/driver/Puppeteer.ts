@@ -44,10 +44,10 @@ export default class Puppeteer implements Browser {
 	private isClosed = false
 	private clientInitializationPromise: Promise<PuppeteerClient>
 
-	async launch(options: ConcreteLaunchOptions = defaultLaunchOptions) {
-		options = {
+	async launch(passedOptions: Partial<ConcreteLaunchOptions> = {}) {
+		let options: ConcreteLaunchOptions = {
 			...defaultLaunchOptions,
-			...options,
+			...passedOptions,
 		}
 
 		if (!options.sandbox) {

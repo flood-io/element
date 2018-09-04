@@ -25,6 +25,7 @@ describe('Feeder', () => {
 	it('Process line by line with filter', async () => {
 		let feeder = new Feeder<Row>('1')
 		feeder
+			.circular(false)
 			.filter((line, index, instanceID) => line.user === instanceID)
 			.filter(line => !!line.username)
 			.filter(Boolean)
@@ -62,10 +63,9 @@ describe('Feeder', () => {
 		expect(feeder.isComplete).to.be.false
 	})
 
-	it('can be looped', async () => {
+	it('is be looped by default', async () => {
 		let feeder = new Feeder<Row>('1')
 			.filter((line, index, instanceID) => line.user === instanceID)
-			.circular()
 			.append(lines)
 
 		expect(feeder.size).to.equal(2)
@@ -79,10 +79,7 @@ describe('Feeder', () => {
 	})
 
 	it('can be randomized', async () => {
-		let feeder = new Feeder<Row>('1')
-			.circular()
-			.shuffle()
-			.append(lines)
+		let feeder = new Feeder<Row>('1').shuffle().append(lines)
 
 		const mustFeed = () => ensureDefined(feeder.feed())
 		let users = [mustFeed()['username'], mustFeed()['username'], mustFeed()['username']]

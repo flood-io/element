@@ -4,20 +4,30 @@ import { Loader } from './Loader'
 
 /**
  * A `TestDataFactory` is available to be imported into your test script as `TestData`. Use this to load a <[TestDataSource]> which provides new test data to each iteration of your test.
+ *
+ * TODO
+ * Files should be uploaded to ...
  */
 export interface TestDataFactory {
 	/**
 	 * Loads a standard Javascript array of data objects
+	 *
+	 * @param objects an array of data objects
 	 */
-	fromData<TRow>(lines: TRow[]): TestDataSource<TRow>
+	fromData<TRow>(objects: TRow[]): TestDataSource<TRow>
 
 	/**
 	 * Loads test data from a CSV file, returning a `TestData` instance.
+	 *
+	 * @param filename the CSV to load
+	 * @param separator (default: `,`) CSV separator to use
 	 */
-	fromCSV<TRow>(filename: string, seperator: string): TestDataSource<TRow>
+	fromCSV<TRow>(filename: string, separator: string): TestDataSource<TRow>
 
 	/**
 	 * Loads data from a JSON ffile
+	 *
+	 * @param filename the JSON to load.
 	 */
 	fromJSON<TRow>(filename: string): TestDataSource<TRow>
 }

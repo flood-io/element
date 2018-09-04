@@ -4,12 +4,19 @@ import { join } from 'path'
 // const debug = debugFactory('element:docs')
 
 export function parsePuppeteer(): any {
-	const puppeteerDoc = require(join(__dirname, '../..', 'puppeteer-1.6-docs.json'))
-	const puppeteerTypes = puppeteerDoc.children.find(
-		({ name }) => name === '"@types/puppeteer/index.d"',
-	).children
+	const puppeteerPath = join(__dirname, '../..', 'puppeteer-1.6-docs.json')
 
-	// puppeteerTypes.forEach(t => debug('puppeteer.%s', t.name))
+	try {
+		const puppeteerDoc = require(puppeteerPath)
+		const puppeteerTypes = puppeteerDoc.children.find(
+			({ name }) => name === '"@types/puppeteer/index.d"',
+		).children
 
-	return puppeteerTypes
+		// puppeteerTypes.forEach(t => debug('puppeteer.%s', t.name))
+
+		return puppeteerTypes
+	} catch (e) {
+		console.error('unable to load puppeteer doc json', e)
+		return {}
+	}
 }

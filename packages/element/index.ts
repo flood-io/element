@@ -11,7 +11,7 @@ export { Condition } from './src/page/Condition'
 /**
  * @docPage Constants
  */
-export { Device, MouseButtons, Key } from './src/page/Enums'
+export { Device, Key, MouseButtons } from './src/page/Enums'
 
 /**
  * @docPage By
@@ -40,6 +40,22 @@ export { TargetLocator } from './src/page/types'
 export { TestDataFactory, TestDataSource } from './src/test-data/TestData'
 
 import { NullTestDataLoaders } from './src/test-data/TestDataLoaders'
+/**
+ * `TestData` is a pre-configured instance of <[TestDataFactory]> that can be used to prepare test data for your script.
+ *
+ * **Example**
+ * ```typescript
+ * import { step, Browser, TestData, TestSettings } from '@flood/element'
+ *
+ * interface Row {
+ *   username: string
+ *   userID: number
+ * }
+ * TestData.fromCSV<Row>('users.csv').shuffle()
+ * ```
+ *
+ * @docPage TestData
+ */
 export const TestData = new NullTestDataLoaders()
 
 /**
@@ -53,10 +69,14 @@ export {
 	ResponseTiming,
 } from './src/runtime/Settings'
 
-import { FloodProcessEnv, nullFloodProcessEnv } from './src/runtime-environment/types'
-
 /**
- * A subset of process.env available to this test.
+ * @docPage DSL
+ */
+export { FloodProcessEnv } from './src/runtime-environment/types'
+
+import { FloodProcessEnv, nullFloodProcessEnv } from './src/runtime-environment/types'
+/**
+ * A subset of `process.env` available to this test. It is of type <[FloodProcessEnv]>.
  * @docPage DSL
  */
 export const ENV: FloodProcessEnv = nullFloodProcessEnv

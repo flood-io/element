@@ -10,34 +10,35 @@ export class ParamTypeFormatter {
 	constructor(public input: ParamType) {}
 
 	public toString() {
-		let { type } = this.input
-
-		switch (this.input.type) {
-			case 'intrinsic':
-				return `${this.input.name}`
-			case 'stringLiteral':
-				return this.input.value
-			case 'array':
-				let formatter = new ParamTypeFormatter(this.input.elementType)
-				return `${formatter.toString()}[]`
-			case 'union':
-				let formattedArgs = this.input.types.map(t => new ParamTypeFormatter(t).toString())
-				return `${formattedArgs.join('|')}`
-			case 'reflection':
-				return new ReflectedDeclarationFormatter(this.input.declaration).toString()
-			case 'reference':
-				if (this.input.name === 'Promise') {
-					let formattedArgs = (this.input.typeArguments || []).map(t =>
-						new ParamTypeFormatter(t).toString(),
-					)
-					return `[Promise]&lt;${formattedArgs.join('|')}&gt;`
-				} else {
-					return `[${this.input.name}]`
-				}
-			default:
-				console.assert(true, `Found unknown type: "${type}"`)
-		}
+		return typeToString(this.input)
 	}
+}
+
+export function typeToString(input: ParamType): string | never {
+	let { type } = input
+
+	switch (input.type) {
+		case 'intrinsic':
+			return `${input.name}`
+		case 'stringLiteral':
+			return `"${input.value}"`
+		case 'array':
+			return `${typeToString(input.elementType)}\\[]`
+		case 'union':
+			return `${input.types.map(typeToString).join(' | ')}`
+		case 'reflection':
+			return reflectedDeclarationToAny(input.declaration).toString()
+		case 'reference':
+			if (input.name === 'Promise') {
+				let formattedArgs = (input.typeArguments || []).map(typeToString)
+				return `[Promise]&lt;${formattedArgs.join(' | ')}&gt;`
+			} else {
+				return `[${input.name}]`
+			}
+		default:
+			console.assert(true, `Found unknown type: "${type}"`)
+	}
+	return 'void'
 }
 
 type Variable = {
@@ -59,26 +60,41 @@ type ReflectedDeclaration = {
 	signatures?: CallSignature[]
 }
 
-class ReflectedDeclarationFormatter {
-	constructor(public declaration: ReflectedDeclaration | Variable | CallSignature) {}
-
-	toString() {
-		if (this.declaration.kindString === 'Type literal') {
-			if (this.declaration.children) {
-				let children = this.declaration.children
-					.map(child => new ReflectedDeclarationFormatter(child).toString())
-					.reduce((memo, obj) => {
-						memo = { ...obj, ...memo }
-						return memo
-					}, {})
+function reflectedDeclarationToAny(
+	declaration: ReflectedDeclaration | Variable | CallSignature,
+): any {
+	switch (declaration.kindString) {
+		case 'Type literal':
+			if (declaration.children) {
+				let children = declaration.children.map(reflectedDeclarationToAny).reduce((memo, obj) => {
+					memo = { ...obj, ...memo }
+					return memo
+				}, {})
 				return JSON.stringify(children)
 			}
-		} else if (this.declaration.kindString === 'Variable') {
-			let { name, type } = this.declaration
-			let formattedType = new ParamTypeFormatter(type)
+			break
+		case 'Variable':
+			let { name, type } = declaration
+			let formattedType = typeToString(type)
 			let obj = {}
-			obj[name] = formattedType.toString()
+			obj[name] = formattedType
 			return obj
-		}
 	}
+
+	return 'unknown reflection type'
 }
+
+// function
+// class TypeDocType {
+// type: string
+// toString() { return 'void' }
+// }
+
+// class UnionType extends TypeDocType {
+// type: 'union',
+// types: TypeDocType[]
+// }
+
+// export class TypeAliasFormatter {
+// constructor(public type: TypeDocType) {}
+// }

@@ -9,7 +9,7 @@ import { preParseIndex } from './preParseIndex'
 import { parsePuppeteer } from './puppeteer'
 import { generateAnchor } from './generateAnchor'
 import { MarkdownDocument, FrontMatter, Comment } from './MarkdownDocument'
-import { ParamType } from './Formatters'
+import { ParamType, typeToString } from './Formatters'
 
 import * as debugFactory from 'debug'
 const debug = debugFactory('element:docs')
@@ -364,9 +364,10 @@ class DocsParser {
 				name,
 				type,
 				flags: { isOptional = false },
+				defaultValue,
 			} = p
 			let desc = commentFromNode(p)
-			params.push({ name, desc, type, isOptional })
+			params.push({ name, desc, type, isOptional, defaultValue })
 		})
 
 		let required = params
@@ -392,6 +393,7 @@ class DocsParser {
 			desc?: string
 			isReference: boolean
 			isOptional: boolean
+			defaultValue: any
 		}[],
 		returnType?: any,
 	) {
@@ -399,7 +401,13 @@ class DocsParser {
 
 		params.forEach(param => {
 			if (param.name && param.type)
-				doc.writeParameterLine(param.name, param.type, param.desc, param.isOptional)
+				doc.writeParameterLine(
+					param.name,
+					param.type,
+					param.desc,
+					param.isOptional,
+					param.defaultValue,
+				)
 		})
 
 		if (returnType) doc.writeParameterLine('returns:', returnType)
@@ -437,17 +445,22 @@ class DocsParser {
 		// const f = new ReflectedDeclarationFormatter(node)
 		// debug('f', f.toString())
 
-		// switch (node.type.type) {
-		// case 'reflection':
-		// debug('sigs %O', node.type.declaration.signatures)
-		// if (node.type.declaration.signatures) {
-		// node.type.declaration.signatures.forEach(sig => {
-		// // this.addReference(sig.name, join(bookDir, filePathForNameAndType('Type alias', node.name)))
-		// this.processCallSignature(doc, sig, null)
-		// })
-		// }
-		// break
-		// }
+		switch (node.type.type) {
+			// case 'reflection':
+			// debug('sigs %O', node.type.declaration.signatures)
+			// if (node.type.declaration.signatures) {
+			// node.type.declaration.signatures.forEach(sig => {
+			// // this.addReference(sig.name, join(bookDir, filePathForNameAndType('Type alias', node.name)))
+			// this.processCallSignature(doc, sig, null)
+			// })
+			// }
+			// break
+			case 'union':
+				this.processAlias_union(doc, node)
+				break
+			default:
+				debug('unknown type alias type', node.type.type)
+		}
 
 		// if (node.signatures) {
 		// node.signatures.forEach(sig => {
@@ -455,6 +468,15 @@ class DocsParser {
 		// this.processCallSignature(doc, sig, null)
 		// })
 		// }
+	}
+
+	private processAlias_union(doc, node) {
+		debug('processAlias_union', node.name)
+		debug(node.type, typeToString(node.type))
+
+		doc.writeLine('```typescript')
+		doc.writeLine(typeToString(node.type))
+		doc.writeLine('```')
 	}
 
 	private processObjectLiteral(ctx, node) {
@@ -476,6 +498,7 @@ class DocsParser {
 		// 1. Create file and reference
 		doc.writeSection(`\`${name}\``)
 		doc.writeComment(node.comment)
+		// doc.writeCodeBlock(typeToString(node.type))
 	}
 
 	private processExternalModule(ctx, node) {
@@ -538,6 +561,7 @@ class DocsParser {
 	}
 
 	private processClass_Property(doc, parent, node) {
+		debug('processClass_Property', parent, node.name, node)
 		if (isNodeInternal(node)) return
 
 		let { name, flags, type } = node
@@ -546,7 +570,7 @@ class DocsParser {
 		// comment rendered as part of an unordered list, so indent
 		comment = '  ' + comment.replace(/\n/g, '  \n  ') + '  '
 
-		doc.writeParameterLine(name, type, comment, !!flags.isOptional)
+		doc.writeParameterLine(name, type, comment, !!flags.isOptional, node.defaultValue)
 	}
 
 	private processObject(doc, parent, members, thing = 'Name') {

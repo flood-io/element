@@ -5,7 +5,7 @@ import * as table from 'markdown-table'
 import * as yaml from 'js-yaml'
 import { generateAnchor } from './generateAnchor'
 
-import { ParamTypeFormatter, ParamType } from './Formatters'
+import { typeToString, ParamType } from './Formatters'
 
 import * as debugFactory from 'debug'
 const debug = debugFactory('element:docs')
@@ -71,6 +71,13 @@ export class MarkdownDocument {
 		this.writeLineRaw(text)
 	}
 
+	public writeCodeBlock(text: string, language = 'typescript') {
+		const fence = '```'
+		this.writeLineRaw(`${fence}${language}`)
+		this.writeLine(text)
+		this.writeLineRaw(fence)
+	}
+
 	extractReferences(text: string) {
 		this.referencesNeeded = this.referencesNeeded.concat(findReferences(text))
 	}
@@ -84,14 +91,28 @@ export class MarkdownDocument {
 		this.writeLine(`${b}* ${text}`)
 	}
 
-	public writeParameterLine(name: string, type: ParamType, desc: string = '', isOptional = false) {
-		let formattedType = new ParamTypeFormatter(type).toString()
+	public writeParameterLine(
+		name: string,
+		type: ParamType,
+		desc: string = '',
+		isOptional = false,
+		defaultValue: any = undefined,
+	) {
+		debug('writeParameterLine %s %O', name, type)
+		let formattedType = typeToString(type)
 		let t = `&lt;${formattedType}&gt;`
 
 		if (name.startsWith('returns')) {
 			this.writeLine(`* ${name} ${t} ${desc}`)
 		} else {
-			this.writeLine(`* \`${name}\` ${t} ${isOptional ? '(Optional)' : ''} ${desc}`)
+			let defaultValueString = ''
+			if (defaultValue !== undefined) {
+				defaultValueString = `(Optional, default: \`${defaultValue.toString()})\``
+			} else if (isOptional) {
+				defaultValueString = '(Optional)'
+			}
+
+			this.writeLine(`* \`${name}\` ${t}  ${defaultValueString} ${desc}`)
 		}
 	}
 

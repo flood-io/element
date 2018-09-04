@@ -15,7 +15,8 @@ import createLogger from '../utils/Logger'
 
 export const handler = (args: Arguments) => {
 	const { file, verbose } = args
-	const workRoot = getWorkRoot(file, args['work-root'])
+	const workRootPath = getWorkRootPath(file, args['work-root'])
+	const testDataPath = getTestDataPath(file, args['test-data-root'])
 
 	const verboseBool: boolean = !!verbose
 
@@ -34,7 +35,7 @@ export const handler = (args: Arguments) => {
 		chrome: args.chrome,
 		sandbox: args.sandbox,
 
-		runEnv: initRunEnv(workRoot),
+		runEnv: initRunEnv(workRootPath, testDataPath),
 		testSettingOverrides: {
 			loopCount: args.loopCount,
 		},
@@ -50,7 +51,7 @@ export const handler = (args: Arguments) => {
 }
 
 // TODO use args to get an override work-dir root
-function getWorkRoot(file: string, root?: string): string {
+function getWorkRootPath(file: string, root?: string): string {
 	const ext = path.extname(file)
 	const bare = path.basename(file, ext)
 
@@ -59,9 +60,15 @@ function getWorkRoot(file: string, root?: string): string {
 	return path.resolve(root, bare, new Date().toISOString())
 }
 
-function initRunEnv(root: string) {
+function getTestDataPath(file: string, root?: string): string {
+	root = root || path.dirname(file)
+
+	return path.resolve(root)
+}
+
+function initRunEnv(root: string, testDataRoot: string) {
 	const workRoot = new WorkRoot(root, {
-		'test-data': root,
+		'test-data': testDataRoot,
 	})
 
 	console.info('workRoot', workRoot.root)
@@ -100,6 +107,10 @@ export const builder = (yargs: Argv) => {
 		.option('work-root', {
 			describe:
 				'Specify a custom work root. (Default: a directory named after your test script, and at the same location)',
+		})
+		.option('test-data-root', {
+			describe:
+				'Specify a custom path to find test data files. (Default: the same directory as the test script)',
 		})
 		.option('no-headless', {
 			describe:

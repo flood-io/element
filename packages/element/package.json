@@ -70,6 +70,7 @@
 		"@types/d3-array": "^1.2.1",
 		"@types/debug": "^0.0.30",
 		"@types/doctrine": "0.0.3",
+		"@types/express": "^4.16.0",
 		"@types/mocha": "^2.2.45",
 		"@types/puppeteer": "ts2.9",
 		"@types/raven": "^2.1.3",

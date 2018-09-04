@@ -14,7 +14,14 @@ export interface FloodProcessEnv {
 	 */
 	SEQUENCE: number
 
-	IN_GRID: boolean
+	/**
+	 * `true` when running as a load test on https://flood.io
+	 * `false` otherwise
+	 *
+	 * This can be useful for changing settings based on whether you're
+	 * testing your script locally or running it as a fully fledged load test.
+	 */
+	FLOOD_LOAD_TEST: boolean
 }
 
 export const nullFloodProcessEnv: FloodProcessEnv = {
@@ -28,7 +35,7 @@ export const nullFloodProcessEnv: FloodProcessEnv = {
 	FLOOD_SEQUENCE_ID: 0,
 	FLOOD_PROJECT_ID: 0,
 	SEQUENCE: 0,
-	IN_GRID: false,
+	FLOOD_LOAD_TEST: false,
 }
 
 export interface RuntimeEnvironment {

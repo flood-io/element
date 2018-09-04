@@ -10,19 +10,8 @@ const debug = debugFactory('element:test:errors')
 
 export default class ErrorObserver extends NoOpTestObserver {
 	async onStepError(test: Test, step: Step, err: StructuredError<AnyErrorData>) {
-		// TODO these don't fit here
-		debug('stepFailure', step.name)
-
 		// TODO handle errors sourced from without the script
 		test.reporter.testStepError(structuredErrorToDocumentedError(err, test.script))
-
-		// if (err.kind == 'browser') {
-		// debug('stepFailure - browser error in test step', step.name, err)
-		// } else {
-		// debug('stepFailure - internal in test step', step.name, err)
-		// // TODO add new reporter method
-		// test.reporter.testStepError(test.script.liftError(err))
-		// }
 
 		return this.next.onStepError(test, step, err)
 	}

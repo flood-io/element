@@ -1,0 +1,58 @@
+FROM node:9
+
+RUN apt-get update \
+      && apt-get install -y --no-install-recommends \
+        libgconf-2-4 \
+        apt-utils \
+        wget \
+        curl \
+        git \
+        fonts-ipafont-gothic \
+        fonts-wqy-zenhei \
+        fonts-thai-tlwg \
+        fonts-kacst \
+        ttf-freefont \
+        fonts-liberation \
+        libappindicator3-1 \
+        libasound2 \
+        libatk-bridge2.0-0 \
+        libatk1.0-0 \
+        libcups2 \
+        libgtk-3-0 \
+        libnspr4 \
+        libnss3 \
+        libx11-xcb1 \
+        libxss1 \
+        libxtst6 \
+        lsb-release \
+        xdg-utils \
+    \
+    && rm -rf /var/lib/apt/lists/*
+    # \
+    # && git config --global url."https://github.com".insteadOf git://github.com \
+    # && git config --global url."https://${GITHUB_TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/" \
+    # \
+    # && echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+
+RUN curl -sLO https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
+    && dpkg -i google-chrome-stable_current_amd64.deb \
+    && rm -rf google-chrome-stable_current_amd64.deb
+
+ENV NO_CHROME_SANDBOX=1
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+
+ADD ./packages/cli/package.json ./packages/cli/tsconfig.json yarn.lock /cli/
+RUN cd /cli && yarn
+
+ADD ./packages/element/package.json ./packages/element/tsconfig.json yarn.lock /element/
+RUN cd /element && yarn
+
+ADD ./packages/cli /cli
+ADD ./packages/element /element
+
+WORKDIR /app
+
+ADD smoke/package.json smoke/yarn.lock smoke/tsconfig.json ./
+RUN yarn 
+
+ADD smoke/ ./

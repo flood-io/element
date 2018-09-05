@@ -13,3 +13,9 @@ docker-build-local:
 
 docker-run-local-shell:
 	docker run -it element-local-build bash
+
+smoke-build:
+	docker build -t element-smoke -f Dockerfile.smoke .
+
+smoke: smoke-build
+	docker run -it --name smoke --rm -v $(shell pwd):/project element-smoke yarn smoke

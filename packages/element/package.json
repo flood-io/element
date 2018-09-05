@@ -5,7 +5,7 @@
 	"main": "./index.js",
 	"types": "./index.ts.d",
 	"scripts": {
-		"xxxxbuild": "tsc --project . && rm -rf lib/src/extern &&  cp -a src/extern lib/src/extern",
+		"build": "./scripts/build.sh",
 		"build:watch": "tsc --watch --project .",
 		"xxxprepublishOnly": "./scripts/build.sh",
 		"test": "mocha --trace-warnings -r ts-node/register src/**/*.spec.ts",

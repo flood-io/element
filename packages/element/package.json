@@ -11,8 +11,8 @@
 		"test": "mocha --trace-warnings -r ts-node/register src/**/*.spec.ts",
 		"doc": "yarn typedoc && ts-node ./scripts/docs/docs.ts",
 		"doc:watch": "node --trace-warnings $(npm bin)/nodemon --ext ts --exec ts-node -- ./scripts/docs/docs.ts",
-		"doc:once": "ts-node ./scripts/docs/docs.ts",
-		"typedoc": "typedoc --json docs.json ./index.ts",
+		"doc:once": "ts-node --project ./tsconfig.doc.json ./scripts/docs/docs.ts",
+		"typedoc": "typedoc --tsconfig ./tsconfig.doc.json --json docs.json ./index.ts",
 		"typedoc:puppeteer": "typedoc --json puppeteer-1.6-docs.json --includeDeclarations ../../node_modules/@types/puppeteer/index.d.ts"
 	},
 	"repository": {

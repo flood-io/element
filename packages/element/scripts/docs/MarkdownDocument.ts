@@ -60,10 +60,25 @@ export class MarkdownDocument {
 
 		let matter = frontMatter<FrontMatter>(content)
 		doc.frontMatter = matter.attributes
-		doc.lines = matter.body.split('\n')
 
-		doc.referencesNeeded = findReferences(matter.body)
+		doc.addLines(matter.body.split('\n'))
+
+		// doc.truncateFootnotes()
+		// doc.referencesNeeded = findReferences(matter.body)
+
 		return doc
+	}
+
+	public addLines(lines: string[]) {
+		const suffixMarker = '<!-- suffix -->'
+		for (const line of lines) {
+			if (line.includes(suffixMarker)) {
+				this.writeLineRaw(line)
+				break
+			} else {
+				this.writeLine(line)
+			}
+		}
 	}
 
 	public writeLine(text: string = '') {

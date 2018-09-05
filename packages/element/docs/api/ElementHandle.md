@@ -21,21 +21,24 @@ This command has no effect if the underlying DOM element is neither a text
 INPUT, SELECT, or a TEXTAREA element.
 
 #### `ElementHandle.click([, options])`
-* `options` &lt;[ClickOptions]&gt; (Optional) 
+* `options` &lt;[ClickOptions]&gt;  (Optional) 
 * returns: &lt;[Promise]&lt;void&gt;&gt; 
 
 Sends a click event to the element attached to this handle. If the element is
 currently outside the viewport it will first scroll to that element.
 
+#### `ElementHandle.dispose()`
+* returns: &lt;[Promise]&lt;void&gt;&gt; 
+
 #### `ElementHandle.findElement(locator)`
-* `locator` &lt;string|[Locator]&gt;  
-* returns: &lt;[Promise]&lt;[ElementHandle]|null&gt;&gt; 
+* `locator` &lt;string | [Locator]&gt;   
+* returns: &lt;[Promise]&lt;[ElementHandle] | null&gt;&gt; 
 
 Locates an element using the supplied <[Locator]>, returning an <[ElementHandle]>.
 
 #### `ElementHandle.findElements(locator)`
-* `locator` &lt;[Locator]|string&gt;  
-* returns: &lt;[Promise]&lt;[ElementHandle][]&gt;&gt; 
+* `locator` &lt;[Locator] | string&gt;   
+* returns: &lt;[Promise]&lt;[ElementHandle]\[]&gt;&gt; 
 
 Locates all elements using the supplied <[Locator]>, returning an array of <[ElementHandle]>s.
 
@@ -45,15 +48,21 @@ Locates all elements using the supplied <[Locator]>, returning an array of <[Ele
 Sends focus to this element so that it receives keyboard inputs.
 
 #### `ElementHandle.getAttribute(key)`
-* `key` &lt;string&gt;  
-* returns: &lt;[Promise]&lt;string|null&gt;&gt; 
+* `key` &lt;string&gt;   
+* returns: &lt;[Promise]&lt;string | null&gt;&gt; 
 
 Fetches the value of an attribute on this element
 
 #### `ElementHandle.getId()`
-* returns: &lt;[Promise]&lt;string|null&gt;&gt; 
+* returns: &lt;[Promise]&lt;string | null&gt;&gt; 
 
 Fetches the remote elements `id` attribute.
+
+#### `ElementHandle.getProperty(key)`
+* `key` &lt;string&gt;   
+* returns: &lt;[Promise]&lt;string | null&gt;&gt; 
+
+getProperty
 
 #### `ElementHandle.highlight()`
 * returns: &lt;[Promise]&lt;void&gt;&gt; 
@@ -84,7 +93,7 @@ If the remote element is selectable (such as an `<option>` or `input[type="check
 Fetches the remote elements physical location as `x` and `y`.
 
 #### `ElementHandle.sendKeys(keys)`
-* `keys` &lt;string[]&gt;  
+* `keys` &lt;string\[]&gt;   
 * returns: &lt;[Promise]&lt;void&gt;&gt; 
 
 Sends a series of key modifiers to the element.
@@ -95,12 +104,12 @@ Sends a series of key modifiers to the element.
 Fetches the remote elements physical dimensions as `width` and `height`.
 
 #### `ElementHandle.tagName()`
-* returns: &lt;[Promise]&lt;string|null&gt;&gt; 
+* returns: &lt;[Promise]&lt;string | null&gt;&gt; 
 
 Fetches the remote elements `tagName` property.
 
 #### `ElementHandle.takeScreenshot([, options])`
-* `options` &lt;[ScreenshotOptions]&gt; (Optional) 
+* `options` &lt;[ScreenshotOptions]&gt;  (Optional) 
 * returns: &lt;[Promise]&lt;void&gt;&gt; 
 
 Takes a screenshot of this element and saves it to the results folder with a random name.
@@ -111,11 +120,12 @@ Takes a screenshot of this element and saves it to the results folder with a ran
 Retrieves the text content of this element excluding leading and trailing whitespace.
 
 #### `ElementHandle.type(text)`
-* `text` &lt;string&gt;  
+* `text` &lt;string&gt;   
 * returns: &lt;[Promise]&lt;void&gt;&gt; 
 
 Sends a series of key presses to the element to simulate a user typing on the keyboard. Use this to fill in input fields.
 
+#### properties
 
 [Promise]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
 [ClickOptions]: ../../api/Browser.md#clickoptions

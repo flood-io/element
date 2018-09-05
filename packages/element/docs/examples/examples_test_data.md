@@ -105,7 +105,7 @@ step('Step 1 - reports', (browser: Browser, data: UserData) => {
 ```
 
 ### manual assertion
-A hidden problem with the type checking approach is that it's not possible to automatically type check data loaded in from a CSV or JSON at runtime (The techinal reason is that TypeScript's type annotations are not available at runtime - they're said to be "erased" once compiled)
+A hidden problem with the type checking approach is that it's not possible to automatically type check data loaded in from a CSV or JSON at runtime (The techinal reason is that [TypeScript]'s type annotations are not available at runtime - they're said to be "erased" once compiled)
 
 When loading in data from a file, we can still validate it by using `assert`. (Note that in this example we're still using type annotations to make the coding experience better)
 
@@ -136,10 +136,19 @@ step('Step 1 - reports', (browser: Browser, data: UserData) => {
 
 #### truthiness and falsiness
 
-'Truthiness' and 'falsiness' refer to the fact that in Javascript (and thus TypeScript), more values than `true` and `false` are considered to be `true` or `false` in an `if` statement.
+'Truthiness' and 'falsiness' refer to the fact that in Javascript (and thus [TypeScript]), more values than `true` and `false` are considered to be `true` or `false` in an `if` statement.
 
 Falsy values are `false`, `""` (an empty string), `0`, `NaN`, `null` and `undefined`; all other values are truthy.
 
 Its important to understand this when validating data, since for example a value of `0` might be valid, but would be considered to be `false` when tested with `assert.ok(0)`.
 
-<!-- footnotes -->
+## More information
+
+- The API reference for [TestData], [TestDataFactory] and [TestDataSource]
+
+[TypeScript]: https://www.typescriptlang.org/
+<!-- suffix -->
+
+[TestData]: ../../api/TestData.md#testdata
+[TestDataFactory]: ../../api/TestData.md#testdatafactory
+[TestDataSource]: ../../api/TestData.md#testdatasource

@@ -28,3 +28,5 @@ If part of the known text is likely to change, consider using the partial visibl
 let pageTextVerify = By.partialVisibleText('Welcome to')
 await browser.wait(Until.elementIsVisible(pageTextVerify))
 ```
+
+<!-- suffix -->

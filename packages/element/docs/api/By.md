@@ -7,9 +7,9 @@ By is used to create <[Locator]>s to find Elements or use in any place which acc
 
 #### methods
 #### `By.attr(tagName, attrName, attrValue)`
-* `tagName` &lt;string&gt;  
-* `attrName` &lt;string&gt;  
-* `attrValue` &lt;string&gt;  
+* `tagName` &lt;string&gt;   
+* `attrName` &lt;string&gt;   
+* `attrValue` &lt;string&gt;   
 * returns: &lt;[Locator]&gt; 
 
 Locates an element where the attribute matches the value.
@@ -18,15 +18,15 @@ Locates an element where the attribute matches the value.
 By.attr('name', 'frame-name')
 
 #### `By.css(selector[, debugString])`
-* `selector` &lt;string&gt;  
+* `selector` &lt;string&gt;   
 
-* `debugString` &lt;undefined|string&gt; (Optional) 
+* `debugString` &lt;undefined | string&gt;  (Optional) 
 * returns: &lt;[Locator]&gt; 
 
 Locates an element using a CSS (jQuery) style selector
 
 #### `By.id(id)`
-* `id` &lt;string&gt;  The ID to search for
+* `id` &lt;string&gt;   The ID to search for
 
 * returns: &lt;[Locator]&gt; 
 
@@ -34,15 +34,15 @@ Locates elements by the ID attribute. This locator uses the CSS selector
 `*[id="$ID"]`, _not_ `document.getElementById`.
 
 #### `By.js(script, args)`
-* `script` &lt;[EvaluateFn]&gt;  The script to execute.
-* `args` &lt;any[]&gt;  
+* `script` &lt;[EvaluateFn]&gt;   The script to execute.
+* `args` &lt;any\[]&gt;   
 * returns: &lt;[Locator]&gt; 
 
 Locates an elements by evaluating a JavaScript expression.
 The result of this expression must be an element or list of elements.
 
 #### `By.linkText(text)`
-* `text` &lt;any&gt;  The link text to search for.
+* `text` &lt;string&gt;   The link text to search for.
 
 * returns: &lt;[Locator]&gt; 
 
@@ -50,13 +50,13 @@ Locates link elements whose `textContent` matches the given
 string.
 
 #### `By.nameAttr(value)`
-* `value` &lt;string&gt;  The name attribute to search for.
+* `value` &lt;string&gt;   The name attribute to search for.
 * returns: &lt;[Locator]&gt; 
 
 Locates elements whose `name` attribute has the given value.
 
 #### `By.partialLinkText(text)`
-* `text` &lt;any&gt;  The substring to check for in a link's visible text.
+* `text` &lt;string&gt;   The substring to check for in a link's visible text.
 
 * returns: &lt;[Locator]&gt; 
 
@@ -64,7 +64,7 @@ Locates link elements whose `textContent` contains the given
 substring.
 
 #### `By.partialVisibleText(text)`
-* `text` &lt;string&gt;  The substring to check for in a elements's visible text.
+* `text` &lt;string&gt;   The substring to check for in a elements's visible text.
 
 * returns: &lt;[Locator]&gt; 
 
@@ -72,13 +72,13 @@ Locates all elements whose `textContent` contains the given
 substring and is not hidden by CSS.
 
 #### `By.tagName(name)`
-* `name` &lt;string&gt;  The tag name to search for.
+* `name` &lt;string&gt;   The tag name to search for.
 * returns: &lt;[Locator]&gt; 
 
 Locates elements with a given tag name.
 
 #### `By.visibleText(text)`
-* `text` &lt;string&gt;  The string to check for in a elements's visible text.
+* `text` &lt;string&gt;   The string to check for in a elements's visible text.
 
 * returns: &lt;[Locator]&gt; 
 
@@ -86,7 +86,7 @@ Locates all elements whose `textContent` equals the given
 substring and is not hidden by CSS.
 
 #### `By.xpath(xpath)`
-* `xpath` &lt;any&gt;  The XPath selector to use.
+* `xpath` &lt;string&gt;   The XPath selector to use.
 * returns: &lt;[Locator]&gt; 
 
 Locates elements matching a XPath selector. Care should be taken when
@@ -96,8 +96,8 @@ given the selector `//div`, WebDriver will search from the document root
 regardless of whether the locator was used with a WebElement.
 
 #### properties
-* `args` &lt;string[]&gt;      
-* `command` &lt;string&gt;      
+* `args` &lt;string\[]&gt;       
+* `command` &lt;string&gt;       
 # `Locator`
 
 A Locator represents an object used to locate elements on the page. It is usually constructed using the helper methods of <[By]>.

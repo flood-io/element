@@ -12,3 +12,5 @@ You are also able to wait for a specific object property on a resulting page loa
 let pageObjectVerify = By.xpath("//a[contains(@id, 'MyLoginLink')]")
 await browser.wait(Until.elementIsVisible(pageObjectVerify))
 ```
+
+<!-- suffix -->

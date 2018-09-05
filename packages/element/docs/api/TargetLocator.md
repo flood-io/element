@@ -7,7 +7,7 @@ The target locator is accessed through `browser.switchTo()` and enables you to s
 
 #### methods
 #### `TargetLocator.activeElement()`
-* returns: &lt;[Promise]&lt;[ElementHandle]|null&gt;&gt; 
+* returns: &lt;[Promise]&lt;[ElementHandle] | null&gt;&gt; 
 
 Locates the DOM element on the current page that corresponds to
 `document.activeElement` or `document.body` if the active element is not
@@ -19,7 +19,7 @@ available.
 Navigates to the topmost frame
 
 #### `TargetLocator.frame(id)`
-* `id` &lt;number|string|[ElementHandle]&gt;  number | string | ElementHandle
+* `id` &lt;number | string | [ElementHandle]&gt;   number | string | ElementHandle
 
 * returns: &lt;[Promise]&lt;void&gt;&gt; 
 

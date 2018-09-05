@@ -3,8 +3,27 @@ title: ''
 ---
 # `ENV`
 
-A subset of process.env available to this test.
+A subset of `process.env` available to this test. It is of type <[FloodProcessEnv]>.
 
+# `FloodProcessEnv`
+
+#### properties
+* `BROWSER_ID` &lt;number&gt;       
+* `FLOOD_GRID_INDEX` &lt;number&gt;       
+* `FLOOD_GRID_NODE_SEQUENCE_ID` &lt;number&gt;       
+* `FLOOD_GRID_REGION` &lt;string&gt;       
+* `FLOOD_GRID_SEQUENCE_ID` &lt;number&gt;       
+* `FLOOD_GRID_SQEUENCE_ID` &lt;number&gt;       
+* `FLOOD_LOAD_TEST` &lt;boolean&gt;     `true` when running as a load test on https://flood.io  
+  `false` otherwise  
+    
+  This can be useful for changing settings based on whether you're  
+  testing your script locally or running it as a fully fledged load test.  
+    
+* `FLOOD_NODE_INDEX` &lt;number&gt;       
+* `FLOOD_PROJECT_ID` &lt;number&gt;       
+* `FLOOD_SEQUENCE_ID` &lt;number&gt;       
+* `SEQUENCE` &lt;number&gt;     Globally unique sequence number for this browser instance.  
 # `StepOptions`
 
 Specifies the available options which can be supplied to a step to override global settings.
@@ -18,7 +37,7 @@ step("Step 1", { waitTimeout: 300 }, async (browser: Browser) => {
 ```
 
 #### properties
-* `waitTimeout` &lt;undefined|number&gt; (Optional)   Timeout in seconds for all wait and navigation operations within this <[step]>.  
+* `waitTimeout` &lt;undefined | number&gt;  (Optional)   Timeout in seconds for all wait and navigation operations within this <[step]>.  
 ## `StepFunction`
 The `StepFunction` type represents a function to be called as a Test step.
 
@@ -34,8 +53,8 @@ const step1: StepFunction = async (browser: Browser) => {
 ```
 
 #### `step(name, fn)`
-* `name` &lt;string&gt;  Step Name
-* `fn` &lt;[StepFunction]&gt;  Actual implementation of step
+* `name` &lt;string&gt;   Step Name
+* `fn` &lt;[StepFunction]&gt;   Actual implementation of step
 
 * returns: &lt;void&gt; 
 
@@ -56,9 +75,9 @@ export default () => {
 ```
 
 #### `step(name, options, fn)`
-* `name` &lt;string&gt;  
-* `options` &lt;[StepOptions]&gt;  
-* `fn` &lt;[StepFunction]&gt;  
+* `name` &lt;string&gt;   
+* `options` &lt;[StepOptions]&gt;   
+* `fn` &lt;[StepFunction]&gt;   
 * returns: &lt;void&gt; 
 
 `step` can also be called with an overridden subset of Test settings (`options`) valid for just this step.
@@ -91,6 +110,7 @@ Defines a test suite of steps to run.
 ```
 
 
+[FloodProcessEnv]: ../../api/DSL.md#floodprocessenv
 [step]: ../../api/DSL.md#step
 [Browser]: ../../api/Browser.md#browser
 [suite]: ../../api/DSL.md#suite

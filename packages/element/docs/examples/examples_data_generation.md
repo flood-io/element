@@ -58,3 +58,7 @@ const randEmailProvider = internet.email("joe","smith","protonmail.com") // retu
 For more information about what Faker can do for you, please consult the [Faker API Documentation](https://github.com/Marak/faker.js#api)
 
 If you have static test data available as CSV or JSON files, consider using Flood Element's [TestData](./examples_test_data.md) facility.
+
+<!-- suffix -->
+
+[TestData]: ../../api/TestData.md#testdata

@@ -71,3 +71,5 @@ await element.focus()
 // finally click the link
 await element.click()
 ```
+
+<!-- suffix -->

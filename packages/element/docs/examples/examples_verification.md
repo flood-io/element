@@ -17,3 +17,5 @@ Adding verification allows your test to take into account both the javascript pe
 
 1. [Page Verification - By Text](examples_verification_bytext.md)
 2. [Page Verification - By Object Properties](examples_verification_byobject.md)
+
+<!-- suffix -->

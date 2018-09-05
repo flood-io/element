@@ -43,3 +43,8 @@ await browser.selectByValue(By.id('challenger_age'), '28')
 ## More information
 
 For more information on the available actions, see [Browser] and [ElementHandle]
+
+<!-- suffix -->
+
+[Browser]: ../../api/Browser.md#browser
+[ElementHandle]: ../../api/ElementHandle.md#elementhandle

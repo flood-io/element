@@ -1,6 +1,21 @@
 ---
 title: ''
 ---
+# `TestData`
+
+`TestData` is a pre-configured instance of <[TestDataFactory]> that can be used to prepare test data for your script.
+
+**Example**
+```typescript
+import { step, Browser, TestData, TestSettings } from '@flood/element'
+
+interface Row {
+  username: string
+  userID: number
+}
+TestData.fromCSV<Row>('users.csv').shuffle()
+```
+
 # `TestDataSource`
 
 TestDataSource is the instance returned by <[TestDataFactory]>'s methods.
@@ -31,14 +46,14 @@ export default () => {
 
 #### methods
 #### `TestDataSource.circular(circular)`
-* `circular` &lt;boolean&gt;  Default: true. Pass `false` to disable.
+* `circular` &lt;boolean&gt;  (Optional, default: `true)` Default: true. Pass `false` to disable.
 
 * returns: &lt;[TestDataSource]&gt; 
 
 Instructs the data feeder to repeat the data set when it reaches the end. TestData is circular by default; use this to turn wrapping off.
 
 #### `TestDataSource.filter(func)`
-* `func` &lt;[FeedFilterFunction]&gt;  filter function to compare each line
+* `func` &lt;[FeedFilterFunction]&gt;   filter function to compare each line
 
 * returns: &lt;[TestDataSource]&gt; 
 
@@ -53,7 +68,7 @@ TestData.fromCSV("users.csv").filter((line, index, browserID) => line.browser ==
 ```
 
 #### `TestDataSource.shuffle(shuffle)`
-* `shuffle` &lt;boolean&gt;  Default: true. Pass `false` to disable.
+* `shuffle` &lt;boolean&gt;  (Optional, default: `true)` Default: true. Pass `false` to disable.
 
 * returns: &lt;[TestDataSource]&gt; 
 
@@ -64,22 +79,28 @@ Shuffles the data set using the Fisher-Yates method. Use this to randomise the o
 
 A `TestDataFactory` is available to be imported into your test script as `TestData`. Use this to load a <[TestDataSource]> which provides new test data to each iteration of your test.
 
+TODO
+Files should be uploaded to ...
+
 #### methods
-#### `TestDataFactory.fromCSV(filename, seperator)`
-* `filename` &lt;string&gt;  
-* `seperator` &lt;string&gt;  
+#### `TestDataFactory.fromCSV(filename, separator)`
+* `filename` &lt;string&gt;   the CSV to load
+* `separator` &lt;string&gt;   (default: `,`) CSV separator to use
+
 * returns: &lt;[TestDataSource]&gt; 
 
 Loads test data from a CSV file, returning a `TestData` instance.
 
-#### `TestDataFactory.fromData(lines)`
-* `lines` &lt;undefined[]&gt;  
+#### `TestDataFactory.fromData(objects)`
+* `objects` &lt;void\[]&gt;   an array of data objects
+
 * returns: &lt;[TestDataSource]&gt; 
 
 Loads a standard Javascript array of data objects
 
 #### `TestDataFactory.fromJSON(filename)`
-* `filename` &lt;string&gt;  
+* `filename` &lt;string&gt;   the JSON to load.
+
 * returns: &lt;[TestDataSource]&gt; 
 
 Loads data from a JSON ffile

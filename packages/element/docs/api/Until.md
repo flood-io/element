@@ -18,7 +18,7 @@ You typically use these to control the flow of you test.
 
 #### methods
 #### `Until.ableToSwitchToFrame(frame)`
-* `frame` &lt;[Locatable]&gt;  
+* `frame` &lt;[Locatable]&gt;   
 * returns: &lt;[Condition]&gt; 
 
 Creates a condition that will wait until the input driver is able to switch to the designated frame.
@@ -37,28 +37,28 @@ Creates a condition that waits for an alert to be opened. Upon success,
 the returned promise will be fulfilled with the handle for the opened alert.
 
 #### `Until.elementIsDisabled(selectorOrLocator)`
-* `selectorOrLocator` &lt;[NullableLocatable]&gt;  A <[Locatable]> to use to find the element.
+* `selectorOrLocator` &lt;[NullableLocatable]&gt;   A <[Locatable]> to use to find the element.
 
 * returns: &lt;[Condition]&gt; 
 
 Creates a condition that will wait for the given element to be disabled
 
 #### `Until.elementIsEnabled(selectorOrLocator)`
-* `selectorOrLocator` &lt;[NullableLocatable]&gt;  A <[Locatable]> to use to find the element.
+* `selectorOrLocator` &lt;[NullableLocatable]&gt;   A <[Locatable]> to use to find the element.
 
 * returns: &lt;[Condition]&gt; 
 
 Creates a condition that will wait for the given element to be enabled
 
 #### `Until.elementIsNotSelected(selectorOrLocator)`
-* `selectorOrLocator` &lt;[NullableLocatable]&gt;  A <[Locatable]> to use to find the element.
+* `selectorOrLocator` &lt;[NullableLocatable]&gt;   A <[Locatable]> to use to find the element.
 
 * returns: &lt;[Condition]&gt; 
 
 Creates a condition that will wait for the given element to be in the DOM, yet not visible to the user
 
 #### `Until.elementIsNotVisible(selectorOrLocator)`
-* `selectorOrLocator` &lt;[NullableLocatable]&gt;  A <[Locatable]> to use to find the element.
+* `selectorOrLocator` &lt;[NullableLocatable]&gt;   A <[Locatable]> to use to find the element.
 
 * returns: &lt;[Condition]&gt; 
 
@@ -73,14 +73,14 @@ step("Step 1", async browser => {
 ```
 
 #### `Until.elementIsSelected(selectorOrLocator)`
-* `selectorOrLocator` &lt;[NullableLocatable]&gt;  A <[Locatable]> to use to find the element.
+* `selectorOrLocator` &lt;[NullableLocatable]&gt;   A <[Locatable]> to use to find the element.
 
 * returns: &lt;[Condition]&gt; 
 
 Creates a condition that will wait for the given element to be deselected.
 
 #### `Until.elementIsVisible(selectorOrLocator)`
-* `selectorOrLocator` &lt;[NullableLocatable]&gt;  A <[Locatable]> to use to find the element.
+* `selectorOrLocator` &lt;[NullableLocatable]&gt;   A <[Locatable]> to use to find the element.
 
 * returns: &lt;[Condition]&gt; 
 
@@ -94,71 +94,71 @@ step("Step 1", async browser => {
 ```
 
 #### `Until.elementLocated(selectorOrLocator)`
-* `selectorOrLocator` &lt;[NullableLocatable]&gt;  
+* `selectorOrLocator` &lt;[NullableLocatable]&gt;   
 * returns: &lt;[Condition]&gt; 
 
 Creates a condition which will wait until the element is located on the page.
 
 #### `Until.elementTextContains(selectorOrLocator, text)`
-* `selectorOrLocator` &lt;[NullableLocatable]&gt;  
-* `text` &lt;string&gt;  
+* `selectorOrLocator` &lt;[NullableLocatable]&gt;   
+* `text` &lt;string&gt;   
 * returns: &lt;[Condition]&gt; 
 
 Creates a condition which will wait until the element's text content contains the target text.
 
 #### `Until.elementTextIs(selectorOrLocator, text)`
-* `selectorOrLocator` &lt;[NullableLocatable]&gt;  
-* `text` &lt;string&gt;  
+* `selectorOrLocator` &lt;[NullableLocatable]&gt;   
+* `text` &lt;string&gt;   
 * returns: &lt;[Condition]&gt; 
 
 Creates a condition which will wait until the element's text exactly matches the target text, excluding leading and trailing whitespace.
 
 #### `Until.elementTextMatches(selectorOrLocator, regex)`
-* `selectorOrLocator` &lt;[NullableLocatable]&gt;  
-* `regex` &lt;[RegExp]&gt;  
+* `selectorOrLocator` &lt;[NullableLocatable]&gt;   
+* `regex` &lt;[RegExp]&gt;   
 * returns: &lt;[Condition]&gt; 
 
 Creates a condition which will wait until the element's text matches the target Regular Expression.
 
 #### `Until.elementsLocated(selectorOrLocator, desiredCount)`
-* `selectorOrLocator` &lt;[NullableLocatable]&gt;  
-* `desiredCount` &lt;number&gt;  
+* `selectorOrLocator` &lt;[NullableLocatable]&gt;   
+* `desiredCount` &lt;number&gt;  (Optional, default: `1)` 
 * returns: &lt;[Condition]&gt; 
 
 Creates a condition that will wait until at least the desired number of elements are found.
 
 #### `Until.titleContains(title)`
-* `title` &lt;string&gt;  
+* `title` &lt;string&gt;   
 * returns: &lt;[Condition]&gt; 
 
 Creates a condition which waits until the page title contains the expected text.
 
 #### `Until.titleIs(title)`
-* `title` &lt;string&gt;  
+* `title` &lt;string&gt;   
 * returns: &lt;[Condition]&gt; 
 
 Creates a condition which waits until the page title exactly matches the expected text.
 
 #### `Until.titleMatches(title)`
-* `title` &lt;[RegExp]&gt;  
+* `title` &lt;[RegExp]&gt;   
 * returns: &lt;[Condition]&gt; 
 
 Creates a condition which waits until the page title matches the title `RegExp`.
 
 #### `Until.urlContains(url)`
-* `url` &lt;string&gt;  
+* `url` &lt;string&gt;   
 * returns: &lt;[Condition]&gt; 
 
 Creates a condition which waits until the page URL contains the expected path.
 
 #### `Until.urlIs(url)`
-* `url` &lt;string&gt;  
+* `url` &lt;string&gt;   
 * returns: &lt;[Condition]&gt; 
 
 Creates a condition which waits until the page URL exactly matches the expected URL.
 
 #### `Until.urlMatches(url)`
-* `url` &lt;[RegExp]&gt;  
+* `url` &lt;[RegExp]&gt;   
 * returns: &lt;[Condition]&gt; 
 
 Creates a condition which waits until the page URL matches the supplied `RegExp`.

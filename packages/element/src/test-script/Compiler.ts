@@ -111,7 +111,7 @@ const defaultCompilerOptions: ts.CompilerOptions = {
 		'lib.es2016.array.include.d.ts',
 		'lib.es2017.object.d.ts',
 	],
-	types: ['@types/node'],
+	// types: ['@types/node'],
 	typeRoots: ['node_modules/@types'],
 
 	baseUrl: './',

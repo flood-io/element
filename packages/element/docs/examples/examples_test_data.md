@@ -1,5 +1,5 @@
 ---
-title: Examples - Test Data Generation
+title: Examples - Test Data
 ---
 
 # Examples - Test Data

@@ -1,23 +1,9 @@
 import { join, basename } from 'path'
-import { writeFileSync } from 'fs'
-import { spawn, execSync } from 'child_process'
+import { spawn } from 'child_process'
 import { sync as globSync } from 'glob'
 import chalk from 'chalk'
 
 process.env.DEBUG = 'element-cli:console-reporter'
-
-// force element-cli to use the local element
-const cliPkgPath = '/cli/package.json'
-const elementPath = '/element'
-const cliPkg = require(cliPkgPath)
-
-cliPkg.dependencies['@flood/element'] = `file:${elementPath}/dist`
-writeFileSync(cliPkgPath, JSON.stringify(cliPkg), 'utf8')
-
-execSync('yarn build', { cwd: elementPath, stdio: 'inherit' })
-
-console.log('yarning cli')
-execSync('yarn global add file:/cli', { stdio: 'inherit' })
 
 // run tests
 console.log('running tests')
@@ -28,9 +14,10 @@ const failTests = globSync('*.fail.ts', { cwd: tests, absolute: true })
 // console.log('pass', passTests)
 
 async function runTest(testScript: string, expectPass: boolean): Promise<boolean> {
+	const shortName = basename(testScript)
 	console.log('')
-	console.log(`============ running test ${basename(testScript)} ===========`)
-	console.log(process.env)
+	console.log(`{yellow ============ {magenta running test {blue ${shortName}}} ===========}`)
+	// console.log(process.env)
 	const proc = spawn('element', ['run', testScript, '--chrome'], {
 		stdio: ['inherit', 'pipe', 'inherit'],
 		env: process.env,
@@ -47,11 +34,14 @@ async function runTest(testScript: string, expectPass: boolean): Promise<boolean
 		}
 	}
 
-	if (expectPass !== passed) {
+	if (expectPass === passed) {
+		console.info(chalk`{green test script {blue ${shortName}} ran as expected}`)
+	} else if (expectPass !== passed) {
+		console.error(chalk`{red test script {blue ${shortName}} did not run as expected}`)
 		console.error(
-			chalk`{red error}: test script expected to {blue ${
-				expectPass ? 'pass' : 'fail'
-			}} but instead {red ${passed ? 'passed' : 'failed'}}`,
+			chalk`expected to {blue ${expectPass ? 'pass' : 'fail'}} but instead {red ${
+				passed ? 'passed' : 'failed'
+			}}`,
 		)
 	}
 
@@ -60,10 +50,9 @@ async function runTest(testScript: string, expectPass: boolean): Promise<boolean
 
 async function runAll() {
 	let allExpected = true
-	passTests
-	// for (const test of passTests) {
-	// allExpected = (await runTest(test, true)) && allExpected
-	// }
+	for (const test of passTests) {
+		allExpected = (await runTest(test, true)) && allExpected
+	}
 	for (const test of failTests) {
 		allExpected = (await runTest(test, false)) && allExpected
 	}

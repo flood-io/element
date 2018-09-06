@@ -18,4 +18,7 @@ smoke-build:
 	docker build -t element-smoke -f Dockerfile.smoke .
 
 smoke: smoke-build
-	docker run -it --name smoke --rm -v $(shell pwd):/project element-smoke yarn smoke
+	docker run -it --name smoke --rm element-smoke yarn smoke
+
+smoke-shell:
+	docker run -it --name smoke-shell --rm element-smoke bash

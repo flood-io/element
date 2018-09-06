@@ -41,18 +41,23 @@ RUN curl -sLO https://dl.google.com/linux/direct/google-chrome-stable_current_am
 ENV NO_CHROME_SANDBOX=1
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
-ADD ./packages/cli/package.json ./packages/cli/tsconfig.json yarn.lock /cli/
-RUN cd /cli && yarn
-
-ADD ./packages/element/package.json ./packages/element/tsconfig.json yarn.lock /element/
+COPY ./package.json ./yarn.lock /element/
 RUN cd /element && yarn
 
-ADD ./packages/cli /cli
-ADD ./packages/element /element
+COPY ./packages/cli/package.json ./packages/cli/tsconfig.json /element/packages/cli/
+
+COPY ./packages/element/package.json ./packages/element/tsconfig.json /element/packages/element/
+RUN cd /element && yarn 
+
+COPY ./packages/cli/ /element/packages/cli/
+COPY ./packages/element/ /element/packages/element/
+
+COPY ./smoke/element-install.js /element-install.js
+RUN node /element-install.js
 
 WORKDIR /app
 
-ADD smoke/package.json smoke/yarn.lock smoke/tsconfig.json ./
-RUN yarn 
+COPY smoke/package.json smoke/yarn.lock smoke/tsconfig.json ./
+RUN yarn
 
 ADD smoke/ ./

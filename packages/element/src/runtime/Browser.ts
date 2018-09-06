@@ -22,7 +22,13 @@ import { Key } from '../page/Enums'
 import { readFileSync } from 'fs'
 import * as termImg from 'term-img'
 import { ConcreteTestSettings } from './Settings'
-import { NetworkErrorData, LocatorErrorData, AnyErrorData, interpretError } from './errors/Types'
+import {
+	NetworkErrorData,
+	LocatorErrorData,
+	AnyErrorData,
+	ActionErrorData,
+	interpretError,
+} from './errors/Types'
 import interpretPuppeteerError from './errors/interpretPuppeteerError'
 
 import { StructuredError } from '../utils/StructuredError'
@@ -242,13 +248,27 @@ export class Browser<T> implements BrowserInterface {
 			await new Promise((yeah, nah) => setTimeout(yeah, Number(timeoutOrCondition) * 1e3))
 			return true
 		}
+
 		debug('wait')
-		let condition = timeoutOrCondition as Condition
-		condition.settings = this.settings
-		if (condition.hasWaitFor) {
-			return condition.waitFor(this.target, this.page)
-		} else {
-			return condition.waitForEvent(this.page)
+		try {
+			let condition: Condition = timeoutOrCondition
+			condition.settings = this.settings
+			if (condition.hasWaitFor) {
+				return await condition.waitFor(this.target, this.page)
+			} else {
+				return await condition.waitForEvent(this.page)
+			}
+		} catch (err) {
+			debug('wait timed out')
+			throw new StructuredError<ActionErrorData>(
+				'wait timed out',
+				{
+					_kind: 'action',
+					kind: 'wait-timeout',
+					action: 'wait',
+				},
+				err,
+			)
 		}
 	}
 

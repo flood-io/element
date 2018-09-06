@@ -98,6 +98,27 @@ console.log('page title:', await browser.title())
       `,
 		)
 	}
+	if (kind === 'evaluation-timeout') {
+		return DocumentedError.documented(
+			err,
+			`Element tried to evaluate a function on the browser, but it took too long.`,
+			`[LOW LEVEL ERROR]:
+At a lower level, Element uses function evaluation on the remote browser to achieve various tasks. 
+To protect from hanging the test script forever, this evaluation is only allowed to take a limited 
+amount of time to complete. After this time, an error is thrown.
+
+The length of this timeout is set using settings.waitTimeout (or overridden for a single step).
+
+Possible causes:
+- the function took too long to complete. For example if it was polling for an element to appear, 
+  but the element took longer than waitTimeout to appear.
+- the function had an error which caused it to hang.
+
+This error is low level and should be made more informative. If you see it, please let us know:
+${documentationNeeded}
+      `,
+		)
+	}
 
 	return DocumentedError.documented(
 		err,
@@ -138,17 +159,19 @@ function netError(err: StructuredError<NetworkErrorData>): DocumentedError {
 
 function actionError(err: StructuredError<ActionErrorData>): DocumentedError {
 	const { kind, action } = err.data
-	if (kind === 'execution-context-destroyed') {
+	if (kind === 'wait-timeout') {
 		return DocumentedError.documented(
 			err,
-			`Unable to perform ${action}, most likely due to page navigation.`,
-			chalk`The test script tried to perform a {blue ${action}} action on an element whose puppeteer ExecutionContext was destroyed. 
+			`'${action}' took too long to complete.`,
+			chalk`The test script tried to perform a {blue ${action}} action but it took longer than settings.waitTimeout to finish.
 
-This can occur when the browser navigates to a new page, and we try to perform an action on an element located on the previous page.
+To prevent scripts hanging, Element cancels actions which take more than settings.waitTimeout seconds.
 
-Things to try to fix:
-- TODO
-`,
+This can happen due to:
+- very slow page scripts
+- intermittent on-page script problems, such as network disruptions.
+- elements missing
+      `,
 		)
 	}
 

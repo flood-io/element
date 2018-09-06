@@ -16,5 +16,17 @@ export default function interpretPuppeteerError(
 			},
 			error,
 		)
+	} else if (
+		error.name === 'TimeoutError' &&
+		error.message.includes('waiting for function failed')
+	) {
+		return new StructuredError<PuppeteerErrorData>(
+			'evaluation timed out',
+			{
+				_kind: 'puppeteer',
+				kind: 'evaluation-timeout',
+			},
+			error,
+		)
 	}
 }

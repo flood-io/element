@@ -36,9 +36,10 @@ export interface NetworkErrorData {
 	code?: string
 }
 
+export type ActionErrorKind = 'wait-timeout' | 'node-detached'
 export interface ActionErrorData {
 	_kind: 'action'
-	kind: string
+	kind: ActionErrorKind
 	action: string
 }
 
@@ -52,9 +53,10 @@ export interface LocatorErrorData {
 	locator: string
 }
 
+export type PuppeteerErrorKind = 'execution-context-destroyed' | 'evaluation-timeout'
 export interface PuppeteerErrorData {
 	_kind: 'puppeteer'
-	kind: 'execution-context-destroyed'
+	kind: PuppeteerErrorKind
 }
 
 export function interpretError<T, U extends ErrorData>(

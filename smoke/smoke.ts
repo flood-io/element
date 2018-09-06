@@ -1,7 +1,10 @@
 import { join, basename } from 'path'
 import { writeFileSync } from 'fs'
-import { execSync } from 'child_process'
+import { spawn, execSync } from 'child_process'
 import { sync as globSync } from 'glob'
+import chalk from 'chalk'
+
+process.env.DEBUG = 'element-cli:console-reporter'
 
 // force element-cli to use the local element
 const cliPkgPath = '/cli/package.json'
@@ -24,11 +27,53 @@ const passTests = globSync('*.pass.ts', { cwd: tests, absolute: true })
 const failTests = globSync('*.fail.ts', { cwd: tests, absolute: true })
 // console.log('pass', passTests)
 
-function runTest(testScript: string, expectPass: boolean) {
+async function runTest(testScript: string, expectPass: boolean): Promise<boolean> {
 	console.log('')
 	console.log(`============ running test ${basename(testScript)} ===========`)
-	execSync(`element run ${testScript} --chrome`, { stdio: 'inherit' })
+	console.log(process.env)
+	const proc = spawn('element', ['run', testScript, '--chrome'], {
+		stdio: ['inherit', 'pipe', 'inherit'],
+		env: process.env,
+	})
+
+	let passed = true
+
+	proc.stdout.setEncoding('utf8')
+
+	for await (const data of proc.stdout) {
+		process.stdout.write(data)
+		if (/xxxx Step .* failed/.test(data)) {
+			passed = false
+		}
+	}
+
+	if (expectPass !== passed) {
+		console.error(
+			chalk`{red error}: test script expected to {blue ${
+				expectPass ? 'pass' : 'fail'
+			}} but instead {red ${passed ? 'passed' : 'failed'}}`,
+		)
+	}
+
+	return expectPass === passed
 }
 
-passTests.forEach(test => runTest(test, true))
-failTests.forEach(test => runTest(test, false))
+async function runAll() {
+	let allExpected = true
+	passTests
+	// for (const test of passTests) {
+	// allExpected = (await runTest(test, true)) && allExpected
+	// }
+	for (const test of failTests) {
+		allExpected = (await runTest(test, false)) && allExpected
+	}
+
+	console.log()
+	if (allExpected) {
+		console.log(chalk`{green all scripts ran as expected}`)
+	} else {
+		console.log(chalk`{red not all scripts ran as expected}`)
+	}
+}
+
+runAll()

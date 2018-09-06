@@ -53,6 +53,9 @@ export class ConsoleReporter implements IReporter {
 			case TestEvent.StepSkipped:
 				this.logger.info(`---- Step '${label}' skipped`)
 				break
+			case TestEvent.StepFailed:
+				this.logger.error(`xxxx Step '${label}' failed`)
+				break
 		}
 	}
 

@@ -1,5 +1,4 @@
-import { launch, LaunchOptions } from 'puppeteer'
-import { PuppeteerClient, Browser } from '../types'
+import { launch as launchPuppeteer, LaunchOptions, Browser, Page } from 'puppeteer'
 
 export type ConcreteLaunchOptions = LaunchOptions & {
 	args: string[]
@@ -18,7 +17,7 @@ const defaultLaunchOptions: ConcreteLaunchOptions = {
 	ignoreHTTPSErrors: false,
 }
 
-function setupSystemChrome(options: ConcreteLaunchOptions): ConcreteLaunchOptions {
+function setupChrome(options: ConcreteLaunchOptions): ConcreteLaunchOptions {
 	if (typeof options.chrome === 'boolean') {
 		if (options.chrome) {
 			switch (process.platform) {
@@ -29,63 +28,75 @@ function setupSystemChrome(options: ConcreteLaunchOptions): ConcreteLaunchOption
 					// TODO search PATH for chrome
 					options.executablePath = '/usr/bin/google-chrome-stable'
 			}
+			options.args.push('--disable-gpu')
+			options.args.push('--disable-dev-shm-usage')
 		}
-	} else {
+	} else if (options.chrome !== undefined) {
 		options.executablePath = options.chrome
+		options.args.push('--disable-gpu')
+		options.args.push('--disable-dev-shm-usage')
 	}
-
-	options.args.push('--disable-gpu')
-	options.args.push('--disable-dev-shm-usage')
 
 	return options
 }
 
-export default class Puppeteer implements Browser {
-	private isClosed = false
-	private clientInitializationPromise: Promise<PuppeteerClient>
+export interface IPuppeteerClient {
+	browser: Browser
+	page: Page
+	close(): Promise<void>
+}
 
-	async launch(passedOptions: Partial<ConcreteLaunchOptions> = {}) {
-		let options: ConcreteLaunchOptions = {
-			...defaultLaunchOptions,
-			...passedOptions,
-		}
+export class PuppeteerClient implements IPuppeteerClient {
+	constructor(public browser: Browser, public page: Page) {}
 
-		if (!options.sandbox) {
-			options.args.push('--no-sandbox')
-			// launchArgs.args.push("--disable-setuid-sandbox");
-		}
+	private _isClosed = false
+	async close(): Promise<void> {
+		if (this._isClosed) return
+		await this.browser.close()
+		this._isClosed = true
+	}
+}
 
-		options = setupSystemChrome(options)
-
-		// console.log(JSON.stringify(options, null, 2))
-
-		this.clientInitializationPromise = this.initClient(options)
-
-		return this.clientInitializationPromise
+export async function launch(
+	passedOptions: Partial<ConcreteLaunchOptions> = {},
+): Promise<PuppeteerClient> {
+	let options: ConcreteLaunchOptions = {
+		...defaultLaunchOptions,
+		...passedOptions,
 	}
 
-	private async initClient(opts: LaunchOptions): Promise<PuppeteerClient> {
-		this.isClosed = false
-		let browser = await launch(opts)
-		let page = await browser.newPage()
-		return { page, browser }
+	if (!options.sandbox) {
+		options.args.push('--no-sandbox')
+		// launchArgs.args.push("--disable-setuid-sandbox");
 	}
 
-	async client(): Promise<PuppeteerClient> {
-		if (!this.clientInitializationPromise) return this.launch()
-		return this.clientInitializationPromise
-	}
+	options = setupChrome(options)
 
-	/**
-	 * Closes the current browser instance
-	 *
-	 * @memberof Puppeteer
-	 */
-	public async close(): Promise<void> {
-		if (this.isClosed) return
+	// console.log(JSON.stringify(options, null, 2))
+	// console.log('Runner launching client', options)
+	// const browser = await launchPuppeteer(options)
+	// console.log('whyyy')
+	// const page = await browser.newPage()
 
-		let { browser } = await this.clientInitializationPromise
-		await browser.close()
-		this.isClosed = true
+	// console.log('Runner building client...')
+	// return new PuppeteerClient(browser, page)
+
+	// console.log('puppeteer launching client...')
+	// return launchPuppeteer(options).then(browser =>
+	// browser.newPage().then(page => new PuppeteerClient(browser, page)),
+	// )
+
+	const browser = await launchPuppeteer(options)
+	const page = await browser.newPage()
+
+	return new PuppeteerClient(browser, page)
+}
+
+export class NullPuppeteerClient implements IPuppeteerClient {
+	public browser: Browser
+	public page: Page
+	constructor() {}
+	async close(): Promise<void> {
+		return
 	}
 }

@@ -15,10 +15,9 @@ export { runCommandLine, runUntilExit, ElementOptions } from './src/Element'
 export { TestSettings, ResponseTiming } from './src/runtime/Settings'
 export { RuntimeEnvironment, FloodProcessEnv } from './src/runtime-environment/types'
 import WorkRoot from './src/runtime-environment/WorkRoot'
-import PuppeteerDriver from './src/driver/Puppeteer'
-import * as types from './src/types'
+import { launch, PuppeteerClient } from './src/driver/Puppeteer'
 
-export { WorkRoot, PuppeteerDriver, types }
+export { WorkRoot, PuppeteerClient, launch }
 
 export { TestScriptError, ITestScript, TestScriptOptions } from './src/TestScript'
 

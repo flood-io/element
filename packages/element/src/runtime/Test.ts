@@ -1,6 +1,6 @@
 import { VM } from './VM'
-import NetworkRecorder from '../network/Recorder'
-import Observer from './Observer'
+// import NetworkRecorder from '../network/Recorder'
+// import Observer from './Observer'
 import { Browser } from './Browser'
 
 import { IReporter } from './../Reporter'
@@ -17,7 +17,7 @@ import { StructuredError } from '../utils/StructuredError'
 
 import { Step } from './Step'
 
-import { PuppeteerClient } from '../types'
+import { IPuppeteerClient } from '../driver/Puppeteer'
 import { RuntimeEnvironment, WorkRoot } from '../runtime-environment/types'
 import { ITestScript } from '../TestScript'
 import { ScreenshotOptions } from 'puppeteer'
@@ -59,8 +59,8 @@ export default class Test {
 
 	public runningBrowser: Browser<Step> | null
 
-	public networkRecorder: NetworkRecorder
-	public observer: Observer
+	// public networkRecorder: NetworkRecorder
+	// public observer: Observer
 
 	public testObserver: TestObserver
 
@@ -68,8 +68,6 @@ export default class Test {
 
 	public script: ITestScript
 	public failed: boolean
-
-	private driver: PuppeteerClient
 
 	public testData: TestDataSource<any>
 	public testDataLoaders: TestDataFactory
@@ -79,6 +77,7 @@ export default class Test {
 	}
 
 	constructor(
+		private client: IPuppeteerClient,
 		private runEnv: RuntimeEnvironment,
 		public reporter: IReporter = new NullReporter(),
 		testObserverFactory: (t: TestObserver) => TestObserver = x => x,
@@ -93,9 +92,24 @@ export default class Test {
 		// this.testData = this.testDataLoaders.fromData([{}]).circular()
 	}
 
-	public async shutdown() {
+	public async cancel() {
 		await this.testObserver.after(this)
 	}
+
+	// public attachDriver(client: PuppeteerClient) {
+	// console.assert(client, `client is not defined`)
+	// console.assert(!this.client, `client already attached`)
+
+	// this.client = client
+
+	// // TODO could this be pushed down into Browser?
+	// this.networkRecorder = new NetworkRecorder(this.client.page)
+	// this.observer = new Observer(this.reporter, this.networkRecorder)
+
+	// // TODO refactor
+	// // Adds filter for console messages emitted by the browser
+	// this.observer.consoleFilters = this.settings.consoleFilter || []
+	// }
 
 	public enqueueScript(script: ITestScript, settingsOverride: TestSettings): ConcreteTestSettings {
 		this.script = script
@@ -119,21 +133,6 @@ export default class Test {
 		return this.settings
 	}
 
-	public attachDriver(driver: PuppeteerClient) {
-		console.assert(driver, `Driver is not defined`)
-		console.assert(!this.driver, `Driver already attached`)
-
-		this.driver = driver
-
-		// TODO could this be pushed down into Browser?
-		this.networkRecorder = new NetworkRecorder(this.driver.page)
-		this.observer = new Observer(this.reporter, this.networkRecorder)
-
-		// TODO refactor
-		// Adds filter for console messages emitted by the browser
-		this.observer.consoleFilters = this.settings.consoleFilter || []
-	}
-
 	public async beforeRun(): Promise<void> {
 		debug('beforeRun()')
 		await this.testData.load()
@@ -144,18 +143,18 @@ export default class Test {
 	 * @return {Promise<void|Error>}
 	 */
 	public async run(iteration?: number): Promise<void | Error> {
-		console.assert(this.driver, `Driver is not configured in Test`)
+		console.assert(this.client, `client is not configured in Test`)
 		// let skipped: Step[] = []
 		// let errors: Error[] = []
 
-		await this.observer.attachToNetworkRecorder()
+		// await this.observer.attachToNetworkRecorder()
 
 		debug('run() start')
 
 		try {
 			const browser = new Browser<Step>(
 				this.runEnv.workRoot,
-				this.driver,
+				this.client,
 				this.settings,
 				this.willRunCommand.bind(this),
 				this.didRunCommand.bind(this),
@@ -235,8 +234,8 @@ export default class Test {
 			await this.doStepDelay()
 		}
 
-		await this.syncNetworkRecorder()
-		this.networkRecorder.reset()
+		// await this.syncNetworkRecorder()
+		// this.networkRecorder.reset()
 		debug('step done')
 	}
 
@@ -351,7 +350,7 @@ export default class Test {
 		return new ObjectTrace(this.runEnv.workRoot, step.name)
 	}
 
-	public async syncNetworkRecorder() {
-		await this.networkRecorder.sync()
-	}
+	// public async syncNetworkRecorder() {
+	// await this.networkRecorder.sync()
+	// }
 }

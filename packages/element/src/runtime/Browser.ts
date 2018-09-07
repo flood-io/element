@@ -14,7 +14,7 @@ import CustomDeviceDescriptors from '../utils/CustomDeviceDescriptors'
 import { Locator, ElementHandle } from '../page/types'
 import { TargetLocator } from '../page/TargetLocator'
 import { By } from '../page/By'
-import { PuppeteerClient } from '../types'
+import { IPuppeteerClient } from '../driver/Puppeteer'
 import { WorkRoot } from '../runtime-environment/types'
 import { join, resolve } from 'path'
 import * as cuid from 'cuid'
@@ -178,7 +178,7 @@ export class Browser<T> implements BrowserInterface {
 
 	constructor(
 		public workRoot: WorkRoot,
-		private client: PuppeteerClient,
+		private client: IPuppeteerClient,
 		public settings: ConcreteTestSettings,
 		public beforeFunc: (b: Browser<T>, name: string) => Promise<void> = async () => {},
 		public afterFunc: (b: Browser<T>, name: string) => Promise<void> = async () => {},

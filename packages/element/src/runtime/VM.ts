@@ -20,10 +20,6 @@ import Test from './Test'
 // import * as debugFactory from 'debug'
 // const debug = debugFactory('element:vm')
 
-export type Opaque = {} | void | null | undefined
-export type Factory<T> = new (...args: Opaque[]) => T
-export type CallbackFunc = (...args: Opaque[]) => void | Promise<void>
-
 export function unreachable(message = 'unreachable'): Error {
 	return new Error(message)
 }

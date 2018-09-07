@@ -2,7 +2,7 @@ import { Logger } from 'winston'
 import { IReporter } from './Reporter'
 import { PuppeteerClient, launch } from './driver/Puppeteer'
 import { RuntimeEnvironment } from './runtime-environment/types'
-import Runner from './Runner'
+import { IRunner, Runner, PersistentRunner, TestCommander } from './Runner'
 import { ITestScript, TestScriptOptions, mustCompileFile } from './TestScript'
 import { TestSettings } from './runtime/Settings'
 import { TestObserver } from './runtime/test-observers/Observer'
@@ -15,7 +15,6 @@ export interface ElementOptions {
 	clientFactory?: AsyncFactory<PuppeteerClient>
 	testScript: string
 	strictCompilation: boolean
-	watch: boolean
 	headless: boolean
 	devtools: boolean
 	chrome: string | boolean
@@ -24,12 +23,18 @@ export interface ElementOptions {
 	verbose: boolean
 	testSettingOverrides: TestSettings
 	testObserverFactory?: (t: TestObserver) => TestObserver
+	persistentRunner: boolean
+	testCommander?: TestCommander
 }
 
 export function runUntilExit(fn: () => Promise<void>) {
 	fn()
-		.then(() => process.exit(0))
+		.then(() => {
+			console.log('process exited')
+			process.exit(0)
+		})
 		.catch(err => {
+			console.log('process exited - with error')
 			console.error(err)
 			process.exit(1)
 		})
@@ -38,8 +43,16 @@ export function runUntilExit(fn: () => Promise<void>) {
 export async function runCommandLine(opts: ElementOptions): Promise<void> {
 	let { logger, testScript, clientFactory } = opts
 
-	const runner = new Runner(
+	let runnerClass: { new (...args: any[]): IRunner }
+	if (opts.persistentRunner) {
+		runnerClass = PersistentRunner
+	} else {
+		runnerClass = Runner
+	}
+
+	const runner = new runnerClass(
 		clientFactory || launch,
+		opts.testCommander,
 		opts.runEnv,
 		opts.reporter,
 		logger,
@@ -79,5 +92,6 @@ export async function runCommandLine(opts: ElementOptions): Promise<void> {
 	const testScriptFactory = async (): Promise<ITestScript> => {
 		return await mustCompileFile(testScript, testScriptOptions)
 	}
+
 	await runner.run(testScriptFactory)
 }

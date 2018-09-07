@@ -5,6 +5,7 @@ import {
 	ElementOptions,
 	WorkRoot,
 	FloodProcessEnv,
+	TestCommander,
 } from '@flood/element/api'
 import { ConsoleReporter } from '../utils/ConsoleReporter'
 import { Argv, Arguments } from 'yargs'
@@ -12,6 +13,8 @@ import { existsSync } from 'fs'
 import * as path from 'path'
 // import { error } from '../utils/out/error'
 import createLogger from '../utils/Logger'
+import { watch } from 'chokidar'
+import { EventEmitter } from 'events'
 
 export const handler = (args: Arguments) => {
 	const { file, verbose } = args
@@ -39,6 +42,17 @@ export const handler = (args: Arguments) => {
 		testSettingOverrides: {
 			loopCount: args.loopCount,
 		},
+		persistentRunner: false,
+	}
+
+	if (args.fastForward) {
+		opts.testSettingOverrides.actionDelay = 1
+		opts.testSettingOverrides.stepDelay = 1
+	}
+
+	if (args.watch) {
+		opts.persistentRunner = true
+		opts.testCommander = makeTestCommander(file)
 	}
 
 	runUntilExit(() => runCommandLine(opts))
@@ -48,6 +62,21 @@ export const handler = (args: Arguments) => {
 
 	// console.log("awaited");
 	// process.exit(0);
+}
+
+function makeTestCommander(file: string): TestCommander {
+	const commander = new EventEmitter()
+
+	const watcher = watch(file, { persistent: true })
+	watcher.on('change', (path, stats) => {
+		console.log('change', path)
+		if (path === file) {
+			console.log('changy')
+			commander.emit('rerun-test')
+			console.log('after changy')
+		}
+	})
+	return commander
 }
 
 // TODO use args to get an override work-dir root
@@ -103,6 +132,12 @@ export const builder = (yargs: Argv) => {
 		})
 		.option('chrome', {
 			describe: 'Specify a custom Google Chrome executable path',
+		})
+		.option('watch', {
+			describe: 'Watch <file> and rerun the test when it changes.',
+		})
+		.option('fast-forward', {
+			describe: 'Reduces configured action and step wait times to speed up testing.',
 		})
 		.option('work-root', {
 			describe:

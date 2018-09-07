@@ -8,6 +8,21 @@ import { IReporter } from './Reporter'
 import { AsyncFactory } from './utils/Factory'
 import { TestScriptError, ITestScript } from './TestScript'
 
+export interface TestCommander {
+	on(event: 'rerun-test', listener: () => void): this
+}
+
+export interface IRunner {
+	run(testScriptFactory: AsyncFactory<ITestScript>): Promise<void>
+	stop(): Promise<void>
+}
+
+function delay(t, v?) {
+	return new Promise(function(resolve) {
+		setTimeout(resolve.bind(null, v), t)
+	})
+}
+
 class Looper {
 	public iterations = 0
 	private timeout: NodeJS.Timer
@@ -44,13 +59,14 @@ class Looper {
 	}
 }
 
-export default class Runner {
+export class Runner {
 	private looper: Looper
 	constructor(
 		private clientFactory: AsyncFactory<PuppeteerClient>,
+		protected testCommander: TestCommander | undefined,
 		private runEnv: RuntimeEnvironment,
 		private reporter: IReporter,
-		private logger: Logger,
+		protected logger: Logger,
 		private testSettingOverrides: TestSettings,
 		private launchOptionOverrides: Partial<ConcreteLaunchOptions>,
 		private testObserverFactory: (t: TestObserver) => TestObserver = x => x,
@@ -96,8 +112,6 @@ export default class Runner {
 	}
 
 	async launchClient(testScript: ITestScript): Promise<PuppeteerClient> {
-		console.log('Runner launch client')
-
 		// evaluate the script so that we can get its settings
 		// TODO refactor into EvaluatedTestScript
 		const settings = new Test(
@@ -177,5 +191,72 @@ export default class Runner {
 
 			await test.cancel()
 		}
+	}
+}
+
+export class PersistentRunner extends Runner {
+	public testScriptFactory: AsyncFactory<ITestScript> | undefined
+	public clientPromise: Promise<PuppeteerClient> | undefined
+	private stopped = false
+
+	constructor(
+		clientFactory: AsyncFactory<PuppeteerClient>,
+		testCommander: TestCommander | undefined,
+		runEnv: RuntimeEnvironment,
+		reporter: IReporter,
+		logger: Logger,
+		testSettingOverrides: TestSettings,
+		launchOptionOverrides: Partial<ConcreteLaunchOptions>,
+		testObserverFactory: (t: TestObserver) => TestObserver = x => x,
+	) {
+		super(
+			clientFactory,
+			testCommander,
+			runEnv,
+			reporter,
+			logger,
+			testSettingOverrides,
+			launchOptionOverrides,
+			testObserverFactory,
+		)
+
+		this.testCommander.on('rerun-test', () => this.rerunTest())
+	}
+
+	rerunTest() {
+		setImmediate(async () => {
+			console.log('persistent runner got a command: rerun')
+
+			try {
+				await this.runTestScript(await this.testScriptFactory(), this.clientPromise)
+			} catch (err) {
+				this.logger.error('an error occurred in the script')
+				this.logger.error(err)
+			}
+		})
+	}
+
+	async stop() {
+		this.stopped = true
+	}
+
+	async waitUntilStopped(): Promise<void> {
+		if (this.stopped) {
+			return
+		} else {
+			await delay(1000)
+			return this.waitUntilStopped()
+		}
+	}
+
+	async run(testScriptFactory: AsyncFactory<ITestScript>): Promise<void> {
+		this.testScriptFactory = testScriptFactory
+
+		// TODO detect changes in testScript settings affecting the client
+		this.clientPromise = this.launchClient(await testScriptFactory())
+
+		this.rerunTest()
+		await this.waitUntilStopped()
+		// return new Promise<void>((resolve, reject) => {})
 	}
 }

@@ -234,6 +234,8 @@ export interface Browser {
 		},
 	): Promise<void>
 
+	sendKeys(...keys: string[]): Promise<void>
+
 	/**
 	 * Takes a screenshot of the whole page and saves it to the `flood/results` folder with a random sequential name. You can download the archive of your test results at the end of the test to retrieve these screenshots.
 	 */

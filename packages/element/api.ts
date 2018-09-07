@@ -17,6 +17,8 @@ export { RuntimeEnvironment, FloodProcessEnv } from './src/runtime-environment/t
 import WorkRoot from './src/runtime-environment/WorkRoot'
 import { launch, PuppeteerClient } from './src/driver/Puppeteer'
 
+export { TestCommander } from './src/Runner'
+
 export { WorkRoot, PuppeteerClient, launch }
 
 export { TestScriptError, ITestScript, TestScriptOptions } from './src/TestScript'

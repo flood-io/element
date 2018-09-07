@@ -1,4 +1,4 @@
-import { step, TestSettings, Until, By } from '@flood/element'
+import { step, TestSettings, Until, By, Key } from '@flood/element'
 import * as assert from 'assert'
 
 export const settings: TestSettings = {
@@ -71,11 +71,11 @@ export default () => {
 		await browser.type(By.id('billing_last_name'), 'Rizioz')
 
 		// Select from searchable dropdown - billing Country
-		let element = await browser.findElement(By.id('billing_country'))
+		let element = await browser.findElement(By.css('#select2-billing_country-container'))
+		await element.highlight()
 		await element.focus()
 		await element.click()
-		await browser.type(By.xpath('/html/body/span/span/span[1]/input'), 'Australia')
-		await browser.type(By.xpath('/html/body/span/span/span[1]/input'), String.fromCharCode(13)) //Simulate Enter key
+		await browser.sendKeys('Australia', Key.RETURN)
 
 		// Fill in text field - billing Address 1
 		await browser.type(By.id('billing_address_1'), '123 ABC Street')
@@ -84,11 +84,12 @@ export default () => {
 		await browser.type(By.id('billing_city'), 'Melbourne')
 
 		// Select from searchable dropdown - billing State
-		let element_state = await browser.findElement(By.id('billing_state'))
+		let element_state = await browser.findElement(
+			By.css('#billing_state_field > span > span > span.selection > span'),
+		)
 		await element_state.focus()
 		await element_state.click()
-		await browser.type(By.xpath('/html/body/span/span/span[1]/input'), 'Victoria')
-		await browser.type(By.xpath('/html/body/span/span/span[1]/input'), String.fromCharCode(13)) //Simulate Enter key
+		await browser.sendKeys('Victoria', Key.RETURN)
 
 		// Fill in text field - billing postcode
 		await browser.type(By.id('billing_postcode'), '3000')

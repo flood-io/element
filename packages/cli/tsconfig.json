@@ -8,7 +8,7 @@
 		"lib": ["dom", "dom.iterable", "esnext", "es2016.array.include", "es2017.object"],
 		"pretty": false,
 		"rootDir": ".",
-		"strictNullChecks": false,
+		"strictNullChecks": true,
 		"forceConsistentCasingInFileNames": true,
 		"allowUnreachableCode": false,
 		"alwaysStrict": true,

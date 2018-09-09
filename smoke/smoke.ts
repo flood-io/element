@@ -16,7 +16,7 @@ const failTests = globSync('*.fail.ts', { cwd: tests, absolute: true })
 async function runTest(testScript: string, expectPass: boolean): Promise<boolean> {
 	const shortName = basename(testScript)
 	console.log('')
-	console.log(`{yellow ============ {magenta running test {blue ${shortName}}} ===========}`)
+	console.log(chalk`{yellow ============ {magenta running test {blue ${shortName}}} ===========}`)
 	// console.log(process.env)
 	const proc = spawn('element', ['run', testScript, '--chrome', '--verbose'], {
 		stdio: ['inherit', 'pipe', 'inherit'],

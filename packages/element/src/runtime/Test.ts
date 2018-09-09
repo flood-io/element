@@ -93,6 +93,7 @@ export default class Test {
 	}
 
 	public async cancel() {
+		this.failed = true
 		await this.testObserver.after(this)
 	}
 

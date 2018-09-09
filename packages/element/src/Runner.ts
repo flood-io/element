@@ -17,7 +17,7 @@ export interface IRunner {
 	stop(): Promise<void>
 }
 
-function delay(t, v?) {
+function delay(t: number, v?: any) {
 	return new Promise(function(resolve) {
 		setTimeout(resolve.bind(null, v), t)
 	})
@@ -220,15 +220,26 @@ export class PersistentRunner extends Runner {
 			testObserverFactory,
 		)
 
-		this.testCommander.on('rerun-test', () => this.rerunTest())
+		if (this.testCommander !== undefined) {
+			this.testCommander.on('rerun-test', () => this.rerunTest())
+		}
 	}
 
 	rerunTest() {
+		// destructure for type checking (narrowing past undefined)
+		const { clientPromise, testScriptFactory } = this
+		if (clientPromise === undefined) {
+			return
+		}
+		if (testScriptFactory === undefined) {
+			return
+		}
+
 		setImmediate(async () => {
 			console.log('persistent runner got a command: rerun')
 
 			try {
-				await this.runTestScript(await this.testScriptFactory(), this.clientPromise)
+				await this.runTestScript(await testScriptFactory(), clientPromise)
 			} catch (err) {
 				this.logger.error('an error occurred in the script')
 				this.logger.error(err)

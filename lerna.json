@@ -3,10 +3,15 @@
   "packages": [
     "packages/*"
   ],
-  "version": "1.0.3-3",
+  "version": "1.0.3-48",
+  "npmClient": "yarn",
+  "useWorkspaces": true,
   "command": {
     "init": {
       "exact": true
+    },
+    "bootstrap": {
+      "npmClient": "yarn"
     }
   }
 }

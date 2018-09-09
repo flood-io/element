@@ -3,19 +3,65 @@ import {
 	TestScriptError,
 	TestScriptOptions,
 	TestScriptDefaultOptions,
+	ErrorWrapper,
+	unwrapError,
 } from '../TestScript'
 import { CategorisedDiagnostics } from './TypescriptDiagnostics'
 import * as ts from 'typescript'
 import * as path from 'path'
+import { existsSync, readFileSync } from 'fs'
 import { VMScript } from 'vm2'
 import * as parseComments from 'comment-parser'
 import { SourceUnmapper } from './SourceUnmapper'
+import * as debugFactory from 'debug'
+import { tmpdir } from 'os'
+import * as findRoot from 'find-root'
 
-const floodchromeRoot = path.join(__dirname, '../..')
+const debug = debugFactory('element:test-script:compiler')
+
+const floodelementRoot = findRoot(__dirname)
+
 const sandboxPath = 'test-script-sandbox'
-const sandboxRoot = path.join(floodchromeRoot, sandboxPath)
+const sandboxRoot = path.join(tmpdir(), 'flood-element-tmp', sandboxPath)
 const sandboxedBasenameTypescript = 'flood-chrome.ts'
 const sandboxedBasenameJavascript = 'flood-chrome.js'
+
+// handle e.g. during dev/test vs built/dist mode
+let indexModuleFile: string
+const indexTypescriptFile = path.join(floodelementRoot, 'index.ts')
+const indexDeclarationsFile = path.join(floodelementRoot, 'index.d.ts')
+
+const ambientDeclarationsFile = path.join(floodelementRoot, 'ambient.d.ts')
+
+if (existsSync(indexTypescriptFile)) {
+	indexModuleFile = indexTypescriptFile
+} else if (existsSync(indexDeclarationsFile)) {
+	indexModuleFile = indexDeclarationsFile
+} else {
+	throw new Error('unable to find index.ts or index.d.ts')
+}
+
+// manually find @types/node
+const nodeTypesPath = (require.resolve.paths('@types/node') || [])
+	.map(p => path.resolve(p, '@types/node'))
+	.find(existsSync)
+
+if (nodeTypesPath === undefined) {
+	throw new Error('unable to find @types/node')
+}
+
+const nodeTypesPkg = JSON.parse(readFileSync(path.resolve(nodeTypesPath, 'package.json'), 'utf8'))
+const nodeTypesVersion = nodeTypesPkg.version
+
+const nodeTypeReference = {
+	primary: false,
+	resolvedFileName: path.join(nodeTypesPath, 'index.d.ts'),
+	packageId: {
+		name: '@types/node',
+		subModuleName: 'index.d.ts',
+		version: nodeTypesVersion,
+	},
+}
 
 const NoModuleImportedTypescript = `Test scripts must import the module '@flood/element'
 Please add an import as follows:
@@ -37,6 +83,7 @@ const FloodChromeErrors = {
 const defaultCompilerOptions: ts.CompilerOptions = {
 	noEmitOnError: true,
 	noImplicitAny: false,
+	strictNullChecks: false,
 	noUnusedParameters: false,
 	noUnusedLocals: false,
 	allowSyntheticDefaultImports: true,
@@ -47,8 +94,8 @@ const defaultCompilerOptions: ts.CompilerOptions = {
 
 	sourceMap: true,
 
-	// useful for our debugging
-	// traceResolution: true,
+	// tracing useful for our debugging
+	traceResolution: false,
 
 	rootDirs: [sandboxRoot],
 
@@ -64,11 +111,20 @@ const defaultCompilerOptions: ts.CompilerOptions = {
 		'lib.es2016.array.include.d.ts',
 		'lib.es2017.object.d.ts',
 	],
-	types: ['@types/node'],
-	typeRoots: ['node_modules/@types', './typings'],
+	// types: ['@types/node'],
+	typeRoots: ['node_modules/@types'],
+
+	baseUrl: './',
+	paths: { '*': ['node_modules/@types/*', '*'] },
 }
 
 type sourceKinds = 'typescript' | 'javascript'
+
+interface OutputFile {
+	name: string
+	text: string
+	writeByteOrderMark: boolean
+}
 
 export class TypeScriptTestScript implements ITestScript {
 	public sandboxedBasename: string
@@ -88,7 +144,7 @@ export class TypeScriptTestScript implements ITestScript {
 		public originalFilename: string,
 		options: TestScriptOptions = TestScriptDefaultOptions,
 	) {
-		this.testScriptOptions = { ...TestScriptDefaultOptions, ...options }
+		this.testScriptOptions = Object.assign({}, TestScriptDefaultOptions, options)
 
 		if (this.originalFilename.endsWith('.js')) {
 			this.sourceKind = 'javascript'
@@ -106,7 +162,7 @@ export class TypeScriptTestScript implements ITestScript {
 	}
 
 	public get formattedErrorString(): string {
-		let errors = []
+		let errors: string[] = []
 
 		if (this.floodChromeErrors.length > 0) {
 			errors = errors.concat(this.floodChromeErrors)
@@ -123,14 +179,19 @@ export class TypeScriptTestScript implements ITestScript {
 		const compilerOptions = Object.assign({}, defaultCompilerOptions)
 
 		if (this.testScriptOptions.stricterTypeChecking) {
+			compilerOptions.strictNullChecks = true
 			compilerOptions.noImplicitAny = true
+		}
+
+		if (this.testScriptOptions.traceResolution || debug.enabled) {
+			compilerOptions.traceResolution = true
 		}
 
 		return compilerOptions
 	}
 
 	public async compile(): Promise<TypeScriptTestScript> {
-		if (!this.isFloodChromeCorrectlyImported) {
+		if (!this.isFloodElementCorrectlyImported) {
 			switch (this.sourceKind) {
 				case 'javascript':
 					this.floodChromeErrors.push(FloodChromeErrors.NoModuleImportedJavascript)
@@ -144,14 +205,15 @@ export class TypeScriptTestScript implements ITestScript {
 
 		// debugger
 
-		const sandboxedBasename = this.sandboxedBasename
+		// const sandboxedBasename = this.sandboxedBasename
+		const sandboxedFilename = this.sandboxedFilename
 		const inputSource = this.originalSource
 
 		const compilerOptions = this.compilerOptions
 
 		const host = ts.createCompilerHost(compilerOptions)
 
-		const outputFiles = []
+		const outputFiles: OutputFile[] = []
 		host.writeFile = function(name, text, writeByteOrderMark) {
 			outputFiles.push({ name, text, writeByteOrderMark })
 		}
@@ -162,15 +224,76 @@ export class TypeScriptTestScript implements ITestScript {
 			languageVersion: ts.ScriptTarget,
 			onError?: (message: string) => void,
 		): ts.SourceFile {
+			debug('getSourceFile', fileName)
 			// inject our source string if its the sandboxedBasename
-			if (fileName == sandboxedBasename) {
+			if (fileName === sandboxedFilename) {
 				return ts.createSourceFile(fileName, inputSource, languageVersion, false)
 			} else {
 				return originalGetSourceFile.apply(this, arguments)
 			}
 		}
 
-		const program = ts.createProgram([this.sandboxedBasename], compilerOptions, host)
+		const moduleResolutionCache = ts.createModuleResolutionCache(host.getCurrentDirectory(), x =>
+			host.getCanonicalFileName(x),
+		)
+
+		host.resolveModuleNames = function(
+			moduleNames: string[],
+			containingFile: string,
+		): ts.ResolvedModule[] {
+			const resolvedModules: ts.ResolvedModule[] = []
+
+			for (let moduleName of moduleNames) {
+				debug('resolve', moduleName)
+				if (moduleName === '@flood/chrome' || moduleName === '@flood/element') {
+					debug('resolving @flood/element as %s', indexModuleFile)
+					resolvedModules.push({
+						resolvedFileName: indexModuleFile,
+						isExternalLibraryImport: true,
+					})
+					continue
+				}
+
+				// TODO manually resolve all the allowed files
+
+				const result = ts.resolveModuleName(
+					moduleName,
+					containingFile,
+					compilerOptions,
+					host,
+					moduleResolutionCache,
+				).resolvedModule! // original-TODO: GH#18217
+
+				resolvedModules.push(result)
+			}
+			return resolvedModules
+		}
+
+		host.resolveTypeReferenceDirectives = (
+			typeReferenceDirectiveNames: string[],
+			containingFile: string,
+		): ts.ResolvedTypeReferenceDirective[] => {
+			debug('resolveTypeReferenceDirectives', typeReferenceDirectiveNames, containingFile)
+			return typeReferenceDirectiveNames
+				.map(typeRef => {
+					if (typeRef === '@types/node') {
+						return nodeTypeReference
+					} else {
+						return ts.resolveTypeReferenceDirective(typeRef, containingFile, compilerOptions, host)
+							.resolvedTypeReferenceDirective!
+					}
+				})
+				.map(t => {
+					debug('res', t)
+					return t
+				})
+		}
+
+		const program = ts.createProgram(
+			[ambientDeclarationsFile, this.sandboxedFilename],
+			compilerOptions,
+			host,
+		)
 		const emitResult = program.emit()
 
 		this.diagnostics = new CategorisedDiagnostics(host, this.filenameMapper.bind(this))
@@ -186,8 +309,9 @@ export class TypeScriptTestScript implements ITestScript {
 
 		console.assert(outputFiles.length == 2, 'There should only be two output files')
 
-		this.source = outputFiles.find(f => f.name.endsWith('.js')).text
-		this.sourceMap = outputFiles.find(f => f.name.endsWith('.js.map')).text
+		// XXX tidy
+		this.source = (outputFiles.find(f => f.name.endsWith('.js')) || { text: '' }).text
+		this.sourceMap = (outputFiles.find(f => f.name.endsWith('.js.map')) || { text: '' }).text
 
 		this.sourceUnmapper = await SourceUnmapper.init(
 			this.originalSource,
@@ -214,7 +338,7 @@ export class TypeScriptTestScript implements ITestScript {
 		return this.vmScriptMemo
 	}
 
-	public get isFloodChromeCorrectlyImported(): boolean {
+	public get isFloodElementCorrectlyImported(): boolean {
 		return (
 			this.originalSource.includes('@flood/chrome') ||
 			this.originalSource.includes('@flood/element')
@@ -229,7 +353,7 @@ export class TypeScriptTestScript implements ITestScript {
 		return this.parsedComments('description')
 	}
 
-	private parsedCommentsMemo: { name: string; description: string }
+	private parsedCommentsMemo: { [index: string]: string; name: string; description: string }
 	private parsedComments(key: string) {
 		if (!this.parsedCommentsMemo) {
 			let comments = parseComments(this.originalSource)
@@ -240,7 +364,7 @@ export class TypeScriptTestScript implements ITestScript {
 				let [line1, ...lines] = body.split('\n')
 				name = line1
 				description = lines
-					.filter(l => l.length)
+					.filter((l: string) => l.length)
 					.join('\n')
 					.trim()
 			}
@@ -250,29 +374,53 @@ export class TypeScriptTestScript implements ITestScript {
 		return this.parsedCommentsMemo[key]
 	}
 
-	public liftError(error: Error): TestScriptError {
-		const filteredStack = error.stack.split('\n').filter(s => s.includes(this.sandboxedFilename))
+	public isScriptError(e: Error | ErrorWrapper): boolean {
+		const error: Error = unwrapError(e)
+		const stack = error.stack || ''
+		return stack.split('\n').filter(s => s.includes(this.sandboxedFilename)).length > 0
+	}
+
+	public liftError(e: Error | ErrorWrapper): TestScriptError {
+		const error: Error = unwrapError(e)
+		const stack = error.stack || ''
+
+		const filteredStack = stack.split('\n').filter(s => s.includes(this.sandboxedFilename))
 		let callsite
-		let unmappedStack = []
+		let unmappedStack: string[] = []
 
 		if (filteredStack.length > 0) {
 			callsite = this.sourceUnmapper.unmapCallsite(filteredStack[0])
 			unmappedStack = this.sourceUnmapper.unmapStackNodeStrings(filteredStack)
 		}
 
-		return new TestScriptError(error.message, error.stack, callsite, unmappedStack)
+		return new TestScriptError(error.message, stack, callsite, unmappedStack, error)
 	}
 
-	public maybeLiftError(error: Error): Error {
-		const lifted: TestScriptError = this.liftError(error)
-		if (lifted.callsite) {
-			return lifted
+	public maybeLiftError(e: Error | ErrorWrapper): Error {
+		const error: Error = unwrapError(e)
+		if (this.isScriptError(error)) {
+			return this.liftError(error)
 		} else {
 			return error
 		}
 	}
 
-	public filterAndUnmapStack(stack: string): string[] {
+	public filterAndUnmapStack(input: string | Error | ErrorWrapper | undefined): string[] {
+		let stack: string
+
+		if (input === undefined) {
+			return []
+		} else if (typeof input === 'string') {
+			stack = input
+		} else {
+			const maybeStack = unwrapError(input).stack
+			if (maybeStack === undefined) {
+				return []
+			} else {
+				stack = maybeStack
+			}
+		}
+
 		const filteredStack = stack.split('\n').filter(s => s.includes(this.sandboxedFilename))
 
 		return this.sourceUnmapper.unmapStackNodeStrings(filteredStack)

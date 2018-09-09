@@ -1,4 +1,4 @@
-import { Assertion } from './runtime/Test'
+import { Assertion } from './runtime/Assertion'
 import { TestScriptError } from './TestScript'
 
 export type MeasurementKind =
@@ -21,7 +21,7 @@ export type CompoundMeasurementKind =
 	| 'first_paint'
 	| 'first_contentful_paint'
 
-export type CompoundMeasurement = { [key: string]: number }
+export type CompoundMeasurement = { [key in CompoundMeasurementKind]?: number }
 
 export interface Measurement {
 	measurement: MeasurementKind
@@ -47,7 +47,7 @@ interface BaseTraceData {
 	errors?: TracedScriptError[]
 }
 
-interface CompositeTraceData {
+export interface CompositeTraceData {
 	op: string
 	label: string
 	objects: string[]

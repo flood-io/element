@@ -1,10 +1,9 @@
-import { ElementCondition } from '../Condition'
+import { ElementCondition, NullableLocatable } from '../Condition'
 import { EvaluateFn } from 'puppeteer'
-import { Locatable } from '../Locator'
 
 export class ElementSelectedCondition extends ElementCondition {
-	constructor(locator: Locatable, ...args: any[]) {
-		super(locator)
+	constructor(desc: string, locator: NullableLocatable, ...args: any[]) {
+		super(desc, locator)
 		this.pageFuncArgs = args
 	}
 
@@ -23,7 +22,7 @@ export class ElementSelectedCondition extends ElementCondition {
 			propertyName = 'checked'
 		}
 
-		let value = !!node[propertyName]
+		let value = !!(node as any)[propertyName]
 		return value === waitForSelected
 
 		function isSelectable(node: HTMLElement) {

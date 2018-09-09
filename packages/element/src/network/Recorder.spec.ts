@@ -1,31 +1,23 @@
 import { expect } from 'chai'
 import 'mocha'
 import { DogfoodServer } from '../../tests/support/fixture-server'
-import PuppeteerDriver from '../driver/Puppeteer'
-import { mustCompileFile } from '../TestScript'
-import Test from '../runtime/Test'
-import { join } from 'path'
 // import Reporter from '../Reporter'
 import Reporter from '../../tests/support/test-reporter'
-import { Page } from 'puppeteer'
-import { PuppeteerClient } from '../types'
 import NetworkRecorder from './Recorder'
 import Observer from '../runtime/Observer'
+import { launchPuppeteer, testPuppeteer } from '../../tests/support/launch-browser'
 
 let dogfoodServer: DogfoodServer = new DogfoodServer()
-let driver: PuppeteerDriver, puppeteer: PuppeteerClient, page: Page
+let puppeteer: testPuppeteer
 describe('Recorder', function() {
 	this.timeout(30e3)
 
 	beforeEach(async () => {
-		driver = new PuppeteerDriver()
-		await driver.launch()
-		puppeteer = await driver.client()
-		page = puppeteer.page
+		puppeteer = await launchPuppeteer()
 	})
 
 	afterEach(async () => {
-		await driver.close()
+		await puppeteer.close()
 	})
 
 	before(async () => {
@@ -36,38 +28,15 @@ describe('Recorder', function() {
 		await dogfoodServer.close()
 	})
 
-	it('records network entries', async () => {
-		let reporter = new Reporter()
-
-		let test = new Test(reporter)
-		let script = await mustCompileFile(join(__dirname, '../../tests/fixtures/dogfood-test-wait.ts'))
-		test.enqueueScript(script)
-		test.prepare()
-		test.attachDriver(puppeteer)
-
-		await test.before()
-		await test.run()
-
-		let responseTimeMeasurements = reporter.measurements.filter(
-			({ measurement }) => measurement === 'response_time',
-		)
-		let responseTime = responseTimeMeasurements
-			.map(m => Number(m.value))
-			.reduce((sum, n) => sum + n, 0)
-		expect(responseTime).to.be.greaterThan(1)
-
-		// Network recorder should now be reset
-		expect(test.networkRecorder.entries.length).to.equal(0)
-	}).timeout(30e3)
-
 	describe('Recorder', () => {
 		let recorder: NetworkRecorder
 
 		beforeEach(async () => {
-			recorder = new NetworkRecorder(page)
-			let observer = new Observer(recorder)
-			await observer.attach()
-			await page.goto('http://localhost:1337/wait.html')
+			const reporter = new Reporter()
+			recorder = new NetworkRecorder(puppeteer.page)
+			let observer = new Observer(reporter, recorder)
+			await observer.attachToNetworkRecorder()
+			await puppeteer.page.goto('http://localhost:1337/wait.html')
 			await recorder.pendingTaskQueue.chain
 		})
 
@@ -75,7 +44,7 @@ describe('Recorder', function() {
 			expect(recorder.entries.length).to.equal(1)
 			expect(recorder.documentResponseCode).to.equal(200)
 			recorder.reset()
-			await page.goto('http://localhost:1337/notfound.html')
+			await puppeteer.page.goto('http://localhost:1337/notfound.html')
 			await recorder.pendingTaskQueue.chain
 			expect(recorder.documentResponseCode).to.equal(404)
 		})

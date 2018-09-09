@@ -1,10 +1,9 @@
-import { ElementCondition } from '../Condition'
+import { ElementCondition, NullableLocatable } from '../Condition'
 import { EvaluateFn } from 'puppeteer'
-import { Locatable } from '../Locator'
 
 export class ElementStateCondition extends ElementCondition {
-	constructor(locator: Locatable, ...args: any[]) {
-		super(locator)
+	constructor(desc: string, locator: NullableLocatable, ...args: any[]) {
+		super(desc, locator)
 		this.pageFuncArgs = args
 	}
 
@@ -15,6 +14,6 @@ export class ElementStateCondition extends ElementCondition {
 
 	pageFunc: EvaluateFn = (node: HTMLElement, waitForDisabled: boolean) => {
 		if (!node) return false
-		return node['disabled'] === waitForDisabled
+		return (node as any)['disabled'] === waitForDisabled
 	}
 }

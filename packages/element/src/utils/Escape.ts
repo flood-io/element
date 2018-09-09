@@ -6,10 +6,7 @@
  * @throws {InvalidCharacterError} if the string contains an invalid character.
  * @see https://drafts.csswg.org/cssom/#serialize-an-identifier
  */
-export function escapeCss(css) {
-	if (typeof css !== 'string') {
-		throw new TypeError('input must be a string')
-	}
+export function escapeCss(css: string): string {
 	let ret = ''
 	const n = css.length
 	for (let i = 0; i < n; i++) {

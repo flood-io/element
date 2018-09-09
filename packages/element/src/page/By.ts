@@ -4,28 +4,33 @@ import { VisibleTextLocator } from './locators/VisibleTextLocator'
 import { CSSLocator } from './locators/CSS'
 import { TagNameLocator } from './locators/TagName'
 import { XPathLocator } from './locators/XPath'
-import { Locator, Locatable } from './Locator'
+import { Locator } from './types'
+import { BaseLocator } from './Locator'
 import { EvaluateFn } from 'puppeteer'
 
-export function locatableToLocator(el: Locatable): Locator {
-	if (typeof el === 'string') {
-		return By.css(el)
-	} else {
-		return el as Locator
-	}
-}
-
+/**
+ * By is used to create <[Locator]>s to find Elements or use in any place which accepts a Locator or <[Locatable]>.
+ *
+ * @class By
+ */
 export class By {
 	public readonly command: string
 	public readonly args: string[]
 
-	constructor(command: string, ...args) {
+	constructor(command: string, ...args: any[]) {
 		this.command = command
 		this.args = args
 	}
 
-	public static css(selector: string): Locator {
-		return new CSSLocator(selector)
+	/**
+	 * Locates an element using a CSS (jQuery) style selector
+	 * @param selector
+	 */
+	public static css(selector: string, debugString?: string): Locator {
+		if (debugString === undefined) {
+			debugString = `By.css('${selector}')`
+		}
+		return new CSSLocator(selector, debugString)
 	}
 
 	/**
@@ -36,7 +41,7 @@ export class By {
 	 */
 	public static id(id: string): Locator {
 		if (id.startsWith('#')) id = id.slice(1)
-		return this.css(`*[id="${escapeCss(id)}"]`)
+		return this.css(`*[id="${escapeCss(id)}"]`, `By.id('#${id}')`)
 	}
 
 	/**
@@ -45,8 +50,8 @@ export class By {
 	 *
 	 * @param {string} text The link text to search for.
 	 */
-	static linkText(text): Locator {
-		return new LinkTextLocator(text)
+	static linkText(text: string): Locator {
+		return new LinkTextLocator(text, false, `By.linkText('${text}')`)
 	}
 
 	/**
@@ -55,8 +60,8 @@ export class By {
 	 *
 	 * @param {string} text The substring to check for in a link's visible text.
 	 */
-	static partialLinkText(text): Locator {
-		return new LinkTextLocator(text, true)
+	static partialLinkText(text: string): Locator {
+		return new LinkTextLocator(text, true, `By.partialLinkText('${text}')`)
 	}
 
 	/**
@@ -66,7 +71,7 @@ export class By {
 	 * @param {string} text The string to check for in a elements's visible text.
 	 */
 	static visibleText(text: string): Locator {
-		return new VisibleTextLocator(text, false)
+		return new VisibleTextLocator(text, false, `By.visibleText('${text}')`)
 	}
 
 	/**
@@ -76,7 +81,7 @@ export class By {
 	 * @param {string} text The substring to check for in a elements's visible text.
 	 */
 	static partialVisibleText(text: string): Locator {
-		return new VisibleTextLocator(text, true)
+		return new VisibleTextLocator(text, true, `By.partialVisibleText('${text}')`)
 	}
 
 	/**
@@ -86,8 +91,8 @@ export class By {
 	 * @param {!(string|Function)} script The script to execute.
 	 * @param {...*} var_args The arguments to pass to the script.
 	 */
-	static js(script: EvaluateFn, ...args): Locator {
-		let locator = new Locator()
+	static js(script: EvaluateFn, ...args: any[]): Locator {
+		let locator = new BaseLocator('By.js(function)')
 		locator.pageFunc = script
 		locator.pageFuncMany = script
 		locator.pageFuncArgs = args
@@ -101,7 +106,7 @@ export class By {
 	 * @return {!By} The new locator.
 	 */
 	public static nameAttr(value: string): Locator {
-		return By.css(`*[name="${escapeCss(value)}"]`)
+		return By.css(`*[name="${escapeCss(value)}"]`, `By.nameAttr('${value}')`)
 	}
 
 	/**
@@ -113,6 +118,7 @@ export class By {
 	public static attr(tagName: string, attrName: string, attrValue: string): Locator {
 		return By.css(
 			`${escapeCss(tagName).toLowerCase()}[${escapeCss(attrName)}="${escapeCss(attrValue)}"]`,
+			`By.attr('${tagName}','${attrName}','${attrValue}')`,
 		)
 	}
 
@@ -137,7 +143,7 @@ export class By {
 	 * @return {!By} The new locator.
 	 * @see http://www.w3.org/TR/xpath/
 	 */
-	static xpath(xpath): Locator {
+	static xpath(xpath: string): Locator {
 		return new XPathLocator(xpath)
 	}
 }

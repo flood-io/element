@@ -1,9 +1,9 @@
-import { Locator } from '../Locator'
+import { BaseLocator } from '../Locator'
 import { EvaluateFn } from 'puppeteer'
 
-export class XPathLocator extends Locator {
+export class XPathLocator extends BaseLocator {
 	constructor(public selector: string) {
-		super()
+		super(`xpath==${selector}`)
 	}
 
 	get pageFuncArgs(): string[] {

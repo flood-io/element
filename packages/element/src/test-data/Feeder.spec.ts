@@ -2,6 +2,14 @@ import 'mocha'
 import { expect } from 'chai'
 import { Feeder } from './Feeder'
 
+function ensureDefined<T>(value: T | undefined | null): T | never {
+	if (value === undefined || value === null) {
+		throw new Error('value was not defined')
+	} else {
+		return value
+	}
+}
+
 let lines = [
 	{ user: '1', username: 'johnny1@loadtest.io', password: 'correcthorsebatterstaple!' },
 	{ user: '2', username: 'johnny2@loadtest.io', password: 'correcthorsebatterstaple!' },
@@ -17,6 +25,7 @@ describe('Feeder', () => {
 	it('Process line by line with filter', async () => {
 		let feeder = new Feeder<Row>('1')
 		feeder
+			.circular(false)
 			.filter((line, index, instanceID) => line.user === instanceID)
 			.filter(line => !!line.username)
 			.filter(Boolean)
@@ -54,27 +63,26 @@ describe('Feeder', () => {
 		expect(feeder.isComplete).to.be.false
 	})
 
-	it('can be looped', async () => {
+	it('is be looped by default', async () => {
 		let feeder = new Feeder<Row>('1')
 			.filter((line, index, instanceID) => line.user === instanceID)
-			.circular()
 			.append(lines)
 
 		expect(feeder.size).to.equal(2)
 
-		expect(feeder.feed()['username']).to.equal('johnny1@loadtest.io')
-		expect(feeder.feed()['username']).to.equal('johnny6@loadtest.io')
-		expect(feeder.feed()['username']).to.equal('johnny1@loadtest.io')
-		expect(feeder.feed()['username']).to.equal('johnny6@loadtest.io')
+		const mustFeed = () => ensureDefined(feeder.feed())
+
+		expect(mustFeed()['username']).to.equal('johnny1@loadtest.io')
+		expect(mustFeed()['username']).to.equal('johnny6@loadtest.io')
+		expect(mustFeed()['username']).to.equal('johnny1@loadtest.io')
+		expect(mustFeed()['username']).to.equal('johnny6@loadtest.io')
 	})
 
 	it('can be randomized', async () => {
-		let feeder = new Feeder<Row>('1')
-			.circular()
-			.shuffle()
-			.append(lines)
+		let feeder = new Feeder<Row>('1').shuffle().append(lines)
 
-		let users = [feeder.feed()['username'], feeder.feed()['username'], feeder.feed()['username']]
+		const mustFeed = () => ensureDefined(feeder.feed())
+		let users = [mustFeed()['username'], mustFeed()['username'], mustFeed()['username']]
 
 		expect(users).to.not.deep.equal([
 			'johnny1@loadtest.io',

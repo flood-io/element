@@ -32,6 +32,6 @@ export class NullReporter implements IReporter {
 	testStepError(err: TestScriptError): void {}
 
 	testScriptConsole(method: string, message?: any, ...optionalParams: any[]): void {
-		console[method](message, ...optionalParams)
+		;(console as any)[method](message, ...optionalParams)
 	}
 }

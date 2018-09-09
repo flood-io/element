@@ -5,23 +5,22 @@
 		"moduleResolution": "node",
 		"inlineSourceMap": true,
 		"outDir": "dist",
-		"lib": ["dom", "dom.iterable", "es7", "es2017", "es2016.array.include", "es2017.object"],
+    "declaration": true,
+    "removeComments": false,
+		"lib": ["DOM", "DOM.Iterable", "ES2015", "ES7", "ES2017", "ES2016.Array.Include", "ES2017.Object"],
 		"pretty": true,
 		"rootDir": ".",
-		"strictNullChecks": false,
+		"strictNullChecks": true,
 		"forceConsistentCasingInFileNames": false,
 		"allowUnreachableCode": false,
 		"alwaysStrict": true,
 		"noUnusedLocals": true,
-		"allowJs": true,
-		"checkJs": true,
-		"noImplicitAny": false,
+		"noImplicitAny": true,
 		"allowSyntheticDefaultImports": true,
 		"experimentalDecorators": true,
-		"types": ["@types/node"],
 		"typeRoots": ["node_modules/@types"],
-		"emitDecoratorMetadata": true
-	},
-	"exclude": ["node_modules", "dist", "examples", "*.spec.ts"],
-	"files": ["./index.ts"]
+		"emitDecoratorMetadata": true	
+  },
+	"exclude": ["node_modules", "lib", "examples", "*.spec.ts", "*.test.ts"],
+	"files": ["./index.ts", "./api.ts", "./ambient.d.ts"]
 }

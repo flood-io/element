@@ -1,5 +1,6 @@
 import { EvaluateFn, ExecutionContext, ElementHandle as PElementHandle, Frame } from 'puppeteer'
 import { ElementHandle } from './ElementHandle'
+import { Locator } from './types'
 
 export class NotImplementedError extends Error {
 	constructor(public message = 'Method not implemented in DSL') {
@@ -7,31 +8,31 @@ export class NotImplementedError extends Error {
 	}
 }
 
-/**
- * @param {*} arg
- * @return {string}
- */
-function serializeArgument(arg) {
+function serializeArgument(arg: any | undefined): string {
 	if (Object.is(arg, undefined)) return 'undefined'
 	// if (typeof arg === 'function') return evaluationString(arg)
 	return JSON.stringify(arg)
 }
 
-function evaluationString(fun, ...args) {
+function evaluationString(fun: any, ...args: any[]): string {
 	return `(${fun})(${args.map(serializeArgument).join(',')})`
 }
 
-export type Locatable = Locator | ElementHandle | string
-
-export class Locator {
+export class BaseLocator implements Locator {
 	public pageFunc: EvaluateFn
 	public pageFuncMany: EvaluateFn
 	public pageFuncArgs: any[]
 
+	constructor(protected errorString: string) {}
+
+	public toErrorString(): string {
+		return this.errorString
+	}
+
 	async find(context: ExecutionContext, node?: PElementHandle): Promise<ElementHandle | null> {
 		let handle = await context.evaluateHandle(this.pageFunc, ...this.pageFuncArgs, node)
 		const element = handle.asElement()
-		if (element) return new ElementHandle(element)
+		if (element) return new ElementHandle(element).initErrorString(this.toErrorString())
 		return null
 	}
 
@@ -39,12 +40,18 @@ export class Locator {
 		const arrayHandle = await context.evaluateHandle(this.pageFuncMany, ...this.pageFuncArgs, node)
 		const properties = await arrayHandle.getProperties()
 		await arrayHandle.dispose()
-		const result: ElementHandle[] = []
+
+		const thisErrorString = this.toErrorString()
+
+		const elements: Promise<ElementHandle>[] = []
+
 		for (const property of properties.values()) {
 			const elementHandle = property.asElement()
-			if (elementHandle) result.push(new ElementHandle(elementHandle))
+			if (elementHandle)
+				elements.push(new ElementHandle(elementHandle).initErrorString(thisErrorString))
 		}
-		return result
+
+		return Promise.all(elements)
 	}
 
 	async wait(

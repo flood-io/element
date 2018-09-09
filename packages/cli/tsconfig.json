@@ -1,9 +1,9 @@
 {
 	"compilerOptions": {
 		"module": "commonjs",
-		"target": "ES2015",
+		"target": "ES2017",
 		"moduleResolution": "node",
-		"removeComments": true,
+		"removeComments": false,
 		"outDir": "dist",
 		"lib": ["dom", "dom.iterable", "esnext", "es2016.array.include", "es2017.object"],
 		"pretty": false,
@@ -18,11 +18,14 @@
 		"noImplicitAny": false,
 		"allowSyntheticDefaultImports": true,
 		"experimentalDecorators": true,
-		"types": ["@types/node"],
 		"typeRoots": ["node_modules/@types"],
-		"emitDecoratorMetadata": true
+		"emitDecoratorMetadata": true,
+    "baseUrl": "./",
+    "paths": {
+      "*": ["node_modules/@types/*", "*"]
+    }
 	},
-	"exclude": ["node_modules", "dist", "*.spec.ts"],
+	"exclude": ["node_modules", "dist", "lib", "*.spec.ts"],
 	"files": ["./index.ts"],
 	"include": ["./src/**/*.ts"]
 }

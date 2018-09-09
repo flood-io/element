@@ -1,10 +1,13 @@
 import { expect } from 'chai'
 import 'mocha'
 import { ObjectTrace } from './ObjectTrace'
+import { testWorkRoot } from '../../tests/support/test-run-env'
+
+const workRoot = testWorkRoot()
 
 describe('ObjectTrace', () => {
 	it('serializes a trace of multiple resources', async () => {
-		let objectTrace = new ObjectTrace('Test Label')
+		let objectTrace = new ObjectTrace(workRoot, 'Test Label')
 		expect(objectTrace.isEmpty).to.be.true
 
 		objectTrace.addAssertion({
@@ -15,7 +18,7 @@ describe('ObjectTrace', () => {
 		})
 
 		let err = new Error('This is an Error')
-		err.stack = err.stack
+		err.stack = (err.stack || '')
 			.split('\n')
 			.slice(0, 1)
 			.join('\n')
@@ -55,6 +58,6 @@ describe('ObjectTrace', () => {
 		expect(obj.label).to.deep.equal('Test Label')
 		expect(obj.objectTypes).to.deep.equal(['screenshot', 'trace'])
 		expect(obj.objects[0]).to.equal('tmp/data/flood/screenshots/screenshot.png')
-		expect(obj.objects[1]).to.match(/tmp\/data\/flood\/network\/(.+)\.json/)
+		expect(obj.objects[1]).to.match(/flood\/network\/(.+)\.json/)
 	})
 })

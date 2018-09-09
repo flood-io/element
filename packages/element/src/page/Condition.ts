@@ -1,25 +1,31 @@
 import { PageFnOptions, Page, EvaluateFn, Frame } from 'puppeteer'
-import { DEFAULT_SETTINGS } from '../runtime/VM'
-import { Locatable } from './Locator'
+import { Locator } from './types'
+import { DEFAULT_SETTINGS } from '../runtime/Settings'
 import * as recast from 'recast'
 import * as prettier from 'prettier'
-import { locatableToLocator } from './By'
-import { TestSettings } from '@flood/chrome'
+import { locatableToLocator } from '../runtime/Browser'
+import { NullableLocatable } from '../runtime/types'
 
+import * as debugFactory from 'debug'
+const debug = debugFactory('element:page:condition')
+
+export { NullableLocatable }
+
+interface ConditionSettings {
+	waitTimeout: number
+}
+
+/**
+ * A Condition represents a predicate which can be used to wait for an <[ElementHandle]>. They are generally created by using <[Until]>'s helper methods.
+ * @docOpaque
+ */
 export abstract class Condition {
-	public pageFuncArgs: any[]
 	public hasWaitFor = true
-	public settings: TestSettings = DEFAULT_SETTINGS
+	public settings: ConditionSettings = DEFAULT_SETTINGS
 
-	constructor(
-		public locator: Locatable | null,
-		public pageFunc: EvaluateFn | null,
-		...pageFuncArgs: any[]
-	) {
-		this.pageFuncArgs = pageFuncArgs
-	}
+	constructor(public desc: string = '*BASE CONDITION') {}
 
-	public abstract toString()
+	public abstract toString(): string
 	public abstract async waitFor(frame: Frame, page?: Page): Promise<any>
 
 	public async waitForEvent(page: Page): Promise<any> {
@@ -27,40 +33,87 @@ export abstract class Condition {
 	}
 
 	protected get timeout(): number {
-		let { waitTimeout } = this.settings
-		return waitTimeout * 1e3
+		return this.settings.waitTimeout * 1e3
 	}
 }
 
-export abstract class ElementCondition extends Condition {
-	constructor(public locator: Locatable) {
-		super(locator, null)
+export abstract class LocatorCondition extends Condition {
+	public pageFuncArgs: any[]
+	public locator: Locator
+
+	constructor(
+		public desc: string = '*BASE CONDITION',
+		locator: NullableLocatable,
+		public pageFunc: EvaluateFn | null,
+		...pageFuncArgs: any[]
+	) {
+		super(desc)
+		this.locator = this.locatableToLocator(locator)
+		this.pageFuncArgs = pageFuncArgs
 	}
 
-	public abstract toString()
+	/**
+	 * @internal
+	 */
+	protected locatableToLocator(el: NullableLocatable): Locator {
+		const e = new Error()
+		Error.captureStackTrace(e)
+		debug('e', e.stack)
 
-	get locatorPageFunc() {
-		let locator = locatableToLocator(this.locator)
-		return locator.pageFunc
+		try {
+			return locatableToLocator(el, `${this.desc}(locatable)`)
+		} catch (e) {
+			// TODO
+			throw new Error(`condition '${this.desc}' unable to use locator: ${e}`)
+		}
+	}
+}
+
+export abstract class ElementCondition extends LocatorCondition {
+	constructor(desc: string = '*BASE ELEMENT CONDITION', locator: NullableLocatable) {
+		super(desc, locator, null)
 	}
 
-	public async waitFor(frame: Frame): Promise<boolean> {
-		let { waitTimeout } = this.settings
-		let options: PageFnOptions = { polling: 'raf', timeout: waitTimeout * 1e3 }
-		let locator = locatableToLocator(this.locator)
+	public abstract toString(): string
+
+	get locatorPageFunc(): EvaluateFn {
+		return this.locator.pageFunc
+	}
+
+	public async waitFor(frame: Frame, page?: Page): Promise<boolean> {
+		const argSeparator = '-SEP-'
+		let options: PageFnOptions = { polling: 'raf', timeout: this.timeout }
 		let locatorFunc = this.locatorPageFunc
 		let conditionFunc = this.pageFunc
 
-		let fn = function predicate(args1: any[], args2: any[]) {
+		let fn = function predicate(...args: any[]) {
+			const argSeparator = '-SEP-'
+
+			let args1: any[] = []
+			let args2: any[] = []
+			let foundSep = false
+			for (const a of args) {
+				if (!foundSep) {
+					if (a === argSeparator) {
+						foundSep = true
+					} else {
+						args1.push(a)
+					}
+				} else {
+					args2.push(a)
+				}
+			}
+
 			let locatorFunc: EvaluateFn = function() {
 				return null
 			}
 			let node: HTMLElement | null = locatorFunc(...args1)
 			if (node === null) return false
 
-			let conditionFunc = function(node, ...args2) {
+			let conditionFunc = function(node: HTMLElement, ...args2: any[]) {
 				return false
 			}
+
 			return conditionFunc(node, ...args2)
 		}
 
@@ -72,7 +125,7 @@ export abstract class ElementCondition extends Condition {
 		let conditionFuncAST = recast.parse(conditionFunc.toString()).program.body[0]
 
 		recast.visit(fnAST, {
-			visitVariableDeclaration(path) {
+			visitVariableDeclaration(path: any) {
 				if (path.node.declarations[0].id.name === 'locatorFunc') {
 					path
 						.get('declarations', 0)
@@ -89,19 +142,17 @@ export abstract class ElementCondition extends Condition {
 			},
 		})
 
-		let code = prettier.format(recast.print(fnAST).code)
+		let code = prettier.format(recast.print(fnAST).code, { parser: 'babylon' })
 
-		let args = [locator.pageFuncArgs, this.pageFuncArgs]
-		let execFnStr = `${code.trim()}(${args.map(serializeArgument).join(',')})`
-		// console.log(code, locator.pageFuncArgs, this.pageFuncArgs)
+		debug('waitFor code', code)
 
-		await frame.waitForFunction(execFnStr, options)
+		let args = Array.prototype.concat(this.locator.pageFuncArgs, argSeparator, this.pageFuncArgs)
+		debug('waitFor args', args)
+
+		code = `(${code})(...args)`
+
+		await frame.waitForFunction(code, options, ...args)
 
 		return true
-
-		function serializeArgument(arg) {
-			if (Object.is(arg, undefined)) return 'undefined'
-			return JSON.stringify(arg)
-		}
 	}
 }

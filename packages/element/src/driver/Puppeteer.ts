@@ -1,76 +1,102 @@
-import { launch, LaunchOptions } from 'puppeteer'
-import { PuppeteerClient, Browser } from '../types'
+import { launch as launchPuppeteer, LaunchOptions, Browser, Page } from 'puppeteer'
 
-const defaultLaunchOptions: LaunchOptions = {
+export type ConcreteLaunchOptions = LaunchOptions & {
+	args: string[]
+	chrome: boolean | string
+	sandbox: boolean
+}
+
+const defaultLaunchOptions: ConcreteLaunchOptions = {
 	args: [],
 	handleSIGINT: false,
-	headless: parseInt(process.env.HEADLESS || '1') === 1,
-	devtools: parseInt(process.env.DEVTOOLS || '0') === 1,
+	headless: true,
+	devtools: false,
+	chrome: false,
+	sandbox: true,
 	timeout: 60e3,
 	ignoreHTTPSErrors: false,
 }
 
-export default class Puppeteer implements Browser {
-	private isClosed = false
-	private clientInitializationPromise: Promise<PuppeteerClient>
-
-	async launch(options: LaunchOptions = {}) {
-		let launchArgs: LaunchOptions = { args: <string[]>[] }
-
-		let noSandbox = process.env.NO_CHROME_SANDBOX === '1'
-		if (noSandbox) {
-			launchArgs.args.push('--no-sandbox')
-		}
-
-		// In docker
-		if (process.env.USE_SYSTEM_CHROMIUM) {
-			launchArgs = { ...launchArgs, executablePath: '/usr/bin/google-chrome-stable' }
-			launchArgs.args.push('--disable-gpu')
-			launchArgs.args.push('--disable-dev-shm-usage')
-		}
-
-		if (process.env.USE_SYSTEM_CHROME_MAC) {
-			launchArgs = {
-				...launchArgs,
-				executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+function setupChrome(options: ConcreteLaunchOptions): ConcreteLaunchOptions {
+	if (typeof options.chrome === 'boolean') {
+		if (options.chrome) {
+			switch (process.platform) {
+				case 'darwin':
+					options.executablePath = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+					break
+				default:
+					// TODO search PATH for chrome
+					options.executablePath = '/usr/bin/google-chrome-stable'
 			}
-			launchArgs.args.push('--disable-gpu')
-			launchArgs.args.push('--disable-dev-shm-usage')
+			options.args.push('--disable-gpu')
+			options.args.push('--disable-dev-shm-usage')
 		}
-
-		let finalOptions = {
-			...defaultLaunchOptions,
-			...options,
-			...launchArgs,
-		}
-		// console.log(JSON.stringify(finalOptions, null, 2))
-		this.clientInitializationPromise = this.initClient(finalOptions)
-
-		return this.clientInitializationPromise
+	} else if (options.chrome !== undefined) {
+		options.executablePath = options.chrome
+		options.args.push('--disable-gpu')
+		options.args.push('--disable-dev-shm-usage')
 	}
 
-	private async initClient(opts: LaunchOptions): Promise<PuppeteerClient> {
-		this.isClosed = false
-		let browser = await launch(opts)
-		let page = await browser.newPage()
-		return { page, browser }
+	return options
+}
+
+export interface IPuppeteerClient {
+	browser: Browser
+	page: Page
+	close(): Promise<void>
+}
+
+export class PuppeteerClient implements IPuppeteerClient {
+	constructor(public browser: Browser, public page: Page) {}
+
+	private _isClosed = false
+	async close(): Promise<void> {
+		if (this._isClosed) return
+		await this.browser.close()
+		this._isClosed = true
+	}
+}
+
+export async function launch(
+	passedOptions: Partial<ConcreteLaunchOptions> = {},
+): Promise<PuppeteerClient> {
+	let options: ConcreteLaunchOptions = {
+		...defaultLaunchOptions,
+		...passedOptions,
 	}
 
-	async client(): Promise<PuppeteerClient> {
-		if (!this.clientInitializationPromise) return this.launch()
-		return this.clientInitializationPromise
+	if (!options.sandbox) {
+		options.args.push('--no-sandbox')
+		// launchArgs.args.push("--disable-setuid-sandbox");
 	}
 
-	/**
-	 * Closes the current browser instance
-	 *
-	 * @memberof Puppeteer
-	 */
-	public async close(): Promise<void> {
-		if (this.isClosed) return
+	options = setupChrome(options)
 
-		let { browser } = await this.clientInitializationPromise
-		await browser.close()
-		this.isClosed = true
+	// console.log(JSON.stringify(options, null, 2))
+	// console.log('Runner launching client', options)
+	// const browser = await launchPuppeteer(options)
+	// console.log('whyyy')
+	// const page = await browser.newPage()
+
+	// console.log('Runner building client...')
+	// return new PuppeteerClient(browser, page)
+
+	// console.log('puppeteer launching client...')
+	// return launchPuppeteer(options).then(browser =>
+	// browser.newPage().then(page => new PuppeteerClient(browser, page)),
+	// )
+
+	const browser = await launchPuppeteer(options)
+	const page = await browser.newPage()
+
+	return new PuppeteerClient(browser, page)
+}
+
+export class NullPuppeteerClient implements IPuppeteerClient {
+	public browser: Browser
+	public page: Page
+	constructor() {}
+	async close(): Promise<void> {
+		return
 	}
 }

@@ -11,9 +11,20 @@ export abstract class Loader<T> {
 	public abstract load(): Promise<void>
 }
 
+export class NullLoader<T> extends Loader<T> {
+	constructor() {
+		super('')
+		this.lines = []
+		this.isLoaded = true
+	}
+	public async load(): Promise<void> {
+		this.isLoaded = true
+	}
+}
+
 export class DataLoader<T> extends Loader<T> {
 	constructor(public lines: T[]) {
-		super(null)
+		super('')
 	}
 	public async load(): Promise<void> {
 		this.isLoaded = true

@@ -1,9 +1,9 @@
-import { Locator } from '../Locator'
+import { BaseLocator } from '../Locator'
 import { EvaluateFn } from 'puppeteer'
 
-export class CSSLocator extends Locator {
-	constructor(public selector: string) {
-		super()
+export class CSSLocator extends BaseLocator {
+	constructor(public selector: string, debugString: string) {
+		super(debugString)
 	}
 
 	get pageFuncArgs(): string[] {

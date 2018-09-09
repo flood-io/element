@@ -1,11 +1,9 @@
 import * as cuid from 'cuid'
 import { promisify } from 'util'
 import { writeFile } from 'fs'
-import { join } from 'path'
-import { networkDataDirectory } from '../runtime/Sandbox'
-import { Assertion } from '../runtime/Test'
-import { NetworkTraceData } from '../Reporter'
-import { ensureDir } from 'fs-extra'
+import { WorkRoot } from '../runtime-environment/types'
+import { Assertion } from '../runtime/Assertion'
+import { NetworkTraceData, CompositeTraceData } from '../Reporter'
 
 const writeFileAsync = promisify(writeFile)
 
@@ -14,8 +12,38 @@ interface ErrorLike {
 	stack?: string | string[]
 }
 
+export interface IObjectTrace {
+	addError(error: ErrorLike): void
+	addNetworkTrace(trace: NetworkTraceData): Promise<void>
+	addScreenshot(screenshotURL: string): void
+	addAssertion(assertion: Assertion): void
+	isEmpty: boolean
+	toObject(): CompositeTraceData
+}
+
+export const NullObjectTrace = {
+	isEmpty: true,
+
+	addError(error: ErrorLike) {},
+	async addNetworkTrace(trace: NetworkTraceData): Promise<void> {},
+	addScreenshot(screenshotURL: string) {},
+	addAssertion(assertion: Assertion) {},
+
+	toObject(): CompositeTraceData {
+		return {
+			op: 'object',
+			label: '',
+			objects: [],
+			errors: [],
+			assertions: [],
+			objectTypes: [],
+		}
+	},
+}
+
 export class ObjectTrace {
 	constructor(
+		private workRoot: WorkRoot,
 		public label: string,
 		public errors: ErrorLike[] = [],
 		public assertions: Assertion[] = [],
@@ -32,18 +60,12 @@ export class ObjectTrace {
 	}
 
 	public async addNetworkTrace(trace: NetworkTraceData): Promise<void> {
-		await ensureDir(networkDataDirectory).catch(err => {
-			console.error(err)
-		})
-
-		let fileName = `${cuid()}.json`
-		let filePath = join(networkDataDirectory, fileName)
+		let filePath = this.workRoot.join('network', `${cuid()}.json`)
 		this.networkTraces.push(filePath)
 
-		return writeFileAsync(filePath, JSON.stringify(trace))
-			.catch(err => {
-				console.error(`Object Trace writing ERROR: ${err.message}`)
-			})
+		return writeFileAsync(filePath, JSON.stringify(trace)).catch(err => {
+			console.error(`Object Trace writing ERROR: ${err.message}`)
+		})
 	}
 
 	public addScreenshot(screenshotURL: string) {
@@ -64,11 +86,11 @@ export class ObjectTrace {
 		)
 	}
 
-	public toObject() {
+	public toObject(): CompositeTraceData {
 		let { label, screenshots, networkTraces, assertions, errors } = this
 
 		let objectTypes: string[] = []
-		let objects = []
+		let objects: string[] = []
 		screenshots.forEach(screenshot => {
 			objects.push(screenshot)
 			objectTypes.push('screenshot')

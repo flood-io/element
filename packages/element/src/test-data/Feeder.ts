@@ -1,4 +1,4 @@
-import { Option } from '../runtime/VM'
+import { Option } from '../utils/Option'
 import { knuthShuffle } from 'knuth-shuffle'
 
 export type FeedFilterFunction<Line> = (line: Line, index: number, instanceID: string) => boolean
@@ -8,18 +8,19 @@ export class Feeder<T> {
 	private shuffleAfterLoad: boolean = false
 
 	constructor(
-		public instanceID?: string,
+		public instanceID: string = '',
 		private lines: T[] = [],
 		private pointer: number = -1,
 		private filters: FeedFilterFunction<T>[] = [],
 	) {
-		this.resetOnEnd = false
+		this.resetOnEnd = true
 		this.shuffleAfterLoad = false
 		this.reset()
 	}
 
 	public append(lines: T[]): Feeder<T> {
-		const { instanceID } = this
+		let { instanceID } = this
+
 		if (!lines || lines.length === 0) return this
 
 		let newLines = lines.filter((line, index) =>

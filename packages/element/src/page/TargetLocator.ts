@@ -1,16 +1,14 @@
 import { ElementHandle } from './ElementHandle'
 import { Page, Frame } from 'puppeteer'
-import { TargetLocator as ITargetLocator } from '@flood/chrome'
-import { getFrames } from '../runtime/Sandbox'
+import { TargetLocator as ITargetLocator, ElementHandle as IElementHandle } from './types'
+import { getFrames } from '../runtime/Browser'
 
+/**
+ * @internal
+ */
 export class TargetLocator implements ITargetLocator {
 	constructor(private page: Page, private apply: (frame: Frame | null) => void) {}
 
-	/**
-	 * Locates the DOM element on the current page that corresponds to
-	 * `document.activeElement` or `document.body` if the active element is not
-	 * available.
-	 */
 	public async activeElement(): Promise<ElementHandle | null> {
 		let jsHandle = await this.page.evaluateHandle(() => document.activeElement || document.body)
 		if (!jsHandle) return null
@@ -18,7 +16,7 @@ export class TargetLocator implements ITargetLocator {
 		let element = jsHandle.asElement()
 		if (!element) return null
 
-		return new ElementHandle(element)
+		return new ElementHandle(element).initErrorString()
 	}
 
 	/**
@@ -28,7 +26,18 @@ export class TargetLocator implements ITargetLocator {
 		this.apply(null)
 	}
 
-	public async frame(id: number | string | ElementHandle) {
+	/**
+	 * Changes the active target to another frame.
+	 *
+	 * Accepts either:
+	 *
+	 * number: Switch to frame by index in window.frames,
+	 * string: Switch to frame by frame.name or frame.id, whichever matches first,
+	 * ElementHandle: Switch to a frame using the supplied ElementHandle of a frame.
+	 *
+	 * @param id number | string | ElementHandle
+	 */
+	public async frame(id: number | string | IElementHandle) {
 		let nextFrame: Frame | null
 
 		if (id === null) {
@@ -41,7 +50,9 @@ export class TargetLocator implements ITargetLocator {
 		if (typeof id === 'number') {
 			// Assume frame index
 			let frameElementName = await this.page.evaluate((index: number) => {
-				let frame = window.frames[Number(index)]
+				// NOTE typescript lib.dom lacks proper index signature for frames: Window to work
+				let frame = (window as any).frames[Number(index)]
+
 				if (!frame) throw Error(`No frame found at index: ${index}`)
 				return frame.name || frame.id
 			}, id)
@@ -53,6 +64,7 @@ export class TargetLocator implements ITargetLocator {
 		} else if (typeof id === 'string') {
 			// Assume id or name attr
 			nextFrame = frames.find(frame => frame.name() === id) || null
+			if (!nextFrame) throw new Error(`Could not match frame by name or id: '${id}'`)
 			console.log(`Switching to Frame: '${nextFrame.name()}'`)
 			this.apply(nextFrame)
 		} else if (id instanceof ElementHandle) {

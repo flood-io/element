@@ -11,11 +11,31 @@ import { URLCondition } from './conditions/URLCondition'
 import { DialogCondition } from './conditions/DialogCondition'
 import { FrameCondition } from './conditions/FrameCondition'
 import { Condition } from './Condition'
-import { Locatable } from './Locator'
+import { NullableLocatable, Locatable } from '../runtime/types'
 
+/**
+ * Until contains a wealth of useful <Condition>s.
+ *
+ * <[Condition]>s represent predicates used to wait for something to become true.
+ *
+ * These predicates include waiting for elements to become active, visible, invisible or disabled on the page.
+ *
+ * You typically use these to control the flow of you test.
+ *
+ */
 export class Until {
-	static ableToSwitchToFrame(frame: string | Locatable): Condition {
-		return new FrameCondition(frame)
+	/**
+	 * Creates a condition that will wait until the input driver is able to switch to the designated frame.
+	 *
+	 * The target frame may be specified as:
+	 * - string name of the frame to wait for matching the frame's `name` or `id` attribute.
+	 * - (Coming soon) numeric index into window.frames for the currently selected frame.
+	 * - (Coming soon) locator which may be used to first locate a FRAME or IFRAME on the current page before attempting to switch to it.
+	 *
+	 * Upon successful resolution of this condition, the driver will be left focused on the new frame.
+	 */
+	static ableToSwitchToFrame(frame: Locatable): Condition {
+		return new FrameCondition('ableToSwitchToFrame', frame)
 	}
 
 	/**
@@ -23,82 +43,159 @@ export class Until {
 	 * the returned promise will be fulfilled with the handle for the opened alert.
 	 */
 	static alertIsPresent(): Condition {
-		return new DialogCondition()
+		return new DialogCondition('alertIsPresent')
 	}
 
-	static elementIsDisabled(selectorOrLocator: Locatable): Condition {
-		return new ElementStateCondition(selectorOrLocator, true)
+	/**
+	 * Creates a condition that will wait for the given element to be disabled
+	 * @param selectorOrLocator A <[Locatable]> to use to find the element.
+	 */
+	static elementIsDisabled(selectorOrLocator: NullableLocatable): Condition {
+		return new ElementStateCondition('elementIsDisabled', selectorOrLocator, true)
 	}
 
-	static elementIsEnabled(selectorOrLocator: Locatable): Condition {
-		return new ElementStateCondition(selectorOrLocator, false)
+	/**
+	 * Creates a condition that will wait for the given element to be enabled
+	 * @param selectorOrLocator A <[Locatable]> to use to find the element.
+	 */
+	static elementIsEnabled(selectorOrLocator: NullableLocatable): Condition {
+		return new ElementStateCondition('elementIsEnabled', selectorOrLocator, false)
 	}
 
-	static elementIsSelected(selectorOrLocator: Locatable): Condition {
-		return new ElementSelectedCondition(selectorOrLocator, true)
-	}
-	static elementIsNotSelected(selectorOrLocator: Locatable): Condition {
-		return new ElementSelectedCondition(selectorOrLocator, false)
-	}
-
-	static elementIsVisible(selectorOrLocator: Locatable): Condition {
-		return new ElementVisibilityCondition(selectorOrLocator, true, false)
+	/**
+	 * Creates a condition that will wait for the given element to be deselected.
+	 * @param selectorOrLocator A <[Locatable]> to use to find the element.
+	 */
+	static elementIsSelected(selectorOrLocator: NullableLocatable): Condition {
+		return new ElementSelectedCondition('elementIsSelected', selectorOrLocator, true)
 	}
 
-	static elementIsNotVisible(selectorOrLocator: Locatable): Condition {
-		return new ElementVisibilityCondition(selectorOrLocator, false, true)
+	/**
+	 * Creates a condition that will wait for the given element to be in the DOM, yet not visible to the user
+	 * @param selectorOrLocator A <[Locatable]> to use to find the element.
+	 */
+	static elementIsNotSelected(selectorOrLocator: NullableLocatable): Condition {
+		return new ElementSelectedCondition('elementIsNotSelected', selectorOrLocator, false)
 	}
 
-	static elementLocated(selectorOrLocator: Locatable): Condition {
-		return new ElementLocatedCondition(selectorOrLocator, true)
+	/**
+	 * Creates a condition that will wait for the given element to be selected.
+	 *
+	 * Example:
+	 * ```typescript
+	 * step("Step 1", async browser => {
+	 *   await browser.wait(Until.elementIsVisible(By.partialLinkText("Start")))
+	 * })
+	 * ```
+	 *
+	 * @param selectorOrLocator A <[Locatable]> to use to find the element.
+	 */
+	static elementIsVisible(selectorOrLocator: NullableLocatable): Condition {
+		return new ElementVisibilityCondition('elementIsVisible', selectorOrLocator, true, false)
 	}
 
-	static elementTextIs(selectorOrLocator: Locatable, text: string): Condition {
-		return new ElementTextCondition(selectorOrLocator, text, false)
+	/**
+	 * Creates a condition that will wait for the given element to become visible.
+	 *
+	 * Example:
+	 * ```typescript
+	 * step("Step 1", async browser => {
+	 * 	 await browser.click(By.css('.hide-panel'))
+	 *   await browser.wait(Until.elementIsNotVisible(By.id("btn")))
+	 * })
+	 * ```
+	 *
+	 * @param selectorOrLocator A <[Locatable]> to use to find the element.
+	 */
+	static elementIsNotVisible(selectorOrLocator: NullableLocatable): Condition {
+		return new ElementVisibilityCondition('elementIsNotVisible', selectorOrLocator, false, true)
 	}
 
-	static elementTextContains(selectorOrLocator: Locatable, text: string): Condition {
-		return new ElementTextCondition(selectorOrLocator, text, true)
+	/**
+	 * Creates a condition which will wait until the element is located on the page.
+	 */
+	static elementLocated(selectorOrLocator: NullableLocatable): Condition {
+		return new ElementLocatedCondition('elementLocated', selectorOrLocator, true)
 	}
 
-	static elementTextMatches(selectorOrLocator: Locatable, regex: RegExp): Condition {
-		return new ElementTextCondition(selectorOrLocator, regex.toString())
+	/**
+	 * Creates a condition which will wait until the element's text exactly matches the target text, excluding leading and trailing whitespace.
+	 */
+	static elementTextIs(selectorOrLocator: NullableLocatable, text: string): Condition {
+		return new ElementTextCondition('elementTextIs', selectorOrLocator, text, false)
+	}
+
+	/**
+	 * Creates a condition which will wait until the element's text content contains the target text.
+	 */
+	static elementTextContains(selectorOrLocator: NullableLocatable, text: string): Condition {
+		return new ElementTextCondition('elementTextContains', selectorOrLocator, text, true)
+	}
+
+	/**
+	 * Creates a condition which will wait until the element's text matches the target Regular Expression.
+	 */
+	static elementTextMatches(selectorOrLocator: NullableLocatable, regex: RegExp): Condition {
+		return new ElementTextCondition('elementTextMatches', selectorOrLocator, regex.toString())
 	}
 
 	/**
 	 * Creates a condition that will wait until at least the desired number of elements are found.
 	 */
-	static elementsLocated(selectorOrLocator: Locatable, desiredCount: number = 1): Condition {
-		return new ElementsLocatedCondition(selectorOrLocator, desiredCount)
+	static elementsLocated(
+		selectorOrLocator: NullableLocatable,
+		desiredCount: number = 1,
+	): Condition {
+		return new ElementsLocatedCondition('elementsLocated', selectorOrLocator, desiredCount)
 	}
 
 	/**
 	 * Creates a condition that will wait for the given element to become stale.
 	 * An element is considered stale once it is removed from the DOM, or a new page has loaded.
 	 */
-	// static stalenessOf(selectorOrLocator: Locatable): Condition {
+	// static stalenessOf(selectorOrLocator: NullableLocatable): Condition {
 	// 	return
 	// }
 
+	/**
+	 * Creates a condition which waits until the page title contains the expected text.
+	 */
 	static titleContains(title: string): Condition {
-		return new TitleCondition(title, true)
+		return new TitleCondition('titleContains', title, true)
 	}
 
+	/**
+	 * Creates a condition which waits until the page title exactly matches the expected text.
+	 */
 	static titleIs(title: string): Condition {
-		return new TitleCondition(title, false)
+		return new TitleCondition('titleIs', title, false)
 	}
 
+	/**
+	 * Creates a condition which waits until the page title matches the title `RegExp`.
+	 */
 	static titleMatches(title: RegExp): Condition {
-		return new TitleCondition(`${title}`, false)
+		return new TitleCondition('titleMatches', `${title}`, false)
 	}
 
+	/**
+	 * Creates a condition which waits until the page URL contains the expected path.
+	 */
 	static urlContains(url: string): Condition {
-		return new URLCondition(url, true)
+		return new URLCondition('urlContains', url, true)
 	}
+
+	/**
+	 * Creates a condition which waits until the page URL exactly matches the expected URL.
+	 */
 	static urlIs(url: string): Condition {
-		return new URLCondition(url, false)
+		return new URLCondition('urlIs', url, false)
 	}
+
+	/**
+	 * Creates a condition which waits until the page URL matches the supplied `RegExp`.
+	 */
 	static urlMatches(url: RegExp): Condition {
-		return new URLCondition(url.toString(), true)
+		return new URLCondition('urlMatches', url.toString(), true)
 	}
 }

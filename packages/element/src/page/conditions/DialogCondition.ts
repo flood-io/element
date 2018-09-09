@@ -7,10 +7,6 @@ import { clearTimeout } from 'timers'
  * handler.
  */
 export class DialogCondition extends Condition {
-	constructor() {
-		super(null, null)
-	}
-
 	toString() {
 		return 'waiting for dialog to appear'
 	}
@@ -23,8 +19,7 @@ export class DialogCondition extends Condition {
 
 	public async waitForEvent(page: Page): Promise<Dialog> {
 		return new Promise<Dialog>((yeah, nah) => {
-			let { waitTimeout } = this.settings
-			let timeout = setTimeout(nah, waitTimeout * 1e3)
+			let timeout = setTimeout(nah, this.timeout)
 
 			page.once('dialog', (dialog: Dialog) => {
 				clearTimeout(timeout)

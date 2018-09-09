@@ -1,65 +1,142 @@
-import { ITestRunner, Browser } from './types'
-import Logger from './utils/Logger'
+import { ConcreteLaunchOptions, PuppeteerClient, NullPuppeteerClient } from './driver/Puppeteer'
+import { RuntimeEnvironment } from './runtime-environment/types'
+import { Logger } from 'winston'
 import Test from './runtime/Test'
-import Reporter from './reporter/Influx'
-import { Factory } from './runtime/VM'
-import { LaunchOptions } from 'puppeteer'
+import { TestObserver } from './runtime/test-observers/Observer'
+import { TestSettings, ConcreteTestSettings } from './runtime/Settings'
+import { IReporter } from './Reporter'
+import { AsyncFactory } from './utils/Factory'
 import { TestScriptError, ITestScript } from './TestScript'
 
-export default class Runner implements ITestRunner {
-	private driver: Browser
-	private timeout: any
-	private testContinue: boolean = true
-	private test: Test
+export interface TestCommander {
+	on(event: 'rerun-test', listener: () => void): this
+}
 
-	constructor(Driver: Factory<Browser>, private logger: Logger) {
-		this.driver = new Driver()
-	}
+export interface IRunner {
+	run(testScriptFactory: AsyncFactory<ITestScript>): Promise<void>
+	stop(): Promise<void>
+}
 
-	private async shutdown(exitCode: number = 0) {
-		this.logger.info('Shutting down...')
-		await this.test.after()
-		clearTimeout(this.timeout)
-		this.testContinue = false
-		this.logger.debug('Closing driver: Google Chrome...')
-		try {
-			;(await this.driver) && this.driver.close()
-		} catch (err) {
-			console.error(`Error while closing browser: ${err}`)
+function delay(t, v?) {
+	return new Promise(function(resolve) {
+		setTimeout(resolve.bind(null, v), t)
+	})
+}
+
+class Looper {
+	public iterations = 0
+	private timeout: NodeJS.Timer
+	private cancelled = false
+	private loopCount: number
+
+	constructor(settings: ConcreteTestSettings) {
+		if (settings.duration > 0) {
+			this.timeout = setTimeout(() => {
+				this.cancelled = true
+			}, settings.duration * 1e3)
 		}
-		process.exit(exitCode)
+
+		this.loopCount = settings.loopCount
 	}
 
-	async run(testScript: ITestScript): Promise<void> {
-		let interupts = 0
+	finish() {
+		clearTimeout(this.timeout)
+	}
 
-		process.on('SIGINT', async () => {
-			this.logger.debug('Received SIGINT')
-			interupts++
-			await this.shutdown()
-		})
+	get continueLoop(): boolean {
+		const hasInfiniteLoops = this.loopCount <= 0
+		const hasLoopsLeft = this.iterations < this.loopCount
 
-		process.once('SIGUSR2', async () => {
-			// Usually received by nodemon on file change
-			this.logger.debug('Received SIGUSR2')
-			interupts++
-			this.shutdown().then(() => process.kill(process.pid, 'SIGUSR2'))
-		})
+		return !this.cancelled && (hasLoopsLeft || hasInfiniteLoops)
+	}
 
-		let reporter = new Reporter(this.logger)
-		let test = new Test(reporter)
-		this.test = test
+	async run(iterator: (iteration: number) => Promise<void>): Promise<number> {
+		while (this.continueLoop) {
+			await iterator(++this.iterations)
+		}
+		this.finish()
+		return this.iterations
+	}
+}
+
+export class Runner {
+	private looper: Looper
+	constructor(
+		private clientFactory: AsyncFactory<PuppeteerClient>,
+		protected testCommander: TestCommander | undefined,
+		private runEnv: RuntimeEnvironment,
+		private reporter: IReporter,
+		protected logger: Logger,
+		private testSettingOverrides: TestSettings,
+		private launchOptionOverrides: Partial<ConcreteLaunchOptions>,
+		private testObserverFactory: (t: TestObserver) => TestObserver = x => x,
+	) {}
+
+	// interrupt() {
+	// this.interrupts++
+	// }
+
+	// async shutdown(): Promise<void> {
+	// this.interrupts++
+	// this.logger.info('Shutting down...')
+	// // if (this.test) {
+	// // await this.test.shutdown()
+	// // }
+
+	// if (this.shouldShutdownBrowser) {
+	// clearTimeout(this.timeout)
+	// this.testContinue = false
+	// this.logger.debug('Closing driver: Google Chrome...')
+	// try {
+	// await this.driver.close()
+	// } catch (err) {
+	// console.error(`Error while closing browser: ${err}`)
+	// }
+	// }
+	// }
+
+	async stop(): Promise<void> {
+		return
+	}
+
+	get shouldShutdownBrowser(): boolean {
+		return !!this.launchOptionOverrides.headless && !this.launchOptionOverrides.devtools
+	}
+
+	async run(testScriptFactory: AsyncFactory<ITestScript>): Promise<void> {
+		const testScript = await testScriptFactory()
+
+		const clientPromise = this.launchClient(testScript)
+
+		await this.runTestScript(testScript, clientPromise)
+	}
+
+	async launchClient(testScript: ITestScript): Promise<PuppeteerClient> {
+		// evaluate the script so that we can get its settings
+		// TODO refactor into EvaluatedTestScript
+		const settings = new Test(
+			new NullPuppeteerClient(),
+			this.runEnv,
+			this.reporter,
+			this.testObserverFactory,
+		).enqueueScript(testScript, this.testSettingOverrides)
+
+		const options: Partial<ConcreteLaunchOptions> = this.launchOptionOverrides
+		options.ignoreHTTPSErrors = settings.ignoreHTTPSErrors
+
+		return this.clientFactory(options)
+	}
+
+	async runTestScript(
+		testScript: ITestScript,
+		clientPromise: Promise<PuppeteerClient>,
+	): Promise<void> {
+		console.log('running test script')
+		const test = new Test(await clientPromise, this.runEnv, this.reporter, this.testObserverFactory)
+		// this.test = test
 
 		try {
-			let settings = test.enqueueScript(testScript)
-			let options: LaunchOptions = {
-				ignoreHTTPSErrors: settings.ignoreHTTPSErrors,
-			}
-
-			this.driver.launch(options)
-			test.attachDriver(await this.driver.client())
-
-			let iterations = 0
+			const settings = test.enqueueScript(testScript, this.testSettingOverrides)
 
 			if (settings.name) {
 				this.logger.info(`
@@ -70,47 +147,26 @@ export default class Runner implements ITestRunner {
 				`)
 			}
 
-			if (settings) {
-				if (settings.hasOwnProperty('duration') && settings.duration && settings.duration > 0) {
-					this.timeout = setTimeout(() => {
-						this.testContinue = false
-					}, settings.duration * 1e3)
-					this.logger.debug(`Test timeout set to ${settings.duration}s`)
-				}
-
-				if (settings.hasOwnProperty('loopCount')) {
-					this.logger.debug(`Test loop count set to ${settings.loopCount} iterations`)
-				}
-
-				this.logger.debug(`Settings: ${JSON.stringify(settings, null, 2)}`)
+			if (settings.duration > 0) {
+				this.logger.debug(`Test timeout set to ${settings.duration}s`)
 			}
+			this.logger.debug(`Test loop count set to ${settings.loopCount} iterations`)
+			this.logger.debug(`Settings: ${JSON.stringify(settings, null, 2)}`)
 
-			// for (let [k, v] of Object.entries(settings)) {
-			// 	this.logger.debug(`Setting: ${k}: ${v}`)
-			// }
+			debugger
+			await test.beforeRun()
 
-			await test.before()
-
-			const testLoopContinue = () => {
-				if (this.testContinue === false) return
-				this.testContinue = interupts === 0
-				if (this.testContinue === false) return
-
-				if (Number(settings.loopCount) > 0) {
-					this.testContinue = iterations < Number(settings.loopCount)
-				}
-			}
-
-			while (this.testContinue) {
-				iterations++
-				this.logger.info(`Starting iteration ${iterations}`)
+			console.log('looper')
+			this.looper = new Looper(settings)
+			await this.looper.run(async iteration => {
+				this.logger.info(`Starting iteration ${iteration}`)
 
 				let startTime = new Date()
 				try {
-					await test.run(iterations)
+					await test.run(iteration)
 				} catch (err) {
 					this.logger.error(
-						`[Iteration: ${iterations}] Error in Runner Loop: ${err.name}: ${err.message}\n${
+						`[Iteration: ${iteration}] Error in Runner Loop: ${err.name}: ${err.message}\n${
 							err.stack
 						}`,
 					)
@@ -118,11 +174,9 @@ export default class Runner implements ITestRunner {
 				}
 				let duration = new Date().valueOf() - startTime.valueOf()
 				this.logger.info(`Iteration completed in ${duration}ms (walltime)`)
-				testLoopContinue()
-			}
+			})
 
-			this.logger.info(`Test completed after ${iterations} iterations`)
-			await test.after()
+			this.logger.info(`Test completed after ${this.looper.iterations} iterations`)
 			return
 		} catch (err) {
 			if (err instanceof TestScriptError) {
@@ -135,8 +189,74 @@ export default class Runner implements ITestRunner {
 			this.logger.debug(err.stack)
 			// }
 
-			await test.after()
-			await this.shutdown(1)
+			await test.cancel()
 		}
+	}
+}
+
+export class PersistentRunner extends Runner {
+	public testScriptFactory: AsyncFactory<ITestScript> | undefined
+	public clientPromise: Promise<PuppeteerClient> | undefined
+	private stopped = false
+
+	constructor(
+		clientFactory: AsyncFactory<PuppeteerClient>,
+		testCommander: TestCommander | undefined,
+		runEnv: RuntimeEnvironment,
+		reporter: IReporter,
+		logger: Logger,
+		testSettingOverrides: TestSettings,
+		launchOptionOverrides: Partial<ConcreteLaunchOptions>,
+		testObserverFactory: (t: TestObserver) => TestObserver = x => x,
+	) {
+		super(
+			clientFactory,
+			testCommander,
+			runEnv,
+			reporter,
+			logger,
+			testSettingOverrides,
+			launchOptionOverrides,
+			testObserverFactory,
+		)
+
+		this.testCommander.on('rerun-test', () => this.rerunTest())
+	}
+
+	rerunTest() {
+		setImmediate(async () => {
+			console.log('persistent runner got a command: rerun')
+
+			try {
+				await this.runTestScript(await this.testScriptFactory(), this.clientPromise)
+			} catch (err) {
+				this.logger.error('an error occurred in the script')
+				this.logger.error(err)
+			}
+		})
+	}
+
+	async stop() {
+		this.stopped = true
+	}
+
+	async waitUntilStopped(): Promise<void> {
+		if (this.stopped) {
+			return
+		} else {
+			await delay(1000)
+			return this.waitUntilStopped()
+		}
+	}
+
+	async run(testScriptFactory: AsyncFactory<ITestScript>): Promise<void> {
+		this.testScriptFactory = testScriptFactory
+
+		// TODO detect changes in testScript settings affecting the client
+		this.clientPromise = this.launchClient(await testScriptFactory())
+
+		this.rerunTest()
+		await this.waitUntilStopped()
+		// return new Promise<void>((resolve, reject) => {})
 	}
 }

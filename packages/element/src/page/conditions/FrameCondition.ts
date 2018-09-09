@@ -1,11 +1,10 @@
-import { Condition } from '../Condition'
+import { Condition, NullableLocatable } from '../Condition'
 import { Frame, Page } from 'puppeteer'
-import { getFrames } from '../../runtime/Sandbox'
-import { Locatable } from '@flood/chrome'
+import { getFrames } from '../../runtime/Browser'
 
 export class FrameCondition extends Condition {
-	constructor(public id: string | Locatable) {
-		super(null, null)
+	constructor(desc: string, public id: NullableLocatable) {
+		super(desc)
 	}
 
 	toString() {

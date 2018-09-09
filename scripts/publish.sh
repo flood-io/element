@@ -19,3 +19,4 @@ npm publish --access public
 git push
 
 # TODO brew publish
+yarn publish:brew

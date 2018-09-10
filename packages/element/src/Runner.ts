@@ -6,6 +6,7 @@ import { TestObserver } from './runtime/test-observers/Observer'
 import { TestSettings, ConcreteTestSettings } from './runtime/Settings'
 import { IReporter } from './Reporter'
 import { AsyncFactory } from './utils/Factory'
+import { CancellationToken } from './utils/CancellationToken'
 import { TestScriptError, ITestScript } from './TestScript'
 
 export interface TestCommander {
@@ -29,6 +30,9 @@ class Looper {
 	private cancelled = false
 	private loopCount: number
 
+	public done: Promise<void>
+	private doneResolve: () => void
+
 	constructor(settings: ConcreteTestSettings, running = true) {
 		if (settings.duration > 0) {
 			this.timeout = setTimeout(() => {
@@ -38,10 +42,25 @@ class Looper {
 
 		this.loopCount = settings.loopCount
 		this.cancelled = !running
+		this.done = new Promise(resolve => (this.doneResolve = resolve))
 	}
 
 	stop() {
 		this.cancelled = true
+	}
+
+	async kill(): Promise<void> {
+		if (this._killer !== undefined) {
+			this._killer()
+		}
+		this.cancelled = true
+
+		await this.done
+	}
+
+	_killer: () => void
+	set killer(killCb: () => void) {
+		this._killer = killCb
 	}
 
 	finish() {
@@ -60,12 +79,16 @@ class Looper {
 			await iterator(++this.iterations)
 		}
 		this.finish()
+
+		// XXX perhaps call this in a finally to ensure it gets called
+		this.doneResolve()
+
 		return this.iterations
 	}
 }
 
 export class Runner {
-	private looper: Looper
+	protected looper: Looper
 	running = true
 	public clientPromise: Promise<PuppeteerClient> | undefined
 
@@ -108,10 +131,6 @@ export class Runner {
 		if (this.looper) this.looper.stop()
 		if (this.clientPromise) (await this.clientPromise).close()
 		return
-	}
-
-	get shouldShutdownBrowser(): boolean {
-		return !!this.launchOptionOverrides.headless && !this.launchOptionOverrides.devtools
 	}
 
 	async run(testScriptFactory: AsyncFactory<ITestScript>): Promise<void> {
@@ -168,14 +187,17 @@ export class Runner {
 
 			await test.beforeRun()
 
+			const cancelToken = new CancellationToken()
+
 			console.log('looper')
 			this.looper = new Looper(settings, this.running)
+			this.looper.killer = () => cancelToken.cancel()
 			await this.looper.run(async iteration => {
 				this.logger.info(`Starting iteration ${iteration}`)
 
 				let startTime = new Date()
 				try {
-					await test.run(iteration)
+					await test.runWithCancellation(iteration, cancelToken)
 				} catch (err) {
 					this.logger.error(
 						`[Iteration: ${iteration}] Error in Runner Loop: ${err.name}: ${err.message}\n${
@@ -238,6 +260,10 @@ export class PersistentRunner extends Runner {
 	}
 
 	rerunTest() {
+		setImmediate(() => this.runNextTest())
+	}
+
+	async runNextTest() {
 		// destructure for type checking (narrowing past undefined)
 		const { clientPromise, testScriptFactory } = this
 		if (clientPromise === undefined) {
@@ -247,20 +273,22 @@ export class PersistentRunner extends Runner {
 			return
 		}
 
-		setImmediate(async () => {
-			console.log('persistent runner got a command: rerun')
+		console.log('persistent runner got a command: rerun')
+		if (this.looper) await this.looper.kill()
+		console.log('looper finished')
 
-			try {
-				await this.runTestScript(await testScriptFactory(), clientPromise)
-			} catch (err) {
-				this.logger.error('an error occurred in the script')
-				this.logger.error(err)
-			}
-		})
+		try {
+			await this.runTestScript(await testScriptFactory(), clientPromise)
+		} catch (err) {
+			this.logger.error('an error occurred in the script')
+			this.logger.error(err)
+		}
 	}
 
 	async stop() {
 		this.stopped = true
+		this.running = false
+		if (this.looper) this.looper.stop()
 	}
 
 	async waitUntilStopped(): Promise<void> {

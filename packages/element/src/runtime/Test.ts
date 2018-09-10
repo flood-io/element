@@ -315,13 +315,13 @@ export default class Test {
 
 	public async willRunCommand(browser: Browser<Step>, command: string) {
 		const step: Step = browser.customContext
-		this.testObserver.beforeStepAction(this, step, command)
+		await this.testObserver.beforeStepAction(this, step, command)
 
 		debug(`Before action: '${command}()' waiting on actionDelay: ${this.settings.actionDelay}`)
 	}
 
 	async didRunCommand(browser: Browser<Step>, command: string) {
-		this.testObserver.afterStepAction(this, browser.customContext, command)
+		await this.testObserver.afterStepAction(this, browser.customContext, command)
 	}
 
 	public async takeScreenshot(options?: ScreenshotOptions) {

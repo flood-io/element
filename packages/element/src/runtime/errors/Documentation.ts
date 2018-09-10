@@ -103,14 +103,14 @@ console.log('page title:', await browser.title())
 			err,
 			`Element tried to evaluate a function on the browser, but it took too long.`,
 			`[LOW LEVEL ERROR]:
-At a lower level, Element uses function evaluation on the remote browser to achieve various tasks. 
-To protect from hanging the test script forever, this evaluation is only allowed to take a limited 
+At a lower level, Element uses function evaluation on the remote browser to achieve various tasks.
+To protect from hanging the test script forever, this evaluation is only allowed to take a limited
 amount of time to complete. After this time, an error is thrown.
 
 The length of this timeout is set using settings.waitTimeout (or overridden for a single step).
 
 Possible causes:
-- the function took too long to complete. For example if it was polling for an element to appear, 
+- the function took too long to complete. For example if it was polling for an element to appear,
   but the element took longer than waitTimeout to appear.
 - the function had an error which caused it to hang.
 
@@ -170,7 +170,7 @@ To prevent scripts hanging, Element cancels actions which take more than setting
 This can happen due to:
 - very slow page scripts
 - intermittent on-page script problems, such as network disruptions.
-- elements missing
+- DOM Elements missing
       `,
 		)
 	}
@@ -180,7 +180,7 @@ This can happen due to:
 			err,
 			`Unable to perform ${action} on detached element.`,
 			chalk`The test script tried to perform a {blue ${action}} action on an element that has been removed from the DOM tree.
-      
+
 This can occur when the page changes between the time you locate the element and when you use it.
 
 Consider using {blue browser.wait(Until.<condition>)} to ensure the page is in a known state before performing the action

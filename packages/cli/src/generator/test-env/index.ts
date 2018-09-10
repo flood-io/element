@@ -46,7 +46,7 @@ export default class TestEnv extends Generator {
 				type: 'input',
 				name: 'url',
 				message: 'A URL to use in the generated test script.',
-				default: 'http://challenge.flood.io',
+				default: 'https://challenge.flood.io',
 			},
 		])
 	}
@@ -75,8 +75,9 @@ export default class TestEnv extends Generator {
 	get _packageJSON(): string {
 		const pkg = {
 			name: this.appname,
-			version: '0.0.0',
-			description: 'flood element test script',
+			version: '0.0.1',
+			description: 'Flood Element test script',
+			private: true,
 
 			prettier: {
 				semi: false,
@@ -89,6 +90,7 @@ export default class TestEnv extends Generator {
 				jsxBracketSameLine: true,
 				arrowParens: 'avoid',
 			},
+
 			dependencies: {
 				'@flood/element': `^${elementVersion}`,
 				prettier: '^1.10.2',
@@ -104,15 +106,13 @@ export default class TestEnv extends Generator {
 				module: 'commonjs',
 				target: 'ES2017',
 				moduleResolution: 'node',
-				lib: ['dom', 'dom.iterable', 'es7', 'es2017', 'es2016.array.include', 'es2017.object'],
+				lib: ['dom', 'esnext'],
 				pretty: true,
 				strictNullChecks: false,
 				allowUnreachableCode: false,
 				alwaysStrict: true,
 				noUnusedLocals: false,
 				noUnusedParameters: false,
-				allowJs: true,
-				checkJs: true,
 				noImplicitAny: false,
 				allowSyntheticDefaultImports: true,
 				types: ['@types/node'],

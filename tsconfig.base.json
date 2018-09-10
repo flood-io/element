@@ -12,8 +12,6 @@
 		"allowUnreachableCode": false,
 		"alwaysStrict": true,
 		"noUnusedLocals": true,
-		"allowJs": true,
-		"checkJs": true,
 		"noImplicitAny": false,
 		"allowSyntheticDefaultImports": true,
 		"experimentalDecorators": true,

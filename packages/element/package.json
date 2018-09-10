@@ -53,7 +53,7 @@
 		"knuth-shuffle": "^1.0.8",
 		"morgan": "^1.9.0",
 		"prettier": "^1.10.2",
-		"puppeteer": "^1.7",
+		"puppeteer": "^1.6.2",
 		"raven": "^2.1.2",
 		"recast": "^0.13.0",
 		"source-map": "^0.7.0",

@@ -3,7 +3,7 @@ FROM node:9
 ARG GITHUB_TOKEN
 ARG NPM_TOKEN
 RUN apt-get update && apt-get install -y \
-         git \
+    git \
     && rm -rf /var/lib/apt/lists/* \
     \
     && git config --global url."https://github.com".insteadOf git://github.com \
@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 ADD package.json yarn.lock ./
 
-RUN yarn 
+RUN yarn
 
 ADD ./ ./
 RUN node_modules/.bin/lerna bootstrap

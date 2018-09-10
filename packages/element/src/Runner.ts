@@ -39,6 +39,10 @@ class Looper {
 		this.loopCount = settings.loopCount
 	}
 
+	stop() {
+		this.cancelled = true
+	}
+
 	finish() {
 		clearTimeout(this.timeout)
 	}
@@ -61,6 +65,9 @@ class Looper {
 
 export class Runner {
 	private looper: Looper
+	running = true
+	public clientPromise: Promise<PuppeteerClient> | undefined
+
 	constructor(
 		private clientFactory: AsyncFactory<PuppeteerClient>,
 		protected testCommander: TestCommander | undefined,
@@ -96,6 +103,9 @@ export class Runner {
 	// }
 
 	async stop(): Promise<void> {
+		this.running = false
+		if (this.looper) this.looper.stop()
+		if (this.clientPromise) (await this.clientPromise).close()
 		return
 	}
 
@@ -106,9 +116,9 @@ export class Runner {
 	async run(testScriptFactory: AsyncFactory<ITestScript>): Promise<void> {
 		const testScript = await testScriptFactory()
 
-		const clientPromise = this.launchClient(testScript)
+		this.clientPromise = this.launchClient(testScript)
 
-		await this.runTestScript(testScript, clientPromise)
+		await this.runTestScript(testScript, this.clientPromise)
 	}
 
 	async launchClient(testScript: ITestScript): Promise<PuppeteerClient> {
@@ -153,7 +163,6 @@ export class Runner {
 			this.logger.debug(`Test loop count set to ${settings.loopCount} iterations`)
 			this.logger.debug(`Settings: ${JSON.stringify(settings, null, 2)}`)
 
-			debugger
 			await test.beforeRun()
 
 			console.log('looper')

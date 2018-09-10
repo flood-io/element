@@ -43,3 +43,5 @@ export { StructuredError } from './src/utils/StructuredError'
 import NetworkRecorder from './src/network/Recorder'
 export { NetworkRecorder }
 export { Entry } from './src/network/Protocol'
+import Observer from './src/runtime/Observer'
+export { Observer as NetworkObserver }

@@ -8,16 +8,16 @@ export interface ErrorWrapper {
 }
 
 export function unwrapError(e: Error | ErrorWrapper): Error {
-	if ((<ErrorWrapper>e).wrappedError !== undefined) {
-		return (<ErrorWrapper>e).wrappedError
+	if ((e as ErrorWrapper).wrappedError !== undefined) {
+		return (e as ErrorWrapper).wrappedError
 	} else {
 		return e as Error
 	}
 }
 
 function originalError(e: Error): Error {
-	if ((<errorWithOriginalError>e).originalError !== undefined) {
-		return originalError((<errorWithOriginalError>e).originalError)
+	if ((e as errorWithOriginalError).originalError !== undefined) {
+		return originalError((e as errorWithOriginalError).originalError)
 	} else {
 		return e
 	}
@@ -56,20 +56,20 @@ export class TestScriptError extends Error {
 	}
 
 	get hasDoc(): boolean {
-		return (<errorWithDoc>this.originalError).errorDoc !== undefined
+		return (this.originalError as errorWithDoc).errorDoc !== undefined
 	}
 
 	get errorDoc(): string | null {
-		if ((<errorWithDoc>this.originalError).errorDoc !== undefined) {
-			return (<errorWithDoc>this.originalError).errorDoc
+		if ((this.originalError as errorWithDoc).errorDoc !== undefined) {
+			return (this.originalError as errorWithDoc).errorDoc
 		} else {
 			return null
 		}
 	}
 
 	get callContext(): string | null {
-		if ((<errorWithDoc>this.originalError).callContext !== undefined) {
-			return (<errorWithDoc>this.originalError).callContext
+		if ((this.originalError as errorWithDoc).callContext !== undefined) {
+			return (this.originalError as errorWithDoc).callContext
 		} else {
 			return null
 		}

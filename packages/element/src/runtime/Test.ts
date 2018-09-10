@@ -145,14 +145,14 @@ export default class Test {
 	 * Runs the group of steps
 	 * @return {Promise<void|Error>}
 	 */
-	public async run(iteration?: number): Promise<void | Error> {
-		return this.runWithCancellation(iteration || 0, new CancellationToken())
+	public async run(iteration?: number): Promise<void> | never {
+		await this.runWithCancellation(iteration || 0, new CancellationToken())
 	}
 
 	public async runWithCancellation(
 		iteration: number,
 		cancelToken: CancellationToken,
-	): Promise<void | Error> {
+	): Promise<void> | never {
 		console.assert(this.client, `client is not configured in Test`)
 
 		this.failed = false
@@ -198,10 +198,12 @@ export default class Test {
 				if (cancelToken.isCancellationRequested) return
 
 				if (this.failed) {
+					console.log('failed, bailing out of steps')
 					break
 				}
 			}
 		} catch (err) {
+			console.log('error -> failed')
 			this.failed = true
 			throw err
 		}
@@ -233,6 +235,7 @@ export default class Test {
 
 		if (error !== null) {
 			debug('step error')
+			console.log('step error -> failed')
 			this.failed = true
 
 			await this.testObserver.onStepError(this, step, this.liftToStructuredError(error))

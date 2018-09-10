@@ -67,9 +67,20 @@ export const handler = (args: Arguments) => {
 function makeTestCommander(file: string): TestCommander {
 	const commander = new EventEmitter()
 
+	// hax
+	// const dir = path.dirname(file)
+	// const [first, ...rest] = path.basename(file)
+	// const globPath = path.join(dir, `{${first}}${rest.join('')}`)
+
+	// console.log('watching', file, globPath)
+
+	watch(path.dirname(file)).on('change', (path, stats) => {
+		console.log('changed dir', path, stats)
+	})
+
 	const watcher = watch(file, { persistent: true })
 	watcher.on('change', (path, stats) => {
-		console.log('change', path)
+		console.log('change', path, stats)
 		if (path === file) {
 			console.log('changy')
 			commander.emit('rerun-test')

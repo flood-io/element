@@ -274,8 +274,14 @@ export class PersistentRunner extends Runner {
 		}
 
 		console.log('persistent runner got a command: rerun')
-		if (this.looper) await this.looper.kill()
-		console.log('looper finished')
+		if (this.looper) {
+			console.log('re-run')
+
+			await this.looper.kill()
+
+			console.log('looper finished')
+			;(await clientPromise).reopenPage()
+		}
 
 		try {
 			await this.runTestScript(await testScriptFactory(), clientPromise)

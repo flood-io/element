@@ -44,6 +44,7 @@ export interface IPuppeteerClient {
 	browser: Browser
 	page: Page
 	close(): Promise<void>
+	reopenPage(): Promise<void>
 }
 
 export class PuppeteerClient implements IPuppeteerClient {
@@ -54,6 +55,11 @@ export class PuppeteerClient implements IPuppeteerClient {
 		if (this._isClosed) return
 		await this.browser.close()
 		this._isClosed = true
+	}
+
+	async reopenPage(): Promise<void> {
+		await this.page.close()
+		this.page = await this.browser.newPage()
 	}
 }
 
@@ -99,4 +105,5 @@ export class NullPuppeteerClient implements IPuppeteerClient {
 	async close(): Promise<void> {
 		return
 	}
+	async reopenPage() {}
 }

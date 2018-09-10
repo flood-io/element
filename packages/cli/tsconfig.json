@@ -1,31 +1,8 @@
 {
+	"extends": "../../tsconfig.base.json",
 	"compilerOptions": {
-		"module": "commonjs",
-		"target": "ES2017",
-		"moduleResolution": "node",
-		"removeComments": false,
-		"outDir": "dist",
-		"lib": ["dom", "dom.iterable", "esnext", "es2016.array.include", "es2017.object"],
-		"pretty": false,
-		"rootDir": ".",
-		"strictNullChecks": true,
-		"forceConsistentCasingInFileNames": true,
-		"allowUnreachableCode": false,
-		"alwaysStrict": true,
-		"noUnusedLocals": true,
-		"allowJs": true,
-		"checkJs": true,
-		"noImplicitAny": false,
-		"allowSyntheticDefaultImports": true,
-		"experimentalDecorators": true,
-		"typeRoots": ["node_modules/@types"],
-		"emitDecoratorMetadata": true,
-    "baseUrl": "./",
-    "paths": {
-      "*": ["node_modules/@types/*", "*"]
-    }
+		"outDir": "packages/cli/dist"
 	},
-	"exclude": ["node_modules", "dist", "lib", "*.spec.ts"],
 	"files": ["./index.ts"],
 	"include": ["./src/**/*.ts"]
 }

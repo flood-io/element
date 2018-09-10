@@ -5,12 +5,12 @@
 	"description": "The command line interface for Flood Element",
 	"repository": "flood-io/element",
 	"bin": {
-		"element": "./dist/index.js"
+		"element": "./lib/index.js"
 	},
 	"private": false,
 	"scripts": {
-		"build": "tsc --outDir dist --project .",
-		"build:watch": "tsc --watch --outDir dist --project .",
+		"build": "tsc",
+		"build:watch": "tsc --watch",
 		"prepublishOnly": "npm run build",
 		"element": "ts-node -- ./index.ts",
 		"element:inspect": "node --inspect-brk -r ts-node/register ./index.ts"

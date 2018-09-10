@@ -11,10 +11,10 @@ import { ConsoleReporter } from '../utils/ConsoleReporter'
 import { Argv, Arguments } from 'yargs'
 import { existsSync } from 'fs'
 import * as path from 'path'
-// import { error } from '../utils/out/error'
 import createLogger from '../utils/Logger'
 import { watch } from 'chokidar'
 import { EventEmitter } from 'events'
+import chalk from 'chalk'
 
 export const handler = (args: Arguments) => {
 	const { file, verbose } = args
@@ -171,7 +171,7 @@ export const builder = (yargs: Argv) => {
 		})
 		.check(({ file, chrome }) => {
 			if (!file.length) return new Error('Please provide a test script')
-			if (!existsSync(file)) return new Error(`File does not exist '${file}'`)
+			if (!existsSync(file)) return new Error(`${chalk.redBright('File does not exist')} '${file}'`)
 			// if (chrome && !existsSync(chrome))
 			// return new Error(`Chrome executable path does not exist '${chrome}'`)
 			return true

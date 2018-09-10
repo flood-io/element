@@ -17,6 +17,8 @@ import { StructuredError } from '../utils/StructuredError'
 
 import { Step } from './Step'
 
+import { CancellationToken } from '../utils/CancellationToken'
+
 import { IPuppeteerClient } from '../driver/Puppeteer'
 import { RuntimeEnvironment, WorkRoot } from '../runtime-environment/types'
 import { ITestScript } from '../TestScript'
@@ -144,9 +146,14 @@ export default class Test {
 	 * @return {Promise<void|Error>}
 	 */
 	public async run(iteration?: number): Promise<void | Error> {
+		return this.runWithCancellation(iteration || 0, new CancellationToken())
+	}
+
+	public async runWithCancellation(
+		iteration: number,
+		cancelToken: CancellationToken,
+	): Promise<void | Error> {
 		console.assert(this.client, `client is not configured in Test`)
-		// let skipped: Step[] = []
-		// let errors: Error[] = []
 
 		this.failed = false
 		this.runningBrowser = null
@@ -186,7 +193,9 @@ export default class Test {
 			for (let step of this.steps) {
 				browser.customContext = step
 
-				await this.runStep(browser, step, testDataRecord)
+				await Promise.race([this.runStep(browser, step, testDataRecord), cancelToken.promise])
+
+				if (cancelToken.isCancellationRequested) return
 
 				if (this.failed) {
 					break

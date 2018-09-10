@@ -5,7 +5,7 @@
 	"description": "The command line interface for Flood Element",
 	"repository": "flood-io/element",
 	"bin": {
-		"element": "./lib/index.js"
+		"element": "./dist/index.js"
 	},
 	"private": false,
 	"scripts": {

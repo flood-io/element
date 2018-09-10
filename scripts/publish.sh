@@ -14,7 +14,7 @@ cd $root/packages/element
 npm publish --access public dist
 
 cd $root/packages/cli
-npm publish --access public dist
+npm publish --access public
 
 git push
 

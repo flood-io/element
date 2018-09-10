@@ -97,9 +97,9 @@ export class VM {
 		// closes over steps: Step[]
 		const step = (...args: any[]) => {
 			// name: string, fn: (driver: Browser) => Promise<void>
-			let name: string,
-				fn: StepFunction<any>,
-				stepOptions: StepOptions = {}
+			let name: string
+			let fn: StepFunction<any>
+			let stepOptions: StepOptions = {}
 
 			if (args.length === 3) {
 				;[name, stepOptions, fn] = args

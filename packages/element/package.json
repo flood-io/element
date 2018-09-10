@@ -1,6 +1,6 @@
 {
 	"name": "@flood/element",
-	"version": "1.0.3-50",
+	"version": "1.0.3-51",
 	"description": "Flood Element is a browser based load generation tool for easily testing modern web application performance",
 	"main": "./index.js",
 	"types": "./index.ts.d",

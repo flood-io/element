@@ -77,7 +77,7 @@ export default class Test {
 	}
 
 	constructor(
-		private client: IPuppeteerClient,
+		public client: IPuppeteerClient,
 		private runEnv: RuntimeEnvironment,
 		public reporter: IReporter = new NullReporter(),
 		testObserverFactory: (t: TestObserver) => TestObserver = x => x,
@@ -148,6 +148,8 @@ export default class Test {
 		// let skipped: Step[] = []
 		// let errors: Error[] = []
 
+		this.failed = false
+		this.runningBrowser = null
 		// await this.observer.attachToNetworkRecorder()
 
 		debug('run() start')

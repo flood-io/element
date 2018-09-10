@@ -7,23 +7,28 @@ export const settings: TestSettings = {
 	clearCookies: true,
 	responseTimeMeasurement: 'step',
 	userAgent: 'I AM ROBOT',
-	actionDelay: 1,
-	stepDelay: 1,
+	actionDelay: 5,
+	stepDelay: 2,
 }
 
 export default () => {
 	step('1. Start', async browser => {
 		await browser.visit('https://challenge.flood.io', { waitUntil: 'networkidle2' })
 
-		let startButton = By.css('#new_challenger > input.btn.btn-xl.btn-default')
+		let startButton = By.css('#new_challenger > input.btn')
 		await browser.wait(Until.elementIsVisible(startButton))
+		let el = await browser.findElement(startButton)
+		await el.focus()
 		await browser.takeScreenshot()
+		await el.click()
 	})
 
-	step('2. Age', async browser => {
-		let button = By.css('#new_challenger > input.btn.btn-xl.btn-default')
-		await browser.wait(Until.elementIsVisible(button))
-		await browser.click(button)
+	step('2. Age', { waitTimeout: 60 }, async browser => {
+		// let button = By.css('input.btn')
+		// await browser.wait(Until.elementIsVisible(button))
+
+		// let buttonElement = await browser.findElement(button)
+		// await buttonElement.click()
 
 		let select = By.id('challenger_age')
 		await browser.wait(Until.elementIsVisible(select))

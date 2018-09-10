@@ -1,0 +1,24 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"target": "ES2017",
+		"moduleResolution": "node",
+		"removeComments": false,
+		"outDir": "lib",
+		"lib": ["dom", "esnext"],
+		"pretty": false,
+		"rootDir": ".",
+		"strictNullChecks": true,
+		"forceConsistentCasingInFileNames": true,
+		"allowUnreachableCode": false,
+		"alwaysStrict": true,
+		"noUnusedLocals": true,
+		"allowJs": true,
+		"checkJs": true,
+		"noImplicitAny": false,
+		"allowSyntheticDefaultImports": true,
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true
+	},
+	"exclude": ["node_modules", "dist", "lib", "*.spec.ts"]
+}

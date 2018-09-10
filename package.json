@@ -9,12 +9,13 @@
 	"dependencies": {
 		"lerna": "^3.2.0"
 	},
-  "scripts": {
-    "build:watch": "lerna run build:watch --parallel",
-    "publish": "./scripts/publish.sh",
-    "publish:brew": "./scripts/publish-brew-tap/publish.sh",
-    "publish:pre": "lerna publish --force-publish=* --cd-version prerelease && yarn publish:brew"
-  },
+	"scripts": {
+		"build:watch": "lerna run build:watch --parallel",
+		"publish": "./scripts/publish.sh",
+		"publish:brew": "./scripts/publish-brew-tap/publish.sh",
+		"publish:pre": "lerna publish --force-publish=* --cd-version prerelease && yarn publish:brew",
+		"element": "ts-node -- ./packages/cli/index.ts"
+	},
 	"prettier": {
 		"semi": false,
 		"singleQuote": true,

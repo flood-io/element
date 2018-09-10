@@ -11,7 +11,7 @@
 	"scripts": {
 		"build": "tsc",
 		"build:watch": "tsc --watch",
-		"prepublishOnly": "npm run build",
+		"prepublishOnly": "yarn build",
 		"element": "ts-node -- ./index.ts",
 		"element:inspect": "node --inspect-brk -r ts-node/register ./index.ts"
 	},

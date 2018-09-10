@@ -1,7 +1,7 @@
 {
 	"extends": "../../tsconfig.base.json",
 	"compilerOptions": {
-		"outDir": "packages/element/dist"
+		"outDir": "dist"
 	},
 	"exclude": ["node_modules", "lib", "examples", "*.spec.ts", "*.test.ts"],
 	"files": ["./index.ts", "./api.ts", "./ambient.d.ts"]

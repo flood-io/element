@@ -10,7 +10,10 @@ cd $root
 dest=$root/dist
 mkdir -p $dest
 
-yarn exec tsc --project . --outDir $dest
+# yarn exec tsc --outDir $dest
+
+yarn exec tsc
+
 rm -rf $dest/src/extern
 cp -a src/extern $dest/src/extern
 

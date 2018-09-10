@@ -1,5 +1,5 @@
 {
-	"name": "element",
+	"name": "flood-element",
 	"version": "1.0.0",
 	"main": "index.js",
 	"repository": "git@github.com:flood-io/element.git",

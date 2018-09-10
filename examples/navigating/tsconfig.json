@@ -1,0 +1,18 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"target": "ES2017",
+		"moduleResolution": "node",
+		"lib": ["dom", "esnext"],
+		"pretty": true,
+		"strictNullChecks": false,
+		"allowUnreachableCode": false,
+		"alwaysStrict": true,
+		"noUnusedLocals": false,
+		"noUnusedParameters": false,
+		"allowJs": true,
+		"checkJs": true,
+		"noImplicitAny": false,
+		"allowSyntheticDefaultImports": true
+	}
+}

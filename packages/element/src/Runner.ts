@@ -29,7 +29,7 @@ class Looper {
 	private cancelled = false
 	private loopCount: number
 
-	constructor(settings: ConcreteTestSettings) {
+	constructor(settings: ConcreteTestSettings, running = true) {
 		if (settings.duration > 0) {
 			this.timeout = setTimeout(() => {
 				this.cancelled = true
@@ -37,6 +37,7 @@ class Looper {
 		}
 
 		this.loopCount = settings.loopCount
+		this.cancelled = !!running
 	}
 
 	stop() {
@@ -141,6 +142,8 @@ export class Runner {
 		testScript: ITestScript,
 		clientPromise: Promise<PuppeteerClient>,
 	): Promise<void> {
+		if (!this.running) return
+
 		console.log('running test script')
 		const test = new Test(await clientPromise, this.runEnv, this.reporter, this.testObserverFactory)
 		// this.test = test
@@ -166,7 +169,7 @@ export class Runner {
 			await test.beforeRun()
 
 			console.log('looper')
-			this.looper = new Looper(settings)
+			this.looper = new Looper(settings, this.running)
 			await this.looper.run(async iteration => {
 				this.logger.info(`Starting iteration ${iteration}`)
 

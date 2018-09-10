@@ -37,7 +37,7 @@ class Looper {
 		}
 
 		this.loopCount = settings.loopCount
-		this.cancelled = !!running
+		this.cancelled = !running
 	}
 
 	stop() {

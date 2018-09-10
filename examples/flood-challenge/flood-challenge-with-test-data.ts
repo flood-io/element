@@ -11,7 +11,7 @@ export const settings: TestSettings = {
 	stepDelay: 1,
 }
 
-let data = [{ age: 42 }, { age: 16 }, { age: 29 }, { age: 54 }]
+let data = [{ age: 42 }, { age: 16 }, { age: 29 }, { age: 54 }, { age: 31 }]
 
 interface Row {
 	age: number
@@ -25,26 +25,24 @@ export default () => {
 	step('1. Start', async browser => {
 		await browser.visit('https://challenge.flood.io')
 
+		let button = By.css('#new_challenger > input.btn.btn-xl.btn-default')
+		await browser.wait(Until.elementIsVisible(button))
+
 		await browser.takeScreenshot()
+		await browser.click(button)
 	})
 
 	step('2. Age', async (browser, row: Row) => {
-		console.log(row)
-
-		let button = By.css('#new_challenger > input.btn.btn-xl.btn-default')
-		await browser.wait(Until.elementIsVisible(button))
-		await browser.click(button)
-
 		let select = By.id('challenger_age')
 		await browser.wait(Until.elementIsVisible(select))
 		await browser.selectByValue(select, row.age.toString())
 
 		await browser.takeScreenshot()
+
+		await browser.click('input.btn')
 	})
 
 	step('3. Largest Order', async browser => {
-		await browser.click('input.btn')
-
 		let table = By.css('table tbody tr td:first-of-type label')
 		await browser.wait(Until.elementIsVisible(table))
 

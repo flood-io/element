@@ -10,7 +10,7 @@ export const error = (...input) => {
 		messages = [message]
 
 		// if (slug) {
-		// 	messages.push(`> More details: https://err.sh/now-cli/${slug}`)
+		// 	messages.push(`> More details: https://flood-element.com/element-cli/${slug}`)
 		// }
 	}
 

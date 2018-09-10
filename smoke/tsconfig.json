@@ -1,30 +1,4 @@
 {
-	"compilerOptions": {
-		"module": "commonjs",
-		"target": "ES2017",
-		"moduleResolution": "node",
-		"removeComments": false,
-		"outDir": "dist",
-		"lib": ["dom", "dom.iterable", "esnext", "es2016.array.include", "es2017.object"],
-		"pretty": false,
-		"rootDir": ".",
-		"strictNullChecks": false,
-		"forceConsistentCasingInFileNames": true,
-		"allowUnreachableCode": false,
-		"alwaysStrict": true,
-		"noUnusedLocals": true,
-		"allowJs": true,
-		"checkJs": true,
-		"noImplicitAny": false,
-		"allowSyntheticDefaultImports": true,
-		"experimentalDecorators": true,
-		"typeRoots": ["node_modules/@types"],
-    "types": ["@types/node"],
-		"emitDecoratorMetadata": true,
-    "baseUrl": "./",
-    "paths": {
-      "*": ["node_modules/@types/*", "*"]
-    }
-	},
+	"extends": "../tsconfig.base.json",
 	"files": ["./smoke.ts"]
 }

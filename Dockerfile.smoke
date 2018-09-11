@@ -34,6 +34,10 @@ RUN apt-get update \
     # \
     # && echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
 
+# increment this to bust the cache when a new chrome comes out
+ARG NOMINAL_CHROME_VERSION
+ENV NOMINAL_CHROME_VERSION=${NOMINAL_CHROME_VERSION}
+
 RUN curl -sLO https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
     && dpkg -i google-chrome-stable_current_amd64.deb \
     && rm -rf google-chrome-stable_current_amd64.deb
@@ -41,7 +45,7 @@ RUN curl -sLO https://dl.google.com/linux/direct/google-chrome-stable_current_am
 ENV NO_CHROME_SANDBOX=1
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
-COPY ./package.json ./yarn.lock /element/
+COPY ./package.json ./yarn.lock ./tsconfig.base.json /element/
 RUN cd /element && yarn
 
 COPY ./packages/cli/package.json ./packages/cli/tsconfig.json /element/packages/cli/
@@ -57,6 +61,8 @@ RUN node /element-install.js
 
 WORKDIR /app
 
+# ugh
+COPY ./tsconfig.base.json /
 COPY smoke/package.json smoke/yarn.lock smoke/tsconfig.json ./
 RUN yarn
 

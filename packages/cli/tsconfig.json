@@ -1,6 +1,7 @@
 {
 	"extends": "../../tsconfig.base.json",
 	"compilerOptions": {
+    "declaration": false,
 		"outDir": "dist"
 	},
 	"files": ["./index.ts", "./ambient.d.ts"],

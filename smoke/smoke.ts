@@ -9,8 +9,8 @@ process.env.DEBUG = 'element-cli:console-reporter'
 console.log('running tests')
 
 const tests = join(__dirname, 'test-scripts')
-const passTests = globSync('*.pass.ts', { cwd: tests, absolute: true })
-const failTests = globSync('*.fail.ts', { cwd: tests, absolute: true })
+let passTests = globSync('*.pass.ts', { cwd: tests, absolute: true })
+let failTests = globSync('*.fail.ts', { cwd: tests, absolute: true })
 // console.log('pass', passTests)
 
 async function runTest(testScript: string, expectPass: boolean): Promise<boolean> {
@@ -29,7 +29,7 @@ async function runTest(testScript: string, expectPass: boolean): Promise<boolean
 
 	for await (const data of proc.stdout) {
 		process.stdout.write(data)
-		if (/xxxx Step .* failed/.test(data)) {
+		if (detectError(data)) {
 			passed = false
 		}
 	}
@@ -48,6 +48,9 @@ async function runTest(testScript: string, expectPass: boolean): Promise<boolean
 	return expectPass === passed
 }
 
+function detectError(data: string): boolean {
+	return /xxxx Step .* failed/.test(data) || /internal flood-chrome error/.test(data)
+}
 async function runAll() {
 	let allExpected = true
 	for (const test of passTests) {

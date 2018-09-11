@@ -12,7 +12,7 @@
 		"allowUnreachableCode": false,
 		"alwaysStrict": true,
 		"noUnusedLocals": true,
-		"noImplicitAny": false,
+		"noImplicitAny": true,
 		"allowSyntheticDefaultImports": true,
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true

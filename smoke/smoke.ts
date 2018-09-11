@@ -15,13 +15,21 @@ let failTests = globSync('*.fail.ts', { cwd: tests, absolute: true })
 
 async function runTest(testScript: string, expectPass: boolean): Promise<boolean> {
 	const shortName = basename(testScript)
+	const shortBareName = basename(testScript, '.ts')
+
+	const dataDir = join(tests, shortBareName)
+
 	console.log('')
 	console.log(chalk`{yellow ============ {magenta running test {blue ${shortName}}} ===========}`)
 	// console.log(process.env)
-	const proc = spawn('element', ['run', testScript, '--chrome', '--verbose'], {
-		stdio: ['inherit', 'pipe', 'inherit'],
-		env: process.env,
-	})
+	const proc = spawn(
+		'element',
+		['run', testScript, '--chrome', '--verbose', '--test-data-root', dataDir],
+		{
+			stdio: ['inherit', 'pipe', 'inherit'],
+			env: process.env,
+		},
+	)
 
 	let passed = true
 
@@ -51,7 +59,12 @@ async function runTest(testScript: string, expectPass: boolean): Promise<boolean
 function detectError(data: string): boolean {
 	return /xxxx Step .* failed/.test(data) || /internal flood-chrome error/.test(data)
 }
+
 async function runAll() {
+	// DEBUG filter
+	// passTests = passTests.filter(x => /googling/.test(x))
+	// failTests = []
+
 	let allExpected = true
 	for (const test of passTests) {
 		allExpected = (await runTest(test, true)) && allExpected

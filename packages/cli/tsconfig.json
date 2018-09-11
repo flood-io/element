@@ -3,6 +3,6 @@
 	"compilerOptions": {
 		"outDir": "dist"
 	},
-	"files": ["./index.ts"],
+	"files": ["./index.ts", "./ambient.d.ts"],
 	"include": ["./src/**/*.ts"]
 }

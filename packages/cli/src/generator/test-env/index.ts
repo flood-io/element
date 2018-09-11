@@ -14,7 +14,7 @@ const elementVersion = elementPackage.version
 export default class TestEnv extends Generator {
 	public options: { [key: string]: string }
 
-	constructor(args, opts) {
+	constructor(args: any[], opts: any) {
 		super(args, opts)
 
 		// This makes `appname` a required argument.
@@ -62,7 +62,7 @@ export default class TestEnv extends Generator {
 	installing() {
 		const prevValue = process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD
 		process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = '1'
-		commandExists('yarn', (err, yes) => {
+		commandExists('yarn', (err: Error, yes: boolean) => {
 			if (yes) {
 				this.yarnInstall()
 			} else {

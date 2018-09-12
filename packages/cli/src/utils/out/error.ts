@@ -2,17 +2,19 @@
 
 import chalk from 'chalk'
 
-export const error = (...input) => {
-	let messages = input
+export const error = (...messages: string[]) => {
+	// let messages: string[]
 
-	if (typeof input[0] === 'object') {
-		const { message } = input[0]
-		messages = [message]
+	// if (typeof maybeError === 'object' && maybeError.message !== undefined) {
+	// const { message } = maybeError
+	// messages = [message]
 
-		// if (slug) {
-		// 	messages.push(`> More details: https://flood-element.com/element-cli/${slug}`)
-		// }
-	}
+	// // if (slug) {
+	// // 	messages.push(`> More details: https://flood-element.com/element-cli/${slug}`)
+	// // }
+	// } else {
+	// messages = [maybeError, ...rest]
+	// }
 
-	return `${chalk.red('> Error!')} ${messages.join('\n')}`
+	return chalk`{red > Error!} ${messages.join('\n')}`
 }

@@ -105,7 +105,7 @@ export class Runner {
 
 	async stop(): Promise<void> {
 		this.running = false
-		if (this.looper) this.looper.stop()
+		if (this.looper) await this.looper.kill()
 		if (this.clientPromise) (await this.clientPromise).close()
 		return
 	}
@@ -261,7 +261,8 @@ export class PersistentRunner extends Runner {
 			await this.looper.kill()
 
 			console.log('looper finished')
-			;(await clientPromise).reopenPage()
+
+			// ;(await clientPromise).reopenPage()
 		}
 
 		try {

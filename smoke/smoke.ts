@@ -65,19 +65,28 @@ async function runAll() {
 	// passTests = passTests.filter(x => /googling/.test(x))
 	// failTests = []
 
-	let allExpected = true
+	const unexpected: { test: string; expectPass: boolean }[] = []
+
 	for (const test of passTests) {
-		allExpected = (await runTest(test, true)) && allExpected
+		if (!(await runTest(test, true))) {
+			unexpected.push({ test, expectPass: true })
+		}
 	}
 	for (const test of failTests) {
-		allExpected = (await runTest(test, false)) && allExpected
+		if (!(await runTest(test, false))) {
+			unexpected.push({ test, expectPass: false })
+		}
 	}
 
 	console.log()
-	if (allExpected) {
-		console.log(chalk`{green all scripts ran as expected}`)
-	} else {
+	if (unexpected.length > 0) {
 		console.log(chalk`{red not all scripts ran as expected}`)
+		for (const { test, expectPass } of unexpected) {
+			const resultDesc = expectPass ? 'expected to pass, but failed' : 'expected to fail but passed'
+			console.log(chalk`- {red ${basename(test)}} ${resultDesc}`)
+		}
+	} else {
+		console.log(chalk`{green all scripts ran as expected}`)
 	}
 }
 

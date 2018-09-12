@@ -135,6 +135,10 @@ export class Runner {
 		const options: Partial<ConcreteLaunchOptions> = this.launchOptionOverrides
 		options.ignoreHTTPSErrors = settings.ignoreHTTPSErrors
 
+		if (options.chromeVersion === undefined) {
+			options.chromeVersion = settings.chromeVersion
+		}
+
 		return this.clientFactory(options)
 	}
 

@@ -27,6 +27,18 @@ export const handler = (args: Arguments) => {
 	const logger = createLogger('debug', true)
 	const reporter = new ConsoleReporter(logger, verboseBool)
 
+	// [not specified] => undefined => use test script value
+	// --chrome => override to 'stable'
+	// --chrome string => override to <string>
+	let chromeVersion: string | undefined
+	if (typeof args.chrome === 'boolean') {
+		if (args.chrome) {
+			chromeVersion = 'stable'
+		}
+	} else {
+		chromeVersion = args.chrome
+	}
+
 	const opts: ElementOptions = {
 		logger: logger,
 		testScript: file,
@@ -35,7 +47,7 @@ export const handler = (args: Arguments) => {
 		verbose: verboseBool,
 		headless: args.headless,
 		devtools: args.devtools,
-		chrome: args.chrome,
+		chromeVersion: chromeVersion,
 		sandbox: args.sandbox,
 
 		runEnv: initRunEnv(workRootPath, testDataPath),

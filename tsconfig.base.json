@@ -4,7 +4,6 @@
 		"target": "ES2017",
 		"moduleResolution": "node",
 		"removeComments": false,
-		"declaration": true,
 		"lib": ["dom", "esnext"],
 		"pretty": false,
 		"strictNullChecks": true,
@@ -12,7 +11,7 @@
 		"allowUnreachableCode": false,
 		"alwaysStrict": true,
 		"noUnusedLocals": true,
-		"noImplicitAny": false,
+		"noImplicitAny": true,
 		"allowSyntheticDefaultImports": true,
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true

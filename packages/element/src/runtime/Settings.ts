@@ -40,6 +40,16 @@ export type ResponseTiming = 'page' | 'network' | 'step' | 'stepWithThinkTime'
 export type ConsoleMethod = 'log' | 'info' | 'debug' | 'warn' | 'error'
 
 /**
+ * Represents the versions of chrome that the test script will run against.
+ *
+ * literal | description
+ * --------|-----------
+ * puppeteer | (Default) The browser bundled with [puppeteer]. It is a curated version of [chromium](https://www.chromium.org) (the open source version of Google Chrome). Using the puppeteer-bundled Chromium ensures the best compatibility with puppeteer, but lacks some features such as video support.
+ * stable | The latest version of [Google Chrome](https://www.chromium.org/). Google Chrome has more features than chromium, but isn't tested as thoroughly against puppeteer, which can result in intermittent errors. If you don't need the extra features, please use `bundled`.
+ */
+export type ChromeVersion = 'puppeteer' | 'stable'
+
+/**
  * The TestSettings interface specifies the available settings you have to configure how your test runs. These properties should be exported using the property `settings`.
  *
  * **Example:**
@@ -161,6 +171,8 @@ export interface TestSettings {
 	 * Whether to ignore HTTPS errors during navigation. Defaults to `false`
 	 */
 	ignoreHTTPSErrors?: boolean
+
+	chromeVersion?: ChromeVersion
 }
 
 /**
@@ -183,6 +195,7 @@ export const DEFAULT_SETTINGS: ConcreteTestSettings = {
 	userAgent: CustomDeviceDescriptors['Chrome Desktop Large'].userAgent,
 	device: 'Chrome Desktop Large',
 	ignoreHTTPSErrors: false,
+	chromeVersion: 'puppeteer',
 }
 
 /**

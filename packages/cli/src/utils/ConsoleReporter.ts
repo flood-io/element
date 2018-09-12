@@ -93,6 +93,6 @@ cause.stack: ${detail.causeStack}`)
 		debug('testScriptConsole', method, message)
 		if (method === 'log') method = 'info'
 		if (method === 'warning') method = 'warn'
-		this.logger[method](`page console.${method}: ${message} ${optionalParams.join(' ')}`)
+		;(this.logger as any)[method](`page console.${method}: ${message} ${optionalParams.join(' ')}`)
 	}
 }

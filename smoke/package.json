@@ -4,6 +4,7 @@
 	"main": "run.ts",
 	"private": true,
 	"dependencies": {
+		"@types/glob": "^5.0.35",
 		"@types/node": "^10.9.4",
 		"chalk": "^2.4.1",
 		"glob": "^7.1.3"

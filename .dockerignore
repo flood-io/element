@@ -1,1 +1,10 @@
+.git
 node_modules
+**/node_modules
+
+packages/*/node_modules
+packages/*/tmp
+packages/cli/node_modules
+packages/cli/tmp
+packages/element/node_modules
+packages/element/tmp

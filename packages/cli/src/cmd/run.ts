@@ -27,6 +27,18 @@ export const handler = (args: Arguments) => {
 	const logger = createLogger('debug', true)
 	const reporter = new ConsoleReporter(logger, verboseBool)
 
+	// [not specified] => undefined => use test script value
+	// --chrome => override to 'stable'
+	// --chrome string => override to <string>
+	let chromeVersion: string | undefined
+	if (typeof args.chrome === 'boolean') {
+		if (args.chrome) {
+			chromeVersion = 'stable'
+		}
+	} else {
+		chromeVersion = args.chrome
+	}
+
 	const opts: ElementOptions = {
 		logger: logger,
 		testScript: file,
@@ -35,7 +47,7 @@ export const handler = (args: Arguments) => {
 		verbose: verboseBool,
 		headless: args.headless,
 		devtools: args.devtools,
-		chrome: args.chrome,
+		chromeVersion: chromeVersion,
 		sandbox: args.sandbox,
 
 		runEnv: initRunEnv(workRootPath, testDataPath),
@@ -67,9 +79,20 @@ export const handler = (args: Arguments) => {
 function makeTestCommander(file: string): TestCommander {
 	const commander = new EventEmitter()
 
+	// hax
+	// const dir = path.dirname(file)
+	// const [first, ...rest] = path.basename(file)
+	// const globPath = path.join(dir, `{${first}}${rest.join('')}`)
+
+	// console.log('watching', file, globPath)
+
+	watch(path.dirname(file)).on('change', (path, stats) => {
+		console.log('changed dir', path, stats)
+	})
+
 	const watcher = watch(file, { persistent: true })
 	watcher.on('change', (path, stats) => {
-		console.log('change', path)
+		console.log('change', path, stats)
 		if (path === file) {
 			console.log('changy')
 			commander.emit('rerun-test')

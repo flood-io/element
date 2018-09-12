@@ -22,3 +22,9 @@ smoke: smoke-build
 
 smoke-shell:
 	docker run -it --name smoke-shell --rm element-smoke bash
+
+dockerignore-test:
+	docker build -t dockerignore-test -f Dockerfile.dockerignore-test .
+	docker run --rm dockerignore-test
+	docker rmi dockerignore-test
+

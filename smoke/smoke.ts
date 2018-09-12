@@ -9,19 +9,27 @@ process.env.DEBUG = 'element-cli:console-reporter'
 console.log('running tests')
 
 const tests = join(__dirname, 'test-scripts')
-const passTests = globSync('*.pass.ts', { cwd: tests, absolute: true })
-const failTests = globSync('*.fail.ts', { cwd: tests, absolute: true })
+let passTests = globSync('*.pass.ts', { cwd: tests, absolute: true })
+let failTests = globSync('*.fail.ts', { cwd: tests, absolute: true })
 // console.log('pass', passTests)
 
 async function runTest(testScript: string, expectPass: boolean): Promise<boolean> {
 	const shortName = basename(testScript)
+	const shortBareName = basename(testScript, '.ts')
+
+	const dataDir = join(tests, shortBareName)
+
 	console.log('')
 	console.log(chalk`{yellow ============ {magenta running test {blue ${shortName}}} ===========}`)
 	// console.log(process.env)
-	const proc = spawn('element', ['run', testScript, '--chrome', '--verbose'], {
-		stdio: ['inherit', 'pipe', 'inherit'],
-		env: process.env,
-	})
+	const proc = spawn(
+		'element',
+		['run', testScript, '--chrome', '--verbose', '--test-data-root', dataDir],
+		{
+			stdio: ['inherit', 'pipe', 'inherit'],
+			env: process.env,
+		},
+	)
 
 	let passed = true
 
@@ -29,7 +37,7 @@ async function runTest(testScript: string, expectPass: boolean): Promise<boolean
 
 	for await (const data of proc.stdout) {
 		process.stdout.write(data)
-		if (/xxxx Step .* failed/.test(data)) {
+		if (detectError(data)) {
 			passed = false
 		}
 	}
@@ -48,20 +56,37 @@ async function runTest(testScript: string, expectPass: boolean): Promise<boolean
 	return expectPass === passed
 }
 
+function detectError(data: string): boolean {
+	return /xxxx Step .* failed/.test(data) || /internal flood-chrome error/.test(data)
+}
+
 async function runAll() {
-	let allExpected = true
+	// DEBUG filter
+	// passTests = passTests.filter(x => /googling/.test(x))
+	// failTests = []
+
+	const unexpected: { test: string; expectPass: boolean }[] = []
+
 	for (const test of passTests) {
-		allExpected = (await runTest(test, true)) && allExpected
+		if (!(await runTest(test, true))) {
+			unexpected.push({ test, expectPass: true })
+		}
 	}
 	for (const test of failTests) {
-		allExpected = (await runTest(test, false)) && allExpected
+		if (!(await runTest(test, false))) {
+			unexpected.push({ test, expectPass: false })
+		}
 	}
 
 	console.log()
-	if (allExpected) {
-		console.log(chalk`{green all scripts ran as expected}`)
-	} else {
+	if (unexpected.length > 0) {
 		console.log(chalk`{red not all scripts ran as expected}`)
+		for (const { test, expectPass } of unexpected) {
+			const resultDesc = expectPass ? 'expected to pass, but failed' : 'expected to fail but passed'
+			console.log(chalk`- {red ${basename(test)}} ${resultDesc}`)
+		}
+	} else {
+		console.log(chalk`{green all scripts ran as expected}`)
 	}
 }
 

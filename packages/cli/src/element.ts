@@ -14,7 +14,7 @@ import ownPackage from './utils/ownPackage'
 const cmdRoot = join(__dirname, 'cmd')
 const pkg = ownPackage()
 
-export const handleUnexpected = err => {
+export const handleUnexpected = (err: Error) => {
 	debug('handling unexpected error')
 
 	console.error(error(`An unexpected error occurred!\n  ${err.stack} ${err.stack}`))
@@ -22,7 +22,7 @@ export const handleUnexpected = err => {
 	process.exit(1)
 }
 
-const handleRejection = err => {
+const handleRejection = (err: Error) => {
 	debug('handling rejection')
 
 	if (err) {

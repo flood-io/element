@@ -7,7 +7,7 @@ const packageRoot = findRoot(__dirname)
 export default class TestScript extends Generator {
 	public options: { [key: string]: string }
 
-	constructor(args, opts) {
+	constructor(args: any[], opts: any) {
 		super(args, opts)
 
 		// This makes `appname` a required argument.

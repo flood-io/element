@@ -4,7 +4,7 @@ import { PuppeteerClient, launch } from './driver/Puppeteer'
 import { RuntimeEnvironment } from './runtime-environment/types'
 import { IRunner, Runner, PersistentRunner, TestCommander } from './Runner'
 import { ITestScript, TestScriptOptions, mustCompileFile } from './TestScript'
-import { TestSettings } from './runtime/Settings'
+import { TestSettings, ChromeVersion } from './runtime/Settings'
 import { TestObserver } from './runtime/test-observers/Observer'
 import { AsyncFactory } from './utils/Factory'
 
@@ -17,7 +17,7 @@ export interface ElementOptions {
 	strictCompilation: boolean
 	headless: boolean
 	devtools: boolean
-	chrome: string | boolean
+	chromeVersion: ChromeVersion | string | undefined
 	sandbox: boolean
 	process?: NodeJS.Process
 	verbose: boolean
@@ -61,7 +61,7 @@ export async function runCommandLine(opts: ElementOptions): Promise<void> {
 			headless: opts.headless,
 			devtools: opts.devtools,
 			sandbox: opts.sandbox,
-			chrome: opts.chrome,
+			chromeVersion: opts.chromeVersion,
 		},
 		opts.testObserverFactory,
 	)

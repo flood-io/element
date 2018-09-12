@@ -1,8 +1,9 @@
 import { launch as launchPuppeteer, LaunchOptions, Browser, Page } from 'puppeteer'
+import { ChromeVersion } from '../runtime/Settings'
 
 export type ConcreteLaunchOptions = LaunchOptions & {
 	args: string[]
-	chrome: boolean | string
+	chromeVersion: ChromeVersion | string
 	sandbox: boolean
 }
 
@@ -11,31 +12,38 @@ const defaultLaunchOptions: ConcreteLaunchOptions = {
 	handleSIGINT: false,
 	headless: true,
 	devtools: false,
-	chrome: false,
+	chromeVersion: 'puppeteer',
 	sandbox: true,
 	timeout: 60e3,
 	ignoreHTTPSErrors: false,
 }
 
 function setupChrome(options: ConcreteLaunchOptions): ConcreteLaunchOptions {
-	if (typeof options.chrome === 'boolean') {
-		if (options.chrome) {
-			switch (process.platform) {
-				case 'darwin':
-					options.executablePath = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
-					break
-				default:
-					// TODO search PATH for chrome
-					options.executablePath = '/usr/bin/google-chrome-stable'
-			}
+	switch (options.chromeVersion) {
+		case 'puppeteer':
+			options.executablePath = undefined
+			return options
+		case 'stable':
+			return setupSystemChrome(options)
+		default:
+			options.executablePath = options.chromeVersion
 			options.args.push('--disable-gpu')
 			options.args.push('--disable-dev-shm-usage')
-		}
-	} else if (options.chrome !== undefined) {
-		options.executablePath = options.chrome
-		options.args.push('--disable-gpu')
-		options.args.push('--disable-dev-shm-usage')
+			return options
 	}
+}
+
+function setupSystemChrome(options: ConcreteLaunchOptions): ConcreteLaunchOptions {
+	switch (process.platform) {
+		case 'darwin':
+			options.executablePath = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+			break
+		default:
+			// TODO search PATH for chrome
+			options.executablePath = '/usr/bin/google-chrome-stable'
+	}
+	options.args.push('--disable-gpu')
+	options.args.push('--disable-dev-shm-usage')
 
 	return options
 }
@@ -44,6 +52,7 @@ export interface IPuppeteerClient {
 	browser: Browser
 	page: Page
 	close(): Promise<void>
+	reopenPage(): Promise<void>
 }
 
 export class PuppeteerClient implements IPuppeteerClient {
@@ -54,6 +63,11 @@ export class PuppeteerClient implements IPuppeteerClient {
 		if (this._isClosed) return
 		await this.browser.close()
 		this._isClosed = true
+	}
+
+	async reopenPage(): Promise<void> {
+		await this.page.close()
+		this.page = await this.browser.newPage()
 	}
 }
 
@@ -99,4 +113,5 @@ export class NullPuppeteerClient implements IPuppeteerClient {
 	async close(): Promise<void> {
 		return
 	}
+	async reopenPage() {}
 }

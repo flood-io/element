@@ -103,29 +103,6 @@ export class Runner {
 		private testObserverFactory: (t: TestObserver) => TestObserver = x => x,
 	) {}
 
-	// interrupt() {
-	// this.interrupts++
-	// }
-
-	// async shutdown(): Promise<void> {
-	// this.interrupts++
-	// this.logger.info('Shutting down...')
-	// // if (this.test) {
-	// // await this.test.shutdown()
-	// // }
-
-	// if (this.shouldShutdownBrowser) {
-	// clearTimeout(this.timeout)
-	// this.testContinue = false
-	// this.logger.debug('Closing driver: Google Chrome...')
-	// try {
-	// await this.driver.close()
-	// } catch (err) {
-	// console.error(`Error while closing browser: ${err}`)
-	// }
-	// }
-	// }
-
 	async stop(): Promise<void> {
 		this.running = false
 		if (this.looper) this.looper.stop()

@@ -1,8 +1,24 @@
 import { Argv, Arguments } from 'yargs'
 import { existsSync } from 'fs'
+import { EvaluatedScript, nullRuntimeEnvironment } from '@flood/element/api'
 
 const main = async (args: Arguments) => {
-	console.log(args.file)
+	const script = await EvaluatedScript.mustCompileFile(args.file, nullRuntimeEnvironment)
+	const { settings, steps } = script
+
+	console.log(`
+*************************************************************
+* Loaded test plan: ${settings.name}
+* ${settings.description}
+*************************************************************
+`)
+
+	console.log(`Settings: ${JSON.stringify(settings, null, 2)}`)
+	console.log()
+	console.log(`${steps.length} step${steps.length > 1 ? 's' : ''}:`)
+	for (const step of steps) {
+		console.log(step.name)
+	}
 }
 
 export const command = 'plan <file> [options]'

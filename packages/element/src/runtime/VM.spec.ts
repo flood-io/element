@@ -6,13 +6,14 @@ import { join } from 'path'
 import testRunEnv from '../../tests/support/test-run-env'
 import Test from './Test'
 import { NullReporter } from '../reporter/Null'
+import { NullPuppeteerClient } from '../driver/Puppeteer'
 import { DEFAULT_SETTINGS } from './Settings'
 
 let vmFeaturesTestScript: ITestScript
 let noSettingsTestScript: ITestScript
 
 const runEnv = testRunEnv()
-const test = new Test(runEnv, new NullReporter())
+const test = new Test(new NullPuppeteerClient(), runEnv, new NullReporter())
 
 function ensureDefined<T>(value: T | undefined | null): T | never {
 	if (value === undefined || value === null) {

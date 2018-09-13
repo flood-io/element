@@ -99,21 +99,6 @@ export default class Test {
 		await this.testObserver.after(this)
 	}
 
-	// public attachDriver(client: PuppeteerClient) {
-	// console.assert(client, `client is not defined`)
-	// console.assert(!this.client, `client already attached`)
-
-	// this.client = client
-
-	// // TODO could this be pushed down into Browser?
-	// this.networkRecorder = new NetworkRecorder(this.client.page)
-	// this.observer = new Observer(this.reporter, this.networkRecorder)
-
-	// // TODO refactor
-	// // Adds filter for console messages emitted by the browser
-	// this.observer.consoleFilters = this.settings.consoleFilter || []
-	// }
-
 	public enqueueScript(script: ITestScript, settingsOverride: TestSettings): ConcreteTestSettings {
 		this.script = script
 

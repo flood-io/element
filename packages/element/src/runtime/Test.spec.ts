@@ -28,8 +28,6 @@ const setupTest = async (scriptName: string) => {
 	let script = await mustCompileFile(join(__dirname, '../../tests/fixtures', scriptName))
 	test.enqueueScript(script, {})
 
-	test.attachDriver(puppeteer)
-
 	await test.beforeRun()
 }
 
@@ -38,7 +36,7 @@ describe('Test', function() {
 	beforeEach(async () => {
 		puppeteer = await launchPuppeteer()
 		testReporter = new EventEmitterReporter()
-		test = new Test(runEnv, testReporter)
+		test = new Test(puppeteer, runEnv, testReporter)
 	})
 
 	afterEach(async () => {
@@ -60,6 +58,7 @@ describe('Test', function() {
 			stepDelay: 0,
 			clearCache: false,
 			device: 'Chrome Desktop Large',
+			chromeVersion: 'puppeteer',
 			ignoreHTTPSErrors: false,
 			userAgent:
 				'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36',

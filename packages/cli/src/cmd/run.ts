@@ -1,4 +1,3 @@
-// import * as ora from "ora";
 import {
 	runCommandLine,
 	runUntilExit,
@@ -47,16 +46,16 @@ function setupDelayOverrides(args: Arguments, testSettingOverrides: TestSettings
 }
 
 export const handler = (args: Arguments) => {
-	console.log('args', args)
-
 	const { file, verbose } = args
 	const workRootPath = getWorkRootPath(file, args['work-root'])
 	const testDataPath = getTestDataPath(file, args['test-data-root'])
 
 	const verboseBool: boolean = !!verbose
 
-	// TODO set level from verbose
-	const logger = createLogger('debug', true)
+	let logLevel = 'info'
+	if (verboseBool) logLevel = 'debug'
+
+	const logger = createLogger(logLevel, true)
 	const reporter = new ConsoleReporter(logger, verboseBool)
 
 	const opts: ElementOptions = {
@@ -85,12 +84,6 @@ export const handler = (args: Arguments) => {
 	}
 
 	runUntilExit(() => runCommandLine(opts))
-
-	// let spinner
-	// if (!args.json) spinner = ora(`Launching test '${file}'`).start()
-
-	// console.log("awaited");
-	// process.exit(0);
 }
 
 function makeTestCommander(file: string): TestCommander {
@@ -103,23 +96,20 @@ function makeTestCommander(file: string): TestCommander {
 
 	// console.log('watching', file, globPath)
 
-	watch(path.dirname(file)).on('change', (path, stats) => {
-		console.log('changed dir', path, stats)
-	})
+	// watch(path.dirname(file)).on('change', (path, stats) => {
+	// console.log('changed dir', path, stats)
+	// })
 
+	// TODO make this more reliable on linux
 	const watcher = watch(file, { persistent: true })
 	watcher.on('change', (path, stats) => {
-		console.log('change', path, stats)
 		if (path === file) {
-			console.log('changy')
 			commander.emit('rerun-test')
-			console.log('after changy')
 		}
 	})
 	return commander
 }
 
-// TODO use args to get an override work-dir root
 function getWorkRootPath(file: string, root?: string): string {
 	const ext = path.extname(file)
 	const bare = path.basename(file, ext)
@@ -163,7 +153,6 @@ function initRunEnv(root: string, testDataRoot: string) {
 }
 
 function coerceDelay(desc: string, val: boolean | string | undefined, defaultVal: number): number {
-	console.log('val', val, typeof val)
 	if (typeof val === 'boolean') {
 		if (val) {
 			return defaultVal

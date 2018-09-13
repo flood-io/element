@@ -144,7 +144,6 @@ export class Runner {
 	): Promise<void> {
 		if (!this.running) return
 
-		console.log('running test script')
 		const test = new Test(await clientPromise, this.runEnv, this.reporter, this.testObserverFactory)
 		// this.test = test
 
@@ -170,7 +169,6 @@ export class Runner {
 
 			const cancelToken = new CancellationToken()
 
-			console.log('looper')
 			this.looper = new Looper(settings, this.running)
 			this.looper.killer = () => cancelToken.cancel()
 			await this.looper.run(async iteration => {
@@ -241,6 +239,7 @@ export class PersistentRunner extends Runner {
 	}
 
 	rerunTest() {
+		this.logger.info('rerun requested')
 		setImmediate(() => this.runNextTest())
 	}
 
@@ -254,13 +253,8 @@ export class PersistentRunner extends Runner {
 			return
 		}
 
-		console.log('persistent runner got a command: rerun')
 		if (this.looper) {
-			console.log('re-run')
-
 			await this.looper.kill()
-
-			console.log('looper finished')
 
 			// ;(await clientPromise).reopenPage()
 		}

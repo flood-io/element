@@ -1,13 +1,7 @@
-import PuppeteerDriver from '../../src/driver/Puppeteer'
-import { Browser, Page } from 'puppeteer'
+import { IPuppeteerClient, launch } from '../../src/driver/Puppeteer'
+export { IPuppeteerClient as testPuppeteer }
 
-export interface testPuppeteer {
-	browser: Browser
-	page: Page
-	close: () => Promise<void>
-}
-
-export async function launchPuppeteer(): Promise<testPuppeteer> {
+export async function launchPuppeteer(): Promise<IPuppeteerClient> {
 	let opts = {
 		sandbox: true,
 	}
@@ -16,11 +10,5 @@ export async function launchPuppeteer(): Promise<testPuppeteer> {
 		opts.sandbox = false
 	}
 
-	const driver = new PuppeteerDriver()
-	await driver.launch(opts)
-	const client = await driver.client()
-	const close = async () => {
-		await driver.close()
-	}
-	return { browser: client.browser, page: client.page, close }
+	return launch(opts)
 }

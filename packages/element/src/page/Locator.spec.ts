@@ -1,14 +1,15 @@
 import { expect } from 'chai'
 import 'mocha'
 import { DogfoodServer } from '../../tests/support/fixture-server'
-import PuppeteerDriver from '../driver/Puppeteer'
+import { launchPuppeteer, testPuppeteer } from '../../tests/support/launch-browser'
 import { Page } from 'puppeteer'
 import { Locator, ElementHandle } from './types'
 import { By } from './By'
 
 let dogfoodServer = new DogfoodServer()
 
-let page: Page, driver: PuppeteerDriver, puppeteer
+let page: Page
+let puppeteer: testPuppeteer
 
 function ensureElement(value: ElementHandle | undefined | null): ElementHandle | never {
 	if (value !== null && value !== undefined) {
@@ -27,16 +28,14 @@ describe('Locator', function() {
 
 	before(async () => {
 		await dogfoodServer.start()
-		driver = new PuppeteerDriver()
-		await driver.launch()
-		puppeteer = await driver.client()
+		puppeteer = await launchPuppeteer()
 		page = puppeteer.page
 		page.on('console', msg => console.log(`>> console.${msg.type}: ${msg.text}`))
 	})
 
 	after(async () => {
 		await dogfoodServer.close()
-		await driver.close()
+		await puppeteer.close()
 	})
 
 	beforeEach(async () => {

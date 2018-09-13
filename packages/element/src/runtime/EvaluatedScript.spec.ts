@@ -1,19 +1,15 @@
 import { expect } from 'chai'
 import 'mocha'
-import { VM } from './VM'
+import { EvaluatedScript } from './EvaluatedScript'
 import { ITestScript, mustCompileFile } from '../TestScript'
 import { join } from 'path'
 import testRunEnv from '../../tests/support/test-run-env'
-import Test from './Test'
-import { NullReporter } from '../reporter/Null'
-import { NullPuppeteerClient } from '../driver/Puppeteer'
 import { DEFAULT_SETTINGS } from './Settings'
 
 let vmFeaturesTestScript: ITestScript
 let noSettingsTestScript: ITestScript
 
 const runEnv = testRunEnv()
-const test = new Test(new NullPuppeteerClient(), runEnv, new NullReporter())
 
 function ensureDefined<T>(value: T | undefined | null): T | never {
 	if (value === undefined || value === null) {
@@ -23,7 +19,7 @@ function ensureDefined<T>(value: T | undefined | null): T | never {
 	}
 }
 
-describe('VM', () => {
+describe('EvaluatedScript', () => {
 	before(async function() {
 		this.timeout(30e3)
 		vmFeaturesTestScript = await mustCompileFile(
@@ -39,8 +35,8 @@ describe('VM', () => {
 
 	describe('evaluate', () => {
 		it('returns default test settings', async () => {
-			let vm = new VM(runEnv, ensureDefined(noSettingsTestScript))
-			let { settings } = vm.evaluate(test)
+			let script = new EvaluatedScript(runEnv, ensureDefined(noSettingsTestScript))
+			let { settings } = script
 
 			expect(settings.name).to.equal('Empty test for evaluating defaults')
 			expect(settings.description).to.equal('Use this in the test environment.')
@@ -59,8 +55,7 @@ describe('VM', () => {
 		})
 
 		it('captures test settings', async () => {
-			let vm = new VM(runEnv, ensureDefined(vmFeaturesTestScript))
-			let { settings, steps } = vm.evaluate(test)
+			let { settings, steps } = new EvaluatedScript(runEnv, ensureDefined(vmFeaturesTestScript))
 
 			expect(settings.name).to.equal('Test Script for evaluating VM features')
 			expect(settings.description).to.equal('Use this in the test environment.')
@@ -73,8 +68,7 @@ describe('VM', () => {
 		})
 
 		it('allows overriding settings per step', async () => {
-			let vm = new VM(runEnv, vmFeaturesTestScript)
-			let { settings, steps } = vm.evaluate(test)
+			let { settings, steps } = new EvaluatedScript(runEnv, vmFeaturesTestScript)
 
 			expect(settings.waitTimeout).to.equal(5)
 			expect(steps[0].stepOptions).to.deep.equal({ waitTimeout: 60 })
@@ -91,6 +85,8 @@ describe('VM', () => {
 			// expect(actionSpy).to.have.been.calledOnce
 			// expect(actionSpy).to.have.been.calledWith(60)
 		}).timeout(30e3)
+
+		// TODO test bindTest
 	})
 
 	// TODO move to Test.spec ?

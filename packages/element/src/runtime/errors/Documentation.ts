@@ -1,5 +1,5 @@
 import { StructuredError } from '../../utils/StructuredError'
-import { ITestScript, TestScriptError } from '../../TestScript'
+import { TestScriptError, TestScriptErrorMapper } from '../../TestScript'
 import { DocumentedError } from '../../utils/DocumentedError'
 import { AssertionError } from 'assert'
 import {
@@ -16,7 +16,7 @@ import * as debugFactory from 'debug'
 const debug = debugFactory('element:test:errordoc')
 
 function liftWithDoc(
-	script: ITestScript,
+	script: TestScriptErrorMapper,
 	error: Error,
 	message: string,
 	doc: string,
@@ -31,7 +31,7 @@ const documentationNeeded =
 
 export function structuredErrorToDocumentedError(
 	sErr: StructuredError<AnyErrorData>,
-	script: ITestScript,
+	script: TestScriptErrorMapper,
 ): TestScriptError {
 	debug('ERROR to map %O', sErr)
 

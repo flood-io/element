@@ -41,3 +41,27 @@ export class NullTestDataLoaders implements TestDataFactory {
 		return new TestDataSource<TRow>(new NullLoader())
 	}
 }
+
+interface hasATestData {
+	testData: TestDataSource<any>
+}
+
+export class BoundTestDataLoaders implements TestDataFactory {
+	private innerLoaders: TestDataFactory
+
+	constructor(private target: hasATestData, workRoot: WorkRoot) {
+		this.innerLoaders = new TestDataLoaders(workRoot)
+	}
+
+	public fromData<TRow>(lines: TRow[]): TestDataSource<TRow> {
+		return (this.target.testData = this.innerLoaders.fromData(lines))
+	}
+
+	public fromCSV<TRow>(filename: string, separator: string = ','): TestDataSource<TRow> {
+		return (this.target.testData = this.innerLoaders.fromCSV(filename, separator))
+	}
+
+	public fromJSON<TRow>(filename: string): TestDataSource<TRow> {
+		return (this.target.testData = this.innerLoaders.fromJSON(filename))
+	}
+}

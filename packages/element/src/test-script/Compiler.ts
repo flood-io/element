@@ -3,8 +3,6 @@ import {
 	TestScriptError,
 	TestScriptOptions,
 	TestScriptDefaultOptions,
-	ErrorWrapper,
-	unwrapError,
 } from '../TestScript'
 import { CategorisedDiagnostics } from './TypescriptDiagnostics'
 import * as ts from 'typescript'
@@ -374,14 +372,12 @@ export class TypeScriptTestScript implements ITestScript {
 		return this.parsedCommentsMemo[key]
 	}
 
-	public isScriptError(e: Error | ErrorWrapper): boolean {
-		const error: Error = unwrapError(e)
+	public isScriptError(error: Error): boolean {
 		const stack = error.stack || ''
 		return stack.split('\n').filter(s => s.includes(this.sandboxedFilename)).length > 0
 	}
 
-	public liftError(e: Error | ErrorWrapper): TestScriptError {
-		const error: Error = unwrapError(e)
+	public liftError(error: Error): TestScriptError {
 		const stack = error.stack || ''
 
 		const filteredStack = stack.split('\n').filter(s => s.includes(this.sandboxedFilename))
@@ -396,8 +392,7 @@ export class TypeScriptTestScript implements ITestScript {
 		return new TestScriptError(error.message, stack, callsite, unmappedStack, error)
 	}
 
-	public maybeLiftError(e: Error | ErrorWrapper): Error {
-		const error: Error = unwrapError(e)
+	public maybeLiftError(error: Error): Error {
 		if (this.isScriptError(error)) {
 			return this.liftError(error)
 		} else {
@@ -405,7 +400,7 @@ export class TypeScriptTestScript implements ITestScript {
 		}
 	}
 
-	public filterAndUnmapStack(input: string | Error | ErrorWrapper | undefined): string[] {
+	public filterAndUnmapStack(input: string | Error | undefined): string[] {
 		let stack: string
 
 		if (input === undefined) {
@@ -413,7 +408,7 @@ export class TypeScriptTestScript implements ITestScript {
 		} else if (typeof input === 'string') {
 			stack = input
 		} else {
-			const maybeStack = unwrapError(input).stack
+			const maybeStack = input.stack
 			if (maybeStack === undefined) {
 				return []
 			} else {

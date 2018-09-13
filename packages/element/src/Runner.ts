@@ -136,11 +136,20 @@ export class Runner {
 	): Promise<void> {
 		if (!this.running) return
 
-		const test = new Test(await clientPromise, testScript, this.reporter, this.testObserverFactory)
-		// this.test = test
+		let testToCancel: Test | undefined
 
 		try {
-			const settings = test.enqueueScript(testScript, this.testSettingOverrides)
+			const test = new Test(
+				await clientPromise,
+				testScript,
+				this.reporter,
+				this.testSettingOverrides,
+				this.testObserverFactory,
+			)
+
+			testToCancel = test
+
+			const { settings } = test
 
 			if (settings.name) {
 				this.logger.info(`
@@ -194,8 +203,10 @@ export class Runner {
 			// if (process.env.NODE_ENV !== 'production') {
 			this.logger.debug(err.stack)
 			// }
+		}
 
-			await test.cancel()
+		if (testToCancel !== undefined) {
+			await testToCancel.cancel()
 		}
 	}
 }

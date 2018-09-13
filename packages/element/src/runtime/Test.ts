@@ -52,22 +52,12 @@ export default class Test {
 		public client: IPuppeteerClient,
 		public script: EvaluatedScript,
 		public reporter: IReporter = new NullReporter(),
+		settingsOverride: TestSettings,
 		testObserverFactory: (t: TestObserver) => TestObserver = x => x,
 	) {
 		this.testObserver = new ErrorObserver(
 			new LifecycleObserver(testObserverFactory(new InnerObserver(new NullTestObserver()))),
 		)
-	}
-
-	public async cancel() {
-		this.failed = true
-		await this.testObserver.after(this)
-	}
-
-	public enqueueScript(
-		script: EvaluatedScript,
-		settingsOverride: TestSettings,
-	): ConcreteTestSettings {
 		this.script = script
 
 		try {
@@ -83,8 +73,11 @@ export default class Test {
 		}
 
 		Object.assign(this.settings, settingsOverride)
+	}
 
-		return this.settings
+	public async cancel() {
+		this.failed = true
+		await this.testObserver.after(this)
 	}
 
 	public async beforeRun(): Promise<void> {

@@ -5,7 +5,7 @@ import { EventEmitter } from 'events'
 
 import { Step, StepFunction, StepOptions, normalizeStepOptions } from './Step'
 import Test from './Test'
-import { ITestScript, TestScriptErrorMapper, TestScriptError } from '../TestScript'
+import { ITestScript, TestScriptErrorMapper, TestScriptError, mustCompileFile } from '../TestScript'
 import { DEFAULT_SETTINGS, ConcreteTestSettings, normalizeSettings, TestSettings } from './Settings'
 import { RuntimeEnvironment } from '../runtime-environment/types'
 import { expect } from '../utils/Expect'
@@ -47,6 +47,13 @@ export class EvaluatedScript implements TestScriptErrorMapper {
 		if (!lazyEval) {
 			this.evaluate()
 		}
+	}
+
+	public static async mustCompileFile(
+		path: string,
+		runEnv: RuntimeEnvironment,
+	): Promise<EvaluatedScript> {
+		return new EvaluatedScript(runEnv, await mustCompileFile(path))
 	}
 
 	public isScriptError(error: Error): boolean {

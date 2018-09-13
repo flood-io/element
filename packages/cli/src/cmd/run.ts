@@ -58,6 +58,9 @@ export const handler = (args: Arguments) => {
 	const logger = createLogger(logLevel, true)
 	const reporter = new ConsoleReporter(logger, verboseBool)
 
+	logger.info(`workRootPath: ${workRootPath}`)
+	logger.info(`testDataPath: ${testDataPath}`)
+
 	const opts: ElementOptions = {
 		logger: logger,
 		testScript: file,
@@ -114,9 +117,11 @@ function getWorkRootPath(file: string, root?: string): string {
 	const ext = path.extname(file)
 	const bare = path.basename(file, ext)
 
-	root = root || path.dirname(file)
+	if (root === undefined) {
+		root = path.join(path.dirname(file), 'tmp/element-results', bare)
+	}
 
-	return path.resolve(root, bare, new Date().toISOString())
+	return path.resolve(root, new Date().toISOString())
 }
 
 function getTestDataPath(file: string, root?: string): string {
@@ -129,8 +134,6 @@ function initRunEnv(root: string, testDataRoot: string) {
 	const workRoot = new WorkRoot(root, {
 		'test-data': testDataRoot,
 	})
-
-	console.info('workRoot', workRoot.root)
 
 	return {
 		workRoot,

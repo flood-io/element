@@ -195,7 +195,8 @@ export class Runner {
 			if (err instanceof TestScriptError) {
 				this.logger.error('\n' + err.toStringNodeFormat())
 			} else {
-				this.logger.error('internal flood-chrome error')
+				this.logger.error(`internal flood-chrome error: ${err.message}`)
+				this.logger.debug(err.stack)
 			}
 
 			// if (process.env.NODE_ENV !== 'production') {

@@ -55,7 +55,12 @@ export class CSVLoader<T> extends Loader<T> {
 	}
 
 	public async load(): Promise<void> {
-		let data = await readFilePromise(this.filePath, 'utf8')
+		let data: string
+		try {
+			data = await readFilePromise(this.filePath, 'utf8')
+		} catch (e) {
+			throw new Error(`unable to read CSV file ${this.filePath}:\ncause: ${e}`)
+		}
 
 		this.lines = parseCSV(data, { delimiter: this.separator, columns: true })
 		this.isLoaded = true

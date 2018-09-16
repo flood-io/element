@@ -17,6 +17,9 @@ import { MouseButtons, Device, Key, userAgents } from '../page/Enums'
 import { TestDataSource, TestDataFactory } from '../test-data/TestData'
 import { BoundTestDataLoaders } from '../test-data/TestDataLoaders'
 
+import * as debugFactory from 'debug'
+const debug = debugFactory('element:runtime:eval-script')
+
 // TODO work out the right type for floodElementActual
 function createVirtualMachine(floodElementActual: any): NodeVM {
 	return new NodeVM({
@@ -49,6 +52,7 @@ export class EvaluatedScript implements TestScriptErrorMapper {
 		}
 	}
 
+	// TestScriptErrorMapper implementation
 	public static async mustCompileFile(
 		path: string,
 		runEnv: RuntimeEnvironment,
@@ -99,10 +103,12 @@ export class EvaluatedScript implements TestScriptErrorMapper {
 	}
 
 	public evaluate(): EvaluatedScript {
-		console.log('evaluating script')
+		debug('evaluating')
+
 		// Clear existing steps
 		const steps: Step[] = []
 
+		// establish base settings
 		let rawSettings = DEFAULT_SETTINGS
 
 		const ENV = this.runEnv.stepEnv()
@@ -130,8 +136,8 @@ export class EvaluatedScript implements TestScriptErrorMapper {
 		}
 
 		let context = {
-			setup: (settings: TestSettings) => {
-				Object.assign(rawSettings, settings)
+			setup: (setupSettings: TestSettings) => {
+				Object.assign(rawSettings, setupSettings)
 			},
 
 			ENV,
@@ -154,12 +160,15 @@ export class EvaluatedScript implements TestScriptErrorMapper {
 
 		this.vm = createVirtualMachine(context)
 
+		// manually extract test name and desc from the script
 		rawSettings.name = this.script.testName
 		rawSettings.description = this.script.testDescription
 
 		let result = this.vm.run(this.script.vmScript)
+		debug('eval %O', result)
 
-		const { scriptSettings } = result
+		// get settings exported from the script
+		const scriptSettings = result.settings
 		if (scriptSettings) {
 			rawSettings = { ...rawSettings, ...scriptSettings }
 		}
@@ -171,12 +180,16 @@ export class EvaluatedScript implements TestScriptErrorMapper {
 		 */
 		testFn.apply(null, [step])
 
+		// layer up the final settings
 		this.settings = {
 			...DEFAULT_SETTINGS,
 			...normalizeSettings(rawSettings),
 		}
 
 		this.steps = steps
+
+		debug('settings', this.settings)
+		debug('steps', this.steps)
 
 		return this
 	}

@@ -6,7 +6,6 @@ import testRunEnv from '../../tests/support/test-run-env'
 import { launchPuppeteer, testPuppeteer } from '../../tests/support/launch-browser'
 import Test from './Test'
 import { EvaluatedScript } from './EvaluatedScript'
-import { mustCompileFile } from '../TestScript'
 import { join } from 'path'
 import { EventEmitterReporter } from '../reporter/EventEmitter'
 use(SinonChai)
@@ -25,10 +24,12 @@ const runEnv = testRunEnv()
 // }
 
 const setupTest = async (scriptName: string) => {
-	const testScript = await mustCompileFile(join(__dirname, '../../tests/fixtures', scriptName))
-	const script = new EvaluatedScript(runEnv, testScript)
+	const script = await EvaluatedScript.mustCompileFile(
+		join(__dirname, '../../tests/fixtures', scriptName),
+		runEnv,
+	)
 
-	const test = new Test(puppeteer, script, testReporter)
+	const test = new Test(puppeteer, script, testReporter, {})
 
 	await test.beforeRun()
 	return test

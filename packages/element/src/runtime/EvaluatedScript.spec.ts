@@ -86,6 +86,13 @@ describe('EvaluatedScript', () => {
 			// expect(actionSpy).to.have.been.calledWith(60)
 		}).timeout(30e3)
 
+		it('returns steps', async () => {
+			let script = new EvaluatedScript(runEnv, ensureDefined(vmFeaturesTestScript))
+			let { steps } = script
+
+			expect(steps.length).to.equal(3)
+		})
+
 		// TODO test bindTest
 	})
 

@@ -1,4 +1,4 @@
-import { VM } from './VM'
+import { EvaluatedScript } from './EvaluatedScript'
 // import NetworkRecorder from '../network/Recorder'
 // import Observer from './Observer'
 import { Browser } from './Browser'
@@ -20,42 +20,16 @@ import { Step } from './Step'
 import { CancellationToken } from '../utils/CancellationToken'
 
 import { IPuppeteerClient } from '../driver/Puppeteer'
-import { RuntimeEnvironment, WorkRoot } from '../runtime-environment/types'
-import { ITestScript } from '../TestScript'
 import { ScreenshotOptions } from 'puppeteer'
 import { TestSettings, ConcreteTestSettings, DEFAULT_STEP_WAIT_SECONDS } from './Settings'
 // import { ScreenshotOptions } from 'puppeteer'
-
-import { TestDataSource, TestDataFactory } from '../test-data/TestData'
-import { TestDataLoaders } from '../test-data/TestDataLoaders'
 
 // import { readdirSync } from 'fs'
 
 import * as debugFactory from 'debug'
 const debug = debugFactory('element:runtime:test')
 
-export class TestBoundTestDataLoaders implements TestDataFactory {
-	private innerLoaders: TestDataFactory
-
-	constructor(private test: Test, workRoot: WorkRoot) {
-		this.innerLoaders = new TestDataLoaders(workRoot)
-	}
-
-	public fromData<TRow>(lines: TRow[]): TestDataSource<TRow> {
-		return (this.test.testData = this.innerLoaders.fromData(lines))
-	}
-
-	public fromCSV<TRow>(filename: string, separator: string = ','): TestDataSource<TRow> {
-		return (this.test.testData = this.innerLoaders.fromCSV(filename, separator))
-	}
-
-	public fromJSON<TRow>(filename: string): TestDataSource<TRow> {
-		return (this.test.testData = this.innerLoaders.fromJSON(filename))
-	}
-}
-
 export default class Test {
-	public vm: VM
 	public settings: ConcreteTestSettings
 	public steps: Step[]
 
@@ -68,11 +42,7 @@ export default class Test {
 
 	public iteration: number = 0
 
-	public script: ITestScript
 	public failed: boolean
-
-	public testData: TestDataSource<any>
-	public testDataLoaders: TestDataFactory
 
 	get skipping(): boolean {
 		return this.failed
@@ -80,18 +50,29 @@ export default class Test {
 
 	constructor(
 		public client: IPuppeteerClient,
-		private runEnv: RuntimeEnvironment,
+		public script: EvaluatedScript,
 		public reporter: IReporter = new NullReporter(),
+		settingsOverride: TestSettings,
 		testObserverFactory: (t: TestObserver) => TestObserver = x => x,
 	) {
 		this.testObserver = new ErrorObserver(
 			new LifecycleObserver(testObserverFactory(new InnerObserver(new NullTestObserver()))),
 		)
+		this.script = script
 
-		this.testDataLoaders = new TestBoundTestDataLoaders(this, runEnv.workRoot)
-		this.testDataLoaders.fromData([{}]).circular()
+		try {
+			let { settings, steps } = script
+			this.settings = settings
+			this.steps = steps
 
-		// this.testData = this.testDataLoaders.fromData([{}]).circular()
+			// Adds output for console in script
+			script.bindTest(this)
+		} catch (err) {
+			// XXX parsing errors. Lift to StructuredError?
+			throw this.script.maybeLiftError(err)
+		}
+
+		Object.assign(this.settings, settingsOverride)
 	}
 
 	public async cancel() {
@@ -99,31 +80,9 @@ export default class Test {
 		await this.testObserver.after(this)
 	}
 
-	public enqueueScript(script: ITestScript, settingsOverride: TestSettings): ConcreteTestSettings {
-		this.script = script
-
-		this.vm = new VM(this.runEnv, script)
-
-		try {
-			let { settings, steps } = this.vm.evaluate(this)
-			this.settings = settings
-			this.steps = steps
-
-			// Adds output for console in script
-			this.vm.bindReporter(this.reporter)
-		} catch (err) {
-			// XXX parsing errors. Lift to StructuredError?
-			throw this.script.maybeLiftError(err)
-		}
-
-		Object.assign(this.settings, settingsOverride)
-
-		return this.settings
-	}
-
 	public async beforeRun(): Promise<void> {
 		debug('beforeRun()')
-		await this.testData.load()
+		await this.script.beforeTestRun()
 	}
 
 	/**
@@ -146,9 +105,11 @@ export default class Test {
 
 		debug('run() start')
 
+		const { testData } = this.script
+
 		try {
 			const browser = new Browser<Step>(
-				this.runEnv.workRoot,
+				this.script.runEnv.workRoot,
 				this.client,
 				this.settings,
 				this.willRunCommand.bind(this),
@@ -167,7 +128,7 @@ export default class Test {
 			await this.testObserver.before(this)
 
 			debug('Feeding data')
-			let testDataRecord = this.testData.feed()
+			let testDataRecord = testData.feed()
 			if (testDataRecord === null) {
 				throw new Error('Test data exhausted, consider making it circular?')
 			} else {
@@ -347,7 +308,7 @@ export default class Test {
 	// }
 
 	newTrace(step: Step): ObjectTrace {
-		return new ObjectTrace(this.runEnv.workRoot, step.name)
+		return new ObjectTrace(this.script.runEnv.workRoot, step.name)
 	}
 
 	// public async syncNetworkRecorder() {

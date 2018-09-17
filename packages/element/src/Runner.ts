@@ -1,20 +1,20 @@
-import { ConcreteLaunchOptions, PuppeteerClient, NullPuppeteerClient } from './driver/Puppeteer'
-import { RuntimeEnvironment } from './runtime-environment/types'
+import { ConcreteLaunchOptions, PuppeteerClient } from './driver/Puppeteer'
 import { Logger } from 'winston'
 import Test from './runtime/Test'
+import { EvaluatedScript } from './runtime/EvaluatedScript'
 import { TestObserver } from './runtime/test-observers/Observer'
 import { TestSettings, ConcreteTestSettings } from './runtime/Settings'
 import { IReporter } from './Reporter'
 import { AsyncFactory } from './utils/Factory'
 import { CancellationToken } from './utils/CancellationToken'
-import { TestScriptError, ITestScript } from './TestScript'
+import { TestScriptError } from './TestScript'
 
 export interface TestCommander {
 	on(event: 'rerun-test', listener: () => void): this
 }
 
 export interface IRunner {
-	run(testScriptFactory: AsyncFactory<ITestScript>): Promise<void>
+	run(testScriptFactory: AsyncFactory<EvaluatedScript>): Promise<void>
 	stop(): Promise<void>
 }
 
@@ -95,7 +95,6 @@ export class Runner {
 	constructor(
 		private clientFactory: AsyncFactory<PuppeteerClient>,
 		protected testCommander: TestCommander | undefined,
-		private runEnv: RuntimeEnvironment,
 		private reporter: IReporter,
 		protected logger: Logger,
 		private testSettingOverrides: TestSettings,
@@ -110,7 +109,7 @@ export class Runner {
 		return
 	}
 
-	async run(testScriptFactory: AsyncFactory<ITestScript>): Promise<void> {
+	async run(testScriptFactory: AsyncFactory<EvaluatedScript>): Promise<void> {
 		const testScript = await testScriptFactory()
 
 		this.clientPromise = this.launchClient(testScript)
@@ -118,15 +117,8 @@ export class Runner {
 		await this.runTestScript(testScript, this.clientPromise)
 	}
 
-	async launchClient(testScript: ITestScript): Promise<PuppeteerClient> {
-		// evaluate the script so that we can get its settings
-		// TODO refactor into EvaluatedTestScript
-		const settings = new Test(
-			new NullPuppeteerClient(),
-			this.runEnv,
-			this.reporter,
-			this.testObserverFactory,
-		).enqueueScript(testScript, this.testSettingOverrides)
+	async launchClient(testScript: EvaluatedScript): Promise<PuppeteerClient> {
+		const { settings } = testScript
 
 		const options: Partial<ConcreteLaunchOptions> = this.launchOptionOverrides
 		options.ignoreHTTPSErrors = settings.ignoreHTTPSErrors
@@ -139,16 +131,25 @@ export class Runner {
 	}
 
 	async runTestScript(
-		testScript: ITestScript,
+		testScript: EvaluatedScript,
 		clientPromise: Promise<PuppeteerClient>,
 	): Promise<void> {
 		if (!this.running) return
 
-		const test = new Test(await clientPromise, this.runEnv, this.reporter, this.testObserverFactory)
-		// this.test = test
+		let testToCancel: Test | undefined
 
 		try {
-			const settings = test.enqueueScript(testScript, this.testSettingOverrides)
+			const test = new Test(
+				await clientPromise,
+				testScript,
+				this.reporter,
+				this.testSettingOverrides,
+				this.testObserverFactory,
+			)
+
+			testToCancel = test
+
+			const { settings } = test
 
 			if (settings.name) {
 				this.logger.info(`
@@ -195,27 +196,29 @@ export class Runner {
 			if (err instanceof TestScriptError) {
 				this.logger.error('\n' + err.toStringNodeFormat())
 			} else {
-				this.logger.error('internal flood-chrome error')
+				this.logger.error(`internal flood-chrome error: ${err.message}`)
+				this.logger.debug(err.stack)
 			}
 
 			// if (process.env.NODE_ENV !== 'production') {
 			this.logger.debug(err.stack)
 			// }
+		}
 
-			await test.cancel()
+		if (testToCancel !== undefined) {
+			await testToCancel.cancel()
 		}
 	}
 }
 
 export class PersistentRunner extends Runner {
-	public testScriptFactory: AsyncFactory<ITestScript> | undefined
+	public testScriptFactory: AsyncFactory<EvaluatedScript> | undefined
 	public clientPromise: Promise<PuppeteerClient> | undefined
 	private stopped = false
 
 	constructor(
 		clientFactory: AsyncFactory<PuppeteerClient>,
 		testCommander: TestCommander | undefined,
-		runEnv: RuntimeEnvironment,
 		reporter: IReporter,
 		logger: Logger,
 		testSettingOverrides: TestSettings,
@@ -225,7 +228,6 @@ export class PersistentRunner extends Runner {
 		super(
 			clientFactory,
 			testCommander,
-			runEnv,
 			reporter,
 			logger,
 			testSettingOverrides,
@@ -282,7 +284,7 @@ export class PersistentRunner extends Runner {
 		}
 	}
 
-	async run(testScriptFactory: AsyncFactory<ITestScript>): Promise<void> {
+	async run(testScriptFactory: AsyncFactory<EvaluatedScript>): Promise<void> {
 		this.testScriptFactory = testScriptFactory
 
 		// TODO detect changes in testScript settings affecting the client

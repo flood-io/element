@@ -3,18 +3,6 @@ import * as ts from 'typescript'
 import { TypeScriptTestScript } from './test-script/Compiler'
 import { Callsite, callsiteToString } from './test-script/SourceUnmapper'
 
-export interface ErrorWrapper {
-	wrappedError: Error
-}
-
-export function unwrapError(e: Error | ErrorWrapper): Error {
-	if ((e as ErrorWrapper).wrappedError !== undefined) {
-		return (e as ErrorWrapper).wrappedError
-	} else {
-		return e as Error
-	}
-}
-
 function originalError(e: Error): Error {
 	if ((e as errorWithOriginalError).originalError !== undefined) {
 		return originalError((e as errorWithOriginalError).originalError)
@@ -139,7 +127,14 @@ export const TestScriptDefaultOptions: TestScriptOptions = {
 	traceResolution: false,
 }
 
-export interface ITestScript {
+export interface TestScriptErrorMapper {
+	isScriptError(error: Error): boolean
+	liftError(error: Error): TestScriptError
+	maybeLiftError(error: Error): Error
+	filterAndUnmapStack(stack: string | Error | undefined): string[]
+}
+
+export interface ITestScript extends TestScriptErrorMapper {
 	sandboxedFilename: string
 	vmScript: VMScript
 	source: string
@@ -153,11 +148,6 @@ export interface ITestScript {
 	isFloodElementCorrectlyImported: boolean
 	testName: string
 	testDescription: string
-
-	isScriptError(error: Error | ErrorWrapper): boolean
-	liftError(error: Error | ErrorWrapper): TestScriptError
-	maybeLiftError(error: Error | ErrorWrapper): Error
-	filterAndUnmapStack(stack: string | Error | ErrorWrapper | undefined): string[]
 }
 
 export async function compileString(
@@ -188,7 +178,7 @@ export async function mustCompileString(
 	const testScript = await compileString(source, filename, testScriptOptions)
 
 	if (testScript.hasErrors) {
-		throw new Error(`errors compiling script ${filename}:\n${testScript.formattedErrorString}`)
+		throw new Error(`unable to compile script ${filename}:\n${testScript.formattedErrorString}`)
 	}
 
 	return testScript
@@ -201,11 +191,13 @@ export async function mustCompileFile(
 	const testScript = await compileFile(filename, testScriptOptions)
 
 	if (testScript === undefined) {
-		throw new Error(`errors compiling script ${filename}:\nunable to read`)
+		throw new Error(
+			`unable to compile script ${filename}:\nunable to read script at path ${filename}`,
+		)
 	}
 
 	if (testScript.hasErrors) {
-		throw new Error(`errors compiling script ${filename}:\n${testScript.formattedErrorString}`)
+		throw new Error(`unable to compile script ${filename}:\n${testScript.formattedErrorString}`)
 	}
 
 	return testScript

@@ -1,21 +1,23 @@
 import { readFile } from 'fs'
-import { promisify } from 'util'
+import { promisify, inspect } from 'util'
 import * as parseCSV from 'csv-parse/lib/sync'
 
 const readFilePromise = promisify(readFile)
 
 export abstract class Loader<T> {
+	public isSet = true
 	public lines: T[]
 	public isLoaded: boolean = false
-	constructor(public filePath: string) {}
+	constructor(public filePath: string, public requestedFilename: string) {}
 	public abstract load(): Promise<void>
 }
 
 export class NullLoader<T> extends Loader<T> {
 	constructor() {
-		super('')
+		super('', '')
 		this.lines = []
 		this.isLoaded = true
+		this.isSet = false
 	}
 	public async load(): Promise<void> {
 		this.isLoaded = true
@@ -24,10 +26,43 @@ export class NullLoader<T> extends Loader<T> {
 
 export class DataLoader<T> extends Loader<T> {
 	constructor(public lines: T[]) {
-		super('')
+		super('', '')
+
+		// handle init via TestData.fromData([{}]) to represent a
+		// working-but-useless placeholder loader
+		// TODO improve this degenerate case
+		if (lines.length === 1 && Object.keys(lines[0]).length === 0) {
+			this.isSet = false
+		}
 	}
+
 	public async load(): Promise<void> {
 		this.isLoaded = true
+	}
+
+	public toString(): string {
+		let s = 'inline data\n'
+
+		const pp = inspect
+
+		switch (this.lines.length) {
+			case 0:
+				s += '<empty>'
+				break
+			default:
+				const show = Math.min(4, this.lines.length)
+				s += `[\n`
+				for (let i = 0; i < show; i++) {
+					s += `  ${pp(this.lines[i])},\n`
+				}
+				if (this.lines.length > show) {
+					const extra = this.lines.length - show
+					s += `  ... (${extra} more row${extra !== 1 ? 's' : ''})\n`
+				}
+				s += ']'
+		}
+
+		return s
 	}
 }
 
@@ -47,17 +82,30 @@ export class JSONLoader<T> extends Loader<T> {
 
 		this.isLoaded = true
 	}
+
+	public toString(): string {
+		return `json data ${this.requestedFilename}`
+	}
 }
 
 export class CSVLoader<T> extends Loader<T> {
-	constructor(public filePath: string, private separator: string = ',') {
-		super(filePath)
+	constructor(public filePath: string, private separator: string = ',', requestedFilename: string) {
+		super(filePath, requestedFilename)
 	}
 
 	public async load(): Promise<void> {
-		let data = await readFilePromise(this.filePath, 'utf8')
+		let data: string
+		try {
+			data = await readFilePromise(this.filePath, 'utf8')
+		} catch (e) {
+			throw new Error(`unable to read CSV file ${this.filePath}:\ncause: ${e}`)
+		}
 
 		this.lines = parseCSV(data, { delimiter: this.separator, columns: true })
 		this.isLoaded = true
+	}
+
+	public toString(): string {
+		return `CSV data ${this.requestedFilename}`
 	}
 }

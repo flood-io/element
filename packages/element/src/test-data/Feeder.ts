@@ -4,7 +4,7 @@ import { knuthShuffle } from 'knuth-shuffle'
 export type FeedFilterFunction<Line> = (line: Line, index: number, instanceID: string) => boolean
 
 export class Feeder<T> {
-	private resetOnEnd: boolean = false
+	private resetOnEnd: boolean = true
 	private shuffleAfterLoad: boolean = false
 
 	constructor(
@@ -13,8 +13,6 @@ export class Feeder<T> {
 		private pointer: number = -1,
 		private filters: FeedFilterFunction<T>[] = [],
 	) {
-		this.resetOnEnd = true
-		this.shuffleAfterLoad = false
 		this.reset()
 	}
 
@@ -90,5 +88,19 @@ export class Feeder<T> {
 
 	public get isEmpty(): boolean {
 		return this.lines.length === 0
+	}
+
+	public toString(): string {
+		let s: string[] = []
+
+		if (this.shuffleAfterLoad) {
+			s.push('shuffled')
+		}
+
+		if (!this.resetOnEnd) {
+			s.push('non-circular')
+		}
+
+		return s.join(', ')
 	}
 }

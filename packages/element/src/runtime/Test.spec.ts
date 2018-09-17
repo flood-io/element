@@ -5,13 +5,12 @@ import { DogfoodServer } from '../../tests/support/fixture-server'
 import testRunEnv from '../../tests/support/test-run-env'
 import { launchPuppeteer, testPuppeteer } from '../../tests/support/launch-browser'
 import Test from './Test'
-import { mustCompileFile } from '../TestScript'
+import { EvaluatedScript } from './EvaluatedScript'
 import { join } from 'path'
 import { EventEmitterReporter } from '../reporter/EventEmitter'
 use(SinonChai)
 
 let dogfoodServer = new DogfoodServer()
-let test: Test
 let puppeteer: testPuppeteer
 let testReporter: EventEmitterReporter = new EventEmitterReporter()
 const runEnv = testRunEnv()
@@ -25,10 +24,15 @@ const runEnv = testRunEnv()
 // }
 
 const setupTest = async (scriptName: string) => {
-	let script = await mustCompileFile(join(__dirname, '../../tests/fixtures', scriptName))
-	test.enqueueScript(script, {})
+	const script = await EvaluatedScript.mustCompileFile(
+		join(__dirname, '../../tests/fixtures', scriptName),
+		runEnv,
+	)
+
+	const test = new Test(puppeteer, script, testReporter, {})
 
 	await test.beforeRun()
+	return test
 }
 
 describe('Test', function() {
@@ -36,7 +40,6 @@ describe('Test', function() {
 	beforeEach(async () => {
 		puppeteer = await launchPuppeteer()
 		testReporter = new EventEmitterReporter()
-		test = new Test(puppeteer, runEnv, testReporter)
 	})
 
 	afterEach(async () => {
@@ -52,7 +55,7 @@ describe('Test', function() {
 	})
 
 	it('extracts settings during evaluation', async () => {
-		await setupTest('test-with-export.ts')
+		const test = await setupTest('test-with-export.ts')
 		expect(test.settings).to.deep.equal({
 			actionDelay: 5,
 			stepDelay: 0,
@@ -75,13 +78,13 @@ describe('Test', function() {
 	})
 
 	it('parses steps', async () => {
-		await setupTest('test-with-export.ts')
+		const test = await setupTest('test-with-export.ts')
 
 		expect(test.steps.map(step => step.name)).to.deep.equal(['Invalid Step', 'Test Step'])
 	})
 
 	it('runs steps', async () => {
-		await setupTest('test-with-export.ts')
+		const test = await setupTest('test-with-export.ts')
 
 		await test.run()
 	}).timeout(30e3)

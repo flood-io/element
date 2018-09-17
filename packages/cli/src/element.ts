@@ -8,11 +8,10 @@ import ownPackage from './utils/ownPackage'
 // import { info } from './utils/out/info'
 // import { existsSync } from 'fs'
 // import { resolve } from 'path'
-// import * as checkForUpdate from 'update-check'
-// import * as ms from 'ms'
+import * as checkForUpdate from 'update-check'
+import * as ms from 'ms'
 
 const cmdRoot = join(__dirname, 'cmd')
-const pkg = ownPackage()
 
 export const handleUnexpected = (err: Error) => {
 	debug('handling unexpected error')
@@ -42,28 +41,9 @@ process.on('unhandledRejection', handleRejection)
 process.on('uncaughtException', handleUnexpected)
 
 export async function main() {
-	// const { isTTY } = process.stdout
-	// let update = null
+	const pkg = ownPackage()
 
-	// try {
-	// update = await checkForUpdate(pkg, {
-	// interval: ms('1d'),
-	// distTag: pkg.version.includes('canary') ? 'canary' : 'latest',
-	// })
-	// } catch (err) {
-	// console.error(error(`Checking for updates failed`))
-	// console.error(err)
-	// }
-
-	// if (update && isTTY) {
-	// console.log(
-	// info(
-	// `${chalk.bgRed('UPDATE AVAILABLE')} The latest version of Element CLI is ${update &&
-	// update.latest}`,
-	// ),
-	// )
-	// console.log(info(`Get it by running ${chalk.greenBright('yarn add @flood/cli@latest')}`))
-	// }
+	await doUpdateCheck(pkg)
 
 	return argv
 		.usage(`${chalk.bold(chalk.blueBright('element'))} subcommand [options]`)
@@ -84,4 +64,32 @@ export async function main() {
 			'Run the Flood Challenge example script in your local browser',
 		)
 		.epilogue(`For more information on Flood Element, see https://element.flood.io`).argv
+}
+
+const info = (...msgs: string[]) => `${chalk.gray('>')} ${msgs.join('\n')}`
+
+async function doUpdateCheck(pkg: any) {
+	if (!process.stdout.isTTY) return
+
+	try {
+		const update = await checkForUpdate(pkg, {
+			interval: ms('1d'),
+			distTag: pkg.version.includes('canary') ? 'canary' : 'latest',
+		})
+
+		if (update) {
+			console.log(
+				info(
+					`${chalk.bgRed('UPDATE AVAILABLE')} The latest version of Element CLI is ${update &&
+						update.latest}`,
+				),
+			)
+			console.log(
+				info(`Get it by running ${chalk.greenBright('yarn add @flood/element-cli@latest')}`),
+			)
+		}
+	} catch (err) {
+		console.error(error(`Checking for updates failed`))
+		console.error(err)
+	}
 }

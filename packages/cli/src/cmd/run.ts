@@ -9,12 +9,11 @@ import {
 } from '@flood/element/api'
 import { ConsoleReporter } from '../utils/ConsoleReporter'
 import { Argv, Arguments } from 'yargs'
-import { existsSync } from 'fs'
 import * as path from 'path'
 import createLogger from '../utils/Logger'
 import { watch } from 'chokidar'
 import { EventEmitter } from 'events'
-import chalk from 'chalk'
+import { checkFile } from './common'
 
 function setupDelayOverrides(args: Arguments, testSettingOverrides: TestSettings) {
 	let stepDelayOverride: number | undefined
@@ -57,6 +56,9 @@ export const handler = (args: Arguments) => {
 
 	const logger = createLogger(logLevel, true)
 	const reporter = new ConsoleReporter(logger, verboseBool)
+
+	logger.info(`workRootPath: ${workRootPath}`)
+	logger.info(`testDataPath: ${testDataPath}`)
 
 	const opts: ElementOptions = {
 		logger: logger,
@@ -114,9 +116,11 @@ function getWorkRootPath(file: string, root?: string): string {
 	const ext = path.extname(file)
 	const bare = path.basename(file, ext)
 
-	root = root || path.dirname(file)
+	if (root === undefined) {
+		root = path.join(path.dirname(file), 'tmp/element-results', bare)
+	}
 
-	return path.resolve(root, bare, new Date().toISOString())
+	return path.resolve(root, new Date().toISOString())
 }
 
 function getTestDataPath(file: string, root?: string): string {
@@ -129,8 +133,6 @@ function initRunEnv(root: string, testDataRoot: string) {
 	const workRoot = new WorkRoot(root, {
 		'test-data': testDataRoot,
 	})
-
-	console.info('workRoot', workRoot.root)
 
 	return {
 		workRoot,
@@ -261,10 +263,9 @@ export const builder = (yargs: Argv) => {
 			describe: 'Verbose mode',
 		})
 		.check(({ file, chrome }) => {
-			if (!file.length) return new Error('Please provide a test script')
-			if (!existsSync(file)) return new Error(`${chalk.redBright('File does not exist')} '${file}'`)
-			// if (chrome && !existsSync(chrome))
-			// return new Error(`Chrome executable path does not exist '${chrome}'`)
+			let fileErr = checkFile(file)
+			if (fileErr) return fileErr
+
 			return true
 		})
 }

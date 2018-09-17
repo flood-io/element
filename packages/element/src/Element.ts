@@ -3,7 +3,8 @@ import { IReporter } from './Reporter'
 import { PuppeteerClient, launch } from './driver/Puppeteer'
 import { RuntimeEnvironment } from './runtime-environment/types'
 import { IRunner, Runner, PersistentRunner, TestCommander } from './Runner'
-import { ITestScript, TestScriptOptions, mustCompileFile } from './TestScript'
+import { TestScriptOptions, mustCompileFile } from './TestScript'
+import { EvaluatedScript } from './runtime/EvaluatedScript'
 import { TestSettings, ChromeVersion } from './runtime/Settings'
 import { TestObserver } from './runtime/test-observers/Observer'
 import { AsyncFactory } from './utils/Factory'
@@ -43,6 +44,7 @@ export function runUntilExit(fn: () => Promise<void>) {
 export async function runCommandLine(opts: ElementOptions): Promise<void> {
 	let { logger, testScript, clientFactory } = opts
 
+	// TODO proper types for args
 	let runnerClass: { new (...args: any[]): IRunner }
 	if (opts.persistentRunner) {
 		runnerClass = PersistentRunner
@@ -53,7 +55,6 @@ export async function runCommandLine(opts: ElementOptions): Promise<void> {
 	const runner = new runnerClass(
 		clientFactory || launch,
 		opts.testCommander,
-		opts.runEnv,
 		opts.reporter,
 		logger,
 		opts.testSettingOverrides,
@@ -89,8 +90,8 @@ export async function runCommandLine(opts: ElementOptions): Promise<void> {
 		traceResolution: false,
 	}
 
-	const testScriptFactory = async (): Promise<ITestScript> => {
-		return await mustCompileFile(testScript, testScriptOptions)
+	const testScriptFactory = async (): Promise<EvaluatedScript> => {
+		return new EvaluatedScript(opts.runEnv, await mustCompileFile(testScript, testScriptOptions))
 	}
 
 	await runner.run(testScriptFactory)

@@ -13,3 +13,9 @@ declare module 'term-img'
 declare module 'knuth-shuffle'
 
 declare module 'comment-parser'
+
+declare module 'boxen'
+
+declare module 'update-check'
+
+declare module 'ms'

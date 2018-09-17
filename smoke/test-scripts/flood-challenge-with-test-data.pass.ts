@@ -17,9 +17,7 @@ interface Row {
 	age: number
 }
 
-TestData.fromData<Row>(data)
-	.shuffle()
-	.circular()
+TestData.fromData<Row>(data).shuffle()
 
 export default () => {
 	step('1. Start', async browser => {

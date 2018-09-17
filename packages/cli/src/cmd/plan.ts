@@ -2,6 +2,7 @@ import { Argv, Arguments } from 'yargs'
 import { inspect } from 'util'
 import { EvaluatedScript, nullRuntimeEnvironment } from '@flood/element/api'
 import chalk from 'chalk'
+import * as boxen from 'boxen'
 import { checkFile } from './common'
 
 function rpad(n: number, maxN: number, padChar = ' '): string {
@@ -18,12 +19,14 @@ const main = async (args: Arguments) => {
 
 	const { settings, steps } = script
 
-	console.log(chalk`
-{green *************************************************************}
-{green *} test script: {blue ${settings.name || '<no name>'}}
-{green *} {blue ${settings.description || '<no description>'}}
-{green *************************************************************}
-`)
+	console.log(
+		boxen(
+			chalk`test script
+{blue ${settings.name || '<no name>'}}
+{blue ${settings.description || '<no description>'}}`,
+			{ padding: 1, margin: 1, align: 'center' },
+		),
+	)
 
 	console.log(chalk`{blue Settings}:`)
 	console.log(inspect(settings, { colors: true }))

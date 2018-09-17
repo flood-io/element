@@ -144,6 +144,10 @@ Selects an option within a `<select>` tag by matching its visible text.
 
 Selects an option within a `<select>` tag using the value of the `<option>` element.
 
+#### `Browser.sendKeys(keys)`
+* `keys` &lt;string\[]&gt;   
+* returns: &lt;[Promise]&lt;void&gt;&gt; 
+
 #### `Browser.setUserAgent(userAgent)`
 * `userAgent` &lt;string&gt;   
 * returns: &lt;[Promise]&lt;void&gt;&gt; 
@@ -248,15 +252,15 @@ Note that most Element location API methods accept a NullableLocatable but will 
 
 #### properties
 * `button` &lt;[MouseButtons]&gt;  (Optional)   defaults to left  
-* `clickCount` &lt;number&gt;  (Optional)   defaults to 1  
-* `delay` &lt;number&gt;  (Optional)   Time to wait between mousedown and mouseup in milliseconds.  
+* `clickCount` &lt;undefined | number&gt;  (Optional)   defaults to 1  
+* `delay` &lt;undefined | number&gt;  (Optional)   Time to wait between mousedown and mouseup in milliseconds.  
   Defaults to 0.  
 # `NavigationOptions`
 
 The navigation options.
 
 #### properties
-* `timeout` &lt;number&gt;  (Optional)   Maximum navigation time in milliseconds, pass 0 to disable timeout.  
+* `timeout` &lt;undefined | number&gt;  (Optional)   Maximum navigation time in milliseconds, pass 0 to disable timeout.  
 * `waitUntil` &lt;[LoadEvent] | [LoadEvent]\[]&gt;  (Optional)   When to consider navigation succeeded.  
 # `ScreenshotOptions`
 
@@ -264,12 +268,12 @@ Defines the screenshot options.
 
 #### properties
 * `clip` &lt;[BoundingBox]&gt;  (Optional)   An object which specifies clipping region of the page.  
-* `fullPage` &lt;boolean&gt;  (Optional)   When true, takes a screenshot of the full scrollable page.  
-* `omitBackground` &lt;boolean&gt;  (Optional)   Hides default white background and allows capturing screenshots with transparency.  
-* `path` &lt;string&gt;  (Optional)   The file path to save the image to. The screenshot type will be inferred from file extension.  
+* `fullPage` &lt;undefined | false | true&gt;  (Optional)   When true, takes a screenshot of the full scrollable page.  
+* `omitBackground` &lt;undefined | false | true&gt;  (Optional)   Hides default white background and allows capturing screenshots with transparency.  
+* `path` &lt;undefined | string&gt;  (Optional)   The file path to save the image to. The screenshot type will be inferred from file extension.  
   If `path` is a relative path, then it is resolved relative to current working directory.  
   If no path is provided, the image won't be saved to the disk.  
-* `quality` &lt;number&gt;  (Optional)   The quality of the image, between 0-100. Not applicable to png images.  
+* `quality` &lt;undefined | number&gt;  (Optional)   The quality of the image, between 0-100. Not applicable to png images.  
 * `type` &lt;"jpeg" | "png"&gt;  (Optional)   The screenshot type.  
 ## `LoadEvent`
 ```typescript

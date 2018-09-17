@@ -22,6 +22,7 @@ See [DEFAULT_SETTINGS] for a list of the default value for each setting.
     
   Waiting between actions simulates the behaviour of a real user as they read, think and act on the page's content.  
     
+* `chromeVersion` &lt;[ChromeVersion]&gt;  (Optional)     
 * `clearCache` &lt;undefined | false | true&gt;  (Optional)   Specifies whether Brwoser cache should be cleared after each test loop.  
 * `clearCookies` &lt;undefined | false | true&gt;  (Optional)   Specifies whether cookies should be cleared after each test loop.  
 * `consoleFilter` &lt;[ConsoleMethod]\[]&gt;  (Optional)   Specify which console methods to filter out. By default no console methods are filtered.  
@@ -100,6 +101,7 @@ The default settings for a Test. Any settings you provide are merged into these 
 | Name                      | Default Value                                              | Comment                                                        |
 | ------------------------- | ---------------------------------------------------------- | -------------------------------------------------------------- |
 | `actionDelay`             | 2                                                          |                                                                |
+| `chromeVersion`           | "puppeteer"                                                |                                                                |
 | `clearCache`              | false                                                      |                                                                |
 | `clearCookies`            | true                                                       |                                                                |
 | `consoleFilter`           |  []                                                        | by default, don't filter any console messages from the browser |
@@ -114,6 +116,7 @@ The default settings for a Test. Any settings you provide are merged into these 
 | `waitTimeout`             | 30                                                         |                                                                |
 
 [DEFAULT_SETTINGS]: ../../api/Settings.md#default_settings
+[ChromeVersion]: ../..#chromeversion
 [ConsoleMethod]: ../../api/Settings.md#consolemethod
 [ResponseTiming]: ../../api/Settings.md#responsetiming
 [TestSettings]: ../../api/Settings.md#testsettings

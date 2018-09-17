@@ -1,4 +1,3 @@
-{ "extends": "./tsconfig",
-	"compilerOptions": { "noImplicitAny": false },
-	"files": ["./index.ts", "./api.ts"]
+{ "extends": "./tsconfig.json",
+	"compilerOptions": { "noImplicitAny": false }
 }

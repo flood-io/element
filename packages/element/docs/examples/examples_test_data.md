@@ -29,7 +29,7 @@ step('Step 1', (browser: Browser, row: any) => {
 })
 ```
 
-## Loading data from a CSV
+## Loading data from a CSV file
 
 If you have data available in a CSV file, perhaps exported from Excel, you can use it to power your test:
 
@@ -58,11 +58,11 @@ row.url
 
 When running Element in cli mode (`element run`), place the CSV in the same directory as your test script.
 
-When its running as a load test on flood.io, upload the script TODO
+When its running as a load test on flood.io, upload the the CSV alongside your script.
 
-## Loading data from a JSON
+## Loading data from a JSON file
 
-Loading data from a JSON is as simple as loading from CSV
+Loading data from a JSON is just as simple as loading from CSV
 
 ```typescript
 TestData.fromCSV('test-data.json')
@@ -149,6 +149,7 @@ Its important to understand this when validating data, since for example a value
 [TypeScript]: https://www.typescriptlang.org/
 <!-- suffix -->
 
+[TypeScript]: https://www.typescriptlang.org/
 [TestData]: ../../api/TestData.md#testdata
 [TestDataFactory]: ../../api/TestData.md#testdatafactory
 [TestDataSource]: ../../api/TestData.md#testdatasource

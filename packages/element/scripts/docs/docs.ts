@@ -360,12 +360,7 @@ class DocsParser {
 
 		let params: any[] = []
 		parameters.forEach(p => {
-			let {
-				name,
-				type,
-				flags: { isOptional = false },
-				defaultValue,
-			} = p
+			let { name, type, flags: { isOptional = false }, defaultValue } = p
 			let desc = commentFromNode(p)
 			params.push({ name, desc, type, isOptional, defaultValue })
 		})
@@ -614,6 +609,8 @@ const externalRefs = {
 	Key: 'Enumerations.md/#key',
 	MouseButtons: 'Enumerations.md/#mousebuttons',
 	Device: 'Enumerations.md/#device',
+	TypeScript: 'https://www.typescriptlang.org/',
+	Flood: 'https://flood.io',
 }
 
 const docsJSON = require(__dirname + '/../../docs.json')

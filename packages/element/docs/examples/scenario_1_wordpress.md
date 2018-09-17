@@ -22,7 +22,7 @@ We'll show you how you can achieve creating a full user item purchase scenario q
 
 ## Download the entire script
 
-Please find the script used in this detailed scenario here: [link](./scenario_1_wordpress.ts)
+Please find the script used in this detailed scenario here: (link)[./scenario_1_wordpress.ts]
 
 ## Overview of script configuration settings
 

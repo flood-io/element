@@ -65,7 +65,6 @@ const writeBrew = root => {
 async function update() {
 	if (!fs.existsSync(tap)) {
 		child_process.execSync(`${git} clone ${repo} -- ${tap}`, {
-			cwd: tap,
 			stdio: 'inherit',
 		})
 	} else {

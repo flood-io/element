@@ -174,4 +174,15 @@ export class TestDataSource<T> {
 	public get isStart(): boolean {
 		return this.feeder.isStart
 	}
+
+	/**
+	 * @internal
+	 */
+	public toString(): string {
+		if (this.loader.isSet) {
+			return [this.feeder.toString(), this.loader.toString()].filter(x => x.length).join(', ')
+		} else {
+			return 'no test data'
+		}
+	}
 }

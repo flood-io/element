@@ -9,12 +9,11 @@ import {
 } from '@flood/element/api'
 import { ConsoleReporter } from '../utils/ConsoleReporter'
 import { Argv, Arguments } from 'yargs'
-import { existsSync } from 'fs'
 import * as path from 'path'
 import createLogger from '../utils/Logger'
 import { watch } from 'chokidar'
 import { EventEmitter } from 'events'
-import chalk from 'chalk'
+import { checkFile } from './common'
 
 function setupDelayOverrides(args: Arguments, testSettingOverrides: TestSettings) {
 	let stepDelayOverride: number | undefined
@@ -264,10 +263,9 @@ export const builder = (yargs: Argv) => {
 			describe: 'Verbose mode',
 		})
 		.check(({ file, chrome }) => {
-			if (!file.length) return new Error('Please provide a test script')
-			if (!existsSync(file)) return new Error(`${chalk.redBright('File does not exist')} '${file}'`)
-			// if (chrome && !existsSync(chrome))
-			// return new Error(`Chrome executable path does not exist '${chrome}'`)
+			let fileErr = checkFile(file)
+			if (fileErr) return fileErr
+
 			return true
 		})
 }

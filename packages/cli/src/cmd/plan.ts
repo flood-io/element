@@ -30,8 +30,9 @@ export const builder = (yargs: Argv) => {
 			default: !process.stdout.isTTY,
 		})
 		.check(({ file }) => {
-			if (!file.length) return new Error('Please provide a test script')
-			if (!existsSync(file)) return new Error(`File does not exist '${file}'`)
+			let fileErr = checkFile(file)
+			if (fileErr) return fileErr
+
 			return true
 		})
 }

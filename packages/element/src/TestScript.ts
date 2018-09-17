@@ -178,7 +178,7 @@ export async function mustCompileString(
 	const testScript = await compileString(source, filename, testScriptOptions)
 
 	if (testScript.hasErrors) {
-		throw new Error(`errors compiling script ${filename}:\n${testScript.formattedErrorString}`)
+		throw new Error(`unable to compile script ${filename}:\n${testScript.formattedErrorString}`)
 	}
 
 	return testScript
@@ -191,11 +191,13 @@ export async function mustCompileFile(
 	const testScript = await compileFile(filename, testScriptOptions)
 
 	if (testScript === undefined) {
-		throw new Error(`errors compiling script ${filename}:\nunable to read`)
+		throw new Error(
+			`unable to compile script ${filename}:\nunable to read script at path ${filename}`,
+		)
 	}
 
 	if (testScript.hasErrors) {
-		throw new Error(`errors compiling script ${filename}:\n${testScript.formattedErrorString}`)
+		throw new Error(`unable to compile script ${filename}:\n${testScript.formattedErrorString}`)
 	}
 
 	return testScript

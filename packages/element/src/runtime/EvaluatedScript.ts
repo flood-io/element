@@ -3,6 +3,10 @@ import * as Faker from 'faker'
 import * as nodeAssert from 'assert'
 import { EventEmitter } from 'events'
 
+import * as fs from 'fs'
+import { promisify } from 'util'
+const exists = promisify(fs.exists)
+
 import { Step, StepFunction, StepOptions, normalizeStepOptions } from './Step'
 import Test from './Test'
 import { ITestScript, TestScriptErrorMapper, TestScriptError, mustCompileFile } from '../TestScript'
@@ -57,6 +61,10 @@ export class EvaluatedScript implements TestScriptErrorMapper {
 		path: string,
 		runEnv: RuntimeEnvironment,
 	): Promise<EvaluatedScript> {
+		if (!await exists(path)) {
+			throw new Error(`unable to compile script: no script found at path ${path}`)
+		}
+
 		return new EvaluatedScript(runEnv, await mustCompileFile(path))
 	}
 

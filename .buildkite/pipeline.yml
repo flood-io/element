@@ -1,0 +1,16 @@
+steps:
+  - command: "scripts/ci/build.sh"
+    label: ":hammer: Build test image"
+
+  - wait
+
+  - command: "scripts/ci/test.sh"
+    label: ":llama: Test"
+
+  - command: "scripts/ci/smoke.sh"
+    label: ":fire: Smoke"
+
+  - wait
+
+  - command: "scripts/ci/publish.sh"
+    label: ":ship: Publish"

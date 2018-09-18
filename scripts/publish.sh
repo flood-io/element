@@ -5,7 +5,16 @@ set -euo pipefail
 HERE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" > /dev/null && pwd )"
 root=$HERE/..
 
-yarn exec lerna version --force-publish --no-push --ignore-changes scripts/publish.sh prerelease
+branch=$(git rev-parse --abbrev-ref HEAD)
+
+case $branch in
+  beta,feature/open-source-everything)
+    yarn exec lerna version --force-publish --no-push --allow-branch beta --allow-branch feature/open-source-everything --preid beta --ignore-changes scripts/publish.sh prerelease
+    ;;
+  master)
+    yarn exec lerna version --force-publish --no-push --allow-branch master --ignore-changes scripts/publish.sh patch
+    ;;
+esac
 
 version=$(cat $root/lerna.json | jq .version)
 

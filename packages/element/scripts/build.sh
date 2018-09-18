@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Custom build to provide more control over the package structure.
+#
+# - build into dist with tsc
+# - copy important files package.json & tsconfig.json 
+# - create a custom .npmignore
+
 set -euo pipefail
 
 HERE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" > /dev/null && pwd )"
@@ -10,9 +16,7 @@ cd $root
 dest=$root/dist
 mkdir -p $dest
 
-# yarn exec tsc --outDir $dest
-
-yarn exec tsc
+yarn exec tsc --outDir $dest
 
 rm -rf $dest/src/extern
 cp -a src/extern $dest/src/extern

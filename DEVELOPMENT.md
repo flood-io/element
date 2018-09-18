@@ -2,14 +2,30 @@
 
 ## lerna & yarn workspaces
 
-We're using [yarn workspaces](https://yarnpkg.com/en/docs/workspaces) to manage dependencies, and [lerna 2.x](https://github.com/lerna/lerna/tree/2.x) for publishing to npm and other monorepo tasks.
+We're using [yarn workspaces](https://yarnpkg.com/en/docs/workspaces) to manage dependencies, and [lerna 3.x](https://github.com/lerna/lerna) for publishing to npm and other monorepo tasks.
 
-## tasks
+## publishing
 
-### `yarn build:watch`
+We do a custom build for `@flood/element` (`packages/element`) to provide more control over the package structure.
 
-To ensure the packages resemble their production/built state while you're developing, use `yarn build:watch`.
+Because of that we also use a custom publishing script `scripts/publish.sh`
 
-### `yarn publish:pre`
+### prerelease
 
-To publish pre-release `yarn publish:pre`.
+```shell
+make publish-pre
+```
+
+## tests
+
+### unit tests
+
+```shell
+yarn test
+```
+
+### smoke tests
+
+```shell
+make smoke
+```

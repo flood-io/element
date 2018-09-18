@@ -6,7 +6,6 @@ publish:
 	./scripts/publish.sh
 
 publish-ci:
-	echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
 	./scripts/publish.sh
 
 test-ci:

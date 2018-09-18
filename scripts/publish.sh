@@ -5,7 +5,7 @@ set -euo pipefail
 HERE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" > /dev/null && pwd )"
 root=$HERE/..
 
-branch=$(git rev-parse --abbrev-ref HEAD)
+branch=${BUILDKITE_BRANCH:-$(git rev-parse --abbrev-ref HEAD)}
 
 case $branch in
   beta,feature/open-source-everything)
@@ -14,7 +14,15 @@ case $branch in
   master)
     yarn exec lerna version --force-publish --no-push --allow-branch master --ignore-changes scripts/publish.sh patch
     ;;
+  *)
+    echo "branch is $branch which I won't publish"
+    exit 0
 esac
+
+npmrc=$HOME/.npmrc
+if [[ ! -f $npmrc ]]; then
+	echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > $npmrc
+fi
 
 version=$(cat $root/lerna.json | jq .version)
 

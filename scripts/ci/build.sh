@@ -9,5 +9,5 @@ source $HERE/config.sh
 
 test_env_file=$HERE/test-env
 
-echo "~~~ Docker build testing image"
+echo "--- Docker build testing/publishing image"
 docker build -t ${DOCKER_IMAGE} .

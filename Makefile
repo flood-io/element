@@ -6,6 +6,7 @@ publish:
 # publish from CI scripts
 # the repo must be mounted at /src
 publish-ci:
+	ls -la /src
 	cp -a /src/.git /app/.git
 	./scripts/publish.sh
 

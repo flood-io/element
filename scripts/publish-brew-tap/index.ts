@@ -15,6 +15,8 @@ const git = which('git')
 
 const major = semver.major(version)
 const minor = semver.minor(version)
+// const patch = semver.patch(version)
+const prerelease = semver.prerelease(version)
 
 const eltURL = `https://registry.npmjs.org/@flood/element-cli/-/element-cli-${version}.tgz`
 const repo = 'https://github.com/flood-io/homebrew-taps.git'
@@ -32,7 +34,7 @@ const sum = child_process
 const formula = versionSuffix => `
 require "language/node"
 
-class Element${versionSuffix} < Formula
+class Element${versionToBrewClassSuffix(versionSuffix)} < Formula
   desc "Flood Element CLI"
   homepage "https://github.com/flood-io/element"
   url "https://registry.npmjs.org/@flood/element-cli/-/element-cli-${version}.tgz"
@@ -53,13 +55,26 @@ class Element${versionSuffix} < Formula
 end
 `
 
+function versionToBrewClassSuffix(version: string): string {
+	if (version.length === 0) return ''
+
+	version = version.replace(/[-_.\s]([a-zA-Z0-9])/g, (x: string, ...captures: any[]): string => {
+		return captures[0].toUpperCase()
+	})
+	return `AT${version}`
+}
+
 const writeBrew = root => {
-	fs.writeFileSync(path.join(root, `element.rb`), formula(''), 'utf8')
-	fs.writeFileSync(
-		path.join(root, `element@${major}.${minor}.rb`),
-		formula(`AT${major}${minor}`),
-		'utf8',
-	)
+	if (prerelease && (version.includes('beta') || version.includes('alpha'))) {
+		fs.writeFileSync(path.join(root, `element@${version}.rb`), formula(version), 'utf8')
+	} else {
+		fs.writeFileSync(path.join(root, `element.rb`), formula(''), 'utf8')
+		fs.writeFileSync(
+			path.join(root, `element@${major}.${minor}.rb`),
+			formula(`${major}.${minor}`),
+			'utf8',
+		)
+	}
 }
 
 async function update() {

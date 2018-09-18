@@ -11,6 +11,11 @@ branch=${BUILDKITE_BRANCH:-$(git rev-parse --abbrev-ref HEAD)}
 git config --global url."https://github.com".insteadOf git://github.com
 git config --global url."https://${GITHUB_TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
 
+npmrc=$HOME/.npmrc
+if [[ ! -f $npmrc ]]; then
+	echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > $npmrc
+fi
+
 case $branch in
   beta|feature/open-source-everything)
     echo publishing beta
@@ -24,11 +29,6 @@ case $branch in
     echo "branch is $branch which I won't publish"
     exit 0
 esac
-
-npmrc=$HOME/.npmrc
-if [[ ! -f $npmrc ]]; then
-	echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > $npmrc
-fi
 
 version=$(cat $root/lerna.json | jq .version)
 

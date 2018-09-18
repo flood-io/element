@@ -1,18 +1,19 @@
-GITHUB_TOKEN = $(shell cat ~/.github-token)
-NPM_TOKEN = $(shell cat ~/.npm-token)
 lerna = ./node_modules/.bin/lerna
 
 publish:
 	./scripts/publish.sh
 
+# publish from CI scripts
+# the repo must be mounted at /src
 publish-ci:
+	cp -a /src/.git /app/.git
 	./scripts/publish.sh
 
 test-ci:
 	yarn test
 
 docker-build-local:
-	docker build --build-arg GITHUB_TOKEN=${GITHUB_TOKEN} --build-arg NPM_TOKEN=${NPM_TOKEN} -t element-local-build .
+	docker build -t element-local-build .
 
 docker-run-local-shell:
 	docker run -it element-local-build bash

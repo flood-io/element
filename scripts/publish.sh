@@ -19,8 +19,7 @@ if [[ $BUILDKITE_BRANCH ]]; then
 
   # build optimisation, so docker images don't have to have the whole .git we feed it in via the bind mount
   cp -a /build/element-dot-git .git
-  cat .git/config
-  git checkout $BUILDKITE_BRANCH
+  git reset --hard $BUILDKITE_BRANCH
 else
   branch=$(git rev-parse --abbrev-ref HEAD)
 fi

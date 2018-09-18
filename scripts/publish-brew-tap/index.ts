@@ -65,8 +65,15 @@ function versionToBrewClassSuffix(version: string): string {
 }
 
 const writeBrew = root => {
-	if (prerelease && (version.includes('beta') || version.includes('alpha'))) {
-		fs.writeFileSync(path.join(root, `element@${version}.rb`), formula(version), 'utf8')
+	if (prerelease) {
+		if (prerelease[0] === 'beta' || prerelease[0] === 'alpha') {
+			fs.writeFileSync(path.join(root, `element@${version}.rb`), formula(version), 'utf8')
+			fs.writeFileSync(
+				path.join(root, `element@${prerelease[0]}.rb`),
+				formula(prerelease[0]),
+				'utf8',
+			)
+		}
 	} else {
 		fs.writeFileSync(path.join(root, `element.rb`), formula(''), 'utf8')
 		fs.writeFileSync(

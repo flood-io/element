@@ -6,15 +6,27 @@ set -euo pipefail
 HERE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" > /dev/null && pwd )"
 root=$HERE/..
 
-branch=${BUILDKITE_BRANCH:-$(git rev-parse --abbrev-ref HEAD)}
-
 git config --global url."https://github.com".insteadOf git://github.com
 git config --global url."https://${GITHUB_TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
+
+branch=
+if [[ $BUILDKITE_BRANCH ]]; then
+  branch=$BUILDKITE_BRANCH
+
+  # build optimisation, so docker images don't have to have the whole .git we feed it in via the bind mount
+  cp -a /build/element-dot-git $root/.git
+  git checkout $BUILDKITE_BRANCH
+else
+  branch=$(git rev-parse --abbrev-ref HEAD)
+fi
+
 
 npmrc=$HOME/.npmrc
 if [[ ! -f $npmrc ]]; then
 	echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > $npmrc
 fi
+
+	cp -a /build/element-dot-git /app/.git
 
 case $branch in
   beta|feature/open-source-everything)

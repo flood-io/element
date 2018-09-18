@@ -6,6 +6,8 @@ set -euo pipefail
 HERE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" > /dev/null && pwd )"
 root=$HERE/..
 
+cd $root
+
 git config --global url."https://github.com".insteadOf git://github.com
 git config --global url."https://${GITHUB_TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
 
@@ -16,7 +18,8 @@ if [[ $BUILDKITE_BRANCH ]]; then
   ls -la $root
 
   # build optimisation, so docker images don't have to have the whole .git we feed it in via the bind mount
-  cp -a /build/element-dot-git $root/.git
+  cp -a /build/element-dot-git .git
+  cat .git/config
   git checkout $BUILDKITE_BRANCH
 else
   branch=$(git rev-parse --abbrev-ref HEAD)

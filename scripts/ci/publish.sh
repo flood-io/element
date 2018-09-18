@@ -15,4 +15,4 @@ ls -la .
 
 echo "~~~ tests passed, publishing"
 cp -a ./.git /build/element-dot-git
-docker run --rm -e NPM_TOKEN -e GITHUB_TOKEN -e BUILDKITE_BRANCH -v /home/core/build:/build --env-file $test_env_file $DOCKER_IMAGE make publish-ci
+docker run --rm -e NPM_TOKEN -e GITHUB_TOKEN -e BUILDKITE_BRANCH -e BUILDKITE_COMMIT -v /home/core/build:/build --env-file $test_env_file $DOCKER_IMAGE make publish-ci

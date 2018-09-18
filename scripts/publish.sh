@@ -13,6 +13,8 @@ branch=
 if [[ $BUILDKITE_BRANCH ]]; then
   branch=$BUILDKITE_BRANCH
 
+  ls -la $root
+
   # build optimisation, so docker images don't have to have the whole .git we feed it in via the bind mount
   cp -a /build/element-dot-git $root/.git
   git checkout $BUILDKITE_BRANCH

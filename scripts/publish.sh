@@ -11,11 +11,11 @@ branch=${BUILDKITE_BRANCH:-$(git rev-parse --abbrev-ref HEAD)}
 case $branch in
   beta|feature/open-source-everything)
     echo publishing beta
-    yarn exec lerna -- version prerelease --force-publish --no-push --allow-branch beta --allow-branch feature/open-source-everything --preid beta --ignore-changes scripts/publish.sh
+    yarn exec lerna -- version prerelease --force-publish --no-push --yes --ignore-changes scripts/publish.sh --allow-branch beta --allow-branch feature/open-source-everything --preid beta
     ;;
   master)
     echo publishing master
-    yarn exec lerna -- version patch --force-publish --no-push --allow-branch master --ignore-changes scripts/publish.sh
+    yarn exec lerna -- version patch --force-publish --no-push --yes --ignore-changes scripts/publish.sh --allow-branch master
     ;;
   *)
     echo "branch is $branch which I won't publish"

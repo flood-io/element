@@ -6,8 +6,7 @@ publish:
 # publish from CI scripts
 # the repo must be mounted at /src
 publish-ci:
-	ls -la /app-src
-	cp -a /app-src/.git /app/
+	cp -a /build/element-dot-git /app/.git
 	./scripts/publish.sh
 
 test-ci:

@@ -8,6 +8,9 @@ root=$HERE/..
 
 branch=${BUILDKITE_BRANCH:-$(git rev-parse --abbrev-ref HEAD)}
 
+git config --global url."https://github.com".insteadOf git://github.com
+git config --global url."https://${GITHUB_TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
+
 case $branch in
   beta|feature/open-source-everything)
     echo publishing beta

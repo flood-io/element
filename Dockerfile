@@ -4,6 +4,7 @@ FROM node:10
 RUN apt-get update && apt-get install -y wget --no-install-recommends \
     && apt-get update \
     && apt-get install -y \
+      git \
       # See https://crbug.com/795759
       libgconf-2-4 \
       apt-utils \
@@ -29,14 +30,6 @@ RUN apt-get update && apt-get install -y wget --no-install-recommends \
       xdg-utils \
       --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
-
-# ARG GITHUB_TOKEN
-# RUN apt-get update && apt-get install -y \
-    # git \
-    # && rm -rf /var/lib/apt/lists/* \
-    # \
-    # && git config --global url."https://github.com".insteadOf git://github.com \
-    # && git config --global url."https://${GITHUB_TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
 
 WORKDIR /app
 ADD package.json yarn.lock ./

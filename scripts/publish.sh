@@ -9,7 +9,7 @@ root=$HERE/..
 cd $root
 
 branch=
-if [[ $BUILDKITE_BRANCH ]]; then
+if [[ ${BUILDKITE_BRANCH:-} ]]; then
   branch=$BUILDKITE_BRANCH
 
   git config --global url."https://github.com".insteadOf git://github.com

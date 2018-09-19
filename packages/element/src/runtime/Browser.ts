@@ -295,6 +295,18 @@ export class Browser<T> implements BrowserInterface {
 					e,
 				)
 			}
+			if (e.message.includes('Navigation Timeout Exceeded')) {
+				e = new StructuredError<NetworkErrorData>(
+					'navigation timed out',
+					{
+						_kind: 'net',
+						url,
+						kind: 'net',
+						subKind: 'navigation-timeout',
+					},
+					e,
+				)
+			}
 			throw e
 		}
 

@@ -140,6 +140,19 @@ function netError(err: StructuredError<NetworkErrorData>): DocumentedError {
 		)
 	}
 
+	if (kind === 'net' && subKind == 'navigation-timeout') {
+		return DocumentedError.documented(
+			err,
+			`Unable to visit ${url}`,
+			`Element tried to navigate to URL ${url} but it didn't load in time.
+This may be due to
+- a transient networking issue.
+- a transient error or logical problem in the web app being visited.
+- attempting to visit a non-existent page.
+- attempting to visit a page protected by authentication.`,
+		)
+	}
+
 	if (kind === 'http' && subKind === 'not-ok') {
 		return DocumentedError.documented(
 			err,

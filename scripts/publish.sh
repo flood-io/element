@@ -65,6 +65,6 @@ npm publish --access public
 echo '--- pushing new tags'
 git push
 
-# TODO brew publish
+echo '--- publishing brew tap'
 cd $root
 yarn publish:brew

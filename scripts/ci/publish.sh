@@ -14,4 +14,4 @@ pwd
 ls -la .
 
 echo "~~~ tests passed, publishing"
-docker run --rm -e NPM_TOKEN -e GITHUB_TOKEN -e BUILDKITE_BRANCH -e BUILDKITE_COMMIT -v /home/core/build:/build --env-file $test_env_file $DOCKER_IMAGE make publish-ci
+docker run --rm -e NPM_TOKEN -e GITHUB_TOKEN -e BUILDKITE_BRANCH -e BUILDKITE_COMMIT --env-file $test_env_file $DOCKER_IMAGE make publish-ci

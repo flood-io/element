@@ -40,20 +40,23 @@ if (existsSync(indexTypescriptFile)) {
 }
 
 // manually find @types/node
-const nodeTypesPath = (require.resolve.paths('@types/node') || [])
+const maybeNodeTypesPath = (require.resolve.paths('@types/node') || [])
 	.map(p => path.resolve(p, '@types/node'))
 	.find(existsSync)
 
-if (nodeTypesPath === undefined) {
+if (maybeNodeTypesPath === undefined) {
 	throw new Error('unable to find @types/node')
 }
+const nodeTypesPath: string = maybeNodeTypesPath
 
 const nodeTypesPkg = JSON.parse(readFileSync(path.resolve(nodeTypesPath, 'package.json'), 'utf8'))
 const nodeTypesVersion = nodeTypesPkg.version
 
+const nodeTypesIndexPath = path.join(nodeTypesPath, 'index.d.ts')
+
 const nodeTypeReference = {
 	primary: false,
-	resolvedFileName: path.join(nodeTypesPath, 'index.d.ts'),
+	resolvedFileName: nodeTypesIndexPath,
 	packageId: {
 		name: '@types/node',
 		subModuleName: 'index.d.ts',
@@ -247,6 +250,14 @@ export class TypeScriptTestScript implements ITestScript {
 					debug('resolving @flood/element as %s', indexModuleFile)
 					resolvedModules.push({
 						resolvedFileName: indexModuleFile,
+						isExternalLibraryImport: true,
+					})
+					continue
+				}
+
+				if (moduleName === 'assert') {
+					resolvedModules.push({
+						resolvedFileName: nodeTypesIndexPath,
 						isExternalLibraryImport: true,
 					})
 					continue

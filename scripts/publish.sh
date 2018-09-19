@@ -14,6 +14,13 @@ if [[ ${BUILDKITE_BRANCH:-} ]]; then
 
   git config --global url."https://github.com".insteadOf git://github.com
   git config --global url."https://${GITHUB_TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
+
+  cp -a . /app-checkout
+  root=/app-checkout
+  cd $root
+  git fetch
+  git checkout $BUILDKITE_COMMIT
+  git reset --hard origin/$BUILDKITE_BRANCH
 else
   branch=$(git rev-parse --abbrev-ref HEAD)
 fi

@@ -41,11 +41,11 @@ fi
 
 case $branch in
   beta|feature/open-source-everything)
-    echo publishing beta
+    echo --- versioning beta
     yarn exec lerna -- version prerelease --force-publish --no-push --yes --ignore-changes scripts/publish.sh --allow-branch beta --allow-branch feature/open-source-everything --preid beta
     ;;
   master)
-    echo publishing master
+    echo --- versioning master
     yarn exec lerna -- version patch --force-publish --no-push --yes --ignore-changes scripts/publish.sh --allow-branch master
     ;;
   *)
@@ -53,13 +53,16 @@ case $branch in
     exit 0
 esac
 
+echo '--- publishing @flood/element'
 cd $root/packages/element
 ./scripts/build.sh
 npm publish --access public dist
 
+echo '--- publishing @flood/element-cli'
 cd $root/packages/cli
 npm publish --access public
 
+echo '--- pushing new tags'
 git push
 
 # TODO brew publish

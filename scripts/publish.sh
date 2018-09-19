@@ -23,8 +23,10 @@ if [[ ${BUILDKITE_BRANCH:-} ]]; then
   git remote set-url origin https://${GITHUB_TOKEN}:x-oauth-basic@github.com/flood-io/element
   cat .git/config
   git fetch
-  git checkout $BUILDKITE_COMMIT
-  git reset --hard origin/$BUILDKITE_BRANCH
+  git checkout --track origin/$BUILDKITE_BRANCH
+  # ensure we're on the right commit - avoid race condition
+  git reset --hard $BUILDKITE_COMMIT
+  git branch
 else
   branch=$(git rev-parse --abbrev-ref HEAD)
 fi

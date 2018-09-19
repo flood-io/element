@@ -53,8 +53,6 @@ case $branch in
     exit 0
 esac
 
-version=$(cat $root/lerna.json | jq .version)
-
 cd $root/packages/element
 ./scripts/build.sh
 npm publish --access public dist

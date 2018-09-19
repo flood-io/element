@@ -18,6 +18,7 @@ if [[ ${BUILDKITE_BRANCH:-} ]]; then
   cp -a . /app-checkout
   root=/app-checkout
   cd $root
+  cat .git/config
   git fetch
   git checkout $BUILDKITE_COMMIT
   git reset --hard origin/$BUILDKITE_BRANCH

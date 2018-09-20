@@ -17,30 +17,32 @@ export default class TestEnv extends Generator {
 	constructor(args: any[], opts: any) {
 		super(args, opts)
 
-		// This makes `appname` a required argument.
+		// This makes `dir` a required argument.
 		this.argument('dir', { type: String, required: true })
 	}
 
 	initializing() {
 		this.sourceRoot(path.join(packageRoot, 'templates'))
 
+
 		if (path.isAbsolute(this.options.dir)) {
 			this.destinationRoot(this.options.dir)
 		} else {
 			this.destinationRoot(this.destinationPath(this.options.dir))
 		}
+
+		this.options.repoName = path.basename(this.destinationPath())
 	}
 
 	answers: { [key: string]: string }
 
 	async prompting() {
-		const basename = path.basename(this.destinationPath())
 		this.answers = await this.prompt([
 			{
 				type: 'input',
-				name: 'url',
+				name: 'title',
 				message: 'The title of this test.',
-				default: basename,
+				default: this.options.repoName,
 			},
 			{
 				type: 'input',
@@ -50,11 +52,12 @@ export default class TestEnv extends Generator {
 			},
 		])
 	}
+
 	writing() {
-		this.fs.write(this.destinationPath('package.json'), this._packageJSON)
-		this.fs.write(this.destinationPath('tsconfig.json'), this._tsConfigJSON)
+		this.fs.writeJSON(this.destinationPath('package.json'), this._packageJSON)
+		this.fs.writeJSON(this.destinationPath('tsconfig.json'), this._tsConfigJSON)
 		this.fs.copyTpl(this.templatePath('test.ts'), this.destinationPath('test.ts'), {
-			title: this.appname,
+			title: this.answers.title,
 			url: this.answers.url,
 		})
 	}
@@ -72,9 +75,9 @@ export default class TestEnv extends Generator {
 		process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = prevValue
 	}
 
-	get _packageJSON(): string {
-		const pkg = {
-			name: this.appname,
+	get _packageJSON(): any {
+		return {
+			name: this.options.repoName,
 			version: '0.0.1',
 			description: 'Flood Element test script',
 			private: true,
@@ -96,12 +99,10 @@ export default class TestEnv extends Generator {
 				prettier: '^1.10.2',
 			},
 		}
-
-		return JSON.stringify(pkg, null, '  ')
 	}
 
-	get _tsConfigJSON(): string {
-		const config = {
+	get _tsConfigJSON(): any {
+		return {
 			compilerOptions: {
 				module: 'commonjs',
 				target: 'ES2017',
@@ -120,7 +121,5 @@ export default class TestEnv extends Generator {
 			},
 			exclude: ['node_modules', 'node_modules/**'],
 		}
-
-		return JSON.stringify(config, null, '  ')
 	}
 }

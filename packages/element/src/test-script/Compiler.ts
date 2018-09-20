@@ -7,7 +7,8 @@ import {
 import { CategorisedDiagnostics } from './TypescriptDiagnostics'
 import * as ts from 'typescript'
 import * as path from 'path'
-import { existsSync, readFileSync } from 'fs'
+import { existsSync } from 'fs'
+// import { existsSync, readFileSync } from 'fs'
 import { VMScript } from 'vm2'
 import * as parseComments from 'comment-parser'
 import { SourceUnmapper } from './SourceUnmapper'
@@ -47,22 +48,22 @@ const maybeNodeTypesPath = (require.resolve.paths('@types/node') || [])
 if (maybeNodeTypesPath === undefined) {
 	throw new Error('unable to find @types/node')
 }
-const nodeTypesPath: string = maybeNodeTypesPath
+// const nodeTypesPath: string = maybeNodeTypesPath
 
-const nodeTypesPkg = JSON.parse(readFileSync(path.resolve(nodeTypesPath, 'package.json'), 'utf8'))
-const nodeTypesVersion = nodeTypesPkg.version
+// const nodeTypesPkg = JSON.parse(readFileSync(path.resolve(nodeTypesPath, 'package.json'), 'utf8'))
+// const nodeTypesVersion = nodeTypesPkg.version
 
-const nodeTypesIndexPath = path.join(nodeTypesPath, 'index.d.ts')
+// const nodeTypesIndexPath = path.join(nodeTypesPath, 'index.d.ts')
 
-const nodeTypeReference = {
-	primary: false,
-	resolvedFileName: nodeTypesIndexPath,
-	packageId: {
-		name: '@types/node',
-		subModuleName: 'index.d.ts',
-		version: nodeTypesVersion,
-	},
-}
+// const nodeTypeReference = {
+// primary: false,
+// resolvedFileName: nodeTypesIndexPath,
+// packageId: {
+// name: '@types/node',
+// subModuleName: 'index.d.ts',
+// version: nodeTypesVersion,
+// },
+// }
 
 const NoModuleImportedTypescript = `Test scripts must import the module '@flood/element'
 Please add an import as follows:
@@ -255,13 +256,13 @@ export class TypeScriptTestScript implements ITestScript {
 					continue
 				}
 
-				if (moduleName === 'assert') {
-					resolvedModules.push({
-						resolvedFileName: nodeTypesIndexPath,
-						isExternalLibraryImport: true,
-					})
-					continue
-				}
+				// if (moduleName === 'assert') {
+				// resolvedModules.push({
+				// resolvedFileName: nodeTypesIndexPath,
+				// isExternalLibraryImport: true,
+				// })
+				// continue
+				// }
 
 				// TODO manually resolve all the allowed files
 
@@ -278,25 +279,25 @@ export class TypeScriptTestScript implements ITestScript {
 			return resolvedModules
 		}
 
-		host.resolveTypeReferenceDirectives = (
-			typeReferenceDirectiveNames: string[],
-			containingFile: string,
-		): ts.ResolvedTypeReferenceDirective[] => {
-			debug('resolveTypeReferenceDirectives', typeReferenceDirectiveNames, containingFile)
-			return typeReferenceDirectiveNames
-				.map(typeRef => {
-					if (typeRef === '@types/node') {
-						return nodeTypeReference
-					} else {
-						return ts.resolveTypeReferenceDirective(typeRef, containingFile, compilerOptions, host)
-							.resolvedTypeReferenceDirective!
-					}
-				})
-				.map(t => {
-					debug('res', t)
-					return t
-				})
-		}
+		// host.resolveTypeReferenceDirectives = (
+		// typeReferenceDirectiveNames: string[],
+		// containingFile: string,
+		// ): ts.ResolvedTypeReferenceDirective[] => {
+		// debug('resolveTypeReferenceDirectives', typeReferenceDirectiveNames, containingFile)
+		// return typeReferenceDirectiveNames
+		// .map(typeRef => {
+		// if (typeRef === '@types/node') {
+		// return nodeTypeReference
+		// } else {
+		// return ts.resolveTypeReferenceDirective(typeRef, containingFile, compilerOptions, host)
+		// .resolvedTypeReferenceDirective!
+		// }
+		// })
+		// .map(t => {
+		// debug('res', t)
+		// return t
+		// })
+		// }
 
 		const program = ts.createProgram(
 			[ambientDeclarationsFile, this.sandboxedFilename],

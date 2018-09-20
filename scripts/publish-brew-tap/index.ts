@@ -15,7 +15,7 @@ const git = which('git')
 
 const major = semver.major(version)
 const minor = semver.minor(version)
-// const patch = semver.patch(version)
+const patch = semver.patch(version)
 const prerelease = semver.prerelease(version)
 
 const eltURL = `https://registry.npmjs.org/@flood/element-cli/-/element-cli-${version}.tgz`
@@ -68,11 +68,9 @@ const writeBrew = root => {
 	if (prerelease) {
 		if (prerelease[0] === 'beta' || prerelease[0] === 'alpha') {
 			fs.writeFileSync(path.join(root, `element@${version}.rb`), formula(version), 'utf8')
-			fs.writeFileSync(
-				path.join(root, `element@${prerelease[0]}.rb`),
-				formula(prerelease[0]),
-				'utf8',
-			)
+
+			const ver = `${major}.${minor}.${patch}-${prerelease[0]}`
+			fs.writeFileSync(path.join(root, `element@${ver}.rb`), formula(ver), 'utf8')
 		}
 	} else {
 		fs.writeFileSync(path.join(root, `element.rb`), formula(''), 'utf8')

@@ -40,31 +40,6 @@ if (existsSync(indexTypescriptFile)) {
 	throw new Error('unable to find index.ts or index.d.ts')
 }
 
-// manually find @types/node
-const maybeNodeTypesPath = (require.resolve.paths('@types/node') || [])
-	.map(p => path.resolve(p, '@types/node'))
-	.find(existsSync)
-
-if (maybeNodeTypesPath === undefined) {
-	throw new Error('unable to find @types/node')
-}
-// const nodeTypesPath: string = maybeNodeTypesPath
-
-// const nodeTypesPkg = JSON.parse(readFileSync(path.resolve(nodeTypesPath, 'package.json'), 'utf8'))
-// const nodeTypesVersion = nodeTypesPkg.version
-
-// const nodeTypesIndexPath = path.join(nodeTypesPath, 'index.d.ts')
-
-// const nodeTypeReference = {
-// primary: false,
-// resolvedFileName: nodeTypesIndexPath,
-// packageId: {
-// name: '@types/node',
-// subModuleName: 'index.d.ts',
-// version: nodeTypesVersion,
-// },
-// }
-
 const NoModuleImportedTypescript = `Test scripts must import the module '@flood/element'
 Please add an import as follows:
 
@@ -255,17 +230,6 @@ export class TypeScriptTestScript implements ITestScript {
 					})
 					continue
 				}
-
-				// if (moduleName === 'assert') {
-				// resolvedModules.push({
-				// resolvedFileName: nodeTypesIndexPath,
-				// isExternalLibraryImport: true,
-				// })
-				// continue
-				// }
-
-				// TODO manually resolve all the allowed files
-
 				const result = ts.resolveModuleName(
 					moduleName,
 					containingFile,
@@ -278,26 +242,6 @@ export class TypeScriptTestScript implements ITestScript {
 			}
 			return resolvedModules
 		}
-
-		// host.resolveTypeReferenceDirectives = (
-		// typeReferenceDirectiveNames: string[],
-		// containingFile: string,
-		// ): ts.ResolvedTypeReferenceDirective[] => {
-		// debug('resolveTypeReferenceDirectives', typeReferenceDirectiveNames, containingFile)
-		// return typeReferenceDirectiveNames
-		// .map(typeRef => {
-		// if (typeRef === '@types/node') {
-		// return nodeTypeReference
-		// } else {
-		// return ts.resolveTypeReferenceDirective(typeRef, containingFile, compilerOptions, host)
-		// .resolvedTypeReferenceDirective!
-		// }
-		// })
-		// .map(t => {
-		// debug('res', t)
-		// return t
-		// })
-		// }
 
 		const program = ts.createProgram(
 			[ambientDeclarationsFile, this.sandboxedFilename],
@@ -319,7 +263,6 @@ export class TypeScriptTestScript implements ITestScript {
 
 		console.assert(outputFiles.length == 2, 'There should only be two output files')
 
-		// XXX tidy
 		this.source = (outputFiles.find(f => f.name.endsWith('.js')) || { text: '' }).text
 		this.sourceMap = (outputFiles.find(f => f.name.endsWith('.js.map')) || { text: '' }).text
 

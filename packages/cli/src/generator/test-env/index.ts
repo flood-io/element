@@ -24,12 +24,10 @@ export default class TestEnv extends Generator {
 	initializing() {
 		this.sourceRoot(path.join(packageRoot, 'templates'))
 
+		// assume dir is absolute
+		this.destinationRoot(this.options.dir)
 
-		if (path.isAbsolute(this.options.dir)) {
-			this.destinationRoot(this.options.dir)
-		} else {
-			this.destinationRoot(this.destinationPath(this.options.dir))
-		}
+		console.log(`initting into ${this.destinationRoot()}`)
 
 		this.options.repoName = path.basename(this.destinationPath())
 	}

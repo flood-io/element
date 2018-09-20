@@ -56,6 +56,7 @@ npm publish --access public dist
 
 echo '--- publishing @flood/element-cli'
 cd $root/packages/cli
+yarn build
 npm publish --access public
 
 echo '--- pushing new tags'

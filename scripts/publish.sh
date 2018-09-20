@@ -67,4 +67,5 @@ git push
 
 echo '--- publishing brew tap'
 cd $root
+yarn
 yarn publish:brew

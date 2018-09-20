@@ -42,11 +42,11 @@ fi
 case $branch in
   beta|feature/open-source-everything)
     echo --- versioning beta
-    yarn exec lerna -- version prerelease --force-publish --no-push --yes --ignore-changes scripts/publish.sh --allow-branch beta --allow-branch feature/open-source-everything --preid beta
+    yarn exec lerna -- version prerelease --force-publish --no-push --yes --ignore-changes scripts/publish.sh -m 'release %s\n[skip ci]' --allow-branch beta --allow-branch feature/open-source-everything --preid beta
     ;;
   master)
     echo --- versioning master
-    yarn exec lerna -- version patch --force-publish --no-push --yes --ignore-changes scripts/publish.sh --allow-branch master
+    yarn exec lerna -- version patch --force-publish --no-push --yes --ignore-changes scripts/publish.sh -m 'release %s\n[skip ci]' --allow-branch master
     ;;
   *)
     echo "branch is $branch which I won't publish"

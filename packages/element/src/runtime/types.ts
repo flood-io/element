@@ -234,6 +234,18 @@ export interface Browser {
 		},
 	): Promise<void>
 
+	/**
+	 * `sendKeys` simulates typing a list of strings on the keyboard.
+	 *
+	 * If a string is a member of <[Key]> it is pressed individually. Otherwise the string is typed.
+	 * This allows sendKeys to simulate a user typing control keys such as `Key.ENTER`.
+	 *
+	 * **Example:**
+	 * ```typescript
+	 * await browser.click("#input_address")
+	 * await browser.sendKeys("Hello, World!", Key.ENTER)
+	 * ```
+	 */
 	sendKeys(...keys: string[]): Promise<void>
 
 	/**

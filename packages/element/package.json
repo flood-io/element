@@ -8,7 +8,7 @@
 		"build": "./scripts/build.sh",
 		"build:watch": "tsc --watch",
 		"xxxprepublishOnly": "./scripts/build.sh",
-		"test": "mocha --trace-warnings -r ts-node/register src/**/*.spec.ts",
+		"test": "mocha --trace-warnings -r ts-node/register \"src/**/*.spec.ts\"",
 		"doc": "yarn typedoc && yarn typedoc:puppeteer && ts-node --project ./tsconfig.doc.json ./scripts/docs/docs.ts",
 		"doc:watch": "node --trace-warnings $(npm bin)/nodemon --ext ts --exec ts-node -- --project ./tsconfig.doc.json ./scripts/docs/docs.ts",
 		"doc:once": "ts-node --project ./tsconfig.doc.json ./scripts/docs/docs.ts",

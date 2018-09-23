@@ -65,7 +65,6 @@ export class TargetLocator implements ITargetLocator {
 			// Assume id or name attr
 			nextFrame = frames.find(frame => frame.name() === id) || null
 			if (!nextFrame) throw new Error(`Could not match frame by name or id: '${id}'`)
-			console.log(`Switching to Frame: '${nextFrame.name()}'`)
 			this.apply(nextFrame)
 		} else if (id instanceof ElementHandle) {
 			let tagName = await id.tagName()

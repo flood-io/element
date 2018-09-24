@@ -250,6 +250,24 @@ export class TypeScriptTestScript implements ITestScript {
 			return resolvedModules
 		}
 
+		if (debug.enabled) {
+			host.resolveTypeReferenceDirectives = (
+				typeReferenceDirectiveNames: string[],
+				containingFile: string,
+			): ts.ResolvedTypeReferenceDirective[] => {
+				debug('resolveTypeReferenceDirectives', typeReferenceDirectiveNames, containingFile)
+				return typeReferenceDirectiveNames
+					.map(typeRef => {
+						return ts.resolveTypeReferenceDirective(typeRef, containingFile, compilerOptions, host)
+							.resolvedTypeReferenceDirective!
+					})
+					.map(t => {
+						debug('resolution', t)
+						return t
+					})
+			}
+		}
+
 		const program = ts.createProgram(
 			[ambientDeclarationsFile, this.sandboxedFilename],
 			compilerOptions,

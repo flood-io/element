@@ -13,7 +13,7 @@ export class VisibleTextLocator extends BaseLocator {
 	get pageFunc(): EvaluateFn {
 		return (targetText: string, partial: boolean = true) => {
 			// TODO: Switch expressions if not partial
-			const expression = `//*[contains(text(), '${targetText}')]`
+			const expression = `//*[contains(text(), ${JSON.stringify(targetText)})]`
 			const iterator = document.evaluate(
 				expression,
 				document,

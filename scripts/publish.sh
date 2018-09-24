@@ -11,7 +11,24 @@ cd $root
 branch=
 if [[ ${BUILDKITE_BRANCH:-} ]]; then
   branch=$BUILDKITE_BRANCH
+else
+  branch=$(git rev-parse --abbrev-ref HEAD)
+fi
 
+case $branch in
+  beta|feature/open-source-everything)
+    echo --- versioning beta
+    ;;
+  master)
+    echo --- versioning master
+    ;;
+  *)
+    echo "--- branch is $branch which I won't publish"
+    exit 0
+    ;;
+esac
+
+if [[ ${BUILDKITE_BRANCH:-} ]]; then
   cd $root
 
   git config --global url."https://github.com".insteadOf git://github.com
@@ -26,8 +43,6 @@ if [[ ${BUILDKITE_BRANCH:-} ]]; then
   # ensure we're on the right commit - avoid race condition
   git reset --hard $BUILDKITE_COMMIT
   git branch
-else
-  branch=$(git rev-parse --abbrev-ref HEAD)
 fi
 
 npmrc=$HOME/.npmrc

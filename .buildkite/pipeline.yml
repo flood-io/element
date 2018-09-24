@@ -7,8 +7,8 @@ steps:
   - command: "scripts/ci/test.sh"
     label: ":llama: Test"
 
-  # - command: "scripts/ci/smoke.sh"
-    # label: ":fire: Smoke"
+  - command: "scripts/ci/smoke.sh"
+    label: ":fire: Smoke"
 
   - wait
 

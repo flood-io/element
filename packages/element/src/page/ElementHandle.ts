@@ -189,6 +189,16 @@ export class ElementHandle implements IElementHandle, Locator {
 	public async click(options?: ClickOptions): Promise<void> {
 		return this.element.click(options)
 	}
+
+	/**
+	 * Sends a click event to the element attached to this handle. If the element is
+	 * currently outside the viewport it will first scroll to that element.
+	 */
+	@wrapDescriptiveError(domError)
+	public async doubleClick(options?: ClickOptions): Promise<void> {
+		return this.element.click({ clickCount: 2, ...options })
+	}
+
 	/**
 	 * Schedules a command to clear the value of this element.
 	 * This command has no effect if the underlying DOM element is neither a text

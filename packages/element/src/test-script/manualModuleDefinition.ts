@@ -1,7 +1,8 @@
 import * as ts from 'typescript'
-import { join, resolve } from 'path'
-import { existsSync } from 'fs'
+import { join, resolve, dirname, basename } from 'path'
+import { existsSync, readFileSync } from 'fs'
 
+// TODO try to use typescript's resolution support
 export function manualModuleDefinition(name: string): ts.ResolvedModule {
 	const modulePath = (require.resolve.paths(name) || []).map(p => resolve(p, name)).find(existsSync)
 
@@ -14,5 +15,24 @@ export function manualModuleDefinition(name: string): ts.ResolvedModule {
 	return {
 		resolvedFileName,
 		isExternalLibraryImport: true,
+	}
+}
+
+function readPackage(root: string): any {
+	return JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
+}
+
+export function manualModuleResolution(name: string): ts.ResolvedTypeReferenceDirective {
+	const { resolvedFileName } = manualModuleDefinition(name)
+	const { version } = readPackage(dirname(resolvedFileName))
+
+	return {
+		primary: true,
+		resolvedFileName,
+		packageId: {
+			name,
+			subModuleName: basename(resolvedFileName),
+			version,
+		},
 	}
 }

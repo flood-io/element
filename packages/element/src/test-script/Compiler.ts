@@ -15,7 +15,7 @@ import { SourceUnmapper } from './SourceUnmapper'
 import * as debugFactory from 'debug'
 import { tmpdir } from 'os'
 import * as findRoot from 'find-root'
-import { manualModuleDefinition } from './manualModuleDefinition'
+import { manualModuleDefinition, manualModuleResolution } from './manualModuleDefinition'
 
 const debug = debugFactory('element:test-script:compiler')
 
@@ -42,6 +42,7 @@ if (existsSync(indexTypescriptFile)) {
 }
 
 const fakerTypesModuleDefinition = manualModuleDefinition('@types/faker')
+const fakerTypesResolution = manualModuleResolution('@types/faker')
 
 const NoModuleImportedTypescript = `Test scripts must import the module '@flood/element'
 Please add an import as follows:
@@ -250,22 +251,24 @@ export class TypeScriptTestScript implements ITestScript {
 			return resolvedModules
 		}
 
-		if (debug.enabled) {
-			host.resolveTypeReferenceDirectives = (
-				typeReferenceDirectiveNames: string[],
-				containingFile: string,
-			): ts.ResolvedTypeReferenceDirective[] => {
-				debug('resolveTypeReferenceDirectives', typeReferenceDirectiveNames, containingFile)
-				return typeReferenceDirectiveNames
-					.map(typeRef => {
+		host.resolveTypeReferenceDirectives = (
+			typeReferenceDirectiveNames: string[],
+			containingFile: string,
+		): ts.ResolvedTypeReferenceDirective[] => {
+			debug('resolveTypeReferenceDirectives', typeReferenceDirectiveNames, containingFile)
+			return typeReferenceDirectiveNames
+				.map(typeRef => {
+					if (typeRef === 'faker') {
+						return fakerTypesResolution
+					} else {
 						return ts.resolveTypeReferenceDirective(typeRef, containingFile, compilerOptions, host)
 							.resolvedTypeReferenceDirective!
-					})
-					.map(t => {
-						debug('resolution', t)
-						return t
-					})
-			}
+					}
+				})
+				.map(t => {
+					debug('resolution', t)
+					return t
+				})
 		}
 
 		const program = ts.createProgram(

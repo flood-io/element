@@ -15,6 +15,7 @@ import { SourceUnmapper } from './SourceUnmapper'
 import * as debugFactory from 'debug'
 import { tmpdir } from 'os'
 import * as findRoot from 'find-root'
+import { manualModuleDefinition } from './manualModuleDefinition'
 
 const debug = debugFactory('element:test-script:compiler')
 
@@ -39,6 +40,8 @@ if (existsSync(indexTypescriptFile)) {
 } else {
 	throw new Error('unable to find index.ts or index.d.ts')
 }
+
+const fakerTypesModuleDefinition = manualModuleDefinition('@types/faker')
 
 const NoModuleImportedTypescript = `Test scripts must import the module '@flood/element'
 Please add an import as follows:
@@ -228,6 +231,10 @@ export class TypeScriptTestScript implements ITestScript {
 						resolvedFileName: indexModuleFile,
 						isExternalLibraryImport: true,
 					})
+					continue
+				}
+				if (moduleName === 'faker') {
+					resolvedModules.push(fakerTypesModuleDefinition)
 					continue
 				}
 				const result = ts.resolveModuleName(

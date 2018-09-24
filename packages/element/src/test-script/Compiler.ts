@@ -41,8 +41,18 @@ if (existsSync(indexTypescriptFile)) {
 	throw new Error('unable to find index.ts or index.d.ts')
 }
 
-const fakerTypesModuleDefinition = manualModuleDefinition('@types/faker')
-const fakerTypesResolution = manualModuleResolution('@types/faker')
+const indexModuleDefinition = {
+	resolvedFileName: indexModuleFile,
+	isExternalLibraryImport: true,
+}
+const manualModuleDefinitions: { [key: string]: ts.ResolvedModule | undefined } = {
+	'@flood/chrome': indexModuleDefinition,
+	'@flood/element': indexModuleDefinition,
+	faker: manualModuleDefinition('@types/faker'),
+}
+const manualTypeResolutions: { [key: string]: ts.ResolvedTypeReferenceDirective | undefined } = {
+	faker: manualModuleResolution('@types/faker'),
+}
 
 const NoModuleImportedTypescript = `Test scripts must import the module '@flood/element'
 Please add an import as follows:
@@ -226,25 +236,17 @@ export class TypeScriptTestScript implements ITestScript {
 
 			for (let moduleName of moduleNames) {
 				debug('resolve', moduleName)
-				if (moduleName === '@flood/chrome' || moduleName === '@flood/element') {
-					debug('resolving @flood/element as %s', indexModuleFile)
-					resolvedModules.push({
-						resolvedFileName: indexModuleFile,
-						isExternalLibraryImport: true,
-					})
-					continue
+				let result = manualModuleDefinitions[moduleName]
+
+				if (result === undefined) {
+					result = ts.resolveModuleName(
+						moduleName,
+						containingFile,
+						compilerOptions,
+						host,
+						moduleResolutionCache,
+					).resolvedModule! // original-TODO: GH#18217
 				}
-				if (moduleName === 'faker') {
-					resolvedModules.push(fakerTypesModuleDefinition)
-					continue
-				}
-				const result = ts.resolveModuleName(
-					moduleName,
-					containingFile,
-					compilerOptions,
-					host,
-					moduleResolutionCache,
-				).resolvedModule! // original-TODO: GH#18217
 
 				resolvedModules.push(result)
 			}
@@ -258,12 +260,18 @@ export class TypeScriptTestScript implements ITestScript {
 			debug('resolveTypeReferenceDirectives', typeReferenceDirectiveNames, containingFile)
 			return typeReferenceDirectiveNames
 				.map(typeRef => {
-					if (typeRef === 'faker') {
-						return fakerTypesResolution
-					} else {
-						return ts.resolveTypeReferenceDirective(typeRef, containingFile, compilerOptions, host)
-							.resolvedTypeReferenceDirective!
+					let typeResolution = manualTypeResolutions[typeRef]
+
+					if (typeResolution === undefined) {
+						typeResolution = ts.resolveTypeReferenceDirective(
+							typeRef,
+							containingFile,
+							compilerOptions,
+							host,
+						).resolvedTypeReferenceDirective!
 					}
+
+					return typeResolution
 				})
 				.map(t => {
 					debug('resolution', t)

@@ -57,7 +57,11 @@ async function runTest(testScript: string, expectPass: boolean): Promise<boolean
 }
 
 function detectError(data: string): boolean {
-	return /xxxx Step .* failed/.test(data) || /internal flood-chrome error/.test(data)
+	return (
+		/xxxx Step .* failed/.test(data) ||
+		/internal flood-chrome error/.test(data) ||
+		/unable to compile script/.test(data)
+	)
 }
 
 async function runAll() {

@@ -64,7 +64,7 @@ function detectError(data: string): boolean {
 	)
 }
 
-async function runAll() {
+async function runAll(): Promise<number> {
 	// DEBUG filter
 	// passTests = passTests.filter(x => /googling/.test(x))
 	// failTests = []
@@ -89,9 +89,13 @@ async function runAll() {
 			const resultDesc = expectPass ? 'expected to pass, but failed' : 'expected to fail but passed'
 			console.log(chalk`- {red ${basename(test)}} ${resultDesc}`)
 		}
+		return 1
 	} else {
 		console.log(chalk`{green all scripts ran as expected}`)
+		return 0
 	}
 }
 
 runAll()
+	.then(code => process.exit(code))
+	.catch(() => process.exit(1))

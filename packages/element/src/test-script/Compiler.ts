@@ -15,6 +15,7 @@ import { SourceUnmapper } from './SourceUnmapper'
 import * as debugFactory from 'debug'
 import { tmpdir } from 'os'
 import * as findRoot from 'find-root'
+import { manualModuleDefinition } from './manualModuleDefinition'
 
 const debug = debugFactory('element:test-script:compiler')
 
@@ -39,6 +40,8 @@ if (existsSync(indexTypescriptFile)) {
 } else {
 	throw new Error('unable to find index.ts or index.d.ts')
 }
+
+const fakerTypesModuleDefinition = manualModuleDefinition('@types/faker')
 
 const NoModuleImportedTypescript = `Test scripts must import the module '@flood/element'
 Please add an import as follows:
@@ -230,6 +233,10 @@ export class TypeScriptTestScript implements ITestScript {
 					})
 					continue
 				}
+				if (moduleName === 'faker') {
+					resolvedModules.push(fakerTypesModuleDefinition)
+					continue
+				}
 				const result = ts.resolveModuleName(
 					moduleName,
 					containingFile,
@@ -253,7 +260,9 @@ export class TypeScriptTestScript implements ITestScript {
 		this.diagnostics = new CategorisedDiagnostics(host, this.filenameMapper.bind(this))
 
 		// sortAndDeduplicateDiagnostics when its released
-		const allDiagnostics = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics)
+		let allDiagnostics = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics)
+
+		allDiagnostics = ts.sortAndDeduplicateDiagnostics(allDiagnostics)
 
 		allDiagnostics.forEach(diagnostic => this.diagnostics.add(diagnostic))
 

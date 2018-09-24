@@ -1,29 +1,27 @@
 import { expect } from 'chai'
 import 'mocha'
 import { DogfoodServer } from '../../../tests/support/fixture-server'
-import PuppeteerDriver from '../../driver/Puppeteer'
+import { launchPuppeteer, testPuppeteer } from '../../../tests/support/launch-browser'
 import { Page } from 'puppeteer'
 import { Until } from '../Until'
 import { By } from '../By'
 
 let dogfoodServer = new DogfoodServer()
 
-let page: Page, driver: PuppeteerDriver, puppeteer
+let page: Page, puppeteer: testPuppeteer
 
 describe('Condition', function() {
 	this.timeout(30e3)
 	before(async () => {
 		await dogfoodServer.start()
-		driver = new PuppeteerDriver()
-		await driver.launch()
-		puppeteer = await driver.client()
+		puppeteer = await launchPuppeteer()
 		page = puppeteer.page
 		page.on('console', msg => console.log(`>> console.${msg.type}: ${msg.text}`))
 	})
 
 	after(async () => {
 		await dogfoodServer.close()
-		await driver.close()
+		await puppeteer.close()
 	})
 
 	beforeEach(async () => {

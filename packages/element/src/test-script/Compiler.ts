@@ -253,7 +253,9 @@ export class TypeScriptTestScript implements ITestScript {
 		this.diagnostics = new CategorisedDiagnostics(host, this.filenameMapper.bind(this))
 
 		// sortAndDeduplicateDiagnostics when its released
-		const allDiagnostics = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics)
+		let allDiagnostics = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics)
+
+		allDiagnostics = ts.sortAndDeduplicateDiagnostics(allDiagnostics)
 
 		allDiagnostics.forEach(diagnostic => this.diagnostics.add(diagnostic))
 

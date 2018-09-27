@@ -6,21 +6,40 @@ Flood Element works by spinning up hundreds or even thousands of instances of Go
 
 > This project is currently in beta and APIs are subject to change.
 
-![Flood Element Example code](./docs/code-snippet.png)
+![Flood Element Example code](./packages/element/docs/code-snippet.png)
 
 # Quickstart
 
+### 1. Install Element
+
+#### On macOS
+
+Select your preferred installation method:
+
+**Install using NPM:**
+
 First, make sure you have installed the [latest version of NodeJS](https://nodejs.org) for your platform.
 
-#### 1. Download Flood CLI
+```bash
+# Using yarn
+yarn global add @flood/element-cli
 
-**On macOS**, install using homebrew:
+# Using npm
+npm install -g @flood/element-cli
+
+# Verify install
+element --version
+```
+
+**Install using homebrew:**
 
 ```bash
 brew install flood-io/taps/flood
 ```
 
-**On linux**, download the [latest release](https://github.com/flood-io/cli/releases/latest) for your platform, then extract and install it:
+#### On linux
+
+Download the [latest release](https://github.com/flood-io/cli/releases/latest) for your platform, then extract and install it:
 
 ```bash
 # assuming you're installing version 1.0.0 on linux
@@ -35,37 +54,52 @@ mv flood/flood /usr/local/bin/flood
 rm -rf flood
 ```
 
-**On Windows:**
+#### On Windows (EXPERIMENTAL)
 
-We're still working on a Windows build, stay tuned.
-
-#### 2. Initialize Project
-
-The very first thing you should do is authenticate the `flood` tool with your Flood account. _If you don't have an account, you can sign up for free at [Flood](https://flood.io)._
+First, make sure you have installed the [latest version of NodeJS](https://nodejs.org) for your platform.
 
 ```bash
-# Login
-flood login
+# Using yarn
+yarn global add @flood/element-cli
 
-# Initialize a new project
-flood init my-flood-element-test
+# Using npm
+npm install -g @flood/element-cli
 
-# Change to this directory and install dependencies
-cd my-flood-element-test
-yarn install
+# Verify install
+element --version
 ```
+
+### 2. Initialize Project
+
+Using the `element` command, you can generate a new project or generate a test within your existing project.
+
+**Generate a new project**
+
+```bash
+element init ./my-element-project
+```
+
+This will create a new project an test.ts file with a single step stubbed out for you.
+
+**Or, generate a new file**
+
+```bash
+element generate load-test-dashboard
+```
+
+This will create a new file with a single step stubbed out for you.
 
 #### 3. Write and validate your script
 
 Edit `test.ts` in your editor of choice. To learn more about the scripting capabilities we've put together a detailed tutorial on [testing the "Flood Merchandice Store"](examples/scenario_1_wordpress.md).
 
-As you're writing your script, you can validate it by running it on the Flood validation service:
+As you're writing your script, you can validate it by running it locally using `element run`:
 
 ```bash
-flood verify test.ts
+element run test.ts
 ```
 
-This will output a detailed list of steps and configuration options it has read from your script, then execute it within the Flood Element Environment.
+This will run the script in an instance of Chrome and output the results locally.
 
 #### 4. Run a real Load Test on [Flood](https://flood.io)
 

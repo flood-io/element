@@ -15,12 +15,15 @@ else
   branch=$(git rev-parse --abbrev-ref HEAD)
 fi
 
+npm_tag=
 case $branch in
   beta|feature/open-source-everything)
     echo --- versioning beta
+    npm_tag=beta
     ;;
   master)
     echo --- versioning master
+    npm_tag=latest
     ;;
   *)
     echo "--- branch is $branch which I won't publish"
@@ -50,6 +53,7 @@ if [[ ! -f $npmrc ]]; then
 	echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > $npmrc
 fi
 
+
 case $branch in
   beta|feature/open-source-everything)
     echo --- versioning beta
@@ -67,12 +71,12 @@ esac
 echo '--- publishing @flood/element'
 cd $root/packages/element
 ./scripts/build.sh
-npm publish --access public dist
+npm publish --access public --tag $npm_tag dist
 
 echo '--- publishing @flood/element-cli'
 cd $root/packages/cli
 yarn build
-npm publish --access public
+npm publish --access public --tag $npm_tag
 
 echo '--- pushing new tags'
 git push

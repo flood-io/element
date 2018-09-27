@@ -262,6 +262,9 @@ export const builder = (yargs: Argv) => {
 		.option('verbose', {
 			describe: 'Verbose mode',
 		})
+		.positional('file', {
+			describe: 'the test script to run',
+		})
 		.check(({ file, chrome }) => {
 			let fileErr = checkFile(file)
 			if (fileErr) return fileErr

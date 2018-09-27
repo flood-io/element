@@ -36,8 +36,8 @@ if [[ ${BUILDKITE_BRANCH:-} ]]; then
 
   git config --global url."https://github.com".insteadOf git://github.com
   git config --global url."https://${GITHUB_TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
-  git config --global user.email "accounts@flood.io"
-  git config --global user.name "flud-buildbox"
+  git config --global user.email ${GIT_EMAIL}
+  git config --global user.name ${GIT_USERNAME}
 
   git remote set-url origin https://${GITHUB_TOKEN}:x-oauth-basic@github.com/flood-io/element
   cat .git/config

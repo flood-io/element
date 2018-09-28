@@ -2,7 +2,7 @@
 
 ## lerna & yarn workspaces
 
-We're using [yarn workspaces](https://yarnpkg.com/en/docs/workspaces) to manage dependencies, and [lerna 3.x](https://github.com/lerna/lerna) for publishing to npm and other monorepo tasks.
+We're using [yarn workspaces](https://yarnpkg.com/en/docs/workspaces) to manage dependencies, and [lerna 3.x](https://github.com/lerna/lerna) for versioning and other monorepo tasks.
 
 ## publishing
 

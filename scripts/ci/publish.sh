@@ -21,4 +21,5 @@ docker run --rm \
   -e GIT_USERNAME \
   -e BUILDKITE_BRANCH \
   -e BUILDKITE_COMMIT \
+  -e DEBUG \
   --env-file $test_env_file $DOCKER_IMAGE make publish-ci

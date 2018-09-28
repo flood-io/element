@@ -42,7 +42,12 @@ if [[ ${BUILDKITE_BRANCH:-} ]]; then
   git remote set-url origin https://${GITHUB_TOKEN}:x-oauth-basic@github.com/flood-io/element
   cat .git/config
   git fetch
-  git checkout --track origin/$BUILDKITE_BRANCH
+
+  # master seems to be setup ok already
+  if [[ $BUILDKITE_BRANCH != "master" ]]; then
+    git checkout --track origin/$BUILDKITE_BRANCH
+  fi
+
   # ensure we're on the right commit - avoid race condition
   git reset --hard $BUILDKITE_COMMIT
   git branch

@@ -96,8 +96,9 @@ echo '--- publishing @flood/element-cli'
 cd $root/packages/cli
 yarn build
 
-echo '--- pushing new tags'
+echo '--- pushing with tags'
 git push
+git push --tags
 
 echo '--- building @flood/element'
 cd $root/packages/element

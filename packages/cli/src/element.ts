@@ -129,9 +129,10 @@ function brewUpdateMessage(version: string, distTag: string, update: update): st
 		if (distTag === 'latest') {
 			brewSpec = 'element'
 		} else {
-			const major = semver.major(version)
-			const minor = semver.minor(version)
-			const patch = semver.patch(version)
+			const { latest } = update
+			const major = semver.major(latest)
+			const minor = semver.minor(latest)
+			const patch = semver.patch(latest)
 			brewSpec = `element@${major}.${minor}.${patch}-${distTag}`
 		}
 		return chalk`Get it by running {greenBright brew upgrade ${brewSpec}}`
@@ -145,6 +146,6 @@ function yarnUpdateMessage(version: string, distTag: string, update: update): st
 }
 
 // fallback
-function npmUpdateMessage(version: string, distTag: string, update: update): string | undefined {
+function npmUpdateMessage(version: string, distTag: string, update: update): string {
 	return chalk`Get it by running {greenBright npm -g update @flood/element-cli@${distTag}}`
 }

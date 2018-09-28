@@ -2,9 +2,9 @@ import { suite, By, Until, TestSettings } from '@flood/element'
 import * as assert from 'assert'
 
 export const settings: TestSettings = {
-	loopCount: 1,
+	// loopCount: 1,
 	clearCache: false,
-	clearCookies: false,
+	clearCookies: true,
 	responseTimeMeasurement: 'step',
 	userAgent: 'I AM ROBOT',
 	actionDelay: 1,

@@ -59,5 +59,8 @@ typings/
 
 # next.js build output
 .next
-/examples/navigating/test
-/examples/flood-challenge/flood-challenge
+
+old-packages
+
+packages/*/package-lock.json
+packages/*/yarn.lock

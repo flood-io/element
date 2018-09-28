@@ -97,7 +97,7 @@ cd $root/packages/cli
 yarn build
 
 echo '--- pushing new tags'
-git push
+git push --tags
 
 echo '--- building @flood/element'
 cd $root/packages/element

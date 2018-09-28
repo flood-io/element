@@ -58,16 +58,21 @@ end
 function versionToBrewClassSuffix(version: string): string {
 	if (version.length === 0) return ''
 
-	version = version.replace(/[-_.\s]([a-zA-Z0-9])/g, (x: string, ...captures: any[]): string => {
-		return captures[0].toUpperCase()
-	})
+	version = version.replace(
+		/[-_.\s]([a-zA-Z0-9])/g,
+		(x: string, ...captures: any[]): string => {
+			return captures[0].toUpperCase()
+		},
+	)
 	return `AT${version}`
 }
 
 const writeBrew = root => {
 	if (prerelease) {
 		if (prerelease[0] === 'beta' || prerelease[0] === 'alpha') {
-			fs.writeFileSync(path.join(root, `element@${version}.rb`), formula(version), 'utf8')
+			// this writes formula for each beta versione.g. element@0.0.2-beta.16
+			// which isn't terribly useful
+			// fs.writeFileSync(path.join(root, `element@${version}.rb`), formula(version), 'utf8')
 
 			const ver = `${major}.${minor}.${patch}-${prerelease[0]}`
 			fs.writeFileSync(path.join(root, `element@${ver}.rb`), formula(ver), 'utf8')

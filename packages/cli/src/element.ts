@@ -1,15 +1,13 @@
 import * as argv from 'yargs'
 import chalk from 'chalk'
 import { join } from 'path'
-const debug = require('debug')('element:main')
 import { error } from './utils/out/error'
 import ownPackage from './utils/ownPackage'
 import * as semver from 'semver'
 import * as commandExists from 'command-exists'
 
-// import { info } from './utils/out/info'
-// import { existsSync } from 'fs'
-// import { resolve } from 'path'
+const debug = require('debug')('element:main')
+
 import * as checkForUpdate from 'update-check'
 import * as ms from 'ms'
 
@@ -19,12 +17,15 @@ export const handleUnexpected = (err: Error) => {
 	debug('handling unexpected error')
 
 	console.error(error(`An unexpected error occurred!\n  ${err.stack} ${err.stack}`))
+	console.error(
+		'this is a bug, please report it here https://github.com/flood-io/element/issues/new?template=bug_report.md',
+	)
 
 	process.exit(1)
 }
 
 const handleRejection = (err: Error) => {
-	debug('handling rejection')
+	debug('handling rejection', err)
 
 	if (err) {
 		if (err instanceof Error) {
@@ -33,8 +34,11 @@ const handleRejection = (err: Error) => {
 			console.error(error(`An unexpected rejection occurred\n  ${err}`))
 		}
 	} else {
-		console.error(error('An unexpected empty rejection occurred'))
+		console.error(error(`An unexpected empty rejection occurred\n rejection: ${err}`))
 	}
+	console.error(
+		'this is a bug, please report it here https://github.com/flood-io/element/issues/new?template=bug_report.md',
+	)
 
 	process.exit(1)
 }

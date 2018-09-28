@@ -19,3 +19,5 @@ declare module 'boxen'
 declare module 'update-check'
 
 declare module 'ms'
+
+// declare module 'bluebird'

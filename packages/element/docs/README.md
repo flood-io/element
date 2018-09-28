@@ -40,11 +40,13 @@ element --version
 
 **On macOS:**
 
-Install `element` using homebrew, including dependencies such as NodeJS:
+If you are on macOS and don't already have NodeJS installed, consider installing `element` using homebrew.
 
 ```bash
 brew install flood-io/taps/element
 ```
+
+This will install `element` along with anything else it needs to run, such as NodeJS.
 
 ### 2. Initialize Your Project
 

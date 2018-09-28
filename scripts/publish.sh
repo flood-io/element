@@ -43,8 +43,12 @@ if [[ ${BUILDKITE_BRANCH:-} ]]; then
   cat .git/config
   git fetch
 
-  # master seems to be setup ok already
-  if [[ $BUILDKITE_BRANCH != "master" ]]; then
+  # if the branch exists, just check it out
+  if git rev-parse $BUILDKITE_BRANCH 2> /dev/null; then
+    git checkout $BUILDKITE_BRANCH
+
+  # otherwise checkout with track
+  else
     git checkout --track origin/$BUILDKITE_BRANCH
   fi
 

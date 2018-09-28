@@ -61,7 +61,6 @@ export async function main() {
 		.help('help')
 		.showHelpOnFail(true)
 		.recommendCommands()
-		.strict()
 		.example(
 			'$0 run ./examples/flood-challenge.ts',
 			'Run the Flood Challenge example script in your local browser',

@@ -1,4 +1,4 @@
-import { join, relative } from 'path'
+import { join, relative, resolve, isAbsolute } from 'path'
 import * as camelcase from 'lodash.camelcase'
 // import * as upperFirst from 'lodash.upperfirst'
 import * as glob from 'glob'
@@ -14,6 +14,7 @@ import { ParamType, typeToString } from './Formatters'
 import * as debugFactory from 'debug'
 const debug = debugFactory('element:docs')
 
+const repoRoot = join(__dirname, '../../../..')
 const root = join(__dirname, '../..')
 const bookDir = join(root, 'docs')
 
@@ -105,9 +106,10 @@ class DocsParser {
 	public puppeteerTypes: any
 
 	constructor(public docsJSON: any, public puppeteerJSON: any) {
-		debug('README', join(root, 'README.md'), join(bookDir, 'README.md'))
 		mkdirpSync(bookDir)
-		copySync(join(root, 'README.md'), join(bookDir, 'README.md'))
+
+		debug('README', join(repoRoot, 'README.md'), join(bookDir, 'README.md'))
+		copySync(join(repoRoot, 'README.md'), join(bookDir, 'README.md'))
 
 		for (const [key, target] of Object.entries(externalRefs)) {
 			this.addReference(key, target)
@@ -143,6 +145,8 @@ class DocsParser {
 
 		console.log('writing')
 		this.writeDocsToFiles()
+
+		this.rewriteReadmePaths()
 	}
 
 	private processTopLevelNode(node) {
@@ -360,7 +364,12 @@ class DocsParser {
 
 		let params: any[] = []
 		parameters.forEach(p => {
-			let { name, type, flags: { isOptional = false }, defaultValue } = p
+			let {
+				name,
+				type,
+				flags: { isOptional = false },
+				defaultValue,
+			} = p
 			let desc = commentFromNode(p)
 			params.push({ name, desc, type, isOptional, defaultValue })
 		})
@@ -578,6 +587,44 @@ class DocsParser {
 			}),
 		])
 	}
+
+	private rewriteReadmePaths() {
+		const readmeFile = join(bookDir, 'README.md')
+		let readme = readFileSync(readmeFile, 'utf8')
+
+		const linkRe = /\[([^\]]+)?\]\(([^)]+)\)/g
+		readme = searchAndReplace(
+			readme,
+			linkRe,
+			(text: string | null, url: string): string | undefined => {
+				if (!url.startsWith('http') && !url.startsWith('#') && !isAbsolute(url)) {
+					const full = resolve(repoRoot, url)
+					url = relative(bookDir, full)
+					return `[${text}](./${url})`
+				}
+				return
+			},
+		)
+
+		writeFileSync(readmeFile, readme, 'utf8')
+	}
+}
+
+function searchAndReplace(
+	input: string,
+	re: RegExp,
+	transformer: (...matches: string[]) => string | undefined,
+): string {
+	let match
+	while ((match = re.exec(input)) !== null) {
+		const [str, ...matches] = match
+
+		const transformed = transformer(...matches)
+		if (transformed !== undefined) {
+			input = input.replace(str, transformed)
+		}
+	}
+	return input
 }
 
 const externalRefs = {

@@ -1,0 +1,8 @@
+src
+tmp
+logs
+*.tgz
+*.ts
+!dist
+!dist/**/*.js
+!templates/**/*

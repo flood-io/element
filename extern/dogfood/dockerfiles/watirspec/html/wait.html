@@ -1,0 +1,84 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>wait test</title>
+    <script type="text/javascript" charset="utf-8">
+
+      function setTimeoutAddDisplay(id, current_id, timeout) {
+          setTimeoutAdd(id, "none", id, current_id, timeout);
+          setTimeoutDisplay(id, "block", timeout*2)
+      }
+
+      function setTimeoutDisplay(id, display, timeout) {
+          setTimeout(function() {
+              document.getElementById(id).style.display = display;
+          }, timeout);
+      }
+
+      function setTimeoutAdd(id, display, text, existing_id, timeout) {
+          var newDiv = document.createElement("div");
+          newDiv.setAttribute("id", id);
+          newDiv.style.display = display;
+          newDiv.appendChild(document.createTextNode(text));
+
+          var currentDiv = document.getElementById(existing_id);
+
+          setTimeout(function() {
+              document.body.insertBefore(newDiv, currentDiv);
+          }, timeout);
+      }
+
+      function setTimeoutRemove(id, timeout) {
+          setTimeout(function() {
+              var e = document.getElementById(id);
+              e.parentNode.removeChild(e);
+          }, timeout);
+      }
+
+      function setDisabled(id, disabled, timeout) {
+        setTimeout(function() {
+          document.getElementById(id).disabled = disabled;
+        }, timeout);
+      }
+
+      function changeName(id) {
+          document.getElementById(id).name = 'different';
+      }
+    </script>
+  </head>
+
+  <body>
+    <div id="foo" style="display:block;">foo</div>
+    <div id="bar" style="display:none;" onclick='this.innerHTML = "changed"'>bar</div>
+    <a id="show_bar" href="#" onclick="setTimeoutDisplay('bar', 'block', 500);">show bar</a>
+    <a id="hide_foo" href="#" onclick="setTimeoutDisplay('foo', 'none', 500);">hide foo</a>
+    <a id="remove_foo" href="#" onclick="setTimeoutRemove('foo', 1000);">remove foo</a>
+    <a id="add_foobar" href="#" onclick="setTimeoutAddDisplay('foobar', 'bar', 1000);">add foobar</a>
+    <div id="buttons">
+      <button id="btn" type="button" onclick="setDisabled('btn', true, 0)" disabled>Click To Disable!</button>
+      <a id="enable_btn" href="#" onclick="setDisabled('btn', false, 500);">enable btn</a>
+      <button id="btn2" style="display:none;" type="button" disabled>Hidden and Disabled</button>
+      <a id="show_and_enable_btn" href="#" onclick="setTimeoutDisplay('btn2', 'block', 500); setDisabled('btn2', false, 1000);">
+        show and enable btn
+      </a>
+    </div>
+    <div>
+      <a id="change_select" href="#" onclick="changeName('add_select');">change select list</a>
+      <a id="add_select" name="add_select" href="#" onclick="setTimeoutDisplay('languages', 'block', 500);">show select list</a>
+    </div>
+    <form>
+      <fieldset>
+        <select name="languages" id="languages", style="display: none">
+          <option id="danish" value="1">Danish</option>
+          <option selected="selected" value="2">English</option>
+          <option selected="selected" value="3">Norwegian</option>
+          <option value="4" disabled>Russian</option>
+          <option>Swedish</option>
+        </select> <br />
+      </fieldset>
+    </form>
+    <div id="also_hidden" style="display:none;">
+      <div id="hidden_child">Nothing to see here</div>
+    </div>
+  </body>
+</html>

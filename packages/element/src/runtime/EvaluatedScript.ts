@@ -47,7 +47,6 @@ function createVirtualMachine(floodElementActual: any): NodeVM {
 export class EvaluatedScript implements TestScriptErrorMapper {
 	public steps: Step[]
 	public settings: ConcreteTestSettings
-	public testData: TestDataSource<any>
 
 	private vm: NodeVM
 
@@ -111,6 +110,20 @@ export class EvaluatedScript implements TestScriptErrorMapper {
 		return this._testDataLoaders
 	}
 
+	private _testData: TestDataSource<any>
+	public set testData(testDataSource: TestDataSource<any>) {
+		this._testData = testDataSource
+		this._testData.setInstanceID(this.sequence.toString())
+	}
+
+	public get testData(): TestDataSource<any> {
+		return this._testData
+	}
+
+	public get sequence(): number {
+		return this.runEnv.stepEnv().SEQUENCE
+	}
+
 	public evaluate(): EvaluatedScript {
 		debug('evaluating')
 
@@ -160,7 +173,6 @@ export class EvaluatedScript implements TestScriptErrorMapper {
 					callback: (this: null, s: StepDefinition<T>) => void,
 				) => {
 					evalScope.testData = expect(data, 'TestData is not present')
-					evalScope.testData.setInstanceID(ENV.SEQUENCE.toString())
 					return callback
 				},
 			},

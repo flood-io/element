@@ -89,8 +89,6 @@ case $branch in
     exit 0
 esac
 
-exit 1
-
 echo '--- building @flood/element'
 cd $root/packages/element
 ./scripts/build.sh

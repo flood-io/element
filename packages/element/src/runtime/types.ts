@@ -100,6 +100,8 @@ export interface Browser {
 	 */
 	setUserAgent(userAgent: string): Promise<void>
 
+	setExtraHTTPHeaders(headers: { [key: string]: string }): Promise<void>
+
 	/**
 	 * Instructs the browser to navigate to a specific page. This is typically used as the
 	 * entrypoint to your test, as the first instruction it is also responsible for creating

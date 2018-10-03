@@ -80,13 +80,16 @@ case $branch in
     yarn exec lerna -- version prerelease --force-publish --no-push --yes --ignore-changes scripts/publish.sh -m "release %s\n[skip ci]" --preid beta
     ;;
   master)
-    echo --- versioning master
-    yarn exec lerna -- version patch --force-publish --no-push --yes --ignore-changes scripts/publish.sh -m "release %s\n[skip ci]"
+    : ${MASTER_SEMVER_BUMP:=patch}
+    echo --- versioning master, incrementing $MASTER_SEMVER_BUMP level
+    yarn exec lerna -- version $MASTER_SEMVER_BUMP --force-publish --no-push --yes --ignore-changes scripts/publish.sh -m "release %s\n[skip ci]"
     ;;
   *)
     echo "branch is $branch which I won't publish"
     exit 0
 esac
+
+exit 1
 
 echo '--- building @flood/element'
 cd $root/packages/element

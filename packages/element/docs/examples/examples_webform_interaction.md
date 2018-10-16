@@ -40,6 +40,18 @@ Dropdown listbox values can simply be chosen by using the selectByValue function
 await browser.selectByValue(By.id('challenger_age'), '28')
 ``` 
 
+## Interacting with Checkboxes and Radio buttons
+
+You only need to click a checkbox or a radio button to interact it. First, select the checkbox or radio button with your preferred method, then click it.
+
+```typescript
+await browser.click(by.css('#checkbox'))
+```
+
+## Interacting with Javascript Dropdown lists e.g. select2
+
+TODO
+
 ## More information
 
 For more information on the available actions, see [Browser] and [ElementHandle]

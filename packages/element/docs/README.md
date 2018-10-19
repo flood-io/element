@@ -4,8 +4,6 @@ Flood Element combines the familiar power of traditional browser scripting tools
 
 Flood Element works by spinning up hundreds or even thousands of instances of Google Chrome, and running the scripts you write using `@flood/element` to drive a load test. We call this Browser Level Load Testing.
 
-> This project is currently in beta and APIs are subject to change.
-
 ![Flood Element Example code](./code-snippet.png)
 
 - [Quickstart](#quickstart)
@@ -25,7 +23,7 @@ Flood Element works by spinning up hundreds or even thousands of instances of Go
 
 **Install using NPM:**
 
-First, make sure you have installed the [latest version of NodeJS](https://nodejs.org) for your platform.
+First, make sure you have installed the [latest version of NodeJS](https://nodejs.org) for your platform. Minimum node version is node 8, preferrably the latest LTS release.
 
 ```bash
 # Using yarn

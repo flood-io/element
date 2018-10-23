@@ -29,7 +29,12 @@ step('Step 1', (browser: Browser, row: any) => {
 })
 ```
 
-## Loading data from a CSV file
+## Loading data from external files
+
+For larger or more complicated data sets, you may load data from CSV or JSON files.
+
+
+### Loading data from a CSV file
 
 If you have data available in a CSV file, perhaps exported from Excel, you can use it to power your test:
 
@@ -37,36 +42,40 @@ If you have data available in a CSV file, perhaps exported from Excel, you can u
 TestData.fromCSV('test-data.csv')
 ```
 
-### CSV column names
+#### CSV column names
+
 Note that the first line of each column is taken to be the name of that column.
 
 This means that if your column names contain spaces, you won't be able to use the javascript `.` property access notation.
 Instead use `[]` notation.
 
 The CSV
+
 ```csv
 query name,url
 green,https://en.wikipedia.org/wiki/Green
 ```
+
 would be accessed as:
+
 ```typescript
 row['query name']
 row.url
 ```
 
-### Data file locations
-
-When running Element in cli mode (`element run`), place the CSV in the same directory as your test script.
-
-When its running as a load test on flood.io, upload the the CSV alongside your script.
-
-## Loading data from a JSON file
+### Loading data from a JSON file
 
 Loading data from a JSON is just as simple as loading from CSV
 
 ```typescript
 TestData.fromJSON('test-data.json')
 ```
+
+### Data file locations
+
+When running Element in cli mode (`element run`), place the data files in the same directory as your test script.
+
+When its running as a load test on [flood.io](https://flood.io), upload the data files alongside your script.
 
 ## Advanced topic: ensuring your data is well-defined
 

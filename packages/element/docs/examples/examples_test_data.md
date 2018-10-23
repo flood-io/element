@@ -65,7 +65,7 @@ When its running as a load test on flood.io, upload the the CSV alongside your s
 Loading data from a JSON is just as simple as loading from CSV
 
 ```typescript
-TestData.fromCSV('test-data.json')
+TestData.fromJSON('test-data.json')
 ```
 
 ## Advanced topic: ensuring your data is well-defined

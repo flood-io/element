@@ -38,7 +38,7 @@ TestData.fromCSV<Row>('users.csv')
   .shuffle()       // Shuffle the data
 
 export default () => {
-   step('Step 1', (browser: Browser, row: Row) => {
+   step('Step 1', async (browser: Browser, row: Row) => {
      // for each loop, a different line from user.csv will be available as `row`
    })
 }

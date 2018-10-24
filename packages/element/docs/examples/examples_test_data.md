@@ -22,7 +22,7 @@ TestData.fromData([
 And to use the data in your steps:
 
 ```typescript
-step('Step 1', (browser: Browser, row: any) => {
+step('Step 1', async (browser: Browser, row: any) => {
   await browser.visit(`http://examplecorp.com/users/${row.id}.html`)
   
   await browser.wait(Until.elementIsVisible(By.partialVisibleText(String(row.id))))
@@ -104,7 +104,7 @@ TestData.fromData<UserData>([
 // { username: null }
 // { username: 'fred', reportCount: 'none' }
 
-step('Step 1 - reports', (browser: Browser, data: UserData) => {
+step('Step 1 - reports', async (browser: Browser, data: UserData) => {
   await browser.visit(`http://examplecorp.com/users/${data.username}.html`)
   
   const reports = await browser.findElements(By.css("#reports > li"))
@@ -130,7 +130,7 @@ interface UserData {
 // Load the test data.
 TestData.fromCSV<UserData>('users.csv')
 
-step('Step 1 - reports', (browser: Browser, data: UserData) => {
+step('Step 1 - reports', async (browser: Browser, data: UserData) => {
   // check that data.username is 'truthy'
   assert.ok(data.username, 'data.username is set')
   

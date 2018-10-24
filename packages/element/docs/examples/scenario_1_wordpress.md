@@ -10,7 +10,7 @@ This detailed example will show you how to actually build a working Flood Elemen
 
 The example uses a site called 'The Flood Store' - a fictional online shopping store that sells Tricentis Flood branded apparel and other clothing items. It is fairly representative of a typical online store that customers may require to be load tested but is complex enough that using a traditional load test tool such as Jmeter or Gatling requires a lot of work in scripting against.
 
-It is built using Wordpress and the wordpress plug-in.
+It is built using Wordpress and the WooCommerce plug-in.
 
 We'll show you how you can achieve creating a full user item purchase scenario quickly and easily using Flood Element.
 

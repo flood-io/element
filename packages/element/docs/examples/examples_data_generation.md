@@ -23,6 +23,7 @@ The simplest way to generate a random number using Faker is to import the `rando
 ```typescript
 var randNumber = random.number(99999).toString()
 ```
+
 This example generates a 5 digit random number between 0 and 99999.
 
 ## Generating Person Names
@@ -51,6 +52,41 @@ import { internet } from 'faker'
 // Generate different types of names and related data
 const randEmail = internet.email() // returns "Timmy_Pacocha@gmail.com"
 const randEmailProvider = internet.email("joe","smith","protonmail.com") // returns "joe.smith@protonmail.com"
+```
+
+## Using fake data in tests
+
+Once you have generated some data with Faker, Flood Element's [TestData](./examples_test_data.md) facility makes it available in your test steps.
+
+```typescript
+import { name, internet } from 'faker'
+
+interface UserData {
+  firstName: string,
+  lastName: string,
+  email: string,
+}
+
+// generate a fake User
+const userFactory = () => <UserData>({
+  firstName: name.firstName(),
+  lastName: name.lastName(),
+  email: internet.email(),
+})
+
+// create 5 fake users
+const data = Array.from({ length: 5 }, userFactory)
+
+// load generated data into the test
+TestData.fromData<UserData>(data)
+```
+
+This example generates 5 random users with realistic data, and makes them available in the test steps. One `UserData` record will be provided to the steps per test iteration.
+
+```typescript
+step('Step 1', (browser: Browser, user: UserData) => {
+  // test your page using the fake user data for this iteration
+})
 ```
 
 ## Further reading

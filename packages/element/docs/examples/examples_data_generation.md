@@ -50,8 +50,8 @@ To generate email addresses and other web related test data, use `internet`:
 import { internet } from 'faker'
 
 // Generate different types of names and related data
-const randEmail = internet.email() // returns "Timmy_Pacocha@gmail.com"
-const randEmailProvider = internet.email("joe","smith","protonmail.com") // returns "joe.smith@protonmail.com"
+const randEmail = internet.email() // returns 'Timmy_Pacocha@gmail.com'
+const randEmailProvider = internet.email('joe','smith','protonmail.com') // returns 'joe.smith@protonmail.com'
 ```
 
 ## Using fake data in tests
@@ -75,9 +75,9 @@ This works the same as loading a pre-populated CSV or JSON file, but with the po
 import { name, internet } from 'faker'
 
 interface UserData {
-  firstName: string,
-  lastName: string,
-  email: string,
+  firstName: string
+  lastName: string
+  email: string
 }
 
 // build a fake User

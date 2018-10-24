@@ -103,13 +103,13 @@ export default () => {
 	})
 
 	step('The Flood Store: Place Order', async browser => {
-		let btnPlaceOrder = By.xpath("//button[contains(@name, 'woocommerce_checkout_place_order')]")
+		let btnPlaceOrder = By.xpath('//button[contains(@name, "woocommerce_checkout_place_order")]')
 		await browser.wait(Until.elementIsVisible(btnPlaceOrder))
 		let element = await browser.findElement(btnPlaceOrder)
 		await element.focus()
 		await element.click()
 
-		//let pageTextVerify = By.visibleText("Thank you. Your order has been received.")
+		//let pageTextVerify = By.visibleText('Thank you. Your order has been received.')
 		let pageTextVerify = By.visibleText('Order received')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 

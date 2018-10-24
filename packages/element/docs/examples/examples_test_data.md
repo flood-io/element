@@ -107,9 +107,9 @@ TestData.fromData<UserData>([
 step('Step 1 - reports', async (browser: Browser, data: UserData) => {
   await browser.visit(`http://examplecorp.com/users/${data.username}.html`)
   
-  const reports = await browser.findElements(By.css("#reports > li"))
+  const reports = await browser.findElements(By.css('#reports > li'))
   
-  assert.equal(reports.length, data.reportCount, "all user reports found")
+  assert.equal(reports.length, data.reportCount, 'all user reports found')
 })
 ```
 

@@ -31,7 +31,7 @@ Specifies the available options which can be supplied to a step to override glob
 **Example:**
 
 ```typescript
-step("Step 1", { waitTimeout: 300 }, async (browser: Browser) => {
+step('Step 1', { waitTimeout: 300 }, async (browser: Browser) => {
 	await browser.click(...)
 })
 ```
@@ -64,13 +64,13 @@ Declares each step in your test. This must go within your main test expression.
 
 ```typescript
 export default () => {
-  step("Step 1", async (browser: Browser) => {
-    await browser.visit("https://example.com")
+  step('Step 1', async (browser: Browser) => {
+    await browser.visit('https://example.com')
   })
 
-  step("Step 2", async (browser: Browser) => {})
+  step('Step 2', async (browser: Browser) => {})
 
-  step("Step 3", async (browser: Browser) => {})
+  step('Step 3', async (browser: Browser) => {})
 }
 ```
 
@@ -84,7 +84,7 @@ export default () => {
 
 ```typescript
   // Step 1 takes longer than the default `waitTimeout` of 30s.
-  step("Step 1", { waitTimeout: 90 }, async browser => {
+  step('Step 1', { waitTimeout: 90 }, async browser => {
     ...
   }
 ```
@@ -103,7 +103,7 @@ Defines a test suite of steps to run.
   const testData = TestData.withCSV<Row>(...)
 
   export default suite.withData((testData, step) => {
-    step("Step 1", async (row: Row, browser: Browser) => {
+    step('Step 1', async (row: Row, browser: Browser) => {
       await browser.visit(`http://example.com/user-${row.systemID}.html`)
     })
   })

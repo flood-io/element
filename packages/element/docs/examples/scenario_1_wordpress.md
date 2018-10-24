@@ -86,7 +86,7 @@ The first step we will use contains the step to tell Flood Element to visit the 
 
 		await browser.visit('https://jriz.io')
 
-		let pageTextVerify = By.visibleText("Welcome to the Flood IO Merchandise Store.")
+		let pageTextVerify = By.visibleText('Welcome to the Flood IO Merchandise Store.')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 
 	})
@@ -210,7 +210,7 @@ This will copy the exact CSS selector path that can be used in your step as foll
 		await element.focus()
 		await element.click()
 
-		let pageTextVerify = By.visibleText("Returning customer?")
+		let pageTextVerify = By.visibleText('Returning customer?')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 
 	})
@@ -228,10 +228,10 @@ Filling out a form with a number of text entry fields can be very easily achieve
 	    //let billingFirstName = await browser.findElement(By.id('billing_first_name'))
 
 	   	// Fill in text field - billing First Name
-		await browser.type(By.id('billing_first_name'), "Jason")
+		await browser.type(By.id('billing_first_name'), 'Jason')
 
 	   	// Fill in text field - billing First Name
-		await browser.type(By.id('billing_last_name'), "Rizio")
+		await browser.type(By.id('billing_last_name'), 'Rizio')
 
 		//...	
 
@@ -253,7 +253,7 @@ We have now almost completed the full item purchase business process. All that i
 		await element.focus()
 		await element.click()	
 
-		let pageTextVerify = By.visibleText("Thank you. Your order has been received.")
+		let pageTextVerify = By.visibleText('Thank you. Your order has been received.')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 
 		await browser.takeScreenshot()

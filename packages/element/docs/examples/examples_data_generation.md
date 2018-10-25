@@ -75,15 +75,13 @@ This works the same as loading a pre-populated CSV or JSON file, but with the po
 import { name, internet } from 'faker'
 
 interface UserData {
-  firstName: string
-  lastName: string
+  name: string
   email: string
 }
 
 // build a fake User
 const userFactory = () => <UserData>({
-  firstName: name.firstName(),
-  lastName: name.lastName(),
+  name: name.findName(),
   email: internet.email(),
 })
 
@@ -98,7 +96,13 @@ This example generates 5 random users with realistic data, and makes them availa
 
 ```typescript
 step('Step 1', async (browser: Browser, user: UserData) => {
-  // test your page using the fake user data for this iteration
+  ...
+  // test your page using the fake UserData record for this iteration
+  await browser.type(By.css('[name="name"]'), user.name)
+
+  // you can still use Faker inline for data that doesn't need to be pre-generated
+  await browser.type(By.css('[name="comment"]'), faker.lorem.sentences())
+  ...
 })
 ```
 

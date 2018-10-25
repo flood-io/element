@@ -19,7 +19,7 @@ TestData.fromData([
 ])
 ```
 
-And to use the data in your steps:
+You may then use the data in your steps:
 
 ```typescript
 step('Step 1', async (browser: Browser, row: any) => {

@@ -118,7 +118,7 @@ Every time you save a change to `my-element-test.ts` the test will run again, sh
 
 ### Inspecting the page
 
-Taking screenshots is a fantastic way of getting a glimpse of your page at important points during your test. However, while writing scripts the ability to view and interact with the entire page can be incredibly useful. In the same way browser developer tools are invaluable when developing an applications, with Element they can be just as helpful when writing test scripts.
+Taking screenshots is a fantastic way of getting a glimpse of your page at important points during your test. However, while writing scripts the ability to view and interact with the entire page can be incredibly useful. In the same way DevTools are invaluable when building an applications, with Element they can be just as helpful when writing test scripts.
 
 Passing the `--devtools` flag when running a script does two things: run in non-headless mode, and also open DevTools. A GUI instance of Chrome will be used to run your test (rather than headless, which is the default) allowing you to see the steps execute on the page as your script runs. Element also opens the DevTools, letting you view the console, select elements and debug the page. 
 
@@ -128,6 +128,7 @@ element run my-element-test.ts --devtools
 
 Running tests in this way is especially useful when used in conjunction with [Browser.wait](../../api/Browser.md#browserwaittimeoutorcondition) to pause your script at specific points. This is a great technique for debugging a test script, or the page under test itself. If your test script interacts with many elements on a page (e.g filling in a form), it is also an excellent way to capture element selectors.
 
+**Note:** to see test steps execute without opening DevTools, use the `--no-headless` option instead.
 
 There are many useful command line flags that help writing and debugging tests scripts. See the command line help for the `run` command (`element run --help`) for a full list of options.
 

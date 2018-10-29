@@ -44,7 +44,7 @@ This will install `element` along with anything else it needs to run, such as No
 
 ## Getting help
 
-The Element CLI comes with built in help that details the commands and options available. Run
+The Element CLI comes with built in help that details the commands and options available. Run:
 
 ```bash
 element help
@@ -52,7 +52,7 @@ element help
 
 to see a list of commands and global the Element CLI supports. To get more detailed information about a specific command, and the options it accepts, pass it the `--help` flag.
 
-For example, to learn more about the `run` command and the options you can pass in, run
+For example, to learn more about the `run` command and the options you can pass in, run:
 
 ```bash
 element run --help
@@ -63,13 +63,13 @@ element run --help
 
 Use the `init` command to initialize a new project. Your new project will include everything you need to get started, including TypeScript configuration, NodeJS dependencies, and a basic test script.
 
-Element can create a new project directory for you
+Element can create a new project directory for you:
 
 ```bash
 element init my-element-project
 ```
 
-or run it without a directory name to initialize your project in the current directory.
+or run it without a directory name to initialize your project in the current directory:
 
 ```bash
 element init
@@ -84,7 +84,7 @@ For more information on `element init`, run `element init --help`.
 
 Use the `generate` command to generate a basic test script that includes the necessary imports, some basic configuration, and an example test step. This is a complete test that you can run straight away to see immediate results, and is a great starting point for writing you own tests.
 
-The `generate` command takes the file name of your new script as input
+The `generate` command takes the file name of your new script as input:
 
 ```bash
 element generate my-load-test.ts

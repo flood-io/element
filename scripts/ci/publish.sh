@@ -22,4 +22,5 @@ docker run --rm \
   -e BUILDKITE_BRANCH \
   -e BUILDKITE_COMMIT \
   -e DEBUG \
+  -e MASTER_SEMVER_BUMP \
   --env-file $test_env_file $DOCKER_IMAGE make publish-ci

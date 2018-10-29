@@ -6,7 +6,7 @@ title: Examples - Test Data Generation
 
 ## Overview
 
-The highly capable open-source Faker library [Faker.js](https://github.com/Marak/faker.js) makes it simple to add rich, unique, on-the-fly test data to your scripts.
+Sometimes you want to generate random data that seem realistic. For this we bundle the highly capable open-source Faker library [Faker.js](https://github.com/Marak/faker.js) which makes it simple to add rich, unique, on-the-fly test data to your scripts.
 The Faker library allows us to generate a wide variety of syntax-correct data such as random names, numbers, strings and emails.
 
 To start using Faker within your Flood Element script you will need to import the part of the Faker library you'd like to make us of.

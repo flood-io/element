@@ -23,7 +23,7 @@ See [DEFAULT_SETTINGS] for a list of the default value for each setting.
   Waiting between actions simulates the behaviour of a real user as they read, think and act on the page's content.  
     
 * `chromeVersion` &lt;[ChromeVersion]&gt;  (Optional)     
-* `clearCache` &lt;undefined | false | true&gt;  (Optional)   Specifies whether Brwoser cache should be cleared after each test loop.  
+* `clearCache` &lt;undefined | false | true&gt;  (Optional)   Specifies whether Browser cache should be cleared after each test loop.  
 * `clearCookies` &lt;undefined | false | true&gt;  (Optional)   Specifies whether cookies should be cleared after each test loop.  
 * `consoleFilter` &lt;[ConsoleMethod]\[]&gt;  (Optional)   Specify which console methods to filter out. By default no console methods are filtered.  
     
@@ -43,7 +43,7 @@ See [DEFAULT_SETTINGS] for a list of the default value for each setting.
     
   Defaults to `-1` for an unlimited number of loops.  
     
-* `name` &lt;undefined | string&gt;  (Optional)   Speicifies the name of the test specified in the comments section  
+* `name` &lt;undefined | string&gt;  (Optional)   Specifies the name of the test specified in the comments section  
 * `responseTimeMeasurement` &lt;[ResponseTiming]&gt;  (Optional)   Configures how we record response time for each step.  
     
   Possible values:  

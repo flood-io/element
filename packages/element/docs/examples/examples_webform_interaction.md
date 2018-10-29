@@ -40,6 +40,46 @@ Dropdown listbox values can simply be chosen by using the selectByValue function
 await browser.selectByValue(By.id('challenger_age'), '28')
 ``` 
 
+## Interacting with Checkboxes and Radio buttons
+
+You only need to click a checkbox or a radio button to interact it. First, select the checkbox or radio button with your preferred method, then click it.
+
+```typescript
+await browser.click(By.css('#checkbox'))
+```
+
+## Interacting with Javascript Dropdown lists e.g. select2
+
+The specifics will depend on how complex the javascript dropdown is. We'll start with a simple [select2][select12] dropdown. 
+
+First, find the element that the user would click on to show the dropdown and click on it. This will differ between dropdown libraries but you can generally find it by right clicking the dropdown in your browser and choosing inspect element.
+
+```typescript
+const triggerElement = By.css('.select2-selection__rendered')
+```
+
+Trigger a click.
+
+```typescript
+await browser.click(triggerElement)
+```
+
+Then select and click on one of the options that should now be visible
+
+```typescript
+await browser.click(By.visibleText('Jason'))
+```
+
+If your dropdown has an animation to show the options, try waiting until the option becomes visible before clicking it:
+
+```typescript
+let option = By.visibleText('Jason')
+await browser.wait(Until.elementIsVisible(option))
+await browser.click(option)
+```
+
+[select2]: https://select2.org
+
 ## More information
 
 For more information on the available actions, see [Browser] and [ElementHandle]

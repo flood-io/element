@@ -82,7 +82,7 @@ For more information on `element init`, run `element init --help`.
 
 ## Generate a new test file
 
-Use the `generate` command to generate a basic test script that includes the necessary imports, some basic configuration, and an example test step. This is a complete test that you can run straight away to see immediate results, and is a great starting point for writing you own tests.
+Use the `generate` command to generate a basic test script that includes the necessary imports, some basic configuration, and an example test step. This is a complete test that you can run straight away to see immediate results and is a great starting point for writing you own tests.
 
 The `generate` command takes the file name of your new script as input:
 
@@ -100,7 +100,7 @@ Use the `run` command to run a test script locally with Element. Your test scrip
 element run my-element-test.ts
 ```
 
-By default, tests run on the CLI have their `loop-count` setting overridden to 1. Running multiple iterations of a test is fantastic for testing load and working with test data, but is unnecessary when verifying a script locally. You can change this behaviour by passing the `--loop-count` command line flag when running your test.
+By default, tests run on the CLI have their `loop-count` setting overridden to 1. Running multiple iterations of a test is fantastic for testing load and working with test data but is unnecessary when verifying a script locally. You can change this behaviour by passing the `--loop-count` command line flag when running your test.
 
 For more information on `element run`, run `element run --help`.
 
@@ -120,7 +120,7 @@ Every time you save a change to `my-element-test.ts` the test will run again, sh
 
 ### Inspecting the page
 
-Taking screenshots is a fantastic way of getting a glimpse of your page at important points during your test. However, while writing scripts the ability to view and interact with the entire page can be incredibly useful. In the same way DevTools are invaluable when building an applications, with Element they can be just as helpful when writing test scripts.
+Taking screenshots is a fantastic way of getting a glimpse of your page at important points during your test. However, while writing scripts the ability to view and interact with the entire page can be incredibly useful. In the same way DevTools are invaluable when building an application, with Element they can be just as helpful when writing test scripts.
 
 Passing the `--devtools` flag when running a script does two things: run in non-headless mode, and also open DevTools. A GUI instance of Chrome will be used to run your test (rather than headless, which is the default) allowing you to see the steps execute on the page as your script runs. Element also opens the DevTools, letting you view the console, select elements and debug the page. 
 
@@ -128,6 +128,6 @@ Passing the `--devtools` flag when running a script does two things: run in non-
 element run my-element-test.ts --devtools
 ```
 
-Running tests in this way is especially useful when used in conjunction with [Browser.wait](../../api/Browser.md#browserwaittimeoutorcondition) to pause your script at specific points. This is a great technique for debugging a test script, or the page under test itself. If your test script interacts with many elements on a page (e.g filling in a form), it is also an excellent way to capture element selectors.
+Running tests in this way is especially useful when used in conjunction with [Browser.wait](../../api/Browser.md#browserwaittimeoutorcondition) to pause your script at specific points. This is a great technique for debugging a test script, or the page under test itself. If your test script interacts with many elements on a page (e.g. filling in a form), it is also an excellent way to capture element selectors.
 
 **Note:** to see test steps execute without opening DevTools, use the `--no-headless` option instead.

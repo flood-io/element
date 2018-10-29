@@ -106,6 +106,8 @@ For more information on `element run`, run `element run --help`.
 
 ## Tips on developing test scripts
 
+There are many useful command line flags that help writing and debugging tests scripts. See the command line help for the `run` command (`element run --help`) for a full list of options.
+
 ### Watching for changes
 
 When developing a test script, it is incredibly useful to see the results of your steps as you write them. When you pass the `--watch` flag, the `run` command will watch your test script and rerun the test when it changes.
@@ -129,6 +131,3 @@ element run my-element-test.ts --devtools
 Running tests in this way is especially useful when used in conjunction with [Browser.wait](../../api/Browser.md#browserwaittimeoutorcondition) to pause your script at specific points. This is a great technique for debugging a test script, or the page under test itself. If your test script interacts with many elements on a page (e.g filling in a form), it is also an excellent way to capture element selectors.
 
 **Note:** to see test steps execute without opening DevTools, use the `--no-headless` option instead.
-
-There are many useful command line flags that help writing and debugging tests scripts. See the command line help for the `run` command (`element run --help`) for a full list of options.
-

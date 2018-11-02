@@ -3,8 +3,6 @@ title: Element CLI
 position: 1
 articleGroup: Guides
 ---
----
-
 
 The Element CLI is a powerful tool that makes it fast and easy to get started with browser level performance testing with Flood Element. It helps you scaffold a new project, then generate, write, validate, and run your scripts on your local machine. When you're ready, you can upload your test scripts to [Flood](https://flood.io) and be confident they’ll run exactly as expected, just like they did on your local machine.
 

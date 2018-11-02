@@ -133,4 +133,6 @@ element run my-element-test.ts --devtools
 
 Running tests in this way is especially useful when used in conjunction with [Browser.wait](../../api/Browser.md#browserwaittimeoutorcondition) to pause your script at specific points. This is a great technique for debugging a test script, or the page under test itself. If your test script interacts with many elements on a page (e.g. filling in a form), it is also an excellent way to capture element selectors.
 
-**Note:** to see test steps execute without opening DevTools, use the `--no-headless` option instead.
+> **Tip:**
+>
+> To see test steps execute without opening DevTools, use the `--no-headless` option instead.

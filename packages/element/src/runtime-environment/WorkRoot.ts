@@ -1,5 +1,5 @@
 import * as path from 'path'
-import { sync as mkdirpSync } from 'mkdirp'
+import { mkdirpSync } from 'fs-extra'
 import { WorkRoot as IWorkRoot, SubRoot, SpecialSubRoot, WorkRootKind } from './types'
 
 export default class WorkRoot implements IWorkRoot {

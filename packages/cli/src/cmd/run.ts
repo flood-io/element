@@ -14,6 +14,7 @@ import createLogger from '../utils/Logger'
 import { watch } from 'chokidar'
 import { EventEmitter } from 'events'
 import { checkFile } from './common'
+import * as sanitize from 'sanitize-filename'
 
 function setupDelayOverrides(args: Arguments, testSettingOverrides: TestSettings) {
 	let stepDelayOverride: number | undefined
@@ -120,7 +121,9 @@ function getWorkRootPath(file: string, root?: string): string {
 		root = path.join(path.dirname(file), 'tmp/element-results', bare)
 	}
 
-	return path.resolve(root, new Date().toISOString())
+	const dateString = sanitize(new Date().toISOString())
+
+	return path.resolve(root, dateString)
 }
 
 function getTestDataPath(file: string, root?: string): string {

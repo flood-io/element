@@ -16,6 +16,7 @@ import * as debugFactory from 'debug'
 import { tmpdir } from 'os'
 import * as findRoot from 'find-root'
 import { manualModuleDefinition, manualModuleResolution } from './manualModuleDefinition'
+import * as os from 'os'
 
 const debug = debugFactory('element:test-script:compiler')
 
@@ -52,6 +53,14 @@ const manualModuleDefinitions: { [key: string]: ts.ResolvedModule | undefined } 
 }
 const manualTypeResolutions: { [key: string]: ts.ResolvedTypeReferenceDirective | undefined } = {
 	faker: manualModuleResolution('@types/faker'),
+}
+
+const win32 = os.platform() === 'win32'
+function tsFilename(infile: string): string {
+	if (win32) {
+		return infile.replace(/\\/g, '/')
+	}
+	return infile
 }
 
 const NoModuleImportedTypescript = `Test scripts must import the module '@flood/element'
@@ -209,6 +218,7 @@ export class TypeScriptTestScript implements ITestScript {
 			outputFiles.push({ name, text, writeByteOrderMark })
 		}
 
+		const tsSandboxedFilename = tsFilename(sandboxedFilename)
 		const originalGetSourceFile = host.getSourceFile
 		host.getSourceFile = function(
 			fileName: string,
@@ -217,7 +227,7 @@ export class TypeScriptTestScript implements ITestScript {
 		): ts.SourceFile {
 			debug('getSourceFile', fileName)
 			// inject our source string if its the sandboxedBasename
-			if (fileName === sandboxedFilename) {
+			if (fileName === tsSandboxedFilename) {
 				return ts.createSourceFile(fileName, inputSource, languageVersion, false)
 			} else {
 				return originalGetSourceFile.apply(this, arguments)

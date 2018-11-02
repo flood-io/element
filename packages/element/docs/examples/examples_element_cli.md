@@ -1,4 +1,8 @@
---- title: Examples - Element CLI
+---
+title: Element CLI
+position: 1
+articleGroup: Guides
+---
 ---
 
 # Examples - Element CLI

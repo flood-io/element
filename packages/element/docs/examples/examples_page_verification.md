@@ -43,7 +43,7 @@ await browser.wait(Until.elementIsVisible(pageTextVerify))
 You are also able to wait for a specific object property on a resulting page load using a simple XPath query.
 
 ```typescript
-let pageObjectVerify = By.xpath("//a[contains(@id, 'MyLoginLink')]")
+let pageObjectVerify = By.xpath('//a[contains(@id, "MyLoginLink")]')
 await browser.wait(Until.elementIsVisible(pageObjectVerify))
 ```
 

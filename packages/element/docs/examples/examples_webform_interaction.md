@@ -13,7 +13,7 @@ Web-based forms are an important part of most interactive web applications, so l
 The simplest way to enter text and interact with standard text field entry is to find the ID of the form field and use the following example:
 
 ```typescript
-await browser.type(By.id('billing_first_name'), "Jason")
+await browser.type(By.id('billing_first_name'), 'Jason')
 ``` 
 
 ## Interacting with Text Fields using CSS Selectors
@@ -21,7 +21,7 @@ await browser.type(By.id('billing_first_name'), "Jason")
 You can also use a CSS selector to interact with a text entry field as follows:
 
 ```typescript
-await browser.type(By.css('#billing_first_name'), "Jason")
+await browser.type(By.css('#billing_first_name'), 'Jason')
 ``` 
 
 ## Interacting with Text Fields using XPath
@@ -29,7 +29,7 @@ await browser.type(By.css('#billing_first_name'), "Jason")
 XPath is also available for selecting the field you'd like to interact with:
 
 ```typescript
-await browser.type(By.xpath('//*[@id="billing_first_name"]'), "Jason")
+await browser.type(By.xpath('//*[@id="billing_first_name"]'), 'Jason')
 ``` 
 
 ## Interacting with Dropdown listboxes

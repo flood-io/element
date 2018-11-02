@@ -6,10 +6,10 @@ title: ''
 Browser (also called Driver) is the main entry point in each <[step]>, it's your direct connection to the browser running the test.
 
 ```typescript
-import { step } from "@flood/element"
+import { step } from '@flood/element'
 export default () => {
-  step("Start", async browser => {
-    await browser.visit("https://challenge.flood.io")
+  step('Start', async browser => {
+    await browser.visit('https://challenge.flood.io')
   })
 }
 ```
@@ -58,7 +58,7 @@ currently outside the viewport it will first scroll to that element.
 **Example:**
 
 ```typescript
-step("Start", async browser => {
+step('Start', async browser => {
   await browser.click(By.partialLinkText('Start'))
 })
 ```
@@ -178,8 +178,8 @@ Types a string into an `<input>` control, key press by key press. Use this to fi
 
 **Example:**
 ```typescript
-step("Step 1", async browser => {
-  await browser.type(By.css("#email"), "user@example.com")
+step('Step 1', async browser => {
+  await browser.type(By.css('#email'), 'user@example.com')
 })
 ```
 
@@ -197,8 +197,8 @@ a new Browser tab for this page to load into.
 **Example:**
 
 ```typescript
-step("Start", async browser => {
-  await browser.visit("https://example.com")
+step('Start', async browser => {
+  await browser.visit('https://example.com')
 })
 ```
 
@@ -213,7 +213,7 @@ Check out <[Until]> for a rich set of wait <[Condition]>s.
 **Example:**
 
 ```typescript
-step("Start", async browser => {
+step('Start', async browser => {
   await browser.wait(Until.elementIsVisible(By.css('h1.title')))
 })
 ```
@@ -277,7 +277,7 @@ Defines the screenshot options.
 * `type` &lt;"jpeg" | "png"&gt;  (Optional)   The screenshot type.  
 ## `LoadEvent`
 ```typescript
-"load" | "domcontentloaded" | "networkidle0" | "networkidle2"
+'load' | 'domcontentloaded' | 'networkidle0' | 'networkidle2'
 ```
 
 [step]: ../../api/DSL.md#step

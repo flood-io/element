@@ -13,7 +13,7 @@ Web-based link navigation is easily achieved with Flood Element. You are have a 
 The simplest way to click on a web link is to use its visible text link description as follows:
 
 ```typescript
-const linkHoodies = await browser.findElement(By.partialLinkText("Hoodies"))
+const linkHoodies = await browser.findElement(By.partialLinkText('Hoodies'))
 await linkHoodies.click()
 ```
 
@@ -34,7 +34,7 @@ Sometimes visible text or CSS selectors aren't specific enough to find the eleme
 XPath to help locate a link or button object as in this example:
 
 ```typescript
-const addHoodieToCart = await browser.findElement(By.xpath("//a[@data-product_id=39]"))
+const addHoodieToCart = await browser.findElement(By.xpath('//a[@data-product_id=39]'))
 await addHoodieToCart.click()
 ```
 

@@ -10,7 +10,7 @@ The TestSettings interface specifies the available settings you have to configur
 ```typescript
 export const settings: TestSettings = {
   loopCount: Infinity,
-  clearCache: true
+  clearCache: true,
 }
 ```
 
@@ -63,7 +63,7 @@ See [DEFAULT_SETTINGS] for a list of the default value for each setting.
 Specifies a `console` method
 
 ```typescript
-"log" | "info" | "debug" | "warn" | "error"
+'log' | 'info' | 'debug' | 'warn' | 'error'
 ```
 ## `ResponseTiming`
 Specifies a method for recording response times.
@@ -76,7 +76,7 @@ network | (Experimental) Takes the mean response time of all network requests wh
 stepWithThinkTime | `"stepWithThinkTime"`: Records the wall clock time of a step including `actionDelay` time.
 
 ```typescript
-"page" | "network" | "step" | "stepWithThinkTime"
+'page' | 'network' | 'step' | 'stepWithThinkTime'
 ```
 #### `setup(settings)`
 * `settings` &lt;[TestSettings]&gt;   

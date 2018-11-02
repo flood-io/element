@@ -25,7 +25,7 @@ Call TestDataSource's methods to configure your data source:
 ```typescript
 import { step, Browser, TestData, TestSettings } from '@flood/element'
 export const settings: TestSettings = {
-  loopCount: -1
+  loopCount: -1,
 }
 
 interface Row {
@@ -38,7 +38,7 @@ TestData.fromCSV<Row>('users.csv')
   .shuffle()       // Shuffle the data
 
 export default () => {
-   step('Step 1', (browser: Browser, row: Row) => {
+   step('Step 1', async (browser: Browser, row: Row) => {
      // for each loop, a different line from user.csv will be available as `row`
    })
 }
@@ -64,7 +64,7 @@ Filters can be chained, and will be run in order only if the previous ffilter pa
 Example:
 ```typescript
 type Row = { browser: string, email: string }
-TestData.fromCSV("users.csv").filter((line, index, browserID) => line.browser === browserID)
+TestData.fromCSV('users.csv').filter((line, index, browserID) => line.browser === browserID)
 ```
 
 #### `TestDataSource.shuffle(shuffle)`

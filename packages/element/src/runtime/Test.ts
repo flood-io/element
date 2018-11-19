@@ -53,11 +53,9 @@ export default class Test {
 		public script: EvaluatedScript,
 		public reporter: IReporter = new NullReporter(),
 		settingsOverride: TestSettings,
-		testObserverFactory: (t: TestObserver) => TestObserver = x => x,
+		public testObserverFactory: (t: TestObserver) => TestObserver = x => x,
 	) {
-		this.testObserver = new ErrorObserver(
-			new LifecycleObserver(testObserverFactory(new InnerObserver(new NullTestObserver()))),
-		)
+		this.testObserver = new NullTestObserver()
 		this.script = script
 
 		try {
@@ -98,6 +96,12 @@ export default class Test {
 		cancelToken: CancellationToken,
 	): Promise<void> | never {
 		console.assert(this.client, `client is not configured in Test`)
+
+		await (await this.client).reopenPage()
+
+		this.testObserver = new ErrorObserver(
+			new LifecycleObserver(this.testObserverFactory(new InnerObserver(new NullTestObserver()))),
+		)
 
 		this.failed = false
 		this.runningBrowser = null

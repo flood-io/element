@@ -10,7 +10,7 @@ This detailed example will show you how to actually build a working Flood Elemen
 
 The example uses a site called 'The Flood Store' - a fictional online shopping store that sells Tricentis Flood branded apparel and other clothing items. It is fairly representative of a typical online store that customers may require to be load tested but is complex enough that using a traditional load test tool such as Jmeter or Gatling requires a lot of work in scripting against.
 
-It is built using Wordpress and the Woocommerce plug-in.
+It is built using Wordpress and the WooCommerce plug-in.
 
 We'll show you how you can achieve creating a full user item purchase scenario quickly and easily using Flood Element.
 
@@ -84,9 +84,9 @@ The first step we will use contains the step to tell Flood Element to visit the 
 ```typescript
 	step('The Flood Store: Home', async browser => {
 
-		await browser.visit('https://jriz.io')
+		await browser.visit('https://wordpress.loadtest.io')
 
-		let pageTextVerify = By.visibleText("Welcome to the Flood IO Merchandise Store.")
+		let pageTextVerify = By.visibleText('Welcome to the Flood IO Merchandise Store.')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 
 	})
@@ -169,7 +169,7 @@ After Flood Element adds this item to the cart, we can navigate to the Cart page
 
 ```typescript
 step('The Flood Store: View Cart', async (browser: Driver) => {
-	await browser.visit('https://jriz.io/cart')
+	await browser.visit('https://wordpress.loadtest.io/cart')
 
 	let pageTextVerify1 = By.visibleText('Free shipping')
 	await browser.wait(Until.elementIsVisible(pageTextVerify1))
@@ -210,7 +210,7 @@ This will copy the exact CSS selector path that can be used in your step as foll
 		await element.focus()
 		await element.click()
 
-		let pageTextVerify = By.visibleText("Returning customer?")
+		let pageTextVerify = By.visibleText('Returning customer?')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 
 	})
@@ -228,10 +228,10 @@ Filling out a form with a number of text entry fields can be very easily achieve
 	    //let billingFirstName = await browser.findElement(By.id('billing_first_name'))
 
 	   	// Fill in text field - billing First Name
-		await browser.type(By.id('billing_first_name'), "Jason")
+		await browser.type(By.id('billing_first_name'), 'Jason')
 
 	   	// Fill in text field - billing First Name
-		await browser.type(By.id('billing_last_name'), "Rizio")
+		await browser.type(By.id('billing_last_name'), 'Rizio')
 
 		//...	
 
@@ -253,7 +253,7 @@ We have now almost completed the full item purchase business process. All that i
 		await element.focus()
 		await element.click()	
 
-		let pageTextVerify = By.visibleText("Thank you. Your order has been received.")
+		let pageTextVerify = By.visibleText('Thank you. Your order has been received.')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 
 		await browser.takeScreenshot()

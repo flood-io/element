@@ -19,17 +19,22 @@ TestData.fromData([
 ])
 ```
 
-And to use the data in your steps:
+You may then use the data in your steps:
 
 ```typescript
-step('Step 1', (browser: Browser, row: any) => {
+step('Step 1', async (browser: Browser, row: any) => {
   await browser.visit(`http://examplecorp.com/users/${row.id}.html`)
   
   await browser.wait(Until.elementIsVisible(By.partialVisibleText(String(row.id))))
 })
 ```
 
-## Loading data from a CSV file
+## Loading data from external files
+
+For larger or more complicated data sets, you may load data from CSV or JSON files.
+
+
+### Loading data from a CSV file
 
 If you have data available in a CSV file, perhaps exported from Excel, you can use it to power your test:
 
@@ -37,36 +42,40 @@ If you have data available in a CSV file, perhaps exported from Excel, you can u
 TestData.fromCSV('test-data.csv')
 ```
 
-### CSV column names
+#### CSV column names
+
 Note that the first line of each column is taken to be the name of that column.
 
 This means that if your column names contain spaces, you won't be able to use the javascript `.` property access notation.
 Instead use `[]` notation.
 
 The CSV
+
 ```csv
 query name,url
 green,https://en.wikipedia.org/wiki/Green
 ```
+
 would be accessed as:
+
 ```typescript
 row['query name']
 row.url
 ```
 
-### Data file locations
-
-When running Element in cli mode (`element run`), place the CSV in the same directory as your test script.
-
-When its running as a load test on flood.io, upload the the CSV alongside your script.
-
-## Loading data from a JSON file
+### Loading data from a JSON file
 
 Loading data from a JSON is just as simple as loading from CSV
 
 ```typescript
-TestData.fromCSV('test-data.json')
+TestData.fromJSON('test-data.json')
 ```
+
+### Data file locations
+
+When running Element in cli mode (`element run`), place the data files in the same directory as your test script.
+
+When its running as a load test on [flood.io](https://flood.io), upload the data files alongside your script.
 
 ## Advanced topic: ensuring your data is well-defined
 
@@ -95,12 +104,12 @@ TestData.fromData<UserData>([
 // { username: null }
 // { username: 'fred', reportCount: 'none' }
 
-step('Step 1 - reports', (browser: Browser, data: UserData) => {
+step('Step 1 - reports', async (browser: Browser, data: UserData) => {
   await browser.visit(`http://examplecorp.com/users/${data.username}.html`)
   
-  const reports = await browser.findElements(By.css("#reports > li"))
+  const reports = await browser.findElements(By.css('#reports > li'))
   
-  assert.equal(reports.length, data.reportCount, "all user reports found")
+  assert.equal(reports.length, data.reportCount, 'all user reports found')
 })
 ```
 
@@ -121,7 +130,7 @@ interface UserData {
 // Load the test data.
 TestData.fromCSV<UserData>('users.csv')
 
-step('Step 1 - reports', (browser: Browser, data: UserData) => {
+step('Step 1 - reports', async (browser: Browser, data: UserData) => {
   // check that data.username is 'truthy'
   assert.ok(data.username, 'data.username is set')
   
@@ -144,7 +153,7 @@ Its important to understand this when validating data, since for example a value
 
 ## More information
 
-- The API reference for [TestData], [TestDataFactory] and [TestDataSource]
+Find more information in the API reference for [TestData], [TestDataFactory] and [TestDataSource], or check out the [Flood challenge with test data][challenge-with-test-data] example script.
 
 [TypeScript]: https://www.typescriptlang.org/
 <!-- suffix -->
@@ -153,3 +162,4 @@ Its important to understand this when validating data, since for example a value
 [TestData]: ../../api/TestData.md#testdata
 [TestDataFactory]: ../../api/TestData.md#testdatafactory
 [TestDataSource]: ../../api/TestData.md#testdatasource
+[challenge-with-test-data]: https://github.com/flood-io/element/blob/master/examples/flood-challenge/flood-challenge-with-test-data.ts

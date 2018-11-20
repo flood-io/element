@@ -11,7 +11,7 @@
 	},
 	"scripts": {
 		"build:watch": "lerna run build:watch --parallel",
-    "test": "lerna run test",
+		"test": "lerna run test",
 		"publish": "./scripts/publish.sh",
 		"publish:brew": "ts-node --project ./scripts/publish-brew-tap/tsconfig.json -- ./scripts/publish-brew-tap/index.ts",
 		"publish:pre": "lerna publish --force-publish=* --cd-version prerelease && yarn publish:brew",
@@ -22,7 +22,6 @@
 		"singleQuote": true,
 		"trailingComma": "all",
 		"printWidth": 100,
-		"useTabs": true,
 		"tabWidth": 2,
 		"bracketSpacing": true,
 		"jsxBracketSameLine": true,
@@ -45,6 +44,6 @@
 	"workspaces": [
 		"packages/cli",
 		"packages/element",
-    "scripts/publish-brew-tap"
+		"scripts/publish-brew-tap"
 	]
 }

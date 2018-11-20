@@ -7,7 +7,8 @@ import * as fs from 'fs'
 import { promisify } from 'util'
 const exists = promisify(fs.exists)
 
-import { Step, StepFunction, StepOptions, normalizeStepOptions } from './Step'
+import { Step, StepFunction, StepOptions, normalizeStepOptions, StepDefinition } from './Step'
+import { SuiteDefinition } from './types'
 import Test from './Test'
 import { ITestScript, TestScriptErrorMapper, TestScriptError, mustCompileFile } from '../TestScript'
 import { DEFAULT_SETTINGS, ConcreteTestSettings, normalizeSettings, TestSettings } from './Settings'
@@ -46,7 +47,6 @@ function createVirtualMachine(floodElementActual: any): NodeVM {
 export class EvaluatedScript implements TestScriptErrorMapper {
 	public steps: Step[]
 	public settings: ConcreteTestSettings
-	public testData: TestDataSource<any>
 
 	private vm: NodeVM
 
@@ -61,7 +61,7 @@ export class EvaluatedScript implements TestScriptErrorMapper {
 		path: string,
 		runEnv: RuntimeEnvironment,
 	): Promise<EvaluatedScript> {
-		if (!await exists(path)) {
+		if (!(await exists(path))) {
 			throw new Error(`unable to compile script: no script found at path ${path}`)
 		}
 
@@ -110,6 +110,20 @@ export class EvaluatedScript implements TestScriptErrorMapper {
 		return this._testDataLoaders
 	}
 
+	private _testData: TestDataSource<any>
+	public set testData(testDataSource: TestDataSource<any>) {
+		this._testData = testDataSource
+		this._testData.setInstanceID(this.sequence.toString())
+	}
+
+	public get testData(): TestDataSource<any> {
+		return this._testData
+	}
+
+	public get sequence(): number {
+		return this.runEnv.stepEnv().SEQUENCE
+	}
+
 	public evaluate(): EvaluatedScript {
 		debug('evaluating')
 
@@ -122,7 +136,7 @@ export class EvaluatedScript implements TestScriptErrorMapper {
 		const ENV = this.runEnv.stepEnv()
 
 		// closes over steps: Step[]
-		const step = (...args: any[]) => {
+		function captureStep(...args: any[]) {
 			// name: string, fn: (driver: Browser) => Promise<void>
 			let name: string
 			let fn: StepFunction<any>
@@ -143,6 +157,27 @@ export class EvaluatedScript implements TestScriptErrorMapper {
 			steps.push({ fn, name, stepOptions })
 		}
 
+		// re-scope this for captureSuite to close over:
+		const evalScope = this
+
+		// closes over evalScope (this) and ENV
+		const captureSuite: SuiteDefinition = Object.assign(
+			(
+				callback: (this: null, s: StepDefinition<null>) => void,
+			): ((this: null, s: StepDefinition<null>) => void) => {
+				return callback
+			},
+			{
+				withData: <T>(
+					data: TestDataSource<T>,
+					callback: (this: null, s: StepDefinition<T>) => void,
+				) => {
+					evalScope.testData = expect(data, 'TestData is not present')
+					return callback
+				},
+			},
+		)
+
 		let context = {
 			setup: (setupSettings: TestSettings) => {
 				Object.assign(rawSettings, setupSettings)
@@ -151,7 +186,8 @@ export class EvaluatedScript implements TestScriptErrorMapper {
 			ENV,
 
 			// Supports either 2 or 3 args
-			step,
+			step: captureStep,
+
 			// Actual implementation of @flood/chrome
 			By,
 			Until,
@@ -160,6 +196,8 @@ export class EvaluatedScript implements TestScriptErrorMapper {
 			TestData: this.testDataLoaders,
 			Key,
 			userAgents,
+
+			suite: captureSuite,
 
 			test() {
 				throw new Error(`test() is no longer supported, please use 'export default suite(...)'`)
@@ -186,7 +224,7 @@ export class EvaluatedScript implements TestScriptErrorMapper {
 		/**
 		 * Evaluate default function
 		 */
-		testFn.apply(null, [step])
+		testFn.apply(null, [captureStep])
 
 		// layer up the final settings
 		this.settings = {

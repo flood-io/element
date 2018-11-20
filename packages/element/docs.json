@@ -37760,7 +37760,7 @@
 					},
 					"comment": {
 						"shortText": "TestDataSource is the instance returned by <[TestDataFactory]>'s methods.",
-						"text": "Call TestDataSource's methods to configure your data source:\n\n```typescript\nimport { step, Browser, TestData, TestSettings } from '@flood/element'\nexport const settings: TestSettings = {\n  loopCount: -1\n}\n\ninterface Row {\n  username: string\n  userID: number\n}\nTestData.fromCSV<Row>('users.csv')\n  .circular(false) // Switch off circular data iteration.\n                   // By default, when the end of the data is reached, it wraps to the beginning.\n  .shuffle()       // Shuffle the data\n\nexport default () => {\n   step('Step 1', (browser: Browser, row: Row) => {\n     // for each loop, a different line from user.csv will be available as `row`\n   })\n}\n```\n"
+						"text": "Call TestDataSource's methods to configure your data source:\n\n```typescript\nimport { step, Browser, TestData, TestSettings } from '@flood/element'\nexport const settings: TestSettings = {\n  loopCount: -1\n}\n\ninterface Row {\n  username: string\n  userID: number\n}\nTestData.fromCSV<Row>('users.csv')\n  .circular(false) // Switch off circular data iteration.\n                   // By default, when the end of the data is reached, it wraps to the beginning.\n  .shuffle()       // Shuffle the data\n\nexport default () => {\n   step('Step 1', async (browser: Browser, row: Row) => {\n     // for each loop, a different line from user.csv will be available as `row`\n   })\n}\n```\n"
 					},
 					"typeParameter": [
 						{

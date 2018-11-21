@@ -12,7 +12,8 @@
 		"build": "tsc",
 		"build:watch": "tsc --watch",
 		"element": "ts-node -- ./index.ts",
-		"element:inspect": "node --inspect-brk -r ts-node/register ./index.ts"
+		"element:inspectb": "node --inspect-brk -r ts-node/register ./index.ts",
+		"element:inspect": "node --inspect -r ts-node/register ./index.ts"
 	},
 	"types": "./index.d.ts",
 	"dependencies": {

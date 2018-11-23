@@ -38,7 +38,7 @@ export default class Test {
 	// public networkRecorder: NetworkRecorder
 	// public observer: Observer
 
-	public testObserver: TestObserver
+	private testCancel: () => Promise<void> = async () => {}
 
 	public iteration: number = 0
 
@@ -55,10 +55,6 @@ export default class Test {
 		settingsOverride: TestSettings,
 		public testObserverFactory: (t: TestObserver) => TestObserver = x => x,
 	) {
-		// this.testObserver = new NullTestObserver()
-		this.testObserver = new ErrorObserver(
-			new LifecycleObserver(this.testObserverFactory(new InnerObserver(new NullTestObserver()))),
-		)
 		this.script = script
 
 		try {
@@ -78,7 +74,7 @@ export default class Test {
 
 	public async cancel() {
 		this.failed = true
-		await this.testObserver.after(this)
+		await this.testCancel()
 	}
 
 	public async beforeRun(): Promise<void> {
@@ -100,7 +96,14 @@ export default class Test {
 	): Promise<void> | never {
 		console.assert(this.client, `client is not configured in Test`)
 
-		// await (await this.client).reopenPage()
+		const testObserver = new ErrorObserver(
+			new LifecycleObserver(this.testObserverFactory(new InnerObserver(new NullTestObserver()))),
+		)
+		await (await this.client).reopenPage()
+
+		this.testCancel = async () => {
+			await testObserver.after(this)
+		}
 
 		this.failed = false
 		this.runningBrowser = null
@@ -115,8 +118,8 @@ export default class Test {
 				this.script.runEnv.workRoot,
 				this.client,
 				this.settings,
-				this.willRunCommand.bind(this),
-				this.didRunCommand.bind(this),
+				this.willRunCommand.bind(this, testObserver),
+				this.didRunCommand.bind(this, testObserver),
 			)
 
 			this.runningBrowser = browser
@@ -128,7 +131,7 @@ export default class Test {
 			if (this.settings.disableCache) await browser.setCacheDisabled(true)
 
 			debug('running this.before(browser)')
-			await this.testObserver.before(this)
+			await testObserver.before(this)
 
 			debug('Feeding data')
 			let testDataRecord = testData.feed()
@@ -142,7 +145,10 @@ export default class Test {
 			for (let step of this.steps) {
 				browser.customContext = step
 
-				await Promise.race([this.runStep(browser, step, testDataRecord), cancelToken.promise])
+				await Promise.race([
+					this.runStep(testObserver, browser, step, testDataRecord),
+					cancelToken.promise,
+				])
 
 				if (cancelToken.isCancellationRequested) return
 
@@ -159,7 +165,7 @@ export default class Test {
 
 		// TODO report skipped steps
 
-		await this.testObserver.after(this)
+		await testObserver.after(this)
 	}
 
 	get currentURL(): string {
@@ -170,9 +176,14 @@ export default class Test {
 		}
 	}
 
-	async runStep(browser: Browser<Step>, step: Step, testDataRecord: any) {
+	async runStep(
+		testObserver: TestObserver,
+		browser: Browser<Step>,
+		step: Step,
+		testDataRecord: any,
+	) {
 		let error: Error | null = null
-		await this.testObserver.beforeStep(this, step)
+		await testObserver.beforeStep(this, step)
 		try {
 			debug(`Run step: ${step.name}`) // ${step.fn.toString()}`)
 
@@ -187,12 +198,12 @@ export default class Test {
 			console.log('step error -> failed')
 			this.failed = true
 
-			await this.testObserver.onStepError(this, step, this.liftToStructuredError(error))
+			await testObserver.onStepError(this, step, this.liftToStructuredError(error))
 		} else {
-			await this.testObserver.onStepPassed(this, step)
+			await testObserver.onStepPassed(this, step)
 		}
 
-		await this.testObserver.afterStep(this, step)
+		await testObserver.afterStep(this, step)
 
 		if (error === null) {
 			await this.doStepDelay()
@@ -274,15 +285,15 @@ export default class Test {
 		})
 	}
 
-	public async willRunCommand(browser: Browser<Step>, command: string) {
+	public async willRunCommand(testObserver: TestObserver, browser: Browser<Step>, command: string) {
 		const step: Step = browser.customContext
-		await this.testObserver.beforeStepAction(this, step, command)
+		await testObserver.beforeStepAction(this, step, command)
 
 		debug(`Before action: '${command}()' waiting on actionDelay: ${this.settings.actionDelay}`)
 	}
 
-	async didRunCommand(browser: Browser<Step>, command: string) {
-		await this.testObserver.afterStepAction(this, browser.customContext, command)
+	async didRunCommand(testObserver: TestObserver, browser: Browser<Step>, command: string) {
+		await testObserver.afterStepAction(this, browser.customContext, command)
 	}
 
 	public async takeScreenshot(options?: ScreenshotOptions) {

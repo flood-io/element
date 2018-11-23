@@ -19,7 +19,7 @@ export default () => {
 	step('The Flood Store: Home', async browser => {
 		await browser.visit('https://jriz.io')
 
-		let pageTextVerify = By.visibleText('Welcome to the Flood IO Merchandise Store.')
+		let pageTextVerify = By.visibleText('Welcome to the Flood Store.')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 
 		await browser.takeScreenshot()
@@ -41,8 +41,8 @@ export default () => {
 	step('The Flood Store: View Cart', async browser => {
 		await browser.visit('https://jriz.io/cart')
 
-		let pageTextVerify1 = By.visibleText('Free shipping')
-		await browser.wait(Until.elementIsVisible(pageTextVerify1))
+		// let pageTextVerify1 = By.visibleText('Free shipping')
+		// await browser.wait(Until.elementIsVisible(pageTextVerify1))
 
 		let pageTextVerify2 = By.visibleText('Hoodie with Logo')
 		await browser.wait(Until.elementIsVisible(pageTextVerify2))

@@ -1,6 +1,6 @@
 {
   "name": "publish-brew-tap",
-  "version": "1.0.3",
+  "version": "1.0.4-beta.1",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {

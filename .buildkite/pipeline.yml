@@ -1,11 +1,15 @@
 steps:
   - command: "scripts/ci/build.sh"
     label: ":hammer: Build test image"
+    agents:
+      agent: "buildbox"
 
   - wait
 
   - command: "scripts/ci/test.sh"
     label: ":llama: Test"
+    agents:
+      agent: "buildbox"
 
   # - command: "scripts/ci/smoke.sh"
     # label: ":fire: Smoke"
@@ -14,3 +18,5 @@ steps:
 
   - command: "scripts/ci/publish.sh"
     label: ":ship: Publish"
+    agents:
+      agent: "buildbox"

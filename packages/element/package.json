@@ -21,11 +21,9 @@
 	},
 	"keywords": [
 		"load",
-		"testing",
 		"puppeteer",
 		"chrome",
 		"browser",
-		"testing",
 		"testing"
 	],
 	"author": "Ivan Vanderbyl <ivan@flood.io>",

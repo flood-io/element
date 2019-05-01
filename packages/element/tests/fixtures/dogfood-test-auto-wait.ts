@@ -8,18 +8,15 @@ export const settings: TestSettings = {
 	actionDelay: 1,
 	stepDelay: 2,
 	responseTimeMeasurement: 'step',
+	autoWait: true,
 }
 
 export default () => {
 	step('Dogfood Test Step', async (driver: Driver) => {
 		await driver.visit('http://localhost:1337/wait.html')
-
 		let linkText = By.linkText('show bar')
-		await driver.wait(Until.elementIsVisible(linkText))
-
 		let link = await driver.findElement(linkText)
 		await link.click()
-
-		await driver.wait(Until.elementIsVisible(By.css('#foo')))
+		await driver.findElement(By.css('#foo'))
 	})
 }

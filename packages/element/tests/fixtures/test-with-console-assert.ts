@@ -5,6 +5,7 @@ export const settings: TestSettings = {
 	actionDelay: 0.1,
 	stepDelay: 0.1,
 	waitTimeout: 10,
+	autoWait: false,
 }
 
 /**

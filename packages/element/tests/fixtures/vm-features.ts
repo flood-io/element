@@ -14,6 +14,7 @@ export const settings: TestSettings = {
 export default () => {
 	setup({
 		waitTimeout: 5,
+		autoWait: false,
 	})
 
 	// First step

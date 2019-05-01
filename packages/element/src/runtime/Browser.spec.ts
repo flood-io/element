@@ -67,7 +67,7 @@ describe('Browser', function() {
 		let browser = new Browser(
 			workRoot,
 			puppeteer,
-			DEFAULT_SETTINGS,
+			{ ...DEFAULT_SETTINGS, autoWait: false },
 			async name => {},
 			async name => {},
 		)

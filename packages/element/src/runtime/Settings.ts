@@ -189,11 +189,11 @@ export interface TestSettings {
 	chromeVersion?: ChromeVersion
 
 	/**
-	 * Enable auto waiting before an action. On by default.
+	 * Enable auto waiting before an action. Defaults to `true`
 	 *
 	 * You can specify a number in seconds to change the default wait time.
 	 */
-	autoWait?: boolean | number
+	autoWait?: boolean
 }
 
 /**

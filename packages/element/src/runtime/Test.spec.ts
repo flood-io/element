@@ -74,6 +74,7 @@ describe('Test', function() {
 			waitTimeout: 30,
 			responseTimeMeasurement: 'step',
 			consoleFilter: [],
+			autoWait: true,
 		})
 	})
 

@@ -4,9 +4,11 @@ import * as assert from 'assert'
 export const settings: TestSettings = {
 	clearCache: true,
 	disableCache: true,
-	stepDelay: 8.5,
-	actionDelay: 8.5,
-	screenshotOnFailure: true
+	stepDelay: 10,
+	actionDelay: 10,
+	screenshotOnFailure: true,
+	clearCookies: true,
+	chromeVersion: 'stable',
 }
 
 /**
@@ -16,7 +18,7 @@ export const settings: TestSettings = {
 export default () => {
     
     step('Visit S/4 Hana Trial Login', async browser => {
-		await browser.visit('https://my300197.s4hana.ondemand.com/ui#Shell-home')
+		await browser.visit('https://my300084.s4hana.ondemand.com/ui?sap-language=EN#Shell-home')
 	})
 
 	step('S/4 Hana Login', async browser => {
@@ -120,24 +122,10 @@ export default () => {
     	let salesOrderNumberValue = await Promise.all(salesOrderNumber.map(span => span.text()))
         console.log('salesOrderNumberValue = ' + salesOrderNumberValue[0])  
         
-        //click home #homeBtn
-        let btnHome = await browser.findElement(By.css('#homeBtn'))
-        await btnHome.click()
-       
-        await browser.takeScreenshot()
 
     })   
 
     step('Sales Order Entry - Back to Dashboard', async browser => {
-        
-        //Close warning dialog
-        let btnClose = await browser.findElement(By.xpath("//button[contains(@id, 'manageSalesOrder-component-appContent--Close')]"))
-        await btnClose.click()
-        
-        //retrieve Sales Order number
-    	let salesOrderNumber = await browser.findElements(By.xpath('//*[@id="cus.sd.salesorder20.manage::sap.suite.ui.generic.template.ObjectPage.view.Details::C_SalesOrderTP--objectPageHeader-innerTitle"]'))
-    	let salesOrderNumberValue = await Promise.all(salesOrderNumber.map(span => span.text()))
-        console.log('salesOrderNumberValue = ' + salesOrderNumberValue[0])  
         
         //click home #homeBtn
         let btnHome = await browser.findElement(By.css('#homeBtn'))

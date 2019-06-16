@@ -116,7 +116,7 @@ export interface TestSettings {
 	clearCookies?: boolean
 
 	/**
-	 * Specifies whether Brwoser cache should be cleared after each test loop.
+	 * Specifies whether Browser cache should be cleared after each test loop.
 	 *
 	 * @default false
 	 */
@@ -126,6 +126,14 @@ export interface TestSettings {
 	 * Disables browser request cache for all requests.
 	 */
 	disableCache?: boolean
+
+	/**
+	 * Specifies a set of extra HTTP headers to set before each test loop.
+	 * If this setting is undefined, the extra HTTP headers are left as-is between iterations.
+	 *
+	 * @default undefined
+	 */
+	extraHTTPHeaders?: { [key: string]: string }
 
 	/**
 	 * Speicifies the name of the test specified in the comments section

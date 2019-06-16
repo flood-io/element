@@ -129,6 +129,8 @@ export default class Test {
 			if (this.settings.device) await browser.emulateDevice(this.settings.device)
 			if (this.settings.userAgent) await browser.setUserAgent(this.settings.userAgent)
 			if (this.settings.disableCache) await browser.setCacheDisabled(true)
+			if (this.settings.extraHTTPHeaders !== undefined)
+				await browser.setExtraHTTPHeaders(this.settings.extraHTTPHeaders)
 
 			debug('running this.before(browser)')
 			await testObserver.before(this)

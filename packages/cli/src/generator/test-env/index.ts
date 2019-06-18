@@ -75,7 +75,7 @@ export default class TestEnv extends Generator {
 
 	get _packageJSON(): any {
 		return {
-			name: this.options.repoName,
+			name: this.options.repoName.split(' ').join('-'),
 			version: '0.0.1',
 			description: 'Flood Element test script',
 			private: true,

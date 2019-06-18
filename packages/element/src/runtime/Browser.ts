@@ -205,7 +205,7 @@ export class Browser<T> implements BrowserInterface {
 		} catch (e) {
 			if (e.message.includes('net::ERR_NAME_NOT_RESOLVED')) {
 				e = new StructuredError<NetworkErrorData>(
-					'dns name not resolved',
+					'domain name not resolved',
 					{
 						_kind: 'net',
 						url,

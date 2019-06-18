@@ -186,6 +186,9 @@ export default class Test {
 	) {
 		let error: Error | null = null
 		await testObserver.beforeStep(this, step)
+
+		let originalBrowserSettings = { ...browser.settings }
+
 		try {
 			debug(`Run step: ${step.name}`) // ${step.fn.toString()}`)
 
@@ -193,6 +196,8 @@ export default class Test {
 			await step.fn.call(null, browser, testDataRecord)
 		} catch (err) {
 			error = err
+		} finally {
+			browser.settings = originalBrowserSettings
 		}
 
 		if (error !== null) {

@@ -6,10 +6,10 @@ title: ''
 Browser (also called Driver) is the main entry point in each <[step]>, it's your direct connection to the browser running the test.
 
 ```typescript
-import { step } from '@flood/element'
+import { step } from "@flood/element"
 export default () => {
-  step('Start', async browser => {
-    await browser.visit('https://challenge.flood.io')
+  step("Start", async browser => {
+    await browser.visit("https://challenge.flood.io")
   })
 }
 ```
@@ -58,7 +58,7 @@ currently outside the viewport it will first scroll to that element.
 **Example:**
 
 ```typescript
-step('Start', async browser => {
+step("Start", async browser => {
   await browser.click(By.partialLinkText('Start'))
 })
 ```
@@ -148,6 +148,17 @@ Selects an option within a `<select>` tag using the value of the `<option>` elem
 * `keys` &lt;string\[]&gt;   
 * returns: &lt;[Promise]&lt;void&gt;&gt; 
 
+`sendKeys` simulates typing a list of strings on the keyboard.
+
+If a string is a member of <[Key]> it is pressed individually. Otherwise the string is typed.
+This allows sendKeys to simulate a user typing control keys such as `Key.ENTER`.
+
+**Example:**
+```typescript
+await browser.click("#input_address")
+await browser.sendKeys("Hello, World!", Key.ENTER)
+```
+
 #### `Browser.setUserAgent(userAgent)`
 * `userAgent` &lt;string&gt;   
 * returns: &lt;[Promise]&lt;void&gt;&gt; 
@@ -178,8 +189,8 @@ Types a string into an `<input>` control, key press by key press. Use this to fi
 
 **Example:**
 ```typescript
-step('Step 1', async browser => {
-  await browser.type(By.css('#email'), 'user@example.com')
+step("Step 1", async browser => {
+  await browser.type(By.css("#email"), "user@example.com")
 })
 ```
 
@@ -197,8 +208,8 @@ a new Browser tab for this page to load into.
 **Example:**
 
 ```typescript
-step('Start', async browser => {
-  await browser.visit('https://example.com')
+step("Start", async browser => {
+  await browser.visit("https://example.com")
 })
 ```
 
@@ -213,7 +224,7 @@ Check out <[Until]> for a rich set of wait <[Condition]>s.
 **Example:**
 
 ```typescript
-step('Start', async browser => {
+step("Start", async browser => {
   await browser.wait(Until.elementIsVisible(By.css('h1.title')))
 })
 ```
@@ -252,15 +263,15 @@ Note that most Element location API methods accept a NullableLocatable but will 
 
 #### properties
 * `button` &lt;[MouseButtons]&gt;  (Optional)   defaults to left  
-* `clickCount` &lt;number&gt;  (Optional)   defaults to 1  
-* `delay` &lt;number&gt;  (Optional)   Time to wait between mousedown and mouseup in milliseconds.  
+* `clickCount` &lt;undefined | number&gt;  (Optional)   defaults to 1  
+* `delay` &lt;undefined | number&gt;  (Optional)   Time to wait between mousedown and mouseup in milliseconds.  
   Defaults to 0.  
 # `NavigationOptions`
 
 The navigation options.
 
 #### properties
-* `timeout` &lt;number&gt;  (Optional)   Maximum navigation time in milliseconds, pass 0 to disable timeout.  
+* `timeout` &lt;undefined | number&gt;  (Optional)   Maximum navigation time in milliseconds, pass 0 to disable timeout.  
 * `waitUntil` &lt;[LoadEvent] | [LoadEvent]\[]&gt;  (Optional)   When to consider navigation succeeded.  
 # `ScreenshotOptions`
 
@@ -268,16 +279,16 @@ Defines the screenshot options.
 
 #### properties
 * `clip` &lt;[BoundingBox]&gt;  (Optional)   An object which specifies clipping region of the page.  
-* `fullPage` &lt;boolean&gt;  (Optional)   When true, takes a screenshot of the full scrollable page.  
-* `omitBackground` &lt;boolean&gt;  (Optional)   Hides default white background and allows capturing screenshots with transparency.  
-* `path` &lt;string&gt;  (Optional)   The file path to save the image to. The screenshot type will be inferred from file extension.  
+* `fullPage` &lt;undefined | false | true&gt;  (Optional)   When true, takes a screenshot of the full scrollable page.  
+* `omitBackground` &lt;undefined | false | true&gt;  (Optional)   Hides default white background and allows capturing screenshots with transparency.  
+* `path` &lt;undefined | string&gt;  (Optional)   The file path to save the image to. The screenshot type will be inferred from file extension.  
   If `path` is a relative path, then it is resolved relative to current working directory.  
   If no path is provided, the image won't be saved to the disk.  
-* `quality` &lt;number&gt;  (Optional)   The quality of the image, between 0-100. Not applicable to png images.  
+* `quality` &lt;undefined | number&gt;  (Optional)   The quality of the image, between 0-100. Not applicable to png images.  
 * `type` &lt;"jpeg" | "png"&gt;  (Optional)   The screenshot type.  
 ## `LoadEvent`
 ```typescript
-'load' | 'domcontentloaded' | 'networkidle0' | 'networkidle2'
+"load" | "domcontentloaded" | "networkidle0" | "networkidle2"
 ```
 
 [step]: ../../api/DSL.md#step
@@ -289,6 +300,7 @@ Defines the screenshot options.
 [EvaluateFn]: ../..#evaluatefn
 [ElementHandle]: ../../api/ElementHandle.md#elementhandle
 [Locator]: ../../api/By.md#locator
+[Key]: ../../api/Constants.md#key
 [TargetLocator]: ../../api/TargetLocator.md#targetlocator
 [ScreenshotOptions]: ../../api/Browser.md#screenshotoptions
 [NavigationOptions]: ../../api/Browser.md#navigationoptions

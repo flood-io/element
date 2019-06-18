@@ -31,8 +31,8 @@ function createVirtualMachine(floodElementActual: any): NodeVM {
 		console: 'redirect',
 		sandbox: {},
 		require: {
-			external: false,
-			builtin: [],
+			external: true,
+			builtin: ["*"],
 			context: 'sandbox',
 			mock: {
 				'@flood/chrome': floodElementActual,

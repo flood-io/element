@@ -165,7 +165,7 @@ export class Browser<T> implements BrowserInterface {
 	@addCallbacks()
 	public async wait(timeoutOrCondition: Condition | number): Promise<boolean> {
 		if (typeof timeoutOrCondition === 'number') {
-			await new Promise((yeah, nah) => setTimeout(yeah, Number(timeoutOrCondition) * 1e3))
+			await new Promise(yeah => setTimeout(yeah, Number(timeoutOrCondition) * 1e3))
 			return true
 		}
 

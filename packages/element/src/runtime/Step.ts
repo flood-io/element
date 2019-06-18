@@ -52,6 +52,13 @@ export interface StepOptions {
 	 * @default `30` seconds
 	 */
 	waitTimeout?: number
+
+	/**
+	 * Override global auto wait setting. Uses `waitTimeout` from step if defined.
+	 *
+	 * @default `inherit`
+	 */
+	autoWait?: boolean
 }
 
 /**

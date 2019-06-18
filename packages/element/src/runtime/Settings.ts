@@ -200,6 +200,7 @@ export interface TestSettings {
  * The default settings for a Test. Any settings you provide are merged into these defaults.
  */
 export const DEFAULT_SETTINGS: ConcreteTestSettings = {
+	autoWait: false,
 	duration: -1,
 	loopCount: Infinity,
 	actionDelay: 2,
@@ -217,7 +218,6 @@ export const DEFAULT_SETTINGS: ConcreteTestSettings = {
 	device: 'Chrome Desktop Large',
 	ignoreHTTPSErrors: false,
 	chromeVersion: 'puppeteer',
-	autoWait: false,
 }
 
 /**

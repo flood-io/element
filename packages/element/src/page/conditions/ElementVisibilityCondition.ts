@@ -17,9 +17,7 @@ export class ElementVisibilityCondition extends ElementCondition {
 		const style = window.getComputedStyle(node)
 		const isVisible = style && style.visibility !== 'hidden' && hasVisibleBoundingBox()
 		return waitForVisible === isVisible || waitForHidden === !isVisible
-		/**
-		 * @return {boolean}
-		 */
+
 		function hasVisibleBoundingBox() {
 			const rect = node.getBoundingClientRect()
 			return !!(rect.top || rect.bottom || rect.width || rect.height)

@@ -217,7 +217,7 @@ export const DEFAULT_SETTINGS: ConcreteTestSettings = {
 	device: 'Chrome Desktop Large',
 	ignoreHTTPSErrors: false,
 	chromeVersion: 'puppeteer',
-	autoWait: true,
+	autoWait: false,
 }
 
 /**

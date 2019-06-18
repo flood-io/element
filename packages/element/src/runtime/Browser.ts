@@ -34,6 +34,7 @@ import interpretPuppeteerError from './errors/interpretPuppeteerError'
 import { StructuredError } from '../utils/StructuredError'
 
 import * as debugFactory from 'debug'
+import Mouse from '../page/Mouse'
 const debug = debugFactory('element:runtime:browser')
 const debugScreenshot = debugFactory('element:runtime:browser:screenshot')
 
@@ -175,6 +176,8 @@ function rewriteError<T>() {
 export class Browser<T> implements BrowserInterface {
 	public screenshots: string[]
 	customContext: T
+
+	private mouseInstance: Mouse = new Mouse(this)
 
 	constructor(
 		public workRoot: WorkRoot,
@@ -448,6 +451,10 @@ export class Browser<T> implements BrowserInterface {
 
 		await element.focus()
 		return this.page.keyboard.type(text, options)
+	}
+
+	public get mouse() {
+		return this.mouseInstance
 	}
 
 	@addCallbacks()

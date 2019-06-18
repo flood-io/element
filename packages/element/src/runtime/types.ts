@@ -1,6 +1,6 @@
 import { Device } from '../page/Enums'
 import { Condition } from '../page/Condition'
-import { NavigationOptions, ClickOptions, ScreenshotOptions } from 'puppeteer'
+import { NavigationOptions, ClickOptions, ScreenshotOptions, Page, Frame } from 'puppeteer'
 import { ElementHandle, Locator } from '../page/types'
 import { TargetLocator } from '../page/TargetLocator'
 import { StepDefinition } from './Step'
@@ -72,6 +72,16 @@ export interface SuiteDefinition {
  */
 export interface Browser {
 	title(): Promise<string>
+
+  /**
+   * The current puppeteer Page
+   */
+  page: Page
+
+  /**
+   * The list of puppeteer Frames
+   */
+  frames: Frame[]
 
 	/**
 	 * Sets the HTTP Authentication details to use if the page is presented with an authentication prompt.

@@ -93,16 +93,20 @@ describe('Browser', function() {
 	})
 
 	describe('Frame handling', () => {
-		it('can list all frames', async () => {
-			let browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
+		let browser: Browser<any>
+
+		beforeEach(async () => {
+			browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
 			await browser.visit('http://localhost:1337/frames.html')
+		})
+
+		it('can list all frames', async () => {
 			let frames = browser.frames
+			expect(frames).to.have.lengthOf(3)
 			expect(frames.map(f => f.name())).to.deep.equal(['', 'frame1', 'frame2'])
 		})
 
 		it('can switch frame by index', async () => {
-			let browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
-			await browser.visit('http://localhost:1337/frames.html')
 			await browser.switchTo().frame(0)
 			expect(browser.target.name()).to.equal('frame1')
 			await browser.switchTo().frame(1)
@@ -112,8 +116,6 @@ describe('Browser', function() {
 		})
 
 		it('can switch frame by name', async () => {
-			let browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
-			await browser.visit('http://localhost:1337/frames.html')
 			await browser.switchTo().frame('frame1')
 			expect(browser.target.name()).to.equal('frame1')
 			await browser.switchTo().frame('frame2')
@@ -123,16 +125,12 @@ describe('Browser', function() {
 		})
 
 		it('can switch frame using ElementHandle', async () => {
-			let browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
-			await browser.visit('http://localhost:1337/frames.html')
 			let frame = await browser.findElement('frame[name="frame1"]')
 			await browser.switchTo().frame(frame)
 			expect(browser.target.name()).to.equal('frame1')
 		})
 
 		it('can interact with another frame', async () => {
-			let browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
-			await browser.visit('http://localhost:1337/frames.html')
 			await browser.switchTo().frame('frame1')
 			expect(browser.target.name()).to.equal('frame1')
 

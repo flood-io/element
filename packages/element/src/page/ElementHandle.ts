@@ -14,6 +14,7 @@ import { StructuredError } from '../utils/StructuredError'
 import { By } from './By'
 import * as debugFactory from 'debug'
 import { Key } from './Enums'
+import { WorkRoot } from '../runtime-environment/types'
 const debug = debugFactory('element:page:element-handle')
 
 /**
@@ -108,6 +109,7 @@ function domError(
  */
 interface ScreenshotSaver {
 	saveScreenshot(fn: (path: string) => Promise<boolean>): void
+	workRoot: WorkRoot
 }
 
 /**
@@ -120,6 +122,7 @@ export class ElementHandle implements IElementHandle, Locator {
 	 * @internal
 	 */
 	private screenshotSaver: ScreenshotSaver
+	private workRoot: WorkRoot
 	/**
 	 * @internal
 	 */
@@ -153,8 +156,9 @@ export class ElementHandle implements IElementHandle, Locator {
 		return this
 	}
 
-	public bindBrowser(sss: ScreenshotSaver) {
-		this.screenshotSaver = sss
+	public bindBrowser(browser: ScreenshotSaver) {
+		this.screenshotSaver = browser
+		this.workRoot = browser.workRoot
 	}
 
 	public toErrorString(): string {
@@ -261,6 +265,15 @@ export class ElementHandle implements IElementHandle, Locator {
 		let handle = this.element.asElement()
 		if (!handle) return
 		return handle.type(text)
+	}
+
+	/**
+	 * Sets the value of the file input these files
+	 * @param names The name of a file you uploaded with this script. Relative to the script.
+	 */
+	@wrapDescriptiveError()
+	public async uploadFile(...names: string[]): Promise<void> {
+		return this.element.uploadFile(...names.map(name => this.workRoot.testData(name)))
 	}
 
 	/**

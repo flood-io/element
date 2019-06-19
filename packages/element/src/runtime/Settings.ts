@@ -181,6 +181,15 @@ export interface TestSettings {
 	ignoreHTTPSErrors?: boolean
 
 	chromeVersion?: ChromeVersion
+
+	/**
+	 * List of domains to disable sending requests to while loading a page.
+	 *
+	 * Example:
+	 *
+	 * `["google-analytics.com"]`
+	 */
+	blockDomains?: string[]
 }
 
 /**
@@ -204,6 +213,7 @@ export const DEFAULT_SETTINGS: ConcreteTestSettings = {
 	device: 'Chrome Desktop Large',
 	ignoreHTTPSErrors: false,
 	chromeVersion: 'puppeteer',
+	blockDomains: [],
 }
 
 /**
@@ -229,6 +239,7 @@ export interface ConcreteTestSettings extends TestSettings {
 	userAgent: string
 	device: string
 	ignoreHTTPSErrors: boolean
+	blockDomains: string[]
 }
 
 /**

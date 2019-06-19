@@ -5,7 +5,7 @@ import { launchPuppeteer, testPuppeteer } from '../../tests/support/launch-brows
 import { DogfoodServer } from '../../tests/support/fixture-server'
 import { Browser } from '../runtime/Browser'
 import { testWorkRoot } from '../../tests/support/test-run-env'
-import { DEFAULT_SETTINGS } from '../../dist'
+import { DEFAULT_SETTINGS } from '../runtime/Settings'
 
 let dogfoodServer = new DogfoodServer()
 let page: Page

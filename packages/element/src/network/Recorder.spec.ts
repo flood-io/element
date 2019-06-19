@@ -101,7 +101,7 @@ describe('Recorder', function() {
 			let [document] = recorder.entriesForType('Document')
 
 			let now = new Date().valueOf()
-			expect(document.request.timestamp).to.be.within(now - 100, now)
+			expect(document.request.timestamp).to.be.within(now - 1000, now + 1000)
 			expect(document.response.timestamp).to.be.greaterThan(document.request.timestamp)
 		})
 

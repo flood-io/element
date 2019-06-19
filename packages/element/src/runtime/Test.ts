@@ -64,7 +64,7 @@ export default class Test {
 		}
 
 		Object.assign(this.settings, settingsOverride)
-		this.requestInterceptor = new Interceptor(this.settings.blockDomains || [])
+		this.requestInterceptor = new Interceptor(this.settings.blockedDomains || [])
 	}
 
 	public async cancel() {

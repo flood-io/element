@@ -189,7 +189,7 @@ export interface TestSettings {
 	 *
 	 * `["google-analytics.com"]`
 	 */
-	blockDomains?: string[]
+	blockedDomains?: string[]
 }
 
 /**
@@ -213,7 +213,7 @@ export const DEFAULT_SETTINGS: ConcreteTestSettings = {
 	device: 'Chrome Desktop Large',
 	ignoreHTTPSErrors: false,
 	chromeVersion: 'puppeteer',
-	blockDomains: [],
+	blockedDomains: [],
 }
 
 /**
@@ -239,7 +239,7 @@ export interface ConcreteTestSettings extends TestSettings {
 	userAgent: string
 	device: string
 	ignoreHTTPSErrors: boolean
-	blockDomains: string[]
+	blockedDomains: string[]
 }
 
 /**

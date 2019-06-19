@@ -82,7 +82,7 @@ export const getFrames = (childFrames: Frame[], collection?: Set<Frame>): Frame[
 		if (!collection!.has(frame)) {
 			collection!.add(frame)
 			getFrames(frame.childFrames(), collection)
-	}
+		}
 	})
 
 	return Array.from(collection.values())
@@ -180,7 +180,7 @@ export class Browser<T> implements BrowserInterface {
 	public screenshots: string[]
 	customContext: T
 
-	private mouseInstance: Mouse = new Mouse(this)
+	public readonly mouse: Mouse = new Mouse(this)
 
 	constructor(
 		public workRoot: WorkRoot,
@@ -452,10 +452,6 @@ export class Browser<T> implements BrowserInterface {
 
 		await element.focus()
 		return this.page.keyboard.type(text, options)
-	}
-
-	public get mouse() {
-		return this.mouseInstance
 	}
 
 	@addCallbacks()

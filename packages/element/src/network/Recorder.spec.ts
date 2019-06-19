@@ -71,7 +71,7 @@ describe('Recorder', function() {
 
 		it('records request headers for document', async () => {
 			let [document] = recorder.entriesForType('Document')
-			expect(document.request.headers.map(({ name }) => name).sort()).to.deep.equal([
+			expect(document.request.headers.map(({ name }) => name).sort()).to.include.members([
 				'Accept',
 				'Accept-Encoding',
 				'Connection',

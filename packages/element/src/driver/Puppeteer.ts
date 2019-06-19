@@ -67,7 +67,8 @@ export class PuppeteerClient implements IPuppeteerClient {
 
 	async reopenPage(): Promise<void> {
 		await this.page.close()
-		this.page = await this.browser.newPage()
+		let context = await this.browser.createIncognitoBrowserContext()
+		this.page = await context.newPage()
 	}
 }
 

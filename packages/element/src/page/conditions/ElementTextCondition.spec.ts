@@ -16,7 +16,7 @@ describe('Condition', function() {
 		await dogfoodServer.start()
 		puppeteer = await launchPuppeteer()
 		page = puppeteer.page
-		page.on('console', msg => console.log(`>> console.${msg.type}: ${msg.text}`))
+		page.on('console', msg => console.log(`>> console.${msg.type()}: ${msg.text()}`))
 	})
 
 	after(async () => {

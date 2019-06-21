@@ -67,7 +67,7 @@ describe('Browser', function() {
 		let browser = new Browser(
 			workRoot,
 			puppeteer,
-			{ ...DEFAULT_SETTINGS, autoWait: false },
+			{ ...DEFAULT_SETTINGS },
 			async name => {},
 			async name => {},
 		)
@@ -153,7 +153,7 @@ describe('Browser', function() {
 
 	describe('auto waiting', () => {
 		it('automatically applies a wait step to actions', async () => {
-			let browser = new Browser(workRoot, puppeteer, { ...DEFAULT_SETTINGS, autoWait: true })
+			let browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
 			await browser.visit('http://localhost:1337/wait.html')
 
 			await browser.click(By.id('add_select'))
@@ -164,7 +164,7 @@ describe('Browser', function() {
 		})
 
 		it('fails to return a visible link without waiting', async () => {
-			let browser = new Browser(workRoot, puppeteer, { ...DEFAULT_SETTINGS, autoWait: false })
+			let browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
 			await browser.visit('http://localhost:1337/wait.html')
 
 			await browser.click(By.id('add_select'))

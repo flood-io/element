@@ -6,7 +6,6 @@ export const settings: TestSettings = {
 	actionDelay: 0,
 	stepDelay: 0,
 	waitTimeout: 10,
-	autoWait: false,
 }
 
 /**
@@ -21,6 +20,5 @@ export default function() {
 		await link.click()
 		await driver.wait(Until.elementIsVisible('#foo'))
 		assert.equal(await link.text(), 'foobarlink')
-		// ((await link.text()) === 'foobarlink')
 	})
 }

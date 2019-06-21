@@ -58,7 +58,7 @@ export interface StepOptions {
 	 *
 	 * @default `inherit`
 	 */
-	autoWait?: boolean
+	waitUntil?: boolean
 }
 
 /**

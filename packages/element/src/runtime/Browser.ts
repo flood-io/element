@@ -38,7 +38,7 @@ import Mouse from '../page/Mouse'
 const debug = debugFactory('element:runtime:browser')
 import { rewriteError } from './decorators/rewriteError'
 import { addCallbacks } from './decorators/addCallbacks'
-import { autoWait } from './decorators/autoWait'
+import { autoWaitUntil } from './decorators/autoWait'
 export const debug = debugFactory('element:runtime:browser')
 const debugScreenshot = debugFactory('element:runtime:browser:screenshot')
 
@@ -259,7 +259,7 @@ export class Browser<T> implements BrowserInterface {
 	 * Sends a click event to the element located at `selector`. If the element is
 	 * currently outside the viewport it will first scroll to that element.
 	 */
-	@autoWait()
+	@autoWaitUntil()
 	@addCallbacks()
 	public async click(selectorOrLocator: NullableLocatable, options?: ClickOptions): Promise<void> {
 		const element = await this.findElement(selectorOrLocator)
@@ -270,7 +270,7 @@ export class Browser<T> implements BrowserInterface {
 	 * Sends a double-click event to the element located by the supplied Locator or `selector`. If the element is
 	 * currently outside the viewport it will first scroll to that element.
 	 */
-	@autoWait()
+	@autoWaitUntil()
 	@addCallbacks()
 	public async doubleClick(
 		selectorOrLocator: NullableLocatable,
@@ -280,7 +280,7 @@ export class Browser<T> implements BrowserInterface {
 		return element.click({ clickCount: 2, ...options })
 	}
 
-	@autoWait()
+	@autoWaitUntil()
 	@addCallbacks()
 	public async selectByValue(locatable: NullableLocatable, ...values: string[]): Promise<string[]> {
 		const element = await this.findElement(locatable)
@@ -303,7 +303,7 @@ export class Browser<T> implements BrowserInterface {
 		)
 	}
 
-	@autoWait()
+	@autoWaitUntil()
 	@addCallbacks()
 	public async selectByIndex(locatable: NullableLocatable, index: string): Promise<string[]> {
 		// TODO: Write tests for this
@@ -328,7 +328,7 @@ export class Browser<T> implements BrowserInterface {
 		)
 	}
 
-	@autoWait()
+	@autoWaitUntil()
 	@addCallbacks()
 	public async selectByText(locatable: NullableLocatable, text: string): Promise<string[]> {
 		const element = await this.findElement(locatable)
@@ -354,7 +354,7 @@ export class Browser<T> implements BrowserInterface {
 		)
 	}
 
-	@autoWait()
+	@autoWaitUntil()
 	@addCallbacks()
 	public async clear(locatable: NullableLocatable | string): Promise<void> {
 		let locator = locatableToLocator(locatable, 'browser.clear()')
@@ -364,7 +364,7 @@ export class Browser<T> implements BrowserInterface {
 		}
 	}
 
-	@autoWait()
+	@autoWaitUntil()
 	@addCallbacks()
 	public async type(
 		locatable: NullableLocatable,
@@ -377,13 +377,13 @@ export class Browser<T> implements BrowserInterface {
 		return this.page.keyboard.type(text, options)
 	}
 
-	@autoWait()
+	@autoWaitUntil()
 	@addCallbacks()
 	public async press(keyCode: string, options?: { text?: string; delay?: number }): Promise<void> {
 		return this.page.keyboard.press(keyCode, options)
 	}
 
-	@autoWait()
+	@autoWaitUntil()
 	@addCallbacks()
 	public async sendKeys(...keys: string[]): Promise<void> {
 		let handle = this.page.keyboard
@@ -396,14 +396,14 @@ export class Browser<T> implements BrowserInterface {
 		}
 	}
 
-	@autoWait()
+	@autoWaitUntil()
 	@addCallbacks()
 	public async blur(locatable: NullableLocatable): Promise<void> {
 		const element = await this.findElement(locatable)
 		return element.blur()
 	}
 
-	@autoWait()
+	@autoWaitUntil()
 	@addCallbacks()
 	public async focus(locatable: NullableLocatable): Promise<void> {
 		const element = await this.findElement(locatable)
@@ -450,7 +450,7 @@ export class Browser<T> implements BrowserInterface {
 		})
 	}
 
-	@autoWait()
+	@autoWaitUntil()
 	@rewriteError()
 	public async highlightElement(element: ElementHandle): Promise<void> {
 		// let session = await this.page.target().createCDPSession()
@@ -458,7 +458,7 @@ export class Browser<T> implements BrowserInterface {
 		return element.highlight()
 	}
 
-	@autoWait()
+	@autoWaitUntil()
 	@rewriteError()
 	public async findElement(locatable: NullableLocatable): Promise<ElementHandle> {
 		let locator = locatableToLocator(locatable, 'browser.findElement(locatable)')
@@ -492,10 +492,10 @@ export class Browser<T> implements BrowserInterface {
 		return element
 	}
 
-	@autoWait()
+	@autoWaitUntil()
 	@rewriteError()
 	public async findElements(locatable: NullableLocatable): Promise<ElementHandle[]> {
-		let locator = locatableToLocator(locatable, 'browser.findElemts(locatable)')
+		let locator = locatableToLocator(locatable, 'browser.findElements(locatable)')
 		let elements = await locator.findMany(await this.context)
 		elements.forEach(element => element.bindBrowser(this))
 		return elements

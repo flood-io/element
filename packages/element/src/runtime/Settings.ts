@@ -50,6 +50,13 @@ export type ConsoleMethod = 'log' | 'info' | 'debug' | 'warn' | 'error'
 export type ChromeVersion = 'puppeteer' | 'stable'
 
 /**
+ * Element presence lists the accepted values for automatically waiting on elements before running actions.
+ *
+ * Set to `false` or `null` to disable.
+ */
+export type ElementPresence = 'visible' | 'present' | false | null
+
+/**
  * The TestSettings interface specifies the available settings you have to configure how your test runs. These properties should be exported using the property `settings`.
  *
  * **Example:**
@@ -193,14 +200,14 @@ export interface TestSettings {
 	 *
 	 * You can specify a number in seconds to change the default wait time.
 	 */
-	autoWait?: boolean
+	waitUntil?: ElementPresence
 }
 
 /**
  * The default settings for a Test. Any settings you provide are merged into these defaults.
  */
 export const DEFAULT_SETTINGS: ConcreteTestSettings = {
-	autoWait: false,
+	waitUntil: null,
 	duration: -1,
 	loopCount: Infinity,
 	actionDelay: 2,

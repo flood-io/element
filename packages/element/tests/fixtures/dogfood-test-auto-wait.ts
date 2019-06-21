@@ -8,7 +8,7 @@ export const settings: TestSettings = {
 	actionDelay: 1,
 	stepDelay: 2,
 	responseTimeMeasurement: 'step',
-	autoWait: true,
+	waitUntil: 'visible',
 }
 
 export default () => {

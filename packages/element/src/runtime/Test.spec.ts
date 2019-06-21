@@ -15,14 +15,6 @@ let puppeteer: testPuppeteer
 let testReporter: EventEmitterReporter = new EventEmitterReporter()
 const runEnv = testRunEnv()
 
-// function ensureDefined(value: any | undefined | null): any | never {
-// if (value === undefined || value === null) {
-// throw new Error('value was not defined')
-// } else {
-// return value
-// }
-// }
-
 const setupTest = async (scriptName: string) => {
 	const script = await EvaluatedScript.mustCompileFile(
 		join(__dirname, '../../tests/fixtures', scriptName),
@@ -75,7 +67,7 @@ describe('Test', function() {
 			responseTimeMeasurement: 'step',
 			consoleFilter: [],
 			incognito: false,
-			autoWait: false,
+			waitUntil: false,
 		})
 	})
 

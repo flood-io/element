@@ -1,4 +1,5 @@
 import { Browser } from './types'
+import { ElementPresence } from './Settings'
 
 /**
  * Declares each step in your test. This must go within your main test expression.
@@ -58,7 +59,7 @@ export interface StepOptions {
 	 *
 	 * @default `inherit`
 	 */
-	waitUntil?: boolean
+	waitUntil?: ElementPresence
 }
 
 /**

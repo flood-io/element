@@ -193,12 +193,17 @@ export interface TestSettings {
 	 */
 	incognito?: boolean
 
+	/**
+	 * Specifies a version of Google Chrome
+	 */
 	chromeVersion?: ChromeVersion
 
 	/**
-	 * Enable auto waiting before an action. Defaults to `true`
+	 * Automatically apply a wait(Until...) before each action. Defaults to `false`
 	 *
-	 * You can specify a number in seconds to change the default wait time.
+	 * Accepts either `visible` or `present` as values. Set to `false` to disable (default).
+	 *
+	 * Uses global wait timeout from settings.
 	 */
 	waitUntil?: ElementPresence
 }
@@ -207,7 +212,7 @@ export interface TestSettings {
  * The default settings for a Test. Any settings you provide are merged into these defaults.
  */
 export const DEFAULT_SETTINGS: ConcreteTestSettings = {
-	waitUntil: null,
+	waitUntil: false,
 	duration: -1,
 	loopCount: Infinity,
 	actionDelay: 2,
@@ -225,6 +230,7 @@ export const DEFAULT_SETTINGS: ConcreteTestSettings = {
 	device: 'Chrome Desktop Large',
 	ignoreHTTPSErrors: false,
 	chromeVersion: 'puppeteer',
+	incognito: false,
 }
 
 /**

@@ -153,7 +153,7 @@ describe('Browser', function() {
 
 	describe('auto waiting', () => {
 		it('automatically applies a wait step to actions', async () => {
-			let browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
+			let browser = new Browser(workRoot, puppeteer, { ...DEFAULT_SETTINGS, waitUntil: 'visible' })
 			await browser.visit('http://localhost:1337/wait.html')
 
 			await browser.click(By.id('add_select'))

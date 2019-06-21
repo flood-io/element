@@ -22,23 +22,14 @@ import { Key } from '../page/Enums'
 import { readFileSync } from 'fs'
 import * as termImg from 'term-img'
 import { ConcreteTestSettings } from './Settings'
-import {
-	NetworkErrorData,
-	LocatorErrorData,
-	AnyErrorData,
-	ActionErrorData,
-	interpretError,
-} from './errors/Types'
-import interpretPuppeteerError from './errors/interpretPuppeteerError'
-
+import { NetworkErrorData, LocatorErrorData, ActionErrorData } from './errors/Types'
 import { StructuredError } from '../utils/StructuredError'
-
-import * as debugFactory from 'debug'
+import debugFactory from 'debug'
 import Mouse from '../page/Mouse'
-const debug = debugFactory('element:runtime:browser')
 import { rewriteError } from './decorators/rewriteError'
 import { addCallbacks } from './decorators/addCallbacks'
 import { autoWaitUntil } from './decorators/autoWait'
+
 export const debug = debugFactory('element:runtime:browser')
 const debugScreenshot = debugFactory('element:runtime:browser:screenshot')
 

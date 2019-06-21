@@ -16,7 +16,8 @@
     "publish:brew": "ts-node --project ./scripts/publish-brew-tap/tsconfig.json -- ./scripts/publish-brew-tap/index.ts",
     "publish:pre": "lerna publish --force-publish=* --cd-version prerelease && yarn publish:brew",
     "element:prof": "node -r ts-node/register --inspect ./packages/cli/index.ts",
-    "element": "ts-node -- ./packages/cli/index.ts"
+    "element": "echo 'DEPRECATED, use `yarn dev` instead' && ts-node -- ./packages/cli/index.ts",
+    "dev": "ts-node -- ./packages/cli/index.ts"
   },
   "prettier": {
     "semi": false,

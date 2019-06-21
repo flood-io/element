@@ -52,7 +52,7 @@ export interface IPuppeteerClient {
 	browser: Browser
 	page: Page
 	close(): Promise<void>
-	reopenPage(): Promise<void>
+	reopenPage(incognito: boolean): Promise<void>
 }
 
 export class PuppeteerClient implements IPuppeteerClient {
@@ -65,9 +65,17 @@ export class PuppeteerClient implements IPuppeteerClient {
 		this._isClosed = true
 	}
 
-	async reopenPage(): Promise<void> {
-		await this.page.close()
-		this.page = await this.browser.newPage()
+	async reopenPage(incognito: boolean = false): Promise<void> {
+		for (const page of await this.browser.pages()) {
+			await page.close()
+		}
+
+		if (incognito) {
+			let context = await this.browser.createIncognitoBrowserContext()
+			this.page = await context.newPage()
+		} else {
+			this.page = await this.browser.newPage()
+		}
 	}
 }
 

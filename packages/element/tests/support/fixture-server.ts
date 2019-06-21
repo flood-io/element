@@ -22,7 +22,7 @@ export class DogfoodServer {
 		}
 		await new Promise(done => {
 			instance = this.server = this.app.listen(1337, function() {
-				console.log('Dogfood server listening on port :1337!')
+				// console.log('Dogfood server listening on port :1337!')
 				done()
 			})
 		})

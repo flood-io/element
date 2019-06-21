@@ -86,16 +86,5 @@
 		"tslint": "^5.5.0",
 		"tslint-config-prettier": "^1.5.0",
 		"tslint-plugin-prettier": "^1.2.0"
-	},
-	"prettier": {
-		"semi": false,
-		"singleQuote": true,
-		"trailingComma": "all",
-		"printWidth": 100,
-		"useTabs": true,
-		"tabWidth": 2,
-		"bracketSpacing": true,
-		"jsxBracketSameLine": true,
-		"arrowParens": "avoid"
 	}
 }

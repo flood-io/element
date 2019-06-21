@@ -19,16 +19,6 @@
     "element": "echo 'DEPRECATED, use `yarn dev` instead' && ts-node -- ./packages/cli/index.ts",
     "dev": "ts-node -- ./packages/cli/index.ts"
   },
-  "prettier": {
-    "semi": false,
-    "singleQuote": true,
-    "trailingComma": "all",
-    "printWidth": 100,
-    "tabWidth": 2,
-    "bracketSpacing": true,
-    "jsxBracketSameLine": true,
-    "arrowParens": "avoid"
-  },
   "devDependencies": {
     "commonmark": "^0.28.1",
     "doctrine": "^2.0.0",

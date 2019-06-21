@@ -180,6 +180,12 @@ export interface TestSettings {
 	 */
 	ignoreHTTPSErrors?: boolean
 
+	/**
+	 * Controls whether each iteration should run within an Incognito window instead of a normal
+	 * window. The Incognito session will be destroyed between each loop.
+	 */
+	incognito?: boolean
+
 	chromeVersion?: ChromeVersion
 
 	/**
@@ -216,6 +222,7 @@ export const DEFAULT_SETTINGS: ConcreteTestSettings = {
 	ignoreHTTPSErrors: false,
 	chromeVersion: 'puppeteer',
 	blockedDomains: [],
+	incognito: false,
 }
 
 /**
@@ -242,6 +249,7 @@ export interface ConcreteTestSettings extends TestSettings {
 	device: string
 	ignoreHTTPSErrors: boolean
 	blockedDomains: string[]
+	incognito: boolean
 }
 
 /**

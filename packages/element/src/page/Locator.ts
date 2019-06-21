@@ -30,14 +30,21 @@ export class BaseLocator implements Locator {
 	}
 
 	async find(context: ExecutionContext, node?: PElementHandle): Promise<ElementHandle | null> {
-		let handle = await context.evaluateHandle(this.pageFunc, ...this.pageFuncArgs, node)
+		let args = [...this.pageFuncArgs]
+		if (node) args.push(node)
+		let handle = await context.evaluateHandle(this.pageFunc, ...args)
 		const element = handle.asElement()
 		if (element) return new ElementHandle(element).initErrorString(this.toErrorString())
 		return null
 	}
 
 	async findMany(context: ExecutionContext, node?: PElementHandle): Promise<ElementHandle[]> {
-		const arrayHandle = await context.evaluateHandle(this.pageFuncMany, ...this.pageFuncArgs, node)
+		let args = [...this.pageFuncArgs]
+		if (node) args.push(node)
+		const arrayHandle = await context.evaluateHandle(this.pageFuncMany, ...args)
+
+		if (!arrayHandle) return []
+
 		const properties = await arrayHandle.getProperties()
 		await arrayHandle.dispose()
 
@@ -73,7 +80,7 @@ return predicate(${['element', ...tmpArgs].join(', ')})`
 
 		try {
 			await frame.waitForFunction(
-				new Function(...tmpArgs, fn),
+				new Function(...tmpArgs, fn).toString(),
 				{ polling, timeout },
 				...waitFuncArgs,
 			)

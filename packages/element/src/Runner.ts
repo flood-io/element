@@ -257,7 +257,6 @@ export class PersistentRunner extends Runner {
 
 		if (this.looper) {
 			await this.looper.kill()
-			// await (await clientPromise).reopenPage()
 		}
 
 		try {

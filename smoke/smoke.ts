@@ -31,7 +31,7 @@ async function runTest(testScript: string, expectPass: boolean): Promise<boolean
 		{
 			stdio: ['inherit', 'pipe', 'pipe'],
 			env: process.env,
-      cwd: elementRoot,
+			cwd: elementRoot,
 		},
 	)
 

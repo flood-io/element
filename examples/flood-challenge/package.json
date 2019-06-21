@@ -1,20 +1,9 @@
 {
-  "name": "examples",
-  "version": "0.0.0",
-  "description": "flood element test script",
-  "prettier": {
-    "semi": false,
-    "singleQuote": true,
-    "trailingComma": "all",
-    "printWidth": 100,
-    "useTabs": true,
-    "tabWidth": 2,
-    "bracketSpacing": true,
-    "jsxBracketSameLine": true,
-    "arrowParens": "avoid"
-  },
-  "dependencies": {
-    "@flood/element": "^1.0.3-48",
-    "prettier": "^1.10.2"
-  }
+	"name": "examples",
+	"version": "0.0.0",
+	"description": "flood element test script",
+	"dependencies": {
+		"@flood/element": "^1.0.3-48",
+		"prettier": "^1.10.2"
+	}
 }

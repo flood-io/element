@@ -94,8 +94,8 @@ export default class Test {
 		const testObserver = new ErrorObserver(
 			new LifecycleObserver(this.testObserverFactory(new InnerObserver(new NullTestObserver()))),
 		)
-    
-		await (await this.client).reopenPage()
+
+		await (await this.client).reopenPage(this.settings.incognito)
 		await this.requestInterceptor.attach(this.client.page)
 
 		this.testCancel = async () => {

@@ -1,4 +1,5 @@
 import { Browser } from './types'
+import { ElementPresence } from './Settings'
 
 /**
  * Declares each step in your test. This must go within your main test expression.
@@ -52,6 +53,13 @@ export interface StepOptions {
 	 * @default `30` seconds
 	 */
 	waitTimeout?: number
+
+	/**
+	 * Override global auto wait setting. Uses `waitTimeout` from step if defined.
+	 *
+	 * @default `inherit`
+	 */
+	waitUntil?: ElementPresence
 }
 
 /**

@@ -22,20 +22,15 @@ import { Key } from '../page/Enums'
 import { readFileSync } from 'fs'
 import * as termImg from 'term-img'
 import { ConcreteTestSettings } from './Settings'
-import {
-	NetworkErrorData,
-	LocatorErrorData,
-	AnyErrorData,
-	ActionErrorData,
-	interpretError,
-} from './errors/Types'
-import interpretPuppeteerError from './errors/interpretPuppeteerError'
-
+import { NetworkErrorData, LocatorErrorData, ActionErrorData } from './errors/Types'
 import { StructuredError } from '../utils/StructuredError'
-
-import * as debugFactory from 'debug'
+import debugFactory from 'debug'
 import Mouse from '../page/Mouse'
-const debug = debugFactory('element:runtime:browser')
+import { rewriteError } from './decorators/rewriteError'
+import { addCallbacks } from './decorators/addCallbacks'
+import { autoWaitUntil } from './decorators/autoWait'
+
+export const debug = debugFactory('element:runtime:browser')
 const debugScreenshot = debugFactory('element:runtime:browser:screenshot')
 
 function toLocatorError(
@@ -86,94 +81,6 @@ export const getFrames = (childFrames: Frame[], collection?: Set<Frame>): Frame[
 	})
 
 	return Array.from(collection.values())
-}
-
-/**
- * Defines a Function Decorator which wraps a method with class local before and after
- */
-function addCallbacks<T>() {
-	const errorInterpreters = [interpretPuppeteerError]
-
-	return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-		let originalFn = descriptor.value
-
-		descriptor.value = async function(...args: any[]) {
-			let ret
-			const browser: Browser<T> = this
-
-			// capture the stack trace at call-time
-			const calltimeError = new Error()
-			Error.captureStackTrace(calltimeError)
-			const calltimeStack = calltimeError.stack
-
-			try {
-				if (browser.beforeFunc instanceof Function) await browser.beforeFunc(browser, propertyKey)
-				ret = await originalFn.apply(browser, args)
-				if (browser.afterFunc instanceof Function) await browser.afterFunc(browser, propertyKey)
-			} catch (e) {
-				debug('addCallbacks lifting to StructuredError', propertyKey, e)
-
-				const newError = interpretError<Browser<T>, AnyErrorData>(
-					errorInterpreters,
-					e,
-					this,
-					propertyKey,
-					args,
-				)
-
-				const sErr = StructuredError.liftWithSource(newError, 'browser', `browser.${propertyKey}`)
-				sErr.stack = calltimeStack
-
-				debug('error now', sErr)
-
-				throw sErr
-			}
-			return ret
-		}
-
-		return descriptor
-	}
-}
-
-function rewriteError<T>() {
-	const errorInterpreters = [interpretPuppeteerError]
-	return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-		let originalFn = descriptor.value
-
-		descriptor.value = async function(...args: any[]) {
-			let ret
-			const browser: Browser<T> = this
-
-			// capture the stack trace at call-time
-			const calltimeError = new Error()
-			Error.captureStackTrace(calltimeError)
-			const calltimeStack = calltimeError.stack
-
-			try {
-				ret = await originalFn.apply(browser, args)
-			} catch (e) {
-				debug('rewriteError lifting to StructuredError', propertyKey, e)
-
-				const newError = interpretError<Browser<T>, AnyErrorData>(
-					errorInterpreters,
-					e,
-					this,
-					propertyKey,
-					args,
-				)
-
-				const sErr = StructuredError.liftWithSource(newError, 'browser', `browser.${propertyKey}`)
-				sErr.stack = calltimeStack
-
-				debug('error now', sErr)
-
-				throw sErr
-			}
-			return ret
-		}
-
-		return descriptor
-	}
 }
 
 export class Browser<T> implements BrowserInterface {
@@ -249,7 +156,7 @@ export class Browser<T> implements BrowserInterface {
 	@addCallbacks()
 	public async wait(timeoutOrCondition: Condition | number): Promise<boolean> {
 		if (typeof timeoutOrCondition === 'number') {
-			await new Promise((yeah, nah) => setTimeout(yeah, Number(timeoutOrCondition) * 1e3))
+			await new Promise(yeah => setTimeout(yeah, Number(timeoutOrCondition) * 1e3))
 			return true
 		}
 
@@ -289,7 +196,7 @@ export class Browser<T> implements BrowserInterface {
 		} catch (e) {
 			if (e.message.includes('net::ERR_NAME_NOT_RESOLVED')) {
 				e = new StructuredError<NetworkErrorData>(
-					'dns name not resolved',
+					'domain name not resolved',
 					{
 						_kind: 'net',
 						url,
@@ -343,6 +250,7 @@ export class Browser<T> implements BrowserInterface {
 	 * Sends a click event to the element located at `selector`. If the element is
 	 * currently outside the viewport it will first scroll to that element.
 	 */
+	@autoWaitUntil()
 	@addCallbacks()
 	public async click(selectorOrLocator: NullableLocatable, options?: ClickOptions): Promise<void> {
 		const element = await this.findElement(selectorOrLocator)
@@ -353,6 +261,7 @@ export class Browser<T> implements BrowserInterface {
 	 * Sends a double-click event to the element located by the supplied Locator or `selector`. If the element is
 	 * currently outside the viewport it will first scroll to that element.
 	 */
+	@autoWaitUntil()
 	@addCallbacks()
 	public async doubleClick(
 		selectorOrLocator: NullableLocatable,
@@ -362,6 +271,7 @@ export class Browser<T> implements BrowserInterface {
 		return element.click({ clickCount: 2, ...options })
 	}
 
+	@autoWaitUntil()
 	@addCallbacks()
 	public async selectByValue(locatable: NullableLocatable, ...values: string[]): Promise<string[]> {
 		const element = await this.findElement(locatable)
@@ -384,6 +294,7 @@ export class Browser<T> implements BrowserInterface {
 		)
 	}
 
+	@autoWaitUntil()
 	@addCallbacks()
 	public async selectByIndex(locatable: NullableLocatable, index: string): Promise<string[]> {
 		// TODO: Write tests for this
@@ -408,6 +319,7 @@ export class Browser<T> implements BrowserInterface {
 		)
 	}
 
+	@autoWaitUntil()
 	@addCallbacks()
 	public async selectByText(locatable: NullableLocatable, text: string): Promise<string[]> {
 		const element = await this.findElement(locatable)
@@ -433,6 +345,7 @@ export class Browser<T> implements BrowserInterface {
 		)
 	}
 
+	@autoWaitUntil()
 	@addCallbacks()
 	public async clear(locatable: NullableLocatable | string): Promise<void> {
 		let locator = locatableToLocator(locatable, 'browser.clear()')
@@ -442,6 +355,7 @@ export class Browser<T> implements BrowserInterface {
 		}
 	}
 
+	@autoWaitUntil()
 	@addCallbacks()
 	public async type(
 		locatable: NullableLocatable,
@@ -454,11 +368,13 @@ export class Browser<T> implements BrowserInterface {
 		return this.page.keyboard.type(text, options)
 	}
 
+	@autoWaitUntil()
 	@addCallbacks()
 	public async press(keyCode: string, options?: { text?: string; delay?: number }): Promise<void> {
 		return this.page.keyboard.press(keyCode, options)
 	}
 
+	@autoWaitUntil()
 	@addCallbacks()
 	public async sendKeys(...keys: string[]): Promise<void> {
 		let handle = this.page.keyboard
@@ -471,12 +387,14 @@ export class Browser<T> implements BrowserInterface {
 		}
 	}
 
+	@autoWaitUntil()
 	@addCallbacks()
 	public async blur(locatable: NullableLocatable): Promise<void> {
 		const element = await this.findElement(locatable)
 		return element.blur()
 	}
 
+	@autoWaitUntil()
 	@addCallbacks()
 	public async focus(locatable: NullableLocatable): Promise<void> {
 		const element = await this.findElement(locatable)
@@ -523,6 +441,7 @@ export class Browser<T> implements BrowserInterface {
 		})
 	}
 
+	@autoWaitUntil()
 	@rewriteError()
 	public async highlightElement(element: ElementHandle): Promise<void> {
 		// let session = await this.page.target().createCDPSession()
@@ -530,6 +449,7 @@ export class Browser<T> implements BrowserInterface {
 		return element.highlight()
 	}
 
+	@autoWaitUntil()
 	@rewriteError()
 	public async findElement(locatable: NullableLocatable): Promise<ElementHandle> {
 		let locator = locatableToLocator(locatable, 'browser.findElement(locatable)')
@@ -563,9 +483,10 @@ export class Browser<T> implements BrowserInterface {
 		return element
 	}
 
+	@autoWaitUntil()
 	@rewriteError()
 	public async findElements(locatable: NullableLocatable): Promise<ElementHandle[]> {
-		let locator = locatableToLocator(locatable, 'browser.findElemts(locatable)')
+		let locator = locatableToLocator(locatable, 'browser.findElements(locatable)')
 		let elements = await locator.findMany(await this.context)
 		elements.forEach(element => element.bindBrowser(this))
 		return elements

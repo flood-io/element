@@ -10,7 +10,7 @@ The TestSettings interface specifies the available settings you have to configur
 ```typescript
 export const settings: TestSettings = {
   loopCount: Infinity,
-  clearCache: true,
+  clearCache: true
 }
 ```
 
@@ -22,8 +22,12 @@ See [DEFAULT_SETTINGS] for a list of the default value for each setting.
     
   Waiting between actions simulates the behaviour of a real user as they read, think and act on the page's content.  
     
+* `autoWait` &lt;undefined | false | true&gt;  (Optional)   Enable auto waiting before an action. Defaults to `true`  
+    
+  You can specify a number in seconds to change the default wait time.  
+    
 * `chromeVersion` &lt;[ChromeVersion]&gt;  (Optional)     
-* `clearCache` &lt;undefined | false | true&gt;  (Optional)   Specifies whether Browser cache should be cleared after each test loop.  
+* `clearCache` &lt;undefined | false | true&gt;  (Optional)   Specifies whether Brwoser cache should be cleared after each test loop.  
 * `clearCookies` &lt;undefined | false | true&gt;  (Optional)   Specifies whether cookies should be cleared after each test loop.  
 * `consoleFilter` &lt;[ConsoleMethod]\[]&gt;  (Optional)   Specify which console methods to filter out. By default no console methods are filtered.  
     
@@ -43,7 +47,7 @@ See [DEFAULT_SETTINGS] for a list of the default value for each setting.
     
   Defaults to `-1` for an unlimited number of loops.  
     
-* `name` &lt;undefined | string&gt;  (Optional)   Specifies the name of the test specified in the comments section  
+* `name` &lt;undefined | string&gt;  (Optional)   Speicifies the name of the test specified in the comments section  
 * `responseTimeMeasurement` &lt;[ResponseTiming]&gt;  (Optional)   Configures how we record response time for each step.  
     
   Possible values:  
@@ -63,7 +67,7 @@ See [DEFAULT_SETTINGS] for a list of the default value for each setting.
 Specifies a `console` method
 
 ```typescript
-'log' | 'info' | 'debug' | 'warn' | 'error'
+"log" | "info" | "debug" | "warn" | "error"
 ```
 ## `ResponseTiming`
 Specifies a method for recording response times.
@@ -76,7 +80,7 @@ network | (Experimental) Takes the mean response time of all network requests wh
 stepWithThinkTime | `"stepWithThinkTime"`: Records the wall clock time of a step including `actionDelay` time.
 
 ```typescript
-'page' | 'network' | 'step' | 'stepWithThinkTime'
+"page" | "network" | "step" | "stepWithThinkTime"
 ```
 #### `setup(settings)`
 * `settings` &lt;[TestSettings]&gt;   
@@ -101,6 +105,7 @@ The default settings for a Test. Any settings you provide are merged into these 
 | Name                      | Default Value                                              | Comment                                                        |
 | ------------------------- | ---------------------------------------------------------- | -------------------------------------------------------------- |
 | `actionDelay`             | 2                                                          |                                                                |
+| `autoWait`                | false                                                      |                                                                |
 | `chromeVersion`           | "puppeteer"                                                |                                                                |
 | `clearCache`              | false                                                      |                                                                |
 | `clearCookies`            | true                                                       |                                                                |

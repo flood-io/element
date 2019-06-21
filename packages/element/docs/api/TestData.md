@@ -25,7 +25,7 @@ Call TestDataSource's methods to configure your data source:
 ```typescript
 import { step, Browser, TestData, TestSettings } from '@flood/element'
 export const settings: TestSettings = {
-  loopCount: -1,
+  loopCount: -1
 }
 
 interface Row {
@@ -50,7 +50,7 @@ export default () => {
 
 * returns: &lt;[TestDataSource]&gt; 
 
-Instructs the data feeder to repeat the data set when it reaches the end. TestData is circular by default; use this to turn wrapping off.
+Instructs the data feeder to repeat the data set when it reaches the end. TestData is circular by default; use this to turn circular data off.
 
 #### `TestDataSource.filter(func)`
 * `func` &lt;[FeedFilterFunction]&gt;   filter function to compare each line
@@ -64,7 +64,7 @@ Filters can be chained, and will be run in order only if the previous ffilter pa
 Example:
 ```typescript
 type Row = { browser: string, email: string }
-TestData.fromCSV('users.csv').filter((line, index, browserID) => line.browser === browserID)
+TestData.fromCSV("users.csv").filter((line, index, browserID) => line.browser === browserID)
 ```
 
 #### `TestDataSource.shuffle(shuffle)`

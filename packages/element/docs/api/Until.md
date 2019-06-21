@@ -66,9 +66,9 @@ Creates a condition that will wait for the given element to become visible.
 
 Example:
 ```typescript
-step('Step 1', async browser => {
-  await browser.click(By.css('.hide-panel'))
-  await browser.wait(Until.elementIsNotVisible(By.id('btn')))
+step("Step 1", async browser => {
+	 await browser.click(By.css('.hide-panel'))
+  await browser.wait(Until.elementIsNotVisible(By.id("btn")))
 })
 ```
 
@@ -88,8 +88,8 @@ Creates a condition that will wait for the given element to be selected.
 
 Example:
 ```typescript
-step('Step 1', async browser => {
-  await browser.wait(Until.elementIsVisible(By.partialLinkText('Start')))
+step("Step 1", async browser => {
+  await browser.wait(Until.elementIsVisible(By.partialLinkText("Start")))
 })
 ```
 

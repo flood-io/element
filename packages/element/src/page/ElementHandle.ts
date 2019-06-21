@@ -423,8 +423,8 @@ export class ElementHandle implements IElementHandle, Locator {
 		let box = await this.element.boundingBox()
 		if (!box) return [0, 0]
 		let { x, y, height, width } = box!
-		let cx = Math.round((x + x + width) / 2)
-		let cy = Math.round((y + y + height) / 2)
+		let cx = Math.round(x + width / 2)
+		let cy = Math.round(y + height / 2)
 		return [cx, cy]
 	}
 

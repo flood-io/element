@@ -198,6 +198,18 @@ export interface TestSettings {
 	chromeVersion?: ChromeVersion
 
 	/**
+
+	 * Blocks requests to a list a domains. Accepts partial matches using `*` or any matcher accepted by [Micromatch](https://github.com/micromatch/micromatch)
+	 *
+	 * Matching is applied to the `hostname` only, unless the blocked domain contains a `:` in which case it will match against `hostname` and `port`.
+	 *
+	 * Example:
+	 *
+	 * `["*.google-analytics.com", "*:1337"]`
+	 */
+	blockedDomains?: string[]
+
+  /*
 	 * Automatically apply a wait(Until...) before each action. Defaults to `false`
 	 *
 	 * Accepts either `visible` or `present` as values. Set to `false` to disable (default).
@@ -229,6 +241,7 @@ export const DEFAULT_SETTINGS: ConcreteTestSettings = {
 	device: 'Chrome Desktop Large',
 	ignoreHTTPSErrors: false,
 	chromeVersion: 'puppeteer',
+	blockedDomains: [],
 	incognito: false,
 	name: 'Element Test',
 	description: '',

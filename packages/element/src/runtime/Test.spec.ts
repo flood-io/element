@@ -67,6 +67,7 @@ describe('Test', function() {
 			waitTimeout: 30,
 			responseTimeMeasurement: 'step',
 			consoleFilter: [],
+			blockedDomains: [],
 			incognito: false,
 			waitUntil: false,
 			disableCache: false,

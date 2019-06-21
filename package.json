@@ -20,13 +20,17 @@
     "dev": "ts-node -- ./packages/cli/index.ts"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "^3.0.4",
+    "@semantic-release/git": "^7.0.12",
     "commonmark": "^0.28.1",
+    "conventional-changelog-eslint": "^3.0.1",
     "doctrine": "^2.0.0",
     "front-matter": "^2.3.0",
     "lodash.camelcase": "^4.3.0",
     "markdown-table": "^1.1.2",
     "markdown-toc": "^1.1.0",
     "nodemon": "^1.18.3",
+    "semantic-release": "^15.13.16",
     "ts-node": "^6.1.1",
     "typedoc": "git://github.com/TypeStrong/typedoc.git",
     "typescript": "^3.5.2",

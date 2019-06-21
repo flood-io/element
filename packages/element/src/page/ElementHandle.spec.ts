@@ -4,7 +4,9 @@ import 'mocha'
 import { DogfoodServer } from '../../tests/support/fixture-server'
 import { ElementHandle as PElementHandle } from 'puppeteer'
 import { launchPuppeteer, testPuppeteer } from '../../tests/support/launch-browser'
-
+import { Browser } from '../runtime/Browser'
+import { DEFAULT_SETTINGS } from '../runtime/Settings'
+import { testWorkRoot } from '../../tests/support/test-run-env'
 let dogfoodServer = new DogfoodServer()
 
 let puppeteer: testPuppeteer
@@ -223,5 +225,27 @@ describe('ElementHandle', function() {
 		).then(result => elementsList1.filter((element, index) => result[index]))
 
 		expect(displayedElements.length).to.equal(43)
+	})
+
+	describe('uploadFile', () => {
+		let browser: Browser<any>
+		beforeEach(async () => {
+			browser = new Browser(testWorkRoot(), puppeteer, DEFAULT_SETTINGS)
+			await browser.visit('http://localhost:1337/forms_with_input_elements.html')
+		})
+
+		afterEach(async () => {
+			await puppeteer.close()
+		})
+
+		it('uploads a file to a file input', async () => {
+			const handle: PElementHandle = await locateEl('#new_user_portrait')
+			let element = await new ElementHandle(handle)
+			element.bindBrowser(browser)
+
+			expect(await element.getProperty('value')).to.be.empty
+			await element.uploadFile('picture.png')
+			expect(await element.getProperty('value')).to.equal('C:\\fakepath\\picture.png')
+		})
 	})
 })

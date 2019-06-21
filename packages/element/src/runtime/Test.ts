@@ -1,6 +1,5 @@
 import { EvaluatedScript } from './EvaluatedScript'
-// import NetworkRecorder from '../network/Recorder'
-// import Observer from './Observer'
+import Interceptor from '../network/Interceptor'
 import { Browser } from './Browser'
 
 import { IReporter } from './../Reporter'
@@ -22,10 +21,6 @@ import { CancellationToken } from '../utils/CancellationToken'
 import { IPuppeteerClient } from '../driver/Puppeteer'
 import { ScreenshotOptions } from 'puppeteer'
 import { TestSettings, ConcreteTestSettings, DEFAULT_STEP_WAIT_SECONDS } from './Settings'
-// import { ScreenshotOptions } from 'puppeteer'
-
-// import { readdirSync } from 'fs'
-
 import * as debugFactory from 'debug'
 const debug = debugFactory('element:runtime:test')
 
@@ -35,8 +30,7 @@ export default class Test {
 
 	public runningBrowser: Browser<Step> | null
 
-	// public networkRecorder: NetworkRecorder
-	// public observer: Observer
+	public requestInterceptor: Interceptor
 
 	private testCancel: () => Promise<void> = async () => {}
 
@@ -70,6 +64,7 @@ export default class Test {
 		}
 
 		Object.assign(this.settings, settingsOverride)
+		this.requestInterceptor = new Interceptor(this.settings.blockedDomains || [])
 	}
 
 	public async cancel() {
@@ -99,7 +94,9 @@ export default class Test {
 		const testObserver = new ErrorObserver(
 			new LifecycleObserver(this.testObserverFactory(new InnerObserver(new NullTestObserver()))),
 		)
+
 		await (await this.client).reopenPage(this.settings.incognito)
+		await this.requestInterceptor.attach(this.client.page)
 
 		this.testCancel = async () => {
 			await testObserver.after(this)
@@ -107,6 +104,7 @@ export default class Test {
 
 		this.failed = false
 		this.runningBrowser = null
+
 		// await this.observer.attachToNetworkRecorder()
 
 		debug('run() start')
@@ -163,10 +161,11 @@ export default class Test {
 			console.log('error -> failed')
 			this.failed = true
 			throw err
+		} finally {
+			await this.requestInterceptor.detach(this.client.page)
 		}
 
 		// TODO report skipped steps
-
 		await testObserver.after(this)
 	}
 
@@ -186,6 +185,9 @@ export default class Test {
 	) {
 		let error: Error | null = null
 		await testObserver.beforeStep(this, step)
+
+		let originalBrowserSettings = { ...browser.settings }
+
 		try {
 			debug(`Run step: ${step.name}`) // ${step.fn.toString()}`)
 
@@ -193,6 +195,8 @@ export default class Test {
 			await step.fn.call(null, browser, testDataRecord)
 		} catch (err) {
 			error = err
+		} finally {
+			browser.settings = originalBrowserSettings
 		}
 
 		if (error !== null) {

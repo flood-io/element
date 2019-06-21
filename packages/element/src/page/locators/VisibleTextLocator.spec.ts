@@ -44,6 +44,7 @@ describe('VisibleTextLocator', function() {
 		expect(async () => {
 			maybeElement = await loc.find(ctx)
 		}).to.not.throw()
+
 		expect(maybeElement).to.be.undefined
 	})
 })

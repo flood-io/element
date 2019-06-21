@@ -10,11 +10,9 @@ import {
 } from '../runtime/errors/Types'
 import interpretPuppeteerError from '../runtime/errors/interpretPuppeteerError'
 import { StructuredError } from '../utils/StructuredError'
-
 import { By } from './By'
-import * as debugFactory from 'debug'
 import { Key } from './Enums'
-import { WorkRoot } from '../runtime-environment/types'
+import debugFactory from 'debug'
 const debug = debugFactory('element:page:element-handle')
 
 /**
@@ -107,9 +105,9 @@ function domError(
 /**
  * @internal
  */
-interface ScreenshotSaver {
+interface FilesystemAccessor {
 	saveScreenshot(fn: (path: string) => Promise<boolean>): void
-	workRoot: WorkRoot
+	testData(filename: string): string
 }
 
 /**
@@ -121,8 +119,10 @@ export class ElementHandle implements IElementHandle, Locator {
 	/**
 	 * @internal
 	 */
-	private screenshotSaver: ScreenshotSaver
-	private workRoot: WorkRoot
+	// private screenshotSaver: FilesystemAccessor
+	// private workRoot: WorkRoot
+	private fs: FilesystemAccessor
+
 	/**
 	 * @internal
 	 */
@@ -156,9 +156,8 @@ export class ElementHandle implements IElementHandle, Locator {
 		return this
 	}
 
-	public bindBrowser(browser: ScreenshotSaver) {
-		this.screenshotSaver = browser
-		this.workRoot = browser.workRoot
+	public bindBrowser(filesystem: FilesystemAccessor) {
+		this.fs = filesystem
 	}
 
 	public toErrorString(): string {
@@ -273,7 +272,7 @@ export class ElementHandle implements IElementHandle, Locator {
 	 */
 	@wrapDescriptiveError()
 	public async uploadFile(...names: string[]): Promise<void> {
-		return this.element.uploadFile(...names.map(name => this.workRoot.testData(name)))
+		return this.element.uploadFile(...names.map(name => this.fs.testData(name)))
 	}
 
 	/**
@@ -281,7 +280,7 @@ export class ElementHandle implements IElementHandle, Locator {
 	 */
 	@wrapDescriptiveError()
 	public async takeScreenshot(options?: ScreenshotOptions): Promise<void> {
-		return this.screenshotSaver.saveScreenshot(async path => {
+		return this.fs.saveScreenshot(async path => {
 			debug(`Saving screenshot to: ${path}`)
 			console.log(`Saving screenshot to: ${path}`)
 

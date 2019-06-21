@@ -186,13 +186,15 @@ export class Browser<T> implements BrowserInterface {
 	) {
 		this.beforeFunc && this.afterFunc
 		this.screenshots = []
-
-		// this.page.on('console', msg => console.log(msg))
 	}
 
 	private get context(): Promise<ExecutionContext> {
 		// Promise.resolve is a quick fix for TS until the types are updated
 		return Promise.resolve(this.target.executionContext())
+	}
+
+	public testData(name: string): string {
+		return this.workRoot.testData(name)
 	}
 
 	public get target(): Frame {

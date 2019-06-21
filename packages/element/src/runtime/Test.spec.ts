@@ -75,6 +75,7 @@ describe('Test', function() {
 			responseTimeMeasurement: 'step',
 			consoleFilter: [],
 			blockedDomains: [],
+			incognito: false,
 		})
 	})
 

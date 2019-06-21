@@ -9,6 +9,7 @@ export const settings: TestSettings = {
 	userAgent: 'I AM ROBOT',
 	actionDelay: 5,
 	stepDelay: 2,
+	blockedDomains: ['google-analytics.com', 'bootstrapcdn.com'],
 }
 
 export default () => {

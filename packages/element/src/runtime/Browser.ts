@@ -106,6 +106,10 @@ export class Browser<T> implements BrowserInterface {
 		return Promise.resolve(this.target.executionContext())
 	}
 
+	public testData(name: string): string {
+		return this.workRoot.testData(name)
+	}
+
 	public get target(): Frame {
 		if (this.activeFrame) {
 			if (this.activeFrame.isDetached()) {

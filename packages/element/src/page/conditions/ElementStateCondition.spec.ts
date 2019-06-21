@@ -23,7 +23,7 @@ describe('Condition', function() {
 	beforeEach(async () => {
 		puppeteer = await launchPuppeteer()
 		page = puppeteer.page
-		page.on('console', msg => console.log(`>> console.${msg.type}: ${msg.text}`))
+		page.on('console', msg => console.log(`>> console.${msg.type()}: ${msg.text()}`))
 		await page.goto('http://localhost:1337/wait.html', { waitUntil: 'networkidle2' })
 	})
 

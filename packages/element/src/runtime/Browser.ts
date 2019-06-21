@@ -34,6 +34,7 @@ import interpretPuppeteerError from './errors/interpretPuppeteerError'
 import { StructuredError } from '../utils/StructuredError'
 
 import * as debugFactory from 'debug'
+import Mouse from '../page/Mouse'
 const debug = debugFactory('element:runtime:browser')
 const debugScreenshot = debugFactory('element:runtime:browser:screenshot')
 
@@ -74,14 +75,17 @@ export function locatableToLocator(el: NullableLocatable, callCtx: string): Loca
 	}
 }
 
-export const getFrames = (childFrames: Frame[]): Frame[] => {
-	let framesMap = new Map<string, Frame>()
-	for (const f of childFrames) {
-		framesMap.set(f.name(), f)
-		getFrames(f.childFrames()).forEach(f => framesMap.set(f.name(), f))
-	}
+export const getFrames = (childFrames: Frame[], collection?: Set<Frame>): Frame[] => {
+	if (!collection) collection = new Set<Frame>()
 
-	return Array.from(framesMap.values())
+	childFrames.forEach(frame => {
+		if (!collection!.has(frame)) {
+			collection!.add(frame)
+			getFrames(frame.childFrames(), collection)
+		}
+	})
+
+	return Array.from(collection.values())
 }
 
 /**
@@ -176,6 +180,8 @@ export class Browser<T> implements BrowserInterface {
 	public screenshots: string[]
 	customContext: T
 
+	public readonly mouse: Mouse = new Mouse(this)
+
 	constructor(
 		public workRoot: WorkRoot,
 		private client: IPuppeteerClient,
@@ -186,8 +192,6 @@ export class Browser<T> implements BrowserInterface {
 	) {
 		this.beforeFunc && this.afterFunc
 		this.screenshots = []
-
-		// this.page.on('console', msg => console.log(msg))
 	}
 
 	private get context(): Promise<ExecutionContext> {
@@ -279,7 +283,7 @@ export class Browser<T> implements BrowserInterface {
 		try {
 			response = await this.page.goto(url, {
 				timeout,
-				waitUntil: 'domcontentloaded',
+				waitUntil: ['load', 'domcontentloaded'],
 				...options,
 			})
 		} catch (e) {

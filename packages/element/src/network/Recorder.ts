@@ -107,10 +107,12 @@ export default class Recorder {
 		entry.connection = payload.response.connectionId.toString()
 
 		if (payload.response.requestHeaders) {
-			entry.request.headers = Object.entries(payload.response.requestHeaders).map(([k, v]) => ({
-				name: k,
-				value: v.toString(),
-			}))
+			entry.request.headers = Object.entries<string>(payload.response.requestHeaders).map(
+				([k, v]) => ({
+					name: k,
+					value: v.toString(),
+				}),
+			)
 		}
 
 		if (payload.response && payload.response.requestHeadersText) {
@@ -119,7 +121,7 @@ export default class Recorder {
 		entry.request.httpVersion = payload.response.protocol
 
 		// Response
-		entry.response.headers = Object.entries(payload.response.headers).map(([k, v]) => ({
+		entry.response.headers = Object.entries<string>(payload.response.headers).map(([k, v]) => ({
 			name: k,
 			value: v.toString(),
 		}))

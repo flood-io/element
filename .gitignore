@@ -67,3 +67,4 @@ packages/*/yarn.lock
 
 puppeteer-*.json
 examples/tmp
+examples/*/tmp

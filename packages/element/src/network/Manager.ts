@@ -1,10 +1,6 @@
 import { Page } from 'puppeteer'
 import { EventEmitter } from 'events'
 
-// interface PagePrivateAccess {
-// [key: '_client']: EventEmitter
-// }
-
 interface RequestEvent {
 	requestId: string
 }
@@ -20,7 +16,6 @@ interface Event extends RequestEvent {
 export class Manager {
 	private lifecycleCompleteCallback: (() => void) | null
 	private networkIdlePromise: Promise<any> | null
-	private maximumTimer: any
 	public timeout = 10e3
 
 	constructor(private page: Page, private requestIdToRequest = new Map<string, any>()) {
@@ -48,7 +43,7 @@ export class Manager {
 	}
 
 	private createTimeoutPromise() {
-		return new Promise(fulfill => (this.maximumTimer = setTimeout(fulfill, this.timeout)))
+		return new Promise(fulfill => setTimeout(fulfill, this.timeout))
 	}
 
 	private createIdlePromise() {

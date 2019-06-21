@@ -67,7 +67,7 @@ describe('Browser', function() {
 		let browser = new Browser(
 			workRoot,
 			puppeteer,
-			DEFAULT_SETTINGS,
+			{ ...DEFAULT_SETTINGS },
 			async name => {},
 			async name => {},
 		)
@@ -148,6 +148,30 @@ describe('Browser', function() {
 
 			let result = await browser.interactionTiming()
 			expect(result).to.be.greaterThan(10)
+		})
+	})
+
+	describe('auto waiting', () => {
+		it('automatically applies a wait step to actions', async () => {
+			let browser = new Browser(workRoot, puppeteer, { ...DEFAULT_SETTINGS, waitUntil: 'visible' })
+			await browser.visit('http://localhost:1337/wait.html')
+
+			await browser.click(By.id('add_select'))
+
+			let link = await browser.findElement(By.id('languages'))
+			let linkIsVisible = await link.isDisplayed()
+			expect(linkIsVisible).to.be.true
+		})
+
+		it('fails to return a visible link without waiting', async () => {
+			let browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
+			await browser.visit('http://localhost:1337/wait.html')
+
+			await browser.click(By.id('add_select'))
+
+			let selectTag = await browser.findElement(By.id('languages'))
+			let selectTagIsVisible = await selectTag.isDisplayed()
+			expect(selectTagIsVisible).to.be.false
 		})
 	})
 })

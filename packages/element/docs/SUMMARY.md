@@ -4,11 +4,13 @@ title: ''
 ## Documentation
 
  * [Quick Start](README.md)
+ * [Examples - Test Data Generation](examples/examples_data_generation.md)
+ * [Element CLI](examples/examples_element_cli.md)
  * [Examples - Link Navigation](examples/examples_link_navigation.md)
- * [Examples - Web Form Interaction](examples/examples_webform_interaction.md)
  * [Examples - Page Verification](examples/examples_page_verification.md)
  * [Examples - Test Data](examples/examples_test_data.md)
- * [Examples - Test Data Generation](examples/examples_data_generation.md)
+ * [Examples - Page Verification](examples/examples_verification.md)
+ * [Examples - Web Form Interaction](examples/examples_webform_interaction.md)
  * [Deep Dive Tutorial](examples/scenario_1_wordpress.md)
 
 ## Flood Chrome API

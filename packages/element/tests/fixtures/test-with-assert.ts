@@ -20,6 +20,5 @@ export default function() {
 		await link.click()
 		await driver.wait(Until.elementIsVisible('#foo'))
 		assert.equal(await link.text(), 'foobarlink')
-		// ((await link.text()) === 'foobarlink')
 	})
 }

@@ -1,6 +1,6 @@
 import { Device } from '../page/Enums'
 import { Condition } from '../page/Condition'
-import { NavigationOptions, ClickOptions, ScreenshotOptions } from 'puppeteer'
+import { NavigationOptions, ClickOptions, ScreenshotOptions, Page, Frame } from 'puppeteer'
 import { ElementHandle, Locator } from '../page/types'
 import { TargetLocator } from '../page/TargetLocator'
 import { StepDefinition } from './Step'
@@ -73,6 +73,16 @@ export interface SuiteDefinition {
 export interface Browser {
 	title(): Promise<string>
 
+  /**
+   * The current puppeteer Page
+   */
+  page: Page
+
+  /**
+   * The list of puppeteer Frames
+   */
+  frames: Frame[]
+
 	/**
 	 * Sets the HTTP Authentication details to use if the page is presented with an authentication prompt.
 	 *
@@ -99,6 +109,8 @@ export interface Browser {
 	 * Set Browser to send a custom User Agent (UA) string
 	 */
 	setUserAgent(userAgent: string): Promise<void>
+
+	setExtraHTTPHeaders(headers: { [key: string]: string }): Promise<void>
 
 	/**
 	 * Instructs the browser to navigate to a specific page. This is typically used as the

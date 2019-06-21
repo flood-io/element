@@ -1,10 +1,12 @@
-import { join, basename } from 'path'
+import { join, basename, dirname } from 'path'
 import { spawn } from 'child_process'
 import { sync as globSync } from 'glob'
 import chalk from 'chalk'
 
 process.env.DEBUG = 'element-cli:console-reporter'
 let only: string | undefined = process.env.SMOKE_ONLY
+
+const elementRoot = dirname(process.cwd())
 
 // run tests
 console.log('running tests')
@@ -24,11 +26,12 @@ async function runTest(testScript: string, expectPass: boolean): Promise<boolean
 	console.log(chalk`{yellow ============ {magenta running test {blue ${shortName}}} ===========}`)
 	// console.log(process.env)
 	const proc = spawn(
-		'element',
-		['run', testScript, '--chrome', '--verbose', '--test-data-root', dataDir],
+		'yarn',
+		['element', 'run', testScript, '--chrome', '--verbose', '--test-data-root', dataDir],
 		{
 			stdio: ['inherit', 'pipe', 'pipe'],
 			env: process.env,
+      cwd: elementRoot,
 		},
 	)
 

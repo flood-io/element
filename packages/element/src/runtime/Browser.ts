@@ -503,6 +503,11 @@ export class Browser<T> implements BrowserInterface {
 		return this.page.setUserAgent(userAgent)
 	}
 
+	@rewriteError()
+	public async setExtraHTTPHeaders(headers: { [key: string]: string }): Promise<void> {
+		return this.page.setExtraHTTPHeaders(headers)
+	}
+
 	/**
 	 * Takes a screenshot of this element and saves it to the results folder with a random name.
 	 */

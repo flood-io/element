@@ -8,7 +8,7 @@ export const handler = (args: Arguments) => {
 
 	args.dir = resolve(process.cwd(), args.dir)
 
-	env.run(`test-env ${args.dir}`, { 'skip-install': args['skip-install'] })
+	env.run(['test-env', args.dir], { 'skip-install': args['skip-install'] })
 }
 
 export const command = 'init [dir] [options]'

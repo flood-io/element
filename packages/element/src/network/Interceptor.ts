@@ -1,6 +1,7 @@
 import { Page, Request } from 'puppeteer'
 import debugFactory from 'debug'
 const debug = debugFactory('network:intercept')
+import { isMatch } from 'micromatch'
 
 export default class Interceptor {
 	constructor(public blockedDomains: string[]) {}
@@ -11,9 +12,9 @@ export default class Interceptor {
 			page.on('request', this.requestBlocker)
 
 			debug(
-				`Attched network request interceptor with blocked domains: ${this.blockedDomains.join(
-					', ',
-				)}`,
+				`Attched network request interceptor with blocked domains: "${this.blockedDomains.join(
+					',',
+				)}"`,
 			)
 		}
 	}
@@ -26,10 +27,16 @@ export default class Interceptor {
 	private requestBlocker = (interceptedRequest: Request) => {
 		let url = new URL(interceptedRequest.url())
 
-		if (this.blockedDomains.some(domain => url.hostname.includes(domain))) {
-			debug(`Blocked request to "${url.hostname}"`)
+		if (
+			this.blockedDomains.some(domain => {
+				let matchee = domain.includes(':') ? url.host : url.hostname
+				return isMatch(matchee, domain)
+			})
+		) {
+			debug(`Blocked request to "${url.host}"`)
 			interceptedRequest.abort()
 		} else {
+			debug(`Accepted request to "${url.host}"`)
 			interceptedRequest.continue()
 		}
 	}

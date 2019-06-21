@@ -25,7 +25,7 @@ const testIntercept = async (page: Page, domains: string[]): Promise<Intercepted
 	return [errors, response]
 }
 
-describe.only('Network/Interceptor', function() {
+describe('Network/Interceptor', function() {
 	this.timeout(30e3)
 	before(async () => {
 		await dogfoodServer.start()

@@ -5,6 +5,7 @@ import { ElementHandle, Locator } from '../page/types'
 import { TargetLocator } from '../page/TargetLocator'
 import { StepDefinition } from './Step'
 import { TestDataSource } from '../test-data/TestData'
+import Mouse from '../page/Mouse'
 
 export { NavigationOptions }
 
@@ -73,15 +74,15 @@ export interface SuiteDefinition {
 export interface Browser {
 	title(): Promise<string>
 
-  /**
-   * The current puppeteer Page
-   */
-  page: Page
+	/**
+	 * The current puppeteer Page
+	 */
+	page: Page
 
-  /**
-   * The list of puppeteer Frames
-   */
-  frames: Frame[]
+	/**
+	 * The list of puppeteer Frames
+	 */
+	frames: Frame[]
 
 	/**
 	 * Sets the HTTP Authentication details to use if the page is presented with an authentication prompt.
@@ -259,6 +260,12 @@ export interface Browser {
 	 * ```
 	 */
 	sendKeys(...keys: string[]): Promise<void>
+
+	/**
+	 * The Mouse class operates in main-frame CSS pixels relative to the top-left corner of the viewport.
+	 * Every page has its own <[Mouse]>, accessible with `browser.mouse`.
+	 */
+	mouse: Mouse
 
 	/**
 	 * Takes a screenshot of the whole page and saves it to the `flood/results` folder with a random sequential name. You can download the archive of your test results at the end of the test to retrieve these screenshots.

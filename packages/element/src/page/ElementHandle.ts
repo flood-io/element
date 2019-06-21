@@ -13,6 +13,7 @@ import { StructuredError } from '../utils/StructuredError'
 import { By } from './By'
 import { Key } from './Enums'
 import debugFactory from 'debug'
+import { Point } from './Mouse'
 const debug = debugFactory('element:page:element-handle')
 
 /**
@@ -407,7 +408,7 @@ export class ElementHandle implements IElementHandle, Locator {
 		return this.element
 			.executionContext()
 			.evaluate(
-				(element: HTMLElement) => element.textContent && element.textContent.trim(),
+				(element: HTMLElement) => (element.textContent ? element.textContent.trim() : ''),
 				this.element,
 			)
 	}
@@ -422,6 +423,21 @@ export class ElementHandle implements IElementHandle, Locator {
 
 		let { width, height } = box
 		return { width, height }
+	}
+
+	/**
+	 * Returns the center x,y coordinates of the element relative to the page.
+	 * This is useful as an input to <[Mouse]> operations such as <drag> or <move>.
+	 *
+	 * @returns Point The [x,y] coordinates
+	 */
+	public async centerPoint(): Promise<Point> {
+		let box = await this.element.boundingBox()
+		if (!box) return [0, 0]
+		let { x, y, height, width } = box!
+		let cx = Math.round(x + width / 2)
+		let cy = Math.round(y + height / 2)
+		return [cx, cy]
 	}
 
 	/**

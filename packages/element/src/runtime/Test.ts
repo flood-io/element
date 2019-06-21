@@ -99,7 +99,7 @@ export default class Test {
 		const testObserver = new ErrorObserver(
 			new LifecycleObserver(this.testObserverFactory(new InnerObserver(new NullTestObserver()))),
 		)
-		await (await this.client).reopenPage()
+		await (await this.client).reopenPage(this.settings.incognito)
 
 		this.testCancel = async () => {
 			await testObserver.after(this)
@@ -231,7 +231,7 @@ export default class Test {
 		}
 	}
 
-	/* 
+	/*
 	private async didRunStep(name: string, screenshots: string[]): Promise<void> {
 		if (this.skipped.length > 0) {
 			debug('didRunStep - skipped', name)

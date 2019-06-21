@@ -109,6 +109,13 @@ describe('ElementHandle', function() {
 		await handle.dispose()
 	})
 
+	it('centerPoint()', async () => {
+		const handle = await locateEl('a#show_bar')
+		let element = await new ElementHandle(handle)
+		expect(await element.centerPoint()).to.deep.equal([37, 35])
+		await handle.dispose()
+	})
+
 	it('click()', async () => {
 		const handle = await locateEl('a#show_bar')
 		let element = await new ElementHandle(handle)

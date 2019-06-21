@@ -19,10 +19,10 @@ export default () => {
 	step('Flood Challenge: Start', async (browser: Browser) => {
 		await browser.visit('https://challenge.flood.io')
 
-    const page = browser.page
+		const page = browser.page
 
-    const content = await page.content()
+		const content = await page.content()
 
-    assert.ok(content.includes('Welcome to our Script Challenge'))
+		assert.ok(content.includes('Welcome to our Script Challenge'))
 	})
 }

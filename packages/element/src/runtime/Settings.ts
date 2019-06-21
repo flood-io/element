@@ -138,17 +138,21 @@ export interface TestSettings {
 	 * Specifies a set of extra HTTP headers to set before each test loop.
 	 * If this setting is undefined, the extra HTTP headers are left as-is between iterations.
 	 *
-	 * @default undefined
+	 * @default {}
 	 */
 	extraHTTPHeaders?: { [key: string]: string }
 
 	/**
 	 * Speicifies the name of the test specified in the comments section
+	 *
+	 * @default "Element Test"
 	 */
 	name?: string
 
 	/**
 	 * Speicifies the description of the test specified in the comments section
+	 *
+	 * @default ""
 	 */
 	description?: string
 
@@ -158,11 +162,6 @@ export interface TestSettings {
 	 * Screenshots are saved to `/flood/result/screenshots` in the test archive.
 	 */
 	screenshotOnFailure?: boolean
-
-	/**
-	 * Take a DOM snapshot of the page when a command fails, to aid in debugging.
-	 */
-	DOMSnapshotOnFailure?: boolean
 
 	/**
 	 * Configures how we record response time for each step.
@@ -231,6 +230,10 @@ export const DEFAULT_SETTINGS: ConcreteTestSettings = {
 	ignoreHTTPSErrors: false,
 	chromeVersion: 'puppeteer',
 	incognito: false,
+	name: 'Element Test',
+	description: '',
+	disableCache: false,
+	extraHTTPHeaders: {},
 }
 
 /**
@@ -242,22 +245,7 @@ export const DEFAULT_SETTINGS: ConcreteTestSettings = {
  *
  * @internal
  */
-export interface ConcreteTestSettings extends TestSettings {
-	duration: number
-	loopCount: number
-	actionDelay: number
-	stepDelay: number
-	screenshotOnFailure: boolean
-	clearCookies: boolean
-	clearCache: boolean
-	waitTimeout: number
-	responseTimeMeasurement: ResponseTiming
-	consoleFilter: ConsoleMethod[]
-	userAgent: string
-	device: string
-	ignoreHTTPSErrors: boolean
-	incognito: boolean
-}
+export interface ConcreteTestSettings extends Required<TestSettings> {}
 
 /**
  * @internal

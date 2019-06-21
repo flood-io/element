@@ -427,7 +427,7 @@ export class Browser<T> implements BrowserInterface {
 
 	@rewriteError()
 	public async setExtraHTTPHeaders(headers: { [key: string]: string }): Promise<void> {
-		return this.page.setExtraHTTPHeaders(headers)
+		if (Object.keys(headers).length) return this.page.setExtraHTTPHeaders(headers)
 	}
 
 	/**

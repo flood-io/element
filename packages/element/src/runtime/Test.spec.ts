@@ -8,6 +8,7 @@ import Test from './Test'
 import { EvaluatedScript } from './EvaluatedScript'
 import { join } from 'path'
 import { EventEmitterReporter } from '../reporter/EventEmitter'
+import { ConcreteTestSettings } from './Settings'
 use(SinonChai)
 
 let dogfoodServer = new DogfoodServer()
@@ -48,7 +49,7 @@ describe('Test', function() {
 
 	it('extracts settings during evaluation', async () => {
 		const test = await setupTest('test-with-export.ts')
-		expect(test.settings).to.deep.equal({
+		const defaultSettings: ConcreteTestSettings = {
 			actionDelay: 5,
 			stepDelay: 0,
 			clearCache: false,
@@ -68,7 +69,10 @@ describe('Test', function() {
 			consoleFilter: [],
 			incognito: false,
 			waitUntil: false,
-		})
+			disableCache: false,
+			extraHTTPHeaders: {},
+		}
+		expect(test.settings).to.deep.equal(defaultSettings)
 	})
 
 	it('parses steps', async () => {

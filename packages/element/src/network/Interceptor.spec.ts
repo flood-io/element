@@ -1,8 +1,5 @@
 import 'mocha'
-import { expect, use } from 'chai'
-import * as asPromised from 'chai-as-promised'
-use(asPromised)
-
+import { expect } from 'chai'
 import Interceptor from './Interceptor'
 import { DogfoodServer } from '../../tests/support/fixture-server'
 import { launchPuppeteer, testPuppeteer } from '../../tests/support/launch-browser'

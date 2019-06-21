@@ -12,17 +12,6 @@
 	"scripts": {
 		"smoke": "ts-node ./smoke.ts"
 	},
-	"prettier": {
-		"semi": false,
-		"singleQuote": true,
-		"trailingComma": "all",
-		"printWidth": 100,
-		"useTabs": true,
-		"tabWidth": 2,
-		"bracketSpacing": true,
-		"jsxBracketSameLine": true,
-		"arrowParens": "avoid"
-	},
 	"devDependencies": {
 		"ts-node": "^6.1.1",
 		"typescript": "^3.0.3"

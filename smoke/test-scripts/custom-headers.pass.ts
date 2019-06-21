@@ -19,7 +19,7 @@ export default async () => {
 	step('1. Start', async browser => {
 		console.log('before visit')
 		const now = new Date().getTime() / 1000
-    await browser.visit(`https://flooded.io/headers?bust=${now}`)
+		await browser.visit(`https://flooded.io/headers?bust=${now}`)
 
 		console.log('after visit')
 		const body = await browser.findElement('body')

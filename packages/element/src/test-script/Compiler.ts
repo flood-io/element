@@ -12,7 +12,7 @@ import { existsSync } from 'fs'
 import { VMScript } from 'vm2'
 import * as parseComments from 'comment-parser'
 import { SourceUnmapper } from './SourceUnmapper'
-import * as debugFactory from 'debug'
+import debugFactory from 'debug'
 import { tmpdir } from 'os'
 import * as findRoot from 'find-root'
 import { manualModuleDefinition, manualModuleResolution } from './manualModuleDefinition'
@@ -299,11 +299,11 @@ export class TypeScriptTestScript implements ITestScript {
 		this.diagnostics = new CategorisedDiagnostics(host, this.filenameMapper.bind(this))
 
 		// sortAndDeduplicateDiagnostics when its released
-		let allDiagnostics = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics)
-
-		allDiagnostics = ts.sortAndDeduplicateDiagnostics(allDiagnostics)
-
-		allDiagnostics.forEach(diagnostic => this.diagnostics.add(diagnostic))
+		let preEmitDiagnostics = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics)
+		let sortedDiagnostics: ts.SortedReadonlyArray<ts.Diagnostic> = ts.sortAndDeduplicateDiagnostics(
+			preEmitDiagnostics,
+		)
+		sortedDiagnostics.forEach(diagnostic => this.diagnostics.add(diagnostic))
 
 		if (emitResult.emitSkipped) {
 			return this

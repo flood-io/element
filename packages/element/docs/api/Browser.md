@@ -159,6 +159,10 @@ await browser.click("#input_address")
 await browser.sendKeys("Hello, World!", Key.ENTER)
 ```
 
+#### `Browser.setExtraHTTPHeaders(headers)`
+* `headers` &lt;unknown reflection type&gt;   
+* returns: &lt;[Promise]&lt;void&gt;&gt; 
+
 #### `Browser.setUserAgent(userAgent)`
 * `userAgent` &lt;string&gt;   
 * returns: &lt;[Promise]&lt;void&gt;&gt; 
@@ -235,6 +239,11 @@ or a <[Condition]>, for more flexible conditions.
 #### `Browser.waitForNavigation()`
 * returns: &lt;[Promise]&lt;any&gt;&gt; 
 
+#### properties
+* `frames` &lt;[Frame]\[]&gt;     The list of puppeteer Frames  
+* `mouse` &lt;[Mouse]&gt;     The Mouse class operates in main-frame CSS pixels relative to the top-left corner of the viewport.  
+  Every page has its own <[Mouse]>, accessible with `browser.mouse`.  
+* `page` &lt;[Page]&gt;     The current puppeteer Page  
 ## `Driver`
 Driver is an alias to Browser. Please use Browser when possible.
 
@@ -262,10 +271,9 @@ Note that most Element location API methods accept a NullableLocatable but will 
 # `ClickOptions`
 
 #### properties
-* `button` &lt;[MouseButtons]&gt;  (Optional)   defaults to left  
-* `clickCount` &lt;undefined | number&gt;  (Optional)   defaults to 1  
+* `button` &lt;[MouseButtons]&gt;  (Optional)     
+* `clickCount` &lt;undefined | number&gt;  (Optional)     
 * `delay` &lt;undefined | number&gt;  (Optional)   Time to wait between mousedown and mouseup in milliseconds.  
-  Defaults to 0.  
 # `NavigationOptions`
 
 The navigation options.
@@ -279,6 +287,7 @@ Defines the screenshot options.
 
 #### properties
 * `clip` &lt;[BoundingBox]&gt;  (Optional)   An object which specifies clipping region of the page.  
+* `encoding` &lt;"base64" | "binary"&gt;  (Optional)   The encoding of the image, can be either base64 or binary.  
 * `fullPage` &lt;undefined | false | true&gt;  (Optional)   When true, takes a screenshot of the full scrollable page.  
 * `omitBackground` &lt;undefined | false | true&gt;  (Optional)   Hides default white background and allows capturing screenshots with transparency.  
 * `path` &lt;undefined | string&gt;  (Optional)   The file path to save the image to. The screenshot type will be inferred from file extension.  
@@ -306,6 +315,7 @@ Defines the screenshot options.
 [NavigationOptions]: ../../api/Browser.md#navigationoptions
 [Condition]: ../../api/Until.md#condition
 [Until]: ../../api/Until.md#until
+[Mouse]: ../../api/Mouse.md#mouse
 [By]: ../../api/By.md#by
 [Error]: https://nodejs.org/api/errors.html#errors_class_error
 [null]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/null

@@ -17,17 +17,20 @@ export const settings: TestSettings = {
 See [DEFAULT_SETTINGS] for a list of the default value for each setting.
 
 #### properties
-* `DOMSnapshotOnFailure` &lt;undefined | false | true&gt;  (Optional)   Take a DOM snapshot of the page when a command fails, to aid in debugging.  
 * `actionDelay` &lt;undefined | number&gt;  (Optional)   Specifies the time (in seconds) to wait between each action call.  
     
   Waiting between actions simulates the behaviour of a real user as they read, think and act on the page's content.  
     
-* `autoWait` &lt;undefined | false | true&gt;  (Optional)   Enable auto waiting before an action. Defaults to `true`  
+* `blockedDomains` &lt;string\[]&gt;  (Optional)   Blocks requests to a list a domains. Accepts partial matches using `*` or any matcher accepted by [Micromatch](https://github.com/micromatch/micromatch)  
     
-  You can specify a number in seconds to change the default wait time.  
+  Matching is applied to the `hostname` only, unless the blocked domain contains a `:` in which case it will match against `hostname` and `port`.  
     
-* `chromeVersion` &lt;[ChromeVersion]&gt;  (Optional)     
-* `clearCache` &lt;undefined | false | true&gt;  (Optional)   Specifies whether Brwoser cache should be cleared after each test loop.  
+  Example:  
+    
+  `["*.google-analytics.com", "*:1337"]`  
+    
+* `chromeVersion` &lt;[ChromeVersion]&gt;  (Optional)   Specifies a version of Google Chrome  
+* `clearCache` &lt;undefined | false | true&gt;  (Optional)   Specifies whether Browser cache should be cleared after each test loop.  
 * `clearCookies` &lt;undefined | false | true&gt;  (Optional)   Specifies whether cookies should be cleared after each test loop.  
 * `consoleFilter` &lt;[ConsoleMethod]\[]&gt;  (Optional)   Specify which console methods to filter out. By default no console methods are filtered.  
     
@@ -42,7 +45,11 @@ See [DEFAULT_SETTINGS] for a list of the default value for each setting.
     
   Defaults to `-1` for no timeout.  
     
+* `extraHTTPHeaders` &lt;undefined | unknown reflection type&gt;  (Optional)   Specifies a set of extra HTTP headers to set before each test loop.  
+  If this setting is undefined, the extra HTTP headers are left as-is between iterations.  
 * `ignoreHTTPSErrors` &lt;undefined | false | true&gt;  (Optional)   Whether to ignore HTTPS errors during navigation. Defaults to `false`  
+* `incognito` &lt;undefined | false | true&gt;  (Optional)   Controls whether each iteration should run within an Incognito window instead of a normal  
+  window. The Incognito session will be destroyed between each loop.  
 * `loopCount` &lt;undefined | number&gt;  (Optional)   Number of times to run this test.  
     
   Defaults to `-1` for an unlimited number of loops.  
@@ -63,6 +70,7 @@ See [DEFAULT_SETTINGS] for a list of the default value for each setting.
 * `stepDelay` &lt;undefined | number&gt;  (Optional)   Specifies the time (in seconds) to wait after each step.  
 * `userAgent` &lt;undefined | string&gt;  (Optional)   Specifies a custom User Agent (UA) string to send.  
 * `waitTimeout` &lt;undefined | number&gt;  (Optional)   Global wait timeout applied to all wait tasks.  
+* `waitUntil` &lt;[ElementPresence]&gt;  (Optional)     
 ## `ConsoleMethod`
 Specifies a `console` method
 
@@ -105,23 +113,30 @@ The default settings for a Test. Any settings you provide are merged into these 
 | Name                      | Default Value                                              | Comment                                                        |
 | ------------------------- | ---------------------------------------------------------- | -------------------------------------------------------------- |
 | `actionDelay`             | 2                                                          |                                                                |
-| `autoWait`                | false                                                      |                                                                |
+| `blockedDomains`          |  []                                                        |                                                                |
 | `chromeVersion`           | "puppeteer"                                                |                                                                |
 | `clearCache`              | false                                                      |                                                                |
 | `clearCookies`            | true                                                       |                                                                |
 | `consoleFilter`           |  []                                                        | by default, don't filter any console messages from the browser |
+| `description`             | ""                                                         |                                                                |
 | `device`                  | "Chrome Desktop Large"                                     |                                                                |
+| `disableCache`            | false                                                      |                                                                |
 | `duration`                |  -1                                                        |                                                                |
+| `extraHTTPHeaders`        |                                                            |                                                                |
 | `ignoreHTTPSErrors`       | false                                                      |                                                                |
+| `incognito`               | false                                                      |                                                                |
 | `loopCount`               |  Infinity                                                  |                                                                |
+| `name`                    | "Element Test"                                             |                                                                |
 | `responseTimeMeasurement` | "step"                                                     |                                                                |
 | `screenshotOnFailure`     | true                                                       |                                                                |
 | `stepDelay`               | 6                                                          |                                                                |
 | `userAgent`               |  CustomDeviceDescriptors['Chrome Desktop Large'].userAgent |                                                                |
 | `waitTimeout`             | 30                                                         |                                                                |
+| `waitUntil`               | false                                                      |                                                                |
 
 [DEFAULT_SETTINGS]: ../../api/Settings.md#default_settings
 [ChromeVersion]: ../..#chromeversion
 [ConsoleMethod]: ../../api/Settings.md#consolemethod
 [ResponseTiming]: ../../api/Settings.md#responsetiming
+[ElementPresence]: ../..#elementpresence
 [TestSettings]: ../../api/Settings.md#testsettings

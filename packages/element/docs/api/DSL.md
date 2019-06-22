@@ -37,8 +37,8 @@ step("Step 1", { waitTimeout: 300 }, async (browser: Browser) => {
 ```
 
 #### properties
-* `autoWait` &lt;undefined | false | true&gt;  (Optional)   Override global auto wait setting. Uses `waitTimeout` from step if defined.  
 * `waitTimeout` &lt;undefined | number&gt;  (Optional)   Timeout in seconds for all wait and navigation operations within this <[step]>.  
+* `waitUntil` &lt;[ElementPresence]&gt;  (Optional)   Override global auto wait setting. Uses `waitTimeout` from step if defined.  
 ## `StepFunction`
 The `StepFunction` type represents a function to be called as a Test step.
 
@@ -113,6 +113,7 @@ Defines a test suite of steps to run.
 
 [FloodProcessEnv]: ../../api/DSL.md#floodprocessenv
 [step]: ../../api/DSL.md#step
+[ElementPresence]: ../..#elementpresence
 [Browser]: ../../api/Browser.md#browser
 [suite]: ../../api/DSL.md#suite
 [StepFunction]: ../../api/DSL.md#stepfunction

@@ -13,7 +13,7 @@ title: ''
  * [Examples - Web Form Interaction](examples/examples_webform_interaction.md)
  * [Deep Dive Tutorial](examples/scenario_1_wordpress.md)
 
-## Flood Chrome API
+## Flood Element API
 
   * [BoundingBox](api/Browser.md#boundingbox)
   * [Browser](api/Browser.md#browser)
@@ -32,6 +32,7 @@ title: ''
   * [Locatable](api/Browser.md#locatable)
   * [Locator](api/By.md#locator)
   * [MouseButtons](api/Constants.md#mousebuttons)
+  * [Mouse](api/Mouse.md#mouse)
   * [NavigationOptions](api/Browser.md#navigationoptions)
   * [NullableLocatable](api/Browser.md#nullablelocatable)
   * [ResponseTiming](api/Settings.md#responsetiming)

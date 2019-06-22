@@ -3,6 +3,12 @@ import { MousePressOptions, ClickOptions } from 'puppeteer'
 
 export type Point = [number, number]
 
+/**
+ * Mouse represents a virtual pointing device which can be used for common Mouse or Touch operations.
+ *
+ * @class Mouse
+ * @public
+ */
 export default class Mouse {
 	constructor(private browser: Browser<any>) {}
 
@@ -43,7 +49,7 @@ export default class Mouse {
 	/**
 	 * Shortcut for `mouse.move`, `mouse.down` and `mouse.up`.
 	 */
-	click(x: number, y: number, options?: ClickOptions): Promise<void> {
+	public async click(x: number, y: number, options?: ClickOptions): Promise<void> {
 		return this.browser.page.mouse.click(x, y, options)
 	}
 }

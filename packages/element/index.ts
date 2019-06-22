@@ -34,6 +34,11 @@ export { ElementHandle } from './src/page/types'
 export { TargetLocator } from './src/page/types'
 
 /**
+ * @docPage Mouse
+ */
+export { default as Mouse } from './src/page/Mouse'
+
+/**
  * @docPage TestData
  * @docAlias TestDataFactory TestData
  */

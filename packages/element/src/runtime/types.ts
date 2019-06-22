@@ -59,7 +59,7 @@ export interface SuiteDefinition {
 }
 
 /**
- * Browser (also called Driver) is the main entry point in each <[step]>, it's your direct connection to the browser running the test.
+ * Browser is the main entry point in each <[step]>, it's your direct connection to the browser running the test.
  *
  * ```typescript
  * import { step } from "@flood/element"

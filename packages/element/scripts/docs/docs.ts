@@ -115,6 +115,8 @@ class DocsParser {
 			this.addReference(key, target)
 		}
 
+		console.log(Object.keys(indexExports))
+
 		for (const [key, target] of Object.entries(indexExports)) {
 			const path = `api/${target}.md`
 			this.addReference(key, path)
@@ -327,7 +329,7 @@ class DocsParser {
 
 		doc.writeLine('')
 
-		doc.writeHeading('Flood Chrome API', 2)
+		doc.writeHeading('Flood Element API', 2)
 		doc.writeLine('')
 
 		// let sortedMethods: string[] = this.summaryParts

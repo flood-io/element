@@ -68,3 +68,6 @@ packages/*/yarn.lock
 puppeteer-*.json
 examples/tmp
 examples/*/tmp
+
+.DS_Store
+.DS_Store?

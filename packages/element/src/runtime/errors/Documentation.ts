@@ -201,7 +201,7 @@ Consider using {blue browser.wait(Until.<condition>)} to ensure the page is in a
 Example:
 let locator = By.css('.button')
 await browser.wait(Until.elementIsVisible(locator))
-await browser.click(locator, { button: MouseButtons.LEFT })
+await browser.click(locator, \{ button: MouseButtons.LEFT \})
       `,
 		)
 	}

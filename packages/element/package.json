@@ -52,7 +52,7 @@
 		"fs-extra": "^4.0.2",
 		"glob": "^7.1.2",
 		"knuth-shuffle": "^1.0.8",
-		"morgan": "^1.9.0",
+		"morgan": "^1.9.1",
 		"prettier": "^1.10.2",
 		"puppeteer": "1.6.2",
 		"raven": "^2.1.2",

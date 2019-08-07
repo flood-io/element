@@ -70,3 +70,5 @@ examples/tmp
 examples/*/tmp
 
 .DS_Store
+
+dist

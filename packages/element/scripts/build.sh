@@ -3,7 +3,7 @@
 # Custom build to provide more control over the package structure.
 #
 # - build into dist with tsc
-# - copy important files package.json & tsconfig.json 
+# - copy important files package.json & tsconfig.json
 # - create a custom .npmignore
 
 set -euo pipefail
@@ -18,8 +18,8 @@ mkdir -p $dest
 
 yarn exec tsc --outDir $dest
 
-rm -rf $dest/src/extern
-cp -a src/extern $dest/src/extern
+# rm -rf $dest/src/extern
+# cp -a src/extern $dest/src/extern
 
 cp ambient.d.ts dist/ambient.d.ts
 

@@ -4,6 +4,6 @@ logs
 *.ts
 *.tgz
 scripts/docs/node_modules
-!lib
-!lib/**/*.js
-!lib/**/*.ts
+!dist
+!dist/**/*.js
+!dist/**/*.ts

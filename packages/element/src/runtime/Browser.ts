@@ -16,10 +16,8 @@ import { TargetLocator } from '../page/TargetLocator'
 import { By } from '../page/By'
 import { IPuppeteerClient } from '../driver/Puppeteer'
 import { WorkRoot } from '../runtime-environment/types'
-import { join, resolve } from 'path'
 import * as cuid from 'cuid'
 import { Key } from '../page/Enums'
-import { readFileSync } from 'fs'
 import * as termImg from 'term-img'
 import { ConcreteTestSettings } from './Settings'
 import { NetworkErrorData, LocatorErrorData, ActionErrorData } from './errors/Types'
@@ -543,17 +541,18 @@ export class Browser<T> implements BrowserInterface {
 
 	// TODO fix this
 	public async interactionTiming(): Promise<number> {
-		try {
-			let polyfill = readFileSync(
-				resolve(join(__dirname, '../extern/tti-polyfill-debug.js')),
-				'utf8',
-			)
-			await this.target.evaluate(polyfill)
-			return await this.target.evaluate('window.ttiPolyfill.getFirstConsistentlyInteractive()')
-		} catch (e) {
-			console.warn('error getting interaction timing:', e)
-			return 0
-		}
+		// try {
+		// 	let polyfill = readFileSync(
+		// 		resolve(join(__dirname, '../extern/tti-polyfill-debug.js')),
+		// 		'utf8',
+		// 	)
+		// 	await this.target.evaluate(polyfill)
+		// 	return await this.target.evaluate('window.ttiPolyfill.getFirstConsistentlyInteractive()')
+		// } catch (e) {
+		// 	console.warn('error getting interaction timing:', e)
+		// 	return 0
+		// }
+		return 0
 	}
 
 	public async setCacheDisabled(cacheDisabled: boolean = true): Promise<void> {

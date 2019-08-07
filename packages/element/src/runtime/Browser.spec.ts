@@ -141,7 +141,7 @@ describe('Browser', function() {
 		})
 	})
 
-	describe('timing', () => {
+	describe.skip('timing', () => {
 		it('can inject polyfill for TTI', async () => {
 			let browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
 			await browser.visit('https://www.google.com')

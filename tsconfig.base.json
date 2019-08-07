@@ -14,7 +14,8 @@
 		"noImplicitAny": true,
 		"allowSyntheticDefaultImports": true,
 		"experimentalDecorators": true,
-		"emitDecoratorMetadata": true
+		"emitDecoratorMetadata": true,
+		"outDir": "dist"
 	},
-	"exclude": ["node_modules", "dist", "lib", "*.spec.ts"]
+	"exclude": ["dist", "lib", "*.spec.ts"]
 }

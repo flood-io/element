@@ -77,7 +77,7 @@ fi
 case $branch in
   beta)
     echo --- versioning beta
-    yarn lerna publish version prerelease --force-publish --no-push --ignore-changes scripts/publish.sh --preid beta
+    yarn lerna publish prerelease --force-publish --no-push --yes --preid beta
     ;;
   master)
     : ${MASTER_SEMVER_BUMP:=patch}

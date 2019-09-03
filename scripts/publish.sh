@@ -82,8 +82,12 @@ case $branch in
   master)
     : ${MASTER_SEMVER_BUMP:=patch}
     echo --- versioning master, incrementing $MASTER_SEMVER_BUMP level
-    yarn lerna -- version $MASTER_SEMVER_BUMP --force-publish --no-push --yes --ignore-changes scripts/publish.sh
+    yarn lerna publish --force-publish --no-push --yes --ignore-changes scripts/publish.sh
     ;;
+  feature/*)
+    echo --- versioning canary
+    yarn lerna publish --canary
+  ;;
   *)
     echo "branch is $branch which I won't publish"
     exit 0

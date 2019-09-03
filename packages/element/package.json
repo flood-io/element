@@ -1,6 +1,6 @@
 {
 	"name": "@flood/element",
-	"version": "1.0.9-beta.3",
+	"version": "1.0.9-beta.4",
 	"description": "Flood Element is a browser based load generation tool for easily testing modern web application performance",
 	"main": "./index.js",
 	"types": "./index.ts.d",
@@ -86,5 +86,6 @@
 		"tslint": "^5.5.0",
 		"tslint-config-prettier": "^1.5.0",
 		"tslint-plugin-prettier": "^1.2.0"
-	}
+	},
+	"gitHead": "c1171a1a394edc6df3dde5f0637e273be2081bd0"
 }

@@ -1,44 +1,57 @@
 {
-  "name": "flood-element",
-  "version": "1.0.0",
-  "main": "index.js",
-  "repository": "git@github.com:flood-io/element.git",
-  "author": "Ivan Vanderbyl <ivanvanderbyl@gmail.com>",
-  "license": "MIT",
-  "private": true,
-  "dependencies": {
-    "lerna": "^3.16.4"
-  },
-  "scripts": {
-    "build:watch": "lerna run build:watch --parallel",
-    "test": "lerna run test",
-    "publish": "./scripts/publish.sh",
-    "publish:brew": "ts-node --project ./scripts/publish-brew-tap/tsconfig.json -- ./scripts/publish-brew-tap/index.ts",
-    "publish:pre": "lerna publish --force-publish=* --cd-version prerelease && yarn publish:brew",
-    "element:prof": "node -r ts-node/register --inspect ./packages/cli/index.ts",
-    "element": "echo 'DEPRECATED, use `yarn dev` instead' && ts-node -- ./packages/cli/index.ts",
-    "dev": "ts-node -- ./packages/cli/index.ts"
-  },
-  "devDependencies": {
-    "@semantic-release/changelog": "^3.0.4",
-    "@semantic-release/git": "^7.0.12",
-    "commonmark": "^0.28.1",
-    "conventional-changelog-eslint": "^3.0.1",
-    "doctrine": "^2.0.0",
-    "front-matter": "^2.3.0",
-    "lodash.camelcase": "^4.3.0",
-    "markdown-table": "^1.1.2",
-    "markdown-toc": "^1.1.0",
-    "nodemon": "^1.18.3",
-    "semantic-release": "^15.13.16",
-    "ts-node": "^6.1.1",
-    "typedoc": "git://github.com/TypeStrong/typedoc.git",
-    "typescript": "^3.5.2",
-    "typescript-parser": "^1.3.3"
-  },
-  "workspaces": [
-    "packages/cli",
-    "packages/element",
-    "scripts/publish-brew-tap"
-  ]
+	"name": "flood-element",
+	"version": "1.0.0",
+	"main": "index.js",
+	"repository": "git@github.com:flood-io/element.git",
+	"author": "Ivan Vanderbyl <ivanvanderbyl@gmail.com>",
+	"license": "MIT",
+	"private": true,
+	"dependencies": {
+		"lerna": "^3.16.4"
+	},
+	"scripts": {
+		"build:watch": "lerna run build:watch --parallel",
+		"test": "lerna run test",
+		"publish": "./scripts/publish.sh",
+		"publish:brew": "ts-node --project ./scripts/publish-brew-tap/tsconfig.json -- ./scripts/publish-brew-tap/index.ts",
+		"publish:pre": "lerna publish --force-publish=* --cd-version prerelease && yarn publish:brew",
+		"element:prof": "node -r ts-node/register --inspect ./packages/cli/index.ts",
+		"element": "echo 'DEPRECATED, use `yarn dev` instead' && ts-node -- ./packages/cli/index.ts",
+		"dev": "ts-node -- ./packages/cli/index.ts"
+	},
+	"devDependencies": {
+		"@commitlint/cli": "^8.1.0",
+		"@commitlint/config-conventional": "^8.1.0",
+		"@semantic-release/changelog": "^3.0.4",
+		"@semantic-release/git": "^7.0.12",
+		"commonmark": "^0.28.1",
+		"conventional-changelog-eslint": "^3.0.1",
+		"doctrine": "^2.0.0",
+		"front-matter": "^2.3.0",
+		"husky": "^3.0.5",
+		"lodash.camelcase": "^4.3.0",
+		"markdown-table": "^1.1.2",
+		"markdown-toc": "^1.1.0",
+		"nodemon": "^1.18.3",
+		"semantic-release": "^15.13.16",
+		"ts-node": "^6.1.1",
+		"typedoc": "git://github.com/TypeStrong/typedoc.git",
+		"typescript": "^3.5.2",
+		"typescript-parser": "^1.3.3"
+	},
+	"workspaces": [
+		"packages/cli",
+		"packages/element",
+		"scripts/publish-brew-tap"
+	],
+	"commitlint": {
+		"extends": [
+			"@commitlint/config-conventional"
+		]
+	},
+	"husky": {
+		"hooks": {
+			"commit-msg": "commitlint -e $HUSKY_GIT_PARAMS"
+		}
+	}
 }

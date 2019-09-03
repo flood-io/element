@@ -13,6 +13,9 @@
 				"conventionalCommits": true
 			}
 		},
+		"version": {
+			"message": "chore(release): publish %s\n[skip ci]"
+		},
 		"bootstrap": {
 			"npmClient": "yarn"
 		}

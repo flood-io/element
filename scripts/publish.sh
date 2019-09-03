@@ -75,14 +75,14 @@ fi
 # do the brew publish - can only do this once packages have been published
 
 case $branch in
-  beta|feature/open-source-everything)
+  beta)
     echo --- versioning beta
-    yarn exec lerna -- version prerelease --force-publish --no-push --yes --ignore-changes scripts/publish.sh -m "release %s\n[skip ci]" --preid beta
+    yarn exec lerna -- version prerelease --force-publish --no-push --yes --ignore-changes scripts/publish.sh --preid beta
     ;;
   master)
     : ${MASTER_SEMVER_BUMP:=patch}
     echo --- versioning master, incrementing $MASTER_SEMVER_BUMP level
-    yarn exec lerna -- version $MASTER_SEMVER_BUMP --force-publish --no-push --yes --ignore-changes scripts/publish.sh -m "release %s\n[skip ci]"
+    yarn exec lerna -- version $MASTER_SEMVER_BUMP --force-publish --no-push --yes --ignore-changes scripts/publish.sh
     ;;
   *)
     echo "branch is $branch which I won't publish"

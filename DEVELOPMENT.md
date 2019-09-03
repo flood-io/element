@@ -1,10 +1,42 @@
-# Developing element
+# Developing Element
 
-## lerna & yarn workspaces
+## `lerna` & `yarn` workspaces
 
 We're using [yarn workspaces](https://yarnpkg.com/en/docs/workspaces) to manage dependencies, and [lerna 3.x](https://github.com/lerna/lerna) for versioning and other monorepo tasks.
 
-## publishing
+## Releasing
+
+We ship packages for each release in 3 formats:
+
+- NPM (@flood/element)
+- Homebrew (flood-io/taps/element)
+- GitHub (tagged archive of source code)
+
+Releases are published automatically and unceremoniously based upon commit history and branch name:
+
+* `feature/*` is the canary release branch.
+* `beta` is the beta release branch.
+* `master` is the stable release branch.
+
+Each time a feature is merged in to `beta`, the commit history is analysed and if it contains changes which require bumping the version, it will be bumped accordingly by `lerna` and `conventional-release` and prereleased with a "beta" tag.
+
+In a similar way, each time `beta` is merged into `master`, the commit history is analysed and the version bumped as needed, this time without a beta tag.
+
+All released on beta are tagged as `beta` on NPM, allowing you to install the latest beta with `@flood/element@beta` or the latest stable release with `@flood/element@latest`.
+
+### Packages
+
+**@flood/element**:
+
+This package contains the core testing library of Element. The released package contains the TypeScript ambient definitions for the built source code.
+
+**@flood/element-cli**:
+
+This package contains the CLI code which you use to interact with Element on the commandline.
+
+The contents of this package is a single file built using `ncc`.
+
+<!-- ## publishing
 
 We do a custom build for `@flood/element` (`packages/element`) to provide more control over the package structure.
 
@@ -69,4 +101,4 @@ yarn test
 ```shell
 make smoke
 ```
-
+ -->

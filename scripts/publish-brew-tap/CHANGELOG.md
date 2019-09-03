@@ -166,31 +166,7 @@
 
 
 
-## [1.0.2-beta.5](https://github.com/flood-io/element/compare/v1.0.2...v1.0.2-beta.5) (2018-11-09)
-
-
-
 ## [1.0.2](https://github.com/flood-io/element/compare/v1.0.2-beta.4...v1.0.2) (2018-11-06)
-
-
-
-## [1.0.2-beta.4](https://github.com/flood-io/element/compare/v1.0.2-beta.3...v1.0.2-beta.4) (2018-11-03)
-
-
-
-## [1.0.2-beta.3](https://github.com/flood-io/element/compare/v1.0.2-beta.2...v1.0.2-beta.3) (2018-11-02)
-
-
-
-## [1.0.2-beta.2](https://github.com/flood-io/element/compare/v1.0.2-beta.1...v1.0.2-beta.2) (2018-11-02)
-
-
-
-## [1.0.2-beta.1](https://github.com/flood-io/element/compare/v1.0.2-beta.0...v1.0.2-beta.1) (2018-11-02)
-
-
-
-## [1.0.2-beta.0](https://github.com/flood-io/element/compare/v1.0.1...v1.0.2-beta.0) (2018-10-29)
 
 
 
@@ -199,14 +175,6 @@
 
 
 # [1.0.0](https://github.com/flood-io/element/compare/v0.0.5-beta.1...v1.0.0) (2018-10-03)
-
-
-
-## [0.0.5-beta.1](https://github.com/flood-io/element/compare/v0.0.5-beta.0...v0.0.5-beta.1) (2018-10-03)
-
-
-
-## [0.0.5-beta.0](https://github.com/flood-io/element/compare/v0.0.4...v0.0.5-beta.0) (2018-10-02)
 
 
 

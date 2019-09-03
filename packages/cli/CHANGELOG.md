@@ -202,14 +202,6 @@
 
 
 
-## [0.0.5-beta.1](https://github.com/flood-io/element/compare/v0.0.5-beta.0...v0.0.5-beta.1) (2018-10-03)
-
-
-
-## [0.0.5-beta.0](https://github.com/flood-io/element/compare/v0.0.4...v0.0.5-beta.0) (2018-10-02)
-
-
-
 ## 0.0.4 (2018-10-02)
 
 

@@ -70,6 +70,7 @@
 		"@types/debug": "^0.0.30",
 		"@types/doctrine": "0.0.3",
 		"@types/express": "^4.16.0",
+		"@types/fs-extra": "^8.0.0",
 		"@types/micromatch": "^3.1.0",
 		"@types/mocha": "^2.2.45",
 		"@types/raven": "^2.1.3",

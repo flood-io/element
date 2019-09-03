@@ -87,7 +87,7 @@ case $branch in
   feature/*)
     echo --- versioning canary
     yarn lerna publish --canary
-  ;;
+    ;;
   *)
     echo "branch is $branch which I won't publish"
     exit 0

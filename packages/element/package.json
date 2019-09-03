@@ -1,6 +1,6 @@
 {
 	"name": "@flood/element",
-	"version": "1.0.9-beta.1",
+	"version": "1.0.9-beta.2",
 	"description": "Flood Element is a browser based load generation tool for easily testing modern web application performance",
 	"main": "./index.js",
 	"types": "./index.ts.d",
@@ -50,6 +50,7 @@
 		"fs-extra": "^4.0.2",
 		"glob": "^7.1.2",
 		"knuth-shuffle": "^1.0.8",
+		"lerna": "^3.16.4",
 		"morgan": "^1.9.1",
 		"prettier": "^1.10.2",
 		"puppeteer": "^1.17.0",

@@ -51,7 +51,7 @@ describe('Recorder', function() {
 
 		it('Captures document response time', async () => {
 			// NOTE this is non-deterministic & may need to be adjusted (LC)
-			expect(recorder.responseTimeForType('Document')).to.be.within(1, 100)
+			expect(recorder.responseTimeForType('Document')).to.be.within(1, 200)
 		})
 
 		it('Records network throughput', async () => {
@@ -60,7 +60,7 @@ describe('Recorder', function() {
 
 		it('Resets everything between tests', async () => {
 			// NOTE this is non-deterministic & may need to be adjusted (LC)
-			expect(recorder.responseTimeForType('Document')).to.be.within(1, 100)
+			expect(recorder.responseTimeForType('Document')).to.be.within(1, 200)
 			expect(recorder.networkThroughput()).to.be.greaterThan(0)
 			expect(recorder.documentResponseCode).to.equal(200)
 			recorder.reset()

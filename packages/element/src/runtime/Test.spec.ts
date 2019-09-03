@@ -72,6 +72,7 @@ describe('Test', function() {
 			waitUntil: false,
 			disableCache: false,
 			extraHTTPHeaders: {},
+			launchArgs: [],
 		}
 		expect(test.settings).to.deep.equal(defaultSettings)
 	})

@@ -127,6 +127,9 @@ export class Runner {
 			options.chromeVersion = settings.chromeVersion
 		}
 
+		if (options.args == null) options.args = []
+		if (Array.isArray(settings.launchArgs)) options.args.push(...settings.launchArgs)
+
 		return this.clientFactory(options)
 	}
 

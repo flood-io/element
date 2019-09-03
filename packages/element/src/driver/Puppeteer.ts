@@ -38,8 +38,8 @@ function setupSystemChrome(options: ConcreteLaunchOptions): ConcreteLaunchOption
 		case 'darwin':
 			options.executablePath = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
 			break
-    case 'win32':
-			options.executablePath = 'C:\Program Files (x86)\Google\Chrome\Application\chrome.exe'
+		case 'win32':
+			options.executablePath = 'C:Program Files (x86)GoogleChromeApplicationchrome.exe'
 			break
 		default:
 			// TODO search PATH for chrome

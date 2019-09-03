@@ -100,7 +100,11 @@ export class Runner {
 		private testSettingOverrides: TestSettings,
 		private launchOptionOverrides: Partial<ConcreteLaunchOptions>,
 		private testObserverFactory: (t: TestObserver) => TestObserver = x => x,
-	) {}
+	) {
+		if (this.launchOptionOverrides.args == null) this.launchOptionOverrides.args = []
+		if (Array.isArray(testSettingOverrides.launchArgs))
+			this.launchOptionOverrides.args.push(...testSettingOverrides.launchArgs)
+	}
 
 	async stop(): Promise<void> {
 		this.running = false

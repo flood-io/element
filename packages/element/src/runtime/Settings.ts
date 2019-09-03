@@ -209,7 +209,7 @@ export interface TestSettings {
 	 */
 	blockedDomains?: string[]
 
-  /*
+	/*
 	 * Automatically apply a wait(Until...) before each action. Defaults to `false`
 	 *
 	 * Accepts either `visible` or `present` as values. Set to `false` to disable (default).
@@ -217,6 +217,12 @@ export interface TestSettings {
 	 * Uses global wait timeout from settings.
 	 */
 	waitUntil?: ElementPresence
+
+	/**
+	 * Additional arguments to pass to the browser instance.
+	 * The list of Chromium flags can be found at https://peter.sh/experiments/chromium-command-line-switches/
+	 */
+	launchArgs?: string[]
 }
 
 /**
@@ -247,6 +253,7 @@ export const DEFAULT_SETTINGS: ConcreteTestSettings = {
 	description: '',
 	disableCache: false,
 	extraHTTPHeaders: {},
+	launchArgs: [],
 }
 
 /**

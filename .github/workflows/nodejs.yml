@@ -22,7 +22,9 @@ jobs:
           yarn test
         env:
           CI: true
-      - name: Build
-        run: ./packages/element/scripts/build.sh
+      - name: Release
+        run: |
+          ./packages/element/scripts/build.sh
+          yarn release
         env:
           CI: true

@@ -1,17 +1,67 @@
-# Change Log
+# Changelog
 
-All notable changes to this project will be documented in this file.
-See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### [1.0.10](https://github.com/flood-io/element/compare/v1.0.10-beta.1...v1.0.10) (2019-09-03)
+
+
+* fix changelogs ([17d41e1](https://github.com/flood-io/element/commit/17d41e1))
+* use lerna to publish packages ([d2931d6](https://github.com/flood-io/element/commit/d2931d6))
+
+
+### Bug Fixes
+
+* indent ([92d3f3e](https://github.com/flood-io/element/commit/92d3f3e))
+* typo ([3d3d2f9](https://github.com/flood-io/element/commit/3d3d2f9))
+
+## [1.0.9](https://github.com/flood-io/element/compare/v1.0.10-beta.1...v1.0.9) (2019-09-03)
+
+
+### Bug Fixes
+
+* indent ([92d3f3e](https://github.com/flood-io/element/commit/92d3f3e))
+* typo ([3d3d2f9](https://github.com/flood-io/element/commit/3d3d2f9))
+
+
 
 ## [1.0.10-beta.1](https://github.com/flood-io/element/compare/v1.0.10-beta.0...v1.0.10-beta.1) (2019-09-03)
 
-**Note:** Version bump only for package @flood/element
+
+
+## [1.0.10-beta.0](https://github.com/flood-io/element/compare/v1.0.9...v1.0.10-beta.0) (2019-09-03)
 
 
 
+## [1.0.9](https://github.com/flood-io/element/compare/v1.0.9-beta.5...v1.0.9) (2019-09-03)
 
 
-## [1.0.8](https://github.com/flood-io/element/compare/v1.0.6-beta.22...v1.0.8) (2019-09-03)
+
+## [1.0.9-beta.5](https://github.com/flood-io/element/compare/v1.0.9-beta.4...v1.0.9-beta.5) (2019-09-03)
+
+
+### Bug Fixes
+
+* **release:** fixing publishing to use lerna for all packages ([79fb772](https://github.com/flood-io/element/commit/79fb772))
+
+
+
+## [1.0.9-beta.4](https://github.com/flood-io/element/compare/v1.0.9-beta.3...v1.0.9-beta.4) (2019-09-03)
+
+
+
+## [1.0.9-beta.3](https://github.com/flood-io/element/compare/v1.0.9-beta.2...v1.0.9-beta.3) (2019-09-03)
+
+
+
+## [1.0.9-beta.2](https://github.com/flood-io/element/compare/v1.0.9-beta.1...v1.0.9-beta.2) (2019-09-03)
+
+
+
+## [1.0.9-beta.1](https://github.com/flood-io/element/compare/v1.0.9-beta.0...v1.0.9-beta.1) (2019-09-03)
+
+
+
+## [1.0.9-beta.0](https://github.com/flood-io/element/compare/v1.0.6-beta.22...v1.0.9-beta.0) (2019-09-03)
 
 
 

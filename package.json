@@ -1,6 +1,6 @@
 {
 	"name": "flood-element",
-	"version": "1.0.9",
+	"version": "1.0.10",
 	"main": "index.js",
 	"repository": "git@github.com:flood-io/element.git",
 	"author": "Ivan Vanderbyl <ivanvanderbyl@gmail.com>",
@@ -32,6 +32,7 @@
 		"markdown-table": "^1.1.2",
 		"markdown-toc": "^1.1.0",
 		"nodemon": "^1.18.3",
+		"standard-changelog": "^2.0.13",
 		"standard-version": "^7.0.0",
 		"ts-node": "^6.1.1",
 		"typedoc": "^0.15.0",
@@ -42,6 +43,43 @@
 		"packages/cli",
 		"packages/element"
 	],
+	"standard-version": {
+		"header": "Element Changelog",
+		"types": [
+			{
+				"type": "feat",
+				"section": "Features"
+			},
+			{
+				"type": "fix",
+				"section": "Bug Fixes"
+			},
+			{
+				"type": "chore",
+				"hidden": false
+			},
+			{
+				"type": "docs",
+				"hidden": false
+			},
+			{
+				"type": "style",
+				"hidden": false
+			},
+			{
+				"type": "refactor",
+				"hidden": false
+			},
+			{
+				"type": "perf",
+				"hidden": false
+			},
+			{
+				"type": "test",
+				"hidden": false
+			}
+		]
+	},
 	"commitlint": {
 		"extends": [
 			"@commitlint/config-conventional"

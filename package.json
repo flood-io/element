@@ -1,6 +1,6 @@
 {
 	"name": "flood-element",
-	"version": "1.0.8",
+	"version": "1.0.9",
 	"main": "index.js",
 	"repository": "git@github.com:flood-io/element.git",
 	"author": "Ivan Vanderbyl <ivanvanderbyl@gmail.com>",
@@ -17,7 +17,8 @@
 		"publish:pre": "lerna publish --force-publish=* --cd-version prerelease && yarn publish:brew",
 		"element:prof": "node -r ts-node/register --inspect ./packages/cli/index.ts",
 		"element": "echo 'DEPRECATED, use `yarn dev` instead' && yarn dev",
-		"dev": "ts-node -- ./packages/cli/index.ts"
+		"dev": "ts-node -- ./packages/cli/index.ts",
+		"release": "standard-version"
 	},
 	"devDependencies": {
 		"@commitlint/cli": "^8.1.0",
@@ -32,6 +33,7 @@
 		"markdown-table": "^1.1.2",
 		"markdown-toc": "^1.1.0",
 		"nodemon": "^1.18.3",
+		"standard-version": "^7.0.0",
 		"ts-node": "^6.1.1",
 		"typedoc": "^0.15.0",
 		"typescript": "^3.5.2",

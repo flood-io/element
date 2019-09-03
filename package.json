@@ -12,7 +12,6 @@
 	"scripts": {
 		"build:watch": "lerna run build:watch --parallel",
 		"test": "lerna run test",
-		"publish": "./scripts/publish.sh",
 		"publish:brew": "ts-node --project ./scripts/publish-brew-tap/tsconfig.json -- ./scripts/publish-brew-tap/index.ts",
 		"publish:pre": "lerna publish --force-publish=* --cd-version prerelease && yarn publish:brew",
 		"element:prof": "node -r ts-node/register --inspect ./packages/cli/index.ts",

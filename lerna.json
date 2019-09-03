@@ -1,8 +1,6 @@
 {
 	"lerna": "2.11.0",
-	"packages": [
-		"packages/*"
-	],
+	"packages": ["packages/*"],
 	"version": "1.0.10-beta.0",
 	"npmClient": "yarn",
 	"useWorkspaces": true,
@@ -10,10 +8,8 @@
 		"init": {
 			"exact": true
 		},
-		"command": {
-			"publish": {
-				"conventionalCommits": true
-			}
+		"publish": {
+			"conventionalCommits": true
 		},
 		"version": {
 			"message": "chore(release): publish %s\n[skip ci]"

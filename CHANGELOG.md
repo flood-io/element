@@ -1,20 +1,4 @@
-# Changelog
-
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
-
-### [1.0.10](https://github.com/flood-io/element/compare/v1.0.10-beta.1...v1.0.10) (2019-09-03)
-
-
-* fix changelogs ([17d41e1](https://github.com/flood-io/element/commit/17d41e1))
-* use lerna to publish packages ([d2931d6](https://github.com/flood-io/element/commit/d2931d6))
-
-
-### Bug Fixes
-
-* indent ([92d3f3e](https://github.com/flood-io/element/commit/92d3f3e))
-* typo ([3d3d2f9](https://github.com/flood-io/element/commit/3d3d2f9))
-
-## [1.0.9](https://github.com/flood-io/element/compare/v1.0.10-beta.1...v1.0.9) (2019-09-03)
+## [1.0.10](https://github.com/flood-io/element/compare/v1.0.10-beta.1...v1.0.10) (2019-09-03)
 
 
 ### Bug Fixes
@@ -274,3 +258,6 @@ All notable changes to this project will be documented in this file. See [standa
 
 
 ## 0.0.4 (2018-10-02)
+
+
+

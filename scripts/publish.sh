@@ -40,7 +40,7 @@ if [[ ${BUILDKITE_BRANCH:-} ]]; then
   git config --global user.name ${GIT_USERNAME}
 
   git remote set-url origin https://${GITHUB_TOKEN}:x-oauth-basic@github.com/flood-io/element
-  cat .git/config
+  # cat .git/config
   git fetch
 
   # if the branch exists, just check it out

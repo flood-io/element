@@ -77,39 +77,39 @@ fi
 case $branch in
   beta)
     echo --- versioning beta
-    yarn exec lerna -- version prerelease --force-publish --no-push --yes --ignore-changes scripts/publish.sh --preid beta
+    yarn lerna publish version prerelease --force-publish --no-push --ignore-changes scripts/publish.sh --preid beta
     ;;
   master)
     : ${MASTER_SEMVER_BUMP:=patch}
     echo --- versioning master, incrementing $MASTER_SEMVER_BUMP level
-    yarn exec lerna -- version $MASTER_SEMVER_BUMP --force-publish --no-push --yes --ignore-changes scripts/publish.sh
+    yarn lerna -- version $MASTER_SEMVER_BUMP --force-publish --no-push --yes --ignore-changes scripts/publish.sh
     ;;
   *)
     echo "branch is $branch which I won't publish"
     exit 0
 esac
 
-echo '--- building @flood/element'
-cd $root/packages/element
-./scripts/build.sh
+# echo '--- building @flood/element'
+# cd $root/packages/element
+# ./scripts/build.sh
 
-echo '--- publishing @flood/element-cli'
-cd $root/packages/cli
-yarn build
+# echo '--- publishing @flood/element-cli'
+# cd $root/packages/cli
+# yarn build
 
-echo '--- pushing with tags'
-git push
-git push --tags
+# echo '--- pushing with tags'
+# git push
+# git push --tags
 
-echo '--- building @flood/element'
-cd $root/packages/element
-npm publish --access public --tag $npm_tag dist
+# echo '--- building @flood/element'
+# cd $root/packages/element
+# npm publish --access public --tag $npm_tag dist
 
-echo '--- publishing @flood/element-cli'
-cd $root/packages/cli
-npm publish --access public --tag $npm_tag
+# echo '--- publishing @flood/element-cli'
+# cd $root/packages/cli
+# npm publish --access public --tag $npm_tag
 
-echo '--- publishing brew tap'
-cd $root
-yarn
-yarn publish:brew
+# echo '--- publishing brew tap'
+# cd $root
+# yarn
+# yarn publish:brew

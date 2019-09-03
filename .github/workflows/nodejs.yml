@@ -20,7 +20,10 @@ jobs:
     - name: install, build, and test
       run: |
         yarn install
-        yarn build
         yarn test
+      env:
+        CI: true
+    - name: Build
+      run: ./packages/elements/scripts/build.sh
       env:
         CI: true

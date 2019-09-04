@@ -74,47 +74,56 @@ fi
 # npm publish - both packages should publish unless there's eg an intermitted network problem
 # do the brew publish - can only do this once packages have been published
 
+echo '--- building @flood/element'
+cd $root/packages/element
+./scripts/build.sh
+
+echo '--- publishing @flood/element-cli'
+cd $root/packages/cli
+yarn build
+
 case $branch in
   beta)
-    echo --- publishing beta
-    yarn lerna publish prerelease beta --yes --force-publish
+    echo +++ publishing beta
+    # yarn lerna publish prerelease beta --yes --force-publish
+    yarn lerna version prerelease beta --yes --force-publish --no-push
     ;;
   master)
-    echo --- publishing stable
-    yarn lerna publish --yes --force-publish
-
-    echo --- publishing brew tap
-    cd $root
-    yarn publish:brew
+    echo +++ publishing stable
+    yarn lerna version --yes --force-publish --no-push
     # yarn lerna publish --force-publish --no-push --yes --ignore-changes scripts/publish.sh
+
+    # echo --- publishing brew tap
+    # cd $root
+    # yarn publish:brew
     ;;
   *)
-    echo --- publishing canary
-    yarn lerna publish --canary --yes --force-publish
+    echo +++ publishing canary
+    yarn lerna version --canary --yes --force-publish
     ;;
 esac
 
-# echo '--- building @flood/element'
-# cd $root/packages/element
-# ./scripts/build.sh
+echo '--- building @flood/element'
+cd $root/packages/element
+./scripts/build.sh
 
-# echo '--- publishing @flood/element-cli'
-# cd $root/packages/cli
-# yarn build
+echo '--- publishing @flood/element-cli'
+cd $root/packages/cli
+yarn build
 
-# echo '--- pushing with tags'
-# git push
-# git push --tags
+echo '--- pushing with tags'
+git push
+git push --tags
 
-# echo '--- building @flood/element'
-# cd $root/packages/element
-# npm publish --access public --tag $npm_tag dist
+echo '--- building @flood/element'
+cd $root/packages/element
+npm publish --access public --tag $npm_tag dist
 
-# echo '--- publishing @flood/element-cli'
-# cd $root/packages/cli
-# npm publish --access public --tag $npm_tag
+echo '--- publishing @flood/element-cli'
+cd $root/packages/cli
+npm publish --access public --tag $npm_tag
 
-# echo '--- publishing brew tap'
-# cd $root
-# yarn
-# yarn publish:brew
+echo '--- publishing brew tap'
+cd $root
+yarn
+yarn publish:brew

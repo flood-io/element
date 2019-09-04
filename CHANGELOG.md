@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.10-beta.5](https://github.com/flood-io/element/compare/v1.0.10-beta.4...v1.0.10-beta.5) (2019-09-04)
+
+
+### Bug Fixes
+
+* **examples:** added auto wait exmaple for challenge ([6815574](https://github.com/flood-io/element/commit/6815574))
+
+
+
+
+
 ## [1.0.10-beta.4](https://github.com/flood-io/element/compare/v1.0.10-beta.3...v1.0.10-beta.4) (2019-09-04)
 
 **Note:** Version bump only for package flood-element

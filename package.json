@@ -16,8 +16,7 @@
 		"publish:pre": "lerna publish --force-publish=* --cd-version prerelease && yarn publish:brew",
 		"element:prof": "node -r ts-node/register --inspect ./packages/cli/index.ts",
 		"element": "echo 'DEPRECATED, use `yarn dev` instead' && yarn dev",
-		"dev": "ts-node -- ./packages/cli/index.ts",
-		"release": "standard-version"
+		"dev": "ts-node -- ./packages/cli/index.ts"
 	},
 	"devDependencies": {
 		"@commitlint/cli": "^8.1.0",

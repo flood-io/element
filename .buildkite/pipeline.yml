@@ -12,7 +12,7 @@ steps:
       agent: "buildbox"
 
   # - command: "scripts/ci/smoke.sh"
-    # label: ":fire: Smoke"
+  # label: ":fire: Smoke"
 
   - wait
 

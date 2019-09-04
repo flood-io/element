@@ -18,15 +18,9 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: install, build, and test
         run: |
-          git config --global user.email "element@flood.io"
-          git config --global user.name "Element buildbot"
+          # git config --global user.email "element@flood.io"
+          # git config --global user.name "Element buildbot"
           yarn install
           yarn test
-        env:
-          CI: true
-      - name: Release
-        run: |
-          ./packages/element/scripts/build.sh
-          yarn release
         env:
           CI: true

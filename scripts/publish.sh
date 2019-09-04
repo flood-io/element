@@ -76,21 +76,22 @@ fi
 
 case $branch in
   beta)
-    echo --- versioning beta
-    yarn lerna publish prerelease --force-publish --no-push --yes --preid beta
+    echo --- publishing beta
+    yarn lerna publish prerelease beta --yes
     ;;
   master)
-    : ${MASTER_SEMVER_BUMP:=patch}
-    echo --- versioning master, incrementing $MASTER_SEMVER_BUMP level
-    yarn lerna publish --force-publish --no-push --yes --ignore-changes scripts/publish.sh
-    ;;
-  feature/*)
-    echo --- versioning canary
-    yarn lerna publish --canary
+    echo --- publishing stable
+    yarn lerna publish --yes
+
+    echo --- publishing brew tap
+    cd $root
+    yarn publish:brew
+    # yarn lerna publish --force-publish --no-push --yes --ignore-changes scripts/publish.sh
     ;;
   *)
-    echo "branch is $branch which I won't publish"
-    exit 0
+    echo --- publishing canary
+    yarn lerna publish --canary --yes
+    ;;
 esac
 
 # echo '--- building @flood/element'

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.10-beta.7](https://github.com/flood-io/element/compare/v1.0.10-beta.6...v1.0.10-beta.7) (2019-09-04)
+
+
+### Bug Fixes
+
+* **updates:** validate correct dist tags ([0bd365a](https://github.com/flood-io/element/commit/0bd365a))
+
+
+
+
+
 ## [1.0.10-beta.6](https://github.com/flood-io/element/compare/v1.0.10-beta.5...v1.0.10-beta.6) (2019-09-04)
 
 **Note:** Version bump only for package @flood/element-cli

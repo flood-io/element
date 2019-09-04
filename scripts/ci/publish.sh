@@ -9,10 +9,6 @@ source $HERE/config.sh
 
 test_env_file=$HERE/test-env
 
-echo pwd
-pwd
-ls -la .
-
 echo "~~~ tests passed, publishing"
 docker run --rm \
   -e NPM_TOKEN \

@@ -77,11 +77,11 @@ fi
 case $branch in
   beta)
     echo --- publishing beta
-    yarn lerna publish prerelease beta --yes
+    yarn lerna publish prerelease beta --yes --force-publish
     ;;
   master)
     echo --- publishing stable
-    yarn lerna publish --yes
+    yarn lerna publish --yes --force-publish
 
     echo --- publishing brew tap
     cd $root
@@ -90,7 +90,7 @@ case $branch in
     ;;
   *)
     echo --- publishing canary
-    yarn lerna publish --canary --yes
+    yarn lerna publish --canary --yes --force-publish
     ;;
 esac
 

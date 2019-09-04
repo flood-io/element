@@ -1,23 +1,30 @@
-# `@flood/element`
+# `@flood/element`: Break the network barrier!
 
-Flood Element combines the familiar power of traditional browser scripting tools with the proven performance of Flood to create an easy to use and maintainable performance testing tool.
+Flood Element is a browser based load generation tool built on top of Puppeteer. It provides an easy to use set of commands for automating most user interfaces, including mouse actions such as click and drag, keyboard key press actions, and working with inputs, buttons, and menus.
 
-Flood Element works by spinning up hundreds or even thousands of instances of Google Chrome, and running the scripts you write using `@flood/element` to drive a load test. We call this Browser Level Load Testing.
+Element is designed purely to generate load by simulating real user behaviour within a browser. It does not attempt to manipulate the page or work with any specific front-end framework, although it works great for testing SPAs built in React, Angular, Ember, or any other JS heavy client framework.
 
-> This project is currently in beta and APIs are subject to change.
+The goals of Element scripts are to be:
+
+* Understandable
+* Easy to write and maintain
+* Declarative for expressing user actions
+
+Scaling up Element tests is easy on [Flood](https://flood.io), by spinning up hundreds or even thousands of instances of Google Chrome, and running the scripts you write to drive a load test. We call this Browser Level Load Testing.
 
 ![Flood Element Example code](./packages/element/docs/code-snippet.png)
 
-- [Quickstart](#quickstart)
-  - [1. Install Element](#1-install-element)
-  - [2. Initialize Your Project](#2-initialize-your-project)
-  - [3. Write and Validate Your Script](#3-write-and-validate-your-script)
-  - [4. Run a Real Load Test on Flood](#4-run-a-real-load-test-on-flood)
-- [About](#about)
-  - [What can I do with it?](#what-can-i-do-with-it)
-- [Repository Layout](#repository-layout)
-- [Documentation](#documentation)
-- [Reporting Issues](#reporting-issues)
+- [`@flood/element`: Break the network barrier!](#floodelement-break-the-network-barrier)
+  - [Quickstart](#quickstart)
+    - [1. Install Element](#1-install-element)
+    - [2. Initialize Your Project](#2-initialize-your-project)
+    - [3. Write and Validate Your Script](#3-write-and-validate-your-script)
+  - [4. Run a real Load Test on Flood](#4-run-a-real-load-test-on-flood)
+  - [About](#about)
+    - [What can I do with it?](#what-can-i-do-with-it)
+  - [Repository Layout](#repository-layout)
+  - [Documentation](#documentation)
+  - [Reporting Issues](#reporting-issues)
 
 ## Quickstart
 

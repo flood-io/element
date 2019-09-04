@@ -80,11 +80,12 @@ async function doUpdateCheck(pkg: any) {
 	try {
 		// 1.0.1 -> latest
 		// 1.0.1-beta.1 -> beta
+		const validDistTags = ['latest', 'beta']
 		let distTag = 'latest'
 
-		const prerelease = semver.prerelease(pkg.version)
+		const prerelease = semver.prerelease(pkg.version) || []
 		if (prerelease) {
-			distTag = prerelease[0]
+			if (validDistTags.includes(prerelease[0])) distTag = prerelease[0]
 		}
 
 		const update = await checkForUpdate(pkg, {

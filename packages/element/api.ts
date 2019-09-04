@@ -25,12 +25,10 @@ export { WorkRoot, PuppeteerClient, launch }
 export { TestScriptError, ITestScript, TestScriptOptions } from './src/TestScript'
 export { EvaluatedScript } from './src/runtime/EvaluatedScript'
 
-import { expect } from './src/utils/Expect'
-export { expect }
+export { expect } from './src/utils/Expect'
 
 // Test observer integration
-import Test from './src/runtime/Test'
-export { Test }
+export { default as Test } from './src/runtime/Test'
 export { Step } from './src/runtime/Step'
 
 export { NoOpTestObserver, TestObserver } from './src/runtime/test-observers/Observer'
@@ -42,8 +40,6 @@ export { IObjectTrace, NullObjectTrace } from './src/utils/ObjectTrace'
 
 export { StructuredError } from './src/utils/StructuredError'
 
-import NetworkRecorder from './src/network/Recorder'
-export { NetworkRecorder }
+export { default as NetworkRecorder } from './src/network/Recorder'
 export { Entry } from './src/network/Protocol'
-import Observer from './src/runtime/Observer'
-export { Observer as NetworkObserver }
+export { default as NetworkObserver } from './src/runtime/Observer'

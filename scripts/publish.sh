@@ -86,12 +86,12 @@ case $branch in
   beta)
     echo +++ publishing beta
     # yarn lerna publish prerelease beta --yes --force-publish --dist-tag beta
-    yarn lerna version prerelease beta --yes --force-publish --no-push
+    yarn lerna version prerelease beta --yes --force-publish --no-push --dist-tag beta
     ;;
   master)
     echo +++ publishing stable
     # yarn lerna publish --force-publish --no-push --yes --dist-tag latest
-    yarn lerna version --yes --force-publish --no-push
+    yarn lerna version --yes --force-publish --no-push --dist-tag latest
 
     # echo --- publishing brew tap
     # cd $root
@@ -99,7 +99,7 @@ case $branch in
     ;;
   *)
     echo +++ publishing canary
-    yarn lerna version --canary --yes --force-publish
+    yarn lerna version --canary --yes --force-publish --dist-tag canary
     # --dist-tag canary
     ;;
 esac

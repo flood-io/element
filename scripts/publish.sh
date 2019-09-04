@@ -26,8 +26,8 @@ case $branch in
     npm_tag=latest
     ;;
   *)
-    echo "--- branch is $branch which I won't publish"
-    exit 0
+    echo --- versioning canary
+    npm_tag=canary
     ;;
 esac
 
@@ -85,13 +85,13 @@ yarn build
 case $branch in
   beta)
     echo +++ publishing beta
-    # yarn lerna publish prerelease beta --yes --force-publish
+    # yarn lerna publish prerelease beta --yes --force-publish --dist-tag beta
     yarn lerna version prerelease beta --yes --force-publish --no-push
     ;;
   master)
     echo +++ publishing stable
+    # yarn lerna publish --force-publish --no-push --yes --dist-tag latest
     yarn lerna version --yes --force-publish --no-push
-    # yarn lerna publish --force-publish --no-push --yes --ignore-changes scripts/publish.sh
 
     # echo --- publishing brew tap
     # cd $root
@@ -100,6 +100,7 @@ case $branch in
   *)
     echo +++ publishing canary
     yarn lerna version --canary --yes --force-publish
+    # --dist-tag canary
     ;;
 esac
 

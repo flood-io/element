@@ -25,6 +25,7 @@ Scaling up Element tests is easy on [Flood](https://flood.io), by spinning up hu
   - [Repository Layout](#repository-layout)
   - [Documentation](#documentation)
   - [Reporting Issues](#reporting-issues)
+  - [Contributing](#contributing)
 
 ## Quickstart
 
@@ -128,3 +129,7 @@ When you run your script as a load test on [Flood](https://app.flood.io), this s
 If you encounter any issues with the `@flood/element` project or Flood Element product, please [open an issue](https://github.com/flood-io/element/issues) on the GitHub project.
 
 If you're encountering issues with Flood itself, please contact Flood Support from within the Flood Dashboard.
+
+## Contributing
+
+We welcome your constributions, please see [CONTRIBUTING.md](/CONTRIBUTING.md)

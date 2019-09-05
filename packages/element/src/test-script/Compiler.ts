@@ -5,10 +5,27 @@ import {
 	TestScriptDefaultOptions,
 } from '../TestScript'
 import { CategorisedDiagnostics } from './TypescriptDiagnostics'
-import * as ts from 'typescript'
+import {
+	CompilerOptions,
+	ResolvedModule,
+	ResolvedTypeReferenceDirective,
+	ModuleKind,
+	ScriptTarget,
+	ModuleResolutionKind,
+	createCompilerHost,
+	SourceFile,
+	createSourceFile,
+	createModuleResolutionCache,
+	resolveModuleName,
+	createProgram,
+	getPreEmitDiagnostics,
+	SortedReadonlyArray,
+	Diagnostic,
+	sortAndDeduplicateDiagnostics,
+	resolveTypeReferenceDirective,
+} from 'typescript'
 import * as path from 'path'
 import { existsSync } from 'fs'
-// import { existsSync, readFileSync } from 'fs'
 import { VMScript } from 'vm2'
 import * as parseComments from 'comment-parser'
 import { SourceUnmapper } from './SourceUnmapper'
@@ -46,12 +63,12 @@ const indexModuleDefinition = {
 	resolvedFileName: indexModuleFile,
 	isExternalLibraryImport: true,
 }
-const manualModuleDefinitions: { [key: string]: ts.ResolvedModule | undefined } = {
+const manualModuleDefinitions: { [key: string]: ResolvedModule | undefined } = {
 	'@flood/chrome': indexModuleDefinition,
 	'@flood/element': indexModuleDefinition,
 	faker: manualModuleDefinition('@types/faker'),
 }
-const manualTypeResolutions: { [key: string]: ts.ResolvedTypeReferenceDirective | undefined } = {
+const manualTypeResolutions: { [key: string]: ResolvedTypeReferenceDirective | undefined } = {
 	faker: manualModuleResolution('@types/faker'),
 }
 
@@ -80,7 +97,7 @@ const FloodChromeErrors = {
 	NoModuleImportedJavascript,
 }
 
-const defaultCompilerOptions: ts.CompilerOptions = {
+const defaultCompilerOptions: CompilerOptions = {
 	noEmitOnError: true,
 	noImplicitAny: false,
 	strictNullChecks: false,
@@ -99,23 +116,20 @@ const defaultCompilerOptions: ts.CompilerOptions = {
 
 	rootDirs: [sandboxRoot],
 
-	module: ts.ModuleKind.CommonJS,
-	moduleResolution: ts.ModuleResolutionKind.NodeJs,
-	target: ts.ScriptTarget.ES2017,
+	module: ModuleKind.CommonJS,
+	moduleResolution: ModuleResolutionKind.NodeJs,
+	target: ScriptTarget.ES2017,
 
 	pretty: true,
-	lib: [
-		'lib.dom.d.ts',
-		'lib.dom.iterable.d.ts',
-		'lib.es2017.d.ts',
-		'lib.es2016.array.include.d.ts',
-		'lib.es2017.object.d.ts',
-	],
-	// types: ['@types/node'],
-	typeRoots: ['node_modules/@types'],
 
-	baseUrl: './',
-	paths: { '*': ['node_modules/@types/*', '*'] },
+	lib: ['lib.dom.d.ts', 'lib.dom.iterable.d.ts', 'lib.esnext.d.ts'],
+	// types: ['@types/node'],
+	// typeRoots: ['node_modules/@types'],
+	typeRoots: [],
+	// exclude: []
+
+	// baseUrl: './',
+	// paths: { '*': ['node_modules/@types/*', '*'] },
 }
 
 type sourceKinds = 'typescript' | 'javascript'
@@ -175,7 +189,7 @@ export class TypeScriptTestScript implements ITestScript {
 		return errors.join('\n')
 	}
 
-	get compilerOptions(): ts.CompilerOptions {
+	get compilerOptions(): CompilerOptions {
 		const compilerOptions = Object.assign({}, defaultCompilerOptions)
 
 		if (this.testScriptOptions.stricterTypeChecking) {
@@ -211,7 +225,7 @@ export class TypeScriptTestScript implements ITestScript {
 
 		const compilerOptions = this.compilerOptions
 
-		const host = ts.createCompilerHost(compilerOptions)
+		const host = createCompilerHost(compilerOptions)
 
 		const outputFiles: OutputFile[] = []
 		host.writeFile = function(name, text, writeByteOrderMark) {
@@ -222,34 +236,34 @@ export class TypeScriptTestScript implements ITestScript {
 		const originalGetSourceFile = host.getSourceFile
 		host.getSourceFile = function(
 			fileName: string,
-			languageVersion: ts.ScriptTarget,
+			languageVersion: ScriptTarget,
 			onError?: (message: string) => void,
-		): ts.SourceFile {
+		): SourceFile {
 			debug('getSourceFile', fileName)
 			// inject our source string if its the sandboxedBasename
 			if (fileName === tsSandboxedFilename) {
-				return ts.createSourceFile(fileName, inputSource, languageVersion, false)
+				return createSourceFile(fileName, inputSource, languageVersion, false)
 			} else {
 				return originalGetSourceFile.apply(this, arguments)
 			}
 		}
 
-		const moduleResolutionCache = ts.createModuleResolutionCache(host.getCurrentDirectory(), x =>
+		const moduleResolutionCache = createModuleResolutionCache(host.getCurrentDirectory(), x =>
 			host.getCanonicalFileName(x),
 		)
 
 		host.resolveModuleNames = function(
 			moduleNames: string[],
 			containingFile: string,
-		): ts.ResolvedModule[] {
-			const resolvedModules: ts.ResolvedModule[] = []
+		): ResolvedModule[] {
+			const resolvedModules: ResolvedModule[] = []
 
 			for (let moduleName of moduleNames) {
 				debug('resolve', moduleName)
 				let result = manualModuleDefinitions[moduleName]
 
 				if (result === undefined) {
-					result = ts.resolveModuleName(
+					result = resolveModuleName(
 						moduleName,
 						containingFile,
 						compilerOptions,
@@ -266,14 +280,14 @@ export class TypeScriptTestScript implements ITestScript {
 		host.resolveTypeReferenceDirectives = (
 			typeReferenceDirectiveNames: string[],
 			containingFile: string,
-		): ts.ResolvedTypeReferenceDirective[] => {
+		): ResolvedTypeReferenceDirective[] => {
 			debug('resolveTypeReferenceDirectives', typeReferenceDirectiveNames, containingFile)
 			return typeReferenceDirectiveNames
 				.map(typeRef => {
 					let typeResolution = manualTypeResolutions[typeRef]
 
 					if (typeResolution === undefined) {
-						typeResolution = ts.resolveTypeReferenceDirective(
+						typeResolution = resolveTypeReferenceDirective(
 							typeRef,
 							containingFile,
 							compilerOptions,
@@ -289,7 +303,7 @@ export class TypeScriptTestScript implements ITestScript {
 				})
 		}
 
-		const program = ts.createProgram(
+		const program = createProgram(
 			[ambientDeclarationsFile, this.sandboxedFilename],
 			compilerOptions,
 			host,
@@ -299,8 +313,8 @@ export class TypeScriptTestScript implements ITestScript {
 		this.diagnostics = new CategorisedDiagnostics(host, this.filenameMapper.bind(this))
 
 		// sortAndDeduplicateDiagnostics when its released
-		let preEmitDiagnostics = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics)
-		let sortedDiagnostics: ts.SortedReadonlyArray<ts.Diagnostic> = ts.sortAndDeduplicateDiagnostics(
+		let preEmitDiagnostics = getPreEmitDiagnostics(program).concat(emitResult.diagnostics)
+		let sortedDiagnostics: SortedReadonlyArray<Diagnostic> = sortAndDeduplicateDiagnostics(
 			preEmitDiagnostics,
 		)
 		sortedDiagnostics.forEach(diagnostic => this.diagnostics.add(diagnostic))

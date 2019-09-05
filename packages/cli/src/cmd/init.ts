@@ -1,30 +1,36 @@
 import { Argv, Arguments } from 'yargs'
 import * as yeomanEnv from 'yeoman-environment'
 import { resolve } from 'path'
+import TestEnvGenerator from '../generator/test-env/index'
+import { CommandModule } from 'yargs'
 
-export const handler = (args: Arguments) => {
-	const env = yeomanEnv.createEnv()
-	env.register(require.resolve('../generator/test-env'), 'test-env')
+const cmd: CommandModule = {
+	command: 'init [dir] [options]',
+	describe: 'Init a test script and a minimal environment to get you started with Flood Element',
 
-	args.dir = resolve(process.cwd(), args.dir)
+	handler(args: Arguments) {
+		const env = yeomanEnv.createEnv()
+		env.register(TestEnvGenerator, 'test-env')
 
-	env.run(['test-env', args.dir], { 'skip-install': args['skip-install'] })
+		args.dir = resolve(process.cwd(), args.dir)
+
+		env.run(['test-env', args.dir], { 'skip-install': args['skip-install'] })
+	},
+
+	builder(yargs: Argv): Argv {
+		return yargs
+			.option('verbose', {
+				describe: 'Verbose mode',
+			})
+			.option('skip-install', {
+				describe: 'Skip yarn/npm install',
+			})
+			.positional('dir', {
+				describe: 'the dir to init',
+				default: process.cwd(),
+				normalize: true,
+			})
+	},
 }
 
-export const command = 'init [dir] [options]'
-export const describe =
-	'Init a test script and a minimal environment to get you started with Flood Element'
-export const builder = (yargs: Argv) => {
-	yargs
-		.option('verbose', {
-			describe: 'Verbose mode',
-		})
-		.option('skip-install', {
-			describe: 'Skip yarn/npm install',
-		})
-		.positional('dir', {
-			describe: 'the dir to init',
-			default: process.cwd(),
-			normalize: true,
-		})
-}
+export default cmd

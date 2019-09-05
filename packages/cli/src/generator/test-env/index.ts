@@ -1,18 +1,12 @@
 import * as Generator from 'yeoman-generator'
-import * as path from 'path'
-import * as fs from 'fs'
-import * as findRoot from 'find-root'
+import { join, basename } from 'path'
+import findRoot from 'find-root'
 import * as commandExists from 'command-exists'
-
-const packageRoot = findRoot(__dirname)
-
-// parse current element version
-const elementPackageFile = path.join(findRoot(require.resolve('@flood/element')), 'package.json')
-const elementPackage = JSON.parse(fs.readFileSync(elementPackageFile, 'utf8'))
-const elementVersion = elementPackage.version
+import { readFileSync } from 'fs'
 
 export default class TestEnv extends Generator {
 	public options: { [key: string]: string }
+	public elementVersion: string
 
 	constructor(args: any[], opts: any) {
 		super(args, opts)
@@ -22,14 +16,21 @@ export default class TestEnv extends Generator {
 	}
 
 	initializing() {
-		this.sourceRoot(path.join(packageRoot, 'templates'))
+		const packageRoot = findRoot(__dirname)
+
+		// parse current element version
+		const elementPackageFile = join(findRoot(require.resolve('@flood/element')), 'package.json')
+		const elementPackage = JSON.parse(readFileSync(elementPackageFile, 'utf8'))
+		this.elementVersion = elementPackage.version
+
+		this.sourceRoot(join(packageRoot, 'templates'))
 
 		// assume dir is absolute
 		this.destinationRoot(this.options.dir)
 
-		console.log(`initting into ${this.destinationRoot()}`)
+		console.log(`Initializing '${this.destinationRoot()}'`)
 
-		this.options.repoName = path.basename(this.destinationPath())
+		this.options.repoName = basename(this.destinationPath())
 	}
 
 	answers: { [key: string]: string }
@@ -93,8 +94,8 @@ export default class TestEnv extends Generator {
 			},
 
 			dependencies: {
-				'@flood/element': `^${elementVersion}`,
-				prettier: '^1.10.2',
+				'@flood/element': `^${this.elementVersion}`,
+				prettier: '*',
 			},
 		}
 	}
@@ -103,7 +104,7 @@ export default class TestEnv extends Generator {
 		return {
 			compilerOptions: {
 				module: 'commonjs',
-				target: 'ES2017',
+				target: 'ES2015',
 				moduleResolution: 'node',
 				lib: ['dom', 'esnext'],
 				pretty: true,

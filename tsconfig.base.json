@@ -1,9 +1,9 @@
 {
 	"compilerOptions": {
 		"module": "commonjs",
-		"target": "ES2017",
+		"target": "es2015",
 		"moduleResolution": "node",
-		"removeComments": false,
+		"removeComments": true,
 		"lib": ["dom", "esnext"],
 		"pretty": false,
 		"strictNullChecks": true,
@@ -17,5 +17,6 @@
 		"emitDecoratorMetadata": true,
 		"outDir": "dist"
 	},
+	"typeAcquisition": { "enable": true },
 	"exclude": ["dist", "lib", "*.spec.ts"]
 }

@@ -1,12 +1,21 @@
 import { step, By, TestSettings } from '@flood/element'
 
 export const settings: TestSettings = {
-	loopCount: 1,
+	// loopCount: 1,
 	userAgent: 'I AM ROBOT',
 
 	// Auto wait until elements are visible before acting
 	waitUntil: 'visible',
 }
+
+/**
+ * A helper to get the largest order number for Step 2
+ */
+const largestNumber = (numbers: (number | string)[]): number =>
+	numbers
+		.map(Number)
+		.sort((a, b) => a - b)
+		.reverse()[0]
 
 export default () => {
 	step('Open page and click start', async b => {
@@ -24,21 +33,13 @@ export default () => {
 	step('Challenge: Step 2', async b => {
 		let orderElements = await b.findElements(By.css('table tbody tr td:first-of-type label'))
 		let orderIDs = await Promise.all(orderElements.map(element => element.text()))
-		let largestOrder = orderIDs
-			.map(Number)
-			.sort((a, b) => a - b)
-			.reverse()[0]
-
+		let largestOrder = largestNumber(orderIDs)
 		// Fill in text field
 		await b.type(By.id('challenger_largest_order'), String(largestOrder))
-		await b.takeScreenshot()
-
 		// Click label with order ID
 		await b.click(By.visibleText(String(largestOrder)))
 		await b.takeScreenshot()
-
 		await b.click(By.css('input.btn'))
-		await b.takeScreenshot()
 	})
 
 	step('Challenge: Step 3', async b => {

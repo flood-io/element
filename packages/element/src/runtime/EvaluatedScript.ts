@@ -195,12 +195,7 @@ export class EvaluatedScript implements TestScriptErrorMapper {
 			TestData: this.testDataLoaders,
 			Key,
 			userAgents,
-
 			suite: captureSuite,
-
-			test() {
-				throw new Error(`test() is no longer supported, please use 'export default suite(...)'`)
-			},
 		}
 
 		this.vm = createVirtualMachine(context)

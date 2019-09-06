@@ -5,7 +5,7 @@ import {
 	CompoundMeasurement,
 	MeasurementKind,
 	TestScriptError,
-} from '@flood/element/api'
+} from '@flood/element'
 import { Logger } from 'winston'
 import chalk from 'chalk'
 
@@ -83,7 +83,7 @@ export class ConsoleReporter implements IReporter {
 		this.logger.error('\n' + str)
 
 		if (this.verbose) {
-			this.logger.error(`Verbose detail: 
+			this.logger.error(`Verbose detail:
 cause.asString(): ${detail.causeAsString}
 cause.stack: ${detail.causeStack}`)
 		}

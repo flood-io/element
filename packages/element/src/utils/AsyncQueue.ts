@@ -1,3 +1,6 @@
+/**
+ * @hidden
+ */
 export class AsyncQueue<Specifier> {
 	constructor(public chain: Promise<Specifier | null> = Promise.resolve(null)) {}
 

@@ -2,7 +2,11 @@ type K = () => void
 type KK = (f: K) => void
 const kk = (f: KK) => {}
 
-// adapted from https://stackoverflow.com/a/37642079
+/**
+ * Adapted from https://stackoverflow.com/a/37642079
+ *
+ * @hidden
+ */
 export class CancellationToken {
 	static neverCancelToken(): CancellationToken {
 		return new CancellationToken()

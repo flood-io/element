@@ -7,8 +7,7 @@ import { generateAnchor } from './generateAnchor'
 
 import { typeToString, ParamType } from './Formatters'
 
-import * as debugFactory from 'debug'
-const debug = debugFactory('element:docs')
+const debug = require('debug')('element:docs')
 
 const root = join(__dirname, '../..')
 const bookDir = join(root, 'docs')

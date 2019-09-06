@@ -163,8 +163,8 @@ export async function compileFile(
 	testScriptOptions?: TestScriptOptions,
 ): Promise<ITestScript | undefined> {
 	const fileContent = ts.sys.readFile(filename)
-	if (fileContent === undefined) {
-		return undefined
+	if (fileContent == null) {
+		return
 	}
 
 	return new TypeScriptTestScript(fileContent, filename, testScriptOptions).compile()
@@ -190,7 +190,7 @@ export async function mustCompileFile(
 ): Promise<ITestScript> {
 	const testScript = await compileFile(filename, testScriptOptions)
 
-	if (testScript === undefined) {
+	if (testScript == null) {
 		throw new Error(
 			`unable to compile script ${filename}:\nunable to read script at path ${filename}`,
 		)

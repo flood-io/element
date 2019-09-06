@@ -350,10 +350,7 @@ export class TypeScriptTestScript implements ITestScript {
 	}
 
 	public get isFloodElementCorrectlyImported(): boolean {
-		return (
-			this.originalSource.includes('@flood/chrome') ||
-			this.originalSource.includes('@flood/element')
-		)
+		return this.originalSource.includes('@flood/element')
 	}
 
 	public get testName(): string {

@@ -122,7 +122,7 @@ const defaultCompilerOptions: CompilerOptions = {
 	pretty: true,
 
 	lib: ['lib.esnext.full.d.ts'],
-	types: ['@types/node'],
+	types: ['node'],
 	typeRoots: ['node_modules/@types'],
 
 	baseUrl: './',
@@ -362,6 +362,7 @@ export class TypeScriptTestScript implements ITestScript {
 	}
 
 	private parsedCommentsMemo: { [index: string]: string; name: string; description: string }
+
 	private parsedComments(key: string) {
 		if (!this.parsedCommentsMemo) {
 			let comments = parseComments(this.originalSource)

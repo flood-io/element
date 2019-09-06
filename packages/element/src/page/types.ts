@@ -1,7 +1,10 @@
-import { ClickOptions, ScreenshotOptions } from 'puppeteer'
-// import { Key } from './Enums'
-// import { Locator } from './Locator'
-import { EvaluateFn, ExecutionContext, ElementHandle as PElementHandle } from 'puppeteer'
+import {
+	EvaluateFn,
+	ExecutionContext,
+	ElementHandle as PElementHandle,
+	ClickOptions,
+	ScreenshotOptions,
+} from 'puppeteer'
 
 /**
  * A Locator represents an object used to locate elements on the page. It is usually constructed using the helper methods of <[By]>.

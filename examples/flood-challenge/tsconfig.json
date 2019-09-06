@@ -1,35 +1,18 @@
 {
-  "compilerOptions": {
-    "module": "commonjs",
-    "target": "ES2017",
-    "moduleResolution": "node",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "es7",
-      "es2017",
-      "es2016.array.include",
-      "es2017.object"
-    ],
-    "pretty": true,
-    "strictNullChecks": false,
-    "allowUnreachableCode": false,
-    "alwaysStrict": true,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "allowJs": true,
-    "checkJs": true,
-    "noImplicitAny": false,
-    "allowSyntheticDefaultImports": true,
-    "types": [
-      "@types/node"
-    ],
-    "typeRoots": [
-      "node_modules/@types"
-    ]
-  },
-  "exclude": [
-    "node_modules",
-    "node_modules/**"
-  ]
+	"compilerOptions": {
+		"module": "commonjs",
+		"target": "ES2015",
+		"moduleResolution": "node",
+		"lib": ["dom", "esnext"],
+		"pretty": true,
+		"strictNullChecks": false,
+		"allowUnreachableCode": false,
+		"alwaysStrict": true,
+		"noUnusedLocals": false,
+		"noUnusedParameters": false,
+		"allowJs": true,
+		"checkJs": true,
+		"noImplicitAny": false,
+		"allowSyntheticDefaultImports": true
+	}
 }

@@ -1,6 +1,6 @@
 // import * as recast from 'recast'
 import * as ts from 'typescript'
-import { readFileSync } from 'fs-extra'
+import { readFileSync } from 'fs'
 
 import * as debugFactory from 'debug'
 const debug = debugFactory('element:docs')
@@ -13,7 +13,7 @@ export function preParseIndex(fileName: string) {
 
 	const s = ts.createSourceFile(
 		fileName,
-		readFileSync(fileName).toString(),
+		readFileSync(fileName, 'utf8'),
 		ts.ScriptTarget.ES2015,
 		/* setParentNodes */ true,
 	)

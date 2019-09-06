@@ -3,6 +3,6 @@
 	"compilerOptions": {
 		"declaration": true
 	},
-	"exclude": ["lib", "dist", "examples", "*.spec.ts", "*.test.ts"],
+	"exclude": ["lib", "examples", "*.test.ts"],
 	"files": ["./index.ts", "./api.ts", "./ambient.d.ts"]
 }

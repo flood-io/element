@@ -64,7 +64,6 @@ const indexModuleDefinition = {
 	isExternalLibraryImport: true,
 }
 const manualModuleDefinitions: { [key: string]: ResolvedModule | undefined } = {
-	'@flood/chrome': indexModuleDefinition,
 	'@flood/element': indexModuleDefinition,
 	faker: manualModuleDefinition('@types/faker'),
 }
@@ -122,14 +121,12 @@ const defaultCompilerOptions: CompilerOptions = {
 
 	pretty: true,
 
-	lib: ['lib.dom.d.ts', 'lib.dom.iterable.d.ts', 'lib.esnext.d.ts'],
-	// types: ['@types/node'],
-	// typeRoots: ['node_modules/@types'],
-	typeRoots: [],
-	// exclude: []
+	lib: ['lib.esnext.full.d.ts'],
+	types: ['@types/node'],
+	typeRoots: ['node_modules/@types'],
 
-	// baseUrl: './',
-	// paths: { '*': ['node_modules/@types/*', '*'] },
+	baseUrl: './',
+	paths: { '*': ['node_modules/@types/*', '*'] },
 }
 
 type sourceKinds = 'typescript' | 'javascript'
@@ -258,6 +255,8 @@ export class TypeScriptTestScript implements ITestScript {
 		): ResolvedModule[] {
 			const resolvedModules: ResolvedModule[] = []
 
+			// debugger
+
 			for (let moduleName of moduleNames) {
 				debug('resolve', moduleName)
 				let result = manualModuleDefinitions[moduleName]
@@ -282,26 +281,23 @@ export class TypeScriptTestScript implements ITestScript {
 			containingFile: string,
 		): ResolvedTypeReferenceDirective[] => {
 			debug('resolveTypeReferenceDirectives', typeReferenceDirectiveNames, containingFile)
-			return typeReferenceDirectiveNames
-				.map(typeRef => {
-					let typeResolution = manualTypeResolutions[typeRef]
+			return typeReferenceDirectiveNames.map(typeRef => {
+				let typeResolution = manualTypeResolutions[typeRef]
 
-					if (typeResolution === undefined) {
-						typeResolution = resolveTypeReferenceDirective(
-							typeRef,
-							containingFile,
-							compilerOptions,
-							host,
-						).resolvedTypeReferenceDirective!
-					}
+				if (typeResolution === undefined) {
+					typeResolution = resolveTypeReferenceDirective(
+						typeRef,
+						containingFile,
+						compilerOptions,
+						host,
+					).resolvedTypeReferenceDirective!
+				}
 
-					return typeResolution
-				})
-				.map(t => {
-					debug('resolution', t)
-					return t
-				})
+				return typeResolution
+			})
 		}
+
+		debugger
 
 		const program = createProgram(
 			[ambientDeclarationsFile, this.sandboxedFilename],

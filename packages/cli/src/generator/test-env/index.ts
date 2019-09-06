@@ -106,7 +106,7 @@ export default class TestEnv extends Generator {
 				module: 'commonjs',
 				target: 'ES2015',
 				moduleResolution: 'node',
-				lib: ['esnext.full'],
+				lib: ['esnext', 'dom'],
 				pretty: true,
 				strictNullChecks: false,
 				allowUnreachableCode: false,

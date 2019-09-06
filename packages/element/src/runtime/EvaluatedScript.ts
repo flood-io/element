@@ -159,6 +159,8 @@ export class EvaluatedScript implements TestScriptErrorMapper {
 		// re-scope this for captureSuite to close over:
 		const evalScope = this
 
+		type WithDataCallback<T> = (this: null, s: StepDefinition<T>) => void
+
 		// closes over evalScope (this) and ENV
 		const captureSuite: SuiteDefinition = Object.assign(
 			(
@@ -167,10 +169,7 @@ export class EvaluatedScript implements TestScriptErrorMapper {
 				return callback
 			},
 			{
-				withData: <T>(
-					data: TestDataSource<T>,
-					callback: (this: null, s: StepDefinition<T>) => void,
-				) => {
+				withData: <T>(data: TestDataSource<T>, callback: WithDataCallback<T>) => {
 					evalScope.testData = expect(data, 'TestData is not present')
 					return callback
 				},

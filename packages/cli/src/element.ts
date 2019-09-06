@@ -4,6 +4,7 @@ import { error } from './utils/error'
 import { updateCheck } from './utils/updateCheck'
 import { join } from 'path'
 import initCmd from './cmd/init'
+import runCmd from './cmd/run'
 
 const debug = require('debug')('element:cli')
 
@@ -41,7 +42,6 @@ process.on('unhandledRejection', handleRejection)
 process.on('uncaughtException', handleUnexpected)
 
 export async function main(rootPath: string) {
-	console.log(rootPath)
 	const pkg = require(join(rootPath, 'package.json'))
 	await updateCheck(pkg)
 
@@ -49,6 +49,7 @@ export async function main(rootPath: string) {
 		argv
 			.usage(chalk`{bold {blueBright element}} <command> {grey [options]}`)
 			.command(initCmd)
+			.command(runCmd)
 			// .command(require('./cmd/init'))
 			// .command(require('./cmd/plan'))
 			// .command(require('./cmd/run'))

@@ -1,3 +1,6 @@
+// import { By } from '@flood/element'
+// console.log(By.css('#test'))
+
 import {
 	runCommandLine,
 	runUntilExit,
@@ -6,9 +9,10 @@ import {
 	FloodProcessEnv,
 	TestCommander,
 	TestSettings,
-} from '@flood/element/api'
+} from '@flood/element'
+
 import { ConsoleReporter } from '../utils/ConsoleReporter'
-import { Argv, Arguments } from 'yargs'
+import { Argv, Arguments, CommandModule } from 'yargs'
 import * as path from 'path'
 import createLogger from '../utils/Logger'
 import { watch } from 'chokidar'
@@ -45,49 +49,154 @@ function setupDelayOverrides(args: Arguments, testSettingOverrides: TestSettings
 	return testSettingOverrides
 }
 
-export const handler = (args: Arguments) => {
-	const { file, verbose } = args
-	const workRootPath = getWorkRootPath(file, args['work-root'])
-	const testDataPath = getTestDataPath(file, args['test-data-root'])
+const cmd: CommandModule = {
+	command: 'run <file> [options]',
+	describe: 'Run a test script locally',
 
-	const verboseBool: boolean = !!verbose
+	handler(args: Arguments) {
+		const { file, verbose } = args
+		const workRootPath = getWorkRootPath(file, args['work-root'])
+		const testDataPath = getTestDataPath(file, args['test-data-root'])
 
-	let logLevel = 'info'
-	if (verboseBool) logLevel = 'debug'
+		const verboseBool: boolean = !!verbose
 
-	const logger = createLogger(logLevel, true)
-	const reporter = new ConsoleReporter(logger, verboseBool)
+		let logLevel = 'info'
+		if (verboseBool) logLevel = 'debug'
 
-	logger.info(`workRootPath: ${workRootPath}`)
-	logger.info(`testDataPath: ${testDataPath}`)
+		const logger = createLogger(logLevel, true)
+		const reporter = new ConsoleReporter(logger, verboseBool)
 
-	const opts: ElementOptions = {
-		logger: logger,
-		testScript: file,
-		strictCompilation: args.strict,
-		reporter: reporter,
-		verbose: verboseBool,
-		headless: args.headless,
-		devtools: args.devtools,
-		chromeVersion: args.chrome,
-		sandbox: args.sandbox,
+		logger.info(`workRootPath: ${workRootPath}`)
+		logger.info(`testDataPath: ${testDataPath}`)
 
-		runEnv: initRunEnv(workRootPath, testDataPath),
-		testSettingOverrides: {
-			loopCount: args.loopCount,
-		},
-		persistentRunner: false,
-	}
+		const opts: ElementOptions = {
+			logger: logger,
+			testScript: file,
+			strictCompilation: args.strict,
+			reporter: reporter,
+			verbose: verboseBool,
+			headless: args.headless,
+			devtools: args.devtools,
+			chromeVersion: args.chrome,
+			sandbox: args.sandbox,
 
-	opts.testSettingOverrides = setupDelayOverrides(args, opts.testSettingOverrides)
+			runEnv: initRunEnv(workRootPath, testDataPath),
+			testSettingOverrides: {
+				loopCount: args.loopCount,
+			},
+			persistentRunner: false,
+		}
 
-	if (args.watch) {
-		opts.persistentRunner = true
-		opts.testCommander = makeTestCommander(file)
-	}
+		opts.testSettingOverrides = setupDelayOverrides(args, opts.testSettingOverrides)
 
-	runUntilExit(() => runCommandLine(opts))
+		if (args.watch) {
+			opts.persistentRunner = true
+			opts.testCommander = makeTestCommander(file)
+		}
+
+		runUntilExit(() => runCommandLine(opts))
+	},
+	builder(yargs: Argv): Argv {
+		return yargs
+			.option('chrome', {
+				group: 'Browser:',
+				describe:
+					'Specify which version of Google Chrome to use. Default: use the puppeteer bundled version. stable: ',
+				coerce: chrome => {
+					// [not specified] => undefined => use test script value
+					// --chrome => override to 'stable'
+					// --chrome string => override to <string>
+					let chromeVersion: string | undefined
+					if (typeof chrome === 'boolean') {
+						if (chrome) {
+							chromeVersion = 'stable'
+						}
+					} else {
+						chromeVersion = chrome
+					}
+
+					return chromeVersion
+				},
+			})
+			.option('no-headless', {
+				group: 'Browser:',
+				describe:
+					'Run in non-headless mode so that you can see what the browser is doing as it runs the test',
+			})
+			.option('devtools', {
+				group: 'Browser:',
+				describe: 'Run in non-headless mode and also open devtools',
+			})
+			.option('no-sandbox', {
+				group: 'Browser:',
+				describe: 'Disable the chrome sandbox - advanced option, mostly necessary on linux',
+			})
+			.option('watch', {
+				group: 'Running the test script:',
+				describe: 'Watch <file> and rerun the test when it changes.',
+			})
+			.option('fast-forward', {
+				group: 'Running the test script:',
+				alias: 'ff',
+				describe:
+					'Run the script in fast-forward: override the actionDelay and stepDelay settings to 1 second in the test script. Specify a number to set a different delay.',
+				coerce: x => coerceDelay('fast-forward', x, 1),
+				conflicts: 'slow-mo',
+			})
+			.options('slow-mo', {
+				group: 'Running the test script:',
+				describe:
+					'Run the script in slow-motion: Increase the actionDelay and stepDelay settings in the test script to 10 seconds.  Specify a number to set a different delay.',
+				coerce: x => coerceDelay('slow-mo', x, 10),
+				conflicts: 'fast-forward',
+			})
+			.options('step-delay', {
+				group: 'Running the test script:',
+				describe: 'Override stepDelay test script setting',
+				type: 'number',
+			})
+			.options('action-delay', {
+				group: 'Running the test script:',
+				describe: 'Override actionDelay test script setting',
+				type: 'number',
+			})
+			.option('loop-count', {
+				group: 'Running the test script:',
+				describe:
+					'Override the loopCount setting in the test script. This is normally overridden to 1 when running via the cli.',
+				type: 'number',
+				default: 1,
+			})
+			.option('strict', {
+				group: 'Running the test script:',
+				describe: 'Compile the script in strict mode. This can be helpful in diagnosing problems.',
+			})
+			.option('work-root', {
+				group: 'Paths:',
+				describe:
+					'Specify a custom work root. (Default: a directory named after your test script, and at the same location)',
+			})
+			.option('test-data-root', {
+				group: 'Paths:',
+				describe:
+					'Specify a custom path to find test data files. (Default: the same directory as the test script)',
+			})
+			.option('verbose', {
+				describe: 'Verbose mode',
+			})
+			.positional('file', {
+				describe: 'the test script to run',
+			})
+			.check(({ file, chrome }) => {
+				let fileErr = checkFile(file)
+				if (fileErr) return fileErr
+
+				return true
+			})
+	},
 }
+
+export default cmd
 
 function makeTestCommander(file: string): TestCommander {
 	const commander = new EventEmitter()
@@ -173,105 +282,4 @@ function coerceDelay(desc: string, val: boolean | string | undefined, defaultVal
 	} else {
 		throw new Error(`Unable to recognise ${desc} value ${val}`)
 	}
-}
-
-export const command = 'run <file> [options]'
-export const describe = 'Run a test script locally'
-export const builder = (yargs: Argv) => {
-	yargs
-		.option('chrome', {
-			group: 'Browser:',
-			describe:
-				'Specify which version of Google Chrome to use. Default: use the puppeteer bundled version. stable: ',
-			coerce: chrome => {
-				// [not specified] => undefined => use test script value
-				// --chrome => override to 'stable'
-				// --chrome string => override to <string>
-				let chromeVersion: string | undefined
-				if (typeof chrome === 'boolean') {
-					if (chrome) {
-						chromeVersion = 'stable'
-					}
-				} else {
-					chromeVersion = chrome
-				}
-
-				return chromeVersion
-			},
-		})
-		.option('no-headless', {
-			group: 'Browser:',
-			describe:
-				'Run in non-headless mode so that you can see what the browser is doing as it runs the test',
-		})
-		.option('devtools', {
-			group: 'Browser:',
-			describe: 'Run in non-headless mode and also open devtools',
-		})
-		.option('no-sandbox', {
-			group: 'Browser:',
-			describe: 'Disable the chrome sandbox - advanced option, mostly necessary on linux',
-		})
-		.option('watch', {
-			group: 'Running the test script:',
-			describe: 'Watch <file> and rerun the test when it changes.',
-		})
-		.option('fast-forward', {
-			group: 'Running the test script:',
-			alias: 'ff',
-			describe:
-				'Run the script in fast-forward: override the actionDelay and stepDelay settings to 1 second in the test script. Specify a number to set a different delay.',
-			coerce: x => coerceDelay('fast-forward', x, 1),
-			conflicts: 'slow-mo',
-		})
-		.options('slow-mo', {
-			group: 'Running the test script:',
-			describe:
-				'Run the script in slow-motion: Increase the actionDelay and stepDelay settings in the test script to 10 seconds.  Specify a number to set a different delay.',
-			coerce: x => coerceDelay('slow-mo', x, 10),
-			conflicts: 'fast-forward',
-		})
-		.options('step-delay', {
-			group: 'Running the test script:',
-			describe: 'Override stepDelay test script setting',
-			type: 'number',
-		})
-		.options('action-delay', {
-			group: 'Running the test script:',
-			describe: 'Override actionDelay test script setting',
-			type: 'number',
-		})
-		.option('loop-count', {
-			group: 'Running the test script:',
-			describe:
-				'Override the loopCount setting in the test script. This is normally overridden to 1 when running via the cli.',
-			type: 'number',
-			default: 1,
-		})
-		.option('strict', {
-			group: 'Running the test script:',
-			describe: 'Compile the script in strict mode. This can be helpful in diagnosing problems.',
-		})
-		.option('work-root', {
-			group: 'Paths:',
-			describe:
-				'Specify a custom work root. (Default: a directory named after your test script, and at the same location)',
-		})
-		.option('test-data-root', {
-			group: 'Paths:',
-			describe:
-				'Specify a custom path to find test data files. (Default: the same directory as the test script)',
-		})
-		.option('verbose', {
-			describe: 'Verbose mode',
-		})
-		.positional('file', {
-			describe: 'the test script to run',
-		})
-		.check(({ file, chrome }) => {
-			let fileErr = checkFile(file)
-			if (fileErr) return fileErr
-
-			return true
-		})
 }

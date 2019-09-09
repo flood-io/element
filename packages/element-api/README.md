@@ -1,11 +1,5 @@
 # `element-api`
 
-> TODO: description
+Internal APIs used by `@flood/element-cli`
 
-## Usage
-
-```
-const elementApi = require('element-api');
-
-// TODO: DEMONSTRATE API
-```
+**Do not import this in your app, the API is not stable**

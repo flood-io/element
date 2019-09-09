@@ -8,7 +8,7 @@
 		"build-sh": "./scripts/build.sh",
 		"prepublish": "in-publish && yarn build || not-in-publish",
 		"prebuild": "rm -rf ./dist",
-		"build": "yarn ncc build -e @types/puppeteer -e assert -e comment-parser -e csv -e cuid -e d3-array -e diff -e faker -e knuth-shuffle -e prettier -e puppeteer -e recast -e sanitize-filename -e source-map -e fs-extra -e strftime -e typescript -e term-img -e vm2 -e winston -o dist ./index.ts",
+		"build": "tsc",
 		"build:watch": "tsc --watch",
 		"xxxprepublishOnly": "./scripts/build.sh",
 		"test": "mocha --trace-warnings -r ts-node/register \"src/**/*.spec.ts\"",

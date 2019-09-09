@@ -11,6 +11,7 @@
 	},
 	"scripts": {
 		"build:watch": "lerna run build:watch --parallel",
+		"build": "lerna run build --sort",
 		"test": "lerna run test",
 		"publish:brew": "ts-node --project ./scripts/publish-brew-tap/tsconfig.json -- ./scripts/publish-brew-tap/index.ts",
 		"publish:pre": "lerna publish --force-publish=* --cd-version prerelease && yarn publish:brew",
@@ -41,7 +42,8 @@
 	},
 	"workspaces": [
 		"packages/cli",
-		"packages/element"
+		"packages/element",
+		"packages/element-api"
 	],
 	"standard-version": {
 		"changelog": {

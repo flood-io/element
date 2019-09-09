@@ -3,7 +3,7 @@
 	"version": "1.0.10-beta.8",
 	"description": "Flood Element is a browser based load generation tool for easily testing modern web application performance",
 	"main": "./dist/index.js",
-	"types": "./dist/index.ts.d",
+	"typings": "./dist/index.ts.d",
 	"scripts": {
 		"build-sh": "./scripts/build.sh",
 		"prepublish": "in-publish && yarn build || not-in-publish",
@@ -69,7 +69,7 @@
 		"@types/micromatch": "^3.1.0",
 		"@types/mkdirp": "^0.5.2",
 		"@types/mocha": "^2.2.45",
-		"@types/node": "^12.7.4",
+		"@types/node": "12.7.4",
 		"@types/prettier": "^1.13.2",
 		"@types/sanitize-filename": "^1.1.28",
 		"@types/sinon-chai": "^2.7.29",

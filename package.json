@@ -22,7 +22,7 @@
 	"devDependencies": {
 		"@commitlint/cli": "^8.1.0",
 		"@commitlint/config-conventional": "^8.1.0",
-		"@types/node": "^12.7.4",
+		"@types/node": "12.7.4",
 		"commonmark": "^0.28.1",
 		"conventional-changelog-cli": "^2.0.23",
 		"conventional-changelog-eslint": "^3.0.1",

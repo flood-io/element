@@ -1,5 +1,4 @@
 import { Argv, Arguments } from 'yargs'
-import * as yeomanEnv from 'yeoman-environment'
 import { resolve } from 'path'
 import TestEnvGenerator from '../generator/test-env/index'
 import { CommandModule } from 'yargs'
@@ -9,6 +8,7 @@ const cmd: CommandModule = {
 	describe: 'Init a test script and a minimal environment to get you started with Flood Element',
 
 	handler(args: Arguments) {
+		const yeomanEnv = require('yeoman-environment')
 		const env = yeomanEnv.createEnv()
 		env.register(TestEnvGenerator, 'test-env')
 

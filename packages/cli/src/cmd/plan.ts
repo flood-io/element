@@ -1,4 +1,4 @@
-import { Argv, Arguments } from 'yargs'
+import { Argv, Arguments, CommandModule } from 'yargs'
 import { inspect } from 'util'
 import { EvaluatedScript, nullRuntimeEnvironment } from '@flood/element-api'
 import chalk from 'chalk'
@@ -53,19 +53,23 @@ function printJSON(script: EvaluatedScript) {
 	console.log(JSON.stringify(o, null, '  '))
 }
 
-export const command = 'plan <file> [options]'
-export const describe = 'Output the test script plan without executing it.'
-export const builder = (yargs: Argv) => {
-	yargs
-		.option('json', {
-			describe: 'Return the test output as JSON',
-			default: !process.stdout.isTTY,
-		})
-		.check(({ file }) => {
-			let fileErr = checkFile(file)
-			if (fileErr) return fileErr
+const cmd: CommandModule = {
+	command: 'plan <file> [options]',
+	describe: 'Output the test script plan without executing it',
+	handler: main,
+	builder(yargs: Argv) {
+		return yargs
+			.option('json', {
+				describe: 'Return the test output as JSON',
+				default: !process.stdout.isTTY,
+			})
+			.check(({ file }) => {
+				let fileErr = checkFile(file)
+				if (fileErr) return fileErr
 
-			return true
-		})
+				return true
+			})
+	},
 }
-export const handler = main
+
+export default cmd

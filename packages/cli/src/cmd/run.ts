@@ -1,6 +1,3 @@
-// import { By } from '@flood/element'
-// console.log(By.css('#test'))
-
 import {
 	runCommandLine,
 	runUntilExit,

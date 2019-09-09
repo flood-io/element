@@ -5,6 +5,8 @@ import { updateCheck } from './utils/updateCheck'
 import { join } from 'path'
 import initCmd from './cmd/init'
 import runCmd from './cmd/run'
+import planCmd from './cmd/plan'
+import generateCmd from './cmd/generate'
 
 const debug = require('debug')('element:cli')
 
@@ -45,31 +47,24 @@ export async function main(rootPath: string) {
 	const pkg = require(join(rootPath, 'package.json'))
 	await updateCheck(pkg)
 
-	return (
-		argv
-			.usage(chalk`{bold {blueBright element}} <command> {grey [options]}`)
-			.command(initCmd)
-			.command(runCmd)
-			// .command(require('./cmd/init'))
-			// .command(require('./cmd/plan'))
-			// .command(require('./cmd/run'))
-			// .command(require('./cmd/generate'))
-			// .commandDir(cmdRoot, {
-			// 	extensions: ['js', 'ts'],
-			// })
-			.updateStrings({
-				'Commands:': chalk.grey('Commands:\n'),
-				'Options:': chalk.grey('Options:\n'),
-			})
-			.version(pkg.version)
-			.demandCommand()
-			.help('help')
-			.showHelpOnFail(true)
-			.recommendCommands()
-			.example(
-				'element run ./examples/flood-challenge.ts',
-				'Run the Flood Challenge example script in your local browser',
-			)
-			.epilogue(`For more information on Flood Element, see https://element.flood.io`).argv
-	)
+	return argv
+		.usage(chalk`{bold {blueBright element}} <command> {grey [options]}`)
+		.command(initCmd)
+		.command(generateCmd)
+		.command(planCmd)
+		.command(runCmd)
+		.updateStrings({
+			'Commands:': chalk.grey('Commands:\n'),
+			'Options:': chalk.grey('Options:\n'),
+		})
+		.version(pkg.version)
+		.demandCommand()
+		.help('help')
+		.showHelpOnFail(true)
+		.recommendCommands()
+		.example(
+			'element run ./examples/flood-challenge.ts',
+			'Run the Flood Challenge example script in your local browser',
+		)
+		.epilogue(`For more information on Flood Element, see https://element.flood.io`).argv
 }

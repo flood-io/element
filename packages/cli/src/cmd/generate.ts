@@ -1,22 +1,26 @@
-import { Argv, Arguments } from 'yargs'
-import * as yeomanEnv from 'yeoman-environment'
+import { Argv, Arguments, CommandModule } from 'yargs'
 
-export const handler = (args: Arguments) => {
-	const env = yeomanEnv.createEnv()
-	env.register(require.resolve('../generator/test-script'), 'test-script')
+const cmd: CommandModule = {
+	command: 'generate <file> [options]',
+	describe: 'Generate a basic test script from a template',
 
-	env.run(`test-script ${args.file}`)
+	handler(args: Arguments) {
+		const yeomanEnv = require('yeoman-environment')
+		const env = yeomanEnv.createEnv()
+		env.register(require.resolve('../generator/test-script'), 'test-script')
+		env.run(`test-script ${args.file}`)
+	},
+
+	builder(yargs: Argv) {
+		return yargs
+			.option('verbose', {
+				describe: 'Verbose mode',
+			})
+			.check(({ file }) => {
+				if (!file.length) return new Error('Please provide the path to the test script to write')
+				return true
+			})
+	},
 }
 
-export const command = 'generate <file> [options]'
-export const describe = 'Generate a basic test script from a template'
-export const builder = (yargs: Argv) => {
-	yargs
-		.option('verbose', {
-			describe: 'Verbose mode',
-		})
-		.check(({ file }) => {
-			if (!file.length) return new Error('Please provide the path to the test script to write')
-			return true
-		})
-}
+export default cmd

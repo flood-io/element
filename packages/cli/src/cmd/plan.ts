@@ -1,6 +1,6 @@
 import { Argv, Arguments } from 'yargs'
 import { inspect } from 'util'
-import { EvaluatedScript, nullRuntimeEnvironment } from '@flood/element/api'
+import { EvaluatedScript, nullRuntimeEnvironment } from '@flood/element-api'
 import chalk from 'chalk'
 import * as boxen from 'boxen'
 import { checkFile } from './common'

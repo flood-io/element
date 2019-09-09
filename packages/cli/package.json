@@ -13,12 +13,11 @@
 		"build:watch": "tsc --watch",
 		"prepublish": "in-publish && yarn build || not-in-publish",
 		"prebuild": "rm -rf ./dist",
-		"build": "yarn ncc build -e @flood/element -e @flood/element-api -e yargs -e yeoman-generator -o dist ./index.ts",
+		"build": "yarn ncc build -e @flood/element -e @flood/element/api -e @flood/element-api -e yargs -e yeoman-generator -o dist ./index.ts",
 		"element": "ts-node -- ./index.ts",
 		"element:inspectb": "node --inspect-brk -r ts-node/register ./index.ts",
 		"element:inspect": "node --inspect -r ts-node/register ./index.ts"
 	},
-	"types": "./index.d.ts",
 	"dependencies": {
 		"@flood/element": "^1.0.10-beta.8",
 		"@flood/element-api": "1.0.10-beta.7",

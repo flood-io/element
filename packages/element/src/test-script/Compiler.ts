@@ -105,7 +105,7 @@ const defaultCompilerOptions: CompilerOptions = {
 	allowSyntheticDefaultImports: true,
 	experimentalDecorators: true,
 	allowJs: true,
-	checkJs: true,
+	checkJs: false,
 	suppressOutputPathCheck: true,
 
 	sourceMap: true,
@@ -117,16 +117,17 @@ const defaultCompilerOptions: CompilerOptions = {
 
 	module: ModuleKind.CommonJS,
 	moduleResolution: ModuleResolutionKind.NodeJs,
-	target: ScriptTarget.ES2017,
+	target: ScriptTarget.ES2015,
 
 	pretty: true,
 
 	lib: ['lib.esnext.full.d.ts'],
-	types: ['node'],
-	typeRoots: ['node_modules/@types'],
+	typeRoots: ['./node_modules/@types'],
 
 	baseUrl: './',
-	paths: { '*': ['node_modules/@types/*', '*'] },
+	paths: {
+		'*': ['node_modules/@types/*', '*'],
+	},
 }
 
 type sourceKinds = 'typescript' | 'javascript'
@@ -187,7 +188,7 @@ export class TypeScriptTestScript implements ITestScript {
 	}
 
 	get compilerOptions(): CompilerOptions {
-		const compilerOptions = Object.assign({}, defaultCompilerOptions)
+		const compilerOptions = { ...defaultCompilerOptions }
 
 		if (this.testScriptOptions.stricterTypeChecking) {
 			compilerOptions.strictNullChecks = true

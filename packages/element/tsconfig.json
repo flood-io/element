@@ -1,7 +1,8 @@
 {
 	"extends": "../../tsconfig.base.json",
 	"compilerOptions": {
-		"declaration": true
+		"declaration": true,
+		"outDir": "dist"
 	},
 	"exclude": ["lib", "examples", "*.test.ts"],
 	"files": ["./index.ts", "./api.ts", "./ambient.d.ts"]

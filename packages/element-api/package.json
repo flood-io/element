@@ -1,14 +1,38 @@
 {
 	"name": "@flood/element-api",
 	"version": "1.0.10-beta.7",
-	"description": "API definitions for Element",
-	"types": "./dist/api.ts.d",
+	"description": "Internal API definitions for Element",
+	"types": "./dist/index.ts.d",
+	"main": "./dist/index.js",
 	"scripts": {
 		"prebuild": "rm -rf dist",
-		"build": "yarn ncc build -e @types/puppeteer -e assert -e comment-parser -e csv -e cuid -e d3-array -e diff -e faker -e knuth-shuffle -e prettier -e puppeteer -e recast -e sanitize-filename -e source-map -e fs-extra -e strftime -e typescript -e term-img -e vm2 -e winston -o dist ./api.ts"
+		"build": "tsc",
+		"build:ncc": "yarn ncc build -e @types/puppeteer -e @flood/element -e assert -e comment-parser -e csv -e cuid -e d3-array -e diff -e faker -e knuth-shuffle -e prettier -e puppeteer -e recast -e sanitize-filename -e source-map -e fs-extra -e strftime -e typescript -e term-img -e vm2 -e winston -o dist ./index.ts"
+	},
+	"dependencies": {
+		"@flood/element": "1.0.10-beta.7"
 	},
 	"devDependencies": {
 		"@zeit/ncc": "^0.20.4",
 		"typescript": "^3.6.2"
+	},
+	"author": "Ivan Vanderbyl <ivanvanderbyl@gmail.com>",
+	"homepage": "https://element.flood.io",
+	"license": "MIT",
+	"directories": {
+		"dist": "dist"
+	},
+	"files": [
+		"dist"
+	],
+	"publishConfig": {
+		"registry": "https://registry.yarnpkg.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/flood-io/element.git"
+	},
+	"bugs": {
+		"url": "https://github.com/flood-io/element/issues"
 	}
 }

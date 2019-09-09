@@ -2,9 +2,10 @@
 	"extends": "../../tsconfig.base.json",
 	"compilerOptions": {
 		"declaration": true,
+		"emitDeclarationOnly": false,
 		"allowJs": false,
 		"checkJs": false,
-		"emitDeclarationOnly": true
+		"outDir": "dist"
 	},
-	"include": ["api.ts", "ambient.d.ts"]
+	"include": ["index.ts", "ambient.d.ts"]
 }

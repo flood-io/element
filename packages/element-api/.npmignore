@@ -1,0 +1,5 @@
+./ambient.d.ts
+__tests__
+*.log
+tmp
+

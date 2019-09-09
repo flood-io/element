@@ -9,7 +9,7 @@ import {
 	FloodProcessEnv,
 	TestCommander,
 	TestSettings,
-} from '@flood/element'
+} from '@flood/element/api'
 
 import { ConsoleReporter } from '../utils/ConsoleReporter'
 import { Argv, Arguments, CommandModule } from 'yargs'

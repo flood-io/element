@@ -85,17 +85,17 @@ yarn build
 case $branch in
   beta)
     echo +++ publishing beta
-    # yarn lerna publish prerelease beta --yes --force-publish --dist-tag beta
-    yarn lerna version prerelease beta --yes --force-publish --no-push --pre-dist-tag beta
+    yarn lerna publish prerelease beta --yes --force-publish --dist-tag beta
+    # yarn lerna version prerelease beta --yes --force-publish --no-push --pre-dist-tag beta
     ;;
   master)
     echo +++ publishing stable
-    # yarn lerna publish --force-publish --no-push --yes --dist-tag latest
-    yarn lerna version --yes --force-publish --no-push --dist-tag latest
+    yarn lerna publish --force-publish --no-push --yes --dist-tag latest
+    # yarn lerna version --yes --force-publish --no-push --dist-tag latest
 
-    # echo --- publishing brew tap
-    # cd $root
-    # yarn publish:brew
+    echo --- publishing brew tap
+    cd $root
+    yarn publish:brew
     ;;
   *)
     echo +++ publishing canary
@@ -104,27 +104,27 @@ case $branch in
     ;;
 esac
 
-echo '--- building @flood/element'
-cd $root/packages/element
-./scripts/build.sh
+# echo '--- building @flood/element'
+# cd $root/packages/element
+# ./scripts/build.sh
 
-echo '--- publishing @flood/element-cli'
-cd $root/packages/cli
-yarn build
+# echo '--- publishing @flood/element-cli'
+# cd $root/packages/cli
+# yarn build
 
-echo '--- pushing with tags'
-git push
-git push --tags
+# echo '--- pushing with tags'
+# git push
+# git push --tags
 
-echo '--- building @flood/element'
-cd $root/packages/element
-npm publish --access public --tag $npm_tag dist
+# echo '--- building @flood/element'
+# cd $root/packages/element
+# npm publish --access public --tag $npm_tag dist
 
-echo '--- publishing @flood/element-cli'
-cd $root/packages/cli
-npm publish --access public --tag $npm_tag
+# echo '--- publishing @flood/element-cli'
+# cd $root/packages/cli
+# npm publish --access public --tag $npm_tag
 
-echo '--- publishing brew tap'
-cd $root
-yarn
-yarn publish:brew
+# echo '--- publishing brew tap'
+# cd $root
+# yarn
+# yarn publish:brew

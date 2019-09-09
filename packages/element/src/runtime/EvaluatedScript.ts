@@ -34,7 +34,7 @@ function createVirtualMachine(floodElementActual: any): NodeVM {
 			external: true,
 			context: 'sandbox',
 			mock: {
-				'@flood/chrome': floodElementActual,
+				// '@flood/chrome': floodElementActual,
 				'@flood/element': floodElementActual,
 				faker: Faker,
 				assert: nodeAssert,

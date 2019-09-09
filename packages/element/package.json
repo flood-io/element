@@ -36,7 +36,7 @@
 	},
 	"homepage": "https://github.com/flood-io/element#readme",
 	"dependencies": {
-		"@types/puppeteer": "^1.12.4",
+		"@types/puppeteer": "1.12.4",
 		"assert": "^1.4.1",
 		"comment-parser": "^0.5.0",
 		"csv": "^3.1.0",

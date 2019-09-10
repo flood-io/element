@@ -14,6 +14,7 @@
 		"noImplicitAny": true,
 		"allowSyntheticDefaultImports": true,
 		"experimentalDecorators": true,
+		"esModuleInterop": true,
 		"emitDecoratorMetadata": true,
 		"outDir": "dist"
 	},

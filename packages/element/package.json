@@ -1,6 +1,6 @@
 {
 	"name": "@flood/element",
-	"version": "1.0.10-beta.13",
+	"version": "1.0.10-beta.14",
 	"description": "Flood Element is a browser based load generation tool for easily testing modern web application performance",
 	"main": "./dist/index.js",
 	"typings": "./dist/index.ts.d",
@@ -44,6 +44,7 @@
 		"d3-array": "^1.2.0",
 		"diff": "^3.3.0",
 		"faker": "^4.1.0",
+		"find-root": "^1.1.0",
 		"fs-extra": "^4.0.2",
 		"knuth-shuffle": "^1.0.8",
 		"prettier": "^1.10.2",
@@ -55,7 +56,6 @@
 		"term-img": "^2.1.0",
 		"typescript": "^3.5.2",
 		"vm2": "^3.5.2",
-		"find-root": "^1.1.0",
 		"winston": "^3.0.0"
 	},
 	"devDependencies": {

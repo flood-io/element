@@ -55,6 +55,7 @@
 		"term-img": "^2.1.0",
 		"typescript": "^3.5.2",
 		"vm2": "^3.5.2",
+		"find-root": "^1.1.0",
 		"winston": "^3.0.0"
 	},
 	"devDependencies": {

@@ -8,9 +8,7 @@ import {
 } from '@flood/element-api'
 import { Logger } from 'winston'
 import chalk from 'chalk'
-
-import * as debugFactory from 'debug'
-const debug = debugFactory('element-cli:console-reporter')
+const debug = require('debug')('element-cli:console-reporter')
 
 export class ConsoleReporter implements IReporter {
 	public responseCode: string

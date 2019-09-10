@@ -1,6 +1,6 @@
-import * as checkForUpdate from 'update-check'
-import * as commandExists from 'command-exists'
-import * as ms from 'ms'
+import checkForUpdate from 'update-check'
+import commandExists from 'command-exists'
+import ms from 'ms'
 import chalk from 'chalk'
 import { error } from './error'
 import { info } from './info'
@@ -46,7 +46,7 @@ type Update = { latest: string }
 function printUpdateMessage(version: string, distTag: string, update: Update) {
 	console.log(
 		info(
-			chalk`{bgRed 'UPDATE AVAILABLE'} The latest ${
+			chalk`{bgRed UPDATE AVAILABLE} The latest ${
 				distTag === 'latest' ? '' : distTag
 			}  version of Element CLI is ${update && update.latest}`,
 		),

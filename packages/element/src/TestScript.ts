@@ -139,6 +139,8 @@ export interface ITestScript extends TestScriptErrorMapper {
 	vmScript: VMScript
 	source: string
 	sourceMap: string
+	settings?: any
+	steps?: any[]
 
 	formattedErrorString: string
 	hasErrors: boolean

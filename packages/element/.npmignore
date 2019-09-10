@@ -3,6 +3,15 @@ tmp
 logs
 *.ts
 *.tgz
+docs.json
+tsconfig.doc.json
+dist/tsconfig.json
+tsconfig.json
+tslint.json
+tests/**/*
+docs/**/*
+scripts/**/*
+
 scripts/docs/node_modules
 !dist
 !dist/**/*.js

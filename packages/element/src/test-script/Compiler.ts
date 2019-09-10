@@ -65,6 +65,7 @@ const indexModuleDefinition = {
 }
 const manualModuleDefinitions: { [key: string]: ResolvedModule | undefined } = {
 	'@flood/element': indexModuleDefinition,
+	// node: indexModuleDefinition,
 	faker: manualModuleDefinition('@types/faker'),
 }
 const manualTypeResolutions: { [key: string]: ResolvedTypeReferenceDirective | undefined } = {
@@ -121,13 +122,14 @@ const defaultCompilerOptions: CompilerOptions = {
 
 	pretty: true,
 
-	lib: ['lib.esnext.full.d.ts'],
+	// lib: ['lib.esnext.full.d.ts'],
+	lib: ['lib.dom.d.ts', 'lib.es2019.d.ts'],
 	typeRoots: ['./node_modules/@types'],
-
-	baseUrl: './',
+	baseUrl: '../..',
 	paths: {
 		'*': ['node_modules/@types/*', '*'],
 	},
+	types: ['node'],
 }
 
 type sourceKinds = 'typescript' | 'javascript'
@@ -215,9 +217,6 @@ export class TypeScriptTestScript implements ITestScript {
 			return this
 		}
 
-		// debugger
-
-		// const sandboxedBasename = this.sandboxedBasename
 		const sandboxedFilename = this.sandboxedFilename
 		const inputSource = this.originalSource
 
@@ -255,11 +254,11 @@ export class TypeScriptTestScript implements ITestScript {
 			containingFile: string,
 		): ResolvedModule[] {
 			const resolvedModules: ResolvedModule[] = []
-
 			// debugger
 
 			for (let moduleName of moduleNames) {
 				debug('resolve', moduleName)
+
 				let result = manualModuleDefinitions[moduleName]
 
 				if (result === undefined) {
@@ -271,11 +270,12 @@ export class TypeScriptTestScript implements ITestScript {
 						moduleResolutionCache,
 					).resolvedModule! // original-TODO: GH#18217
 				}
-
 				resolvedModules.push(result)
 			}
 			return resolvedModules
 		}
+
+		let referenceCache = new Map()
 
 		host.resolveTypeReferenceDirectives = (
 			typeReferenceDirectiveNames: string[],
@@ -283,6 +283,10 @@ export class TypeScriptTestScript implements ITestScript {
 		): ResolvedTypeReferenceDirective[] => {
 			debug('resolveTypeReferenceDirectives', typeReferenceDirectiveNames, containingFile)
 			return typeReferenceDirectiveNames.map(typeRef => {
+				if (referenceCache.has(typeRef)) {
+					return referenceCache.get(typeRef)
+				}
+
 				let typeResolution = manualTypeResolutions[typeRef]
 
 				if (typeResolution === undefined) {
@@ -294,11 +298,11 @@ export class TypeScriptTestScript implements ITestScript {
 					).resolvedTypeReferenceDirective!
 				}
 
+				referenceCache.set(typeRef, typeResolution)
+
 				return typeResolution
 			})
 		}
-
-		debugger
 
 		const program = createProgram(
 			[ambientDeclarationsFile, this.sandboxedFilename],

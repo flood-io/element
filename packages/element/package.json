@@ -89,6 +89,9 @@
 		"tslint-config-prettier": "^1.5.0",
 		"tslint-plugin-prettier": "^1.2.0"
 	},
+	"resolutions": {
+		"@types/node": "12.7.4"
+	},
 	"gitHead": "e8bf1b41988d8a4c1c3b35943a349dd04d6ebfaf",
 	"publishConfig": {
 		"access": "public"

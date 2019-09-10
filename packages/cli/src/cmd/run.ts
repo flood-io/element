@@ -10,12 +10,13 @@ import {
 
 import { ConsoleReporter } from '../utils/ConsoleReporter'
 import { Argv, Arguments, CommandModule } from 'yargs'
-import * as path from 'path'
 import createLogger from '../utils/Logger'
 import { watch } from 'chokidar'
 import { EventEmitter } from 'events'
 import { checkFile } from './common'
-import * as sanitize from 'sanitize-filename'
+import sanitize from 'sanitize-filename'
+import { extname, basename, join, dirname } from 'path'
+import { resolve } from 'url'
 
 function setupDelayOverrides(args: Arguments, testSettingOverrides: TestSettings) {
 	let stepDelayOverride: number | undefined
@@ -220,22 +221,22 @@ function makeTestCommander(file: string): TestCommander {
 }
 
 function getWorkRootPath(file: string, root?: string): string {
-	const ext = path.extname(file)
-	const bare = path.basename(file, ext)
+	const ext = extname(file)
+	const bare = basename(file, ext)
 
-	if (root === undefined) {
-		root = path.join(path.dirname(file), 'tmp/element-results', bare)
+	if (root == null) {
+		root = join(dirname(file), 'tmp/element-results', bare)
 	}
 
 	const dateString = sanitize(new Date().toISOString())
 
-	return path.resolve(root, dateString)
+	return resolve(root, dateString)
 }
 
 function getTestDataPath(file: string, root?: string): string {
-	root = root || path.dirname(file)
+	root = root || dirname(file)
 
-	return path.resolve(root)
+	return dirname(resolve(root, file))
 }
 
 function initRunEnv(root: string, testDataRoot: string) {

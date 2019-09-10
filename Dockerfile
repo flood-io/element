@@ -40,4 +40,5 @@ RUN yarn
 
 ENV NO_CHROME_SANDBOX=1
 
-ADD ./ ./
+COPY . .
+RUN yarn build

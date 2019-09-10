@@ -43,7 +43,20 @@ function createVirtualMachine(floodElementActual: any): NodeVM {
 	})
 }
 
-export class EvaluatedScript implements TestScriptErrorMapper {
+export interface IEvaluatedScript {
+	steps: any[]
+	settings: TestSettings
+	isScriptError(error: Error): boolean
+	maybeLiftError(error: Error): Error
+	liftError(error: Error): TestScriptError
+	filterAndUnmapStack(stack: string | Error | undefined): string[]
+	bindTest(test: Test): void
+	beforeTestRun(): Promise<void>
+	evaluate(): IEvaluatedScript
+	testData: TestDataSource<any>
+}
+
+export class EvaluatedScript implements TestScriptErrorMapper, IEvaluatedScript {
 	public steps: Step[]
 	public settings: ConcreteTestSettings
 
@@ -59,7 +72,7 @@ export class EvaluatedScript implements TestScriptErrorMapper {
 	public static async mustCompileFile(
 		path: string,
 		runEnv: RuntimeEnvironment,
-	): Promise<EvaluatedScript> {
+	): Promise<IEvaluatedScript> {
 		if (!(await exists(path))) {
 			throw new Error(`unable to compile script: no script found at path ${path}`)
 		}

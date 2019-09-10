@@ -25,7 +25,7 @@ export { TestCommander } from '@flood/element/src/Runner'
 export { WorkRoot, PuppeteerClient, launch }
 
 export { TestScriptError, ITestScript, TestScriptOptions } from '@flood/element/src/TestScript'
-export { EvaluatedScript } from '@flood/element/src/runtime/EvaluatedScript'
+export { EvaluatedScript, IEvaluatedScript } from '@flood/element/src/runtime/EvaluatedScript'
 
 export { expect } from '@flood/element/src/utils/Expect'
 

@@ -25,51 +25,13 @@ import {
 	resolveTypeReferenceDirective,
 } from 'typescript'
 import * as path from 'path'
-import { existsSync } from 'fs'
 import { VMScript } from 'vm2'
 import * as parseComments from 'comment-parser'
 import { SourceUnmapper } from './SourceUnmapper'
 import debugFactory from 'debug'
-import { tmpdir } from 'os'
-import * as findRoot from 'find-root'
-import { manualModuleDefinition, manualModuleResolution } from './manualModuleDefinition'
+import { TestScriptHost } from './TestScriptHost'
 
 const debug = debugFactory('element:test-script:compiler')
-
-const floodelementRoot = findRoot(__dirname)
-
-const sandboxPath = 'test-script-sandbox'
-const sandboxRoot = path.join(tmpdir(), 'flood-element-tmp', sandboxPath)
-const sandboxedBasenameTypescript = 'flood-chrome.ts'
-const sandboxedBasenameJavascript = 'flood-chrome.js'
-
-// handle e.g. during dev/test vs built/dist mode
-let indexModuleFile: string
-const indexTypescriptFile = path.join(floodelementRoot, 'index.ts')
-const indexDeclarationsFile = path.join(floodelementRoot, 'index.d.ts')
-
-const ambientDeclarationsFile = path.join(floodelementRoot, 'ambient.d.ts')
-
-if (existsSync(indexTypescriptFile)) {
-	indexModuleFile = indexTypescriptFile
-} else if (existsSync(indexDeclarationsFile)) {
-	indexModuleFile = indexDeclarationsFile
-} else {
-	throw new Error('unable to find index.ts or index.d.ts')
-}
-
-const indexModuleDefinition = {
-	resolvedFileName: indexModuleFile,
-	isExternalLibraryImport: true,
-}
-const manualModuleDefinitions: { [key: string]: ResolvedModule | undefined } = {
-	'@flood/element': indexModuleDefinition,
-	// node: indexModuleDefinition,
-	faker: manualModuleDefinition('@types/faker'),
-}
-const manualTypeResolutions: { [key: string]: ResolvedTypeReferenceDirective | undefined } = {
-	faker: manualModuleResolution('@types/faker'),
-}
 
 const NoModuleImportedTypescript = `Test scripts must import the module '@flood/element'
 Please add an import as follows:
@@ -104,8 +66,6 @@ const defaultCompilerOptions: CompilerOptions = {
 
 	// tracing useful for our debugging
 	traceResolution: false,
-
-	rootDirs: [sandboxRoot],
 
 	module: ModuleKind.CommonJS,
 	moduleResolution: ModuleResolutionKind.NodeJs,
@@ -143,23 +103,25 @@ export class TypeScriptTestScript implements ITestScript {
 	private vmScriptMemo: VMScript
 	private diagnostics: CategorisedDiagnostics
 	public testScriptOptions: TestScriptOptions
+	private host: TestScriptHost
 
 	constructor(
 		public originalSource: string,
 		public originalFilename: string,
 		options: TestScriptOptions = TestScriptDefaultOptions,
 	) {
+		this.host = new TestScriptHost()
 		this.testScriptOptions = Object.assign({}, TestScriptDefaultOptions, options)
 
 		if (this.originalFilename.endsWith('.js')) {
 			this.sourceKind = 'javascript'
-			this.sandboxedBasename = sandboxedBasenameJavascript
+			this.sandboxedBasename = this.host.sandboxedBasenameJavascript
 		} else {
 			this.sourceKind = 'typescript'
-			this.sandboxedBasename = sandboxedBasenameTypescript
+			this.sandboxedBasename = this.host.sandboxedBasenameTypescript
 		}
-		this.sandboxedFilename = path.join(sandboxRoot, this.sandboxedBasename)
-		this.sandboxedRelativeFilename = path.join(sandboxPath, this.sandboxedBasename)
+		this.sandboxedFilename = path.join(this.host.sandboxRoot, this.sandboxedBasename)
+		this.sandboxedRelativeFilename = path.join(this.host.sandboxPath, this.sandboxedBasename)
 	}
 
 	public get hasErrors(): boolean {
@@ -181,7 +143,7 @@ export class TypeScriptTestScript implements ITestScript {
 	}
 
 	get compilerOptions(): CompilerOptions {
-		const compilerOptions = { ...defaultCompilerOptions }
+		const compilerOptions = { ...defaultCompilerOptions, rootDirs: [this.host.sandboxRoot] }
 
 		if (this.testScriptOptions.stricterTypeChecking) {
 			compilerOptions.strictNullChecks = true
@@ -240,19 +202,16 @@ export class TypeScriptTestScript implements ITestScript {
 			host.getCanonicalFileName(x),
 		)
 
-		host.resolveModuleNames = function(
-			moduleNames: string[],
-			containingFile: string,
-		): ResolvedModule[] {
+		host.resolveModuleNames = (moduleNames: string[], containingFile: string): ResolvedModule[] => {
 			const resolvedModules: ResolvedModule[] = []
 			// debugger
 
 			for (let moduleName of moduleNames) {
 				debug('resolve', moduleName)
 
-				let result = manualModuleDefinitions[moduleName]
+				let result = this.host.resolveModuleDefinition(moduleName)
 
-				if (result === undefined) {
+				if (result == null) {
 					result = resolveModuleName(
 						moduleName,
 						containingFile,
@@ -261,6 +220,9 @@ export class TypeScriptTestScript implements ITestScript {
 						moduleResolutionCache,
 					).resolvedModule! // original-TODO: GH#18217
 				}
+				if (!result)
+					throw new Error(`Unable to resolve module during script compilation: ${moduleName}`)
+
 				resolvedModules.push(result)
 			}
 			return resolvedModules
@@ -278,16 +240,10 @@ export class TypeScriptTestScript implements ITestScript {
 					return referenceCache.get(typeRef)
 				}
 
-				let typeResolution = manualTypeResolutions[typeRef]
-
-				if (typeResolution === undefined) {
-					typeResolution = resolveTypeReferenceDirective(
-						typeRef,
-						containingFile,
-						compilerOptions,
-						host,
-					).resolvedTypeReferenceDirective!
-				}
+				let typeResolution =
+					this.host.resolveTypeReferenceDirective(typeRef) ||
+					resolveTypeReferenceDirective(typeRef, containingFile, compilerOptions, host)
+						.resolvedTypeReferenceDirective!
 
 				referenceCache.set(typeRef, typeResolution)
 
@@ -296,7 +252,7 @@ export class TypeScriptTestScript implements ITestScript {
 		}
 
 		const program = createProgram(
-			[ambientDeclarationsFile, this.sandboxedFilename],
+			[this.host.ambientDeclarationsFile, this.sandboxedFilename],
 			compilerOptions,
 			host,
 		)

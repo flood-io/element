@@ -1,6 +1,6 @@
 {
 	"name": "@flood/element-api",
-	"version": "1.0.10-beta.11",
+	"version": "1.0.10-beta.12",
 	"description": "Internal API definitions for Element",
 	"typings": "./dist/index.ts.d",
 	"main": "./dist/index.js",
@@ -11,7 +11,7 @@
 		"prepublish": "in-publish && yarn build || not-in-publish"
 	},
 	"dependencies": {
-		"@flood/element": "^1.0.10-beta.11"
+		"@flood/element": "^1.0.10-beta.12"
 	},
 	"devDependencies": {
 		"@types/node": "12.7.4",

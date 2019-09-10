@@ -1,6 +1,6 @@
 import { readFile } from 'fs'
 import { promisify, inspect } from 'util'
-import * as parseCSV from 'csv-parse/lib/sync'
+import parseCSV from 'csv-parse/lib/sync'
 
 const readFilePromise = promisify(readFile)
 

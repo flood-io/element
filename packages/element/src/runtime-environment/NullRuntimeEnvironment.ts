@@ -1,5 +1,5 @@
 import { WorkRootKind } from './types'
-import * as path from 'path'
+import path from 'path'
 
 const nullFloodProcessEnv = {
 	BROWSER_ID: 0,

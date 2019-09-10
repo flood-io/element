@@ -1,5 +1,5 @@
 import { Diagnostic, DiagnosticCategory } from 'typescript'
-import * as ts from 'typescript'
+import ts from 'typescript'
 
 // because https://github.com/Microsoft/TypeScript/issues/13042
 type diagnosticCategory = 'warnings' | 'errors' | 'messages'

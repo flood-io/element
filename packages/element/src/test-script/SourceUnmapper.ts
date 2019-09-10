@@ -1,6 +1,4 @@
 import { SourceMapConsumer, NullableMappedPosition } from 'source-map'
-// import * as debugFactory from 'debug'
-// const debug = debugFactory('element:test-script:source-unmapper')
 
 export interface Callsite {
 	file: string
@@ -84,11 +82,6 @@ export class SourceUnmapper {
 
 	// XXX Error.prepareStackTrace
 	public parseStack(stack: string[]): StackLine[] {
-		// const tapp = tag => x => {
-		// debug(tag, x)
-		// return x
-		// }
-
 		return stack
 			.map(s => /\s+at ([^(]+) \((.*?):(\d+):(\d+)\)/.exec(s))
 			.filter((x): x is RegExpExecArray => x !== null)

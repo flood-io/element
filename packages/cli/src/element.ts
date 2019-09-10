@@ -1,5 +1,5 @@
-import * as argv from 'yargs'
 import chalk from 'chalk'
+import argv from 'yargs'
 import { error } from './utils/error'
 import { updateCheck } from './utils/updateCheck'
 import { join } from 'path'

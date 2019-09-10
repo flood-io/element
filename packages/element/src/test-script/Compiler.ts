@@ -24,9 +24,9 @@ import {
 	sortAndDeduplicateDiagnostics,
 	resolveTypeReferenceDirective,
 } from 'typescript'
-import * as path from 'path'
+import path from 'path'
 import { VMScript } from 'vm2'
-import * as parseComments from 'comment-parser'
+import parseComments from 'comment-parser'
 import { SourceUnmapper } from './SourceUnmapper'
 import debugFactory from 'debug'
 import { TestScriptHost } from './TestScriptHost'
@@ -81,6 +81,8 @@ const defaultCompilerOptions: CompilerOptions = {
 		'*': ['node_modules/@types/*', '*'],
 	},
 	types: ['node'],
+
+	esModuleInterop: true,
 }
 
 type sourceKinds = 'typescript' | 'javascript'

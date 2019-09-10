@@ -1,11 +1,9 @@
 import { sum, mean } from 'd3-array'
 import { ResourceType, Page as PuppeteerPage, PageEvents } from 'puppeteer'
 import { Entry, RawResponse, EntryRequest, Page, EntryResponse } from './Protocol'
-// import * as NetworkManager from 'puppeteer/lib/NetworkManager'
 import { AsyncQueue } from '../utils/AsyncQueue'
 import { Manager } from './Manager'
-
-import * as debugFactory from 'debug'
+import debugFactory from 'debug'
 const debug = debugFactory('element:network:recorder')
 
 function round(value: number): number {

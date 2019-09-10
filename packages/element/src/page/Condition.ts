@@ -1,12 +1,12 @@
 import { PageFnOptions, Page, EvaluateFn, Frame } from 'puppeteer'
 import { Locator } from './types'
 import { DEFAULT_SETTINGS } from '../runtime/Settings'
-import * as recast from 'recast'
-import * as prettier from 'prettier'
+import recast from 'recast'
+import prettier from 'prettier'
 import { locatableToLocator } from '../runtime/Browser'
 import { NullableLocatable } from '../runtime/types'
 
-import * as debugFactory from 'debug'
+import debugFactory from 'debug'
 const debug = debugFactory('element:page:condition')
 
 export { NullableLocatable }

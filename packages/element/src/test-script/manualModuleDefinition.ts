@@ -1,4 +1,4 @@
-import * as ts from 'typescript'
+import ts from 'typescript'
 import { join, resolve, dirname, basename } from 'path'
 import { existsSync, readFileSync } from 'fs'
 

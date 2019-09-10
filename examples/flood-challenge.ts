@@ -1,5 +1,5 @@
-import { step, TestSettings, Until, By, MouseButtons, Device, Driver } from '@flood/element'
-import * as assert from 'assert'
+import { step, TestSettings, Until, By, Device, Driver } from '@flood/element'
+import assert from 'assert'
 export const settings: TestSettings = {
 	loopCount: 1,
 	device: Device.iPadLandscape,

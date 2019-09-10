@@ -21,8 +21,7 @@ import { CancellationToken } from '../utils/CancellationToken'
 import { IPuppeteerClient } from '../driver/Puppeteer'
 import { ScreenshotOptions } from 'puppeteer'
 import { TestSettings, ConcreteTestSettings, DEFAULT_STEP_WAIT_SECONDS } from './Settings'
-import * as debugFactory from 'debug'
-const debug = debugFactory('element:runtime:test')
+const debug = require('debug')('element:runtime:test')
 
 export default class Test {
 	public settings: ConcreteTestSettings

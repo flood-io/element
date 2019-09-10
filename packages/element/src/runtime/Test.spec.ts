@@ -1,6 +1,6 @@
 import 'mocha'
 import { use, expect } from 'chai'
-import * as SinonChai from 'sinon-chai'
+import SinonChai from 'sinon-chai'
 import { DogfoodServer } from '../../tests/support/fixture-server'
 import testRunEnv from '../../tests/support/test-run-env'
 import { launchPuppeteer, testPuppeteer } from '../../tests/support/launch-browser'

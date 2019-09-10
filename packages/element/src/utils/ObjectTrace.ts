@@ -1,4 +1,4 @@
-import * as cuid from 'cuid'
+import cuid from 'cuid'
 import { promisify } from 'util'
 import { writeFile } from 'fs'
 import { WorkRoot } from '../runtime-environment/types'

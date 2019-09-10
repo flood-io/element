@@ -1,4 +1,4 @@
-import * as path from 'path'
+import path from 'path'
 import { mkdirpSync } from 'fs-extra'
 import { WorkRoot as IWorkRoot, SubRoot, SpecialSubRoot, WorkRootKind } from './types'
 

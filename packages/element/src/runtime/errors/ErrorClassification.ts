@@ -1,7 +1,5 @@
 import { ITestScript } from '../../TestScript'
-
-import * as debugFactory from 'debug'
-const debug = debugFactory('element:test:error')
+const debug = require('debug')('element:test:error')
 
 export type ErrorKind = 'assertion' | 'protocol' | 'browser' | 'internal'
 export type ErrorSource = 'element' | 'testScript'

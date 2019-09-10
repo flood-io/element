@@ -1,5 +1,5 @@
-import * as Sinon from 'sinon'
-import * as SinonChai from 'sinon-chai'
+import Sinon from 'sinon'
+import SinonChai from 'sinon-chai'
 import { expect, use } from 'chai'
 import 'mocha'
 import { DogfoodServer } from '../../tests/support/fixture-server'

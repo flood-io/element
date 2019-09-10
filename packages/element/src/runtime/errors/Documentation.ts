@@ -11,9 +11,7 @@ import {
 	PuppeteerErrorData,
 } from '../../runtime/errors/Types'
 import chalk from 'chalk'
-
-import * as debugFactory from 'debug'
-const debug = debugFactory('element:test:errordoc')
+const debug = require('debug')('element:test:errordoc')
 
 function liftWithDoc(
 	script: TestScriptErrorMapper,

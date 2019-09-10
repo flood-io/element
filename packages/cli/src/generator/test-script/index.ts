@@ -1,8 +1,6 @@
-import * as Generator from 'yeoman-generator'
-import * as path from 'path'
-import * as findRoot from 'find-root'
-
-const packageRoot = findRoot(__dirname)
+import Generator from 'yeoman-generator'
+import path from 'path'
+import findRoot from 'find-root'
 
 export default class TestScript extends Generator {
 	public options: { [key: string]: string }
@@ -15,6 +13,7 @@ export default class TestScript extends Generator {
 	}
 
 	default() {
+		const packageRoot = findRoot(__dirname)
 		this.sourceRoot(path.join(packageRoot, 'templates'))
 	}
 

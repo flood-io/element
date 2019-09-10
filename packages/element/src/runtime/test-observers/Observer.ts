@@ -1,10 +1,6 @@
 import Test from '../Test'
 import { Step } from '../Step'
 import { StructuredError } from '../../utils/StructuredError'
-
-// import * as debugFactory from 'debug'
-// const debug = debugFactory('element:test:observer')
-
 export type NextFunction = () => Promise<void>
 
 export interface TestObserver {

@@ -1,5 +1,5 @@
 import { VMScript } from 'vm2'
-import * as ts from 'typescript'
+import ts from 'typescript'
 import { TypeScriptTestScript } from './test-script/Compiler'
 import { Callsite, callsiteToString } from './test-script/SourceUnmapper'
 

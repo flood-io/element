@@ -1,9 +1,9 @@
 import { NodeVM } from 'vm2'
-import * as Faker from 'faker'
-import * as nodeAssert from 'assert'
+import Faker from 'faker'
+import nodeAssert from 'assert'
 import { EventEmitter } from 'events'
 
-import * as fs from 'fs'
+import fs from 'fs'
 import { promisify } from 'util'
 const exists = promisify(fs.exists)
 
@@ -22,8 +22,7 @@ import { MouseButtons, Device, Key, userAgents } from '../page/Enums'
 import { TestDataSource, TestDataFactory } from '../test-data/TestData'
 import { BoundTestDataLoaders } from '../test-data/TestDataLoaders'
 
-import * as debugFactory from 'debug'
-const debug = debugFactory('element:runtime:eval-script')
+const debug = require('debug')('element:runtime:eval-script')
 
 // TODO work out the right type for floodElementActual
 function createVirtualMachine(floodElementActual: any): NodeVM {

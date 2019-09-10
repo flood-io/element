@@ -1,6 +1,5 @@
 import { createLogger, transports, format, Logger } from 'winston'
 import { Format } from 'logform'
-// import * as strftime from 'strftime'
 
 export default function(level: string = 'debug', colourise: boolean = false): Logger {
 	const startTime = Date.now()

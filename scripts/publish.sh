@@ -15,21 +15,21 @@ else
   branch=$(git rev-parse --abbrev-ref HEAD)
 fi
 
-npm_tag=
-case $branch in
-  beta|feature/open-source-everything)
-    echo --- versioning beta
-    npm_tag=beta
-    ;;
-  master)
-    echo --- versioning master
-    npm_tag=latest
-    ;;
-  *)
-    echo --- versioning canary
-    npm_tag=canary
-    ;;
-esac
+# npm_tag=
+# case $branch in
+#   beta|feature/open-source-everything)
+#     echo --- versioning beta
+#     npm_tag=beta
+#     ;;
+#   master)
+#     echo --- versioning master
+#     npm_tag=latest
+#     ;;
+#   *)
+#     echo --- versioning canary
+#     npm_tag=canary
+#     ;;
+# esac
 
 if [[ ${BUILDKITE_BRANCH:-} ]]; then
   cd $root
@@ -74,12 +74,14 @@ fi
 # npm publish - both packages should publish unless there's eg an intermitted network problem
 # do the brew publish - can only do this once packages have been published
 
-echo '--- building @flood/element'
-cd $root/packages/element
-./scripts/build.sh
+# echo '--- building @flood/element'
+# cd $root/packages/element
+# ./scripts/build.sh
 
-echo '--- publishing @flood/element-cli'
-cd $root/packages/cli
+# echo '--- publishing @flood/element-cli'
+# cd $root/packages/cli
+
+echo "--- building all packages"
 yarn build
 
 case $branch in

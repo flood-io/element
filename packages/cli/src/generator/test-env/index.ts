@@ -1,7 +1,7 @@
-import * as Generator from 'yeoman-generator'
+import Generator from 'yeoman-generator'
 import { join, basename } from 'path'
 import findRoot from 'find-root'
-import * as commandExists from 'command-exists'
+import commandExists from 'command-exists'
 import { readFileSync } from 'fs'
 
 export default class TestEnv extends Generator {
@@ -64,8 +64,8 @@ export default class TestEnv extends Generator {
 	installing() {
 		const prevValue = process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD
 		process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = '1'
-		commandExists('yarn', (err: Error, yes: boolean) => {
-			if (yes) {
+		commandExists('yarn', (err: null | Error, exists: boolean) => {
+			if (exists) {
 				this.yarnInstall()
 			} else {
 				this.npmInstall()

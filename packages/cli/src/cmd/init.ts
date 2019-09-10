@@ -1,20 +1,26 @@
 import { Argv, Arguments } from 'yargs'
 import { resolve } from 'path'
-import TestEnvGenerator from '../generator/test-env/index'
 import { CommandModule } from 'yargs'
+import runCmd from '../utils/cmd'
+import chalk from 'chalk'
 
 const cmd: CommandModule = {
 	command: 'init [dir] [options]',
 	describe: 'Init a test script and a minimal environment to get you started with Flood Element',
 
 	handler(args: Arguments) {
-		const yeomanEnv = require('yeoman-environment')
-		const env = yeomanEnv.createEnv()
-		env.register(TestEnvGenerator, 'test-env')
-
+		const YoEnv = require('yeoman-environment')
+		const TestEnvGenerator = require('../generator/test-env/index').default
+		const env = YoEnv.createEnv()
+		env.registerStub(TestEnvGenerator, 'element/test-env')
 		args.dir = resolve(process.cwd(), args.dir)
-
-		env.run(['test-env', args.dir], { 'skip-install': args['skip-install'] })
+		env.run(['element/test-env', args.dir], { 'skip-install': args['skip-install'] }, () => {
+			console.log(
+				chalk`{grey COMPLETED} Run ${runCmd(`cd ${args.dir}`)} and ${runCmd(
+					`element run test.ts`,
+				)}`,
+			)
+		})
 	},
 
 	builder(yargs: Argv): Argv {
@@ -26,7 +32,7 @@ const cmd: CommandModule = {
 				describe: 'Skip yarn/npm install',
 			})
 			.positional('dir', {
-				describe: 'the dir to init',
+				describe: 'the directory to initialize with an Element test script',
 				default: process.cwd(),
 				normalize: true,
 			})

@@ -8,8 +8,6 @@
 		"prebuild": "rm -rf dist",
 		"build": "tsc",
 		"postbuild": "sed -i '' 's/src/dist\\/src/g' dist/index.js",
-		"build:webpack": "rm -rf dist && webpack",
-		"build:ncc": "yarn ncc build -e @types/puppeteer -e assert -e comment-parser -e csv -e cuid -e d3-array -e diff -e faker -e knuth-shuffle -e prettier -e puppeteer -e recast -e sanitize-filename -e source-map -e fs-extra -e strftime -e typescript -e term-img -e vm2 -e winston -o dist ./index.ts",
 		"prepublish": "in-publish && yarn build || not-in-publish"
 	},
 	"dependencies": {
@@ -30,6 +28,11 @@
 	"publishConfig": {
 		"access": "public"
 	},
+	"files": [
+		"dist",
+		"CHANGELOG.md",
+		"README.md"
+	],
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flood-io/element.git"

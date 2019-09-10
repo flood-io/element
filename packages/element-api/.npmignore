@@ -1,5 +1,6 @@
-./ambient.d.ts
+index.ts
+index.d.ts
+ambient.d.ts
 __tests__
 *.log
 tmp
-

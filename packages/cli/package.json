@@ -13,16 +13,16 @@
 		"build:watch": "tsc --watch",
 		"prepublish": "in-publish && yarn build || not-in-publish",
 		"prebuild": "rm -rf ./dist",
-		"build": "yarn ncc build -e @flood/element -e @flood/element/api -e @flood/element-api -e yargs -e yeoman-generator -o dist ./index.ts",
+		"build": "yarn ncc build -e @flood/element -e @flood/element/api -e @flood/element-api -e yargs -e yeoman-generator -e yeoman-environment -e typescript -o dist ./index.ts",
 		"element": "ts-node -- ./index.ts",
 		"element:inspectb": "node --inspect-brk -r ts-node/register ./index.ts",
 		"element:inspect": "node --inspect -r ts-node/register ./index.ts"
 	},
 	"dependencies": {
-		"@flood/element": "^1.0.10-beta.9",
 		"@flood/element-api": "^1.0.10-beta.9",
 		"yargs": "^11.0.0",
-		"yeoman-generator": "^3.1.1"
+		"yeoman-generator": "^3.1.1",
+		"yeoman-environment": "^2.3.2"
 	},
 	"devDependencies": {
 		"@types/chalk": "^2.2.0",
@@ -43,8 +43,7 @@
 		"ora": "^2.1.0",
 		"typescript": "^3.6.2",
 		"update-check": "^1.5.2",
-		"winston": "^3.0.0",
-		"yeoman-environment": "^2.3.2"
+		"winston": "^3.0.0"
 	},
 	"gitHead": "e8bf1b41988d8a4c1c3b35943a349dd04d6ebfaf",
 	"publishConfig": {

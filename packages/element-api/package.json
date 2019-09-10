@@ -12,7 +12,7 @@
 		"build:ncc": "yarn ncc build -e @types/puppeteer -e assert -e comment-parser -e csv -e cuid -e d3-array -e diff -e faker -e knuth-shuffle -e prettier -e puppeteer -e recast -e sanitize-filename -e source-map -e fs-extra -e strftime -e typescript -e term-img -e vm2 -e winston -o dist ./index.ts"
 	},
 	"dependencies": {
-		"@flood/element": "1.0.10-beta.7"
+		"@flood/element": "^1.0.10-beta.9"
 	},
 	"devDependencies": {
 		"@types/node": "12.7.4",

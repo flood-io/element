@@ -33,7 +33,6 @@ import debugFactory from 'debug'
 import { tmpdir } from 'os'
 import * as findRoot from 'find-root'
 import { manualModuleDefinition, manualModuleResolution } from './manualModuleDefinition'
-import * as os from 'os'
 
 const debug = debugFactory('element:test-script:compiler')
 
@@ -70,14 +69,6 @@ const manualModuleDefinitions: { [key: string]: ResolvedModule | undefined } = {
 }
 const manualTypeResolutions: { [key: string]: ResolvedTypeReferenceDirective | undefined } = {
 	faker: manualModuleResolution('@types/faker'),
-}
-
-const win32 = os.platform() === 'win32'
-function tsFilename(infile: string): string {
-	if (win32) {
-		return infile.replace(/\\/g, '/')
-	}
-	return infile
 }
 
 const NoModuleImportedTypescript = `Test scripts must import the module '@flood/element'
@@ -229,7 +220,7 @@ export class TypeScriptTestScript implements ITestScript {
 			outputFiles.push({ name, text, writeByteOrderMark })
 		}
 
-		const tsSandboxedFilename = tsFilename(sandboxedFilename)
+		const tsSandboxedFilename = path.normalize(sandboxedFilename)
 		const originalGetSourceFile = host.getSourceFile
 		host.getSourceFile = function(
 			fileName: string,

@@ -7,8 +7,8 @@ import { ResolvedModule, ResolvedTypeReferenceDirective } from 'typescript'
 import { manualModuleDefinition, manualModuleResolution } from './manualModuleDefinition'
 
 export class TestScriptHost {
-	sandboxedBasenameTypescript: string = 'flood-chrome.ts'
-	sandboxedBasenameJavascript: string = 'flood-chrome.js'
+	sandboxedBasenameTypescript: string = 'element-test.ts'
+	sandboxedBasenameJavascript: string = 'element-test.js'
 	root: string
 
 	private internalModuleResolutions: Map<string, ResolvedModule>
@@ -17,8 +17,9 @@ export class TestScriptHost {
 	constructor() {
 		this.root = findRoot(__dirname)
 		this.internalModuleResolutions = new Map()
+		this.internalTypeReferenceResolutions = new Map()
 
-		this.internalModuleResolutions.set('flood/element', this.indexModuleDefinition)
+		this.internalModuleResolutions.set('@flood/element', this.indexModuleDefinition)
 		this.internalModuleResolutions.set('faker', manualModuleDefinition('@types/faker'))
 		this.internalTypeReferenceResolutions.set('faker', manualModuleResolution('@types/faker'))
 	}

@@ -71,7 +71,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, IEvaluatedScript 
 	public static async mustCompileFile(
 		path: string,
 		runEnv: RuntimeEnvironment,
-	): Promise<IEvaluatedScript> {
+	): Promise<EvaluatedScript> {
 		if (!(await exists(path))) {
 			throw new Error(`unable to compile script: no script found at path ${path}`)
 		}

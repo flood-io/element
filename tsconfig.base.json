@@ -4,7 +4,7 @@
 		"target": "es2015",
 		"moduleResolution": "node",
 		"removeComments": true,
-		"lib": ["dom", "esnext"],
+		"lib": ["esnext", "dom"],
 		"pretty": false,
 		"strictNullChecks": true,
 		"forceConsistentCasingInFileNames": true,
@@ -13,8 +13,8 @@
 		"noUnusedLocals": true,
 		"noImplicitAny": true,
 		"allowSyntheticDefaultImports": true,
-		"experimentalDecorators": true,
 		"esModuleInterop": true,
+		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
 		"outDir": "dist"
 	},

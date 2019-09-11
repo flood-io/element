@@ -3,7 +3,8 @@
 	"compilerOptions": {
 		"declaration": false,
 		"allowJs": false,
-		"checkJs": false
+		"checkJs": false,
+		"outDir": "dist"
 	},
 	"include": ["index.ts", "ambient.d.ts"]
 }

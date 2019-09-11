@@ -10,4 +10,6 @@ declare module 'comment-parser'
 
 declare module 'update-check'
 
-// declare module 'bluebird'
+declare module 'yeoman-generator'
+
+declare module 'yeoman-environment'

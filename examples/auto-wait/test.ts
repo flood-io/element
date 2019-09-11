@@ -32,7 +32,7 @@ export default () => {
 
 	step('Challenge: Step 2', async b => {
 		let orderElements = await b.findElements(By.css('table tbody tr td:first-of-type label'))
-		let orderIDs = await Promise.all(orderElements.map(element => element.text()))
+		let orderIDs = await Promise.all<string>(orderElements.map(element => element.text()))
 		let largestOrder = largestNumber(orderIDs)
 		// Fill in text field
 		await b.type(By.id('challenger_largest_order'), String(largestOrder))

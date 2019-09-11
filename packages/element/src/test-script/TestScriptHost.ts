@@ -20,7 +20,7 @@ export class TestScriptHost {
 		this.internalTypeReferenceResolutions = new Map()
 
 		this.internalModuleResolutions.set('@flood/element', this.indexModuleDefinition)
-		this.internalModuleResolutions.set('faker', manualModuleDefinition('@types/faker'))
+		this.internalModuleResolutions.set('@types/faker', manualModuleDefinition('@types/faker'))
 		this.internalTypeReferenceResolutions.set('faker', manualModuleResolution('@types/faker'))
 	}
 

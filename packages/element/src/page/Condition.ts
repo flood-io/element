@@ -2,7 +2,6 @@ import { PageFnOptions, Page, EvaluateFn, Frame } from 'puppeteer'
 import { Locator } from './types'
 import { DEFAULT_SETTINGS } from '../runtime/Settings'
 import recast from 'recast'
-import prettier from 'prettier'
 import { locatableToLocator } from '../runtime/Browser'
 import { NullableLocatable } from '../runtime/types'
 
@@ -142,7 +141,7 @@ export abstract class ElementCondition extends LocatorCondition {
 			},
 		})
 
-		let code = prettier.format(recast.print(fnAST).code, { parser: 'babylon' })
+		let code = recast.print(fnAST).code
 
 		debug('waitFor code', code)
 

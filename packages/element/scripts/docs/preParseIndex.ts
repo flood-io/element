@@ -1,9 +1,7 @@
 // import * as recast from 'recast'
-import * as ts from 'typescript'
+import ts from 'typescript'
 import { readFileSync } from 'fs'
-
-import * as debugFactory from 'debug'
-const debug = debugFactory('element:docs')
+const debug = require('debug')('element:docs')
 
 export function preParseIndex(fileName: string) {
 	const ctx = {

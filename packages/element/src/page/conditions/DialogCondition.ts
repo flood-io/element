@@ -19,10 +19,10 @@ export class DialogCondition extends Condition {
 
 	public async waitForEvent(page: Page): Promise<Dialog> {
 		return new Promise<Dialog>((yeah, nah) => {
-			let timeout = setTimeout(nah, this.timeout)
+			let timeout = <any>setTimeout(nah, this.timeout)
 
 			page.once('dialog', (dialog: Dialog) => {
-				clearTimeout(timeout)
+				clearTimeout(timeout as any)
 				yeah(dialog)
 			})
 		})

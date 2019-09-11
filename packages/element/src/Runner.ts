@@ -26,7 +26,7 @@ function delay(t: number, v?: any) {
 
 class Looper {
 	public iterations = 0
-	private timeout: NodeJS.Timer
+	private timeout: any
 	private cancelled = false
 	private loopCount: number
 

@@ -82,7 +82,7 @@ const defaultCompilerOptions: CompilerOptions = {
 	},
 	types: ['node'],
 
-	esModuleInterop: true,
+	// esModuleInterop: true,
 }
 
 type sourceKinds = 'typescript' | 'javascript'
@@ -222,8 +222,8 @@ export class TypeScriptTestScript implements ITestScript {
 						moduleResolutionCache,
 					).resolvedModule! // original-TODO: GH#18217
 				}
-				if (!result)
-					throw new Error(`Unable to resolve module during script compilation: ${moduleName}`)
+				// if (!result)
+				// 	throw new Error(`Unable to resolve module during script compilation: ${moduleName}`)
 
 				resolvedModules.push(result)
 			}

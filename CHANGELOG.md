@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.10-beta.15](https://github.com/flood-io/element/compare/v1.0.10-beta.14...v1.0.10-beta.15) (2019-09-11)
+
+
+### Bug Fixes
+
+* **element:** typings on timers conficting with DOM types ([627e686](https://github.com/flood-io/element/commit/627e686))
+* **tests:** fixes typings on tests ([260f43e](https://github.com/flood-io/element/commit/260f43e))
+
+
+
+
+
 ## [1.0.10-beta.14](https://github.com/flood-io/element/compare/v1.0.10-beta.13...v1.0.10-beta.14) (2019-09-10)
 
 **Note:** Version bump only for package flood-element

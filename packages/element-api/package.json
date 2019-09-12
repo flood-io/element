@@ -2,8 +2,8 @@
 	"name": "@flood/element-api",
 	"version": "1.0.10-beta.17",
 	"description": "Internal API definitions for Element",
-	"typings": "./dist/index.ts.d",
 	"main": "./dist/index.js",
+	"types": "./dist/index.ts.d",
 	"scripts": {
 		"prebuild": "rm -rf dist",
 		"build": "tsc",

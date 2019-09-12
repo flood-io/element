@@ -48,6 +48,7 @@
 		"find-root": "^1.1.0",
 		"fs-extra": "^4.0.2",
 		"knuth-shuffle": "^1.0.8",
+		"micromatch": "^4.0.2",
 		"puppeteer": "^1.17.0",
 		"recast": "^0.13.0",
 		"sanitize-filename": "^1.6.1",

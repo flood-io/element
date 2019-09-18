@@ -1,21 +1,39 @@
-import ts from 'typescript'
-import { join, resolve, dirname, basename } from 'path'
-import { existsSync, readFileSync } from 'fs'
+import ts, {
+	CompilerOptions,
+	ModuleResolutionKind,
+	createCompilerHost,
+	nodeModuleNameResolver,
+} from 'typescript'
+import { join, dirname, basename } from 'path'
+import { readFileSync } from 'fs'
 
 // TODO try to use typescript's resolution support
 export function manualModuleDefinition(name: string): ts.ResolvedModule {
-	const modulePath = (require.resolve.paths(name) || []).map(p => resolve(p, name)).find(existsSync)
-
-	if (modulePath === undefined) {
-		throw new Error(`unable to find ${name}`)
+	let options: CompilerOptions = {
+		esModuleInterop: true,
+		allowSyntheticDefaultImports: true,
+		moduleResolution: ModuleResolutionKind.NodeJs,
+		lib: ['esnext', 'dom'],
 	}
 
-	const resolvedFileName = join(modulePath, 'index.d.ts')
+	let host = createCompilerHost(options)
+	let resolver = nodeModuleNameResolver(name, __filename, options, host)
 
-	return {
-		resolvedFileName,
-		isExternalLibraryImport: true,
-	}
+	let result = resolver.resolvedModule!
+	return result
+
+	// // const modulePath = (require.resolve.paths(name) || []).map(p => resolve(p, name)).find(existsSync)
+	// const modulePath = dirname(require.resolve(name))
+	// if (modulePath == null) throw new Error(`unable to find ${name}`)
+
+	// const resolvedFileName = join(modulePath, 'index.d.ts')
+
+	// ts.ModuleResolutionKind
+
+	// return {
+	// 	resolvedFileName,
+	// 	isExternalLibraryImport: true,
+	// }
 }
 
 function readPackage(root: string): any {

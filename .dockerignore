@@ -1,6 +1,8 @@
 node_modules
 **/node_modules
 tmp
+dist
+*.log
 
 packages/*/node_modules
 packages/*/tmp

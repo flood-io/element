@@ -17,7 +17,7 @@ export const settings: TestSettings = {
  */
 export default () => {
 	step('The Flood Store: Home', async browser => {
-		await browser.visit('https://jriz.io')
+		await browser.visit('https://wordpress.loadtest.io')
 
 		let pageTextVerify = By.visibleText('Welcome to the Flood IO Merchandise Store.')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
@@ -39,7 +39,7 @@ export default () => {
 	})
 
 	step('The Flood Store: View Cart', async browser => {
-		await browser.visit('https://jriz.io/cart')
+		await browser.visit('https://wordpress.loadtest.io/cart')
 
 		let pageTextVerify1 = By.visibleText('Free shipping')
 		await browser.wait(Until.elementIsVisible(pageTextVerify1))

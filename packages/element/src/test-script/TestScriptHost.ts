@@ -21,7 +21,10 @@ export class TestScriptHost {
 
 		this.internalModuleResolutions.set('@flood/element', this.indexModuleDefinition)
 		this.internalModuleResolutions.set('@types/faker', manualModuleDefinition('@types/faker'))
+		// this.internalModuleResolutions.set('@types/node', manualModuleDefinition('@types/node'))
+		this.internalModuleResolutions.set('assert', manualModuleDefinition('assert'))
 		this.internalTypeReferenceResolutions.set('faker', manualModuleResolution('@types/faker'))
+		// this.internalTypeReferenceResolutions.set('node', manualModuleResolution('@types/node'))
 	}
 
 	get sandboxPath() {

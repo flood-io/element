@@ -75,12 +75,17 @@ const defaultCompilerOptions: CompilerOptions = {
 
 	// lib: ['lib.esnext.full.d.ts'],
 	lib: ['lib.dom.d.ts', 'lib.es2019.d.ts'],
-	typeRoots: ['./node_modules/@types'],
-	baseUrl: '../..',
-	paths: {
-		'*': ['node_modules/@types/*', '*'],
-	},
-	types: ['node'],
+	typeRoots: ['node_modules/@types'],
+
+	baseUrl: './',
+	paths: { '*': ['node_modules/@types/*', '*'] },
+
+	// typeRoots: ['./node_modules/@types'],
+	// baseUrl: '../..',
+	// paths: {
+	// 	'*': ['node_modules/@types/*', '*'],
+	// },
+	// types: ['@types/node'],
 
 	// esModuleInterop: true,
 }

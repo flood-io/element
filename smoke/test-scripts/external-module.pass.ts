@@ -1,6 +1,6 @@
 import { step, TestSettings, Device, Browser } from '@flood/element'
 import { dirname } from 'path'
-import * as assert from 'assert'
+import assert from 'assert'
 
 export const settings: TestSettings = {
 	loopCount: 1,

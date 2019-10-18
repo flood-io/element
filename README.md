@@ -1,5 +1,20 @@
 # `@flood/element`: Break the network barrier!
 
+<p align="center">
+  <a aria-label="Flood Logo" href="https://github.com/flood-io">
+    <img src="https://img.shields.io/badge/MADE%20BY%20FLOOD-4285f4.svg?style=for-the-badge&labelColor=FFFFFF">
+  </a>
+  <a aria-label="NPM version" href="https://www.npmjs.com/package/@flood/element-cli/">
+    <img alt="" src="https://img.shields.io/npm/v/@flood/element-cli.svg?style=for-the-badge&labelColor=000000&color=6554C0">
+  </a>
+  <a aria-label="License" href="/LICENSE.md">
+    <img alt="" src="https://img.shields.io/npm/l/@flood/element-cli.svg?style=for-the-badge&labelColor=000000">
+  </a>
+  <a aria-label="join us in spectrum" href="https://spectrum.chat/flood/element">
+    <img alt="" src="https://img.shields.io/badge/Join%20the%20community-blueviolet.svg?style=for-the-badge&labelColor=000000">
+  </a>
+</p>
+
 Flood Element is a browser based load generation tool built on top of Puppeteer. It provides an easy to use set of commands for automating most user interfaces, including mouse actions such as click and drag, keyboard key press actions, and working with inputs, buttons, and menus.
 
 Element is designed purely to generate load by simulating real user behaviour within a browser. It does not attempt to manipulate the page or work with any specific front-end framework, although it works great for testing SPAs built in React, Angular, Ember, or any other JS heavy client framework.

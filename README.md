@@ -1,4 +1,4 @@
-# `@flood/element`: Break the network barrier!
+[![Flood Element](/assets/Repo-header.png)](https://element.flood.io)
 
 <p align="center">
   <a aria-label="Flood Logo" href="https://github.com/flood-io">

@@ -15,6 +15,8 @@
   </a>
 </p>
 
+---
+
 Flood Element is a browser based load generation tool built on top of Puppeteer. It provides an easy to use set of commands for automating most user interfaces, including mouse actions such as click and drag, keyboard key press actions, and working with inputs, buttons, and menus.
 
 Element is designed purely to generate load by simulating real user behaviour within a browser. It does not attempt to manipulate the page or work with any specific front-end framework, although it works great for testing SPAs built in React, Angular, Ember, or any other JS heavy client framework.

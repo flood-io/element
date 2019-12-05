@@ -1,6 +1,6 @@
 steps:
   - command: "scripts/ci/build.sh"
-    label: ":hammer: Build test image"
+    label: ":hammer: Build"
     agents:
       agent: "k8s"
       queue: "continuous-integration"

@@ -8,4 +8,4 @@ HERE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" > /dev/null && pwd )"
 source "${HERE}/defaults.sh"
 
 echo "--- Docker build"
-docker build -t "${DOCKER_IMAGE}" .
+docker build --network=host -t "${DOCKER_IMAGE}" .

@@ -177,10 +177,7 @@ export class TypeScriptTestScript implements ITestScript {
 			return this
 		}
 
-		const sandboxedFilename = this.sandboxedFilename
-		const inputSource = this.originalSource
-
-		const compilerOptions = this.compilerOptions
+		const { sandboxedFilename, compilerOptions, originalSource: inputSource } = this
 
 		const host = createCompilerHost(compilerOptions)
 

@@ -1,10 +1,11 @@
 import findRoot from 'find-root'
-import { join } from 'path'
 import { tmpdir } from 'os'
 import { Package } from 'normalize-package-data'
 import { existsSync } from 'fs'
 import { ResolvedModule, ResolvedTypeReferenceDirective } from 'typescript'
 import { manualModuleDefinition, manualModuleResolution } from './manualModuleDefinition'
+import path from 'path'
+const join = path.join
 
 export class TestScriptHost {
 	sandboxedBasenameTypescript: string = 'element-test.ts'

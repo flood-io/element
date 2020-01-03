@@ -14,7 +14,7 @@
 		"prepublish": "in-publish && yarn build || not-in-publish",
 		"prepublishOnly": "echo 'prepublishOnly'",
 		"prebuild": "rm -rf ./dist",
-		"build": "yarn ncc build -e @flood/element -e @flood/element/api -e @flood/element-api -e yargs -e yeoman-generator -e yeoman-environment -e typescript -o dist ./index.ts",
+		"build": "yarn ncc build -e @flood/element -e @flood/element/api -e @flood/element-api -e yargs -e yeoman-generator -e yeoman-environment -e typescript -e path -o dist ./index.ts",
 		"element": "ts-node -- ./index.ts",
 		"element:inspectb": "node --inspect-brk -r ts-node/register ./index.ts",
 		"element:inspect": "node --inspect -r ts-node/register ./index.ts"

@@ -8,7 +8,13 @@
 
 // @ts-ignore
 import importLocal from 'import-local'
+import debugFactory from 'debug'
+
+const debug = debugFactory('element:cli')
 
 if (!importLocal(__filename)) {
+	debug('Using global element installation')
 	require('element-cli/bin/element')
+} else {
+	debug('Using local element installation')
 }

@@ -1,0 +1,11 @@
+{
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {
+		"declaration": true,
+		"allowJs": false,
+		"checkJs": false,
+		"outDir": "dist",
+		"module": "commonjs"
+	},
+	"include": ["src/index.ts"]
+}

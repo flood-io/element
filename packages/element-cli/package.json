@@ -1,6 +1,6 @@
 {
 	"name": "element-cli",
-	"version": "1.0.10-beta.25",
+	"version": "1.0.10-beta.26",
 	"description": "Element is a real browser load testing tool",
 	"keywords": [
 		"load",

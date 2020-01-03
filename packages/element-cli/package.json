@@ -1,6 +1,6 @@
 {
 	"name": "element-cli",
-	"version": "1.0.10-beta.21",
+	"version": "1.0.10-beta.24",
 	"description": "Element is a real browser load testing tool",
 	"keywords": [
 		"load",
@@ -19,6 +19,7 @@
 	"engines": {
 		"node": ">= 10"
 	},
+	"private": false,
 	"publishConfig": {
 		"access": "public",
 		"registry": "https://registry.yarnpkg.com"

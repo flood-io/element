@@ -87,7 +87,7 @@ yarn build
 case $branch in
   beta)
     echo +++ publishing beta
-    yarn lerna publish prerelease beta --yes --force-publish --dist-tag beta
+    yarn lerna publish prerelease --yes --force-publish --dist-tag beta
     # yarn lerna version prerelease beta --yes --force-publish --no-push --pre-dist-tag beta
     ;;
   master)
@@ -101,7 +101,7 @@ case $branch in
     ;;
   *)
     echo +++ publishing canary
-    yarn lerna publish prerelease alpha --yes --force-publish --dist-tag alpha
+    yarn lerna publish from-git --yes --force-publish --dist-tag alpha
     # yarn lerna version --yes --force-publish --dist-tag canary
     ;;
 esac

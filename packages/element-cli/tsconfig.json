@@ -1,0 +1,10 @@
+{
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {
+		"declaration": false,
+		"allowJs": false,
+		"checkJs": false,
+		"outDir": "bin"
+	},
+	"include": ["./src/bin/element.ts"]
+}

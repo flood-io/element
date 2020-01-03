@@ -43,5 +43,6 @@
 	"devDependencies": {
 		"@zeit/ncc": "^0.20.5",
 		"typescript": "^3.7.4"
-	}
+	},
+	"gitHead": "514c51e484061fa5c6b25ea03232cb353467854c"
 }

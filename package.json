@@ -7,7 +7,7 @@
 	"license": "MIT",
 	"private": true,
 	"dependencies": {
-		"lerna": "^3.16.4"
+		"lerna": "^3.20.2"
 	},
 	"scripts": {
 		"build:watch": "lerna run build:watch --parallel",
@@ -44,9 +44,7 @@
 		"@types/node": "12.7.4"
 	},
 	"workspaces": [
-		"packages/cli",
-		"packages/element",
-		"packages/element-api"
+		"packages/*"
 	],
 	"standard-version": {
 		"changelog": {

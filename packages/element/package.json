@@ -95,7 +95,7 @@
 	"resolutions": {
 		"@types/node": "12.7.4"
 	},
-	"gitHead": "e8bf1b41988d8a4c1c3b35943a349dd04d6ebfaf",
+	"gitHead": "514c51e484061fa5c6b25ea03232cb353467854c",
 	"publishConfig": {
 		"access": "public"
 	}

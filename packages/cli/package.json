@@ -1,6 +1,6 @@
 {
 	"name": "@flood/element-cli",
-	"version": "1.0.10-beta.26",
+	"version": "1.0.10-beta.27",
 	"license": "Apache-2.0",
 	"description": "The command line interface for Flood Element",
 	"repository": "flood-io/element",
@@ -20,8 +20,8 @@
 		"element:inspect": "node --inspect -r ts-node/register ./index.ts"
 	},
 	"dependencies": {
-		"@flood/element-api": "^1.0.10-beta.26",
-		"element-cli": "^1.0.10-beta.26",
+		"@flood/element-api": "^1.0.10-beta.27",
+		"element-cli": "^1.0.10-beta.27",
 		"import-local": "^3.0.2",
 		"yargs": "^11.0.0",
 		"yeoman-environment": "2.3.0",
@@ -51,7 +51,7 @@
 		"update-check": "^1.5.2",
 		"winston": "^3.0.0"
 	},
-	"gitHead": "514c51e484061fa5c6b25ea03232cb353467854c",
+	"gitHead": "861eebae2a19beda9bdd133b8424c4eda09216cd",
 	"publishConfig": {
 		"access": "public"
 	}

@@ -1,6 +1,6 @@
 {
 	"name": "element-cli",
-	"version": "1.0.10-beta.26",
+	"version": "1.0.10-beta.27",
 	"description": "Element is a real browser load testing tool",
 	"keywords": [
 		"load",
@@ -44,5 +44,5 @@
 		"@zeit/ncc": "^0.20.5",
 		"typescript": "^3.7.4"
 	},
-	"gitHead": "514c51e484061fa5c6b25ea03232cb353467854c"
+	"gitHead": "861eebae2a19beda9bdd133b8424c4eda09216cd"
 }

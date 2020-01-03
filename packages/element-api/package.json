@@ -1,6 +1,6 @@
 {
 	"name": "@flood/element-api",
-	"version": "1.0.10-beta.26",
+	"version": "1.0.10-beta.27",
 	"description": "Internal API definitions for Element",
 	"main": "./dist/index.js",
 	"types": "./dist/index.ts.d",
@@ -11,8 +11,8 @@
 		"prepublish": "in-publish && yarn build || not-in-publish"
 	},
 	"dependencies": {
-		"@flood/element": "^1.0.10-beta.26",
-		"element-cli": "^1.0.10-beta.26"
+		"@flood/element": "^1.0.10-beta.27",
+		"element-cli": "^1.0.10-beta.27"
 	},
 	"devDependencies": {
 		"@types/node": "12.7.4",
@@ -41,5 +41,5 @@
 	"bugs": {
 		"url": "https://github.com/flood-io/element/issues"
 	},
-	"gitHead": "514c51e484061fa5c6b25ea03232cb353467854c"
+	"gitHead": "861eebae2a19beda9bdd133b8424c4eda09216cd"
 }

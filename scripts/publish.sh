@@ -101,8 +101,8 @@ case $branch in
     ;;
   *)
     echo +++ publishing canary
-    yarn lerna version --canary --yes --force-publish --dist-tag canary
-    # --dist-tag canary
+    yarn lerna publish prerelease alpha --yes --force-publish --dist-tag alpha
+    # yarn lerna version --yes --force-publish --dist-tag canary
     ;;
 esac
 

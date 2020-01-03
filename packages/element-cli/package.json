@@ -1,6 +1,6 @@
 {
 	"name": "element-cli",
-	"version": "1.0.10-beta.28",
+	"version": "1.0.10-beta.29",
 	"description": "Element is a real browser load testing tool",
 	"keywords": [
 		"load",
@@ -21,8 +21,7 @@
 	},
 	"private": false,
 	"publishConfig": {
-		"access": "public",
-		"registry": "https://registry.yarnpkg.com"
+		"access": "public"
 	},
 	"repository": {
 		"type": "git",
@@ -44,5 +43,5 @@
 		"@zeit/ncc": "^0.20.5",
 		"typescript": "^3.7.4"
 	},
-	"gitHead": "713e27b7e4c17e45f21f98f5645281fb86a0671c"
+	"gitHead": "75ceb903881476ed98cbc911bfce5fe303a57d55"
 }

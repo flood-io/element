@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.10-beta.22](https://github.com/flood-io/element/compare/v1.0.10-beta.21...v1.0.10-beta.22) (2020-01-03)
+
+
+### Bug Fixes
+
+* attempting to fix windows path resolving ([76f224b](https://github.com/flood-io/element/commit/76f224b))
+
+
+
+
+
 ## [1.0.10-beta.21](https://github.com/flood-io/element/compare/v1.0.10-beta.20...v1.0.10-beta.21) (2019-09-18)
 
 **Note:** Version bump only for package @flood/element

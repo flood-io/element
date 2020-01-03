@@ -21,6 +21,7 @@
 	},
 	"dependencies": {
 		"@flood/element-api": "^1.0.10-beta.21",
+		"import-local": "^3.0.2",
 		"yargs": "^11.0.0",
 		"yeoman-environment": "2.3.0",
 		"yeoman-generator": "3.1.0"

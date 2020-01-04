@@ -1,9 +1,5 @@
-import {
-	ITestScript,
-	TestScriptError,
-	TestScriptOptions,
-	TestScriptDefaultOptions,
-} from '../TestScript'
+import { TestScriptError, TestScriptOptions, TestScriptDefaultOptions } from '../TestScript'
+import { ITestScript } from '../ITestScript'
 import { CategorisedDiagnostics } from './TypescriptDiagnostics'
 import {
 	CompilerOptions,

@@ -1,7 +1,8 @@
-import { VMScript } from 'vm2'
 import ts from 'typescript'
 import { TypeScriptTestScript } from './test-script/Compiler'
 import { Callsite, callsiteToString } from './test-script/SourceUnmapper'
+import WebpackCompiler from './test-script/WebpackCompiler'
+import { ITestScript } from './ITestScript'
 
 function originalError(e: Error): Error {
 	if ((e as errorWithOriginalError).originalError !== undefined) {
@@ -134,24 +135,6 @@ export interface TestScriptErrorMapper {
 	filterAndUnmapStack(stack: string | Error | undefined): string[]
 }
 
-export interface ITestScript extends TestScriptErrorMapper {
-	sandboxedFilename: string
-	vmScript: VMScript
-	source: string
-	sourceMap: string
-	settings?: any
-	steps?: any[]
-
-	formattedErrorString: string
-	hasErrors: boolean
-
-	compile(): Promise<ITestScript>
-
-	isFloodElementCorrectlyImported: boolean
-	testName: string
-	testDescription: string
-}
-
 export async function compileString(
 	source: string,
 	filename: string,
@@ -164,12 +147,14 @@ export async function compileFile(
 	filename: string,
 	testScriptOptions?: TestScriptOptions,
 ): Promise<ITestScript | undefined> {
-	const fileContent = ts.sys.readFile(filename)
-	if (fileContent == null) {
-		return
-	}
+	return new WebpackCompiler(filename, testScriptOptions)
 
-	return new TypeScriptTestScript(fileContent, filename, testScriptOptions).compile()
+	// const fileContent = ts.sys.readFile(filename)
+	// if (fileContent == null) {
+	// 	return
+	// }
+
+	// return new TypeScriptTestScript(fileContent, filename, testScriptOptions).compile()
 }
 
 export async function mustCompileString(

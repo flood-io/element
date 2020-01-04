@@ -24,7 +24,7 @@ import {
 	sortAndDeduplicateDiagnostics,
 	resolveTypeReferenceDirective,
 } from 'typescript'
-import path from 'path'
+import path, { normalize } from 'path'
 import { VMScript } from 'vm2'
 import parseComments from 'comment-parser'
 import { SourceUnmapper } from './SourceUnmapper'
@@ -201,7 +201,7 @@ export class TypeScriptTestScript implements ITestScript {
 		): SourceFile {
 			debug('getSourceFile', fileName)
 			// inject our source string if its the sandboxedBasename
-			if (fileName === tsSandboxedFilename) {
+			if (normalize(fileName) === normalize(tsSandboxedFilename)) {
 				return createSourceFile(fileName, inputSource, languageVersion, false)
 			} else {
 				return originalGetSourceFile.apply(this, arguments)

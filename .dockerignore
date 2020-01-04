@@ -2,6 +2,7 @@ node_modules
 **/node_modules
 tmp
 dist
+bin/*.js
 *.log
 
 packages/*/node_modules

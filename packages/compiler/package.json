@@ -1,48 +1,50 @@
 {
-  "name": "@flood/element-compiler",
-  "version": "1.0.10-beta.21",
-  "description": "Element internal script compiler",
-  "author": "Ivan Vanderbyl <ivanvanderbyl@gmail.com>",
-  "homepage": "https://github.com/flood-io/element#readme",
-  "license": "Apache-2.0",
-  "main": "lib/compiler.js",
-  "directories": {
-    "lib": "lib",
-    "test": "__tests__"
-  },
-  "files": [
-    "lib"
-  ],
-  "publishConfig": {
-    "registry": "https://registry.yarnpkg.com"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/flood-io/element.git"
-  },
-  "scripts": {
-    "test": "jest"
-  },
-  "bugs": {
-    "url": "https://github.com/flood-io/element/issues"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.7.7",
-    "@babel/preset-env": "^7.7.7",
-    "@babel/preset-typescript": "^7.7.7",
-    "@types/memory-fs": "^0.3.2",
-    "@types/webpack": "^4.41.1",
-    "babel-jest": "^24.9.0",
-    "jest": "^24.9.0",
-    "typescript": "^3.7.4"
-  },
-  "dependencies": {
-    "@babel/preset-stage-2": "^7.0.0",
-    "fork-ts-checker-webpack-plugin": "^3.1.1",
-    "memory-fs": "^0.5.0",
-    "ts-loader": "^6.2.1",
-    "tsconfig-paths-webpack-plugin": "^3.2.0",
-    "webpack": "^4.41.5",
-    "webpackbar": "^4.0.0"
-  }
+	"name": "@flood/element-compiler",
+	"version": "1.0.10-beta.21",
+	"description": "Element internal script compiler",
+	"author": "Ivan Vanderbyl <ivanvanderbyl@gmail.com>",
+	"homepage": "https://github.com/flood-io/element#readme",
+	"license": "Apache-2.0",
+	"main": "dist/index.js",
+	"directories": {
+		"lib": "lib",
+		"test": "__tests__"
+	},
+	"files": [
+		"lib"
+	],
+	"publishConfig": {
+		"registry": "https://registry.yarnpkg.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/flood-io/element.git"
+	},
+	"scripts": {
+		"test": "jest",
+		"build": "tsc",
+		"prepublishOnly": "yarn build"
+	},
+	"bugs": {
+		"url": "https://github.com/flood-io/element/issues"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.7.7",
+		"@babel/preset-env": "^7.7.7",
+		"@babel/preset-typescript": "^7.7.7",
+		"@types/memory-fs": "^0.3.2",
+		"@types/webpack": "^4.41.1",
+		"babel-jest": "^24.9.0",
+		"jest": "^24.9.0",
+		"typescript": "^3.7.4"
+	},
+	"dependencies": {
+		"@babel/preset-stage-2": "^7.0.0",
+		"fork-ts-checker-webpack-plugin": "^3.1.1",
+		"memory-fs": "^0.5.0",
+		"ts-loader": "^6.2.1",
+		"tsconfig-paths-webpack-plugin": "^3.2.0",
+		"webpack": "^4.41.5",
+		"webpackbar": "^4.0.0"
+	}
 }

@@ -51,9 +51,7 @@
 		"@types/node": "12.7.4"
 	},
 	"workspaces": [
-		"packages/cli",
-		"packages/element",
-		"packages/element-api"
+		"packages/*"
 	],
 	"standard-version": {
 		"changelog": {

@@ -1,4 +1,5 @@
 import { step, By, TestSettings } from '@flood/element'
+import { largestNumber, expect } from './helpers'
 
 export const settings: TestSettings = {
 	// loopCount: 1,
@@ -7,15 +8,6 @@ export const settings: TestSettings = {
 	// Auto wait until elements are visible before acting
 	waitUntil: 'visible',
 }
-
-/**
- * A helper to get the largest order number for Step 2
- */
-const largestNumber = (numbers: (number | string)[]): number =>
-	numbers
-		.map(Number)
-		.sort((a, b) => a - b)
-		.reverse()[0]
 
 export default () => {
 	step('Open page and click start', async b => {
@@ -59,7 +51,7 @@ export default () => {
 		let element = await b.findElement('h2')
 		await b.takeScreenshot()
 		let completionText = await element.text()
-		if (completionText.trim() !== "You're Done!")
-			throw new Error(`Expected header to be "You're Done!", got "${completionText}"`)
+
+		expect(completionText.trim(), "You're Done!")
 	})
 }

@@ -10,8 +10,8 @@
 			"request": "launch",
 			"args": ["--runInBand"],
 			"cwd": "${workspaceFolder}",
-			"console": "integratedTerminal",
-			"internalConsoleOptions": "neverOpen",
+			"console": "internalConsole",
+			"internalConsoleOptions": "openOnFirstSessionStart",
 			"disableOptimisticBPs": true,
 			"program": "${workspaceFolder}/node_modules/jest/bin/jest"
 		}

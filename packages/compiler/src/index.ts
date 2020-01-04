@@ -1,37 +1,107 @@
-import { transformFileAsync } from '@babel/core'
-import webpack from 'webpack'
+import webpack, { Configuration as WebpackConfig, Stats } from 'webpack'
+import { CompilerOptions } from 'typescript'
+import { resolve, dirname, join } from 'path'
+// import forkTSCheckerPlugin from 'fork-ts-checker-webpack-plugin'
+// import tsLoader, { Options } from 'ts-loader'
+import MemoryFileSystem from 'memory-fs'
+// import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin'
+import WebpackBar from 'webpackbar'
+
+export interface CompilerOutput {
+	content: string
+	stats: Stats
+}
 
 export class Compiler {
-	constructor(private sourceFile: string) {}
+	constructor(private sourceFile: string, private productionMode: boolean = false) {}
 
-	public async emit() {
-		let output = await transformFileAsync(this.sourceFile, {
-			presets: [
-				[
-					'@babel/preset-typescript',
-					{
-						diagnostics: true,
-					},
-				],
-				[
-					'@babel/preset-env',
-					{
-						targets: {
-							node: 'current',
-						},
-						modules: 'commonjs',
-					},
-				],
-			],
-		}).catch(err => {
-			console.log(err)
+	public async emit(): Promise<CompilerOutput> {
+		let compiler = webpack(this.webpackConfig)
+
+		let fileSystem = new MemoryFileSystem()
+
+		compiler.outputFileSystem = fileSystem
+
+		return new Promise((yeah, nah) => {
+			compiler.run((err, stats) => {
+				let formattedStats = stats.toString()
+				console.log(formattedStats)
+
+				if (stats.hasErrors() || stats.hasWarnings()) {
+					return nah(
+						new Error(
+							stats.toString({
+								errorDetails: true,
+								warnings: true,
+							}),
+						),
+					)
+				} else {
+					// let output = compiler.outputFileSystem as MemoryFileSystem
+					yeah({ stats, content: fileSystem.data['bundle.js'].toString() })
+				}
+			})
 		})
+	}
 
-		if (output != null) {
-			debugger
-			return output.code
+	get compilerOptions(): CompilerOptions {
+		return {
+			allowJs: true,
+			checkJs: false,
+			sourceMap: false,
+			declaration: false,
 		}
+	}
 
-		return null
+	get webpackConfig(): WebpackConfig {
+		let loader = require.resolve('ts-loader')
+
+		return {
+			entry: this.sourceFile,
+			mode: 'development',
+			devtool: 'cheap-module-eval-source-map',
+			output: {
+				path: '/',
+				filename: join('bundle.js'),
+			},
+			resolve: {
+				extensions: ['.ts', '.js'],
+
+				// plugins: [
+				// 	new TsconfigPathsPlugin({
+				// 		configFile: join(__dirname, '../element-tsconfig.json'),
+				// 	}),
+				// ],
+			},
+			cache: true,
+
+			plugins: [
+				new WebpackBar({
+					reporters: ['fancy'],
+				}),
+			],
+
+			module: {
+				rules: [
+					{
+						test: /\.ts$/,
+						exclude: /node_modules/,
+						loader: {
+							loader,
+							options: {
+								context: resolve(dirname(this.sourceFile)),
+								configFile: 'tsconfig.json',
+								onlyCompileBundledFiles: true,
+								reportFiles: [this.sourceFile],
+								transpileOnly: this.productionMode,
+								compilerOptions: this.compilerOptions,
+							},
+						},
+					},
+				],
+			},
+
+			externals: ['@flood/element', '@flood/element-api'],
+		}
 	}
 }

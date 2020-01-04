@@ -19,5 +19,5 @@
 		"outDir": "dist"
 	},
 	"typeAcquisition": { "enable": true },
-	"exclude": ["dist", "lib", "*.spec.ts"]
+	"exclude": ["dist", "lib", "bin/*.js", "*.spec.ts"]
 }

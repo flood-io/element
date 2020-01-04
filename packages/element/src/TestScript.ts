@@ -199,7 +199,9 @@ export async function mustCompileFile(
 	}
 
 	if (testScript.hasErrors) {
-		throw new Error(`unable to compile script ${filename}:\n${testScript.formattedErrorString}`)
+		throw new Error(
+			`Error: Unable to compile Element script ${filename}: ${testScript.formattedErrorString}`,
+		)
 	}
 
 	return testScript

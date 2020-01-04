@@ -23,7 +23,7 @@ export class NullWorkRoot {
 	}
 
 	testData(filename: string): string {
-		return path.join('/tmp/test-data', filename)
+		return path.join('/tmp', 'test-data', filename)
 	}
 }
 

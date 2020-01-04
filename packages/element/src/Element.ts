@@ -34,7 +34,7 @@ export function runUntilExit(fn: () => Promise<void>) {
 			console.log('process exited')
 			process.exit(0)
 		})
-		.catch(err => {
+		.catch((err: Error) => {
 			console.log('process exited - with error')
 			console.error(err)
 			process.exit(1)

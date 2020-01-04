@@ -1,6 +1,6 @@
 {
 	"name": "@flood/element-cli",
-	"version": "1.0.10-beta.21",
+	"version": "1.0.10-beta.29",
 	"license": "Apache-2.0",
 	"description": "The command line interface for Flood Element",
 	"repository": "flood-io/element",
@@ -14,13 +14,15 @@
 		"prepublish": "in-publish && yarn build || not-in-publish",
 		"prepublishOnly": "echo 'prepublishOnly'",
 		"prebuild": "rm -rf ./dist",
-		"build": "yarn ncc build -e @flood/element -e @flood/element/api -e @flood/element-api -e yargs -e yeoman-generator -e yeoman-environment -e typescript -o dist ./index.ts",
+		"build": "yarn ncc build -e @flood/element -e @flood/element/api -e @flood/element-api -e yargs -e yeoman-generator -e yeoman-environment -e typescript -e path -o dist ./index.ts",
 		"element": "ts-node -- ./index.ts",
 		"element:inspectb": "node --inspect-brk -r ts-node/register ./index.ts",
 		"element:inspect": "node --inspect -r ts-node/register ./index.ts"
 	},
 	"dependencies": {
-		"@flood/element-api": "^1.0.10-beta.21",
+		"@flood/element-api": "^1.0.10-beta.29",
+		"element-cli": "^1.0.10-beta.29",
+		"import-local": "^3.0.2",
 		"yargs": "^11.0.0",
 		"yeoman-environment": "2.3.0",
 		"yeoman-generator": "3.1.0"
@@ -49,7 +51,7 @@
 		"update-check": "^1.5.2",
 		"winston": "^3.0.0"
 	},
-	"gitHead": "e8bf1b41988d8a4c1c3b35943a349dd04d6ebfaf",
+	"gitHead": "75ceb903881476ed98cbc911bfce5fe303a57d55",
 	"publishConfig": {
 		"access": "public"
 	}

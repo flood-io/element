@@ -72,3 +72,4 @@ examples/*/tmp
 .DS_Store
 
 dist
+packages/**/bin/*.js

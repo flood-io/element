@@ -1,0 +1,7 @@
+.buildkite
+.github
+.vscode
+assets
+extern
+scripts
+smoke

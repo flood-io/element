@@ -1,13 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-set -euo pipefail
-set +x
-[[ ${DEBUG:-} ]] && set -x
+set -eo pipefail
+
+[ -n "${VERBOSE}" ] && set -x
 
 HERE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" > /dev/null && pwd )"
-source $HERE/config.sh
+source "${HERE}/defaults.sh"
 
-test_env_file=$HERE/test-env
-
-echo "--- Docker build testing/publishing image"
-docker build -t ${DOCKER_IMAGE} .
+echo "--- Docker build"
+docker build --network=host -t "${DOCKER_IMAGE}" .

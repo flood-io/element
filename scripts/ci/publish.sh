@@ -1,16 +1,15 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-set -euo pipefail
-set +x
-[[ ${DEBUG:-} ]] && set -x
+set -eo pipefail
+
+[ -n "${VERBOSE}" ] && set -x
 
 HERE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" > /dev/null && pwd )"
-source $HERE/config.sh
-
-test_env_file=$HERE/test-env
+source "${HERE}/defaults.sh"
 
 echo "~~~ tests passed, publishing"
 docker run --rm \
+  --network=host \
   -e NPM_TOKEN \
   -e GITHUB_TOKEN \
   -e GIT_EMAIL \
@@ -19,4 +18,4 @@ docker run --rm \
   -e BUILDKITE_COMMIT \
   -e DEBUG \
   -e MASTER_SEMVER_BUMP \
-  --env-file $test_env_file $DOCKER_IMAGE make publish-ci
+  --env-file "${HERE}/test-env" "${DOCKER_IMAGE}" make publish-ci

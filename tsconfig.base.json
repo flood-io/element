@@ -19,7 +19,8 @@
 		"declarationMap": true,
 		"baseUrl": "./packages",
 		"paths": {
-			"@flood/*": ["./*/src"]
+			"@flood/element-compiler": ["./compiler/src/index.ts"],
+			"@flood/element-*": ["./*/src/index.ts"]
 		}
 	},
 	"typeAcquisition": { "enable": true },

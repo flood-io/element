@@ -15,8 +15,6 @@ export default class WebpackCompiler implements ITestScript {
 		let compiler = new Compiler(this.sourceFile)
 		let output = await compiler.emit()
 		this.result = output
-
-		console.log(this.source)
 		return this
 	}
 

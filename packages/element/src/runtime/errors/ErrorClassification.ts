@@ -1,4 +1,4 @@
-import { ITestScript } from '../../TestScript'
+import { ITestScript } from '../../ITestScript'
 const debug = require('debug')('element:test:error')
 
 export type ErrorKind = 'assertion' | 'protocol' | 'browser' | 'internal'
@@ -11,7 +11,10 @@ export interface ErrorClassification {
 
 type ClassifiedError<T> = T & ErrorClassification
 
-export function classifyError<T>(error: Error, testScript?: ITestScript): ClassifiedError<T> {
+export function classifyError<T extends ErrorClassification>(
+	error: Error,
+	testScript?: ITestScript,
+): ClassifiedError<T> {
 	debug('input %O', error)
 	debug('error.name %s', error.name)
 
@@ -29,6 +32,7 @@ export function classifyError<T>(error: Error, testScript?: ITestScript): Classi
 
 	debug('source: %s kind: %s', source, kind)
 
+	// @ts-ignore
 	return {
 		kind,
 		source,

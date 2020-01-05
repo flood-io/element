@@ -1,4 +1,5 @@
-import { launch as launchPuppeteer, LaunchOptions, Browser, Page } from 'puppeteer'
+import { LaunchOptions, Browser, Page } from 'puppeteer'
+import puppeteer from 'puppeteer'
 import { ChromeVersion } from '../runtime/Settings'
 
 export type ConcreteLaunchOptions = LaunchOptions & {
@@ -111,7 +112,7 @@ export async function launch(
 	// browser.newPage().then(page => new PuppeteerClient(browser, page)),
 	// )
 
-	const browser = await launchPuppeteer(options)
+	const browser = await puppeteer.launch(options)
 	const page = await browser.newPage()
 
 	return new PuppeteerClient(browser, page)

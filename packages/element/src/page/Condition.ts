@@ -106,7 +106,10 @@ export abstract class ElementCondition extends LocatorCondition {
 			let locatorFunc: EvaluateFn = function() {
 				return null
 			}
-			let node: HTMLElement | null = locatorFunc(...args1)
+
+			let [arg1, ...rest] = args1
+
+			let node: HTMLElement | null = locatorFunc(arg1, ...rest)
 			if (node === null) return false
 
 			let conditionFunc = function(node: HTMLElement, ...args2: any[]) {

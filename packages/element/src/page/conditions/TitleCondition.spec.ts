@@ -1,9 +1,7 @@
-import { DogfoodServer } from '../../../tests/support/fixture-server'
+import { serve } from '../../../tests/support/fixture-server'
 import { launchPuppeteer, testPuppeteer } from '../../../tests/support/launch-browser'
 import { Page } from 'puppeteer'
 import { Until } from '../Until'
-
-let dogfoodServer = new DogfoodServer()
 
 let page: Page, puppeteer: testPuppeteer
 
@@ -11,18 +9,17 @@ describe('Condition', () => {
 	jest.setTimeout(30e3)
 	describe('TitleCondition', () => {
 		beforeAll(async () => {
-			await dogfoodServer.start()
 			puppeteer = await launchPuppeteer()
 			page = puppeteer.page
 		})
 
 		afterAll(async () => {
-			await dogfoodServer.close()
 			await puppeteer.close()
 		})
 
 		beforeEach(async () => {
-			await page.goto('http://localhost:1337/wait.html')
+			let url = await serve('wait.html')
+			await page.goto(url)
 		})
 
 		test('waits Until.titleIs', async () => {

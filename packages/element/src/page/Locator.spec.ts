@@ -1,10 +1,8 @@
-import { DogfoodServer } from '../../tests/support/fixture-server'
+import { serve } from '../../tests/support/fixture-server'
 import { launchPuppeteer, testPuppeteer } from '../../tests/support/launch-browser'
 import { Page } from 'puppeteer'
 import { Locator, ElementHandle } from './types'
 import { By } from './By'
-
-let dogfoodServer = new DogfoodServer()
 
 let page: Page
 let puppeteer: testPuppeteer
@@ -25,19 +23,18 @@ describe('Locator', () => {
 	jest.setTimeout(30e3)
 
 	beforeAll(async () => {
-		await dogfoodServer.start()
 		puppeteer = await launchPuppeteer()
 		page = puppeteer.page
 		page.on('console', msg => console.log(`>> console.${msg.type()}: ${msg.text()}`))
 	})
 
 	afterAll(async () => {
-		await dogfoodServer.close()
 		await puppeteer.close()
 	})
 
 	beforeEach(async () => {
-		await page.goto('http://localhost:1337/wait.html')
+		let url = await serve('wait.html')
+		await page.goto(url)
 	})
 
 	describe('By.linkText', () => {

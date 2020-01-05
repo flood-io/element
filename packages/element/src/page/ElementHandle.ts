@@ -24,7 +24,7 @@ async function getProperty<T>(element: PElementHandle, prop: string): Promise<T 
 		return null
 	} else {
 		let handle = await element.getProperty(prop)
-		let value = await handle.jsonValue()
+		let value = (await handle.jsonValue()) as T
 		handle.dispose()
 		return value
 	}

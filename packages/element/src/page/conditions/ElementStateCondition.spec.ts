@@ -1,28 +1,20 @@
-import { DogfoodServer } from '../../../tests/support/fixture-server'
+import { serve } from '../../../tests/support/fixture-server'
 import { launchPuppeteer, testPuppeteer } from '../../../tests/support/launch-browser'
 import { Page } from 'puppeteer'
 import { Until } from '../Until'
 import { By } from '../By'
 
-let dogfoodServer = new DogfoodServer()
-
 let page: Page, puppeteer: testPuppeteer
 
 describe('Condition', () => {
 	jest.setTimeout(30e3)
-	beforeAll(async () => {
-		await dogfoodServer.start()
-	})
-
-	afterAll(async () => {
-		await dogfoodServer.close()
-	})
 
 	beforeEach(async () => {
 		puppeteer = await launchPuppeteer()
 		page = puppeteer.page
 		page.on('console', msg => console.log(`>> console.${msg.type()}: ${msg.text()}`))
-		await page.goto('http://localhost:1337/wait.html', { waitUntil: 'networkidle2' })
+
+		await page.goto(await serve('wait.html'), { waitUntil: 'networkidle2' })
 	})
 
 	afterEach(async () => {

@@ -1,11 +1,10 @@
 import { ElementHandle } from './ElementHandle'
-import { DogfoodServer } from '../../tests/support/fixture-server'
+import { serve } from '../../tests/support/fixture-server'
 import { ElementHandle as PElementHandle } from 'puppeteer'
 import { launchPuppeteer, testPuppeteer } from '../../tests/support/launch-browser'
 import { Browser } from '../runtime/Browser'
 import { DEFAULT_SETTINGS } from '../runtime/Settings'
 import { testWorkRoot } from '../../tests/support/test-run-env'
-let dogfoodServer = new DogfoodServer()
 
 let puppeteer: testPuppeteer
 
@@ -21,8 +20,6 @@ async function locateEl(selector: string): Promise<PElementHandle | never> {
 describe('ElementHandle', () => {
 	jest.setTimeout(30e3)
 	beforeAll(async () => {
-		await dogfoodServer.start()
-
 		puppeteer = await launchPuppeteer()
 		puppeteer.page.setViewport({
 			height: 600,
@@ -35,12 +32,12 @@ describe('ElementHandle', () => {
 	})
 
 	afterAll(async () => {
-		await dogfoodServer.close()
 		await puppeteer.close()
 	})
 
 	beforeEach(async () => {
-		await puppeteer.page.goto('http://localhost:1337/wait.html', { waitUntil: 'domcontentloaded' })
+		let url = await serve('wait.html')
+		await puppeteer.page.goto(url, { waitUntil: 'domcontentloaded' })
 	})
 
 	test('getAttribute(id)', async () => {
@@ -93,14 +90,14 @@ describe('ElementHandle', () => {
 	})
 
 	test('size()', async () => {
-        const handle = await locateEl('a#show_bar')
-        let element = await new ElementHandle(handle)
-        expect((await element.size()).width).toBeGreaterThanOrEqual(57);
-        expect((await element.size()).width).toBeLessThanOrEqual(60)
-        expect((await element.size()).height).toBeGreaterThanOrEqual(15);
-        expect((await element.size()).height).toBeLessThanOrEqual(20)
-        await handle.dispose()
-    })
+		const handle = await locateEl('a#show_bar')
+		let element = await new ElementHandle(handle)
+		expect((await element.size()).width).toBeGreaterThanOrEqual(57)
+		expect((await element.size()).width).toBeLessThanOrEqual(60)
+		expect((await element.size()).height).toBeGreaterThanOrEqual(15)
+		expect((await element.size()).height).toBeLessThanOrEqual(20)
+		await handle.dispose()
+	})
 
 	test('location()', async () => {
 		const handle = await locateEl('a#show_bar')
@@ -124,7 +121,8 @@ describe('ElementHandle', () => {
 	})
 
 	test('clear() input', async () => {
-		await puppeteer.page.goto('http://localhost:1337/forms_with_input_elements.html')
+		let url = await serve('forms_with_input_elements.html')
+		await puppeteer.page.goto(url)
 		const handle: PElementHandle = await locateEl('input[name="new_user_first_name"]')
 		let element = await new ElementHandle(handle)
 
@@ -197,7 +195,8 @@ describe('ElementHandle', () => {
 	})
 
 	test('findElement()', async () => {
-		await puppeteer.page.goto('http://localhost:1337/forms_with_input_elements.html')
+		let url = await serve('forms_with_input_elements.html')
+		await puppeteer.page.goto(url)
 		const handle: PElementHandle = await locateEl('form')
 		let element = await new ElementHandle(handle)
 		let element2 = await element.findElement('input[name="new_user_first_name"]')
@@ -212,7 +211,8 @@ describe('ElementHandle', () => {
 	})
 
 	test('findElements()', async () => {
-		await puppeteer.page.goto('http://localhost:1337/forms_with_input_elements.html')
+		let url = await serve('forms_with_input_elements.html')
+		await puppeteer.page.goto(url)
 		const handle: PElementHandle = await locateEl('form')
 		let element = await new ElementHandle(handle)
 		let elementsList1 = await element.findElements('input')
@@ -231,7 +231,8 @@ describe('ElementHandle', () => {
 		let browser: Browser<any>
 		beforeEach(async () => {
 			browser = new Browser(testWorkRoot(), puppeteer, DEFAULT_SETTINGS)
-			await browser.visit('http://localhost:1337/forms_with_input_elements.html')
+			let url = await serve('forms_with_input_elements.html')
+			await browser.visit(url)
 		})
 
 		afterEach(async () => {

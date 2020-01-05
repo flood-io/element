@@ -1,24 +1,21 @@
-import { DogfoodServer } from '../../../tests/support/fixture-server'
+import { serve } from '../../../tests/support/fixture-server'
 import { launchPuppeteer, testPuppeteer } from '../../../tests/support/launch-browser'
-
 import { VisibleTextLocator } from './VisibleTextLocator'
 
-let dogfoodServer = new DogfoodServer()
 let puppeteer: testPuppeteer
 
 describe('VisibleTextLocator', () => {
 	beforeAll(async () => {
-		await dogfoodServer.start()
 		puppeteer = await launchPuppeteer()
 	})
 
 	afterAll(async () => {
-		await dogfoodServer.close()
 		await puppeteer.close()
 	})
 
 	beforeEach(async () => {
-		await puppeteer.page.goto('http://localhost:1337/wait.html', { waitUntil: 'domcontentloaded' })
+		let url = await serve('wait.html')
+		await puppeteer.page.goto(url, { waitUntil: 'domcontentloaded' })
 	})
 
 	test('evaluates', async () => {
@@ -37,7 +34,7 @@ describe('VisibleTextLocator', () => {
 		const loc = new VisibleTextLocator("foon't", false, 'By.visibleText')
 		const ctx = await puppeteer.page.mainFrame().executionContext()
 
-		let maybeElement
+		let maybeElement: any
 
 		expect(async () => {
 			maybeElement = await loc.find(ctx)

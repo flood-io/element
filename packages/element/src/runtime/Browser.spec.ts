@@ -1,27 +1,17 @@
-import { DogfoodServer } from '../../tests/support/fixture-server'
+import { serve } from '../../tests/support/fixture-server'
 import { testWorkRoot } from '../../tests/support/test-run-env'
 import { launchPuppeteer, testPuppeteer } from '../../tests/support/launch-browser'
 import { Browser } from './Browser'
 import { Until } from '../page/Until'
 import { By } from '../page/By'
 import { DEFAULT_SETTINGS } from './Settings'
-let dogfoodServer = new DogfoodServer()
 
 let puppeteer: testPuppeteer
 const workRoot = testWorkRoot()
 
-function ensureDefined<T>(value: T | undefined | null): T | never {
-	if (value === undefined || value === null) {
-		throw new Error('value was not defined')
-	} else {
-		return value
-	}
-}
-
 describe('Browser', () => {
 	jest.setTimeout(30e3)
 	beforeAll(async () => {
-		await dogfoodServer.start()
 		puppeteer = await launchPuppeteer()
 
 		puppeteer.page.on('console', msg =>
@@ -30,7 +20,6 @@ describe('Browser', () => {
 	})
 
 	afterAll(async () => {
-		await dogfoodServer.close()
 		await puppeteer.close()
 	})
 
@@ -49,15 +38,14 @@ describe('Browser', () => {
 				afterSpy(actionName)
 			},
 		)
-		await browser.visit('http://localhost:1337/forms_with_input_elements.html')
+		let url = await serve('forms_with_input_elements.html')
+		await browser.visit(url)
 
 		expect(beforeSpy).toHaveBeenCalledWith('visit')
 		expect(afterSpy).toHaveBeenCalledWith('visit')
 	})
 
 	test('throws an error', async () => {
-		let noErrorSpy = jest.fn()
-
 		let browser = new Browser(
 			workRoot,
 			puppeteer,
@@ -65,25 +53,26 @@ describe('Browser', () => {
 			async name => {},
 			async name => {},
 		)
-		await browser.visit('http://localhost:1337/forms_with_input_elements.html')
+		let url = await serve('forms_with_input_elements.html')
+		await browser.visit(url)
 
-		let caughtError: Error | undefined
-		try {
-			await browser.click('.notanelement')
-			noErrorSpy()
-		} catch (e) {
-			caughtError = e
-		}
-		expect(noErrorSpy).not.toHaveBeenCalled()
-		expect(ensureDefined(caughtError)).toBeInstanceOf('error')
+		return expect(browser.click('.notanelement')).rejects.toEqual(
+			new Error(`No element was found on the page using '.notanelement'`),
+		)
 	})
 
 	test('returns active element', async () => {
 		let browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
-		await browser.visit('http://localhost:1337/forms_with_input_elements.html')
+
+		let url = await serve('forms_with_input_elements.html')
+
+		await browser.visit(url)
 		await browser.wait(Until.elementIsVisible(By.id('new_user_first_name')))
-		let el1 = ensureDefined(await browser.switchTo().activeElement())
-		expect(await el1.getId()).toBe('new_user_first_name')
+
+		let el1 = await browser.switchTo().activeElement()
+		expect(el1).toBeDefined()
+		expect(el1).not.toBeNull()
+		expect(await el1!.getId()).toBe('new_user_first_name')
 	})
 
 	describe('Frame handling', () => {
@@ -91,7 +80,8 @@ describe('Browser', () => {
 
 		beforeEach(async () => {
 			browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
-			await browser.visit('http://localhost:1337/frames.html')
+			let url = await serve('frames.html')
+			await browser.visit(url)
 		})
 
 		test('can list all frames', async () => {
@@ -135,8 +125,10 @@ describe('Browser', () => {
 		})
 	})
 
-	describe.skip('timing', () => {
-		test('can inject polyfill for TTI', async () => {
+	describe('timing', () => {
+		test.todo('it receives timing data')
+
+		test.skip('can inject polyfill for TTI', async () => {
 			let browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
 			await browser.visit('https://www.google.com')
 
@@ -148,7 +140,8 @@ describe('Browser', () => {
 	describe('auto waiting', () => {
 		test('automatically applies a wait step to actions', async () => {
 			let browser = new Browser(workRoot, puppeteer, { ...DEFAULT_SETTINGS, waitUntil: 'visible' })
-			await browser.visit('http://localhost:1337/wait.html')
+			let url = await serve('wait.html')
+			await browser.visit(url)
 
 			await browser.click(By.id('add_select'))
 
@@ -159,7 +152,8 @@ describe('Browser', () => {
 
 		test('fails to return a visible link without waiting', async () => {
 			let browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
-			await browser.visit('http://localhost:1337/wait.html')
+			let url = await serve('wait.html')
+			await browser.visit(url)
 
 			await browser.click(By.id('add_select'))
 

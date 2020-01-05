@@ -35,9 +35,7 @@ export default class Observer {
 		this.networkRecorder.attachEvent('frameattached', event => this.onFrameAttached(event))
 		this.networkRecorder.attachEvent('domcontentloaded', event => this.onDOMContentLoaded(event))
 
-		this.networkRecorder.attachEvent('Page.frameScheduledNavigation', event =>
-			this.onNavigate(event),
-		)
+		this.networkRecorder.attachEvent('framenavigated', event => this.onNavigate(event))
 		this.networkRecorder.attachEvent('Page.frameStartedLoading', event =>
 			this.onFrameStartedLoading(event),
 		)
@@ -98,7 +96,10 @@ export default class Observer {
 					encodedDataLength,
 					timestamp,
 				})
-				.then(() => yeah(), err => nah(err))
+				.then(
+					() => yeah(),
+					err => nah(err),
+				)
 		})
 		this.networkRecorder.addPendingTask(promise)
 	}

@@ -1,9 +1,12 @@
 import Interceptor from './Interceptor'
-import { DogfoodServer } from '../../tests/support/fixture-server'
+import { serve } from '../../tests/support/fixture-server'
 import { launchPuppeteer, testPuppeteer } from '../../tests/support/launch-browser'
 import { Response, Page } from 'puppeteer'
+import { URL } from 'url'
 
 type InterceptedResponse = [Error[], Response | null]
+
+let url: string = ''
 
 const testIntercept = async (page: Page, domains: string[]): Promise<InterceptedResponse> => {
 	let intercept = new Interceptor(domains)
@@ -13,7 +16,7 @@ const testIntercept = async (page: Page, domains: string[]): Promise<Intercepted
 	let response = null
 
 	try {
-		response = await page.goto('http://localhost:1337/wait.html')
+		response = await page.goto(url)
 	} catch (err) {
 		errors.push(err)
 	}
@@ -26,15 +29,13 @@ const testIntercept = async (page: Page, domains: string[]): Promise<Intercepted
 describe('Network/Interceptor', () => {
 	jest.setTimeout(30e3)
 	beforeAll(async () => {
-		await dogfoodServer.start()
+		url = await serve('wait.html')
 		puppeteer = await launchPuppeteer()
 	})
 
-	let dogfoodServer = new DogfoodServer()
 	let puppeteer: testPuppeteer
 
 	afterAll(async () => {
-		await dogfoodServer.close()
 		await puppeteer.close()
 	})
 
@@ -52,15 +53,17 @@ describe('Network/Interceptor', () => {
 		let [errors, response] = await testIntercept(page, ['*host'])
 		expect(response).toBeNull()
 		expect(errors).toHaveLength(1)
-		expect(errors[0].message).toBe('net::ERR_FAILED at http://localhost:1337/wait.html')
+		expect(errors[0].message).toMatch(/net::ERR_FAILED at http\:\/\/(.+)\/wait.html/)
 	})
 
 	test('blocks requests on specific ports', async () => {
 		let { page } = puppeteer
 
-		let [errors, response] = await testIntercept(page, ['*:1337'])
+		let uri = new URL(url)
+
+		let [errors, response] = await testIntercept(page, [`*:${uri.port}`])
 		expect(response).toBeNull()
 		expect(errors).toHaveLength(1)
-		expect(errors[0].message).toBe('net::ERR_FAILED at http://localhost:1337/wait.html')
+		expect(errors[0].message).toMatch(/net::ERR_FAILED at http\:\/\/(.+)\/wait\.html/)
 	})
 })

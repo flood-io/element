@@ -1,11 +1,10 @@
 import { Page, ElementHandle } from 'puppeteer'
 import { launchPuppeteer, testPuppeteer } from '../../tests/support/launch-browser'
-import { DogfoodServer } from '../../tests/support/fixture-server'
+import { serve } from '../../tests/support/fixture-server'
 import { Browser } from '../runtime/Browser'
 import { testWorkRoot } from '../../tests/support/test-run-env'
 import { DEFAULT_SETTINGS } from '../runtime/Settings'
 
-let dogfoodServer = new DogfoodServer()
 let page: Page
 let puppeteer: testPuppeteer
 const workRoot = testWorkRoot()
@@ -34,17 +33,17 @@ describe('Mouse', () => {
 	jest.setTimeout(30e3)
 
 	beforeAll(async () => {
-		await dogfoodServer.start()
 		puppeteer = await launchPuppeteer()
 		page = puppeteer.page
 
 		browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
-		await browser.visit('http://localhost:1337/drag_and_drop.html')
+
+		let url = await serve('drag_and_drop.html')
+		await browser.visit(url)
 	})
 
 	afterAll(async () => {
 		await puppeteer.close()
-		await dogfoodServer.close()
 	})
 
 	test('can move mouse', async () => {

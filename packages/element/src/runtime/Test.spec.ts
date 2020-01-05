@@ -1,4 +1,4 @@
-import { DogfoodServer } from '../../tests/support/fixture-server'
+import { serve } from '../../tests/support/fixture-server'
 import testRunEnv from '../../tests/support/test-run-env'
 import { launchPuppeteer, testPuppeteer } from '../../tests/support/launch-browser'
 import Test from './Test'
@@ -6,17 +6,25 @@ import { EvaluatedScript } from './EvaluatedScript'
 import { join } from 'path'
 import { EventEmitterReporter } from '../reporter/EventEmitter'
 import { ConcreteTestSettings } from './Settings'
+import { readFileSync, writeFileSync } from 'fs-extra'
+import { tmpdir } from 'os'
 
-let dogfoodServer = new DogfoodServer()
 let puppeteer: testPuppeteer
 let testReporter: EventEmitterReporter = new EventEmitterReporter()
 const runEnv = testRunEnv()
 
 const setupTest = async (scriptName: string) => {
-	const script = await EvaluatedScript.mustCompileFile(
-		join(__dirname, '../../tests/fixtures', scriptName),
-		runEnv,
-	)
+	let url = await serve('wait.html')
+
+	let testScriptFile = readFileSync(join(__dirname, '../../tests/fixtures', scriptName), {
+		encoding: 'utf8',
+	})
+
+	testScriptFile = testScriptFile.replace('<URL>', url)
+	let tmpFile = join(tmpdir(), 'test-script.ts')
+	writeFileSync(tmpFile, testScriptFile)
+
+	const script = await EvaluatedScript.mustCompileFile(tmpFile, runEnv)
 
 	const test = new Test(puppeteer, script, testReporter, {})
 
@@ -33,14 +41,6 @@ describe('Test', () => {
 
 	afterEach(async () => {
 		await puppeteer.close()
-	})
-
-	beforeAll(async () => {
-		await dogfoodServer.start()
-	})
-
-	afterAll(async () => {
-		await dogfoodServer.close()
 	})
 
 	test('extracts settings during evaluation', async () => {

@@ -1,5 +1,5 @@
 import { sum, mean } from 'd3-array'
-import { ResourceType, Page as PuppeteerPage, PageEvents } from 'puppeteer'
+import { ResourceType, Page as PuppeteerPage, PageEventObj } from 'puppeteer'
 import { Entry, RawResponse, EntryRequest, Page, EntryResponse } from './Protocol'
 import { AsyncQueue } from '../utils/AsyncQueue'
 import { Manager } from './Manager'
@@ -17,6 +17,8 @@ function justNumber(value: number | undefined, defaultValue: number): number {
 		return value
 	}
 }
+
+type PageEvents = keyof PageEventObj
 
 export default class Recorder {
 	public entries: Entry[]

@@ -3,7 +3,6 @@
 	"version": "0.0.0",
 	"description": "flood element test script",
 	"dependencies": {
-		"@flood/element": "^1.0.3-48",
-		"prettier": "^1.10.2"
+		"@flood/element": "^1.0.3-48"
 	}
 }

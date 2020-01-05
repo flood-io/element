@@ -16,7 +16,10 @@
 		"esModuleInterop": true,
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
-		"outDir": "dist"
+		"baseUrl": "./packages",
+		"paths": {
+			"@flood/*": ["./*/src"]
+		}
 	},
 	"typeAcquisition": { "enable": true },
 	"exclude": ["dist", "lib", "*.spec.ts"]

@@ -12,8 +12,5 @@
 	"scripts": {
 		"smoke": "ts-node ./smoke.ts"
 	},
-	"devDependencies": {
-		"ts-node": "^6.1.1",
-		"typescript": "^3.0.3"
-	}
+	"devDependencies": {}
 }

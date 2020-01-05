@@ -24,8 +24,7 @@ export class Compiler {
 
 		return new Promise((yeah, nah) => {
 			compiler.run((err, stats) => {
-				let formattedStats = stats.toString()
-				console.log(formattedStats)
+				// let formattedStats = stats.toString()
 
 				if (stats.hasErrors() || stats.hasWarnings()) {
 					return nah(
@@ -58,7 +57,7 @@ export class Compiler {
 
 		return {
 			entry: this.sourceFile,
-			mode: 'development',
+			mode: this.productionMode ? 'production' : 'development',
 			devtool: 'cheap-module-eval-source-map',
 			output: {
 				path: '/',
@@ -77,7 +76,7 @@ export class Compiler {
 
 			plugins: [
 				new WebpackBar({
-					reporters: ['fancy'],
+					// reporters: ['fancy'],
 				}),
 			],
 

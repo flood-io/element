@@ -8,19 +8,14 @@
 		"prebuild": "rm -rf dist",
 		"build": "tsc",
 		"postbuild": "sed 's/src/dist\\/src/g' dist/index.js > index.tmp && mv index.tmp dist/index.js",
-		"prepublish": "in-publish && yarn build || not-in-publish"
+		"prepublishOnly": "yarn build"
 	},
 	"dependencies": {
 		"@flood/element": "^1.0.10-beta.21"
 	},
 	"devDependencies": {
 		"@types/node": "12.7.4",
-		"@zeit/ncc": "^0.20.4",
-		"in-publish": "^2.0.0",
-		"ts-loader": "^6.0.4",
-		"typescript": "^3.6.2",
-		"webpack": "^4.39.3",
-		"webpack-cli": "^3.3.8"
+		"@zeit/ncc": "^0.20.4"
 	},
 	"author": "Ivan Vanderbyl <ivanvanderbyl@gmail.com>",
 	"homepage": "https://element.flood.io",

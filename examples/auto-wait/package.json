@@ -1,0 +1,9 @@
+{
+  "name": "auto-wait",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@flood/element": "^1.0.8-stable.1"
+  }
+}

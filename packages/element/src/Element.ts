@@ -31,11 +31,11 @@ export interface ElementOptions {
 export function runUntilExit(fn: () => Promise<void>) {
 	fn()
 		.then(() => {
-			console.log('process exited')
+			console.log('Element finished successfully')
 			process.exit(0)
 		})
 		.catch(err => {
-			console.log('process exited - with error')
+			console.log('Element exited with error')
 			console.error(err)
 			process.exit(1)
 		})

@@ -19,27 +19,27 @@ export default function() {
 	})
 
 	step('By.linkText', async driver => {
-		await driver.visit('http://localhost:1337/wait.html')
+		await driver.visit('<URL>')
 		await driver.findElement(By.linkText('show bar'))
 	})
 
 	step('By.linkText many', async driver => {
-		await driver.visit('http://localhost:1337/wait.html')
+		await driver.visit('<URL>')
 		await driver.findElements(By.linkText('show bar'))
 	})
 
 	step('By.partialLinkText', async driver => {
-		await driver.visit('http://localhost:1337/wait.html')
+		await driver.visit('<URL>')
 		await driver.findElement(By.partialLinkText('show'))
 	})
 
 	step('By.css', async driver => {
-		await driver.visit('http://localhost:1337/wait.html')
+		await driver.visit('<URL>')
 		await driver.findElement(By.css('body a[href]'))
 	})
 
 	step('elementIsVisible', async driver => {
-		await driver.visit('http://localhost:1337/wait.html')
+		await driver.visit('<URL>')
 		let link = await driver.findElement(By.linkText('show bar'))
 		await link.click()
 		await driver.wait(Until.elementIsVisible('#foo'))

@@ -13,7 +13,7 @@ export const settings: TestSettings = {
 
 export default () => {
 	step('Dogfood Test Step', async (driver: Driver) => {
-		await driver.visit('http://localhost:1337/wait.html')
+		await driver.visit('<URL>')
 		let linkText = By.linkText('show bar')
 		let link = await driver.findElement(linkText)
 		await link.click()

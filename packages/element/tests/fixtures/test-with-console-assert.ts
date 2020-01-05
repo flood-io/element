@@ -14,7 +14,7 @@ export const settings: TestSettings = {
  */
 export default function() {
 	step('console.assert', async driver => {
-		await driver.visit('http://localhost:1337/wait.html')
+		await driver.visit('<URL>')
 		let link = await driver.findElement(By.linkText('show bar'))
 		await link.click()
 		await driver.wait(Until.elementIsVisible('#foo'))

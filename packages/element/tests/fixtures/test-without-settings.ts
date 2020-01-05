@@ -1,4 +1,4 @@
-import { step, TestSettings } from '@flood/element'
+import { TestSettings } from '@flood/element'
 
 export const settings: TestSettings = {}
 

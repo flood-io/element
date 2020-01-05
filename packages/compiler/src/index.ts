@@ -1,11 +1,9 @@
 import webpack, { Configuration as WebpackConfig, Stats } from 'webpack'
-import { CompilerOptions } from 'typescript'
+import { CompilerOptions, sys } from 'typescript'
 import { resolve, dirname, join } from 'path'
-// import forkTSCheckerPlugin from 'fork-ts-checker-webpack-plugin'
-// import tsLoader, { Options } from 'ts-loader'
 import MemoryFileSystem from 'memory-fs'
-// import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin'
 import WebpackBar from 'webpackbar'
+import findRoot from 'find-root'
 
 export interface CompilerOutput {
 	content: string
@@ -89,7 +87,7 @@ export class Compiler {
 							loader,
 							options: {
 								context: resolve(dirname(this.sourceFile)),
-								configFile: 'tsconfig.json',
+								configFile: this.configFilePath,
 								onlyCompileBundledFiles: true,
 								reportFiles: [this.sourceFile],
 								transpileOnly: this.productionMode,
@@ -102,5 +100,15 @@ export class Compiler {
 
 			externals: ['@flood/element', '@flood/element-api'],
 		}
+	}
+
+	private get configFilePath(): string {
+		let configFile = 'tsconfig.json'
+		let root = findRoot(__dirname)
+		let paths = [resolve(dirname(this.sourceFile)), resolve(root, 'compiler-home')]
+
+		let localConfig = paths.map(path => join(path, configFile)).find(path => sys.fileExists(path))
+
+		return localConfig || configFile
 	}
 }

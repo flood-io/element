@@ -81,16 +81,16 @@ export class EvaluatedScript implements TestScriptErrorMapper, IEvaluatedScript 
 	}
 
 	public isScriptError(error: Error): boolean {
-		return this.script.isScriptError?.apply(this,error) ?? false
+		return this.script.isScriptError?.apply(this, error) ?? false
 	}
 	public maybeLiftError(error: Error): Error {
-		return this.script?.maybeLiftError?.apply(this,error) ?? false
+		return this.script?.maybeLiftError?.apply(this, error) ?? false
 	}
 	public liftError(error: Error): TestScriptError {
-		return this.script?.liftError?.apply(this,error)
+		return this.script?.liftError?.apply(this, error)
 	}
 	public filterAndUnmapStack(stack: string | Error | undefined): string[] {
-		return this.script?.filterAndUnmapStack?.apply(this,stack)
+		return this.script?.filterAndUnmapStack?.apply(this, stack)
 	}
 
 	public bindTest(test: Test): void {

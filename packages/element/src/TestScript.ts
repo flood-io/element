@@ -1,8 +1,11 @@
-import ts from 'typescript'
-import { TypeScriptTestScript } from './test-script/Compiler'
+// import ts from 'typescript'
+// import { TypeScriptTestScript } from './test-script/Compiler'
 import { Callsite, callsiteToString } from './test-script/SourceUnmapper'
 import WebpackCompiler from './test-script/WebpackCompiler'
 import { ITestScript } from './ITestScript'
+import { join } from 'path'
+import { tmpdir } from 'os'
+import { writeFileSync } from 'fs-extra'
 
 function originalError(e: Error): Error {
 	if ((e as errorWithOriginalError).originalError !== undefined) {
@@ -129,10 +132,10 @@ export const TestScriptDefaultOptions: TestScriptOptions = {
 }
 
 export interface TestScriptErrorMapper {
-	isScriptError(error: Error): boolean
-	liftError(error: Error): TestScriptError
-	maybeLiftError(error: Error): Error
-	filterAndUnmapStack(stack: string | Error | undefined): string[]
+	isScriptError?(error: Error): boolean
+	liftError?(error: Error): TestScriptError
+	maybeLiftError?(error: Error): Error
+	filterAndUnmapStack?(stack: string | Error | undefined): string[]
 }
 
 export async function compileString(
@@ -140,14 +143,18 @@ export async function compileString(
 	filename: string,
 	testScriptOptions?: TestScriptOptions,
 ): Promise<ITestScript> {
-	return new TypeScriptTestScript(source, filename, testScriptOptions).compile()
+	let tmpFile = join(tmpdir(), filename ?? 'flood-element-test-script.ts')
+	writeFileSync(tmpFile, Buffer.from(source), { encoding: 'utf8' })
+	return new WebpackCompiler(tmpFile, testScriptOptions).compile()
+
+	// return new TypeScriptTestScript(source, filename, testScriptOptions).compile()
 }
 
 export async function compileFile(
 	filename: string,
 	testScriptOptions?: TestScriptOptions,
 ): Promise<ITestScript | undefined> {
-	return new WebpackCompiler(filename, testScriptOptions)
+	return new WebpackCompiler(filename, testScriptOptions).compile()
 
 	// const fileContent = ts.sys.readFile(filename)
 	// if (fileContent == null) {

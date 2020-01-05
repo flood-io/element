@@ -21,7 +21,7 @@ function liftWithDoc(
 	callContext?: string,
 ): TestScriptError {
 	// TODO get callContext from og error if it exists
-	return script.liftError(DocumentedError.documented(error, message, doc, callContext))
+	return script.liftError?.apply(this, DocumentedError.documented(error, message, doc, callContext))
 }
 
 const documentationNeeded =
@@ -42,15 +42,21 @@ export function structuredErrorToDocumentedError(
 	// delegate out to the various type handlers
 	switch (sErr.data._kind) {
 		case 'assertion':
-			return script.liftError(assertionError(<StructuredError<AssertionErrorData>>sErr))
+			return script.liftError?.apply(
+				this,
+				assertionError(<StructuredError<AssertionErrorData>>sErr),
+			)
 		case 'net':
-			return script.liftError(netError(<StructuredError<NetworkErrorData>>sErr))
+			return script.liftError?.apply(this, netError(<StructuredError<NetworkErrorData>>sErr))
 		case 'action':
-			return script.liftError(actionError(<StructuredError<ActionErrorData>>sErr))
+			return script.liftError?.apply(this, actionError(<StructuredError<ActionErrorData>>sErr))
 		case 'locator':
-			return script.liftError(locatorError(<StructuredError<LocatorErrorData>>sErr))
+			return script.liftError?.apply(this, locatorError(<StructuredError<LocatorErrorData>>sErr))
 		case 'puppeteer':
-			return script.liftError(puppeteerError(<StructuredError<PuppeteerErrorData>>sErr))
+			return script.liftError?.apply(
+				this,
+				puppeteerError(<StructuredError<PuppeteerErrorData>>sErr),
+			)
 	}
 
 	// nothing else worked
@@ -155,9 +161,7 @@ This may be due to
 		return DocumentedError.documented(
 			err,
 			`Unable to visit ${url}`,
-			`Element tried to visit The URL ${url} but it responded with status code ${
-				err.data.code
-			}. Element expected a response code 200-299 or 300-399.`,
+			`Element tried to visit The URL ${url} but it responded with status code ${err.data.code}. Element expected a response code 200-299 or 300-399.`,
 		)
 	}
 

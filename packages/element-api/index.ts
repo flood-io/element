@@ -15,16 +15,15 @@ export { runCommandLine, runUntilExit, ElementOptions } from '@flood/element/src
 export { TestSettings, ResponseTiming } from '@flood/element/src/runtime/Settings'
 export { RuntimeEnvironment, FloodProcessEnv } from '@flood/element/src/runtime-environment/types'
 import WorkRoot from '@flood/element/src/runtime-environment/WorkRoot'
-export {
-	nullRuntimeEnvironment,
-} from '@flood/element/src/runtime-environment/NullRuntimeEnvironment'
+export { nullRuntimeEnvironment } from '@flood/element/src/runtime-environment/NullRuntimeEnvironment'
 import { launch, PuppeteerClient } from '@flood/element/src/driver/Puppeteer'
 
 export { TestCommander } from '@flood/element/src/Runner'
 
 export { WorkRoot, PuppeteerClient, launch }
 
-export { TestScriptError, ITestScript, TestScriptOptions } from '@flood/element/src/TestScript'
+export { TestScriptError, TestScriptOptions } from '@flood/element/src/TestScript'
+export { ITestScript } from '@flood/element/src/ITestScript'
 export { EvaluatedScript, IEvaluatedScript } from '@flood/element/src/runtime/EvaluatedScript'
 
 export { expect } from '@flood/element/src/utils/Expect'

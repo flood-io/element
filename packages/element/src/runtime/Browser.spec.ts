@@ -1,7 +1,3 @@
-import Sinon from 'sinon'
-import SinonChai from 'sinon-chai'
-import { expect, use } from 'chai'
-import 'mocha'
 import { DogfoodServer } from '../../tests/support/fixture-server'
 import { testWorkRoot } from '../../tests/support/test-run-env'
 import { launchPuppeteer, testPuppeteer } from '../../tests/support/launch-browser'
@@ -10,8 +6,6 @@ import { Until } from '../page/Until'
 import { By } from '../page/By'
 import { DEFAULT_SETTINGS } from './Settings'
 let dogfoodServer = new DogfoodServer()
-
-use(SinonChai)
 
 let puppeteer: testPuppeteer
 const workRoot = testWorkRoot()
@@ -24,9 +18,9 @@ function ensureDefined<T>(value: T | undefined | null): T | never {
 	}
 }
 
-describe('Browser', function() {
-	this.timeout(30e3)
-	before(async () => {
+describe('Browser', () => {
+	jest.setTimeout(30e3)
+	beforeAll(async () => {
 		await dogfoodServer.start()
 		puppeteer = await launchPuppeteer()
 
@@ -35,14 +29,14 @@ describe('Browser', function() {
 		)
 	})
 
-	after(async () => {
+	afterAll(async () => {
 		await dogfoodServer.close()
 		await puppeteer.close()
 	})
 
-	it('fires callbacks on action command calls', async () => {
-		let beforeSpy = Sinon.spy()
-		let afterSpy = Sinon.spy()
+	test('fires callbacks on action command calls', async () => {
+		let beforeSpy = jest.fn()
+		let afterSpy = jest.fn()
 
 		let browser = new Browser(
 			workRoot,
@@ -57,12 +51,12 @@ describe('Browser', function() {
 		)
 		await browser.visit('http://localhost:1337/forms_with_input_elements.html')
 
-		expect(beforeSpy).to.have.been.calledWith('visit')
-		expect(afterSpy).to.have.been.calledWith('visit')
+		expect(beforeSpy).toHaveBeenCalledWith('visit')
+		expect(afterSpy).toHaveBeenCalledWith('visit')
 	})
 
-	it('throws an error', async () => {
-		let noErrorSpy = Sinon.spy()
+	test('throws an error', async () => {
+		let noErrorSpy = jest.fn()
 
 		let browser = new Browser(
 			workRoot,
@@ -80,16 +74,16 @@ describe('Browser', function() {
 		} catch (e) {
 			caughtError = e
 		}
-		expect(noErrorSpy).to.not.have.been.called
-		expect(ensureDefined(caughtError)).to.be.an('error')
+		expect(noErrorSpy).not.toHaveBeenCalled()
+		expect(ensureDefined(caughtError)).toBeInstanceOf('error')
 	})
 
-	it('returns active element', async () => {
+	test('returns active element', async () => {
 		let browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
 		await browser.visit('http://localhost:1337/forms_with_input_elements.html')
 		await browser.wait(Until.elementIsVisible(By.id('new_user_first_name')))
 		let el1 = ensureDefined(await browser.switchTo().activeElement())
-		expect(await el1.getId()).to.equal('new_user_first_name')
+		expect(await el1.getId()).toBe('new_user_first_name')
 	})
 
 	describe('Frame handling', () => {
@@ -100,59 +94,59 @@ describe('Browser', function() {
 			await browser.visit('http://localhost:1337/frames.html')
 		})
 
-		it('can list all frames', async () => {
+		test('can list all frames', async () => {
 			let frames = browser.frames
-			expect(frames).to.have.lengthOf(3)
-			expect(frames.map(f => f.name())).to.deep.equal(['', 'frame1', 'frame2'])
+			expect(frames).toHaveLength(3)
+			expect(frames.map(f => f.name())).toEqual(['', 'frame1', 'frame2'])
 		})
 
-		it('can switch frame by index', async () => {
+		test('can switch frame by index', async () => {
 			await browser.switchTo().frame(0)
-			expect(browser.target.name()).to.equal('frame1')
+			expect(browser.target.name()).toBe('frame1')
 			await browser.switchTo().frame(1)
-			expect(browser.target.name()).to.equal('frame2')
+			expect(browser.target.name()).toBe('frame2')
 			await browser.switchTo().defaultContent()
-			expect(browser.target.name()).to.equal('')
+			expect(browser.target.name()).toBe('')
 		})
 
-		it('can switch frame by name', async () => {
+		test('can switch frame by name', async () => {
 			await browser.switchTo().frame('frame1')
-			expect(browser.target.name()).to.equal('frame1')
+			expect(browser.target.name()).toBe('frame1')
 			await browser.switchTo().frame('frame2')
-			expect(browser.target.name()).to.equal('frame2')
+			expect(browser.target.name()).toBe('frame2')
 			await browser.switchTo().defaultContent()
-			expect(browser.target.name()).to.equal('')
+			expect(browser.target.name()).toBe('')
 		})
 
-		it('can switch frame using ElementHandle', async () => {
+		test('can switch frame using ElementHandle', async () => {
 			let frame = await browser.findElement('frame[name="frame1"]')
 			await browser.switchTo().frame(frame)
-			expect(browser.target.name()).to.equal('frame1')
+			expect(browser.target.name()).toBe('frame1')
 		})
 
-		it('can interact with another frame', async () => {
+		test('can interact with another frame', async () => {
 			await browser.switchTo().frame('frame1')
-			expect(browser.target.name()).to.equal('frame1')
+			expect(browser.target.name()).toBe('frame1')
 
 			let input = await browser.findElement('input[name="senderElement"]')
 			await input.clear()
 			await input.type('Hello World')
-			expect(await input.getProperty('value')).to.equal('Hello World')
+			expect(await input.getProperty('value')).toBe('Hello World')
 		})
 	})
 
 	describe.skip('timing', () => {
-		it('can inject polyfill for TTI', async () => {
+		test('can inject polyfill for TTI', async () => {
 			let browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
 			await browser.visit('https://www.google.com')
 
 			let result = await browser.interactionTiming()
-			expect(result).to.be.greaterThan(10)
+			expect(result).toBeGreaterThan(10)
 		})
 	})
 
 	describe('auto waiting', () => {
-		it('automatically applies a wait step to actions', async () => {
+		test('automatically applies a wait step to actions', async () => {
 			let browser = new Browser(workRoot, puppeteer, { ...DEFAULT_SETTINGS, waitUntil: 'visible' })
 			await browser.visit('http://localhost:1337/wait.html')
 
@@ -160,10 +154,10 @@ describe('Browser', function() {
 
 			let link = await browser.findElement(By.id('languages'))
 			let linkIsVisible = await link.isDisplayed()
-			expect(linkIsVisible).to.be.true
+			expect(linkIsVisible).toBe(true)
 		})
 
-		it('fails to return a visible link without waiting', async () => {
+		test('fails to return a visible link without waiting', async () => {
 			let browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
 			await browser.visit('http://localhost:1337/wait.html')
 
@@ -171,7 +165,7 @@ describe('Browser', function() {
 
 			let selectTag = await browser.findElement(By.id('languages'))
 			let selectTagIsVisible = await selectTag.isDisplayed()
-			expect(selectTagIsVisible).to.be.false
+			expect(selectTagIsVisible).toBe(false)
 		})
 	})
 })

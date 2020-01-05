@@ -1,5 +1,3 @@
-import { expect } from 'chai'
-import 'mocha'
 import { DogfoodServer } from '../../../tests/support/fixture-server'
 import { launchPuppeteer, testPuppeteer } from '../../../tests/support/launch-browser'
 import { Page } from 'puppeteer'
@@ -9,16 +7,16 @@ let dogfoodServer = new DogfoodServer()
 
 let page: Page, puppeteer: testPuppeteer
 
-describe('Condition', function() {
-	this.timeout(30e3)
+describe('Condition', () => {
+	jest.setTimeout(30e3)
 	describe('TitleCondition', () => {
-		before(async () => {
+		beforeAll(async () => {
 			await dogfoodServer.start()
 			puppeteer = await launchPuppeteer()
 			page = puppeteer.page
 		})
 
-		after(async () => {
+		afterAll(async () => {
 			await dogfoodServer.close()
 			await puppeteer.close()
 		})
@@ -27,7 +25,7 @@ describe('Condition', function() {
 			await page.goto('http://localhost:1337/wait.html')
 		})
 
-		it('waits Until.titleIs', async () => {
+		test('waits Until.titleIs', async () => {
 			let condition = Until.titleIs('another title')
 
 			await page.evaluate(() => {
@@ -40,10 +38,10 @@ describe('Condition', function() {
 			})
 
 			let result = await condition.waitFor(page.mainFrame())
-			expect(result).to.equal(true)
+			expect(result).toBe(true)
 		})
 
-		it('waits Until.titleContains', async () => {
+		test('waits Until.titleContains', async () => {
 			let condition = Until.titleContains('another title')
 
 			await page.evaluate(() => {
@@ -56,10 +54,10 @@ describe('Condition', function() {
 			})
 
 			let result = await condition.waitFor(page.mainFrame())
-			expect(result).to.equal(true)
+			expect(result).toBe(true)
 		})
 
-		it('waits Until.titleMatches', async () => {
+		test('waits Until.titleMatches', async () => {
 			let condition = Until.titleMatches(/^another/)
 
 			await page.evaluate(() => {
@@ -72,7 +70,7 @@ describe('Condition', function() {
 			})
 
 			let result = await condition.waitFor(page.mainFrame())
-			expect(result).to.equal(true)
+			expect(result).toBe(true)
 		})
 	})
 })

@@ -1,14 +1,12 @@
-import { expect } from 'chai'
-import 'mocha'
 import { ObjectTrace } from './ObjectTrace'
 import { testWorkRoot } from '../../tests/support/test-run-env'
 
 const workRoot = testWorkRoot()
 
 describe('ObjectTrace', () => {
-	it('serializes a trace of multiple resources', async () => {
+	test('serializes a trace of multiple resources', async () => {
 		let objectTrace = new ObjectTrace(workRoot, 'Test Label')
-		expect(objectTrace.isEmpty).to.be.true
+		expect(objectTrace.isEmpty).toBe(true)
 
 		objectTrace.addAssertion({
 			assertionName: 'Assert',
@@ -24,7 +22,7 @@ describe('ObjectTrace', () => {
 			.join('\n')
 		objectTrace.addError(err)
 
-		expect(objectTrace.isEmpty).to.be.false
+		expect(objectTrace.isEmpty).toBe(false)
 
 		await objectTrace.addNetworkTrace({
 			label: 'Test Label',
@@ -39,7 +37,7 @@ describe('ObjectTrace', () => {
 
 		objectTrace.addScreenshot('tmp/data/flood/screenshots/screenshot.png')
 		let obj = objectTrace.toObject()
-		expect(obj.assertions).to.deep.equal([
+		expect(obj.assertions).toEqual([
 			{
 				assertionName: 'Assert',
 				isFailure: false,
@@ -48,16 +46,16 @@ describe('ObjectTrace', () => {
 			},
 		])
 
-		expect(obj.errors).to.deep.equal([
+		expect(obj.errors).toEqual([
 			{
 				message: 'This is an Error',
 				stack: 'Error: This is an Error',
 			},
 		])
 
-		expect(obj.label).to.deep.equal('Test Label')
-		expect(obj.objectTypes).to.deep.equal(['screenshot', 'trace'])
-		expect(obj.objects[0]).to.equal('tmp/data/flood/screenshots/screenshot.png')
-		expect(obj.objects[1]).to.match(/flood\/network\/(.+)\.json/)
+		expect(obj.label).toEqual('Test Label')
+		expect(obj.objectTypes).toEqual(['screenshot', 'trace'])
+		expect(obj.objects[0]).toBe('tmp/data/flood/screenshots/screenshot.png')
+		expect(obj.objects[1]).toMatch(/flood\/network\/(.+)\.json/)
 	})
 })

@@ -1,6 +1,4 @@
 import { ElementHandle } from './ElementHandle'
-import { expect } from 'chai'
-import 'mocha'
 import { DogfoodServer } from '../../tests/support/fixture-server'
 import { ElementHandle as PElementHandle } from 'puppeteer'
 import { launchPuppeteer, testPuppeteer } from '../../tests/support/launch-browser'
@@ -20,9 +18,9 @@ async function locateEl(selector: string): Promise<PElementHandle | never> {
 	}
 }
 
-describe('ElementHandle', function() {
-	this.timeout(30e3)
-	before(async () => {
+describe('ElementHandle', () => {
+	jest.setTimeout(30e3)
+	beforeAll(async () => {
 		await dogfoodServer.start()
 
 		puppeteer = await launchPuppeteer()
@@ -36,7 +34,7 @@ describe('ElementHandle', function() {
 		})
 	})
 
-	after(async () => {
+	afterAll(async () => {
 		await dogfoodServer.close()
 		await puppeteer.close()
 	})
@@ -45,85 +43,87 @@ describe('ElementHandle', function() {
 		await puppeteer.page.goto('http://localhost:1337/wait.html', { waitUntil: 'domcontentloaded' })
 	})
 
-	it('getAttribute(id)', async () => {
+	test('getAttribute(id)', async () => {
 		const handle = await locateEl('a#show_bar')
 		let element = await new ElementHandle(handle)
-		expect(await element.getAttribute('id')).to.deep.equal('show_bar')
+		expect(await element.getAttribute('id')).toEqual('show_bar')
 		await handle.dispose()
 	})
 
-	it('getAttribute(href)', async () => {
+	test('getAttribute(href)', async () => {
 		const handle = await locateEl('a#show_bar')
 		let element = await new ElementHandle(handle)
-		expect(await element.getAttribute('href')).to.deep.equal('#')
+		expect(await element.getAttribute('href')).toEqual('#')
 		await handle.dispose()
 	})
 
-	it('tagName()', async () => {
+	test('tagName()', async () => {
 		const handle = await locateEl('a#show_bar')
 		let element = await new ElementHandle(handle)
-		expect(await element.tagName()).to.equal('A')
+		expect(await element.tagName()).toBe('A')
 		await handle.dispose()
 	})
 
-	it('getId()', async () => {
+	test('getId()', async () => {
 		const handle = await locateEl('a#show_bar')
 		let element = await new ElementHandle(handle)
-		expect(await element.getId()).to.equal('show_bar')
+		expect(await element.getId()).toBe('show_bar')
 		await handle.dispose()
 	})
 
-	it('isSelected()', async () => {
+	test('isSelected()', async () => {
 		const handle = await locateEl('#languages option')
 		let element = await new ElementHandle(handle)
-		expect(await element.isSelected()).to.equal(true)
+		expect(await element.isSelected()).toBe(true)
 		await handle.dispose()
 	})
 
-	it('isSelectable()', async () => {
+	test('isSelectable()', async () => {
 		const handle = await locateEl('#languages option')
 		let element = await new ElementHandle(handle)
-		expect(await element.isSelectable()).to.equal(true)
+		expect(await element.isSelectable()).toBe(true)
 		await handle.dispose()
 	})
 
-	it('text()', async () => {
+	test('text()', async () => {
 		const handle = await locateEl('a#show_bar')
 		let element = await new ElementHandle(handle)
-		expect(await element.text()).to.equal('show bar')
+		expect(await element.text()).toBe('show bar')
 		await handle.dispose()
 	})
 
-	it('size()', async () => {
+	test('size()', async () => {
+        const handle = await locateEl('a#show_bar')
+        let element = await new ElementHandle(handle)
+        expect((await element.size()).width).toBeGreaterThanOrEqual(57);
+        expect((await element.size()).width).toBeLessThanOrEqual(60)
+        expect((await element.size()).height).toBeGreaterThanOrEqual(15);
+        expect((await element.size()).height).toBeLessThanOrEqual(20)
+        await handle.dispose()
+    })
+
+	test('location()', async () => {
 		const handle = await locateEl('a#show_bar')
 		let element = await new ElementHandle(handle)
-		expect((await element.size()).width).to.be.within(57, 60)
-		expect((await element.size()).height).to.be.within(15, 20)
+		expect(await element.location()).toEqual({ x: 8, y: 26 })
 		await handle.dispose()
 	})
 
-	it('location()', async () => {
+	test('centerPoint()', async () => {
 		const handle = await locateEl('a#show_bar')
 		let element = await new ElementHandle(handle)
-		expect(await element.location()).to.deep.equal({ x: 8, y: 26 })
+		expect(await element.centerPoint()).toEqual([37, 35])
 		await handle.dispose()
 	})
 
-	it('centerPoint()', async () => {
-		const handle = await locateEl('a#show_bar')
-		let element = await new ElementHandle(handle)
-		expect(await element.centerPoint()).to.deep.equal([37, 35])
-		await handle.dispose()
-	})
-
-	it('click()', async () => {
+	test('click()', async () => {
 		const handle = await locateEl('a#show_bar')
 		let element = await new ElementHandle(handle)
 		await element.click()
 		await handle.dispose()
 	})
 
-	it('clear() input', async () => {
+	test('clear() input', async () => {
 		await puppeteer.page.goto('http://localhost:1337/forms_with_input_elements.html')
 		const handle: PElementHandle = await locateEl('input[name="new_user_first_name"]')
 		let element = await new ElementHandle(handle)
@@ -133,53 +133,53 @@ describe('ElementHandle', function() {
 		let value = await handle
 			.executionContext()
 			.evaluate((element: HTMLInputElement) => element.value, handle)
-		expect(value).to.equal('user@example.com')
+		expect(value).toBe('user@example.com')
 
 		await element.clear()
 
 		value = await handle
 			.executionContext()
 			.evaluate((element: HTMLInputElement) => element.value, handle)
-		expect(value).to.equal('')
+		expect(value).toBe('')
 		await handle.dispose()
 	})
 
-	it('clear() select', async () => {
+	test('clear() select', async () => {
 		const handle: PElementHandle = await locateEl('select')
 		let element = await new ElementHandle(handle)
 		let value = await handle
 			.executionContext()
 			.evaluate((element: HTMLInputElement) => element.value, handle)
-		expect(value).to.equal('3')
+		expect(value).toBe('3')
 
 		await element.clear()
 
 		value = await handle
 			.executionContext()
 			.evaluate((element: HTMLInputElement) => element.value, handle)
-		expect(value).to.equal('')
+		expect(value).toBe('')
 		await handle.dispose()
 	})
 
-	it('isDisplayed()', async () => {
+	test('isDisplayed()', async () => {
 		const handle: PElementHandle = await locateEl('#bar')
 		let element = await new ElementHandle(handle)
 
-		expect(await element.isDisplayed()).to.be.false
+		expect(await element.isDisplayed()).toBe(false)
 
 		await puppeteer.page.click('#show_bar')
 		await puppeteer.page.waitForSelector('#bar', { visible: true, timeout: 5e3 })
 
-		expect(await element.isDisplayed()).to.be.true
+		expect(await element.isDisplayed()).toBe(true)
 
 		await handle.dispose()
 	})
 
-	it('isEnabled()', async () => {
+	test('isEnabled()', async () => {
 		const handle: PElementHandle = await locateEl('#btn')
 		let element = await new ElementHandle(handle)
 
-		expect(await element.isEnabled()).to.be.false
+		expect(await element.isEnabled()).toBe(false)
 
 		await puppeteer.page.click('#enable_btn')
 		await puppeteer.page.waitForFunction(
@@ -191,40 +191,40 @@ describe('ElementHandle', function() {
 			'#btn',
 		)
 
-		expect(await element.isEnabled()).to.be.true
+		expect(await element.isEnabled()).toBe(true)
 
 		await handle.dispose()
 	})
 
-	it('findElement()', async () => {
+	test('findElement()', async () => {
 		await puppeteer.page.goto('http://localhost:1337/forms_with_input_elements.html')
 		const handle: PElementHandle = await locateEl('form')
 		let element = await new ElementHandle(handle)
 		let element2 = await element.findElement('input[name="new_user_first_name"]')
 		let element3 = await element.findElement('h2')
 
-		expect(element2).to.not.be.null
-		expect(element3).to.be.null
+		expect(element2).not.toBeNull()
+		expect(element3).toBeNull()
 
 		if (element2 !== null) {
-			expect(await element2.getId()).to.equal('new_user_first_name')
+			expect(await element2.getId()).toBe('new_user_first_name')
 		}
 	})
 
-	it('findElements()', async () => {
+	test('findElements()', async () => {
 		await puppeteer.page.goto('http://localhost:1337/forms_with_input_elements.html')
 		const handle: PElementHandle = await locateEl('form')
 		let element = await new ElementHandle(handle)
 		let elementsList1 = await element.findElements('input')
 		let elementsList2 = await element.findElements('h2')
-		expect(elementsList1.length).to.equal(45)
-		expect(elementsList2.length).to.equal(0)
+		expect(elementsList1.length).toBe(45)
+		expect(elementsList2.length).toBe(0)
 
 		let displayedElements = await Promise.all(
 			elementsList1.map((e, index) => e.isDisplayed()),
 		).then(result => elementsList1.filter((element, index) => result[index]))
 
-		expect(displayedElements.length).to.equal(43)
+		expect(displayedElements.length).toBe(43)
 	})
 
 	describe('uploadFile', () => {
@@ -238,14 +238,14 @@ describe('ElementHandle', function() {
 			await puppeteer.close()
 		})
 
-		it('uploads a file to a file input', async () => {
+		test('uploads a file to a file input', async () => {
 			const handle: PElementHandle = await locateEl('#new_user_portrait')
 			let element = await new ElementHandle(handle)
 			element.bindBrowser(browser)
 
-			expect(await element.getProperty('value')).to.be.empty
+			expect(await element.getProperty('value')).toHaveLength(0)
 			await element.uploadFile('picture.png')
-			expect(await element.getProperty('value')).to.equal('C:\\fakepath\\picture.png')
+			expect(await element.getProperty('value')).toBe('C:\\fakepath\\picture.png')
 		})
 	})
 })

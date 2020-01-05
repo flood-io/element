@@ -1,5 +1,3 @@
-import 'mocha'
-import { expect } from 'chai'
 import { DogfoodServer } from '../../../tests/support/fixture-server'
 import { launchPuppeteer, testPuppeteer } from '../../../tests/support/launch-browser'
 
@@ -8,13 +6,13 @@ import { VisibleTextLocator } from './VisibleTextLocator'
 let dogfoodServer = new DogfoodServer()
 let puppeteer: testPuppeteer
 
-describe('VisibleTextLocator', function() {
-	before(async () => {
+describe('VisibleTextLocator', () => {
+	beforeAll(async () => {
 		await dogfoodServer.start()
 		puppeteer = await launchPuppeteer()
 	})
 
-	after(async () => {
+	afterAll(async () => {
 		await dogfoodServer.close()
 		await puppeteer.close()
 	})
@@ -23,7 +21,7 @@ describe('VisibleTextLocator', function() {
 		await puppeteer.page.goto('http://localhost:1337/wait.html', { waitUntil: 'domcontentloaded' })
 	})
 
-	it('evaluates', async () => {
+	test('evaluates', async () => {
 		const loc = new VisibleTextLocator('foo', false, 'By.visibleText')
 		const ctx = await puppeteer.page.mainFrame().executionContext()
 
@@ -32,10 +30,10 @@ describe('VisibleTextLocator', function() {
 			throw new Error("visible text locator didn't match an element")
 		}
 
-		expect(await maybeElement.text()).to.equal('foo')
+		expect(await maybeElement.text()).toBe('foo')
 	})
 
-	it('escapes target text correctly', async () => {
+	test('escapes target text correctly', async () => {
 		const loc = new VisibleTextLocator("foon't", false, 'By.visibleText')
 		const ctx = await puppeteer.page.mainFrame().executionContext()
 
@@ -43,8 +41,8 @@ describe('VisibleTextLocator', function() {
 
 		expect(async () => {
 			maybeElement = await loc.find(ctx)
-		}).to.not.throw()
+		}).not.toThrowError()
 
-		expect(maybeElement).to.be.undefined
+		expect(maybeElement).toBeUndefined()
 	})
 })

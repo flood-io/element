@@ -1,5 +1,3 @@
-import 'mocha'
-import { expect } from 'chai'
 import { Feeder } from './Feeder'
 
 function ensureDefined<T>(value: T | undefined | null): T | never {
@@ -22,7 +20,7 @@ let lines = [
 type Row = { user: string; username: string; password: string }
 
 describe('Feeder', () => {
-	it('Process line by line with filter', async () => {
+	test('Process line by line with filter', async () => {
 		let feeder = new Feeder<Row>('1')
 		feeder
 			.circular(false)
@@ -31,60 +29,60 @@ describe('Feeder', () => {
 			.filter(Boolean)
 			.append(lines)
 
-		expect(feeder.feed()).to.deep.equal({
+		expect(feeder.feed()).toEqual({
 			user: '1',
 			username: 'johnny1@loadtest.io',
 			password: 'correcthorsebatterstaple!',
 		})
-		expect(feeder.isComplete).to.be.false
-		expect(feeder.feed()).to.deep.equal({
+		expect(feeder.isComplete).toBe(false)
+		expect(feeder.feed()).toEqual({
 			user: '1',
 			username: 'johnny6@loadtest.io',
 			password: 'correcthorsebatterstaple!',
 		})
-		expect(feeder.feed()).to.deep.equal(null)
-		expect(feeder.isComplete).to.be.true
-		expect(feeder.size).to.equal(2)
+		expect(feeder.feed()).toEqual(null)
+		expect(feeder.isComplete).toBe(true)
+		expect(feeder.size).toBe(2)
 	})
 
-	it('can be reset', async () => {
+	test('can be reset', async () => {
 		let feeder = new Feeder<Row>('1')
 			.filter((line, index, instanceID) => line.user === instanceID)
 			.append(lines)
 			.circular(false)
 
-		expect(feeder.isStart).to.be.true
-		expect(feeder.feed()).to.not.be.null
-		expect(feeder.feed()).to.not.be.null
-		expect(feeder.size).to.equal(2)
+		expect(feeder.isStart).toBe(true)
+		expect(feeder.feed()).not.toBeNull()
+		expect(feeder.feed()).not.toBeNull()
+		expect(feeder.size).toBe(2)
 
-		expect(feeder.isComplete).to.be.true
+		expect(feeder.isComplete).toBe(true)
 		feeder.reset()
-		expect(feeder.isComplete).to.be.false
+		expect(feeder.isComplete).toBe(false)
 	})
 
-	it('is be looped by default', async () => {
+	test('is be looped by default', async () => {
 		let feeder = new Feeder<Row>('1')
 			.filter((line, index, instanceID) => line.user === instanceID)
 			.append(lines)
 
-		expect(feeder.size).to.equal(2)
+		expect(feeder.size).toBe(2)
 
 		const mustFeed = () => ensureDefined(feeder.feed())
 
-		expect(mustFeed()['username']).to.equal('johnny1@loadtest.io')
-		expect(mustFeed()['username']).to.equal('johnny6@loadtest.io')
-		expect(mustFeed()['username']).to.equal('johnny1@loadtest.io')
-		expect(mustFeed()['username']).to.equal('johnny6@loadtest.io')
+		expect(mustFeed()['username']).toBe('johnny1@loadtest.io')
+		expect(mustFeed()['username']).toBe('johnny6@loadtest.io')
+		expect(mustFeed()['username']).toBe('johnny1@loadtest.io')
+		expect(mustFeed()['username']).toBe('johnny6@loadtest.io')
 	})
 
-	it('can be randomized', async () => {
+	test('can be randomized', async () => {
 		let feeder = new Feeder<Row>('1').shuffle().append(lines)
 
 		const mustFeed = () => ensureDefined(feeder.feed())
 		let users = [mustFeed()['username'], mustFeed()['username'], mustFeed()['username']]
 
-		expect(users).to.not.deep.equal([
+		expect(users).not.toEqual([
 			'johnny1@loadtest.io',
 			'johnny2@loadtest.io',
 			'johnny3@loadtest.io',

@@ -1,7 +1,6 @@
-import { expect } from 'chai'
-import 'mocha'
 import { EvaluatedScript } from './EvaluatedScript'
-import { ITestScript, mustCompileFile } from '../TestScript'
+import { mustCompileFile } from '../TestScript'
+import { ITestScript } from '../ITestScript'
 import { join } from 'path'
 import testRunEnv from '../../tests/support/test-run-env'
 import { DEFAULT_SETTINGS } from './Settings'
@@ -20,8 +19,8 @@ function ensureDefined<T>(value: T | undefined | null): T | never {
 }
 
 describe('EvaluatedScript', () => {
-	before(async function() {
-		this.timeout(30e3)
+	beforeAll(async () => {
+		jest.setTimeout(30e3)
 		vmFeaturesTestScript = await mustCompileFile(
 			join(__dirname, '../../tests/fixtures/vm-features.ts'),
 		)
@@ -34,44 +33,44 @@ describe('EvaluatedScript', () => {
 	})
 
 	describe('evaluate', () => {
-		it('returns default test settings', async () => {
+		test('returns default test settings', async () => {
 			let script = new EvaluatedScript(runEnv, ensureDefined(noSettingsTestScript))
 			let { settings } = script
 
-			expect(settings.name).to.equal('Empty test for evaluating defaults')
-			expect(settings.description).to.equal('Use this in the test environment.')
-			expect(settings.duration).to.equal(DEFAULT_SETTINGS.duration)
-			expect(settings.loopCount).to.equal(DEFAULT_SETTINGS.loopCount)
-			expect(settings.actionDelay).to.equal(DEFAULT_SETTINGS.actionDelay)
-			expect(settings.stepDelay).to.equal(DEFAULT_SETTINGS.stepDelay)
-			expect(settings.screenshotOnFailure).to.equal(DEFAULT_SETTINGS.screenshotOnFailure)
-			expect(settings.clearCookies).to.equal(DEFAULT_SETTINGS.clearCookies)
-			expect(settings.waitTimeout).to.equal(DEFAULT_SETTINGS.waitTimeout)
-			expect(settings.responseTimeMeasurement).to.equal(DEFAULT_SETTINGS.responseTimeMeasurement)
-			expect(settings.userAgent).to.equal(DEFAULT_SETTINGS.userAgent)
+			expect(settings.name).toBe('Empty test for evaluating defaults')
+			expect(settings.description).toBe('Use this in the test environment.')
+			expect(settings.duration).toBe(DEFAULT_SETTINGS.duration)
+			expect(settings.loopCount).toBe(DEFAULT_SETTINGS.loopCount)
+			expect(settings.actionDelay).toBe(DEFAULT_SETTINGS.actionDelay)
+			expect(settings.stepDelay).toBe(DEFAULT_SETTINGS.stepDelay)
+			expect(settings.screenshotOnFailure).toBe(DEFAULT_SETTINGS.screenshotOnFailure)
+			expect(settings.clearCookies).toBe(DEFAULT_SETTINGS.clearCookies)
+			expect(settings.waitTimeout).toBe(DEFAULT_SETTINGS.waitTimeout)
+			expect(settings.responseTimeMeasurement).toBe(DEFAULT_SETTINGS.responseTimeMeasurement)
+			expect(settings.userAgent).toBe(DEFAULT_SETTINGS.userAgent)
 
-			expect(settings.device).to.equal(DEFAULT_SETTINGS.device)
-			expect(settings.ignoreHTTPSErrors).to.equal(DEFAULT_SETTINGS.ignoreHTTPSErrors)
+			expect(settings.device).toBe(DEFAULT_SETTINGS.device)
+			expect(settings.ignoreHTTPSErrors).toBe(DEFAULT_SETTINGS.ignoreHTTPSErrors)
 		})
 
-		it('captures test settings', async () => {
+		test('captures test settings', async () => {
 			let { settings, steps } = new EvaluatedScript(runEnv, ensureDefined(vmFeaturesTestScript))
 
-			expect(settings.name).to.equal('Test Script for evaluating VM features')
-			expect(settings.description).to.equal('Use this in the test environment.')
-			expect(settings.duration).to.equal(30e3)
-			expect(settings.waitTimeout).to.equal(5)
-			expect(settings.userAgent).to.equal('I AM ROBOT')
-			expect(settings.ignoreHTTPSErrors).to.equal(false)
+			expect(settings.name).toBe('Test Script for evaluating VM features')
+			expect(settings.description).toBe('Use this in the test environment.')
+			expect(settings.duration).toBe(30e3)
+			expect(settings.waitTimeout).toBe(5)
+			expect(settings.userAgent).toBe('I AM ROBOT')
+			expect(settings.ignoreHTTPSErrors).toBe(false)
 
-			expect(steps.map(step => step.name)).to.deep.equal(['Step 1', 'Step 2', 'Step 3'])
+			expect(steps.map(step => step.name)).toEqual(['Step 1', 'Step 2', 'Step 3'])
 		})
 
-		it('allows overriding settings per step', async () => {
+		test('allows overriding settings per step', async () => {
 			let { settings, steps } = new EvaluatedScript(runEnv, vmFeaturesTestScript)
 
-			expect(settings.waitTimeout).to.equal(5)
-			expect(steps[0].stepOptions).to.deep.equal({ waitTimeout: 60 })
+			expect(settings.waitTimeout).toBe(5)
+			expect(steps[0].stepOptions).toEqual({ waitTimeout: 60 })
 
 			// TODO move to Test.spec ?
 			// let actionSpy = Sinon.spy()
@@ -84,13 +83,13 @@ describe('EvaluatedScript', () => {
 			// await vm.execute(puppeteer)
 			// expect(actionSpy).to.have.been.calledOnce
 			// expect(actionSpy).to.have.been.calledWith(60)
-		}).timeout(30e3)
+		}, 30e3)
 
-		it('returns steps', async () => {
+		test('returns steps', async () => {
 			let script = new EvaluatedScript(runEnv, ensureDefined(vmFeaturesTestScript))
 			let { steps } = script
 
-			expect(steps.length).to.equal(3)
+			expect(steps.length).toBe(3)
 		})
 
 		// TODO test bindTest

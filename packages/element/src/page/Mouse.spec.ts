@@ -1,5 +1,3 @@
-import { expect } from 'chai'
-import 'mocha'
 import { Page, ElementHandle } from 'puppeteer'
 import { launchPuppeteer, testPuppeteer } from '../../tests/support/launch-browser'
 import { DogfoodServer } from '../../tests/support/fixture-server'
@@ -32,10 +30,10 @@ const centerPoint = async (element: ElementHandle): Promise<[number, number]> =>
 	return [cx, cy]
 }
 
-describe('Mouse', function() {
-	this.timeout(30e3)
+describe('Mouse', () => {
+	jest.setTimeout(30e3)
 
-	before(async () => {
+	beforeAll(async () => {
 		await dogfoodServer.start()
 		puppeteer = await launchPuppeteer()
 		page = puppeteer.page
@@ -44,17 +42,17 @@ describe('Mouse', function() {
 		await browser.visit('http://localhost:1337/drag_and_drop.html')
 	})
 
-	after(async () => {
+	afterAll(async () => {
 		await puppeteer.close()
 		await dogfoodServer.close()
 	})
 
-	it('can move mouse', async () => {
+	test('can move mouse', async () => {
 		await browser.mouse.move([0, 0], [156, 63], [157, 65])
-		expect(await getDropReports()).to.equal('start move move')
+		expect(await getDropReports()).toBe('start move move')
 	})
 
-	it('can drag and drop', async () => {
+	test('can drag and drop', async () => {
 		let handleEl = await page.$('#draggable')
 		let targetEl = await page.$('#droppable')
 		let startingPoint = await centerPoint(handleEl!)
@@ -64,7 +62,7 @@ describe('Mouse', function() {
 
 		await browser.mouse.drag(startingPoint, finishPoint)
 		await timeout(100)
-		expect(await getText('#droppable')).to.equal('Dropped!')
-		expect(await getDropReports()).to.equal('start move move move down move dragstart drag up drop')
+		expect(await getText('#droppable')).toBe('Dropped!')
+		expect(await getDropReports()).toBe('start move move move down move dragstart drag up drop')
 	})
 })

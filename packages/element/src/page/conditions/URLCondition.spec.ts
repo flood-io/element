@@ -1,5 +1,3 @@
-import { expect } from 'chai'
-import 'mocha'
 import { DogfoodServer } from '../../../tests/support/fixture-server'
 import { launchPuppeteer, testPuppeteer } from '../../../tests/support/launch-browser'
 import { Page } from 'puppeteer'
@@ -9,10 +7,10 @@ let dogfoodServer = new DogfoodServer()
 
 let page: Page, puppeteer: testPuppeteer
 
-describe('Condition', function() {
-	this.timeout(30e3)
+describe('Condition', () => {
+	jest.setTimeout(30e3)
 	describe('URLCondition', () => {
-		before(async () => {
+		beforeAll(async () => {
 			await dogfoodServer.start()
 
 			puppeteer = await launchPuppeteer()
@@ -20,7 +18,7 @@ describe('Condition', function() {
 			page = puppeteer.page
 		})
 
-		after(async () => {
+		afterAll(async () => {
 			await dogfoodServer.close()
 			await puppeteer.close()
 		})
@@ -29,22 +27,22 @@ describe('Condition', function() {
 			await page.goto('http://localhost:1337/timeout_window_location.html')
 		})
 
-		it('waits Until.urlIs', async () => {
+		test('waits Until.urlIs', async () => {
 			let condition = Until.urlIs('http://localhost:1337/non_control_elements.html')
 			let result = await condition.waitFor(page.mainFrame())
-			expect(result).to.equal(true)
+			expect(result).toBe(true)
 		})
 
-		it('waits Until.urlMatches', async () => {
+		test('waits Until.urlMatches', async () => {
 			let condition = Until.urlMatches(/non_control_elements/)
 			let result = await condition.waitFor(page.mainFrame())
-			expect(result).to.equal(true)
+			expect(result).toBe(true)
 		})
 
-		it('waits Until.urlContains', async () => {
+		test('waits Until.urlContains', async () => {
 			let condition = Until.urlContains('non_control_elements')
 			let result = await condition.waitFor(page.mainFrame())
-			expect(result).to.equal(true)
+			expect(result).toBe(true)
 		})
 	})
 })

@@ -1,5 +1,3 @@
-import { expect } from 'chai'
-import 'mocha'
 import { DogfoodServer } from '../../../tests/support/fixture-server'
 import { launchPuppeteer, testPuppeteer } from '../../../tests/support/launch-browser'
 import { Page } from 'puppeteer'
@@ -10,13 +8,13 @@ let dogfoodServer = new DogfoodServer()
 
 let page: Page, puppeteer: testPuppeteer
 
-describe('Condition', function() {
-	this.timeout(30e3)
-	before(async () => {
+describe('Condition', () => {
+	jest.setTimeout(30e3)
+	beforeAll(async () => {
 		await dogfoodServer.start()
 	})
 
-	after(async () => {
+	afterAll(async () => {
 		await dogfoodServer.close()
 	})
 
@@ -32,17 +30,17 @@ describe('Condition', function() {
 	})
 
 	describe('ElementStateCondition', () => {
-		it('waits Until.elementIsEnabled', async () => {
+		test('waits Until.elementIsEnabled', async () => {
 			let condition = Until.elementIsEnabled(By.css('#btn'))
 
 			// Triggers a timeout of 500ms
 			await page.click('a#enable_btn')
 
 			let found = await condition.waitFor(page.mainFrame())
-			expect(found).to.equal(true)
-		}).timeout(31e3)
+			expect(found).toBe(true)
+		}, 31e3)
 
-		it('waits Until.elementIsDisabled', async () => {
+		test('waits Until.elementIsDisabled', async () => {
 			await page.evaluate(() => {
 				const btn = document.querySelector('#btn')
 				if (btn) {
@@ -51,19 +49,19 @@ describe('Condition', function() {
 			})
 			let btn = await page.$('#btn')
 
-			expect(btn).to.not.be.null
+			expect(btn).not.toBeNull()
 			if (!btn) throw new Error('#btn was null')
 
-			expect(
-				await btn.executionContext().evaluate(el => el.hasAttribute('disabled'), btn),
-			).to.equal(false)
+			expect(await btn.executionContext().evaluate(el => el.hasAttribute('disabled'), btn)).toBe(
+				false,
+			)
 
 			let condition = Until.elementIsDisabled(By.css('#btn'))
 
 			await page.click('#btn')
 
 			let found = await condition.waitFor(page.mainFrame())
-			expect(found).to.equal(true)
-		}).timeout(31e3)
+			expect(found).toBe(true)
+		}, 31e3)
 	})
 })

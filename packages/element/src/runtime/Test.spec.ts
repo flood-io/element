@@ -1,6 +1,3 @@
-import 'mocha'
-import { use, expect } from 'chai'
-import SinonChai from 'sinon-chai'
 import { DogfoodServer } from '../../tests/support/fixture-server'
 import testRunEnv from '../../tests/support/test-run-env'
 import { launchPuppeteer, testPuppeteer } from '../../tests/support/launch-browser'
@@ -9,7 +6,6 @@ import { EvaluatedScript } from './EvaluatedScript'
 import { join } from 'path'
 import { EventEmitterReporter } from '../reporter/EventEmitter'
 import { ConcreteTestSettings } from './Settings'
-use(SinonChai)
 
 let dogfoodServer = new DogfoodServer()
 let puppeteer: testPuppeteer
@@ -28,8 +24,8 @@ const setupTest = async (scriptName: string) => {
 	return test
 }
 
-describe('Test', function() {
-	this.timeout(30e3)
+describe('Test', () => {
+	jest.setTimeout(30e3)
 	beforeEach(async () => {
 		puppeteer = await launchPuppeteer()
 		testReporter = new EventEmitterReporter()
@@ -39,15 +35,15 @@ describe('Test', function() {
 		await puppeteer.close()
 	})
 
-	before(async () => {
+	beforeAll(async () => {
 		await dogfoodServer.start()
 	})
 
-	after(async () => {
+	afterAll(async () => {
 		await dogfoodServer.close()
 	})
 
-	it('extracts settings during evaluation', async () => {
+	test('extracts settings during evaluation', async () => {
 		const test = await setupTest('test-with-export.ts')
 		const defaultSettings: ConcreteTestSettings = {
 			actionDelay: 5,
@@ -74,18 +70,18 @@ describe('Test', function() {
 			extraHTTPHeaders: {},
 			launchArgs: [],
 		}
-		expect(test.settings).to.deep.equal(defaultSettings)
+		expect(test.settings).toEqual(defaultSettings)
 	})
 
-	it('parses steps', async () => {
+	test('parses steps', async () => {
 		const test = await setupTest('test-with-export.ts')
 
-		expect(test.steps.map(step => step.name)).to.deep.equal(['Invalid Step', 'Test Step'])
+		expect(test.steps.map(step => step.name)).toEqual(['Invalid Step', 'Test Step'])
 	})
 
-	it('runs steps', async () => {
+	test('runs steps', async () => {
 		const test = await setupTest('test-with-export.ts')
 
 		await test.run()
-	}).timeout(30e3)
+	}, 30e3)
 })

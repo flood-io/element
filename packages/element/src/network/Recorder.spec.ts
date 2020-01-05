@@ -1,5 +1,3 @@
-import { expect } from 'chai'
-import 'mocha'
 import { DogfoodServer } from '../../tests/support/fixture-server'
 // import Reporter from '../Reporter'
 import Reporter from '../../tests/support/test-reporter'
@@ -9,8 +7,8 @@ import { launchPuppeteer, testPuppeteer } from '../../tests/support/launch-brows
 
 let dogfoodServer: DogfoodServer = new DogfoodServer()
 let puppeteer: testPuppeteer
-describe('Recorder', function() {
-	this.timeout(30e3)
+describe('Recorder', () => {
+	jest.setTimeout(30e3)
 
 	beforeEach(async () => {
 		puppeteer = await launchPuppeteer()
@@ -20,11 +18,11 @@ describe('Recorder', function() {
 		await puppeteer.close()
 	})
 
-	before(async () => {
+	beforeAll(async () => {
 		await dogfoodServer.start()
 	})
 
-	after(async () => {
+	afterAll(async () => {
 		await dogfoodServer.close()
 	})
 
@@ -40,50 +38,52 @@ describe('Recorder', function() {
 			await recorder.pendingTaskQueue.chain
 		})
 
-		it('Captures correct document response code', async () => {
-			expect(recorder.entries.length).to.equal(1)
-			expect(recorder.documentResponseCode).to.equal(200)
+		test('Captures correct document response code', async () => {
+			expect(recorder.entries.length).toBe(1)
+			expect(recorder.documentResponseCode).toBe(200)
 			recorder.reset()
 			await puppeteer.page.goto('http://localhost:1337/notfound.html')
 			await recorder.pendingTaskQueue.chain
-			expect(recorder.documentResponseCode).to.equal(404)
+			expect(recorder.documentResponseCode).toBe(404)
 		})
 
-		it('Captures document response time', async () => {
-			// NOTE this is non-deterministic & may need to be adjusted (LC)
-			expect(recorder.responseTimeForType('Document')).to.be.within(1, 200)
+		test('Captures document response time', async () => {
+            expect(recorder.responseTimeForType('Document')).toBeGreaterThanOrEqual(1);
+            // NOTE this is non-deterministic & may need to be adjusted (LC)
+            expect(recorder.responseTimeForType('Document')).toBeLessThanOrEqual(200)
+        })
+
+		test('Records network throughput', async () => {
+			expect(recorder.networkThroughput()).toBeGreaterThan(0)
 		})
 
-		it('Records network throughput', async () => {
-			expect(recorder.networkThroughput()).to.be.greaterThan(0)
-		})
+		test('Resets everything between tests', async () => {
+            expect(recorder.responseTimeForType('Document')).toBeGreaterThanOrEqual(1);
+            // NOTE this is non-deterministic & may need to be adjusted (LC)
+            expect(recorder.responseTimeForType('Document')).toBeLessThanOrEqual(200)
+            expect(recorder.networkThroughput()).toBeGreaterThan(0)
+            expect(recorder.documentResponseCode).toBe(200)
+            recorder.reset()
+            expect(recorder.responseTimeForType('Document')).toBe(0)
+            expect(recorder.networkThroughput()).toBe(0)
+            expect(recorder.documentResponseCode).toBe(0)
+        })
 
-		it('Resets everything between tests', async () => {
-			// NOTE this is non-deterministic & may need to be adjusted (LC)
-			expect(recorder.responseTimeForType('Document')).to.be.within(1, 200)
-			expect(recorder.networkThroughput()).to.be.greaterThan(0)
-			expect(recorder.documentResponseCode).to.equal(200)
-			recorder.reset()
-			expect(recorder.responseTimeForType('Document')).to.equal(0)
-			expect(recorder.networkThroughput()).to.be.equal(0)
-			expect(recorder.documentResponseCode).to.equal(0)
-		})
-
-		it('records request headers for document', async () => {
+		test('records request headers for document', async () => {
 			let [document] = recorder.entriesForType('Document')
-			expect(document.request.headers.map(({ name }) => name).sort()).to.include.members([
+			expect(document.request.headers.map(({ name }) => name).sort()).toEqual(expect.arrayContaining([
 				'Accept',
 				'Accept-Encoding',
 				'Connection',
 				'Host',
 				'Upgrade-Insecure-Requests',
 				'User-Agent',
-			])
+			]))
 		})
 
-		it('records response headers for document', async () => {
+		test('records response headers for document', async () => {
 			let [document] = recorder.entriesForType('Document')
-			expect(document.response.headers.map(({ name }) => name).sort()).to.deep.equal([
+			expect(document.response.headers.map(({ name }) => name).sort()).toEqual([
 				'Accept-Ranges',
 				'Cache-Control',
 				'Connection',
@@ -96,24 +96,25 @@ describe('Recorder', function() {
 			])
 		})
 
-		it('records document time', async () => {
-			expect(recorder.timeToFirstByteForType('Document')).to.greaterThan(0)
-			let [document] = recorder.entriesForType('Document')
+		test('records document time', async () => {
+            expect(recorder.timeToFirstByteForType('Document')).toBeGreaterThan(0)
+            let [document] = recorder.entriesForType('Document')
 
-			let now = new Date().valueOf()
-			expect(document.request.timestamp).to.be.within(now - 1000, now + 1000)
-			expect(document.response.timestamp).to.be.greaterThan(document.request.timestamp)
+            let now = new Date().valueOf()
+            expect(document.request.timestamp).toBeGreaterThanOrEqual(now - 1000);
+            expect(document.request.timestamp).toBeLessThanOrEqual(now + 1000)
+            expect(document.response.timestamp).toBeGreaterThan(document.request.timestamp)
+        })
+
+		test('records document request url', async () => {
+			let [document] = recorder.entriesForType('Document')
+			expect(document.request.url).toBe('http://localhost:1337/wait.html')
 		})
 
-		it('records document request url', async () => {
-			let [document] = recorder.entriesForType('Document')
-			expect(document.request.url).to.equal('http://localhost:1337/wait.html')
-		})
-
-		it.skip('records response body', async () => {
+		test.skip('records response body', async () => {
 			// This is pending because we've disabled response body capture
 			let [document] = recorder.entriesForType('Document')
-			expect(document.response.content.text).to.contains('<html>')
+			expect(document.response.content.text).toEqual(expect.arrayContaining(['<html>']))
 		})
 	})
 })

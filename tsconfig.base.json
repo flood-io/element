@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
 		"module": "commonjs",
-		"target": "es2015",
+		"target": "ES2018",
 		"moduleResolution": "node",
 		"removeComments": true,
 		"lib": ["esnext", "dom"],
@@ -16,6 +16,7 @@
 		"esModuleInterop": true,
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
+		"declarationMap": true,
 		"baseUrl": "./packages",
 		"paths": {
 			"@flood/*": ["./*/src"]

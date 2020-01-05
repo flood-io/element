@@ -1,0 +1,15 @@
+{
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {
+		"declaration": true,
+		"outDir": "dist",
+		"paths": {
+			"@flood/element-compiler": ["./packages/compiler/src/index.ts"]
+		}
+	},
+
+	"references": [{ "path": "../compiler" }],
+
+	"exclude": ["lib", "examples", "*.test.ts", "dist"],
+	"files": ["./src/index.ts"]
+}

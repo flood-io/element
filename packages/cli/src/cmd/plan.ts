@@ -1,6 +1,6 @@
 import { Argv, Arguments, CommandModule } from 'yargs'
 import { inspect } from 'util'
-import { IEvaluatedScript } from '@flood/element-api'
+import { IEvaluatedScript } from '@flood/element-core'
 import chalk from 'chalk'
 import boxen from 'boxen'
 import { checkFile } from './common'
@@ -13,7 +13,7 @@ function rpad(n: number, maxN: number, padChar = ' '): string {
 }
 
 const main = async (args: Arguments) => {
-	const { EvaluatedScript, nullRuntimeEnvironment } = require('@flood/element-api')
+	const { EvaluatedScript, nullRuntimeEnvironment } = require('@flood/element-core')
 	const script = await EvaluatedScript.mustCompileFile(args.file, nullRuntimeEnvironment)
 
 	if (args.json) return printJSON(script)

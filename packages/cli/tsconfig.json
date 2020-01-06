@@ -1,11 +1,9 @@
 {
 	"extends": "../../tsconfig.base.json",
 	"compilerOptions": {
-		"composite": true,
-		"allowJs": false,
-		"checkJs": false,
+		"declaration": true,
 		"outDir": "dist"
 	},
-	"files": ["index.ts", "ambient.d.ts"],
-	"include": ["src/**/*.ts"]
+
+	"files": ["index.ts", "ambient.d.ts"]
 }

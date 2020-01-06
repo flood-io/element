@@ -6,7 +6,7 @@ import {
 	FloodProcessEnv,
 	TestCommander,
 	TestSettings,
-} from '@flood/element-api'
+} from '@flood/element-core'
 
 import { ConsoleReporter } from '../utils/ConsoleReporter'
 import { Argv, Arguments, CommandModule } from 'yargs'
@@ -18,7 +18,7 @@ import sanitize from 'sanitize-filename'
 import { extname, basename, join, dirname } from 'path'
 import { resolve } from 'url'
 
-interface RunArguments {
+interface RunArguments extends Arguments {
 	file: string
 	strict?: boolean
 	headless?: boolean
@@ -34,7 +34,7 @@ interface RunArguments {
 	'test-data-root'?: string
 }
 
-function setupDelayOverrides(args: Arguments<RunArguments>, testSettingOverrides: TestSettings) {
+function setupDelayOverrides(args: RunArguments, testSettingOverrides: TestSettings) {
 	if (testSettingOverrides == null) testSettingOverrides = {}
 
 	if (args.fastForward ?? false) {
@@ -55,7 +55,7 @@ const cmd: CommandModule = {
 	command: 'run <file> [options]',
 	describe: 'Run a test script locally',
 
-	handler(args: Arguments<RunArguments>) {
+	handler(args: RunArguments) {
 		const { file, verbose } = args
 		const workRootPath = getWorkRootPath(file, args['work-root'])
 		const testDataPath = getTestDataPath(file, args['test-data-root'])

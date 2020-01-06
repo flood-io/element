@@ -19,5 +19,15 @@ module.exports = {
 				legacy: true,
 			},
 		],
+		[
+			'module-resolver',
+			{
+				cwd: 'packages',
+				alias: {
+					'@flood/element-compiler': './compiler/src/index.ts',
+					'@flood/element-core': './core/src/index.ts',
+				},
+			},
+		],
 	],
 }

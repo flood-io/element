@@ -1,8 +1,12 @@
 // For a detailed explanation regarding each configuration property, visit:
 // https://jestjs.io/docs/en/configuration.html
 
+const os = require('os')
+const cpuCount = os.cpus().length
+
 module.exports = {
-	maxConcurrency: 1,
+	maxConcurrency: 10,
+	maxWorkers: cpuCount,
 
 	// All imported modules in your tests should be mocked automatically
 	// automock: false,

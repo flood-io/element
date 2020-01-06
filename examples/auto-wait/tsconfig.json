@@ -18,7 +18,11 @@
 		"emitDecoratorMetadata": true,
 		"declaration": true,
 		"allowJs": false,
-		"checkJs": false
+		"checkJs": false,
+		"baseUrl": "./",
+		"paths": {
+			"@flood/element": ["../../packages/element/index.ts"]
+		}
 	},
 	"files": ["test.ts"]
 }

@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@flood/element@^1.0.8-stable.1":
-  version "1.0.8-stable.1"
-  resolved "https://registry.yarnpkg.com/@flood/element/-/element-1.0.8-stable.1.tgz#e2777682ef7d5ee11088dd6aeadac168fce7591e"
-  integrity sha512-K6FeAqcr2yKKLtCo/pZc0mTcozsyIFGONGvbOWqGytXkV34/7PvF2dvi0khitYtjweLsMcuqpfSMi7TbhkUzDA==
+"@flood/element@*":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@flood/element/-/element-1.0.8.tgz#bd2d17c0c132659823a935c97ef7602d7ca62bc0"
+  integrity sha512-i0xCzK5Ndw8bBp/AOMBGjg/p2dnzte1QpJY2vlE9P0Fy8Pr6FwqCcDCKyas2OYAKlW2hDeTkBDqZ6pEccxK/Bg==
   dependencies:
     "@types/faker" "^4.1.3"
     "@types/mkdirp" "^0.5.2"

@@ -20,6 +20,6 @@
 		"allowJs": false,
 		"checkJs": false
 	},
-	"include": ["**/*.ts"],
+
 	"files": ["test.ts"]
 }

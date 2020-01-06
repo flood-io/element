@@ -1,128 +1,61 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Compiler should compile test script to js string 1`] = `
-"/******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
-/******/ 		if(mode & 8) return value;
-/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = \\"\\";
-/******/
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = \\"./examples/auto-wait/test.ts\\");
-/******/ })
-/************************************************************************/
-/******/ ({
+"\\"use strict\\";
 
-/***/ \\"./examples/auto-wait/helpers.ts\\":
-/*!***************************************!*\\\\
-  !*** ./examples/auto-wait/helpers.ts ***!
-  \\\\***************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+Object.defineProperty(exports, \\"__esModule\\", {
+  value: true
+});
+exports.default = exports.settings = void 0;
 
-\\"use strict\\";
-eval(\\"\\\\nObject.defineProperty(exports, \\\\\\"__esModule\\\\\\", { value: true });\\\\nexports.largestNumber = (numbers) => numbers\\\\n    .map(Number)\\\\n    .sort((a, b) => a - b)\\\\n    .reverse()[0];\\\\nfunction expect(a, b) {\\\\n    if (a != b)\\\\n        throw new Error(\`Expected result to be \\\\\\"\${a}\\\\\\", got \\\\\\"\${b}\\\\\\"\`);\\\\n}\\\\nexports.expect = expect;\\\\n//# sourceURL=[module]\\\\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9leGFtcGxlcy9hdXRvLXdhaXQvaGVscGVycy50cy5qcyIsInNvdXJjZXMiOlsid2VicGFjazovLy8uL2V4YW1wbGVzL2F1dG8td2FpdC9oZWxwZXJzLnRzP2NkMzEiXSwic291cmNlc0NvbnRlbnQiOlsiXCJ1c2Ugc3RyaWN0XCI7XG5PYmplY3QuZGVmaW5lUHJvcGVydHkoZXhwb3J0cywgXCJfX2VzTW9kdWxlXCIsIHsgdmFsdWU6IHRydWUgfSk7XG5leHBvcnRzLmxhcmdlc3ROdW1iZXIgPSAobnVtYmVycykgPT4gbnVtYmVyc1xuICAgIC5tYXAoTnVtYmVyKVxuICAgIC5zb3J0KChhLCBiKSA9PiBhIC0gYilcbiAgICAucmV2ZXJzZSgpWzBdO1xuZnVuY3Rpb24gZXhwZWN0KGEsIGIpIHtcbiAgICBpZiAoYSAhPSBiKVxuICAgICAgICB0aHJvdyBuZXcgRXJyb3IoYEV4cGVjdGVkIHJlc3VsdCB0byBiZSBcIiR7YX1cIiwgZ290IFwiJHtifVwiYCk7XG59XG5leHBvcnRzLmV4cGVjdCA9IGV4cGVjdDtcbiJdLCJtYXBwaW5ncyI6IkFBQUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTsiLCJzb3VyY2VSb290IjoiIn0=\\\\n//# sourceURL=webpack-internal:///./examples/auto-wait/helpers.ts\\\\n\\");
+var _element = require(\\"@flood/element\\");
 
-/***/ }),
+var _helpers = require(\\"./helpers\\");
 
-/***/ \\"./examples/auto-wait/test.ts\\":
-/*!************************************!*\\\\
-  !*** ./examples/auto-wait/test.ts ***!
-  \\\\************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+const settings = {
+  userAgent: 'I AM ROBOT',
+  waitUntil: 'visible'
+};
+exports.settings = settings;
 
-\\"use strict\\";
-eval(\\"\\\\nObject.defineProperty(exports, \\\\\\"__esModule\\\\\\", { value: true });\\\\nconst element_1 = __webpack_require__(/*! @flood/element */ \\\\\\"@flood/element\\\\\\");\\\\nconst helpers_1 = __webpack_require__(/*! ./helpers */ \\\\\\"./examples/auto-wait/helpers.ts\\\\\\");\\\\nexports.settings = {\\\\n    userAgent: 'I AM ROBOT',\\\\n    waitUntil: 'visible',\\\\n};\\\\nexports.default = () => {\\\\n    element_1.step('Open page and click start', async (b) => {\\\\n        await b.visit('https://challenge.flood.io');\\\\n        await b.click(element_1.By.css('#new_challenger > input.btn.btn-xl.btn-default'));\\\\n        await b.takeScreenshot();\\\\n    });\\\\n    element_1.step('Challenge: Step 1', async (b) => {\\\\n        await b.selectByValue(element_1.By.id('challenger_age'), '31');\\\\n        await b.takeScreenshot();\\\\n        await b.click('input.btn');\\\\n    });\\\\n    element_1.step('Challenge: Step 2', async (b) => {\\\\n        let orderElements = await b.findElements(element_1.By.css('table tbody tr td:first-of-type label'));\\\\n        let orderIDs = await Promise.all(orderElements.map(element => element.text()));\\\\n        let largestOrder = helpers_1.largestNumber(orderIDs);\\\\n        await b.type(element_1.By.id('challenger_largest_order'), String(largestOrder));\\\\n        await b.click(element_1.By.visibleText(String(largestOrder)));\\\\n        await b.takeScreenshot();\\\\n        await b.click(element_1.By.css('input.btn'));\\\\n    });\\\\n    element_1.step('Challenge: Step 3', async (b) => {\\\\n        await b.click('input.btn');\\\\n        await b.takeScreenshot();\\\\n    });\\\\n    element_1.step('Challenge: Step 4', async (b) => {\\\\n        let element = await b.findElement('span.token');\\\\n        let token = await element.text();\\\\n        await b.type(element_1.By.id('challenger_one_time_token'), token);\\\\n        await b.takeScreenshot();\\\\n        await b.click('input.btn');\\\\n    });\\\\n    element_1.step('Challenge: Step 5', async (b) => {\\\\n        let element = await b.findElement('h2');\\\\n        await b.takeScreenshot();\\\\n        let completionText = await element.text();\\\\n        helpers_1.expect(completionText.trim(), \\\\\\"You're Done!\\\\\\");\\\\n    });\\\\n};\\\\n//# sourceURL=[module]\\\\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9leGFtcGxlcy9hdXRvLXdhaXQvdGVzdC50cy5qcyIsInNvdXJjZXMiOlsid2VicGFjazovLy8uL2V4YW1wbGVzL2F1dG8td2FpdC90ZXN0LnRzPzQyZWYiXSwic291cmNlc0NvbnRlbnQiOlsiXCJ1c2Ugc3RyaWN0XCI7XG5PYmplY3QuZGVmaW5lUHJvcGVydHkoZXhwb3J0cywgXCJfX2VzTW9kdWxlXCIsIHsgdmFsdWU6IHRydWUgfSk7XG5jb25zdCBlbGVtZW50XzEgPSByZXF1aXJlKFwiQGZsb29kL2VsZW1lbnRcIik7XG5jb25zdCBoZWxwZXJzXzEgPSByZXF1aXJlKFwiLi9oZWxwZXJzXCIpO1xuZXhwb3J0cy5zZXR0aW5ncyA9IHtcbiAgICB1c2VyQWdlbnQ6ICdJIEFNIFJPQk9UJyxcbiAgICB3YWl0VW50aWw6ICd2aXNpYmxlJyxcbn07XG5leHBvcnRzLmRlZmF1bHQgPSAoKSA9PiB7XG4gICAgZWxlbWVudF8xLnN0ZXAoJ09wZW4gcGFnZSBhbmQgY2xpY2sgc3RhcnQnLCBhc3luYyAoYikgPT4ge1xuICAgICAgICBhd2FpdCBiLnZpc2l0KCdodHRwczovL2NoYWxsZW5nZS5mbG9vZC5pbycpO1xuICAgICAgICBhd2FpdCBiLmNsaWNrKGVsZW1lbnRfMS5CeS5jc3MoJyNuZXdfY2hhbGxlbmdlciA+IGlucHV0LmJ0bi5idG4teGwuYnRuLWRlZmF1bHQnKSk7XG4gICAgICAgIGF3YWl0IGIudGFrZVNjcmVlbnNob3QoKTtcbiAgICB9KTtcbiAgICBlbGVtZW50XzEuc3RlcCgnQ2hhbGxlbmdlOiBTdGVwIDEnLCBhc3luYyAoYikgPT4ge1xuICAgICAgICBhd2FpdCBiLnNlbGVjdEJ5VmFsdWUoZWxlbWVudF8xLkJ5LmlkKCdjaGFsbGVuZ2VyX2FnZScpLCAnMzEnKTtcbiAgICAgICAgYXdhaXQgYi50YWtlU2NyZWVuc2hvdCgpO1xuICAgICAgICBhd2FpdCBiLmNsaWNrKCdpbnB1dC5idG4nKTtcbiAgICB9KTtcbiAgICBlbGVtZW50XzEuc3RlcCgnQ2hhbGxlbmdlOiBTdGVwIDInLCBhc3luYyAoYikgPT4ge1xuICAgICAgICBsZXQgb3JkZXJFbGVtZW50cyA9IGF3YWl0IGIuZmluZEVsZW1lbnRzKGVsZW1lbnRfMS5CeS5jc3MoJ3RhYmxlIHRib2R5IHRyIHRkOmZpcnN0LW9mLXR5cGUgbGFiZWwnKSk7XG4gICAgICAgIGxldCBvcmRlcklEcyA9IGF3YWl0IFByb21pc2UuYWxsKG9yZGVyRWxlbWVudHMubWFwKGVsZW1lbnQgPT4gZWxlbWVudC50ZXh0KCkpKTtcbiAgICAgICAgbGV0IGxhcmdlc3RPcmRlciA9IGhlbHBlcnNfMS5sYXJnZXN0TnVtYmVyKG9yZGVySURzKTtcbiAgICAgICAgYXdhaXQgYi50eXBlKGVsZW1lbnRfMS5CeS5pZCgnY2hhbGxlbmdlcl9sYXJnZXN0X29yZGVyJyksIFN0cmluZyhsYXJnZXN0T3JkZXIpKTtcbiAgICAgICAgYXdhaXQgYi5jbGljayhlbGVtZW50XzEuQnkudmlzaWJsZVRleHQoU3RyaW5nKGxhcmdlc3RPcmRlcikpKTtcbiAgICAgICAgYXdhaXQgYi50YWtlU2NyZWVuc2hvdCgpO1xuICAgICAgICBhd2FpdCBiLmNsaWNrKGVsZW1lbnRfMS5CeS5jc3MoJ2lucHV0LmJ0bicpKTtcbiAgICB9KTtcbiAgICBlbGVtZW50XzEuc3RlcCgnQ2hhbGxlbmdlOiBTdGVwIDMnLCBhc3luYyAoYikgPT4ge1xuICAgICAgICBhd2FpdCBiLmNsaWNrKCdpbnB1dC5idG4nKTtcbiAgICAgICAgYXdhaXQgYi50YWtlU2NyZWVuc2hvdCgpO1xuICAgIH0pO1xuICAgIGVsZW1lbnRfMS5zdGVwKCdDaGFsbGVuZ2U6IFN0ZXAgNCcsIGFzeW5jIChiKSA9PiB7XG4gICAgICAgIGxldCBlbGVtZW50ID0gYXdhaXQgYi5maW5kRWxlbWVudCgnc3Bhbi50b2tlbicpO1xuICAgICAgICBsZXQgdG9rZW4gPSBhd2FpdCBlbGVtZW50LnRleHQoKTtcbiAgICAgICAgYXdhaXQgYi50eXBlKGVsZW1lbnRfMS5CeS5pZCgnY2hhbGxlbmdlcl9vbmVfdGltZV90b2tlbicpLCB0b2tlbik7XG4gICAgICAgIGF3YWl0IGIudGFrZVNjcmVlbnNob3QoKTtcbiAgICAgICAgYXdhaXQgYi5jbGljaygnaW5wdXQuYnRuJyk7XG4gICAgfSk7XG4gICAgZWxlbWVudF8xLnN0ZXAoJ0NoYWxsZW5nZTogU3RlcCA1JywgYXN5bmMgKGIpID0+IHtcbiAgICAgICAgbGV0IGVsZW1lbnQgPSBhd2FpdCBiLmZpbmRFbGVtZW50KCdoMicpO1xuICAgICAgICBhd2FpdCBiLnRha2VTY3JlZW5zaG90KCk7XG4gICAgICAgIGxldCBjb21wbGV0aW9uVGV4dCA9IGF3YWl0IGVsZW1lbnQudGV4dCgpO1xuICAgICAgICBoZWxwZXJzXzEuZXhwZWN0KGNvbXBsZXRpb25UZXh0LnRyaW0oKSwgXCJZb3UncmUgRG9uZSFcIik7XG4gICAgfSk7XG59O1xuIl0sIm1hcHBpbmdzIjoiQUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTsiLCJzb3VyY2VSb290IjoiIn0=\\\\n//# sourceURL=webpack-internal:///./examples/auto-wait/test.ts\\\\n\\");
+var _default = () => {
+  (0, _element.step)('Open page and click start', async b => {
+    await b.visit('https://challenge.flood.io');
+    await b.click(_element.By.css('#new_challenger > input.btn.btn-xl.btn-default'));
+    await b.takeScreenshot();
+  });
+  (0, _element.step)('Challenge: Step 1', async b => {
+    await b.selectByValue(_element.By.id('challenger_age'), '31');
+    await b.takeScreenshot();
+    await b.click('input.btn');
+  });
+  (0, _element.step)('Challenge: Step 2', async b => {
+    let orderElements = await b.findElements(_element.By.css('table tbody tr td:first-of-type label'));
+    let orderIDs = await Promise.all(orderElements.map(element => element.text()));
+    let largestOrder = (0, _helpers.largestNumber)(orderIDs);
+    await b.type(_element.By.id('challenger_largest_order'), String(largestOrder));
+    await b.click(_element.By.visibleText(String(largestOrder)));
+    await b.takeScreenshot();
+    await b.click(_element.By.css('input.btn'));
+  });
+  (0, _element.step)('Challenge: Step 3', async b => {
+    await b.click('input.btn');
+    await b.takeScreenshot();
+  });
+  (0, _element.step)('Challenge: Step 4', async b => {
+    let element = await b.findElement('span.token');
+    let token = await element.text();
+    await b.type(_element.By.id('challenger_one_time_token'), token);
+    await b.takeScreenshot();
+    await b.click('input.btn');
+  });
+  (0, _element.step)('Challenge: Step 5', async b => {
+    let element = await b.findElement('h2');
+    await b.takeScreenshot();
+    let completionText = await element.text();
+    (0, _helpers.expect)(completionText.trim(), \\"You're Done!\\");
+  });
+};
 
-/***/ }),
-
-/***/ \\"@flood/element\\":
-/*!*********************************!*\\\\
-  !*** external \\"@flood/element\\" ***!
-  \\\\*********************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-eval(\\"module.exports = @flood/element;//# sourceURL=[module]\\\\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiQGZsb29kL2VsZW1lbnQuanMiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vZXh0ZXJuYWwgXCJAZmxvb2QvZWxlbWVudFwiPzY1NmEiXSwic291cmNlc0NvbnRlbnQiOlsibW9kdWxlLmV4cG9ydHMgPSBAZmxvb2QvZWxlbWVudDsiXSwibWFwcGluZ3MiOiJBQUFBIiwic291cmNlUm9vdCI6IiJ9\\\\n//# sourceURL=webpack-internal:///@flood/element\\\\n\\");
-
-/***/ })
-
-/******/ });"
+exports.default = _default;"
 `;

@@ -5,7 +5,7 @@
 	"author": "Ivan Vanderbyl <ivanvanderbyl@gmail.com>",
 	"homepage": "https://github.com/flood-io/element#readme",
 	"license": "Apache-2.0",
-	"main": "dist/index.js",
+	"main": "dist/src/index.js",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flood-io/element.git"
@@ -22,14 +22,17 @@
 	"devDependencies": {
 		"@babel/core": "^7.7.7",
 		"@babel/preset-env": "^7.7.7",
-		"@types/find-root": "^1.1.1",
 		"@babel/preset-typescript": "^7.7.7",
+		"@types/find-root": "^1.1.1",
 		"@types/memory-fs": "^0.3.2",
 		"@types/webpack": "^4.41.1",
 		"@types/webpackbar": "^2.6.0"
 	},
 	"dependencies": {
+		"@babel/core": "^7.7.7",
+		"@babel/preset-env": "^7.7.7",
 		"@babel/preset-stage-2": "^7.0.0",
+		"@babel/preset-typescript": "^7.7.7",
 		"find-root": "^1.1.0",
 		"fork-ts-checker-webpack-plugin": "^3.1.1",
 		"memory-fs": "^0.5.0",

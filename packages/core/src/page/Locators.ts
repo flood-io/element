@@ -1,0 +1,7 @@
+export { ElementHandle } from './ElementHandle'
+export * from './Locator'
+export * from './locators/CSS'
+export * from './locators/LinkText'
+export * from './locators/TagName'
+export * from './locators/VisibleTextLocator'
+export * from './locators/XPath'

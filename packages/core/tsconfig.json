@@ -4,5 +4,7 @@
 		"declaration": true,
 		"outDir": "dist"
 	},
+
+	"exclude": ["lib", "examples", "*.test.ts", "*.spec.ts", "dist", "docs", "scripts", "tests"],
 	"files": ["./index.ts", "ambient.d.ts"]
 }

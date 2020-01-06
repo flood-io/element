@@ -17,7 +17,8 @@ const cmd: CommandModule = {
 				describe: 'Verbose mode',
 			})
 			.check(({ file }) => {
-				if (!file.length) return new Error('Please provide the path to the test script to write')
+				if (!(file as string).length)
+					return new Error('Please provide the path to the test script to write')
 				return true
 			})
 	},

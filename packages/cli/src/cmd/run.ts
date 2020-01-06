@@ -18,31 +18,35 @@ import sanitize from 'sanitize-filename'
 import { extname, basename, join, dirname } from 'path'
 import { resolve } from 'url'
 
-function setupDelayOverrides(args: Arguments, testSettingOverrides: TestSettings) {
-	let stepDelayOverride: number | undefined
-	let actionDelayOverride: number | undefined
+interface RunArguments {
+	file: string
+	strict?: boolean
+	headless?: boolean
+	devtools?: boolean
+	chrome?: string
+	sandbox?: boolean
+	loopCount?: number
+	fastForward?: number
+	stepDelay?: number
+	actionDelay?: number
+	slowMo?: number
+	'work-root'?: string
+	'test-data-root'?: string
+}
 
-	if (args.fastForward >= 0) {
-		stepDelayOverride = args.fastForward
-		actionDelayOverride = args.fastForward
-	} else if (args.slowMo >= 0) {
-		stepDelayOverride = args.slowMo
-		actionDelayOverride = args.slowMo
+function setupDelayOverrides(args: Arguments<RunArguments>, testSettingOverrides: TestSettings) {
+	if (testSettingOverrides == null) testSettingOverrides = {}
+
+	if (args.fastForward ?? false) {
+		testSettingOverrides.stepDelay = args.fastForward
+		testSettingOverrides.actionDelay = args.fastForward
+	} else if (args.slowMo ?? false) {
+		testSettingOverrides.stepDelay = args.slowMo ?? testSettingOverrides.stepDelay
+		testSettingOverrides.actionDelay = args.slowMo ?? testSettingOverrides.actionDelay
 	}
 
-	if (args.actionDelay !== undefined) {
-		actionDelayOverride = args.actionDelay
-	}
-	if (args.stepDelay !== undefined) {
-		stepDelayOverride = args.stepDelay
-	}
-
-	if (stepDelayOverride !== undefined) {
-		testSettingOverrides.stepDelay = stepDelayOverride
-	}
-	if (actionDelayOverride !== undefined) {
-		testSettingOverrides.actionDelay = actionDelayOverride
-	}
+	testSettingOverrides.actionDelay = args.actionDelay ?? testSettingOverrides.actionDelay
+	testSettingOverrides.actionDelay = args.stepDelay ?? testSettingOverrides.stepDelay
 
 	return testSettingOverrides
 }
@@ -51,7 +55,7 @@ const cmd: CommandModule = {
 	command: 'run <file> [options]',
 	describe: 'Run a test script locally',
 
-	handler(args: Arguments) {
+	handler(args: Arguments<RunArguments>) {
 		const { file, verbose } = args
 		const workRootPath = getWorkRootPath(file, args['work-root'])
 		const testDataPath = getTestDataPath(file, args['test-data-root'])
@@ -70,13 +74,13 @@ const cmd: CommandModule = {
 		const opts: ElementOptions = {
 			logger: logger,
 			testScript: file,
-			strictCompilation: args.strict,
+			strictCompilation: args.strict ?? false,
 			reporter: reporter,
 			verbose: verboseBool,
-			headless: args.headless,
-			devtools: args.devtools,
+			headless: args.headless ?? false,
+			devtools: args.devtools ?? false,
 			chromeVersion: args.chrome,
-			sandbox: args.sandbox,
+			sandbox: args.sandbox ?? false,
 
 			runEnv: initRunEnv(workRootPath, testDataPath),
 			testSettingOverrides: {
@@ -186,7 +190,7 @@ const cmd: CommandModule = {
 				describe: 'the test script to run',
 			})
 			.check(({ file, chrome }) => {
-				let fileErr = checkFile(file)
+				let fileErr = checkFile(file as string)
 				if (fileErr) return fileErr
 
 				return true

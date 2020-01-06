@@ -13,7 +13,7 @@ const cmd: CommandModule = {
 		const TestEnvGenerator = require('../generator/test-env/index').default
 		const env = YoEnv.createEnv()
 		env.registerStub(TestEnvGenerator, 'element/test-env')
-		args.dir = resolve(process.cwd(), args.dir)
+		args.dir = resolve(process.cwd(), args.dir as string)
 		env.run(['element/test-env', args.dir], { 'skip-install': args['skip-install'] }, () => {
 			console.log(
 				chalk`{grey COMPLETED} Run ${runCmd(`cd ${args.dir}`)} and ${runCmd(

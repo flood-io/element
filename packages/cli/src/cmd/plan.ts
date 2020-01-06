@@ -65,7 +65,7 @@ const cmd: CommandModule = {
 				default: !process.stdout.isTTY,
 			})
 			.check(({ file }) => {
-				let fileErr = checkFile(file)
+				let fileErr = checkFile(file as string)
 				if (fileErr) return fileErr
 
 				return true

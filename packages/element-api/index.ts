@@ -6,41 +6,41 @@ export {
 	TestEvent,
 	CompoundMeasurement,
 	NetworkTraceData,
-} from '@flood/element/src/Reporter'
+} from '@flood/element-core'
 
 // XYZ
 
-export { runCommandLine, runUntilExit, ElementOptions } from '@flood/element/src/Element'
+export { runCommandLine, runUntilExit, ElementOptions } from '@flood/element-core'
 
-export { TestSettings, ResponseTiming } from '@flood/element/src/runtime/Settings'
-export { RuntimeEnvironment, FloodProcessEnv } from '@flood/element/src/runtime-environment/types'
-import WorkRoot from '@flood/element/src/runtime-environment/WorkRoot'
-export { nullRuntimeEnvironment } from '@flood/element/src/runtime-environment/NullRuntimeEnvironment'
-import { launch, PuppeteerClient } from '@flood/element/src/driver/Puppeteer'
+export { TestSettings, ResponseTiming } from '@flood/element-core'
+export { RuntimeEnvironment, FloodProcessEnv } from '@flood/element-core'
+import WorkRoot from '@flood/element-core'
+export { nullRuntimeEnvironment } from '@flood/element-core'
+import { launch, PuppeteerClient } from '@flood/element-core'
 
-export { TestCommander } from '@flood/element/src/Runner'
+export { TestCommander } from '@flood/element-core'
 
 export { WorkRoot, PuppeteerClient, launch }
 
-export { TestScriptError, TestScriptOptions } from '@flood/element/src/TestScript'
-export { ITestScript } from '@flood/element/src/ITestScript'
-export { EvaluatedScript, IEvaluatedScript } from '@flood/element/src/runtime/EvaluatedScript'
+export { TestScriptError, TestScriptOptions } from '@flood/element-core'
+export { ITestScript } from '@flood/element-core'
+export { EvaluatedScript, IEvaluatedScript } from '@flood/element-core'
 
-export { expect } from '@flood/element/src/utils/Expect'
+export { expect } from '@flood/element-core'
 
 // Test observer integration
-export { default as Test } from '@flood/element/src/runtime/Test'
-export { Step } from '@flood/element/src/runtime/Step'
+export { default as Test } from '@flood/element-core'
+export { Step } from '@flood/element-core'
 
-export { NoOpTestObserver, TestObserver } from '@flood/element/src/runtime/test-observers/Observer'
+export { NoOpTestObserver, TestObserver } from '@flood/element-core'
 
-export { Assertion } from '@flood/element/src/runtime/Assertion'
-export { AssertionErrorData, castStructuredError } from '@flood/element/src/runtime/errors/Types'
+export { Assertion } from '@flood/element-core'
+export { AssertionErrorData, castStructuredError } from '@flood/element-core'
 
-export { IObjectTrace, NullObjectTrace } from '@flood/element/src/utils/ObjectTrace'
+export { IObjectTrace, NullObjectTrace } from '@flood/element-core'
 
-export { StructuredError } from '@flood/element/src/utils/StructuredError'
+export { StructuredError } from '@flood/element-core'
 
-export { default as NetworkRecorder } from '@flood/element/src/network/Recorder'
-export { Entry } from '@flood/element/src/network/Protocol'
-export { default as NetworkObserver } from '@flood/element/src/runtime/Observer'
+export { default as NetworkRecorder } from '@flood/element-core'
+export { Entry } from '@flood/element-core'
+export { default as NetworkObserver } from '@flood/element-core'

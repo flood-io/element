@@ -1,10 +1,10 @@
 {
 	"compilerOptions": {
-		"module": "commonjs",
-		"target": "ES2018",
-		"moduleResolution": "node",
+		"module": "CommonJS",
+		"target": "ES2016",
+		"moduleResolution": "Node",
 		"removeComments": true,
-		"lib": ["esnext", "dom"],
+		"lib": ["ESNext", "DOM"],
 		"pretty": false,
 		"strictNullChecks": true,
 		"forceConsistentCasingInFileNames": true,
@@ -16,7 +16,6 @@
 		"esModuleInterop": true,
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
-		"declarationMap": true,
 		"baseUrl": "./packages",
 		"paths": {
 			"@flood/element-compiler": ["./compiler/src/index.ts"],
@@ -24,5 +23,5 @@
 		}
 	},
 	"typeAcquisition": { "enable": true },
-	"exclude": ["dist", "lib", "*.spec.ts"]
+	"exclude": ["dist", "lib", "*.spec.ts", "examples", "smoke", "scripts"]
 }

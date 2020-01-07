@@ -7,6 +7,8 @@ import {
 } from './../Reporter'
 import { TestScriptError } from './../TestScript'
 
+type ConsoleMethod = keyof Console
+
 export class ConsoleReporter implements IReporter {
 	public responseCode: string
 	public stepName: string
@@ -31,7 +33,9 @@ export class ConsoleReporter implements IReporter {
 	testAssertionError(err: TestScriptError): void {}
 	testStepError(err: TestScriptError): void {}
 
-	testScriptConsole(method: string, message?: any, ...optionalParams: any[]): void {
-		console[method](message, ...optionalParams)
+	testScriptConsole(method: ConsoleMethod, message?: any, ...optionalParams: any[]): void {
+		if (method in console) {
+			console[method](message, ...optionalParams)
+		}
 	}
 }

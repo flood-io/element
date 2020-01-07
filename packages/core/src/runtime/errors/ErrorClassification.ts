@@ -19,14 +19,14 @@ export function classifyError<T extends ErrorClassification>(
 	debug('error.name %s', error.name)
 
 	let source: ErrorSource = 'element'
-	if (testScript && testScript.isScriptError(error)) {
+	if (testScript?.isScriptError?.(error)) {
 		source = 'testScript'
 	}
 
 	let kind: ErrorKind = 'internal'
-	if (error.name.startsWith('AssertionError')) {
+	if (error.name?.startsWith('AssertionError')) {
 		kind = 'assertion'
-	} else if (error.name.startsWith('ElementNotFound') || error.name.startsWith('BrowserError')) {
+	} else if (error.name?.startsWith('ElementNotFound') || error.name?.startsWith('BrowserError')) {
 		kind = 'browser'
 	}
 

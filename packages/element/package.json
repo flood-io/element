@@ -21,7 +21,9 @@
 		"url": "git+https://github.com/flood-io/element.git"
 	},
 	"scripts": {
-		"test": "echo \"Error: run tests from root\" && exit 1"
+		"prebuild": "rm -rf ./dist",
+		"build": "tsc",
+		"prepublishOnly": "yarn build"
 	},
 	"bugs": {
 		"url": "https://github.com/flood-io/element/issues"

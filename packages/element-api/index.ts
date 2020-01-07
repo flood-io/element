@@ -14,7 +14,7 @@ export { runCommandLine, runUntilExit, ElementOptions } from '@flood/element-cor
 
 export { TestSettings, ResponseTiming } from '@flood/element-core'
 export { RuntimeEnvironment, FloodProcessEnv } from '@flood/element-core'
-import WorkRoot from '@flood/element-core'
+import { WorkRoot } from '@flood/element-core'
 export { nullRuntimeEnvironment } from '@flood/element-core'
 import { launch, PuppeteerClient } from '@flood/element-core'
 

@@ -1,6 +1,4 @@
-import { Action } from '../types'
 import { sum, min, max, extent, ascending, descending } from 'd3-array'
-import { diffChars } from 'diff'
 import { randomBytes } from 'crypto'
 const variableReplacementGroup = /{{\s*[\w\.\-]+\s*}}/g
 const expressionReplacementGroup = /{{\s*[\w\.\-]+\(\d+\)\s*}}/g
@@ -8,7 +6,7 @@ const expressionReplacementGroup = /{{\s*[\w\.\-]+\(\d+\)\s*}}/g
 export class AssertionFailure extends Error {}
 
 export default class TestBuffer {
-	storage: Map<string, string | Array<string>>
+	storage: Map<string, string | string[]>
 
 	constructor() {
 		this.storage = new Map()
@@ -18,9 +16,9 @@ export default class TestBuffer {
 		return this.storage.has(key)
 	}
 
-	public get(key: string): string | Array<string> {
+	public get(key: string): string | string[] {
 		console.assert(this.storage.has(key), `Buffer is missing key: ${key}`)
-		return this.storage.get(key)
+		return this.storage.get(key) as string[]
 	}
 
 	public set(key: string, value: string | string[]): void {
@@ -45,13 +43,15 @@ export default class TestBuffer {
 		let variableMatches = str.match(variableReplacementGroup)
 		let expressionMatches = str.match(expressionReplacementGroup)
 		if (variableMatches) {
-			variableMatches.map(x => x.match(/[\w\.]+/)).forEach(match => {
-				if (this.has(match[0])) {
-					Array(this.get(match[0])).forEach((r: string) => {
-						newStr = newStr.replace(match.input, r)
-					})
-				}
-			})
+			variableMatches
+				.map(x => x.match(/[\w\.]+/))
+				.forEach(match => {
+					if (this.has(match[0])) {
+						Array(this.get(match[0])).forEach((r: string) => {
+							newStr = newStr.replace(match.input, r)
+						})
+					}
+				})
 		}
 
 		if (expressionMatches) {

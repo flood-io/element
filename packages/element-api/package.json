@@ -7,7 +7,7 @@
 	"scripts": {
 		"prebuild": "rm -rf dist",
 		"build": "tsc",
-		"postbuild": "sed 's/src/dist\\/src/g' dist/index.js > index.tmp && mv index.tmp dist/index.js",
+		"xpostbuild": "sed 's/src/dist\\/src/g' dist/index.js > index.tmp && mv index.tmp dist/index.js",
 		"prepublishOnly": "yarn build"
 	},
 	"dependencies": {

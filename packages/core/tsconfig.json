@@ -1,10 +1,25 @@
 {
-	"extends": "../../tsconfig.base.json",
+	"extends": "../../tsconfig.json",
 	"compilerOptions": {
 		"declaration": true,
 		"outDir": "dist"
 	},
 
-	"exclude": ["lib", "examples", "*.test.ts", "*.spec.ts", "dist", "docs", "scripts", "tests"],
-	"files": ["./index.ts", "ambient.d.ts"]
+	"references": [{ "path": "../compiler" }],
+
+	"exclude": [
+		"lib",
+		"examples",
+		"src/**/*.test.ts",
+		"src/**/*.spec.ts",
+		"dist",
+		"docs",
+		"scripts",
+		"tests",
+		"src/runtime/Buffer.ts",
+		"src/runtime/errors/ErrorClassification.ts"
+	],
+
+	"files": ["./index.ts"],
+	"include": ["./index.ts", "./api.ts", "ambient.d.ts", "./src"]
 }

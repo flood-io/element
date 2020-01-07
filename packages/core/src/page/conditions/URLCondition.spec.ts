@@ -17,7 +17,7 @@ describe('Condition', () => {
 			await puppeteer.close()
 		})
 
-		let url
+		let url: any
 
 		beforeEach(async () => {
 			url = await serve('timeout_window_location.html')

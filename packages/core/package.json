@@ -5,11 +5,9 @@
 	"main": "./dist/index.js",
 	"types": "./dist/index.ts.d",
 	"scripts": {
-		"build-sh": "./scripts/build.sh",
 		"prepublishOnly": "yarn build",
 		"prebuild": "rm -rf ./dist",
 		"build": "tsc",
-		"build:watch": "tsc --watch",
 		"test": "jest",
 		"doc": "yarn typedoc && yarn typedoc:puppeteer && ts-node --project ./tsconfig.doc.json ./scripts/docs/docs.ts",
 		"doc:watch": "node --trace-warnings $(npm bin)/nodemon --ext ts --exec ts-node -- --project ./tsconfig.doc.json ./scripts/docs/docs.ts",

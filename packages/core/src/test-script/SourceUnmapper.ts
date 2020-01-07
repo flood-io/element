@@ -1,4 +1,4 @@
-import { SourceMapConsumer, RawSourceMap, NullableMappedPosition } from 'source-map'
+import { SourceMapConsumer, NullableMappedPosition } from 'source-map'
 
 export interface Callsite {
 	file: string
@@ -35,11 +35,7 @@ export function callsiteToString(callsite: Callsite | undefined): string {
 // https://github.com/evanw/node-source-map-support
 export class SourceUnmapper {
 	// can't have async constructors, so:
-	public static async init(
-		originalSource: string,
-		originalFilename: string,
-		sourceMap: RawSourceMap,
-	) {
+	public static async init(originalSource: string, originalFilename: string, sourceMap: string) {
 		const sourceMapConsumer = await new SourceMapConsumer(sourceMap)
 
 		return new SourceUnmapper(originalSource, originalFilename, sourceMapConsumer)

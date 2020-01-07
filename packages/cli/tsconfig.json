@@ -1,9 +1,28 @@
 {
-	"extends": "../../tsconfig.base.json",
+	"extends": "../../tsconfig.json",
 	"compilerOptions": {
 		"declaration": true,
 		"outDir": "dist"
 	},
 
-	"files": ["index.ts", "ambient.d.ts"]
+	"references": [
+		{
+			"path": "../core"
+		},
+
+		{
+			"path": "../compiler"
+		},
+
+		{
+			"path": "../element-api"
+		},
+
+		{
+			"path": "../element"
+		}
+	],
+
+	"files": ["index.ts"],
+	"include": ["index.ts", "ambient.d.ts"]
 }

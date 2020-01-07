@@ -1,3 +1,30 @@
 {
-	"extends": "./tsconfig.base.json"
+	"compilerOptions": {
+		"module": "CommonJS",
+		"target": "ES2016",
+		"moduleResolution": "Node",
+		"removeComments": true,
+		"lib": ["ESNext", "DOM"],
+		"pretty": false,
+		"strictNullChecks": true,
+		"forceConsistentCasingInFileNames": true,
+		"allowUnreachableCode": false,
+		"alwaysStrict": true,
+		"noUnusedLocals": true,
+		"noImplicitAny": true,
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"composite": true,
+		"declarationMap": true,
+		"baseUrl": "./packages",
+		"paths": {
+			"@flood/element-compiler": ["./compiler/src/index.ts"],
+			"@flood/element-core": ["./compiler/index.ts"],
+			"@flood/element-*": ["./*/src/index.ts"]
+		}
+	},
+	"typeAcquisition": { "enable": true },
+	"exclude": ["node_modules"]
 }

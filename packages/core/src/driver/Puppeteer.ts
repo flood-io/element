@@ -1,5 +1,5 @@
-import puppeteer from 'puppeteer'
-import { LaunchOptions, Browser, Page } from 'puppeteer'
+import puppeteer, { LaunchOptions, Browser, Page } from 'puppeteer'
+
 import { ChromeVersion } from '../runtime/Settings'
 
 export type ConcreteLaunchOptions = LaunchOptions & {
@@ -19,21 +19,6 @@ const defaultLaunchOptions: ConcreteLaunchOptions = {
 	ignoreHTTPSErrors: false,
 }
 
-function setupChrome(options: ConcreteLaunchOptions): ConcreteLaunchOptions {
-	switch (options.chromeVersion) {
-		case 'puppeteer':
-			options.executablePath = undefined
-			return options
-		case 'stable':
-			return setupSystemChrome(options)
-		default:
-			options.executablePath = options.chromeVersion
-			options.args.push('--disable-gpu')
-			options.args.push('--disable-dev-shm-usage')
-			return options
-	}
-}
-
 function setupSystemChrome(options: ConcreteLaunchOptions): ConcreteLaunchOptions {
 	switch (process.platform) {
 		case 'darwin':
@@ -51,15 +36,29 @@ function setupSystemChrome(options: ConcreteLaunchOptions): ConcreteLaunchOption
 
 	return options
 }
+function setupChrome(options: ConcreteLaunchOptions): ConcreteLaunchOptions {
+	switch (options.chromeVersion) {
+		case 'puppeteer':
+			options.executablePath = undefined
+			return options
+		case 'stable':
+			return setupSystemChrome(options)
+		default:
+			options.executablePath = options.chromeVersion
+			options.args.push('--disable-gpu')
+			options.args.push('--disable-dev-shm-usage')
+			return options
+	}
+}
 
-export interface IPuppeteerClient {
+export interface PuppeteerClientLike {
 	browser: Browser
 	page: Page
 	close(): Promise<void>
 	reopenPage(incognito: boolean): Promise<void>
 }
 
-export class PuppeteerClient implements IPuppeteerClient {
+export class PuppeteerClient implements PuppeteerClientLike {
 	constructor(public browser: Browser, public page: Page) {}
 
 	private _isClosed = false
@@ -69,13 +68,13 @@ export class PuppeteerClient implements IPuppeteerClient {
 		this._isClosed = true
 	}
 
-	async reopenPage(incognito: boolean = false): Promise<void> {
+	async reopenPage(incognito = false): Promise<void> {
 		for (const page of await this.browser.pages()) {
 			await page.close()
 		}
 
 		if (incognito) {
-			let context = await this.browser.createIncognitoBrowserContext()
+			const context = await this.browser.createIncognitoBrowserContext()
 			this.page = await context.newPage()
 		} else {
 			this.page = await this.browser.newPage()
@@ -98,6 +97,8 @@ export async function launch(
 
 	options = setupChrome(options)
 
+	options.args.push('--single-process', '--no-zygote')
+
 	// console.log(JSON.stringify(options, null, 2))
 	// console.log('Runner launching client', options)
 	// const browser = await launchPuppeteer(options)
@@ -118,12 +119,14 @@ export async function launch(
 	return new PuppeteerClient(browser, page)
 }
 
-export class NullPuppeteerClient implements IPuppeteerClient {
+export class NullPuppeteerClient implements PuppeteerClientLike {
 	public browser: Browser
 	public page: Page
-	constructor() {}
+
 	async close(): Promise<void> {
 		return
 	}
-	async reopenPage() {}
+	async reopenPage() {
+		return
+	}
 }

@@ -17,11 +17,12 @@
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
 		"composite": true,
+		"declaration": true,
 		"declarationMap": true,
 		"baseUrl": "./packages",
 		"paths": {
 			"@flood/element-compiler": ["./compiler/src/index.ts"],
-			"@flood/element-core": ["./compiler/index.ts"],
+			"@flood/element-core": ["./core/index.ts"],
 			"@flood/element-*": ["./*/src/index.ts"]
 		}
 	},

@@ -14,6 +14,25 @@
 			"internalConsoleOptions": "openOnFirstSessionStart",
 			"disableOptimisticBPs": true,
 			"program": "${workspaceFolder}/node_modules/jest/bin/jest"
+		},
+
+		{
+			"name": "cli run ./example",
+			"type": "node",
+			"request": "launch",
+			"args": [
+				"${workspaceFolder}/packages/cli/index.ts",
+				"run",
+				"./examples/auto-wait/test.ts",
+				"--devtools",
+				"--debug"
+			],
+			"skipFiles": ["<node_internals>/**"],
+			"runtimeArgs": ["--nolazy", "-r", "ts-node/register", "-r", "tsconfig-paths/register"],
+			"sourceMaps": true,
+			"cwd": "${workspaceRoot}",
+			"console": "internalConsole",
+			"protocol": "inspector"
 		}
 	]
 }

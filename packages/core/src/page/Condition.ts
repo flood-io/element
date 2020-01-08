@@ -2,7 +2,7 @@ import { PageFnOptions, Page, EvaluateFn, Frame } from 'puppeteer'
 import { Locator } from './types'
 import { DEFAULT_SETTINGS } from '../runtime/Settings'
 import recast from 'recast'
-import { locatableToLocator } from '../runtime/Browser'
+import { locatableToLocator } from '../runtime/toLocatorError'
 import { NullableLocatable } from '../runtime/types'
 
 import debugFactory from 'debug'
@@ -27,9 +27,7 @@ export abstract class Condition {
 	public abstract toString(): string
 	public abstract async waitFor(frame: Frame, page?: Page): Promise<any>
 
-	public async waitForEvent(page: Page): Promise<any> {
-		return
-	}
+	public abstract async waitForEvent(page: Page): Promise<any>
 
 	protected get timeout(): number {
 		return this.settings.waitTimeout * 1e3
@@ -69,7 +67,7 @@ export abstract class LocatorCondition extends Condition {
 }
 
 export abstract class ElementCondition extends LocatorCondition {
-	constructor(desc: string = '*BASE ELEMENT CONDITION', locator: NullableLocatable) {
+	constructor(desc = '*BASE ELEMENT CONDITION', locator: NullableLocatable) {
 		super(desc, locator, null)
 	}
 
@@ -79,17 +77,17 @@ export abstract class ElementCondition extends LocatorCondition {
 		return this.locator.pageFunc
 	}
 
-	public async waitFor(frame: Frame, page?: Page): Promise<boolean> {
+	public async waitFor(frame: Frame): Promise<boolean> {
 		const argSeparator = '-SEP-'
-		let options: PageFnOptions = { polling: 'raf', timeout: this.timeout }
-		let locatorFunc = this.locatorPageFunc
-		let conditionFunc = this.pageFunc
+		const options: PageFnOptions = { polling: 'raf', timeout: this.timeout }
+		const locatorFunc = this.locatorPageFunc
+		const conditionFunc = this.pageFunc
 
-		let fn = function predicate(...args: any[]) {
+		const fn = function predicate(...args: any[]) {
 			const argSeparator = '-SEP-'
 
-			let args1: any[] = []
-			let args2: any[] = []
+			const args1: any[] = []
+			const args2: any[] = []
 			let foundSep = false
 			for (const a of args) {
 				if (!foundSep) {
@@ -103,28 +101,29 @@ export abstract class ElementCondition extends LocatorCondition {
 				}
 			}
 
-			let locatorFunc: EvaluateFn = function() {
+			const locatorFunc: EvaluateFn = function() {
 				return null
 			}
 
-			let [arg1, ...rest] = args1
+			const [arg1, ...rest] = args1
 
-			let node: HTMLElement | null = locatorFunc(arg1, ...rest)
+			const node: HTMLElement | null = locatorFunc(arg1, ...rest)
 			if (node === null) return false
 
-			let conditionFunc = function(node: HTMLElement, ...args2: any[]) {
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			const conditionFunc = function(node: HTMLElement, ...args2: any[]) {
 				return false
 			}
 
 			return conditionFunc(node, ...args2)
 		}
 
-		let fnAST = recast.parse(fn.toString())
-		let locatorFuncAST = recast.parse(locatorFunc.toString()).program.body[0]
+		const fnAST = recast.parse(fn.toString())
+		const locatorFuncAST = recast.parse(locatorFunc.toString()).program.body[0]
 
 		if (!conditionFunc) throw new Error(`Condition.pageFunc is not defined`)
 
-		let conditionFuncAST = recast.parse(conditionFunc.toString()).program.body[0]
+		const conditionFuncAST = recast.parse(conditionFunc.toString()).program.body[0]
 
 		recast.visit(fnAST, {
 			visitVariableDeclaration(path: any) {
@@ -148,7 +147,7 @@ export abstract class ElementCondition extends LocatorCondition {
 
 		debug('waitFor code', code)
 
-		let args = Array.prototype.concat(this.locator.pageFuncArgs, argSeparator, this.pageFuncArgs)
+		const args = Array.prototype.concat(this.locator.pageFuncArgs, argSeparator, this.pageFuncArgs)
 		debug('waitFor args', args)
 
 		code = `(${code})(...args)`

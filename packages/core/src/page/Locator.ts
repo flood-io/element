@@ -1,6 +1,12 @@
-import { EvaluateFn, ExecutionContext, ElementHandle as PElementHandle, Frame } from 'puppeteer'
-import { ElementHandle } from './Locators'
-import { Locator } from './types'
+import {
+	EvaluateFn,
+	ExecutionContext,
+	ElementHandle as PuppeteerElementHandle,
+	Frame,
+	ElementHandle,
+} from 'puppeteer'
+// import { ElementHandle } from './Locators'
+import { Locator, ElementHandle as IElementHandle, LocatorBuilder } from './types'
 
 export class NotImplementedError extends Error {
 	constructor(public message = 'Method not implemented in DSL') {
@@ -19,27 +25,43 @@ function evaluationString(fun: any, ...args: any[]): string {
 }
 
 export class BaseLocator implements Locator {
-	public pageFunc: EvaluateFn
-	public pageFuncMany: EvaluateFn
-	public pageFuncArgs: any[]
+	constructor(private builder: LocatorBuilder, private errorString: string) {}
 
-	constructor(protected errorString: string) {}
+	get pageFunc(): EvaluateFn<HTMLElement | undefined> {
+		return this.builder.pageFunc
+	}
+
+	get pageFuncMany(): EvaluateFn<HTMLElement | undefined> {
+		return this.builder.pageFuncMany
+	}
+
+	get pageFuncArgs(): (string | ElementHandle<Element>)[] {
+		return this.builder.pageFuncArgs
+	}
 
 	public toErrorString(): string {
 		return this.errorString
 	}
 
-	async find(context: ExecutionContext, node?: PElementHandle): Promise<ElementHandle | null> {
-		let args = [...this.pageFuncArgs]
+	async find(
+		context: ExecutionContext,
+		node?: PuppeteerElementHandle,
+	): Promise<IElementHandle | null> {
+		const args = [...this.pageFuncArgs]
 		if (node) args.push(node)
-		let handle = await context.evaluateHandle(this.pageFunc, ...args)
+		const handle = await context.evaluateHandle(this.pageFunc, ...args)
 		const element = handle.asElement()
+
+		const { ElementHandle } = await import('./ElementHandle')
 		if (element) return new ElementHandle(element).initErrorString(this.toErrorString())
 		return null
 	}
 
-	async findMany(context: ExecutionContext, node?: PElementHandle): Promise<ElementHandle[]> {
-		let args = [...this.pageFuncArgs]
+	async findMany(
+		context: ExecutionContext,
+		node?: PuppeteerElementHandle,
+	): Promise<IElementHandle[]> {
+		const args = [...this.pageFuncArgs]
 		if (node) args.push(node)
 		const arrayHandle = await context.evaluateHandle(this.pageFuncMany, ...args)
 
@@ -50,7 +72,9 @@ export class BaseLocator implements Locator {
 
 		const thisErrorString = this.toErrorString()
 
-		const elements: Promise<ElementHandle>[] = []
+		const elements: Promise<IElementHandle>[] = []
+
+		const { ElementHandle } = await import('./ElementHandle')
 
 		for (const property of properties.values()) {
 			const elementHandle = property.asElement()
@@ -72,8 +96,8 @@ export class BaseLocator implements Locator {
 		const waitForHidden = !!options.hidden
 		const polling = waitForVisible || waitForHidden ? 'raf' : 'mutation'
 
-		let tmpArgs = waitFuncArgs.map((_, index) => `arg${index}`)
-		let fn = `
+		const tmpArgs = waitFuncArgs.map((_, index) => `arg${index}`)
+		const fn = `
 let element = ${evaluationString(this.pageFunc, ...this.pageFuncArgs)}
 let predicate = ${waitFunc}
 return predicate(${['element', ...tmpArgs].join(', ')})`

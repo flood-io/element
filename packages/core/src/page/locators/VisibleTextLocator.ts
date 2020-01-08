@@ -1,17 +1,15 @@
-import { BaseLocator } from '../Locators'
 import { EvaluateFn } from 'puppeteer'
+import { LocatorBuilder } from '../types'
 
-export class VisibleTextLocator extends BaseLocator {
-	constructor(public linkText: string, public partial: boolean = false, desc: string) {
-		super(desc)
-	}
+export class VisibleTextLocator implements LocatorBuilder {
+	constructor(public linkText: string, public partial: boolean = false) {}
 
 	get pageFuncArgs(): any[] {
 		return [this.linkText, this.partial]
 	}
 
 	get pageFunc(): EvaluateFn {
-		return (targetText: string, partial: boolean = true) => {
+		return (targetText: string, partial = true) => {
 			// TODO: Switch expressions if not partial
 			const expression = `//*[contains(text(), ${JSON.stringify(targetText)})]`
 			const iterator = document.evaluate(
@@ -23,19 +21,18 @@ export class VisibleTextLocator extends BaseLocator {
 			)
 
 			let node = iterator.iterateNext()
+			function hasVisibleBoundingBox(element: HTMLElement) {
+				const rect = element.getBoundingClientRect()
+				return !!(rect.top || rect.bottom || rect.width || rect.height)
+			}
 
 			while (node) {
 				if (node && node.nodeType === Node.ELEMENT_NODE) {
-					let element: HTMLElement = node as HTMLElement
+					const element: HTMLElement = node as HTMLElement
 					const style = window.getComputedStyle(element)
-					const isVisible = style && style.visibility !== 'hidden' && hasVisibleBoundingBox()
+					const isVisible = style && style.visibility !== 'hidden' && hasVisibleBoundingBox(element)
 
 					if (isVisible) return node
-
-					function hasVisibleBoundingBox() {
-						const rect = element.getBoundingClientRect()
-						return !!(rect.top || rect.bottom || rect.width || rect.height)
-					}
 				}
 				node = iterator.iterateNext()
 			}
@@ -47,27 +44,26 @@ export class VisibleTextLocator extends BaseLocator {
 	// TODO: Switch this to use Xpath
 	get pageFuncMany(): EvaluateFn {
 		return (targetText: string, partial: boolean) => {
-			let elements = Array.from(document.querySelectorAll('*'))
+			const elements = Array.from(document.querySelectorAll('*'))
+			function hasVisibleBoundingBox(node: Element) {
+				const rect = node.getBoundingClientRect()
+				return !!(rect.top || rect.bottom || rect.width || rect.height)
+			}
 			return elements
 				.filter(link => {
 					if (!link.textContent) return false
-					let text = link.textContent.trim()
+					const text = link.textContent.trim()
 					return (partial && text.indexOf(targetText) !== -1) || text === targetText
 				})
 				.filter(node => {
 					const style = window.getComputedStyle(node)
-					const isVisible = style && style.visibility !== 'hidden' && hasVisibleBoundingBox()
+					const isVisible = style && style.visibility !== 'hidden' && hasVisibleBoundingBox(node)
 					return isVisible
-
-					function hasVisibleBoundingBox() {
-						const rect = node.getBoundingClientRect()
-						return !!(rect.top || rect.bottom || rect.width || rect.height)
-					}
 				})
 		}
 	}
 
 	toString() {
-		return `visible text "${this.linkText}"`
+		return `By.partialVisibleText("${this.linkText}")`
 	}
 }

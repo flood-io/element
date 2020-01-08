@@ -1,21 +1,20 @@
-import { BaseLocator } from '../Locators'
 import { EvaluateFn } from 'puppeteer'
+import { LocatorBuilder } from '../types'
 
-export class TagNameLocator extends BaseLocator {
-	constructor(public tagName: string) {
-		super(`<${tagName}>`)
-	}
+export class TagNameLocator implements LocatorBuilder {
+	constructor(public tagName: string) {}
 
 	get pageFuncArgs(): string[] {
 		return [this.tagName]
 	}
 
 	get pageFunc(): EvaluateFn {
-		return (tagName: string) => document.getElementsByTagName(tagName)[0]
+		return (tagName: string, node?: HTMLElement) =>
+			(node ?? document).getElementsByTagName(tagName)[0]
 	}
 
 	get pageFuncMany(): EvaluateFn {
-		return (tagName: string) => document.getElementsByTagName(tagName)
+		return (tagName: string, node?: HTMLElement) => (node ?? document).getElementsByTagName(tagName)
 	}
 
 	toString() {

@@ -1,6 +1,7 @@
 import { serve } from '../../../tests/support/fixture-server'
 import { launchPuppeteer, testPuppeteer } from '../../../tests/support/launch-browser'
 import { VisibleTextLocator } from './VisibleTextLocator'
+import { BaseLocator } from '../Locator'
 
 let puppeteer: testPuppeteer
 
@@ -14,12 +15,12 @@ describe('VisibleTextLocator', () => {
 	})
 
 	beforeEach(async () => {
-		let url = await serve('wait.html')
+		const url = await serve('wait.html')
 		await puppeteer.page.goto(url, { waitUntil: 'domcontentloaded' })
 	})
 
 	test('evaluates', async () => {
-		const loc = new VisibleTextLocator('foo', false, 'By.visibleText')
+		const loc = new BaseLocator(new VisibleTextLocator('foo', false), 'By.visibleText')
 		const ctx = await puppeteer.page.mainFrame().executionContext()
 
 		const maybeElement = await loc.find(ctx)
@@ -31,7 +32,7 @@ describe('VisibleTextLocator', () => {
 	})
 
 	test('escapes target text correctly', async () => {
-		const loc = new VisibleTextLocator("foon't", false, 'By.visibleText')
+		const loc = new BaseLocator(new VisibleTextLocator("foon't", false), 'By.visibleText')
 		const ctx = await puppeteer.page.mainFrame().executionContext()
 
 		let maybeElement: any

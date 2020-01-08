@@ -1,6 +1,10 @@
-import { ElementHandle as PElementHandle, ClickOptions, ScreenshotOptions } from 'puppeteer'
+import {
+	ElementHandle as PElementHandle,
+	ClickOptions,
+	ScreenshotOptions,
+	EvaluateFn,
+} from 'puppeteer'
 import { ElementHandle as IElementHandle, Locator } from './types'
-import { EvaluateFn } from '../runtime/types'
 import {
 	ErrorInterpreter,
 	AnyErrorData,
@@ -10,12 +14,12 @@ import {
 } from '../runtime/errors/Types'
 import interpretPuppeteerError from '../runtime/errors/interpretPuppeteerError'
 import { StructuredError } from '../utils/StructuredError'
-// import { By } from './By'
 import { Key } from './Enums'
 import debugFactory from 'debug'
-import { Point } from './Mouse'
-import { By } from './By'
-// import { CSSLocator } from './locators/CSS'
+import { Point } from './Point'
+import { CSSLocator } from './locators/index'
+import { BaseLocator } from './Locator'
+// import { By } from './Locators'
 const debug = debugFactory('element:page:element-handle')
 
 /**
@@ -25,8 +29,8 @@ async function getProperty<T>(element: PElementHandle, prop: string): Promise<T 
 	if (!element) {
 		return null
 	} else {
-		let handle = await element.getProperty(prop)
-		let value = (await handle.jsonValue()) as T
+		const handle = await element.getProperty(prop)
+		const value = (await handle.jsonValue()) as T
 		handle.dispose()
 		return value
 	}
@@ -41,7 +45,7 @@ function wrapDescriptiveError(
 	errorInterpreters.push(interpretPuppeteerError)
 
 	return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-		let originalFn = descriptor.value
+		const originalFn = descriptor.value
 
 		descriptor.value = async function(...args: any[]) {
 			// capture the stack trace at call-time
@@ -88,9 +92,9 @@ function wrapDescriptiveError(
 function domError(
 	err: Error,
 	target: ElementHandle,
-	key: string,
+	key: string /* ,
 	callCtx: string,
-	options?: ClickOptions,
+	options?: ClickOptions, */,
 ): StructuredError<ActionErrorData | EmptyErrorData> | undefined {
 	if (err.message.includes('Node is detached from document')) {
 		return new StructuredError<ActionErrorData>(
@@ -167,11 +171,11 @@ export class ElementHandle implements IElementHandle, Locator {
 		return this.errorString
 	}
 
-	async find(context: never, node?: never): Promise<ElementHandle | null> {
+	async find(/* context: never, node?: never */): Promise<ElementHandle | null> {
 		return this
 	}
 
-	async findMany(context: never, node?: never): Promise<ElementHandle[]> {
+	async findMany(/* context: never, node?: never */): Promise<ElementHandle[]> {
 		return [this]
 	}
 
@@ -180,11 +184,11 @@ export class ElementHandle implements IElementHandle, Locator {
 	}
 
 	get pageFunc(): EvaluateFn {
-		return (element: HTMLElement, node?: HTMLElement) => element
+		return (element: HTMLElement) => element
 	}
 
 	get pageFuncMany(): EvaluateFn {
-		return (element: HTMLElement, node?: HTMLElement) => [element]
+		return (element: HTMLElement) => [element]
 	}
 
 	/**
@@ -212,7 +216,7 @@ export class ElementHandle implements IElementHandle, Locator {
 	 */
 	@wrapDescriptiveError()
 	public async clear(): Promise<void> {
-		let tagName = await this.tagName()
+		const tagName = await this.tagName()
 		if (tagName === 'SELECT') {
 			await this.element
 				.executionContext()
@@ -247,7 +251,7 @@ export class ElementHandle implements IElementHandle, Locator {
 	 */
 	@wrapDescriptiveError()
 	public async sendKeys(...keys: string[]): Promise<void> {
-		let handle = this.element.asElement()
+		const handle = this.element.asElement()
 		if (!handle) return
 
 		for (const key of keys) {
@@ -264,7 +268,7 @@ export class ElementHandle implements IElementHandle, Locator {
 	 */
 	@wrapDescriptiveError()
 	public async type(text: string): Promise<void> {
-		let handle = this.element.asElement()
+		const handle = this.element.asElement()
 		if (!handle) return
 		return handle.type(text)
 	}
@@ -298,7 +302,7 @@ export class ElementHandle implements IElementHandle, Locator {
 	// TODO wrap
 	public async findElement(locator: string | Locator): Promise<IElementHandle | null> {
 		if (typeof locator === 'string') {
-			locator = By.css(locator)
+			locator = new BaseLocator(new CSSLocator(locator), 'handle.findElement')
 		}
 		return locator.find(this.element.executionContext(), this.element)
 	}
@@ -308,7 +312,7 @@ export class ElementHandle implements IElementHandle, Locator {
 	 */
 	public async findElements(locator: string | Locator): Promise<IElementHandle[]> {
 		if (typeof locator === 'string') {
-			locator = By.css(locator)
+			locator = new BaseLocator(new CSSLocator(locator), 'handle.findElements')
 		}
 		return locator.findMany(this.element.executionContext(), this.element)
 	}
@@ -331,7 +335,7 @@ export class ElementHandle implements IElementHandle, Locator {
 	 * Fetches the value of an attribute on this element
 	 */
 	public async getAttribute(key: string): Promise<string | null> {
-		let handle = this.element.asElement()
+		const handle = this.element.asElement()
 		if (!handle) return null
 
 		return handle
@@ -354,15 +358,15 @@ export class ElementHandle implements IElementHandle, Locator {
 			throw new Error('Element is not selectable')
 		}
 
-		var propertyName = 'selected'
-		let tagName = await this.tagName()
+		let propertyName = 'selected'
+		const tagName = await this.tagName()
 
-		var type = tagName && tagName.toUpperCase()
+		const type = tagName && tagName.toUpperCase()
 		if ('CHECKBOX' == type || 'RADIO' == type) {
 			propertyName = 'checked'
 		}
 
-		let value = getProperty<string>(this.element, propertyName)
+		const value = getProperty<string>(this.element, propertyName)
 		return !!value
 	}
 
@@ -370,14 +374,14 @@ export class ElementHandle implements IElementHandle, Locator {
 	 * Checks whether the remote element is selectable. An element is selectable if it is an `<option>` or `input[type="checkbox"]` or radio button.
 	 */
 	public async isSelectable(): Promise<boolean> {
-		let tagName = await this.tagName()
+		const tagName = await this.tagName()
 
 		if (tagName === 'OPTION') {
 			return true
 		}
 
 		if (tagName === 'INPUT') {
-			let type = tagName.toLowerCase()
+			const type = tagName.toLowerCase()
 			return type == 'checkbox' || type == 'radio'
 		}
 
@@ -388,7 +392,7 @@ export class ElementHandle implements IElementHandle, Locator {
 	 * Checks whether the remote element is displayed in the DOM and is visible to the user without being hidden by CSS or occluded by another element.
 	 */
 	public async isDisplayed(): Promise<boolean> {
-		let box = await this.element.boundingBox()
+		const box = await this.element.boundingBox()
 		return box !== null
 	}
 
@@ -396,7 +400,7 @@ export class ElementHandle implements IElementHandle, Locator {
 	 * Checks whether the remote element is enabled. Typically this means it does not have a `disabled` property or attribute applied.
 	 */
 	public async isEnabled(): Promise<boolean> {
-		let disabled = await this.getAttribute('disabled')
+		const disabled = await this.getAttribute('disabled')
 		return disabled === null
 	}
 
@@ -420,10 +424,10 @@ export class ElementHandle implements IElementHandle, Locator {
 	 * as a {width:number, height:number} object
 	 */
 	public async size(): Promise<{ width: number; height: number }> {
-		let box = await this.element.boundingBox()
+		const box = await this.element.boundingBox()
 		if (!box) return { width: 0, height: 0 }
 
-		let { width, height } = box
+		const { width, height } = box
 		return { width, height }
 	}
 
@@ -434,11 +438,11 @@ export class ElementHandle implements IElementHandle, Locator {
 	 * @returns Point The [x,y] coordinates
 	 */
 	public async centerPoint(): Promise<Point> {
-		let box = await this.element.boundingBox()
-		if (!box) return [0, 0]
-		let { x, y, height, width } = box!
-		let cx = Math.round(x + width / 2)
-		let cy = Math.round(y + height / 2)
+		const box = await this.element.boundingBox()
+		if (box == null) return [0, 0]
+		const { x, y, height, width } = box
+		const cx = Math.round(x + width / 2)
+		const cy = Math.round(y + height / 2)
 		return [cx, cy]
 	}
 
@@ -447,10 +451,10 @@ export class ElementHandle implements IElementHandle, Locator {
 	 * as a {x:number, y:number} object.
 	 */
 	public async location(): Promise<{ x: number; y: number }> {
-		let box = await this.element.boundingBox()
+		const box = await this.element.boundingBox()
 		if (!box) return { x: 0, y: 0 }
 
-		let { x, y } = box
+		const { x, y } = box
 		return { x, y }
 	}
 

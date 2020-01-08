@@ -1,23 +1,21 @@
-import { BaseLocator } from '../Locators'
+// import { BaseLocator } from '../Locators'
 import { EvaluateFn } from 'puppeteer'
+import { LocatorBuilder } from '../types'
 
-export class CSSLocator extends BaseLocator {
-	constructor(public selector: string, debugString: string) {
-		super(debugString)
-	}
+export class CSSLocator implements LocatorBuilder {
+	constructor(public selector: string) {}
 
 	get pageFuncArgs(): string[] {
 		return [this.selector]
 	}
 
-	get pageFunc(): EvaluateFn {
-		return (selector: string, node?: HTMLElement) =>
-			(node ? node : document).querySelector(selector)
+	get pageFunc(): EvaluateFn<string | undefined> {
+		return (selector: string, node?: HTMLElement) => (node ?? document).querySelector(selector)
 	}
 
-	get pageFuncMany(): EvaluateFn {
+	get pageFuncMany(): EvaluateFn<string> {
 		return (selector: string, node?: HTMLElement) =>
-			Array.from((node ? node : document).querySelectorAll(selector))
+			Array.from((node ?? document).querySelectorAll(selector))
 	}
 
 	toString() {

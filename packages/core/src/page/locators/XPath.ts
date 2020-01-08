@@ -1,10 +1,8 @@
-import { BaseLocator } from '../Locators'
 import { EvaluateFn } from 'puppeteer'
+import { LocatorBuilder } from '../types'
 
-export class XPathLocator extends BaseLocator {
-	constructor(public selector: string) {
-		super(`xpath==${selector}`)
-	}
+export class XPathLocator implements LocatorBuilder {
+	constructor(public selector: string) {}
 
 	get pageFuncArgs(): string[] {
 		return [this.selector]
@@ -18,7 +16,7 @@ export class XPathLocator extends BaseLocator {
 
 	get pageFuncMany(): EvaluateFn {
 		return (expression: string) => {
-			let nodes = document.evaluate(
+			const nodes = document.evaluate(
 				expression,
 				document,
 				null,
@@ -26,7 +24,7 @@ export class XPathLocator extends BaseLocator {
 				null,
 			)
 
-			let elements: Node[] = []
+			const elements: Node[] = []
 			let node = nodes.iterateNext()
 			while (node) {
 				elements.push(node)
@@ -35,5 +33,9 @@ export class XPathLocator extends BaseLocator {
 
 			return elements
 		}
+	}
+
+	toString() {
+		return `xpath==${this.selector}`
 	}
 }

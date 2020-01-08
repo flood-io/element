@@ -6,6 +6,7 @@
 	"homepage": "https://github.com/flood-io/element#readme",
 	"license": "Apache-2.0",
 	"main": "dist/src/index.js",
+	"esnext": "src/index.ts",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flood-io/element.git"

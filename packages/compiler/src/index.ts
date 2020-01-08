@@ -1,9 +1,10 @@
 import { Configuration as WebpackConfig, Stats } from 'webpack'
 import { CompilerOptions, sys } from 'typescript'
 import { resolve, dirname, join } from 'path'
-// import MemoryFileSystem from 'memory-fs'
+import MemoryFileSystem from 'memory-fs'
 import WebpackBar from 'webpackbar'
 import findRoot from 'find-root'
+import webpack from 'webpack'
 
 import { transformFileAsync } from '@babel/core'
 
@@ -11,6 +12,7 @@ import { transformFileAsync } from '@babel/core'
 
 export interface CompilerOutput {
 	content: string
+	sourceMap?: string
 	stats?: CompilerStats
 }
 
@@ -37,58 +39,7 @@ export class Compiler {
 	constructor(private sourceFile: string /* , private productionMode: boolean = false */) {}
 
 	public async emit(): Promise<CompilerOutput> {
-		let result = await transformFileAsync(resolve(this.sourceFile), {
-			comments: false,
-			highlightCode: true,
-			presets: [
-				'@babel/preset-typescript',
-				[
-					'@babel/preset-env',
-					{
-						targets: { node: 'current' },
-						useBuiltIns: false,
-					},
-				],
-			],
-		})
-
-		let content: string = ''
-		if (result != null) {
-			content = result.code ?? ''
-		}
-
-		let stats = new CompilerStats()
-
-		return {
-			content,
-			stats,
-		}
-
-		// let compiler = webpack(this.webpackConfig)
-
-		// let fileSystem = new MemoryFileSystem()
-
-		// compiler.outputFileSystem = fileSystem
-
-		// return new Promise((yeah, nah) => {
-		// 	compiler.run((err, stats) => {
-		// 		// let formattedStats = stats.toString()
-
-		// 		if (stats.hasErrors() || stats.hasWarnings()) {
-		// 			return nah(
-		// 				new Error(
-		// 					stats.toString({
-		// 						errorDetails: true,
-		// 						warnings: true,
-		// 					}),
-		// 				),
-		// 			)
-		// 		} else {
-		// 			// let output = compiler.outputFileSystem as MemoryFileSystem
-		// 			yeah({ stats, content: fileSystem.data['bundle.js'].toString() })
-		// 		}
-		// 	})
-		// })
+		return this.webpackCompiler()
 	}
 
 	get compilerOptions(): CompilerOptions {
@@ -107,7 +58,8 @@ export class Compiler {
 			entry: this.sourceFile,
 			// mode: this.productionMode ? 'production' : 'development',
 			mode: 'none',
-			devtool: 'cheap-module-eval-source-map',
+			// devtool: 'cheap-module-eval-source-map',
+			devtool: 'cheap-module-source-map',
 			output: {
 				path: '/',
 				filename: join('bundle.js'),
@@ -163,5 +115,72 @@ export class Compiler {
 		let localConfig = paths.map(path => join(path, configFile)).find(path => sys.fileExists(path))
 
 		return localConfig || configFile
+	}
+
+	private async webpackCompiler(): Promise<CompilerOutput> {
+		let compiler = webpack(this.webpackConfig)
+		let fileSystem = new MemoryFileSystem()
+		compiler.outputFileSystem = fileSystem
+		return new Promise((yeah, nah) => {
+			compiler.run((err, stats) => {
+				// let formattedStats = stats.toString()
+				if (stats.hasErrors() || stats.hasWarnings()) {
+					return nah(
+						new Error(
+							stats.toString({
+								errorDetails: true,
+								warnings: true,
+							}),
+						),
+					)
+				} else {
+					// let output = compiler.outputFileSystem as MemoryFileSystem
+					yeah({
+						stats,
+						content: fileSystem.data['bundle.js'].toString(),
+						sourceMap: fileSystem.data['bundle.js.map'].toString(),
+					})
+				}
+			})
+		})
+	}
+
+	// @ts-ignore
+	private async babelCompiler(): Promise<CompilerOutput> {
+		let result = await transformFileAsync(resolve(this.sourceFile), {
+			comments: false,
+			highlightCode: true,
+			caller: {
+				name: 'element-babel-compiler',
+				supportsStaticESM: false,
+			},
+			compact: false,
+			sourceMaps: 'both',
+
+			cwd: dirname(this.sourceFile),
+
+			presets: [
+				'@babel/preset-typescript',
+				[
+					'@babel/preset-env',
+					{
+						targets: { node: 'current' },
+						useBuiltIns: false,
+					},
+				],
+			],
+		})
+
+		let content: string = ''
+		if (result != null) {
+			content = result.code ?? ''
+		}
+
+		let stats = new CompilerStats()
+
+		return {
+			content,
+			stats,
+		}
 	}
 }

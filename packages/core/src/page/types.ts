@@ -6,21 +6,25 @@ import {
 	ScreenshotOptions,
 } from 'puppeteer'
 
-/**
- * A Locator represents an object used to locate elements on the page. It is usually constructed using the helper methods of <[By]>.
- * An <[ElementHandle]> can also be used as a Locator which finds itself.
- *
- * @docOpaque
- */
-export interface Locator {
+export interface LocatorBuilder {
 	pageFunc: EvaluateFn
 
 	pageFuncMany: EvaluateFn
 
 	pageFuncArgs: any[]
 
-	toErrorString(): string
+	toErrorString?(): string
 
+	toString(): string
+}
+
+/**
+ * A Locator represents an object used to locate elements on the page. It is usually constructed using the helper methods of <[By]>.
+ * An <[ElementHandle]> can also be used as a Locator which finds itself.
+ *
+ * @docOpaque
+ */
+export interface Locator extends LocatorBuilder {
 	find(context: ExecutionContext, node?: PElementHandle): Promise<ElementHandle | null>
 
 	findMany(context: ExecutionContext, node?: PElementHandle): Promise<ElementHandle[]>

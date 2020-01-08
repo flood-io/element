@@ -1,5 +1,5 @@
-;(function() {
-	var h =
+(function() {
+	const h =
 			'undefined' != typeof window && window === this
 				? this
 				: 'undefined' != typeof global && null != global ? global : this,
@@ -13,13 +13,13 @@
 		l = function() {}
 		h.Symbol || (h.Symbol = m)
 	}
-	var n = 0
+	let n = 0
 	function m(a) {
 		return 'jscomp_symbol_' + (a || '') + n++
 	}
 	function p() {
 		l()
-		var a = h.Symbol.iterator
+		let a = h.Symbol.iterator
 		a || (a = h.Symbol.iterator = h.Symbol('iterator'))
 		'function' != typeof Array.prototype[a] &&
 			k(Array.prototype, a, {
@@ -32,7 +32,7 @@
 		p = function() {}
 	}
 	function q(a) {
-		var b = 0
+		let b = 0
 		return r(function() {
 			return b < a.length ? { done: !1, value: a[b++] } : { done: !0 }
 		})
@@ -47,7 +47,7 @@
 	}
 	function t(a) {
 		p()
-		var b = a[Symbol.iterator]
+		const b = a[Symbol.iterator]
 		return b ? b.call(a) : q(a)
 	}
 	function u(a) {
@@ -58,13 +58,13 @@
 		}
 		return a
 	}
-	var v = 0
+	let v = 0
 	function w(a, b) {
-		var c = XMLHttpRequest.prototype.send,
+		const c = XMLHttpRequest.prototype.send,
 			d = v++
 		XMLHttpRequest.prototype.send = function(f) {
 			for (var e = [], g = 0; g < arguments.length; ++g) e[g - 0] = arguments[g]
-			var E = this
+			const E = this
 			a(d)
 			this.addEventListener('readystatechange', function() {
 				4 === E.readyState && b(d)
@@ -73,11 +73,11 @@
 		}
 	}
 	function x(a, b) {
-		var c = fetch
+		const c = fetch
 		fetch = function(d) {
 			for (var f = [], e = 0; e < arguments.length; ++e) f[e - 0] = arguments[e]
 			return new Promise(function(d, e) {
-				var g = v++
+				const g = v++
 				a(g)
 				c.apply(null, [].concat(u(f))).then(
 					function(a) {
@@ -92,17 +92,17 @@
 			})
 		}
 	}
-	var y = 'img script iframe link audio video source'.split(' ')
+	const y = 'img script iframe link audio video source'.split(' ')
 	function z(a, b) {
 		a = t(a)
-		for (var c = a.next(); !c.done; c = a.next())
+		for (let c = a.next(); !c.done; c = a.next())
 			if (((c = c.value), b.includes(c.nodeName.toLowerCase()) || z(c.children, b))) return !0
 		return !1
 	}
 	function A(a) {
-		var b = new MutationObserver(function(c) {
+		const b = new MutationObserver(function(c) {
 			c = t(c)
-			for (var b = c.next(); !b.done; b = c.next())
+			for (let b = c.next(); !b.done; b = c.next())
 				(b = b.value),
 					'childList' == b.type && z(b.addedNodes, y)
 						? a(b)
@@ -118,7 +118,7 @@
 	}
 	function B(a, b) {
 		if (2 < a.length) return performance.now()
-		var c = []
+		const c = []
 		b = t(b)
 		for (var d = b.next(); !d.done; d = b.next())
 			(d = d.value),
@@ -149,7 +149,7 @@
 		this.w = !!a.useMutationObserver
 		this.u = a.minValue || null
 		a = window.__tti && window.__tti.e
-		var b = window.__tti && window.__tti.o
+		const b = window.__tti && window.__tti.o
 		this.a = a
 			? a.map(function(a) {
 					return { start: a.startTime, end: a.startTime + a.duration }
@@ -168,7 +168,7 @@
 		this.w && (this.h = A(this.B.bind(this)))
 	}
 	C.prototype.getFirstConsistentlyInteractive = function() {
-		var a = this
+		const a = this
 		return new Promise(function(b) {
 			a.s = b
 			'complete' == document.readyState
@@ -180,7 +180,7 @@
 	}
 	function F(a) {
 		a.i = !0
-		var b = 0 < a.a.length ? a.a[a.a.length - 1].end : 0,
+		const b = 0 < a.a.length ? a.a[a.a.length - 1].end : 0,
 			c = B(a.g, a.b)
 		G(a, Math.max(c + 5e3, b))
 	}
@@ -199,9 +199,9 @@
 					performance.timing.domContentLoadedEventEnd
 						? ((f = performance.timing), (f = f.domContentLoadedEventEnd - f.navigationStart))
 						: (f = null)
-				var e = performance.now()
+				const e = performance.now()
 				null === f && G(a, Math.max(d + 5e3, e + 1e3))
-				var g = a.a
+				const g = a.a
 				5e3 > e - d
 					? (d = null)
 					: ((d = g.length ? g[g.length - 1].end : b), (d = 5e3 > e - d ? null : Math.max(d, f)))
@@ -214,14 +214,14 @@
 	function D(a) {
 		a.c = new PerformanceObserver(function(b) {
 			b = t(b.getEntries())
-			for (var c = b.next(); !c.done; c = b.next())
+			for (let c = b.next(); !c.done; c = b.next())
 				if (
 					((c = c.value),
 					'resource' === c.entryType &&
 						(a.b.push({ start: c.fetchStart, end: c.responseEnd }), G(a, B(a.g, a.b) + 5e3)),
 					'longtask' === c.entryType)
 				) {
-					var d = c.startTime + c.duration
+					const d = c.startTime + c.duration
 					a.a.push({ start: c.startTime, end: d })
 					G(a, d + 5e3)
 				}
@@ -246,7 +246,7 @@
 			},
 		},
 	})
-	var H = {
+	const H = {
 		getFirstConsistentlyInteractive: function(a) {
 			a = a ? a : {}
 			return 'PerformanceLongTaskTiming' in window

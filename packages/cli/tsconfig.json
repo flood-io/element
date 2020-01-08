@@ -2,16 +2,13 @@
 	"extends": "../../tsconfig.json",
 	"compilerOptions": {
 		"declaration": true,
+		"composite": true,
 		"outDir": "dist"
 	},
 
 	"references": [
 		{
 			"path": "../core"
-		},
-
-		{
-			"path": "../compiler"
 		},
 
 		{
@@ -23,6 +20,6 @@
 		}
 	],
 
-	"files": ["index.ts"],
-	"include": ["index.ts", "ambient.d.ts"]
+	"files": ["index.ts", "ambient.d.ts"],
+	"include": ["index.ts", "ambient.d.ts", "src"]
 }

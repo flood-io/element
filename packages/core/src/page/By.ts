@@ -1,14 +1,17 @@
 import { escapeCss } from '../utils/Escape'
+import { BaseLocator } from './Locator'
+
 import {
-	BaseLocator,
 	LinkTextLocator,
 	VisibleTextLocator,
 	CSSLocator,
 	TagNameLocator,
 	XPathLocator,
-} from './Locators'
+} from './locators/index'
+
 import { Locator } from './types'
 import { EvaluateFn } from 'puppeteer'
+import { EvalLocator } from './locators/EvalLocator'
 
 /**
  * By is used to create <[Locator]>s to find Elements or use in any place which accepts a Locator or <[Locatable]>.
@@ -16,14 +19,6 @@ import { EvaluateFn } from 'puppeteer'
  * @class By
  */
 export class By {
-	public readonly command: string
-	public readonly args: string[]
-
-	constructor(command: string, ...args: any[]) {
-		this.command = command
-		this.args = args
-	}
-
 	/**
 	 * Locates an element using a CSS (jQuery) style selector
 	 * @param selector
@@ -32,7 +27,8 @@ export class By {
 		if (debugString === undefined) {
 			debugString = `By.css('${selector}')`
 		}
-		return new CSSLocator(selector, debugString)
+
+		return new BaseLocator(new CSSLocator(selector), debugString)
 	}
 
 	/**
@@ -53,7 +49,8 @@ export class By {
 	 * @param {string} text The link text to search for.
 	 */
 	static linkText(text: string): Locator {
-		return new LinkTextLocator(text, false, `By.linkText('${text}')`)
+		const builder = new LinkTextLocator(text, false)
+		return new BaseLocator(builder, `By.linkText('${text}')`)
 	}
 
 	/**
@@ -63,7 +60,8 @@ export class By {
 	 * @param {string} text The substring to check for in a link's visible text.
 	 */
 	static partialLinkText(text: string): Locator {
-		return new LinkTextLocator(text, true, `By.partialLinkText('${text}')`)
+		const builder = new LinkTextLocator(text, true)
+		return new BaseLocator(builder, `By.partialLinkText('${text}')`)
 	}
 
 	/**
@@ -73,7 +71,8 @@ export class By {
 	 * @param {string} text The string to check for in a elements's visible text.
 	 */
 	static visibleText(text: string): Locator {
-		return new VisibleTextLocator(text, false, `By.visibleText('${text}')`)
+		const builder = new VisibleTextLocator(text, false)
+		return new BaseLocator(builder, `By.visibleText('${text}')`)
 	}
 
 	/**
@@ -83,7 +82,8 @@ export class By {
 	 * @param {string} text The substring to check for in a elements's visible text.
 	 */
 	static partialVisibleText(text: string): Locator {
-		return new VisibleTextLocator(text, true, `By.partialVisibleText('${text}')`)
+		const builder = new VisibleTextLocator(text, true)
+		return new BaseLocator(builder, `By.partialVisibleText('${text}')`)
 	}
 
 	/**
@@ -94,11 +94,7 @@ export class By {
 	 * @param {...*} var_args The arguments to pass to the script.
 	 */
 	static js(script: EvaluateFn, ...args: any[]): Locator {
-		let locator = new BaseLocator('By.js(function)')
-		locator.pageFunc = script
-		locator.pageFuncMany = script
-		locator.pageFuncArgs = args
-		return locator
+		return new BaseLocator(new EvalLocator(script, script, args), 'By.js(function)')
 	}
 
 	/**
@@ -108,7 +104,7 @@ export class By {
 	 * @return {!By} The new locator.
 	 */
 	public static nameAttr(value: string): Locator {
-		return By.css(`*[name="${escapeCss(value)}"]`, `By.nameAttr('${value}')`)
+		return this.css(`*[name="${escapeCss(value)}"]`, `By.nameAttr('${value}')`)
 	}
 
 	/**
@@ -118,7 +114,7 @@ export class By {
 	 * By.attr('name', 'frame-name')
 	 */
 	public static attr(tagName: string, attrName: string, attrValue: string): Locator {
-		return By.css(
+		return this.css(
 			`${escapeCss(tagName).toLowerCase()}[${escapeCss(attrName)}="${escapeCss(attrValue)}"]`,
 			`By.attr('${tagName}','${attrName}','${attrValue}')`,
 		)
@@ -131,7 +127,7 @@ export class By {
 	 * @return {!By} The new locator.
 	 */
 	static tagName(name: string): Locator {
-		return new TagNameLocator(name)
+		return new BaseLocator(new TagNameLocator(name), `By.tagName('${name}')`)
 	}
 
 	/**
@@ -146,6 +142,6 @@ export class By {
 	 * @see http://www.w3.org/TR/xpath/
 	 */
 	static xpath(xpath: string): Locator {
-		return new XPathLocator(xpath)
+		return new BaseLocator(new XPathLocator(xpath), `By.xpath('${xpath}')`)
 	}
 }

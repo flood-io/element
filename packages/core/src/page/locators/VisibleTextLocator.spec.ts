@@ -24,10 +24,8 @@ describe('VisibleTextLocator', () => {
 		const ctx = await puppeteer.page.mainFrame().executionContext()
 
 		const maybeElement = await loc.find(ctx)
-		if (maybeElement === null) {
-			throw new Error("visible text locator didn't match an element")
-		}
 
+		expect(maybeElement).toBeDefined()
 		expect(await maybeElement.text()).toBe('foo')
 	})
 

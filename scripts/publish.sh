@@ -101,32 +101,6 @@ case $branch in
     ;;
   *)
     echo +++ publishing canary
-    yarn lerna version --canary --yes --force-publish --dist-tag canary
-    # --dist-tag canary
+    yarn lerna publish prerelease --canary --yes --force-publish --dist-tag canary
     ;;
 esac
-
-# echo '--- building @flood/element'
-# cd $root/packages/element
-# ./scripts/build.sh
-
-# echo '--- publishing @flood/element-cli'
-# cd $root/packages/cli
-# yarn build
-
-# echo '--- pushing with tags'
-# git push
-# git push --tags
-
-# echo '--- building @flood/element'
-# cd $root/packages/element
-# npm publish --access public --tag $npm_tag dist
-
-# echo '--- publishing @flood/element-cli'
-# cd $root/packages/cli
-# npm publish --access public --tag $npm_tag
-
-# echo '--- publishing brew tap'
-# cd $root
-# yarn
-# yarn publish:brew

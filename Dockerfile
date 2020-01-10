@@ -1,4 +1,4 @@
-FROM node:12
+FROM node:current
 
 # need to install packages for chrome to even
 RUN apt-get update && apt-get install -y wget --no-install-recommends \
@@ -34,7 +34,7 @@ RUN apt-get update && apt-get install -y wget --no-install-recommends \
 WORKDIR /app
 
 
-RUN yarn global add lerna
+RUN yarn add lerna@^3.20.2
 
 # RUN yarn install --ignore-optional
 
@@ -46,8 +46,8 @@ COPY . .
 
 # COPY . .
 
-RUN lerna link
-RUN lerna bootstrap
+RUN yarn lerna link
+RUN yarn lerna bootstrap
 
 ENV NO_CHROME_SANDBOX=1
 

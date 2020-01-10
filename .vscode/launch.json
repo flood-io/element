@@ -33,6 +33,19 @@
 			"cwd": "${workspaceRoot}",
 			"console": "internalConsole",
 			"protocol": "inspector"
+		},
+
+		{
+			"name": "cli init",
+			"type": "node",
+			"request": "launch",
+			"args": ["${workspaceFolder}/packages/cli/index.ts", "init", "./tmp/test-init", "--debug"],
+			"skipFiles": ["<node_internals>/**"],
+			"runtimeArgs": ["--nolazy", "-r", "ts-node/register", "-r", "tsconfig-paths/register"],
+			"sourceMaps": true,
+			"cwd": "${workspaceRoot}",
+			"console": "internalConsole",
+			"protocol": "inspector"
 		}
 	]
 }

@@ -1,42 +1,19 @@
-import { Configuration as WebpackConfig, Stats } from 'webpack'
+import webpack, { Configuration as WebpackConfig } from 'webpack'
 import { CompilerOptions, sys } from 'typescript'
 import { resolve, dirname, join } from 'path'
 import MemoryFileSystem from 'memory-fs'
 import WebpackBar from 'webpackbar'
 import findRoot from 'find-root'
-import webpack from 'webpack'
+import { CompilerOutput } from './types'
 
-import { transformFileAsync } from '@babel/core'
-
-// import { Context, Script, compileFunction, createContext, runInContext } from 'vm'
-
-export interface CompilerOutput {
-	content: string
-	sourceMap?: string
-	stats?: CompilerStats
-}
-
-class CompilerStats {
-	hash?: string
-	startTime?: number
-	endTime?: number
-
-	/** Returns true if there were errors while compiling. */
-	hasErrors(): boolean {
-		return false
-	}
-	/** Returns true if there were warnings while compiling. */
-	hasWarnings(): boolean {
-		return false
-	}
-	/** Returns a formatted string of the compilation information (similar to CLI output). */
-	toString(options?: Stats.ToStringOptions): string {
-		return 'Compiled'
-	}
-}
+export {CompilerOutput}
 
 export class Compiler {
-	constructor(private sourceFile: string /* , private productionMode: boolean = false */) {}
+	private sourceFile:string
+
+	constructor(sourceFile: string) {
+		this.sourceFile = resolve(sourceFile)
+	}
 
 	public async emit(): Promise<CompilerOutput> {
 		return this.webpackCompiler()
@@ -52,7 +29,7 @@ export class Compiler {
 	}
 
 	get webpackConfig(): WebpackConfig {
-		let loader = require.resolve('ts-loader')
+		const loader = require.resolve('ts-loader')
 
 		return {
 			entry: this.sourceFile,
@@ -79,6 +56,7 @@ export class Compiler {
 
 			plugins: [
 				new WebpackBar({
+					name: "Script Compiler"
 					// reporters: ['fancy'],
 				}),
 			],
@@ -108,18 +86,18 @@ export class Compiler {
 	}
 
 	private get configFilePath(): string {
-		let configFile = 'tsconfig.json'
-		let root = findRoot(__dirname)
-		let paths = [resolve(dirname(this.sourceFile)), resolve(root, 'compiler-home')]
+		const configFile = 'tsconfig.json'
+		const root = findRoot(__dirname)
+		const paths = [resolve(dirname(this.sourceFile)), resolve(root, 'compiler-home')]
 
-		let localConfig = paths.map(path => join(path, configFile)).find(path => sys.fileExists(path))
+		const localConfig = paths.map(path => join(path, configFile)).find(path => sys.fileExists(path))
 
 		return localConfig || configFile
 	}
 
 	private async webpackCompiler(): Promise<CompilerOutput> {
-		let compiler = webpack(this.webpackConfig)
-		let fileSystem = new MemoryFileSystem()
+		const compiler = webpack(this.webpackConfig)
+		const fileSystem = new MemoryFileSystem()
 		compiler.outputFileSystem = fileSystem
 		return new Promise((yeah, nah) => {
 			compiler.run((err, stats) => {
@@ -145,42 +123,5 @@ export class Compiler {
 		})
 	}
 
-	// @ts-ignore
-	private async babelCompiler(): Promise<CompilerOutput> {
-		let result = await transformFileAsync(resolve(this.sourceFile), {
-			comments: false,
-			highlightCode: true,
-			caller: {
-				name: 'element-babel-compiler',
-				supportsStaticESM: false,
-			},
-			compact: false,
-			sourceMaps: 'both',
 
-			cwd: dirname(this.sourceFile),
-
-			presets: [
-				'@babel/preset-typescript',
-				[
-					'@babel/preset-env',
-					{
-						targets: { node: 'current' },
-						useBuiltIns: false,
-					},
-				],
-			],
-		})
-
-		let content: string = ''
-		if (result != null) {
-			content = result.code ?? ''
-		}
-
-		let stats = new CompilerStats()
-
-		return {
-			content,
-			stats,
-		}
-	}
 }

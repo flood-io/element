@@ -35,6 +35,8 @@ WORKDIR /app
 
 COPY . .
 
+RUN yarn install --ignore-optional
+
 # ADD package.json yarn.lock ./
 # ADD packages/element/package.json ./packages/element/
 # ADD packages/cli/package.json  ./packages/cli/

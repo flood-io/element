@@ -14,7 +14,7 @@
 		"prepublish": "in-publish && yarn build || not-in-publish",
 		"prepublishOnly": "echo 'prepublishOnly'",
 		"prebuild": "rm -rf ./dist",
-		"build": "yarn ncc build -e @flood/element -e @flood/element-core -e @flood/element-compiler -e yargs -e yeoman-generator -e yeoman-environment -e typescript -o dist ./index.ts",
+		"build": "yarn ncc build -e @flood/element-core -e @flood/element-compiler -e yargs -e yeoman-generator -e yeoman-environment -e typescript -o dist ./index.ts",
 		"dev": "ts-node -- ./index.ts"
 	},
 	"dependencies": {

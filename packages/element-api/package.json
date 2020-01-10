@@ -11,7 +11,7 @@
 		"prepublishOnly": "yarn build"
 	},
 	"dependencies": {
-		"@flood/element": "^1.0.10-beta.21"
+		"@flood/element-core": "^1.0.10-beta.21"
 	},
 	"devDependencies": {
 		"@types/node": "12.7.4",

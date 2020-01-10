@@ -33,15 +33,20 @@ RUN apt-get update && apt-get install -y wget --no-install-recommends \
 
 WORKDIR /app
 
+
+RUN yarn global add lerna
+
+# RUN yarn install --ignore-optional
+
 COPY . .
-
-RUN yarn install --ignore-optional
-
 # ADD package.json yarn.lock ./
 # ADD packages/element/package.json ./packages/element/
 # ADD packages/cli/package.json  ./packages/cli/
 # ADD packages/element-api/package.json  ./packages/element-api/
-RUN yarn lerna bootstrap
+
+# COPY . .
+
+RUN lerna bootstrap
 
 ENV NO_CHROME_SANDBOX=1
 

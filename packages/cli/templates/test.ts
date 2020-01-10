@@ -18,9 +18,9 @@ export default () => {
 	step('Step 2 find first heading', async b => {
 		// Note the use of await here, this is the async/await pattern https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Async_await
 		// and is required everytime you talk to the browser
-		let firstHeading = await b.findElement(By.css('h1,h2,h3,p'))
+		const firstHeading = await b.findElement(By.css('h1,h2,h3,p'))
 		await b.highlightElement(firstHeading)
-		let h1Text = await firstHeading.text()
+		const h1Text = await firstHeading.text()
 
 		// You can use console.log to write out to the command line
 		console.log(h1Text)

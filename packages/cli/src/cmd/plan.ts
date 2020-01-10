@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import { Argv, Arguments, CommandModule } from 'yargs'
 import { inspect } from 'util'
 import { IEvaluatedScript } from '@flood/element-core'
@@ -13,7 +14,7 @@ function rpad(n: number, maxN: number, padChar = ' '): string {
 }
 
 const main = async (args: Arguments) => {
-	const { EvaluatedScript, nullRuntimeEnvironment } = require('@flood/element-core')
+	const { EvaluatedScript, nullRuntimeEnvironment } = await import('@flood/element-core')
 	const script = await EvaluatedScript.mustCompileFile(args.file, nullRuntimeEnvironment)
 
 	if (args.json) return printJSON(script)
@@ -49,7 +50,7 @@ const main = async (args: Arguments) => {
 function printJSON(script: IEvaluatedScript) {
 	const o = {
 		settings: script.settings,
-		steps: script.steps!.map(s => s.name),
+		steps: script.steps.map(s => s.name),
 	}
 	console.log(JSON.stringify(o, null, '  '))
 }
@@ -65,7 +66,7 @@ const cmd: CommandModule = {
 				default: !process.stdout.isTTY,
 			})
 			.check(({ file }) => {
-				let fileErr = checkFile(file as string)
+				const fileErr = checkFile(file as string)
 				if (fileErr) return fileErr
 
 				return true

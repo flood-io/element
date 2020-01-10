@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import {
 	runCommandLine,
 	runUntilExit,
@@ -60,7 +61,7 @@ const cmd: CommandModule = {
 		const workRootPath = getWorkRootPath(file, args['work-root'])
 		const testDataPath = getTestDataPath(file, args['test-data-root'])
 
-		const verboseBool: boolean = !!verbose
+		const verboseBool = !!verbose
 
 		let logLevel = 'info'
 		if (verboseBool) logLevel = 'debug'
@@ -189,8 +190,8 @@ const cmd: CommandModule = {
 			.positional('file', {
 				describe: 'the test script to run',
 			})
-			.check(({ file, chrome }) => {
-				let fileErr = checkFile(file as string)
+			.check(({ file }) => {
+				const fileErr = checkFile(file as string)
 				if (fileErr) return fileErr
 
 				return true
@@ -216,7 +217,7 @@ function makeTestCommander(file: string): TestCommander {
 
 	// TODO make this more reliable on linux
 	const watcher = watch(file, { persistent: true })
-	watcher.on('change', (path, stats) => {
+	watcher.on('change', path => {
 		if (path === file) {
 			commander.emit('rerun-test')
 		}

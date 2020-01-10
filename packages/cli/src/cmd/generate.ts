@@ -4,8 +4,8 @@ const cmd: CommandModule = {
 	command: 'generate <file> [options]',
 	describe: 'Generate a basic test script from a template',
 
-	handler(args: Arguments) {
-		const yeomanEnv = require('yeoman-environment')
+	async handler(args: Arguments) {
+		const { default: yeomanEnv } = await import('yeoman-environment')
 		const env = yeomanEnv.createEnv()
 		env.register(require.resolve('../generator/test-script'), 'test-script')
 		env.run(`test-script ${args.file}`)

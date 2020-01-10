@@ -21,7 +21,7 @@
 		"checkJs": false,
 		"baseUrl": "./",
 		"paths": {
-			"@flood/element": ["../../packages/element/index.ts"]
+			"@flood/element": ["../../packages/core/index.ts"]
 		}
 	},
 	"files": ["test.ts"]

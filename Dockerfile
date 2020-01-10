@@ -46,6 +46,7 @@ COPY . .
 
 # COPY . .
 
+RUN lerna link
 RUN lerna bootstrap
 
 ENV NO_CHROME_SANDBOX=1

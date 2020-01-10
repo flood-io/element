@@ -75,6 +75,18 @@ export interface SuiteDefinition {
 export interface Browser {
 	settings: TestSettings
 
+	/**
+	 * @internal
+	 * @private
+	 */
+	beforeFunc: (b: Browser, name: string) => Promise<void>
+
+	/**
+	 * @internal
+	 * @private
+	 */
+	afterFunc: (b: Browser, name: string) => Promise<void>
+
 	title(): Promise<string>
 
 	/**

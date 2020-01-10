@@ -8,7 +8,8 @@ import { AnyErrorData } from '../errors/Types'
 export default class ErrorObserver extends NoOpTestObserver {
 	async onStepError(test: Test, step: Step, err: StructuredError<AnyErrorData>) {
 		// TODO handle errors sourced from without the script
-		test.reporter.testStepError(structuredErrorToDocumentedError(err, test.script))
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		test.reporter.testStepError(structuredErrorToDocumentedError(err, test.script)!)
 
 		return this.next.onStepError(test, step, err)
 	}

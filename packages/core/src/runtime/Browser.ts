@@ -11,69 +11,32 @@ import {
 import { Browser as BrowserInterface, NullableLocatable, EvaluateFn } from './types'
 import DeviceDescriptors from 'puppeteer/DeviceDescriptors'
 import CustomDeviceDescriptors from '../utils/CustomDeviceDescriptors'
-import { Locator, ElementHandle } from '../page/types'
+import { ElementHandle } from '../page/types'
 import { TargetLocator } from '../page/TargetLocator'
-import { By } from '../page/By'
-import { IPuppeteerClient } from '../driver/Puppeteer'
+import { PuppeteerClientLike } from '../driver/Puppeteer'
 import { WorkRoot } from '../runtime-environment/types'
 import cuid from 'cuid'
 import { Key } from '../page/Enums'
 import termImg from 'term-img'
 import { ConcreteTestSettings } from './Settings'
-import { NetworkErrorData, LocatorErrorData, ActionErrorData } from './errors/Types'
+import { NetworkErrorData, ActionErrorData } from './errors/Types'
 import { StructuredError } from '../utils/StructuredError'
 import debugFactory from 'debug'
 import Mouse from '../page/Mouse'
 import { rewriteError } from './decorators/rewriteError'
 import { addCallbacks } from './decorators/addCallbacks'
 import { autoWaitUntil } from './decorators/autoWait'
+import { locatableToLocator, toLocatorError } from './toLocatorError'
 
 export const debug = debugFactory('element:runtime:browser')
 const debugScreenshot = debugFactory('element:runtime:browser:screenshot')
 
-function toLocatorError(
-	locatable: NullableLocatable,
-	callContext: string,
-): StructuredError<LocatorErrorData> {
-	let locatorString: string
-	if (locatable === null) {
-		locatorString = 'null locator'
-	} else if (typeof locatable === 'string') {
-		locatorString = locatable
-	} else {
-		locatorString = locatable.toErrorString()
-	}
-
-	return new StructuredError<LocatorErrorData>(
-		`No element was found on the page using '${locatorString}'`,
-		{
-			_kind: 'locator',
-			kind: 'element-not-found',
-			locator: locatorString,
-		},
-		undefined,
-		'browser',
-		callContext,
-	)
-}
-
-export function locatableToLocator(el: NullableLocatable, callCtx: string): Locator | never {
-	if (el === null) {
-		throw toLocatorError(el, callCtx)
-	} else if (typeof el === 'string') {
-		return By.css(el)
-	} else {
-		// TODO proerly handle ElementHandle here...
-		return el as Locator
-	}
-}
-
 export const getFrames = (childFrames: Frame[], collection?: Set<Frame>): Frame[] => {
-	if (!collection) collection = new Set<Frame>()
+	if (typeof collection === 'undefined') collection = new Set<Frame>()
 
 	childFrames.forEach(frame => {
-		if (!collection!.has(frame)) {
-			collection!.add(frame)
+		if (!collection?.has(frame)) {
+			collection?.add(frame)
 			getFrames(frame.childFrames(), collection)
 		}
 	})
@@ -89,10 +52,10 @@ export class Browser<T> implements BrowserInterface {
 
 	constructor(
 		public workRoot: WorkRoot,
-		private client: IPuppeteerClient,
+		private client: PuppeteerClientLike,
 		public settings: ConcreteTestSettings,
-		public beforeFunc: (b: Browser<T>, name: string) => Promise<void> = async () => {},
-		public afterFunc: (b: Browser<T>, name: string) => Promise<void> = async () => {},
+		public beforeFunc: (b: Browser<T>, name: string) => Promise<void> = async () => undefined,
+		public afterFunc: (b: Browser<T>, name: string) => Promise<void> = async () => undefined,
 		private activeFrame?: Frame | null,
 	) {
 		this.beforeFunc && this.afterFunc
@@ -164,7 +127,7 @@ export class Browser<T> implements BrowserInterface {
 
 		debug('wait')
 		try {
-			let condition: Condition = timeoutOrCondition
+			const condition: Condition = timeoutOrCondition
 			condition.settings = this.settings
 			if (condition.hasWaitFor) {
 				return await condition.waitFor(this.target, this.page)
@@ -187,17 +150,18 @@ export class Browser<T> implements BrowserInterface {
 
 	@addCallbacks()
 	public async visit(url: string, options: NavigationOptions = {}): Promise<void> {
-		let timeout = this.settings.waitTimeout * 1e3
+		const timeout = this.settings.waitTimeout * 1e3
 		let response
 		try {
 			response = await this.page.goto(url, {
 				timeout,
-				waitUntil: ['load', 'domcontentloaded'],
+				waitUntil: ['load', 'domcontentloaded', 'networkidle0', 'networkidle2'],
 				...options,
 			})
 		} catch (e) {
+			let finalErr = e
 			if (e.message.includes('net::ERR_NAME_NOT_RESOLVED')) {
-				e = new StructuredError<NetworkErrorData>(
+				finalErr = new StructuredError<NetworkErrorData>(
 					'domain name not resolved',
 					{
 						_kind: 'net',
@@ -209,7 +173,7 @@ export class Browser<T> implements BrowserInterface {
 				)
 			}
 			if (e.message.includes('Navigation Timeout Exceeded')) {
-				e = new StructuredError<NetworkErrorData>(
+				finalErr = new StructuredError<NetworkErrorData>(
 					'navigation timed out',
 					{
 						_kind: 'net',
@@ -220,10 +184,10 @@ export class Browser<T> implements BrowserInterface {
 					e,
 				)
 			}
-			throw e
+			throw finalErr
 		}
 
-		if (response === null) {
+		if (response == null) {
 			throw new StructuredError<NetworkErrorData>('no response', {
 				url,
 				_kind: 'net',
@@ -350,8 +314,8 @@ export class Browser<T> implements BrowserInterface {
 	@autoWaitUntil()
 	@addCallbacks()
 	public async clear(locatable: NullableLocatable | string): Promise<void> {
-		let locator = locatableToLocator(locatable, 'browser.clear()')
-		let elements = await locator.findMany(await this.context)
+		const locator = locatableToLocator(locatable, 'browser.clear()')
+		const elements = await locator.findMany(await this.context)
 		for (const element of elements) {
 			await element.clear()
 		}
@@ -364,7 +328,7 @@ export class Browser<T> implements BrowserInterface {
 		text: string,
 		options?: { delay: number },
 	): Promise<void> {
-		let element = await this.findElement(locatable)
+		const element = await this.findElement(locatable)
 
 		await element.focus()
 		return this.page.keyboard.type(text, options)
@@ -379,7 +343,7 @@ export class Browser<T> implements BrowserInterface {
 	@autoWaitUntil()
 	@addCallbacks()
 	public async sendKeys(...keys: string[]): Promise<void> {
-		let handle = this.page.keyboard
+		const handle = this.page.keyboard
 		for (const key of keys) {
 			if (Object.values(Key).includes(key)) {
 				await handle.press(key)
@@ -417,7 +381,7 @@ export class Browser<T> implements BrowserInterface {
 
 	@rewriteError()
 	public async emulateDevice(deviceName: string): Promise<void> {
-		let device = DeviceDescriptors[deviceName] || CustomDeviceDescriptors[deviceName]
+		const device = DeviceDescriptors[deviceName] || CustomDeviceDescriptors[deviceName]
 		if (!device) throw new Error(`Unknown device descriptor: ${deviceName}`)
 		return this.page.emulate(device)
 	}
@@ -454,11 +418,11 @@ export class Browser<T> implements BrowserInterface {
 	@autoWaitUntil()
 	@rewriteError()
 	public async findElement(locatable: NullableLocatable): Promise<ElementHandle> {
-		let locator = locatableToLocator(locatable, 'browser.findElement(locatable)')
+		const locator = locatableToLocator(locatable, 'browser.findElement(locatable)')
 
 		debug('locator %o', locator)
 
-		let maybeElement = await locator.find(await this.context)
+		const maybeElement = await locator.find(await this.context)
 		if (!maybeElement) {
 			throw toLocatorError(locatable, 'browser.findElement()')
 		}
@@ -476,7 +440,7 @@ export class Browser<T> implements BrowserInterface {
 
 		const locator = locatableToLocator(locatable, 'browser.maybeFindElement(locatable)')
 		const context = await this.context
-		let maybeElement = await locator.find(context)
+		const maybeElement = await locator.find(context)
 		if (!maybeElement) return null
 
 		const element = maybeElement as ElementHandle
@@ -488,21 +452,25 @@ export class Browser<T> implements BrowserInterface {
 	@autoWaitUntil()
 	@rewriteError()
 	public async findElements(locatable: NullableLocatable): Promise<ElementHandle[]> {
-		let locator = locatableToLocator(locatable, 'browser.findElements(locatable)')
-		let elements = await locator.findMany(await this.context)
+		const locator = locatableToLocator(locatable, 'browser.findElements(locatable)')
+		const elements = await locator.findMany(await this.context)
 		elements.forEach(element => element.bindBrowser(this))
 		return elements
 	}
 
-	public async set(key: string, value: string): Promise<void> {}
+	public async set(_key: string, _value: string): Promise<void> {
+		return
+	}
 
-	public async get(key: string): Promise<void> {}
+	public async get(_key: string): Promise<void> {
+		return
+	}
 
 	@rewriteError()
 	public async extractText(locatable: NullableLocatable): Promise<string> {
 		console.warn(`DEPRECATED: Driver.extractText() is deprecated, please use ElementHandle.text()`)
-		let locator = locatableToLocator(locatable, 'browser.extractText(locatable) (DEPRECATED)')
-		let element = await locator.find(await this.context)
+		const locator = locatableToLocator(locatable, 'browser.extractText(locatable) (DEPRECATED)')
+		const element = await locator.find(await this.context)
 		if (!element) throw toLocatorError(locatable, 'browser.extractText()')
 		return element.text()
 	}
@@ -521,7 +489,7 @@ export class Browser<T> implements BrowserInterface {
 	}
 
 	public async navigationTiming(): Promise<PerformanceTiming> {
-		let data = await this.page.evaluate(() => JSON.stringify(window.performance.timing))
+		const data = await this.page.evaluate(() => JSON.stringify(window.performance.timing))
 		return JSON.parse(data.toString())
 	}
 
@@ -529,7 +497,7 @@ export class Browser<T> implements BrowserInterface {
 	 * Fetches the paint performance timing entries
 	 */
 	public async paintTiming(): Promise<PerformanceEntry[]> {
-		let data = await this.page.evaluate(() =>
+		const data = await this.page.evaluate(() =>
 			JSON.stringify(window.performance.getEntriesByType('paint')),
 		)
 		return JSON.parse(data.toString())
@@ -555,13 +523,13 @@ export class Browser<T> implements BrowserInterface {
 		return 0
 	}
 
-	public async setCacheDisabled(cacheDisabled: boolean = true): Promise<void> {
+	public async setCacheDisabled(cacheDisabled = true): Promise<void> {
 		const client = await this.page['target']().createCDPSession()
 		await client.send('Network.setCacheDisabled', { cacheDisabled })
 	}
 
 	public fetchScreenshots() {
-		let screenshots = [...this.screenshots]
+		const screenshots = [...this.screenshots]
 		this.screenshots = []
 		return screenshots
 	}

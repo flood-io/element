@@ -18,10 +18,12 @@ import { Step } from './Step'
 
 import { CancellationToken } from '../utils/CancellationToken'
 
-import { IPuppeteerClient } from '../driver/Puppeteer'
+import { PuppeteerClientLike } from '../driver/Puppeteer'
 import { ScreenshotOptions } from 'puppeteer'
 import { TestSettings, ConcreteTestSettings, DEFAULT_STEP_WAIT_SECONDS } from './Settings'
 import { ITest } from './ITest'
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:test')
 
 export default class Test implements ITest {
@@ -34,7 +36,7 @@ export default class Test implements ITest {
 
 	private testCancel: () => Promise<void> = async () => {}
 
-	public iteration: number = 0
+	public iteration = 0
 
 	public failed: boolean
 
@@ -43,7 +45,7 @@ export default class Test implements ITest {
 	}
 
 	constructor(
-		public client: IPuppeteerClient,
+		public client: PuppeteerClientLike,
 		public script: EvaluatedScript,
 		public reporter: IReporter = new NullReporter(),
 		settingsOverride: TestSettings,
@@ -52,7 +54,7 @@ export default class Test implements ITest {
 		this.script = script
 
 		try {
-			let { settings, steps } = script
+			const { settings, steps } = script
 			this.settings = settings
 			this.steps = steps
 
@@ -134,7 +136,7 @@ export default class Test implements ITest {
 			await testObserver.before(this)
 
 			debug('Feeding data')
-			let testDataRecord = testData.feed()
+			const testDataRecord = testData.feed()
 			if (testDataRecord === null) {
 				throw new Error('Test data exhausted, consider making it circular?')
 			} else {
@@ -142,7 +144,7 @@ export default class Test implements ITest {
 			}
 
 			debug('running steps')
-			for (let step of this.steps) {
+			for (const step of this.steps) {
 				browser.customContext = step
 
 				await Promise.race([
@@ -158,7 +160,7 @@ export default class Test implements ITest {
 				}
 			}
 		} catch (err) {
-			console.log('error -> failed')
+			console.log('error -> failed', err)
 			this.failed = true
 			throw err
 		} finally {
@@ -186,7 +188,7 @@ export default class Test implements ITest {
 		let error: Error | null = null
 		await testObserver.beforeStep(this, step)
 
-		let originalBrowserSettings = { ...browser.settings }
+		const originalBrowserSettings = { ...browser.settings }
 
 		try {
 			debug(`Run step: ${step.name}`) // ${step.fn.toString()}`)
@@ -227,8 +229,8 @@ export default class Test implements ITest {
 				{ _kind: 'assertion' },
 				error,
 			).copyStackFromOriginalError()
-		} else if ((<StructuredError<AnyErrorData>>error)._structured === 'yes') {
-			return <StructuredError<AnyErrorData>>error
+		} else if ((error as StructuredError<AnyErrorData>)._structured === 'yes') {
+			return error as StructuredError<AnyErrorData>
 		} else {
 			// catchall - this should trigger a documentation request further up the chain
 			return StructuredError.wrapBareError<EmptyErrorData>(error, { _kind: 'empty' }, 'test')

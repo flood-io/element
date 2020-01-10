@@ -24,10 +24,10 @@ describe('Browser', () => {
 	})
 
 	test('fires callbacks on action command calls', async () => {
-		let beforeSpy = jest.fn()
-		let afterSpy = jest.fn()
+		const beforeSpy = jest.fn()
+		const afterSpy = jest.fn()
 
-		let browser = new Browser(
+		const browser = new Browser(
 			workRoot,
 			puppeteer,
 			DEFAULT_SETTINGS,
@@ -38,7 +38,7 @@ describe('Browser', () => {
 				afterSpy(actionName)
 			},
 		)
-		let url = await serve('forms_with_input_elements.html')
+		const url = await serve('forms_with_input_elements.html')
 		await browser.visit(url)
 
 		expect(beforeSpy).toHaveBeenCalledWith('visit')
@@ -46,14 +46,14 @@ describe('Browser', () => {
 	})
 
 	test('throws an error', async () => {
-		let browser = new Browser(
+		const browser = new Browser(
 			workRoot,
 			puppeteer,
 			{ ...DEFAULT_SETTINGS },
 			async name => {},
 			async name => {},
 		)
-		let url = await serve('forms_with_input_elements.html')
+		const url = await serve('forms_with_input_elements.html')
 		await browser.visit(url)
 
 		return expect(browser.click('.notanelement')).rejects.toEqual(
@@ -62,17 +62,17 @@ describe('Browser', () => {
 	})
 
 	test('returns active element', async () => {
-		let browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
+		const browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
 
-		let url = await serve('forms_with_input_elements.html')
+		const url = await serve('forms_with_input_elements.html')
 
 		await browser.visit(url)
 		await browser.wait(Until.elementIsVisible(By.id('new_user_first_name')))
 
-		let el1 = await browser.switchTo().activeElement()
+		const el1 = await browser.switchTo().activeElement()
 		expect(el1).toBeDefined()
 		expect(el1).not.toBeNull()
-		expect(await el1!.getId()).toBe('new_user_first_name')
+		expect(await el1.getId()).toBe('new_user_first_name')
 	})
 
 	describe('Frame handling', () => {
@@ -80,12 +80,12 @@ describe('Browser', () => {
 
 		beforeEach(async () => {
 			browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
-			let url = await serve('frames.html')
+			const url = await serve('frames.html')
 			await browser.visit(url)
 		})
 
 		test('can list all frames', async () => {
-			let frames = browser.frames
+			const frames = browser.frames
 			expect(frames).toHaveLength(3)
 			expect(frames.map(f => f.name())).toEqual(['', 'frame1', 'frame2'])
 		})
@@ -109,7 +109,7 @@ describe('Browser', () => {
 		})
 
 		test('can switch frame using ElementHandle', async () => {
-			let frame = await browser.findElement('frame[name="frame1"]')
+			const frame = await browser.findElement('frame[name="frame1"]')
 			await browser.switchTo().frame(frame)
 			expect(browser.target.name()).toBe('frame1')
 		})
@@ -118,7 +118,7 @@ describe('Browser', () => {
 			await browser.switchTo().frame('frame1')
 			expect(browser.target.name()).toBe('frame1')
 
-			let input = await browser.findElement('input[name="senderElement"]')
+			const input = await browser.findElement('input[name="senderElement"]')
 			await input.clear()
 			await input.type('Hello World')
 			expect(await input.getProperty('value')).toBe('Hello World')
@@ -129,36 +129,39 @@ describe('Browser', () => {
 		test.todo('it receives timing data')
 
 		test.skip('can inject polyfill for TTI', async () => {
-			let browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
+			const browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
 			await browser.visit('https://www.google.com')
 
-			let result = await browser.interactionTiming()
+			const result = await browser.interactionTiming()
 			expect(result).toBeGreaterThan(10)
 		})
 	})
 
 	describe('auto waiting', () => {
 		test('automatically applies a wait step to actions', async () => {
-			let browser = new Browser(workRoot, puppeteer, { ...DEFAULT_SETTINGS, waitUntil: 'visible' })
-			let url = await serve('wait.html')
+			const browser = new Browser(workRoot, puppeteer, {
+				...DEFAULT_SETTINGS,
+				waitUntil: 'visible',
+			})
+			const url = await serve('wait.html')
 			await browser.visit(url)
 
 			await browser.click(By.id('add_select'))
 
-			let link = await browser.findElement(By.id('languages'))
-			let linkIsVisible = await link.isDisplayed()
+			const link = await browser.findElement(By.id('languages'))
+			const linkIsVisible = await link.isDisplayed()
 			expect(linkIsVisible).toBe(true)
 		})
 
 		test('fails to return a visible link without waiting', async () => {
-			let browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
-			let url = await serve('wait.html')
+			const browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
+			const url = await serve('wait.html')
 			await browser.visit(url)
 
 			await browser.click(By.id('add_select'))
 
-			let selectTag = await browser.findElement(By.id('languages'))
-			let selectTagIsVisible = await selectTag.isDisplayed()
+			const selectTag = await browser.findElement(By.id('languages'))
+			const selectTagIsVisible = await selectTag.isDisplayed()
 			expect(selectTagIsVisible).toBe(false)
 		})
 	})

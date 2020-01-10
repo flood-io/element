@@ -31,8 +31,9 @@ function createVirtualMachine(floodElementActual: any): NodeVM {
 		console: 'redirect',
 		sandbox: {},
 		wrapper: 'commonjs',
+		sourceExtensions: ['js', 'ts'],
 		require: {
-			// builtin: ['*'],
+			builtin: ['*'],
 			external: true,
 			context: 'sandbox',
 			mock: {
@@ -89,7 +90,8 @@ export class EvaluatedScript implements TestScriptErrorMapper, IEvaluatedScript 
 		return this.script?.maybeLiftError?.apply(this, error) ?? false
 	}
 	public liftError(error: Error): TestScriptError {
-		return this.script?.liftError?.apply(this, error)
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		return this.script.liftError!(error)
 	}
 	public filterAndUnmapStack(stack: string | Error | undefined): string[] {
 		return this.script?.filterAndUnmapStack?.apply(this, stack)
@@ -102,7 +104,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, IEvaluatedScript 
 		const { reporter } = test
 
 		// hack because the vm2 typings don't include their EventEmitteryness
-		let eevm = (this.vm as any) as EventEmitter
+		const eevm = (this.vm as any) as EventEmitter
 		;['log', 'info', 'error', 'dir', 'trace'].forEach(key =>
 			eevm.on(`console.${key}`, (message, ...args) =>
 				reporter.testScriptConsole(key, message, ...args),
@@ -191,7 +193,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, IEvaluatedScript 
 			},
 		)
 
-		let context = {
+		const context = {
 			setup: (setupSettings: TestSettings) => {
 				Object.assign(rawSettings, setupSettings)
 			},
@@ -218,7 +220,8 @@ export class EvaluatedScript implements TestScriptErrorMapper, IEvaluatedScript 
 		rawSettings.name = this.script.testName
 		rawSettings.description = this.script.testDescription
 
-		let result = this.vm.run(this.script.vmScript)
+		console.log(this.script.sandboxedFilename)
+		const result = this.vm.run(this.script.vmScript, this.script.sandboxedFilename)
 		debug('eval %O', result)
 
 		// get settings exported from the script
@@ -227,7 +230,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, IEvaluatedScript 
 			rawSettings = { ...rawSettings, ...scriptSettings }
 		}
 
-		let testFn = expect(result.default, 'Test script must export a default function')
+		const testFn = expect(result.default, 'Test script must export a default function')
 
 		/**
 		 * Evaluate default function

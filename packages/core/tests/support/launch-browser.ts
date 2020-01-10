@@ -1,7 +1,7 @@
-import { IPuppeteerClient, launch } from '../../src/driver/Puppeteer'
-export { IPuppeteerClient as testPuppeteer }
+import { PuppeteerClientLike, launch } from '../../src/driver/Puppeteer'
+export { PuppeteerClientLike as testPuppeteer }
 
-export async function launchPuppeteer(): Promise<IPuppeteerClient> {
+export async function launchPuppeteer(): Promise<PuppeteerClientLike> {
 	let opts = {
 		sandbox: true,
 	}

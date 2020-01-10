@@ -10,7 +10,7 @@
 		"lerna": "^3.16.4"
 	},
 	"scripts": {
-		"build:watch": "lerna run build:watch --parallel",
+		"build:watch": "lerna run build:watch  --sort --parallel",
 		"build": "lerna run build --sort",
 		"test": "jest",
 		"publish:brew": "ts-node --project ./scripts/publish-brew-tap/tsconfig.json -- ./scripts/publish-brew-tap/index.ts",

@@ -6,20 +6,7 @@
 	},
 
 	"references": [{ "path": "../compiler" }],
+	"include": ["**/*.ts"],
 
-	"exclude": [
-		"lib",
-		"examples",
-		"src/**/*.test.ts",
-		"src/**/*.spec.ts",
-		"dist",
-		"docs",
-		"scripts",
-		"tests",
-		"src/runtime/Buffer.ts",
-		"src/runtime/errors/ErrorClassification.ts"
-	],
-
-	"files": ["./index.ts"],
-	"include": ["./index.ts", "./api.ts", "ambient.d.ts", "./src/**/*.ts"]
+	"files": ["./index.ts", "./api.ts"]
 }

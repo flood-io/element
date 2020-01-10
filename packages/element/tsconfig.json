@@ -4,6 +4,13 @@
 		"declaration": true,
 		"outDir": "dist"
 	},
-	"include": ["./index.ts", "ambient.d.ts"],
+
+	"references": [
+		{
+			"path": "../core"
+		}
+	],
+
+	"include": ["**/*.ts"],
 	"files": ["./index.ts"]
 }

@@ -2,9 +2,10 @@
 	"extends": "../../tsconfig.json",
 	"compilerOptions": {
 		"outDir": "dist",
+		"rootDir": ".",
 		"declaration": true
 	},
+	"include": ["src/**/*.ts"],
 
-	"files": ["src/index.ts"],
-	"include": ["./src/**/*.ts"]
+	"files": ["src/index.ts"]
 }

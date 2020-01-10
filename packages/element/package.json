@@ -22,7 +22,7 @@
 	},
 	"scripts": {
 		"prebuild": "rm -rf ./dist",
-		"build": "tsc",
+		"build": "tsc -b",
 		"prepublishOnly": "yarn build"
 	},
 	"bugs": {

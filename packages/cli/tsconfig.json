@@ -2,8 +2,7 @@
 	"extends": "../../tsconfig.json",
 	"compilerOptions": {
 		"declaration": true,
-		"composite": true,
-		"outDir": "dist"
+		"outDir": "./dist"
 	},
 
 	"references": [
@@ -20,6 +19,6 @@
 		}
 	],
 
-	"files": ["index.ts", "ambient.d.ts"],
-	"include": ["index.ts", "ambient.d.ts", "src"]
+	"files": ["index.ts"],
+	"include": ["**/*.ts"]
 }

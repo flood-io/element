@@ -16,7 +16,7 @@ export class URLCondition extends Condition {
 				if (typeof url === 'string') {
 					if (url.startsWith('/') && url.endsWith('/')) {
 						// RegExp
-						let exp = new RegExp(url.slice(1, url.length - 1))
+						const exp = new RegExp(url.slice(1, url.length - 1))
 						return exp.test(window.location.href)
 					} else if (partial) {
 						return window.location.href.toLowerCase().indexOf(url.toLowerCase()) > -1
@@ -30,5 +30,9 @@ export class URLCondition extends Condition {
 			this.partial === true,
 		)
 		return true
+	}
+
+	public async waitForEvent(): Promise<any> {
+		return
 	}
 }

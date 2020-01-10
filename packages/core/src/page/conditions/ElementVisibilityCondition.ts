@@ -14,14 +14,18 @@ export class ElementVisibilityCondition extends ElementCondition {
 	pageFunc: EvaluateFn = (node: HTMLElement, waitForVisible: boolean, waitForHidden: boolean) => {
 		if (!node) return false
 
-		const style = window.getComputedStyle(node)
-		const isVisible = style && style.visibility !== 'hidden' && hasVisibleBoundingBox()
-		return waitForVisible === isVisible || waitForHidden === !isVisible
-
 		function hasVisibleBoundingBox() {
 			const rect = node.getBoundingClientRect()
 			return !!(rect.top || rect.bottom || rect.width || rect.height)
 		}
+
+		const style = window.getComputedStyle(node)
+		const isVisible = style && style.visibility !== 'hidden' && hasVisibleBoundingBox()
+		return waitForVisible === isVisible || waitForHidden === !isVisible
+	}
+
+	async waitForEvent() {
+		return
 	}
 }
 
@@ -35,8 +39,12 @@ export class ElementLocatedCondition extends ElementCondition {
 		return 'waiting for element to be located on the page'
 	}
 
-	pageFunc: EvaluateFn = (node: HTMLElement, isPresent: boolean = true) => {
+	pageFunc: EvaluateFn = (node: HTMLElement, isPresent = true) => {
 		return !!node === isPresent
+	}
+
+	async waitForEvent() {
+		return
 	}
 }
 
@@ -48,7 +56,7 @@ export class ElementsLocatedCondition extends ElementCondition {
 	}
 
 	toString() {
-		let [count] = this.pageFuncArgs
+		const [count] = this.pageFuncArgs
 		return `waiting for ${count} elements to be located on the page`
 	}
 
@@ -56,8 +64,11 @@ export class ElementsLocatedCondition extends ElementCondition {
 		return this.locator.pageFuncMany
 	}
 
-	pageFunc: EvaluateFn = (nodes: HTMLElement[], count: number = 1) => {
+	pageFunc: EvaluateFn = (nodes: HTMLElement[], count = 1) => {
 		if (typeof nodes === 'undefined') return false
 		return nodes.length >= count
+	}
+	async waitForEvent() {
+		return
 	}
 }

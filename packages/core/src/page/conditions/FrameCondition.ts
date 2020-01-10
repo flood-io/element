@@ -53,9 +53,14 @@ export class FrameCondition extends Condition {
 	// 	)
 	// }
 
+	async waitForEvent() {
+		return
+	}
+
 	public async waitFor(frame: Frame, page: Page): Promise<Frame | Error> {
-		let waiterPromise = new Promise<Frame>(yeah => {
+		const waiterPromise = new Promise<Frame>(yeah => {
 			const cleanup = () => {
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				page.removeListener('framenavigated', handler)
 			}
 
@@ -71,7 +76,7 @@ export class FrameCondition extends Condition {
 
 			if (typeof this.id === 'string') {
 				// Check all existing frames as well to ensure we don't race
-				let frames = getFrames(page.frames())
+				const frames = getFrames(page.frames())
 				for (const frame of frames) {
 					handler(frame)
 				}
@@ -94,8 +99,8 @@ export class FrameCondition extends Condition {
 
 	private async createTimeoutPromise() {
 		const errorMessage = `Frame Wait Timeout Exceeded: ${this.timeout}ms exceeded`
-		return new Promise<Error>(
-			yeah => (this.maximumTimer = <any>setTimeout(yeah, this.timeout)),
-		).then(() => new Error(errorMessage))
+		return new Promise<Error>(yeah => (this.maximumTimer = setTimeout(yeah, this.timeout))).then(
+			() => new Error(errorMessage),
+		)
 	}
 }

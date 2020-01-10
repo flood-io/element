@@ -8,12 +8,16 @@ export class ElementStateCondition extends ElementCondition {
 	}
 
 	toString() {
-		let [disabled] = this.pageFuncArgs
+		const [disabled] = this.pageFuncArgs
 		return `for element to become ${disabled ? 'disabled' : 'enabled'}`
 	}
 
 	pageFunc: EvaluateFn = (node: HTMLElement, waitForDisabled: boolean) => {
 		if (!node) return false
 		return (node as any)['disabled'] === waitForDisabled
+	}
+
+	async waitForEvent() {
+		return
 	}
 }

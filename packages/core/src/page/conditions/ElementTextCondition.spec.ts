@@ -19,29 +19,29 @@ describe('Condition', () => {
 	})
 
 	beforeEach(async () => {
-		let url = await serve('definition_lists.html')
+		const url = await serve('definition_lists.html')
 		await page.goto(url)
 	})
 
 	describe('ElementTextCondition', () => {
 		test('waits Until.elementTextIs', async () => {
-			let condition = Until.elementTextIs(By.css('#name'), 'changed!')
+			const condition = Until.elementTextIs(By.css('#name'), 'changed!')
 			page.click('#name')
-			let found = await condition.waitFor(page.mainFrame())
+			const found = await condition.waitFor(page.mainFrame())
 			expect(found).toBe(true)
 		})
 
 		test('waits Until.elementTextMatches', async () => {
-			let condition = Until.elementTextMatches(By.css('#name'), /changed/)
+			const condition = Until.elementTextMatches(By.css('#name'), /changed/)
 			page.click('#name')
-			let found = await condition.waitFor(page.mainFrame())
+			const found = await condition.waitFor(page.mainFrame())
 			expect(found).toBe(true)
 		})
 
 		test('waits Until.elementTextContains', async () => {
-			let condition = Until.elementTextContains(By.css('#name'), 'changed')
+			const condition = Until.elementTextContains(By.css('#name'), 'changed')
 			page.click('#name')
-			let found = await condition.waitFor(page.mainFrame())
+			const found = await condition.waitFor(page.mainFrame())
 			expect(found).toBe(true)
 		})
 	})

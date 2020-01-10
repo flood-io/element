@@ -13,31 +13,35 @@ export class ElementSelectedCondition extends ElementCondition {
 
 	pageFunc: EvaluateFn = (node: HTMLElement, waitForSelected: boolean) => {
 		if (!node) return false
-		if (!isSelectable(node)) return false
-
-		let tagName = node.tagName
-		var propertyName = 'selected'
-		var type = tagName.toUpperCase()
-		if ('CHECKBOX' == type || 'RADIO' == type) {
-			propertyName = 'checked'
-		}
-
-		let value = !!(node as any)[propertyName]
-		return value === waitForSelected
-
 		function isSelectable(node: HTMLElement) {
-			let tagName = node.tagName
+			const tagName = node.tagName
 
 			if (tagName === 'OPTION') {
 				return true
 			}
 
 			if (tagName === 'INPUT') {
-				let type = tagName.toLowerCase()
+				const type = tagName.toLowerCase()
 				return type == 'checkbox' || type == 'radio'
 			}
 
 			return false
 		}
+
+		if (!isSelectable(node)) return false
+
+		const tagName = node.tagName
+		let propertyName = 'selected'
+		const type = tagName.toUpperCase()
+		if ('CHECKBOX' == type || 'RADIO' == type) {
+			propertyName = 'checked'
+		}
+
+		const value = !!(node as any)[propertyName]
+		return value === waitForSelected
+	}
+
+	async waitForEvent() {
+		return
 	}
 }

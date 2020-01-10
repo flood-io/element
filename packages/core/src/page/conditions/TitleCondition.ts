@@ -16,7 +16,7 @@ export class TitleCondition extends Condition {
 				if (typeof title === 'string') {
 					if (title.startsWith('/') && title.endsWith('/')) {
 						// RegExp
-						let exp = new RegExp(title.slice(1, title.length - 1))
+						const exp = new RegExp(title.slice(1, title.length - 1))
 						return exp.test(document.title)
 					} else if (partial) {
 						return document.title.indexOf(title) > -1
@@ -30,5 +30,9 @@ export class TitleCondition extends Condition {
 			this.partial === true,
 		)
 		return true
+	}
+
+	public async waitForEvent(): Promise<any> {
+		return
 	}
 }

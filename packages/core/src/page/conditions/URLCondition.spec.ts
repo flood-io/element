@@ -25,23 +25,23 @@ describe('Condition', () => {
 		})
 
 		test('waits Until.urlIs', async () => {
-			let uri = new URL(url)
+			const uri = new URL(url)
 			uri.pathname = 'non_control_elements.html'
 
-			let condition = Until.urlIs(uri.toString())
-			let result = await condition.waitFor(page.mainFrame())
+			const condition = Until.urlIs(uri.toString())
+			const result = await condition.waitFor(page.mainFrame())
 			expect(result).toBe(true)
 		})
 
 		test('waits Until.urlMatches', async () => {
-			let condition = Until.urlMatches(/non_control_elements/)
-			let result = await condition.waitFor(page.mainFrame())
+			const condition = Until.urlMatches(/non_control_elements/)
+			const result = await condition.waitFor(page.mainFrame())
 			expect(result).toBe(true)
 		})
 
 		test('waits Until.urlContains', async () => {
-			let condition = Until.urlContains('non_control_elements')
-			let result = await condition.waitFor(page.mainFrame())
+			const condition = Until.urlContains('non_control_elements')
+			const result = await condition.waitFor(page.mainFrame())
 			expect(result).toBe(true)
 		})
 	})

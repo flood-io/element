@@ -27,18 +27,18 @@ describe('Condition', () => {
 	describe('ElementSelectedCondition', () => {
 		test('waits Until.elementIsSelected', async () => {
 			// Wait until Sweden is selected
-			let condition = Until.elementIsSelected(By.css('select#new_user_country option[value="3"]'))
+			const condition = Until.elementIsSelected(By.css('select#new_user_country option[value="3"]'))
 			page.select('select#new_user_country', '3')
-			let found = await condition.waitFor(page.mainFrame(), undefined)
+			const found = await condition.waitFor(page.mainFrame(), undefined)
 			expect(found).toBe(true)
 		}, 31e3)
 
 		test('waits Until.elementIsNotSelected', async () => {
-			let condition = Until.elementIsNotSelected(
+			const condition = Until.elementIsNotSelected(
 				By.css('select#new_user_country option[value="2"]'),
 			)
 			page.select('select#new_user_country', '3')
-			let found = await condition.waitFor(page.mainFrame(), undefined)
+			const found = await condition.waitFor(page.mainFrame(), undefined)
 			expect(found).toBe(true)
 		}, 31e3)
 	})

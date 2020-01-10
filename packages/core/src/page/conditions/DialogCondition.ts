@@ -13,16 +13,16 @@ export class DialogCondition extends Condition {
 
 	hasWaitFor = false
 
-	public async waitFor(frame: Frame): Promise<boolean> {
+	public async waitFor(_frame: Frame): Promise<boolean> {
 		return true
 	}
 
 	public async waitForEvent(page: Page): Promise<Dialog> {
 		return new Promise<Dialog>((yeah, nah) => {
-			let timeout = <any>setTimeout(nah, this.timeout)
+			const timeout = setTimeout(nah, this.timeout)
 
 			page.once('dialog', (dialog: Dialog) => {
-				clearTimeout(timeout as any)
+				clearTimeout(timeout)
 				yeah(dialog)
 			})
 		})

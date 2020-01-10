@@ -23,8 +23,8 @@ describe('Condition', () => {
 		})
 
 		test('waits Until.ableToSwitchToFrame with frame name', async () => {
-			let condition = Until.ableToSwitchToFrame('one')
-			let frame: Frame = await condition.waitFor(page.mainFrame(), page)
+			const condition = Until.ableToSwitchToFrame('one')
+			const frame: Frame = await condition.waitFor(page.mainFrame(), page)
 			expect(frame.name()).toBe('one')
 			expect(
 				await frame.$eval('body', body => (body.textContent ? body.textContent.trim() : '')),
@@ -32,8 +32,8 @@ describe('Condition', () => {
 		})
 
 		test.skip('waits Until.ableToSwitchToFrame with Locatable', async () => {
-			let condition = Until.ableToSwitchToFrame(By.id('one'))
-			let frame: Frame = await condition.waitFor(page.mainFrame(), page)
+			const condition = Until.ableToSwitchToFrame(By.id('one'))
+			const frame: Frame = await condition.waitFor(page.mainFrame(), page)
 			expect(frame.name()).toBe('one')
 			expect(
 				await frame.$eval('body', body => (body.textContent ? body.textContent.trim() : '')),

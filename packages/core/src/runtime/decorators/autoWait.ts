@@ -1,6 +1,5 @@
-import { Browser } from '../types'
+import { Browser, Locatable } from '../types'
 import { Until } from '../../page/Until'
-import { Locatable } from '../types'
 
 const isLocatable = (arg: Locatable | any): arg is Locatable => {
 	return !!arg.pageFunc || !!arg.find || !!arg.element || typeof arg === 'string'
@@ -11,9 +10,9 @@ const isLocatable = (arg: Locatable | any): arg is Locatable => {
  */
 export function autoWaitUntil<T>() {
 	return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-		let originalFn = descriptor.value
+		const originalFn = descriptor.value
 		descriptor.value = async function(this: Browser, ...args: any[]) {
-			let locator = args.find(isLocatable)
+			const locator = args.find(isLocatable)
 			const { waitUntil } = this.settings
 
 			if (locator && waitUntil) {

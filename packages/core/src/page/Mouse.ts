@@ -1,7 +1,6 @@
 import { Browser } from '../runtime/Browser'
 import { MousePressOptions, ClickOptions } from 'puppeteer'
-
-export type Point = [number, number]
+import { Point } from './Point'
 
 /**
  * Mouse represents a virtual pointing device which can be used for common Mouse or Touch operations.
@@ -39,7 +38,7 @@ export default class Mouse {
 	 * Shortcut for `mouse.move`, `mouse.down`, `mouse.move` and `mouse.up`.
 	 */
 	public async drag(...points: Point[]): Promise<void> {
-		let [startingPoint, ...rest] = points
+		const [startingPoint, ...rest] = points
 		await this.move(startingPoint)
 		await this.down()
 		await this.move(...rest)

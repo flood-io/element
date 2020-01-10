@@ -142,10 +142,7 @@ export class Until {
 	/**
 	 * Creates a condition that will wait until at least the desired number of elements are found.
 	 */
-	static elementsLocated(
-		selectorOrLocator: NullableLocatable,
-		desiredCount: number = 1,
-	): Condition {
+	static elementsLocated(selectorOrLocator: NullableLocatable, desiredCount = 1): Condition {
 		return new ElementsLocatedCondition('elementsLocated', selectorOrLocator, desiredCount)
 	}
 

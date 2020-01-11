@@ -20,12 +20,13 @@ import {
 	sortAndDeduplicateDiagnostics,
 	resolveTypeReferenceDirective,
 } from 'typescript'
-import path from 'path'
+import path, { normalize } from 'path'
 import { VMScript } from 'vm2'
 import parseComments from 'comment-parser'
 import { SourceUnmapper } from './SourceUnmapper'
 import debugFactory from 'debug'
 import { TestScriptHost } from './TestScriptHost'
+import { mkdirpSync, writeFileSync } from 'fs-extra'
 
 const debug = debugFactory('element:test-script:compiler')
 
@@ -124,7 +125,12 @@ export class TypeScriptTestScript implements ITestScript {
 			this.sandboxedBasename = this.host.sandboxedBasenameTypescript
 		}
 		this.sandboxedFilename = path.join(this.host.sandboxRoot, this.sandboxedBasename)
+
+		mkdirpSync(path.join(this.host.sandboxPath))
+
 		this.sandboxedRelativeFilename = path.join(this.host.sandboxPath, this.sandboxedBasename)
+
+		writeFileSync(this.sandboxedRelativeFilename, '', { encoding: 'utf8' })
 	}
 
 	public get hasErrors(): boolean {
@@ -173,10 +179,7 @@ export class TypeScriptTestScript implements ITestScript {
 			return this
 		}
 
-		const sandboxedFilename = this.sandboxedFilename
-		const inputSource = this.originalSource
-
-		const compilerOptions = this.compilerOptions
+		const { sandboxedFilename, compilerOptions, originalSource: inputSource } = this
 
 		const host = createCompilerHost(compilerOptions)
 
@@ -194,7 +197,7 @@ export class TypeScriptTestScript implements ITestScript {
 		): SourceFile {
 			debug('getSourceFile', fileName)
 			// inject our source string if its the sandboxedBasename
-			if (fileName === tsSandboxedFilename) {
+			if (normalize(fileName) === normalize(tsSandboxedFilename)) {
 				return createSourceFile(fileName, inputSource, languageVersion, false)
 			} else {
 				return originalGetSourceFile.apply(this, arguments)

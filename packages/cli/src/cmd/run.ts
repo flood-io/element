@@ -230,7 +230,7 @@ function getWorkRootPath(file: string, root?: string): string {
 	const bare = basename(file, ext)
 
 	if (root == null) {
-		root = join(dirname(file), 'tmp/element-results', bare)
+		root = join(dirname(file), 'tmp', 'element-results', bare)
 	}
 
 	const dateString = sanitize(new Date().toISOString())

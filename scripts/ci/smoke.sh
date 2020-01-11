@@ -1,10 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-set -euo pipefail
-set +x
-[[ ${DEBUG:-} ]] && set -x
+set -eo pipefail
+
+[ -n "${VERBOSE}" ] && set -x
 
 HERE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" > /dev/null && pwd )"
-source $HERE/config.sh
+source "${HERE}/defaults.sh"
 
 make smoke

@@ -3,6 +3,86 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.10-beta.30](https://github.com/flood-io/element/compare/v1.0.10-beta.21...v1.0.10-beta.30) (2020-01-04)
+
+**Note:** Version bump only for package @flood/element-cli
+
+
+
+
+
+## [1.0.10-beta.29](https://github.com/flood-io/element/compare/v1.0.10-beta.28...v1.0.10-beta.29) (2020-01-03)
+
+**Note:** Version bump only for package @flood/element-cli
+
+
+
+
+
+## [1.0.10-beta.28](https://github.com/flood-io/element/compare/v1.0.10-beta.27...v1.0.10-beta.28) (2020-01-03)
+
+**Note:** Version bump only for package @flood/element-cli
+
+
+
+
+
+## [1.0.10-beta.27](https://github.com/flood-io/element/compare/v1.0.10-beta.26...v1.0.10-beta.27) (2020-01-03)
+
+**Note:** Version bump only for package @flood/element-cli
+
+
+
+
+
+## [1.0.10-beta.26](https://github.com/flood-io/element/compare/v1.0.10-beta.25...v1.0.10-beta.26) (2020-01-03)
+
+**Note:** Version bump only for package @flood/element-cli
+
+
+
+
+
+## [1.0.10-beta.25](https://github.com/flood-io/element/compare/v1.0.10-beta.24...v1.0.10-beta.25) (2020-01-03)
+
+**Note:** Version bump only for package @flood/element-cli
+
+
+
+
+
+## [1.0.10-beta.24](https://github.com/flood-io/element/compare/v1.0.10-beta.22...v1.0.10-beta.24) (2020-01-03)
+
+**Note:** Version bump only for package @flood/element-cli
+
+
+
+
+
+## [1.0.10-beta.23](https://github.com/flood-io/element/compare/v1.0.10-beta.22...v1.0.10-beta.23) (2020-01-03)
+
+**Note:** Version bump only for package @flood/element-cli
+
+
+
+
+
+## [1.0.10-beta.22](https://github.com/flood-io/element/compare/v1.0.10-beta.21...v1.0.10-beta.22) (2020-01-03)
+
+
+### Bug Fixes
+
+* attempting to fix windows path resolving ([76f224b](https://github.com/flood-io/element/commit/76f224b))
+
+
+### Features
+
+* stub out element-cli package ([f4af40b](https://github.com/flood-io/element/commit/f4af40b))
+
+
+
+
+
 ## [1.0.10-beta.21](https://github.com/flood-io/element/compare/v1.0.10-beta.20...v1.0.10-beta.21) (2019-09-18)
 
 **Note:** Version bump only for package @flood/element-cli

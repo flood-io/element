@@ -18,13 +18,13 @@ docker-run-local-shell:
 	docker run -it element-local-build bash
 
 smoke-build:
-	docker build -t element-smoke -f Dockerfile.smoke .
+	docker build --network=host -t element-smoke -f Dockerfile.smoke .
 
 smoke: smoke-build
-	docker run -it -e SMOKE_ONLY --name smoke --rm element-smoke yarn smoke
+	docker run --network=host -it -e SMOKE_ONLY --name smoke --rm element-smoke yarn smoke
 
 smoke-shell:
-	docker run -it --name smoke-shell --rm element-smoke bash
+	docker run --network=host -it --name smoke-shell --rm element-smoke bash
 
 dockerignore-test:
 	docker build -t dockerignore-test -f Dockerfile.dockerignore-test .

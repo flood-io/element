@@ -1,0 +1,47 @@
+{
+	"name": "element-cli",
+	"version": "1.0.10-beta.30",
+	"description": "Element is a real browser load testing tool",
+	"keywords": [
+		"load",
+		"testing",
+		"testing",
+		"performance",
+		"browser",
+		"automation"
+	],
+	"author": "Ivan Vanderbyl <ivanvanderbyl@gmail.com>",
+	"homepage": "https://element.flood.io",
+	"license": "Apache-2.0",
+	"bin": {
+		"element": "./bin/element.js"
+	},
+	"engines": {
+		"node": ">= 10"
+	},
+	"private": false,
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/flood-io/element.git"
+	},
+	"scripts": {
+		"prepublishOnly": "yarn build",
+		"prebuild": "rm -rf ./bin",
+		"build:ncc": "yarn ncc build -e @flood/* -e yargs -e yeoman-generator -e yeoman-environment -e typescript -e path -o bin ./src/bin/element.ts",
+		"build": "yarn tsc"
+	},
+	"bugs": {
+		"url": "https://github.com/flood-io/element/issues"
+	},
+	"dependencies": {
+		"import-local": "^3.0.2"
+	},
+	"devDependencies": {
+		"@zeit/ncc": "^0.20.5",
+		"typescript": "^3.7.4"
+	},
+	"gitHead": "75ceb903881476ed98cbc911bfce5fe303a57d55"
+}

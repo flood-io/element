@@ -1,13 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-set -euo pipefail
-set +x
-[[ ${DEBUG:-} ]] && set -x
+set -eo pipefail
+
+[ -n "${VERBOSE}" ] && set -x
 
 HERE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" > /dev/null && pwd )"
-source $HERE/config.sh
-
-test_env_file=$HERE/test-env
+source "${HERE}/defaults.sh"
 
 echo "~~~ running tests"
-docker run --rm --env-file $test_env_file $DOCKER_IMAGE make test-ci
+docker run --network=host --rm --env-file "${HERE}/test-env" "${DOCKER_IMAGE}" make test-ci

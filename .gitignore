@@ -72,3 +72,4 @@ examples/*/tmp
 
 dist
 graph.svg
+packages/**/bin/*.js

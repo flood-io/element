@@ -31,7 +31,6 @@ export interface ElementOptions {
 export function runUntilExit(fn: () => Promise<void>) {
 	fn()
 		.then(() => {
-			console.log('Element finished successfully')
 			process.exit(0)
 		})
 		.catch(err => {

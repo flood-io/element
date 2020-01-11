@@ -5,7 +5,7 @@ import {
 	CompoundMeasurement,
 	MeasurementKind,
 	TestScriptError,
-} from '@flood/element-api'
+} from '@flood/element-core'
 import { Logger } from 'winston'
 import chalk from 'chalk'
 const debug = require('debug')('element-cli:console-reporter')

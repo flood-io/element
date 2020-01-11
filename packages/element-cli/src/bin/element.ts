@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-// @ts-ignore
 import importLocal from 'import-local'
 import debugFactory from 'debug'
 

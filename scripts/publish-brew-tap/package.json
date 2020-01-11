@@ -12,8 +12,6 @@
 		"mkdirp": "^0.5.1",
 		"semver": "^5.5.1",
 		"simple-git": "^1.96.0",
-		"ts-node": "^7.0.1",
-		"typescript": "^3.0.1",
 		"which": "^1.3.1"
 	},
 	"gitHead": "c1171a1a394edc6df3dde5f0637e273be2081bd0"

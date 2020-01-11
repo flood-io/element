@@ -1,0 +1,12 @@
+{
+	"extends": "../../tsconfig.json",
+	"compilerOptions": {
+		"declaration": true,
+		"outDir": "dist"
+	},
+
+	"references": [{ "path": "../compiler" }],
+	"include": ["**/*.ts"],
+
+	"files": ["./index.ts", "./api.ts"]
+}

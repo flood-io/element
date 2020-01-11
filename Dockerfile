@@ -1,4 +1,4 @@
-FROM node:12
+FROM node:current
 
 # need to install packages for chrome to even
 RUN apt-get update && apt-get install -y wget --no-install-recommends \
@@ -32,13 +32,23 @@ RUN apt-get update && apt-get install -y wget --no-install-recommends \
   && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-ADD package.json yarn.lock ./
-ADD packages/element/package.json ./packages/element/
-ADD packages/cli/package.json  ./packages/cli/
-ADD packages/element-api/package.json  ./packages/element-api/
-RUN yarn
+
+
+RUN yarn add lerna@^3.20.2
+
+# RUN yarn install --ignore-optional
+
+COPY . .
+# ADD package.json yarn.lock ./
+# ADD packages/element/package.json ./packages/element/
+# ADD packages/cli/package.json  ./packages/cli/
+# ADD packages/element-api/package.json  ./packages/element-api/
+
+# COPY . .
+
+RUN yarn lerna link
+RUN yarn lerna bootstrap
 
 ENV NO_CHROME_SANDBOX=1
 
-COPY . .
 RUN yarn build

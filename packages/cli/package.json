@@ -14,15 +14,12 @@
 		"prepublish": "in-publish && yarn build || not-in-publish",
 		"prepublishOnly": "echo 'prepublishOnly'",
 		"prebuild": "rm -rf ./dist",
-		"build": "yarn ncc build -e @flood/element -e @flood/element/api -e @flood/element-api -e yargs -e yeoman-generator -e yeoman-environment -e typescript -e path -o dist ./index.ts",
-		"element": "ts-node -- ./index.ts",
-		"element:inspectb": "node --inspect-brk -r ts-node/register ./index.ts",
-		"element:inspect": "node --inspect -r ts-node/register ./index.ts"
+		"build": "yarn ncc build -e @flood/element -e @flood/element-core -e @flood/element-compiler -e @flood/element-api -e yargs -e yeoman-generator -e yeoman-environment -e typescript -o dist ./index.ts",
+		"dev": "ts-node ./index.ts"
 	},
 	"dependencies": {
-		"@flood/element-api": "^1.0.10-beta.30",
-		"element-cli": "^1.0.10-beta.30",
-		"import-local": "^3.0.2",
+		"@flood/element-core": "^1.0.10-beta.21",
+		"@flood/element": "^1.0.10-beta.21",
 		"yargs": "^11.0.0",
 		"yeoman-environment": "2.3.0",
 		"yeoman-generator": "3.1.0"
@@ -37,6 +34,7 @@
 		"@types/ora": "^1.3.4",
 		"@types/semver": "^5.5.0",
 		"@types/yargs": "^11.0.0",
+		"@types/yeoman-generator": "^3.1.4",
 		"@zeit/ncc": "^0.20.4",
 		"boxen": "^3.0",
 		"chalk": "^2.4.1",
@@ -47,7 +45,6 @@
 		"in-publish": "^2.0.0",
 		"ms": "^2.1.1",
 		"ora": "^2.1.0",
-		"typescript": "^3.6.2",
 		"update-check": "^1.5.2",
 		"winston": "^3.0.0"
 	},

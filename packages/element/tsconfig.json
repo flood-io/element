@@ -1,9 +1,16 @@
 {
-	"extends": "../../tsconfig.base.json",
+	"extends": "../../tsconfig.json",
 	"compilerOptions": {
 		"declaration": true,
 		"outDir": "dist"
 	},
-	"exclude": ["lib", "examples", "*.test.ts", "dist"],
-	"files": ["./index.ts", "./api.ts", "./ambient.d.ts"]
+
+	"references": [
+		{
+			"path": "../core"
+		}
+	],
+
+	"include": ["**/*.ts"],
+	"files": ["./index.ts"]
 }

@@ -63,7 +63,6 @@ typings/
 old-packages
 
 packages/*/package-lock.json
-packages/*/yarn.lock
 
 puppeteer-*.json
 examples/tmp
@@ -72,4 +71,5 @@ examples/*/tmp
 .DS_Store
 
 dist
+graph.svg
 packages/**/bin/*.js

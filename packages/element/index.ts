@@ -1,50 +1,50 @@
 /**
  * @docPage Until
  */
-export { Until } from './src/page/Until'
+export { Until } from '@flood/element-core'
 
 /**
  * @docPage Until
  */
-export { Condition } from './src/page/Condition'
+export { Condition } from '@flood/element-core'
 
 /**
  * @docPage Constants
  */
-export { Device, Key, MouseButtons } from './src/page/Enums'
+export { Device, Key, MouseButtons } from '@flood/element-core'
 
 /**
  * @docPage By
  */
-export { By } from './src/page/By'
+export { By } from '@flood/element-core'
 
 /**
  * @docPage By
  */
-export { Locator } from './src/page/types'
+export { Locator } from '@flood/element-core'
 
 /**
  * @docPage ElementHandle
  */
-export { ElementHandle } from './src/page/types'
+export { ElementHandle } from '@flood/element-core'
 
 /**
  * @docPage TargetLocator
  */
-export { TargetLocator } from './src/page/types'
+export { TargetLocator } from '@flood/element-core'
 
 /**
  * @docPage Mouse
  */
-export { default as Mouse } from './src/page/Mouse'
+export { default as Mouse } from '@flood/element-core'
 
 /**
  * @docPage TestData
  * @docAlias TestDataFactory TestData
  */
-export { TestDataFactory, TestDataSource } from './src/test-data/TestData'
+export { TestDataFactory, TestDataSource } from '@flood/element-core'
 
-import { NullTestDataLoaders } from './src/test-data/TestDataLoaders'
+import { NullTestDataLoaders } from '@flood/element-core'
 /**
  * `TestData` is a pre-configured instance of <[TestDataFactory]> that can be used to prepare test data for your script.
  *
@@ -72,25 +72,23 @@ export {
 	DEFAULT_SETTINGS,
 	ConsoleMethod,
 	ResponseTiming,
-} from './src/runtime/Settings'
+} from '@flood/element-core'
 
 /**
  * @docPage DSL
  */
-export { FloodProcessEnv } from './src/runtime-environment/types'
-
-import { FloodProcessEnv, nullFloodProcessEnv } from './src/runtime-environment/types'
+export { FloodProcessEnv } from '@flood/element-core'
 
 /**
  * A subset of `process.env` available to this test. It is of type <[FloodProcessEnv]>.
  * @docPage DSL
  */
-export const ENV: FloodProcessEnv = nullFloodProcessEnv
+export { ENV } from '@flood/element-core'
 
 /**
  * @docPage Browser
  */
-export { Browser, Browser as Driver, Locatable, NullableLocatable } from './src/runtime/types'
+export { Browser, Browser as Driver, Locatable, NullableLocatable } from '@flood/element-core'
 
 /**
  * @docPage Browser
@@ -106,9 +104,9 @@ export {
 /**
  * @docPage DSL
  */
-export { step, StepFunction, StepOptions } from './src/runtime/Step'
+export { step, StepFunction, StepOptions } from '@flood/element-core'
 
 /**
  * @docPage DSL
  */
-export { suite } from './src/runtime/types'
+export { suite } from '@flood/element-core'

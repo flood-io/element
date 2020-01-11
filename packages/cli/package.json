@@ -22,7 +22,17 @@
 		"@flood/element-core": "^1.0.10-beta.33",
 		"yargs": "^11.0.0",
 		"yeoman-environment": "2.3.0",
-		"yeoman-generator": "3.1.0"
+		"yeoman-generator": "3.1.0",
+		"ms": "^2.1.1",
+		"ora": "^2.1.0",
+		"update-check": "^1.5.2",
+		"boxen": "^3.0",
+		"chalk": "^2.4.1",
+		"chokidar": "^2.0.4",
+		"command-exists": "^1.2.7",
+		"debug": "^3.1.0",
+		"find-root": "^1.1.0",
+		"winston": "^3.0.0"
 	},
 	"devDependencies": {
 		"@types/boxen": "^3.0.1",
@@ -36,17 +46,7 @@
 		"@types/yargs": "^11.0.0",
 		"@types/yeoman-generator": "^3.1.4",
 		"@zeit/ncc": "^0.20.4",
-		"boxen": "^3.0",
-		"chalk": "^2.4.1",
-		"chokidar": "^2.0.4",
-		"command-exists": "^1.2.7",
-		"debug": "^3.1.0",
-		"find-root": "^1.1.0",
-		"in-publish": "^2.0.0",
-		"ms": "^2.1.1",
-		"ora": "^2.1.0",
-		"update-check": "^1.5.2",
-		"winston": "^3.0.0"
+		"in-publish": "^2.0.0"
 	},
 	"gitHead": "75ceb903881476ed98cbc911bfce5fe303a57d55",
 	"publishConfig": {

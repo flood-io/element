@@ -36,7 +36,7 @@ export { TargetLocator } from '@flood/element-core'
 /**
  * @docPage Mouse
  */
-export { default as Mouse } from '@flood/element-core'
+export { Mouse } from '@flood/element-core'
 
 /**
  * @docPage TestData

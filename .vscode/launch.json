@@ -21,7 +21,7 @@
 			"type": "node",
 			"request": "launch",
 			"args": [
-				"${workspaceFolder}/packages/cli/index.ts",
+				"${workspaceFolder}/packages/cli/bin/element.ts",
 				"run",
 				"./examples/auto-wait/test.ts",
 				"--devtools",

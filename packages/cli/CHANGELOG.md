@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.10-beta.39](https://github.com/flood-io/element/compare/v1.0.10-beta.38...v1.0.10-beta.39) (2020-01-11)
+
+
+### Features
+
+* **cli:** modernized init template ([a051034](https://github.com/flood-io/element/commit/a051034a828771bf7acfb6023055a6eb4ae68c1c))
+
+
+
+
+
 ## [1.0.10-beta.38](https://github.com/flood-io/element/compare/v1.0.10-beta.37...v1.0.10-beta.38) (2020-01-11)
 
 **Note:** Version bump only for package @flood/element-cli

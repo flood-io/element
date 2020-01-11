@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.10-beta.39](https://github.com/flood-io/element/compare/v1.0.10-beta.38...v1.0.10-beta.39) (2020-01-11)
+
+
+### Bug Fixes
+
+* **core:** debugging options and default headless state ([d411088](https://github.com/flood-io/element/commit/d411088b29a73c37de87a7f79b4bc31608ef21de))
+
+
+
+
+
 ## [1.0.10-beta.38](https://github.com/flood-io/element/compare/v1.0.10-beta.37...v1.0.10-beta.38) (2020-01-11)
 
 **Note:** Version bump only for package @flood/element-core

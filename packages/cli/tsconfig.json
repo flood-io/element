@@ -19,6 +19,6 @@
 		}
 	],
 
-	"files": ["index.ts"],
+	"files": ["./bin/element.ts"],
 	"include": ["**/*.ts"]
 }

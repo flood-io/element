@@ -31,31 +31,30 @@ fi
 #     ;;
 # esac
 
-# if [[ ${BUILDKITE_BRANCH:-} ]]; then
-#   cd $root
+if [[ ${BUILDKITE_BRANCH:-} ]]; then
+  cd $root
 
-#   git config --global url."https://github.com".insteadOf git://github.com
-#   git config --global url."https://${GITHUB_TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
-#   git config --global user.email ${GIT_EMAIL}
-#   git config --global user.name ${GIT_USERNAME}
+  git config --global url."https://github.com".insteadOf git://github.com
+  git config --global url."https://${GITHUB_TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
+  git config --global user.email ${GIT_EMAIL}
+  git config --global user.name ${GIT_USERNAME}
 
-#   git remote set-url origin https://${GITHUB_TOKEN}:x-oauth-basic@github.com/flood-io/element
-#   # cat .git/config
-#   git fetch
+  git remote set-url origin https://${GITHUB_TOKEN}:x-oauth-basic@github.com/flood-io/element
+  git fetch
 
-#   # if the branch exists, just check it out
-#   if git rev-parse $BUILDKITE_BRANCH 2> /dev/null; then
-#     git checkout $BUILDKITE_BRANCH
+  # if the branch exists, just check it out
+  if git rev-parse $BUILDKITE_BRANCH 2> /dev/null; then
+    git checkout $BUILDKITE_BRANCH
 
-#   # otherwise checkout with track
-#   else
-#     git checkout --track origin/$BUILDKITE_BRANCH
-#   fi
+  # otherwise checkout with track
+  else
+    git checkout --track origin/$BUILDKITE_BRANCH
+  fi
 
-#   # ensure we're on the right commit - avoid race condition
-#   git reset --hard $BUILDKITE_COMMIT
-#   git branch
-# fi
+  # ensure we're on the right commit - avoid race condition
+  git reset --hard $BUILDKITE_COMMIT
+  git branch
+fi
 
 npmrc=$HOME/.npmrc
 if [[ ! -f $npmrc ]]; then

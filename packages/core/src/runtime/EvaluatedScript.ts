@@ -1,6 +1,6 @@
 import { NodeVM } from 'vm2'
-// import Faker from 'faker'
-// import nodeAssert from 'assert'
+import Faker from 'faker'
+import nodeAssert from 'assert'
 import { EventEmitter } from 'events'
 
 import fs from 'fs'
@@ -37,10 +37,9 @@ function createVirtualMachine(floodElementActual: any): NodeVM {
 			external: true,
 			context: 'sandbox',
 			mock: {
-				// '@flood/chrome': floodElementActual,
 				'@flood/element': floodElementActual,
-				// faker: Faker,
-				// assert: nodeAssert,
+				faker: Faker,
+				assert: nodeAssert,
 			},
 		},
 	})

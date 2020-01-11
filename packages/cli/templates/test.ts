@@ -4,6 +4,7 @@ export const settings: TestSettings = {
 	// userAgent: 'flood-chrome-test',
 	// loopCount: 1,
 
+	// Automatically wait for elements before trying to interact with them
 	waitUntil: 'visible',
 }
 

@@ -72,7 +72,7 @@ export class TestScriptError extends Error {
 	}
 
 	toDetailObject(includeVerbose = false): Detail {
-		let output: Detail = {
+		const output: Detail = {
 			callsite: this.callsiteString(),
 			callContext: this.callContext,
 			asString: this.toString(),
@@ -112,7 +112,7 @@ export class TestScriptError extends Error {
 	}
 
 	toJSON() {
-		let { message, stackWhenThrown: stack } = this
+		const { message, stackWhenThrown: stack } = this
 
 		return {
 			message,
@@ -143,7 +143,7 @@ export async function compileString(
 	filename: string,
 	testScriptOptions?: TestScriptOptions,
 ): Promise<ITestScript> {
-	let tmpFile = join(tmpdir(), filename ?? 'flood-element-test-script.ts')
+	const tmpFile = join(tmpdir(), filename ?? 'flood-element-test-script.ts')
 	writeFileSync(tmpFile, Buffer.from(source), { encoding: 'utf8' })
 	return new WebpackCompiler(tmpFile, testScriptOptions).compile()
 

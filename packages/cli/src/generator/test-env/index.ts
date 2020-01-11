@@ -77,7 +77,7 @@ export default class TestEnv extends Generator {
 	get _packageJSON(): any {
 		return {
 			name: this.options.repoName.split(' ').join('-'),
-			version: '0.0.1',
+			version: '1.0.0',
 			description: 'Flood Element test script',
 			private: true,
 
@@ -95,7 +95,19 @@ export default class TestEnv extends Generator {
 
 			dependencies: {
 				'@flood/element': `^${this.elementVersion}`,
+				'@flood/element-cli': `^${this.elementVersion}`,
+				assert: `*`,
+				faker: `*`,
 				prettier: '*',
+			},
+
+			devDependencies: {
+				'@types/faker': '*',
+				'@types/assert': '*',
+			},
+
+			element: {
+				testMatch: ['**/*.perf.[tj]s'],
 			},
 		}
 	}

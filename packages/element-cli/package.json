@@ -13,9 +13,6 @@
 	"author": "Ivan Vanderbyl <ivanvanderbyl@gmail.com>",
 	"homepage": "https://element.flood.io",
 	"license": "Apache-2.0",
-	"bin": {
-		"element": "./bin/element.js"
-	},
 	"engines": {
 		"node": ">= 10"
 	},

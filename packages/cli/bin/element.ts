@@ -15,7 +15,6 @@ import { main } from '../src/index'
 if (importLocal(__filename)) {
 	console.log(`Using local version of Element`)
 } else {
-	// require('@flood/element-cli/bin/element')
 	const root = findRoot(__dirname)
 	main(root)
 }

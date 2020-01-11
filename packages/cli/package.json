@@ -5,16 +5,16 @@
 	"description": "The command line interface for Flood Element",
 	"repository": "flood-io/element",
 	"bin": {
-		"element": "./dist/index.js"
+		"element": "./dist/bin/element.js"
 	},
 	"private": false,
 	"scripts": {
-		"build-tsc": "tsc",
+		"build": "tsc",
 		"build:watch": "tsc --watch",
 		"prepublish": "in-publish && yarn build || not-in-publish",
 		"prepublishOnly": "echo 'prepublishOnly'",
 		"prebuild": "rm -rf ./dist",
-		"build": "yarn ncc build -e @flood/element -e @flood/element-core -e @flood/element-compiler -e @flood/element-api -e yargs -e yeoman-generator -e yeoman-environment -e typescript -o dist ./bin/element.ts",
+		"xbuild": "yarn ncc build -e @flood/element -e @flood/element-core -e @flood/element-compiler -e @flood/element-api -e yargs -e yeoman-generator -e yeoman-environment -e typescript -o dist ./bin/element.ts",
 		"dev": "ts-node ./index.ts"
 	},
 	"dependencies": {

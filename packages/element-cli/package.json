@@ -14,7 +14,7 @@
 	"homepage": "https://element.flood.io",
 	"license": "Apache-2.0",
 	"engines": {
-		"node": ">= 10"
+		"node": ">= 12"
 	},
 	"private": false,
 	"publishConfig": {
@@ -24,12 +24,7 @@
 		"type": "git",
 		"url": "git+https://github.com/flood-io/element.git"
 	},
-	"scripts": {
-		"prepublishOnly": "yarn build",
-		"prebuild": "rm -rf ./bin",
-		"build:ncc": "yarn ncc build -e @flood/* -e yargs -e yeoman-generator -e yeoman-environment -e typescript -e path -o bin ./src/bin/element.ts",
-		"build": "yarn tsc"
-	},
+	"scripts": {},
 	"bugs": {
 		"url": "https://github.com/flood-io/element/issues"
 	},

@@ -178,18 +178,16 @@ export class Runner {
 			await this.looper.run(async iteration => {
 				this.logger.info(`Starting iteration ${iteration}`)
 
-				let startTime = new Date()
+				const startTime = new Date()
 				try {
 					await test.runWithCancellation(iteration, cancelToken)
 				} catch (err) {
 					this.logger.error(
-						`[Iteration: ${iteration}] Error in Runner Loop: ${err.name}: ${err.message}\n${
-							err.stack
-						}`,
+						`[Iteration: ${iteration}] Error in Runner Loop: ${err.name}: ${err.message}\n${err.stack}`,
 					)
 					throw err
 				}
-				let duration = new Date().valueOf() - startTime.valueOf()
+				const duration = new Date().valueOf() - startTime.valueOf()
 				this.logger.info(`Iteration completed in ${duration}ms (walltime)`)
 			})
 

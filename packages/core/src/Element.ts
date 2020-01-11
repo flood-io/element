@@ -41,7 +41,7 @@ export function runUntilExit(fn: () => Promise<void>) {
 }
 
 export async function runCommandLine(opts: ElementOptions): Promise<void> {
-	let { logger, testScript, clientFactory } = opts
+	const { logger, testScript, clientFactory } = opts
 
 	// TODO proper types for args
 	let runnerClass: { new (...args: any[]): IRunner }
@@ -62,6 +62,7 @@ export async function runCommandLine(opts: ElementOptions): Promise<void> {
 			devtools: opts.devtools,
 			sandbox: opts.sandbox,
 			chromeVersion: opts.chromeVersion,
+			debug: opts.verbose,
 		},
 		opts.testObserverFactory,
 	)
@@ -84,7 +85,7 @@ export async function runCommandLine(opts: ElementOptions): Promise<void> {
 
 	logger.debug(`Loading test script: ${testScript}`)
 
-	let testScriptOptions: TestScriptOptions = {
+	const testScriptOptions: TestScriptOptions = {
 		stricterTypeChecking: opts.strictCompilation,
 		traceResolution: false,
 	}

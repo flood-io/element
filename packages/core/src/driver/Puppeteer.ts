@@ -6,6 +6,7 @@ export type ConcreteLaunchOptions = LaunchOptions & {
 	args: string[]
 	chromeVersion: ChromeVersion | string
 	sandbox: boolean
+	debug: boolean
 }
 
 const defaultLaunchOptions: ConcreteLaunchOptions = {
@@ -17,6 +18,7 @@ const defaultLaunchOptions: ConcreteLaunchOptions = {
 	sandbox: true,
 	timeout: 60e3,
 	ignoreHTTPSErrors: false,
+	debug: false,
 }
 
 function setupSystemChrome(options: ConcreteLaunchOptions): ConcreteLaunchOptions {
@@ -95,23 +97,13 @@ export async function launch(
 		// launchArgs.args.push("--disable-setuid-sandbox");
 	}
 
+	if (options.debug) {
+		console.dir(options)
+	}
+
 	options = setupChrome(options)
 
 	// options.args.push('--single-process', '--no-zygote')
-
-	// console.log(JSON.stringify(options, null, 2))
-	// console.log('Runner launching client', options)
-	// const browser = await launchPuppeteer(options)
-	// console.log('whyyy')
-	// const page = await browser.newPage()
-
-	// console.log('Runner building client...')
-	// return new PuppeteerClient(browser, page)
-
-	// console.log('puppeteer launching client...')
-	// return launchPuppeteer(options).then(browser =>
-	// browser.newPage().then(page => new PuppeteerClient(browser, page)),
-	// )
 
 	const browser = await puppeteer.launch(options)
 	const page = await browser.newPage()

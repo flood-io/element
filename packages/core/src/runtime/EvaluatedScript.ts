@@ -23,6 +23,7 @@ import { MouseButtons, Device, Key, userAgents } from '../page/Enums'
 import { TestDataSource, TestDataFactory } from '../test-data/TestData'
 import { BoundTestDataLoaders } from '../test-data/TestDataLoaders'
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:eval-script')
 
 // TODO work out the right type for floodElementActual
@@ -45,7 +46,7 @@ function createVirtualMachine(floodElementActual: any): NodeVM {
 	})
 }
 
-export interface IEvaluatedScript {
+export interface EvaluatedScriptLike {
 	steps: any[]
 	settings: TestSettings
 	isScriptError(error: Error): boolean
@@ -54,11 +55,11 @@ export interface IEvaluatedScript {
 	filterAndUnmapStack(stack: string | Error | undefined): string[]
 	bindTest(test: Test): void
 	beforeTestRun(): Promise<void>
-	evaluate(): IEvaluatedScript
+	evaluate(): EvaluatedScriptLike
 	testData: TestDataSource<any>
 }
 
-export class EvaluatedScript implements TestScriptErrorMapper, IEvaluatedScript {
+export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLike {
 	public steps: Step[]
 	public settings: ConcreteTestSettings
 
@@ -173,7 +174,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, IEvaluatedScript 
 		}
 
 		// re-scope this for captureSuite to close over:
-		const evalScope = this
+		const evalScope = this as EvaluatedScript
 
 		type WithDataCallback<T> = (this: null, s: StepDefinition<T>) => void
 

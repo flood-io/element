@@ -1,6 +1,6 @@
 {
 	"name": "element-cli",
-	"version": "1.0.10-beta.32",
+	"version": "1.0.10-beta.33",
 	"description": "Element is a real browser load testing tool",
 	"keywords": [
 		"load",
@@ -29,9 +29,8 @@
 		"url": "https://github.com/flood-io/element/issues"
 	},
 	"dependencies": {
-		"import-local": "^3.0.2",
-		"@flood/element-cli": "^1.0.10-beta.31"
+		"@flood/element-cli": "^1.0.10-beta.33",
+		"import-local": "^3.0.2"
 	},
-	"devDependencies": {},
 	"gitHead": "75ceb903881476ed98cbc911bfce5fe303a57d55"
 }

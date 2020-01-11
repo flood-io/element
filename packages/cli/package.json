@@ -26,6 +26,7 @@
 		"command-exists": "^1.2.7",
 		"debug": "^3.1.0",
 		"find-root": "^1.1.0",
+		"import-local": "^3.0.2",
 		"ms": "^2.1.1",
 		"ora": "^2.1.0",
 		"update-check": "^1.5.2",

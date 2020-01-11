@@ -14,7 +14,7 @@ export default class TestEnv extends Generator {
 
 		// This makes `dir` a required argument.
 		this.argument('dir', { type: String, required: true })
-		this.argument('skip-install', { type: Boolean, required: false })
+		this.argument('skip-install', { type: String, required: false })
 	}
 
 	initializing() {
@@ -73,7 +73,7 @@ export default class TestEnv extends Generator {
 			title: this.answers.title,
 			url: this.answers.url,
 		})
-		this.fs.copyTpl(this.templatePath('gitignore'), this.destinationPath('.gitignore'))
+		this.fs.copyTpl(this.templatePath('gitignore'), this.destinationPath('.gitignore'), {})
 	}
 
 	installing() {

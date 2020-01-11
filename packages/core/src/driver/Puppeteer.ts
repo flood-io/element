@@ -97,7 +97,7 @@ export async function launch(
 
 	options = setupChrome(options)
 
-	options.args.push('--single-process', '--no-zygote')
+	// options.args.push('--single-process', '--no-zygote')
 
 	// console.log(JSON.stringify(options, null, 2))
 	// console.log('Runner launching client', options)

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.10-beta.32](https://github.com/flood-io/element/compare/v1.0.10-beta.31...v1.0.10-beta.32) (2020-01-11)
+
+
+### Bug Fixes
+
+* **cli:** don't publish new CLI just yet ([3c2167a](https://github.com/flood-io/element/commit/3c2167ad14bdb386eeac2514dcd81f692120e314))
+
+
+
+
+
 ## [1.0.10-beta.31](https://github.com/flood-io/element/compare/v1.0.10-beta.30...v1.0.10-beta.31) (2020-01-11)
 
 

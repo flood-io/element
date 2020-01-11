@@ -47,7 +47,7 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
 WORKDIR /element
 
-COPY ./lerna.json ./package.json ./yarn.lock ./tsconfig.base.json ./
+COPY ./lerna.json ./package.json ./yarn.lock ./tsconfig.json ./
 
 COPY ./packages/cli/package.json ./packages/cli/tsconfig.json ./packages/cli/
 COPY ./packages/element-api/package.json ./packages/element-api/tsconfig.json ./packages/element-api/
@@ -62,7 +62,7 @@ COPY ./packages/element/ ./packages/element/
 RUN yarn build
 
 WORKDIR /app
-COPY ./tsconfig.base.json ./
+COPY ./tsconfig.json ./
 WORKDIR /app/smoke/
 COPY ./smoke/package.json ./smoke/yarn.lock ./smoke/tsconfig.json ./
 RUN yarn

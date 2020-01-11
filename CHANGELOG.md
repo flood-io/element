@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.10-beta.38](https://github.com/flood-io/element/compare/v1.0.10-beta.37...v1.0.10-beta.38) (2020-01-11)
+
+
+### Bug Fixes
+
+* **element:** api exports wrong file ([1acf68b](https://github.com/flood-io/element/commit/1acf68b124829f9398c88c4bda3124a9eab5d53c))
+
+
+
+
+
 ## [1.0.10-beta.37](https://github.com/flood-io/element/compare/v1.0.10-beta.36...v1.0.10-beta.37) (2020-01-11)
 
 

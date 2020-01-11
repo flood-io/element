@@ -12,12 +12,15 @@ const cmd: CommandModule = {
 		const { default: YoEnv } = await import('yeoman-environment')
 		const { default: TestEnvGenerator } = await import('../generator/test-env/index')
 		const env = YoEnv.createEnv()
-		env.registerStub(TestEnvGenerator, 'element/test-env')
+		env.registerStub((TestEnvGenerator as any) as Generator, 'element/test-env')
 		args.dir = resolve(process.cwd(), args.dir as string)
 		env.run(['element/test-env', args.dir], { 'skip-install': args['skip-install'] }, () => {
+			// eslint-disable-next-line @typescript-eslint/no-var-requires
+			const tsConfig = require(resolve(args.dir, './tsconfig.json'))
+
 			console.log(
 				chalk`{grey COMPLETED} Run ${runCmd(`cd ${args.dir}`)} and ${runCmd(
-					`element run test.ts`,
+					`element run ${tsConfig.files[0]}`,
 				)}`,
 			)
 		})

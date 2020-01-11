@@ -8,7 +8,7 @@ const cmd: CommandModule = {
 		const { default: yeomanEnv } = await import('yeoman-environment')
 		const env = yeomanEnv.createEnv()
 		env.register(require.resolve('../generator/test-script'), 'test-script')
-		env.run(`test-script ${args.file}`)
+		env.run(() => `test-script ${args.file}`)
 	},
 
 	builder(yargs: Argv) {

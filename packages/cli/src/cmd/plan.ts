@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { Argv, Arguments, CommandModule } from 'yargs'
 import { inspect } from 'util'
-import { IEvaluatedScript } from '@flood/element-core'
+import { EvaluatedScriptLike } from '@flood/element-core'
 import chalk from 'chalk'
+// eslint-disable-next-line import/default
 import boxen from 'boxen'
 import { checkFile } from './common'
 
@@ -47,7 +48,7 @@ const main = async (args: Arguments) => {
 	console.log()
 }
 
-function printJSON(script: IEvaluatedScript) {
+function printJSON(script: EvaluatedScriptLike) {
 	const o = {
 		settings: script.settings,
 		steps: script.steps.map(s => s.name),

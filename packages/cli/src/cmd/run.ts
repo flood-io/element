@@ -78,10 +78,10 @@ const cmd: CommandModule = {
 			strictCompilation: args.strict ?? false,
 			reporter: reporter,
 			verbose: verboseBool,
-			headless: args.headless ?? false,
+			headless: args.headless ?? true,
 			devtools: args.devtools ?? false,
 			chromeVersion: args.chrome,
-			sandbox: args.sandbox ?? false,
+			sandbox: args.sandbox ?? true,
 
 			runEnv: initRunEnv(workRootPath, testDataPath),
 			testSettingOverrides: {

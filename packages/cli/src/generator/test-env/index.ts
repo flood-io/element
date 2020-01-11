@@ -3,6 +3,7 @@ import { join, basename } from 'path'
 import findRoot from 'find-root'
 import commandExists from 'command-exists'
 import { readFileSync } from 'fs'
+import slug from 'slug'
 
 export default class TestEnv extends Generator {
 	public options: { [key: string]: string }
@@ -13,6 +14,7 @@ export default class TestEnv extends Generator {
 
 		// This makes `dir` a required argument.
 		this.argument('dir', { type: String, required: true })
+		this.argument('skip-install', { type: Boolean, required: false })
 	}
 
 	initializing() {
@@ -50,20 +52,35 @@ export default class TestEnv extends Generator {
 				default: 'https://challenge.flood.io',
 			},
 		])
+
+		const testScriptPath = slug(this.answers.title)
+		const newAnswers = await this.prompt([
+			{
+				type: 'input',
+				name: 'scriptName',
+				message: 'Test script name',
+				default: `${testScriptPath}.perf.ts`,
+			},
+		])
+
+		this.answers = { ...this.answers, ...newAnswers }
 	}
 
 	writing() {
 		this.fs.writeJSON(this.destinationPath('package.json'), this._packageJSON)
 		this.fs.writeJSON(this.destinationPath('tsconfig.json'), this._tsConfigJSON)
-		this.fs.copyTpl(this.templatePath('test.ts'), this.destinationPath('test.ts'), {
+		this.fs.copyTpl(this.templatePath('test.ts'), this.destinationPath(this.answers.scriptName), {
 			title: this.answers.title,
 			url: this.answers.url,
 		})
+		this.fs.copyTpl(this.templatePath('gitignore'), this.destinationPath('.gitignore'))
 	}
 
 	installing() {
-		const prevValue = process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD
-		process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = '1'
+		if (this.options['skip-install']) return
+
+		// const prevValue = process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD
+		// process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = '1'
 		commandExists('yarn', (err: null | Error, exists: boolean) => {
 			if (exists) {
 				this.yarnInstall()
@@ -71,7 +88,7 @@ export default class TestEnv extends Generator {
 				this.npmInstall()
 			}
 		})
-		process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = prevValue
+		// process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = prevValue
 	}
 
 	get _packageJSON(): any {
@@ -116,21 +133,27 @@ export default class TestEnv extends Generator {
 		return {
 			compilerOptions: {
 				module: 'commonjs',
-				target: 'ES2015',
+				target: 'es2015',
 				moduleResolution: 'node',
+				removeComments: true,
 				lib: ['esnext', 'dom'],
 				pretty: true,
-				strictNullChecks: false,
+				strictNullChecks: true,
+				forceConsistentCasingInFileNames: true,
 				allowUnreachableCode: false,
 				alwaysStrict: true,
-				noUnusedLocals: false,
-				noUnusedParameters: false,
-				noImplicitAny: false,
+				noUnusedLocals: true,
+				noImplicitAny: true,
 				allowSyntheticDefaultImports: true,
-				// types: ['@types/node'],
-				// typeRoots: ['node_modules/@types'],
+				esModuleInterop: true,
+				experimentalDecorators: true,
+				emitDecoratorMetadata: true,
+				declaration: true,
+				allowJs: false,
+				checkJs: false,
 			},
-			exclude: ['node_modules', 'node_modules/**'],
+
+			files: [`./${this.answers.scriptName}`],
 		}
 	}
 }

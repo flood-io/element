@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.10-beta.42](https://github.com/flood-io/element/compare/v1.0.10-beta.41...v1.0.10-beta.42) (2020-01-15)
+
+
+### Bug Fixes
+
+* mouse tests ([00eac5f](https://github.com/flood-io/element/commit/00eac5fd3f45e724f9c02584242938e7743f867b))
+* target locator overrides ID ([132abcf](https://github.com/flood-io/element/commit/132abcfd0263d2a33e3a8455d47957b594151853))
+* the build ([910cc5e](https://github.com/flood-io/element/commit/910cc5e1685e14a1786e85dda29a75fbcac6e804))
+* **core:** frames can now be located by ID ([0e4074a](https://github.com/flood-io/element/commit/0e4074ae62bd9743bb19c2a0176e74805901e5db))
+* **security:** swap cuid for KSUID ([c76e2cb](https://github.com/flood-io/element/commit/c76e2cb145fd13b6bbb38c6950e1b63f74e3a9ee))
+
+
+### Features
+
+* **core:** adds "ready" state to auto waiter ([2de11d4](https://github.com/flood-io/element/commit/2de11d456b487a3f678de58e5111cf385ed36ac9))
+* **core:** adds keyboard support ([68fec04](https://github.com/flood-io/element/commit/68fec041b9f27fa661393b4f97ceec0300229d65))
+* **core:** always focus before typing ([8055df4](https://github.com/flood-io/element/commit/8055df4b3ee0676ee2e8d74e8992f7d49f99047b))
+* **core:** implement better keyboard and mouse interfaces ([d3661fd](https://github.com/flood-io/element/commit/d3661fdcb3357958fcacd864951b9303249ae2fb))
+* removed Browser.extractText ([cf86806](https://github.com/flood-io/element/commit/cf868060c568b1268a29a6bb0c756d1686322026))
+
+
+
+
+
 ## [1.0.10-beta.41](https://github.com/flood-io/element/compare/v1.0.10-beta.40...v1.0.10-beta.41) (2020-01-15)
 
 

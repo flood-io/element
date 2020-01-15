@@ -3,7 +3,7 @@ import parseComments from 'comment-parser'
 import { ITestScript } from '../ITestScript'
 import { VMScript } from 'vm2'
 import { TestScriptOptions, TestScriptDefaultOptions, TestScriptError } from '../TestScript'
-import { readFileSync, writeFileSync } from 'fs-extra'
+import { readFileSync } from 'fs-extra'
 import { SourceUnmapper } from './SourceUnmapper'
 import { dirname } from 'path'
 

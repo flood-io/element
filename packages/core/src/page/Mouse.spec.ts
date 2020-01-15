@@ -22,10 +22,10 @@ const timeout = async (duration: number): Promise<any> =>
 	new Promise(yeah => setTimeout(yeah, duration))
 
 const centerPoint = async (element: ElementHandle): Promise<[number, number]> => {
-	let box = await element!.boundingBox()
-	let { x, y, height, width } = box!
-	let cx = (x + x + width) / 2
-	let cy = (y + y + height) / 2
+	const box = await element.boundingBox()
+	const { x, y, height, width } = box
+	const cx = (x + x + width) / 2
+	const cy = (y + y + height) / 2
 	return [cx, cy]
 }
 
@@ -38,7 +38,7 @@ describe('Mouse', () => {
 
 		browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
 
-		let url = await serve('drag_and_drop.html')
+		const url = await serve('drag_and_drop.html')
 		await browser.visit(url)
 	})
 
@@ -47,15 +47,22 @@ describe('Mouse', () => {
 	})
 
 	test('can move mouse', async () => {
-		await browser.mouse.move([0, 0], [156, 63], [157, 65])
+		for (const point of [
+			[0, 0],
+			[156, 63],
+			[157, 65],
+		]) {
+			await browser.mouse.move(point[0], point[1])
+		}
+
 		expect(await getDropReports()).toBe('start move move')
 	})
 
 	test('can drag and drop', async () => {
-		let handleEl = await page.$('#draggable')
-		let targetEl = await page.$('#droppable')
-		let startingPoint = await centerPoint(handleEl!)
-		let finishPoint = await centerPoint(targetEl!)
+		const handleEl = await page.$('#draggable')
+		const targetEl = await page.$('#droppable')
+		const startingPoint = await centerPoint(handleEl)
+		const finishPoint = await centerPoint(targetEl)
 
 		// console.log(`Drag handle from ${startingPoint} -> ${finishPoint}`)
 

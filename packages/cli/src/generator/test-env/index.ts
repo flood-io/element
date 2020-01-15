@@ -35,6 +35,10 @@ export default class TestEnv extends Generator {
 		this.options.repoName = basename(this.destinationPath())
 	}
 
+	rootGeneratorName() {
+		return 'flood-element-cli'
+	}
+
 	answers: { [key: string]: string }
 
 	async prompting() {

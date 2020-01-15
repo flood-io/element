@@ -8,6 +8,7 @@ import runCmd from './cmd/run'
 import planCmd from './cmd/plan'
 import generateCmd from './cmd/generate'
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:cli')
 
 export const handleUnexpected = (err: Error) => {
@@ -44,6 +45,7 @@ process.on('unhandledRejection', handleRejection)
 process.on('uncaughtException', handleUnexpected)
 
 export async function main(rootPath: string) {
+	// eslint-disable-next-line @typescript-eslint/no-var-requires
 	const pkg = require(join(rootPath, 'package.json'))
 	await updateCheck(pkg)
 

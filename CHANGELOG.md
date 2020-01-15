@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.10-beta.40](https://github.com/flood-io/element/compare/v1.0.10-beta.39...v1.0.10-beta.40) (2020-01-15)
+
+
+### Bug Fixes
+
+* **cli:** yeoman needs a storage name ([84a08f4](https://github.com/flood-io/element/commit/84a08f42fb3ccfb463b45ce86e1daf1111ea5966))
+
+
+
+
+
 ## [1.0.10-beta.39](https://github.com/flood-io/element/compare/v1.0.10-beta.38...v1.0.10-beta.39) (2020-01-11)
 
 

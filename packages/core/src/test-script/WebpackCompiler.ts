@@ -5,6 +5,7 @@ import { VMScript } from 'vm2'
 import { TestScriptOptions, TestScriptDefaultOptions, TestScriptError } from '../TestScript'
 import { readFileSync } from 'fs-extra'
 import { SourceUnmapper } from './SourceUnmapper'
+import { join, dirname } from 'path'
 
 export default class WebpackCompiler implements ITestScript {
 	private vmScriptCache: VMScript
@@ -26,6 +27,10 @@ export default class WebpackCompiler implements ITestScript {
 		)
 
 		return this
+	}
+
+	public get scriptRoot() {
+		return dirname(this.sourceFile)
 	}
 
 	public get isFloodElementCorrectlyImported(): boolean {

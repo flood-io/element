@@ -73,3 +73,5 @@ examples/*/tmp
 dist
 graph.svg
 packages/**/bin/*.js
+packages/examples/sap/tmp/
+tmp

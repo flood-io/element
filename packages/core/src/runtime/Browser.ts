@@ -49,9 +49,6 @@ export class Browser<T> implements BrowserInterface {
 	public screenshots: string[]
 	customContext: T
 
-	public readonly mouse: Mouse = new Mouse(this)
-	public readonly keyboard: Keyboard = new Keyboard(this)
-
 	constructor(
 		public workRoot: WorkRoot,
 		private client: PuppeteerClientLike,
@@ -92,6 +89,14 @@ export class Browser<T> implements BrowserInterface {
 
 	public get frames(): Frame[] {
 		return getFrames(this.page.frames())
+	}
+
+	public get mouse() {
+		return new Mouse(this.page)
+	}
+
+	public get keyboard() {
+		return new Keyboard(this.page)
 	}
 
 	/**

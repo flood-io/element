@@ -1,7 +1,7 @@
-import { Browser } from '../runtime/types'
+import { Page } from 'puppeteer'
 
 export class Keyboard {
-	constructor(private browser: Browser) {}
+	constructor(private page: Page) {}
 
 	/**
 	 * Dispatches a keydown event.
@@ -9,17 +9,17 @@ export class Keyboard {
 	 * @param options Specifies a input text event.
 	 */
 	async down(key: string, options?: { text?: string }): Promise<void> {
-		return this.browser.page.keyboard.down(key, options)
+		return this.page.keyboard.down(key, options)
 	}
 
 	/** Shortcut for `keyboard.down` and `keyboard.up`. */
 	async press(key: string, options?: { text?: string; delay?: number }): Promise<void> {
-		return this.browser.page.keyboard.press(key, options)
+		return this.page.keyboard.press(key, options)
 	}
 
 	/** Dispatches a `keypress` and `input` event. This does not send a `keydown` or keyup `event`. */
 	async sendCharacter(char: string): Promise<void> {
-		return this.browser.page.keyboard.sendCharacter(char)
+		return this.page.keyboard.sendCharacter(char)
 	}
 
 	/**
@@ -28,7 +28,7 @@ export class Keyboard {
 	 * @param options Specifies the typing options.
 	 */
 	async type(text: string, options?: { delay?: number }): Promise<void> {
-		return this.browser.page.keyboard.type(text, options)
+		return this.page.keyboard.type(text, options)
 	}
 
 	/**
@@ -36,6 +36,6 @@ export class Keyboard {
 	 * @param key Name of key to release, such as ArrowLeft.
 	 */
 	async up(key: string): Promise<void> {
-		return this.browser.page.keyboard.up(key)
+		return this.page.keyboard.up(key)
 	}
 }

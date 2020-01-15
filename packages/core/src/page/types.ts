@@ -5,6 +5,7 @@ import {
 	ClickOptions,
 	ScreenshotOptions,
 } from 'puppeteer'
+import { Point } from './Point'
 
 export interface LocatorBuilder {
 	pageFunc: EvaluateFn
@@ -150,6 +151,11 @@ export interface ElementHandle {
 	 * getProperty
 	 */
 	getProperty(key: string): Promise<string | null>
+
+	/**
+	 * Returns the x,y coordinates of the center point of the element
+	 */
+	centerPoint(): Promise<Point>
 
 	/**
 	 * @internal

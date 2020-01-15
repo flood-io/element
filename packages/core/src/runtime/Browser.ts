@@ -15,7 +15,7 @@ import { ElementHandle } from '../page/types'
 import { TargetLocator } from '../page/TargetLocator'
 import { PuppeteerClientLike } from '../driver/Puppeteer'
 import { WorkRoot } from '../runtime-environment/types'
-import cuid from 'cuid'
+import KSUID from 'ksuid'
 import { Key } from '../page/Enums'
 import termImg from 'term-img'
 import { ConcreteTestSettings } from './Settings'
@@ -535,7 +535,9 @@ export class Browser<T> implements BrowserInterface {
 	}
 
 	public async saveScreenshot(fn: (path: string) => Promise<boolean>): Promise<void> {
-		const path = this.workRoot.join('screenshots', `${cuid()}.jpg`)
+		const fileId = KSUID.randomSync().toString()
+
+		const path = this.workRoot.join('screenshots', `${fileId}.jpg`)
 		debugScreenshot(`Saving screenshot to: ${path}`)
 
 		if (await fn(path)) {

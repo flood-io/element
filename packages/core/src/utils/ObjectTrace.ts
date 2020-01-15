@@ -1,4 +1,4 @@
-import cuid from 'cuid'
+import KSUID from 'ksuid'
 import { promisify } from 'util'
 import { writeFile } from 'fs'
 import { WorkRoot } from '../runtime-environment/types'
@@ -52,7 +52,7 @@ export class ObjectTrace {
 	) {}
 
 	public addError(error: ErrorLike) {
-		let { message, stack } = error
+		const { message, stack } = error
 		this.errors.push({
 			message,
 			stack,
@@ -60,7 +60,9 @@ export class ObjectTrace {
 	}
 
 	public async addNetworkTrace(trace: NetworkTraceData): Promise<void> {
-		let filePath = this.workRoot.join('network', `${cuid()}.json`)
+		const fileId = KSUID.randomSync().toString()
+
+		const filePath = this.workRoot.join('network', `${fileId}.json`)
 		this.networkTraces.push(filePath)
 
 		return writeFileAsync(filePath, JSON.stringify(trace)).catch(err => {
@@ -77,7 +79,7 @@ export class ObjectTrace {
 	}
 
 	get isEmpty(): boolean {
-		let { screenshots, networkTraces, assertions, errors } = this
+		const { screenshots, networkTraces, assertions, errors } = this
 		return (
 			screenshots.length === 0 &&
 			networkTraces.length === 0 &&
@@ -87,10 +89,10 @@ export class ObjectTrace {
 	}
 
 	public toObject(): CompositeTraceData {
-		let { label, screenshots, networkTraces, assertions, errors } = this
+		const { label, screenshots, networkTraces, assertions, errors } = this
 
-		let objectTypes: string[] = []
-		let objects: string[] = []
+		const objectTypes: string[] = []
+		const objects: string[] = []
 		screenshots.forEach(screenshot => {
 			objects.push(screenshot)
 			objectTypes.push('screenshot')

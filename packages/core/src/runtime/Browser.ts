@@ -27,6 +27,7 @@ import { rewriteError } from './decorators/rewriteError'
 import { addCallbacks } from './decorators/addCallbacks'
 import { autoWaitUntil } from './decorators/autoWait'
 import { locatableToLocator, toLocatorError } from './toLocatorError'
+import { Keyboard } from '../page/Keyboard'
 
 export const debug = debugFactory('element:runtime:browser')
 const debugScreenshot = debugFactory('element:runtime:browser:screenshot')
@@ -49,6 +50,7 @@ export class Browser<T> implements BrowserInterface {
 	customContext: T
 
 	public readonly mouse: Mouse = new Mouse(this)
+	public readonly keyboard: Keyboard = new Keyboard(this)
 
 	constructor(
 		public workRoot: WorkRoot,

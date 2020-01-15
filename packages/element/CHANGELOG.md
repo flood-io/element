@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.10-beta.41](https://github.com/flood-io/element/compare/v1.0.10-beta.40...v1.0.10-beta.41) (2020-01-15)
+
+
+### Bug Fixes
+
+* expose typings from @flood/element ([6a17d93](https://github.com/flood-io/element/commit/6a17d9397b3c8dd5cebe675eeb1523c213d244f9))
+
+
+
+
+
 ## [1.0.10-beta.40](https://github.com/flood-io/element/compare/v1.0.10-beta.39...v1.0.10-beta.40) (2020-01-15)
 
 **Note:** Version bump only for package @flood/element

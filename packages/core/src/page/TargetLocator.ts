@@ -65,15 +65,17 @@ export class TargetLocator implements ITargetLocator {
 			// Assume id or name attr
 			nextFrame = frames.find(frame => frame.name() === id) || null
 
-			const frameElementName = await this.page.evaluate((id: string) => {
-				// NOTE typescript lib.dom lacks proper index signature for frames: Window to work
-				const frame = Array.from(window.frames).find(frame => frame.frameElement.id === id)
+			if (nextFrame == null) {
+				const frameElementName = await this.page.evaluate((id: string) => {
+					// NOTE typescript lib.dom lacks proper index signature for frames: Window to work
+					const frame = Array.from(window.frames).find(frame => frame.frameElement.id === id)
 
-				if (!frame) throw Error(`No frame found with id=${id}`)
-				return frame.name
-			}, id)
+					if (!frame) throw Error(`No frame found with id=${id}`)
+					return frame.name
+				}, id)
 
-			nextFrame = frames.find(frame => frame.name() === frameElementName) || null
+				nextFrame = frames.find(frame => frame.name() === frameElementName) || null
+			}
 
 			if (!nextFrame) throw new Error(`Could not match frame by name or id: '${id}'`)
 			this.apply(nextFrame)

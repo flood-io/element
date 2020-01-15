@@ -60,8 +60,7 @@ export class ObjectTrace {
 	}
 
 	public async addNetworkTrace(trace: NetworkTraceData): Promise<void> {
-		const fileId = KSUID.randomSync().toString()
-
+		const fileId = KSUID.randomSync().string
 		const filePath = this.workRoot.join('network', `${fileId}.json`)
 		this.networkTraces.push(filePath)
 

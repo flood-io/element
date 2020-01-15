@@ -27,16 +27,20 @@ import { BoundTestDataLoaders } from '../test-data/TestDataLoaders'
 const debug = require('debug')('element:runtime:eval-script')
 
 // TODO work out the right type for floodElementActual
-function createVirtualMachine(floodElementActual: any): NodeVM {
+function createVirtualMachine(floodElementActual: any, root?: string): NodeVM {
 	return new NodeVM({
-		console: 'redirect',
+		// console: 'redirect',
+		console: 'inherit',
 		sandbox: {},
 		wrapper: 'commonjs',
 		sourceExtensions: ['js', 'ts'],
+
 		require: {
 			builtin: ['*'],
 			external: true,
 			context: 'sandbox',
+			root,
+
 			mock: {
 				'@flood/element': floodElementActual,
 				faker: Faker,
@@ -214,13 +218,12 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			suite: captureSuite,
 		}
 
-		this.vm = createVirtualMachine(context)
+		this.vm = createVirtualMachine(context, this.script.scriptRoot)
 
 		// manually extract test name and desc from the script
 		rawSettings.name = this.script.testName
 		rawSettings.description = this.script.testDescription
 
-		console.log(this.script.sandboxedFilename)
 		const result = this.vm.run(this.script.vmScript, this.script.sandboxedFilename)
 		debug('eval %O', result)
 

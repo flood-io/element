@@ -466,15 +466,6 @@ export class Browser<T> implements BrowserInterface {
 		return
 	}
 
-	@rewriteError()
-	public async extractText(locatable: NullableLocatable): Promise<string> {
-		console.warn(`DEPRECATED: Driver.extractText() is deprecated, please use ElementHandle.text()`)
-		const locator = locatableToLocator(locatable, 'browser.extractText(locatable) (DEPRECATED)')
-		const element = await locator.find(await this.context)
-		if (!element) throw toLocatorError(locatable, 'browser.extractText()')
-		return element.text()
-	}
-
 	/**
 	 * Switch the focus of the browser to another frame or window
 	 */
@@ -535,7 +526,7 @@ export class Browser<T> implements BrowserInterface {
 	}
 
 	public async saveScreenshot(fn: (path: string) => Promise<boolean>): Promise<void> {
-		const fileId = KSUID.randomSync().toString()
+		const fileId = KSUID.randomSync().string
 
 		const path = this.workRoot.join('screenshots', `${fileId}.jpg`)
 		debugScreenshot(`Saving screenshot to: ${path}`)

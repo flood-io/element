@@ -13,4 +13,6 @@ export interface ITestScript extends TestScriptErrorMapper {
 	isFloodElementCorrectlyImported: boolean
 	testName: string
 	testDescription: string
+
+	scriptRoot?: string
 }

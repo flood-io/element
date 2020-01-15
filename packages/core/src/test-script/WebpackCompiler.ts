@@ -3,9 +3,9 @@ import parseComments from 'comment-parser'
 import { ITestScript } from '../ITestScript'
 import { VMScript } from 'vm2'
 import { TestScriptOptions, TestScriptDefaultOptions, TestScriptError } from '../TestScript'
-import { readFileSync } from 'fs-extra'
+import { readFileSync, writeFileSync } from 'fs-extra'
 import { SourceUnmapper } from './SourceUnmapper'
-import { join, dirname } from 'path'
+import { dirname } from 'path'
 
 export default class WebpackCompiler implements ITestScript {
 	private vmScriptCache: VMScript
@@ -25,6 +25,10 @@ export default class WebpackCompiler implements ITestScript {
 			this.sourceFile,
 			this.sourceMap,
 		)
+
+		// writeFileSync(join(this.scriptRoot, 'bundle.js.map'), this.sourceMap, {
+		// 	encoding: 'utf8',
+		// })
 
 		return this
 	}

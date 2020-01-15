@@ -20,6 +20,9 @@ export function autoWaitUntil<T>() {
 					await this.wait(Until.elementIsVisible(locator))
 				} else if (waitUntil === 'present') {
 					await this.wait(Until.elementLocated(locator))
+				} else if (waitUntil === 'ready') {
+					await this.wait(Until.elementIsVisible(locator))
+					await this.wait(Until.elementIsEnabled(locator))
 				}
 				return originalFn.apply(this, args)
 			} else {

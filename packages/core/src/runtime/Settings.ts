@@ -52,9 +52,13 @@ export type ChromeVersion = 'puppeteer' | 'stable'
 /**
  * Element presence lists the accepted values for automatically waiting on elements before running actions.
  *
+ * - visible: waits until the element is visible on the page and is painted
+ * - present: only checks for presence in the DOM
+ * - ready: waits until the element is painted and not disabled
+ *
  * Set to `false` or `null` to disable.
  */
-export type ElementPresence = 'visible' | 'present' | false | null
+export type ElementPresence = 'visible' | 'present' | 'ready' | false | null
 
 /**
  * The TestSettings interface specifies the available settings you have to configure how your test runs. These properties should be exported using the property `settings`.
@@ -265,7 +269,7 @@ export const DEFAULT_SETTINGS: ConcreteTestSettings = {
  *
  * @internal
  */
-export interface ConcreteTestSettings extends Required<TestSettings> {}
+export type ConcreteTestSettings = Required<TestSettings>
 
 /**
  * @internal

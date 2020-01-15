@@ -268,6 +268,8 @@ export class ElementHandle implements IElementHandle, Locator {
 	 */
 	@wrapDescriptiveError()
 	public async type(text: string): Promise<void> {
+		await this.focus()
+
 		const handle = this.element.asElement()
 		if (!handle) return
 		return handle.type(text)

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.10-beta.43](https://github.com/flood-io/element/compare/v1.0.10-beta.42...v1.0.10-beta.43) (2020-01-30)
+
+
+### Bug Fixes
+
+* **cli:** test data loading path when running locally ([3324a35](https://github.com/flood-io/element/commit/3324a350ae01fb6f7732893d5af4992af96135ff))
+
+
+
+
+
 ## [1.0.10-beta.42](https://github.com/flood-io/element/compare/v1.0.10-beta.41...v1.0.10-beta.42) (2020-01-15)
 
 **Note:** Version bump only for package @flood/element-cli

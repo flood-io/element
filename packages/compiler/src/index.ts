@@ -81,7 +81,7 @@ export class Compiler {
 				],
 			},
 
-			externals: ['@flood/element', '@flood/element-api'],
+			externals: ['@flood/element', '@flood/element-api', 'faker', 'assert'],
 		}
 	}
 

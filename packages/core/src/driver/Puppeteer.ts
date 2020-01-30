@@ -105,6 +105,8 @@ export async function launch(
 
 	// options.args.push('--single-process', '--no-zygote')
 
+	options.args.push('--auth-server-whitelist="hostname/domain"')
+
 	const browser = await puppeteer.launch(options)
 	const page = await browser.newPage()
 

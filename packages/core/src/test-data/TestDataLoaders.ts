@@ -9,15 +9,15 @@ export class TestDataLoaders implements TestDataFactory {
 	 * Loads a standard Javascript array of data objects
 	 */
 	public fromData<TRow>(lines: TRow[]): TestDataSource<TRow> {
-		let loader = new DataLoader<TRow>(lines)
+		const loader = new DataLoader<TRow>(lines)
 		return new TestDataSource<TRow>(loader)
 	}
 
 	/**
 	 * Loads test data from a CSV file, returning a `<[TestDataSource]>` instance.
 	 */
-	public fromCSV<TRow>(filename: string, separator: string = ','): TestDataSource<TRow> {
-		let loader = new CSVLoader<TRow>(this.workRoot.testData(filename), separator, filename)
+	public fromCSV<TRow>(filename: string, separator = ','): TestDataSource<TRow> {
+		const loader = new CSVLoader<TRow>(this.workRoot.testData(filename), separator, filename)
 		return new TestDataSource<TRow>(loader)
 	}
 
@@ -25,7 +25,7 @@ export class TestDataLoaders implements TestDataFactory {
 	 * Loads data from a JSON ffile
 	 */
 	public fromJSON<TRow>(filename: string): TestDataSource<TRow> {
-		let loader = new JSONLoader<TRow>(this.workRoot.testData(filename), filename)
+		const loader = new JSONLoader<TRow>(this.workRoot.testData(filename), filename)
 		return new TestDataSource<TRow>(loader)
 	}
 }
@@ -34,7 +34,7 @@ export class NullTestDataLoaders implements TestDataFactory {
 	public fromData<TRow>(lines: TRow[]): TestDataSource<TRow> {
 		return new TestDataSource<TRow>(new NullLoader())
 	}
-	public fromCSV<TRow>(filename: string, separator: string = ','): TestDataSource<TRow> {
+	public fromCSV<TRow>(filename: string, separator = ','): TestDataSource<TRow> {
 		return new TestDataSource<TRow>(new NullLoader())
 	}
 	public fromJSON<TRow>(filename: string): TestDataSource<TRow> {
@@ -57,7 +57,7 @@ export class BoundTestDataLoaders implements TestDataFactory {
 		return (this.target.testData = this.innerLoaders.fromData(lines))
 	}
 
-	public fromCSV<TRow>(filename: string, separator: string = ','): TestDataSource<TRow> {
+	public fromCSV<TRow>(filename: string, separator = ','): TestDataSource<TRow> {
 		return (this.target.testData = this.innerLoaders.fromCSV(filename, separator))
 	}
 

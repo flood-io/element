@@ -16,8 +16,7 @@ import { watch } from 'chokidar'
 import { EventEmitter } from 'events'
 import { checkFile } from './common'
 import sanitize from 'sanitize-filename'
-import { extname, basename, join, dirname } from 'path'
-import { resolve } from 'url'
+import { extname, basename, join, dirname, resolve } from 'path'
 
 interface RunArguments extends Arguments {
 	file: string
@@ -241,7 +240,8 @@ function getWorkRootPath(file: string, root?: string): string {
 function getTestDataPath(file: string, root?: string): string {
 	root = root || dirname(file)
 
-	return dirname(resolve(root, file))
+	// return root
+	return resolve(root)
 }
 
 function initRunEnv(root: string, testDataRoot: string) {

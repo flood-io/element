@@ -7,7 +7,7 @@ const readFilePromise = promisify(readFile)
 export abstract class Loader<T> {
 	public isSet = true
 	public lines: T[]
-	public isLoaded: boolean = false
+	public isLoaded = false
 	constructor(public filePath: string, public requestedFilename: string) {}
 	public abstract load(): Promise<void>
 }
@@ -68,12 +68,12 @@ export class DataLoader<T> extends Loader<T> {
 
 export class JSONLoader<T> extends Loader<T> {
 	public async load(): Promise<void> {
-		let data = readFilePromise(this.filePath, 'utf8')
+		const data = readFilePromise(this.filePath, 'utf8')
 		data.catch(err => {
 			console.error(err)
 		})
 
-		let jsonData: T[] = JSON.parse(await data)
+		const jsonData: T[] = JSON.parse(await data)
 		if (Array.isArray(jsonData)) {
 			this.lines = jsonData
 		} else {
@@ -109,9 +109,7 @@ export class CSVLoader<T> extends Loader<T> {
 
 		if (this.lines.length === 0) {
 			throw new Error(
-				`CSV file '${
-					this.requestedFilename
-				}' loaded but contains no rows of data.\nNote that the first row of a CSV file is used as the header to name columns.\nFor details see https://github.com/flood-io/element/blob/master/packages/element/docs/examples/examples_test_data.md#csv-column-names`,
+				`CSV file '${this.requestedFilename}' loaded but contains no rows of data.\nNote that the first row of a CSV file is used as the header to name columns.\nFor details see https://github.com/flood-io/element/blob/master/packages/element/docs/examples/examples_test_data.md#csv-column-names`,
 			)
 		}
 

@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.10-beta.44](https://github.com/flood-io/element/compare/v1.0.10-beta.43...v1.0.10-beta.44) (2020-02-04)
+
+
+### Bug Fixes
+
+* add core node_modules to resolver path ([0f89dd1](https://github.com/flood-io/element/commit/0f89dd124809b39e797bc3de785432a3039f5168))
+* **compiler:** exclude faker and assert from compiled script ([1556ba2](https://github.com/flood-io/element/commit/1556ba2288bc88d867a8054e0a6af59a27c9bd39))
+
+
+
+
+
 ## [1.0.10-beta.43](https://github.com/flood-io/element/compare/v1.0.10-beta.42...v1.0.10-beta.43) (2020-01-30)
 
 **Note:** Version bump only for package @flood/element-compiler

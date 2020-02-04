@@ -8,6 +8,8 @@ import { CompilerOutput } from './types'
 
 export { CompilerOutput }
 
+const isProductionGrid = process.env.IS_GRID !=null || process.env.FLOOD_CHROME_VERSION !=null
+
 export class Compiler {
 	private sourceFile: string
 
@@ -32,7 +34,7 @@ export class Compiler {
 		const loader = require.resolve('ts-loader')
 
 		const modules = ['node_modules']
-		if (process.env.IS_GRID || process.env.FLOOD_CHROME_VERSION) {
+		if (isProductionGrid) {
 			modules.push('/app/node_modules')
 		}
 		console.log(`Module resolve paths: ${modules.join(', ')}`)
@@ -88,7 +90,7 @@ export class Compiler {
 				],
 			},
 
-			externals: ['@flood/element', '@flood/element-api', 'faker', 'assert'],
+			externals: ['@flood/element', '@flood/element-api'],//'faker', 'assert'
 		}
 	}
 

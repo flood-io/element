@@ -6,10 +6,10 @@ import WebpackBar from 'webpackbar'
 import findRoot from 'find-root'
 import { CompilerOutput } from './types'
 
-export {CompilerOutput}
+export { CompilerOutput }
 
 export class Compiler {
-	private sourceFile:string
+	private sourceFile: string
 
 	constructor(sourceFile: string) {
 		this.sourceFile = resolve(sourceFile)
@@ -31,6 +31,12 @@ export class Compiler {
 	get webpackConfig(): WebpackConfig {
 		const loader = require.resolve('ts-loader')
 
+		const modules = ['node_modules']
+		if (process.env.IS_GRID || process.env.FLOOD_CHROME_VERSION) {
+			modules.push('/app/node_modules')
+		}
+		console.log(`Module resolve paths: ${modules.join(', ')}`)
+
 		return {
 			entry: this.sourceFile,
 			// mode: this.productionMode ? 'production' : 'development',
@@ -45,6 +51,7 @@ export class Compiler {
 			},
 			resolve: {
 				extensions: ['.ts', '.js'],
+				modules,
 
 				// plugins: [
 				// 	new TsconfigPathsPlugin({
@@ -56,7 +63,7 @@ export class Compiler {
 
 			plugins: [
 				new WebpackBar({
-					name: "Script Compiler"
+					name: 'Script Compiler',
 					// reporters: ['fancy'],
 				}),
 			],
@@ -122,6 +129,4 @@ export class Compiler {
 			})
 		})
 	}
-
-
 }

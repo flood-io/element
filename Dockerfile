@@ -50,5 +50,6 @@ RUN yarn lerna link
 RUN yarn lerna bootstrap
 
 ENV NO_CHROME_SANDBOX=1
+ENV IS_GRID=1
 
 RUN yarn build

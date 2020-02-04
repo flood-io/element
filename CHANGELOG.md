@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.10-beta.45](https://github.com/flood-io/element/compare/v1.0.10-beta.44...v1.0.10-beta.45) (2020-02-04)
+
+
+### Bug Fixes
+
+* include faker and assert in built package just for good measure ([e6119ab](https://github.com/flood-io/element/commit/e6119ab749b7645eb59f42af8c8afe220deb31fc))
+
+
+
+
+
 ## [1.0.10-beta.44](https://github.com/flood-io/element/compare/v1.0.10-beta.43...v1.0.10-beta.44) (2020-02-04)
 
 

@@ -2,7 +2,8 @@ import { newMetricIdentifierFromObject } from './MetricIdentifier'
 import { GridConfig } from './GridConfig'
 import { WorkRoot, FloodProcessEnv } from '@flood/element-api'
 import findRoot from 'find-root'
-import * as path from 'path'
+import { join } from 'path'
+import { ensureDirSync } from 'fs-extra'
 import { devDefaults } from './defaults'
 import { ProcessEnv } from './types'
 
@@ -24,6 +25,19 @@ function stepEnv(): FloodProcessEnv {
 	}
 }
 
+const num = (v?: string, defaultValue?: number): number | undefined => {
+	if (v === undefined || v.trim() === '') {
+		return defaultValue
+	}
+
+	const n = Number(v)
+	if (Number.isNaN(n)) {
+		return defaultValue
+	}
+
+	return n
+}
+
 export function initFromEnvironment(env: ProcessEnv = process.env): Partial<GridConfig> {
 	let root: string
 	let testDataRoot: string
@@ -31,12 +45,14 @@ export function initFromEnvironment(env: ProcessEnv = process.env): Partial<Grid
 	if (env.NODE_ENV !== 'production') {
 		devDefaults(env)
 		const projectRoot = findRoot(__dirname)
-		root = path.join(projectRoot, 'tmp/data')
-		testDataRoot = path.join(projectRoot, 'tmp/data/flood/files')
+		root = join(projectRoot, 'tmp/data')
+		testDataRoot = join(projectRoot, 'tmp/data/flood/files')
 	} else {
 		root = env.FLOOD_DATA_ROOT ?? '/data/flood'
 		testDataRoot = env.FLOOD_FILES_PATH ?? '/data/flood/files'
 	}
+
+	ensureDirSync(join(root, 'lock'))
 
 	const workRoot = new WorkRoot(root, {
 		'test-data': testDataRoot,
@@ -50,19 +66,6 @@ export function initFromEnvironment(env: ProcessEnv = process.env): Partial<Grid
 		nodeID: Number(env.FLOOD_GRID_NODE_SEQUENCE_ID),
 		region: env.FLOOD_GRID_REGION,
 	})
-
-	const num = (v: string | undefined, defaultValue: number | undefined): number | undefined => {
-		if (v === undefined || v.trim() === '') {
-			return defaultValue
-		}
-
-		const n = Number(v)
-		if (Number.isNaN(n)) {
-			return defaultValue
-		}
-
-		return n
-	}
 
 	return {
 		metricIdentifier,

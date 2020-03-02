@@ -5,7 +5,7 @@ const workRoot = testWorkRoot()
 
 describe('ObjectTrace', () => {
 	test('serializes a trace of multiple resources', async () => {
-		let objectTrace = new ObjectTrace(workRoot, 'Test Label')
+		const objectTrace = new ObjectTrace(workRoot, 'Test Label')
 		expect(objectTrace.isEmpty).toBe(true)
 
 		objectTrace.addAssertion({
@@ -15,7 +15,7 @@ describe('ObjectTrace', () => {
 			stack: ['line.1', 'line.2'],
 		})
 
-		let err = new Error('This is an Error')
+		const err = new Error('This is an Error')
 		err.stack = (err.stack || '')
 			.split('\n')
 			.slice(0, 1)
@@ -36,7 +36,7 @@ describe('ObjectTrace', () => {
 		})
 
 		objectTrace.addScreenshot('tmp/data/flood/screenshots/screenshot.png')
-		let obj = objectTrace.toObject()
+		const obj = objectTrace.toObject()
 		expect(obj.assertions).toEqual([
 			{
 				assertionName: 'Assert',

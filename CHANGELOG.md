@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.10-beta.51](https://github.com/flood-io/element/compare/v1.0.10-beta.50...v1.0.10-beta.51) (2020-03-02)
+
+
+### Bug Fixes
+
+* element needs to export actual impl ([9f565c8](https://github.com/flood-io/element/commit/9f565c85b9ade939ec320161be1a83e62e8184ec))
+
+
+
+
+
 ## [1.0.10-beta.50](https://github.com/flood-io/element/compare/v1.0.10-beta.49...v1.0.10-beta.50) (2020-03-02)
 
 **Note:** Version bump only for package flood-element

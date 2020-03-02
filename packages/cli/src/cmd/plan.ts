@@ -14,7 +14,11 @@ function rpad(n: number, maxN: number, padChar = ' '): string {
 	return ns + padChar.repeat(width - ns.length)
 }
 
-const main = async (args: Arguments) => {
+interface CommandArgs extends Arguments {
+	file: string
+}
+
+const main = async (args: CommandArgs) => {
 	const { EvaluatedScript, nullRuntimeEnvironment } = await import('@flood/element-core')
 	const script = await EvaluatedScript.mustCompileFile(args.file, nullRuntimeEnvironment)
 

@@ -14,12 +14,12 @@
 		"prepublish": "in-publish && yarn build || not-in-publish",
 		"prepublishOnly": "echo 'prepublishOnly'",
 		"prebuild": "rm -rf ./dist",
-		"xbuild": "yarn ncc build -e @flood/element -e @flood/element-core -e @flood/element-compiler -e @flood/element-api -e yargs -e yeoman-generator -e yeoman-environment -e typescript -o dist ./bin/element.ts",
 		"dev": "ts-node ./bin/element.ts"
 	},
 	"dependencies": {
 		"@flood/element": "^1.0.10-beta.49",
 		"@flood/element-core": "^1.0.10-beta.49",
+		"@flood/element-api": "^1.0.10-beta.49",
 		"@flood/element-flood-runner": "^1.0.10-beta.49",
 		"boxen": "^3.0",
 		"chalk": "^2.4.1",
@@ -33,7 +33,7 @@
 		"slug": "^2.1.0",
 		"update-check": "^1.5.2",
 		"winston": "^3.0.0",
-		"yargs": "^11.0.0",
+		"yargs": "^15.1.0",
 		"yeoman-environment": "2.3.0",
 		"yeoman-generator": "3.1.0"
 	},
@@ -47,7 +47,7 @@
 		"@types/ora": "^1.3.4",
 		"@types/semver": "^5.5.0",
 		"@types/slug": "^0.9.1",
-		"@types/yargs": "^11.0.0",
+		"@types/yargs": "^15.0.4",
 		"@types/yeoman-environment": "^2.3.2",
 		"@types/yeoman-generator": "^3.1.4",
 		"@zeit/ncc": "^0.20.4",

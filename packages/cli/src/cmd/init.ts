@@ -4,11 +4,15 @@ import { resolve } from 'path'
 import runCmd from '../utils/cmd'
 import chalk from 'chalk'
 
+interface CommandArgs extends Arguments {
+	dir: string
+}
+
 const cmd: CommandModule = {
 	command: 'init [dir] [options]',
 	describe: 'Init a test script and a minimal environment to get you started with Flood Element',
 
-	async handler(args: Arguments) {
+	async handler(args: CommandArgs) {
 		const { default: YoEnv } = await import('yeoman-environment')
 		const { default: TestEnvGenerator } = await import('../generator/test-env/index')
 		const env = YoEnv.createEnv()

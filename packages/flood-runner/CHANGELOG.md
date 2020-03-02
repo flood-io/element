@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.10-beta.48](https://github.com/flood-io/element/compare/v1.0.10-beta.47...v1.0.10-beta.48) (2020-03-02)
+
+
+### Bug Fixes
+
+* concurrency hacks paths ([e306f44](https://github.com/flood-io/element/commit/e306f4497807607d6acda7bf7c3b13032d0f31ff))
+
+
+
+
+
 ## [1.0.10-beta.47](https://github.com/flood-io/element/compare/v1.0.10-beta.46...v1.0.10-beta.47) (2020-03-02)
 
 

@@ -7,15 +7,13 @@
 	"scripts": {
 		"prebuild": "rm -rf dist",
 		"build": "tsc -b",
-		"xpostbuild": "sed 's/src/dist\\/src/g' dist/index.js > index.tmp && mv index.tmp dist/index.js",
 		"prepublishOnly": "yarn build"
 	},
 	"dependencies": {
 		"@flood/element-core": "^1.0.10-beta.48"
 	},
 	"devDependencies": {
-		"@types/node": "12.7.4",
-		"@zeit/ncc": "^0.20.4"
+		"@types/node": "12.7.4"
 	},
 	"author": "Ivan Vanderbyl <ivanvanderbyl@gmail.com>",
 	"homepage": "https://element.flood.io",
@@ -23,11 +21,6 @@
 	"publishConfig": {
 		"access": "public"
 	},
-	"files": [
-		"dist",
-		"CHANGELOG.md",
-		"README.md"
-	],
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/flood-io/element.git"

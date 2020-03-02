@@ -1,11 +1,3 @@
 # `flood-runner`
 
-> TODO: description
-
-## Usage
-
-```
-const floodRunner = require('flood-runner');
-
-// TODO: DEMONSTRATE API
-```
+Internall runner used by Flood Agent

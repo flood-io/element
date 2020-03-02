@@ -24,7 +24,9 @@ const cmd: CommandModule = {
 			})
 			.check(({ file }) => {
 				if (process.env.FLOOD_DATA_ROOT == null)
-					throw new Error(`"agent start" can executed by Flood Agent`)
+					throw new Error(
+						`"agent start" can executed by Flood Agent (failed to detect $FLOOD_DATA_ROOT)`,
+					)
 
 				const fileErr = checkFile(file as string)
 				if (fileErr) return fileErr

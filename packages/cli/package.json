@@ -20,6 +20,7 @@
 	"dependencies": {
 		"@flood/element": "^1.0.10-beta.46",
 		"@flood/element-core": "^1.0.10-beta.46",
+		"@flood/element-flood-runner": "^1.0.10-beta.46",
 		"boxen": "^3.0",
 		"chalk": "^2.4.1",
 		"chokidar": "^2.0.4",

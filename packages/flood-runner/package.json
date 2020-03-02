@@ -11,7 +11,7 @@
 		"prebuild": "rm -rf dist",
 		"prepublishOnly": "yarn build"
 	},
-	"main": "dist/src/Grid.js",
+	"main": "dist/index.js",
 	"publishConfig": {
 		"access": "public"
 	},

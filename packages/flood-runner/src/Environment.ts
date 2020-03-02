@@ -1,7 +1,7 @@
 import { newMetricIdentifierFromObject } from './MetricIdentifier'
 import { GridConfig } from './GridConfig'
 import { WorkRoot, FloodProcessEnv } from '@flood/element-api'
-import * as findRoot from 'find-root'
+import findRoot from 'find-root'
 import * as path from 'path'
 import { devDefaults } from './defaults'
 import { ProcessEnv } from './types'

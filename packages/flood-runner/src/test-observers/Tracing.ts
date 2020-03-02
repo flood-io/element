@@ -14,12 +14,12 @@ import {
 } from '@flood/element-api'
 import { NetworkRecordingTestObserver } from './NetworkRecordingTestObserver'
 
-import * as debugFactory from 'debug'
+import debugFactory from 'debug'
 const debug = debugFactory('element:grid:tracing')
 
 export class TracingObserver extends NetworkRecordingTestObserver {
 	private trace: IObjectTrace = NullObjectTrace
-	private failed: number = 0
+	private failed = 0
 
 	async beforeStep(test: Test, step: Step) {
 		this.failed = 0
@@ -28,7 +28,7 @@ export class TracingObserver extends NetworkRecordingTestObserver {
 	}
 
 	async afterStep(test: Test, step: Step) {
-		let screenshots = await test.fetchScreenshots()
+		const screenshots = await test.fetchScreenshots()
 		screenshots.forEach(file => this.trace.addScreenshot(file))
 
 		await this.addNetworkTrace(test, step, this.ctx.networkRecorder)
@@ -55,7 +55,7 @@ export class TracingObserver extends NetworkRecordingTestObserver {
 			debug('stepFailure - assertion', step.name, err)
 			// Handles assertions from assert
 
-			let assertion: Assertion = {
+			const assertion: Assertion = {
 				assertionName: 'AssertionError',
 				message: sErr.message,
 				stack: test.script?.filterAndUnmapStack?.(sErr.stack) ?? 'No stack trace from script',
@@ -65,7 +65,7 @@ export class TracingObserver extends NetworkRecordingTestObserver {
 			this.trace.addAssertion(assertion)
 			// TODO should return after handling
 		} else {
-			let errorPayload = {
+			const errorPayload = {
 				message: err.message,
 				stack: test.script?.filterAndUnmapStack?.(err)?.join('\n') ?? 'No stack trace from script',
 			}
@@ -83,7 +83,7 @@ export class TracingObserver extends NetworkRecordingTestObserver {
 	}
 
 	private async addNetworkTrace(test: Test, step: Step, networkRecorder: NetworkRecorder) {
-		let [document] = networkRecorder.entriesForType('Document')
+		const [document] = networkRecorder.entriesForType('Document')
 
 		// there may be no document if e.g. the step didn't cause any network activity
 		if (!document) {
@@ -98,7 +98,7 @@ export class TracingObserver extends NetworkRecordingTestObserver {
 			endTime = new Date().valueOf(),
 			responseData = ''
 
-		let url = test.currentURL
+		const url = test.currentURL
 
 		responseHeaders = serializeResponseHeaders(document)
 		requestHeaders = serializeRequestHeaders(document)
@@ -110,7 +110,7 @@ export class TracingObserver extends NetworkRecordingTestObserver {
 
 		if (document.response.content) responseData = document.response.content.text.slice(0, 32 * 1024)
 
-		let traceData: NetworkTraceData = {
+		const traceData: NetworkTraceData = {
 			op: 'network',
 			label: step.name,
 			sampleCount: 1,

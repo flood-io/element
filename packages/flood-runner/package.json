@@ -1,5 +1,5 @@
 {
-	"name": "flood-runner",
+	"name": "@flood/element-flood-runner",
 	"version": "1.0.10-beta.45",
 	"description": "Flood runner for Element",
 	"author": "Ivan Vanderbyl <ivanvanderbyl@gmail.com>",
@@ -11,8 +11,7 @@
 		"prebuild": "rm -rf dist",
 		"prepublishOnly": "yarn build"
 	},
-	"main": "dist/index.js",
-	"esnext": "index.ts",
+	"main": "dist/src/Grid.js",
 	"publishConfig": {
 		"access": "public"
 	},
@@ -22,5 +21,10 @@
 	},
 	"bugs": {
 		"url": "https://github.com/flood-io/element/issues"
+	},
+	"dependencies": {
+		"@flood/node-influx": "^5.0.9",
+		"find-root": "^1.1.0",
+		"winston": "^3.2.1"
 	}
 }

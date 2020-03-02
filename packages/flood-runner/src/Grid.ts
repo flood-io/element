@@ -6,10 +6,8 @@ import { initConfig } from './initConfig'
 import { startConcurrencyTicker } from './tickerInterval'
 import { initInfluxReporter } from './initInfluxReporter'
 
-export async function main(argv: string[]): Promise<void> {
-	const file = argv[2]
+export async function runner(file: string): Promise<void> {
 	const gridConfig = initConfig()
-
 	const influxReporter = initInfluxReporter(gridConfig)
 
 	const testObserverFactory = (innerObserver: TestObserver) => {

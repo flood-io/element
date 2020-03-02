@@ -8,7 +8,7 @@ import {
 } from '@flood/element-api'
 import { NetworkRecordingTestObserver } from './NetworkRecordingTestObserver'
 
-import * as debugFactory from 'debug'
+import debugFactory from 'debug'
 const debug = debugFactory('element:grid:timing')
 
 // TODO re-enable when browser_performance decoupled
@@ -28,20 +28,20 @@ class Timing {
 	}
 
 	start(segmentName: TimingSegmentName) {
-		let now = new Date().valueOf()
+		const now = new Date().valueOf()
 		this.segments.set(segmentName, { start: now, end: 0, thinkTime: 0 })
 	}
 
 	end(segmentName: TimingSegmentName) {
-		let seg = expect(this.segments.get(segmentName), `No timing started for ${segmentName}`)
-		let now = new Date().valueOf()
+		const seg = expect(this.segments.get(segmentName), `No timing started for ${segmentName}`)
+		const now = new Date().valueOf()
 		seg.end = now
 		this.segments.set(segmentName, seg)
 	}
 	// TODO thinkTime
 
 	getDurationForSegment(segmentName: TimingSegmentName): number {
-		let { start, end } = expect(
+		const { start, end } = expect(
 			this.segments.get(segmentName),
 			`No timing started for ${segmentName}`,
 		)
@@ -49,7 +49,7 @@ class Timing {
 	}
 
 	getThinkTimeForSegment(segmentName: TimingSegmentName): number {
-		let { thinkTime } = expect(
+		const { thinkTime } = expect(
 			this.segments.get(segmentName),
 			`No timing started for ${segmentName}`,
 		)
@@ -61,10 +61,10 @@ class Timing {
 	}
 
 	async measureThinkTime(segmentName: TimingSegmentName, func: Function, ...args: any[]) {
-		let seg = expect(this.segments.get(segmentName), `No timing started for ${segmentName}`)
-		let start = new Date()
+		const seg = expect(this.segments.get(segmentName), `No timing started for ${segmentName}`)
+		const start = new Date()
 		await func.apply(this, ...args)
-		let end = new Date()
+		const end = new Date()
 		seg.thinkTime += end.valueOf() - start.valueOf()
 	}
 
@@ -74,8 +74,8 @@ class Timing {
 }
 
 export class TimingObserver extends NetworkRecordingTestObserver {
-	private passed: number = 0
-	private failed: number = 0
+	private passed = 0
+	private failed = 0
 	private t: Timing = new Timing()
 
 	/**
@@ -175,12 +175,12 @@ export class TimingObserver extends NetworkRecordingTestObserver {
 		if (networkRecorder) {
 			debug(`Report Result: ${name}`)
 
-			let responseCode = String(networkRecorder.documentResponseCode || 0)
-			let documentResponseTime = this.getResponseTimeMeasurement(
+			const responseCode = String(networkRecorder.documentResponseCode || 0)
+			const documentResponseTime = this.getResponseTimeMeasurement(
 				test.settings.responseTimeMeasurement,
 				networkRecorder,
 			)
-			let documentLatency = networkRecorder.latencyForType('Document')
+			const documentLatency = networkRecorder.latencyForType('Document')
 
 			test.reporter.responseCode = responseCode
 

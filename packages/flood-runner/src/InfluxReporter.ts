@@ -43,7 +43,7 @@ export interface ConcretePoint {
 }
 
 export function encodeTraceData(traceData: TraceData) {
-	let compressedData = zlib.gzipSync(new Buffer(JSON.stringify(traceData), 'utf8'))
+	const compressedData = zlib.gzipSync(new Buffer(JSON.stringify(traceData), 'utf8'))
 	return compressedData.toString('base64')
 }
 export function decodeTraceData(traceData: string) {
@@ -51,7 +51,7 @@ export function decodeTraceData(traceData: string) {
 }
 
 export default class InfluxReporter implements IReporter {
-	public responseCode: string = '200'
+	public responseCode = '200'
 	public stepName: string
 
 	private socket: Socket
@@ -81,7 +81,7 @@ export default class InfluxReporter implements IReporter {
 		const point = {
 			measurement,
 			tags: { ...this.options.metricIdentifier.influxTags },
-			fields: { response_code: this.responseCode },
+			fields: { ['response_code']: this.responseCode },
 		}
 
 		if (label !== undefined) {
@@ -105,7 +105,7 @@ export default class InfluxReporter implements IReporter {
 		// 	console.log(`REPORTER.send() ${JSON.stringify(payload, null, 2)}`)
 		// }
 
-		let message = Buffer.from(payload)
+		const message = Buffer.from(payload)
 
 		await new Promise((yeah, nah) => {
 			this.socket.send(
@@ -117,9 +117,7 @@ export default class InfluxReporter implements IReporter {
 						this.logger.error(`REPORTER.socket.send() ERROR: ${err.message}`)
 					} else {
 						this.logger.debug(
-							`REPORTER.socket.send() wrote ${bytes} bytes to ${this.options.influxHost}:${
-								this.options.influxPort
-							}`,
+							`REPORTER.socket.send() wrote ${bytes} bytes to ${this.options.influxHost}:${this.options.influxPort}`,
 						)
 						this.logger.debug(message.toString())
 					}
@@ -141,7 +139,7 @@ export default class InfluxReporter implements IReporter {
 
 	addTrace(traceData: TraceData, label: string): void {
 		if (!traceData.objects) traceData.objects = []
-		let base64EncodedData = encodeTraceData(traceData)
+		const base64EncodedData = encodeTraceData(traceData)
 		this.addMeasurement('object', base64EncodedData, label)
 	}
 
@@ -177,10 +175,10 @@ export default class InfluxReporter implements IReporter {
 	}
 
 	async flushMeasurements(): Promise<void> {
-		let sends: Promise<void>[] = []
-		let printedResults = []
+		const sends: Promise<void>[] = []
+		const printedResults: string[] = []
 
-		for (let [measurement, values] of Object.entries(this.measurements)) {
+		for (const [measurement, values] of Object.entries(this.measurements)) {
 			if (values === undefined) continue
 			// concurrency is handled independently of the Test
 			if (measurement === 'concurrency') {
@@ -193,7 +191,7 @@ export default class InfluxReporter implements IReporter {
 				)
 			}
 
-			values.forEach((reading, index) => {
+			values.forEach(reading => {
 				const point = this.newPoint(measurement, reading.label)
 
 				const { value } = reading

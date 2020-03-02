@@ -34,8 +34,8 @@ export function initFromEnvironment(env: ProcessEnv = process.env): Partial<Grid
 		root = path.join(projectRoot, 'tmp/data')
 		testDataRoot = path.join(projectRoot, 'tmp/data/flood/files')
 	} else {
-		root = '/data'
-		testDataRoot = env.TEST_DATA_DIRECTORY || '/data/flood/files'
+		root = env.FLOOD_DATA_ROOT ?? '/data/flood'
+		testDataRoot = env.FLOOD_FILES_PATH ?? '/data/flood/files'
 	}
 
 	const workRoot = new WorkRoot(root, {

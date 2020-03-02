@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.10-beta.46](https://github.com/flood-io/element/compare/v1.0.10-beta.45...v1.0.10-beta.46) (2020-03-02)
+
+
+### Bug Fixes
+
+* implement agent start command ([e31a6ef](https://github.com/flood-io/element/commit/e31a6ef170215a96e84a67d5315668049293dfea))
+
+
+
+
+
 ## [1.0.10-beta.45](https://github.com/flood-io/element/compare/v1.0.10-beta.44...v1.0.10-beta.45) (2020-02-04)
 
 **Note:** Version bump only for package @flood/element-cli

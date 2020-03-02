@@ -1,11 +1,3 @@
 # `element-cli`
 
-> TODO: description
-
-## Usage
-
-```
-const elementCli = require('element-cli');
-
-// TODO: DEMONSTRATE API
-```
+Wrapper to install `@flood/element-cli` for local use.

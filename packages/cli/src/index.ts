@@ -7,6 +7,7 @@ import initCmd from './cmd/init'
 import runCmd from './cmd/run'
 import planCmd from './cmd/plan'
 import generateCmd from './cmd/generate'
+import agentCmd from './cmd/agent'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:cli')
@@ -49,24 +50,33 @@ export async function main(rootPath: string) {
 	const pkg = require(join(rootPath, 'package.json'))
 	await updateCheck(pkg)
 
-	return argv
+	const cli = argv
 		.usage(chalk`{bold {blueBright element}} <command> {grey [options]}`)
 		.command(initCmd)
 		.command(generateCmd)
 		.command(planCmd)
 		.command(runCmd)
+		.command(agentCmd)
 		.updateStrings({
 			'Commands:': chalk.grey('Commands:\n'),
 			'Options:': chalk.grey('Options:\n'),
 		})
+		.hide('agent')
 		.version(pkg.version)
 		.demandCommand()
 		.help('help')
-		.showHelpOnFail(true)
 		.recommendCommands()
+		.showHelpOnFail(false, chalk('Specify {blue --help} for available options'))
+		.fail(msg => {
+			// if (err) throw err // preserve stack
+			console.error(chalk.redBright(msg))
+			process.exit(1)
+		})
 		.example(
 			'element run ./examples/flood-challenge.ts',
 			'Run the Flood Challenge example script in your local browser',
 		)
-		.epilogue(`For more information on Flood Element, see https://element.flood.io`).argv
+		.epilogue(`For more documentation on Element, see https://element.flood.io`).argv
+
+	return cli
 }

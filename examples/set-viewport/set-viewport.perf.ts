@@ -6,14 +6,12 @@ export const settings: TestSettings = {
 
 	// Automatically wait for elements before trying to interact with them
 	waitUntil: 'visible',
-	viewport: {
-		height:800,
-		width:1280,
-	},
+	viewport: { width: 800, height: 600 },
 }
 
 export default () => {
 	step('Start', async browser => {
+		// await browser.setViewport({ width: 800, height: 600 })
 		// visit instructs the browser to launch, open a page, and navigate to https://amazon.com
 		await browser.visit('https://amazon.com')
 		await browser.takeScreenshot()

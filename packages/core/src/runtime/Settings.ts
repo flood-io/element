@@ -113,7 +113,7 @@ export interface TestSettings {
 	/**
 	 * Specifies a device to emulate with browser device emulation.
 	 */
-	device?: string
+	device?: string | null
 
 	/**
 	 * Sets the viewport of the page.

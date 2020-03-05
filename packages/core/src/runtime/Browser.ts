@@ -471,14 +471,6 @@ export class Browser<T> implements BrowserInterface {
 		return elements
 	}
 
-	public async set(_key: string, _value: string): Promise<void> {
-		return
-	}
-
-	public async get(_key: string): Promise<void> {
-		return
-	}
-
 	/**
 	 * Switch the focus of the browser to another frame or window
 	 */

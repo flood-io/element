@@ -14,14 +14,14 @@ let testReporter: EventEmitterReporter = new EventEmitterReporter()
 const runEnv = testRunEnv()
 
 const setupTest = async (scriptName: string) => {
-	let url = await serve('wait.html')
+	const url = await serve('wait.html')
 
 	let testScriptFile = readFileSync(join(__dirname, '../../tests/fixtures', scriptName), {
 		encoding: 'utf8',
 	})
 
 	testScriptFile = testScriptFile.replace('<URL>', url)
-	let tmpFile = join(tmpdir(), 'test-script.ts')
+	const tmpFile = join(tmpdir(), 'test-script.ts')
 	writeFileSync(tmpFile, testScriptFile)
 
 	const script = await EvaluatedScript.mustCompileFile(tmpFile, runEnv)
@@ -69,6 +69,7 @@ describe('Test', () => {
 			disableCache: false,
 			extraHTTPHeaders: {},
 			launchArgs: [],
+			viewport: null,
 		}
 		expect(test.settings).toEqual(defaultSettings)
 	})

@@ -23,7 +23,7 @@ const cmd: CommandModule = {
 			const tsConfig = require(resolve(args.dir, './tsconfig.json'))
 
 			console.log(
-				chalk`{grey COMPLETED} Run ${runCmd(`cd ${args.dir}`)} and ${runCmd(
+				chalk`{grey New Element project initialized}\nRun ${runCmd(`cd ${args.dir}`)} and ${runCmd(
 					`element run ${tsConfig.files[0]}`,
 				)}`,
 			)
@@ -37,6 +37,7 @@ const cmd: CommandModule = {
 			})
 			.option('skip-install', {
 				describe: 'Skip yarn/npm install',
+				default: false,
 			})
 			.positional('dir', {
 				describe: 'the directory to initialize with an Element test script',

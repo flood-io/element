@@ -1,0 +1,33 @@
+{
+	"name": "set-viewport",
+	"version": "1.0.0",
+	"description": "Flood Element test script",
+	"private": true,
+	"prettier": {
+		"semi": false,
+		"singleQuote": true,
+		"trailingComma": "all",
+		"printWidth": 100,
+		"useTabs": true,
+		"tabWidth": 2,
+		"bracketSpacing": true,
+		"jsxBracketSameLine": true,
+		"arrowParens": "avoid"
+	},
+	"dependencies": {
+		"@flood/element": "../../packages/element",
+		"@flood/element-cli": "../../packages/cli",
+		"assert": "*",
+		"faker": "*",
+		"prettier": "*"
+	},
+	"devDependencies": {
+		"@types/faker": "*",
+		"@types/assert": "*"
+	},
+	"element": {
+		"testMatch": [
+			"**/*.perf.[tj]s"
+		]
+	}
+}

@@ -34,8 +34,8 @@ describe('EvaluatedScript', () => {
 
 	describe('evaluate', () => {
 		test('returns default test settings', async () => {
-			let script = new EvaluatedScript(runEnv, ensureDefined(noSettingsTestScript))
-			let { settings } = script
+			const script = new EvaluatedScript(runEnv, ensureDefined(noSettingsTestScript))
+			const { settings } = script
 
 			expect(settings.name).toBe('Empty test for evaluating defaults')
 			expect(settings.description).toBe('Use this in the test environment.')
@@ -54,7 +54,7 @@ describe('EvaluatedScript', () => {
 		})
 
 		test('captures test settings', async () => {
-			let { settings, steps } = new EvaluatedScript(runEnv, ensureDefined(vmFeaturesTestScript))
+			const { settings, steps } = new EvaluatedScript(runEnv, ensureDefined(vmFeaturesTestScript))
 
 			expect(settings.name).toBe('Test Script for evaluating VM features')
 			expect(settings.description).toBe('Use this in the test environment.')
@@ -67,7 +67,7 @@ describe('EvaluatedScript', () => {
 		})
 
 		test('allows overriding settings per step', async () => {
-			let { settings, steps } = new EvaluatedScript(runEnv, vmFeaturesTestScript)
+			const { settings, steps } = new EvaluatedScript(runEnv, vmFeaturesTestScript)
 
 			expect(settings.waitTimeout).toBe(5)
 			expect(steps[0].stepOptions).toEqual({ waitTimeout: 60 })
@@ -86,8 +86,8 @@ describe('EvaluatedScript', () => {
 		}, 30e3)
 
 		test('returns steps', async () => {
-			let script = new EvaluatedScript(runEnv, ensureDefined(vmFeaturesTestScript))
-			let { steps } = script
+			const script = new EvaluatedScript(runEnv, ensureDefined(vmFeaturesTestScript))
+			const { steps } = script
 
 			expect(steps.length).toBe(3)
 		})

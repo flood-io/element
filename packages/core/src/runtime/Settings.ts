@@ -1,4 +1,5 @@
 import CustomDeviceDescriptors from '../utils/CustomDeviceDescriptors'
+import { Viewport } from 'puppeteer'
 
 /**
  * Declares the settings for the test, overriding the settings constant exported in the test script.
@@ -74,7 +75,7 @@ export type ElementPresence = 'visible' | 'present' | 'ready' | false | null
  *
  * See [DEFAULT_SETTINGS] for a list of the default value for each setting.
  */
-// TODO provide ConcreteTestSettings
+
 export interface TestSettings {
 	/**
 	 * Maximum duration to run the test for.
@@ -113,6 +114,12 @@ export interface TestSettings {
 	 * Specifies a device to emulate with browser device emulation.
 	 */
 	device?: string
+
+	/**
+	 * Sets the viewport of the page.
+	 * @param viewport The viewport parameters.
+	 */
+	viewport?: Viewport
 
 	/**
 	 * Global wait timeout applied to all wait tasks.
@@ -213,7 +220,7 @@ export interface TestSettings {
 	 */
 	blockedDomains?: string[]
 
-	/*
+	/**
 	 * Automatically apply a wait(Until...) before each action. Defaults to `false`
 	 *
 	 * Accepts either `visible` or `present` as values. Set to `false` to disable (default).
@@ -258,6 +265,10 @@ export const DEFAULT_SETTINGS: ConcreteTestSettings = {
 	disableCache: false,
 	extraHTTPHeaders: {},
 	launchArgs: [],
+	viewport: {
+		width: 1440,
+		height: 900,
+	},
 }
 
 /**

@@ -7,9 +7,10 @@ import {
 	Page,
 	ScreenshotOptions,
 	AuthOptions,
+	Viewport,
 } from 'puppeteer'
-import { Browser as BrowserInterface, NullableLocatable, EvaluateFn } from './types'
 import DeviceDescriptors from 'puppeteer/DeviceDescriptors'
+import { Browser as BrowserInterface, NullableLocatable, EvaluateFn } from './types'
 import CustomDeviceDescriptors from '../utils/CustomDeviceDescriptors'
 import { ElementHandle } from '../page/types'
 import { TargetLocator } from '../page/TargetLocator'
@@ -396,6 +397,11 @@ export class Browser<T> implements BrowserInterface {
 	@rewriteError()
 	public async setUserAgent(userAgent: string): Promise<void> {
 		return this.page.setUserAgent(userAgent)
+	}
+
+	@rewriteError()
+	public async setViewport(viewport: Viewport): Promise<void> {
+		return this.page.setViewport(viewport)
 	}
 
 	@rewriteError()

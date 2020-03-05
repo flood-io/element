@@ -119,7 +119,7 @@ export interface TestSettings {
 	 * Sets the viewport of the page.
 	 * @param viewport The viewport parameters.
 	 */
-	viewport?: Viewport
+	viewport?: Viewport | null
 
 	/**
 	 * Global wait timeout applied to all wait tasks.
@@ -265,10 +265,7 @@ export const DEFAULT_SETTINGS: ConcreteTestSettings = {
 	disableCache: false,
 	extraHTTPHeaders: {},
 	launchArgs: [],
-	viewport: {
-		width: 1440,
-		height: 900,
-	},
+	viewport: null,
 }
 
 /**

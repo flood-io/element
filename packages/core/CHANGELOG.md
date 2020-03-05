@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.10-beta.52](https://github.com/flood-io/element/compare/v1.0.10-beta.51...v1.0.10-beta.52) (2020-03-05)
+
+
+### Bug Fixes
+
+* tests on settings ([51fe131](https://github.com/flood-io/element/commit/51fe131324e06c8b9a1b504eb71c02ede2c03538))
+
+
+### Features
+
+* expose browser.setViewport ([86b08a7](https://github.com/flood-io/element/commit/86b08a77e740fbd24421272e2d9c6c4b4122ddc1))
+* setting default viewport in TestSettings ([37c6d8e](https://github.com/flood-io/element/commit/37c6d8ef95fc3dbc73798aaf940617c42d75ffd0))
+
+
+
+
+
 ## [1.0.10-beta.51](https://github.com/flood-io/element/compare/v1.0.10-beta.50...v1.0.10-beta.51) (2020-03-02)
 
 **Note:** Version bump only for package @flood/element-core

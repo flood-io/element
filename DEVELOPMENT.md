@@ -28,6 +28,13 @@ In a similar way, each time `beta` is merged into `master`, the commit history i
 
 NPM releases are handled in CI automatically so that shipping releases isn't a big deal, it should be something we do regularly.
 
+#### Installing released packages
+
+Each release channel has a tag on NPM which points to the latest release for that channel:
+
+- stable: `@flood/element-cli@stable`
+- beta: `@flood/element-cli@beta`
+- canary: `@flood/element-cli@canary`
 
 ### Packages
 
@@ -61,3 +68,30 @@ Public API for Element testing functionality. DEPRECATED.
 
 Public API for Element testing functionality.
 
+# Developing
+
+## Editor Config
+
+We recommend that you use VSCode and the extensions configured automatically by this package under `@recommended`
+
+## Running locally
+
+After you make changes, you naturally need to be able to run them without building all the packages. To do this, use the `yarn dev run <path/to/file.ts> [options]`.
+
+**Detail**
+
+This invokes the CLI in development mode using `ts-node` to compile each project in real time. This might be slower than running natively.
+
+## Debugging
+
+You can of course throw `console.log()` statements everywhere, but a much better way is to use the built in debugger of VSCode.
+
+1. Add a breakpoint or a `debugger` statement
+2. Launch the `cli run ./example` debugger task in the debug panel
+3. Wait for the code to launch and attach itself
+
+## Testing
+
+This project uses Jest for testing. It should automatically be configured to work with VSCode, enabling editor integration, debugging, and inline results.
+
+Alternatively, you can run `yarn jest --watch` in another console window.

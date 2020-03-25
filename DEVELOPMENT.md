@@ -26,83 +26,38 @@ Each time a feature is merged in to `beta`, the commit history is analysed and i
 
 In a similar way, each time `beta` is merged into `master`, the commit history is analysed and the version bumped as needed, this time without a beta tag.
 
-All released on beta are tagged as `beta` on NPM, allowing you to install the latest beta with `@flood/element@beta` or the latest stable release with `@flood/element@latest`.
+NPM releases are handled in CI automatically so that shipping releases isn't a big deal, it should be something we do regularly.
+
 
 ### Packages
 
-**@flood/element**:
+In the `./packages/` directory...
+
+- `core` (`@flood/element-core`)
 
 This package contains the core testing library of Element. The released package contains the TypeScript ambient definitions for the built source code.
 
-**@flood/element-cli**:
+- `compiler` (`@flood/element-compiler`)
+
+Contains the script compiler. This is used to transform the test scripts written by customers in TypeScript to a JavaScript bundle which is loaded into the VM.
+
+- `cli` (`@flood/element-cli`)
 
 This package contains the CLI code which you use to interact with Element on the commandline.
 
-The contents of this package is a single file built using `ncc`.
+- `flood-runner` (`@flood/element-flood-runner`)
 
-<!-- ## publishing
+This is the adapter for running Element tests on Flood.io, it adds an additional command to the CLI (`element agent start`) and a wire protocol reporter which emits results in the Flood Reporting Wire Protocol used by all our tools.
 
-We do a custom build for `@flood/element` (`packages/element`) to provide more control over the package structure.
+- `element-cli` (`element-cli`)
 
-Because of that we also use a custom publishing script `scripts/publish.sh`
+A work in progress to wrap all Element packages into a single easy to remember package for local usage.
 
-## Branching
+- `element-api` (`@flood/element-api`)
 
-There are two main branches, `master` and `beta`. Pushing to either one automatically increments the versions using [`semver`](https://www.npmjs.com/package/semver) (via `lerna`)
+Public API for Element testing functionality. DEPRECATED.
 
-### beta
-Builds against `beta` increment the version using `semver -i prerelease --preid beta`.
+- `element` (`@flood/element`)
 
-```bash
-0.0.2        => 0.0.3-beta.0
-0.0.3.beta.0 => 0.0.3-beta.1
-...
-```
+Public API for Element testing functionality.
 
-Therefore, PRs should be merged into `beta` so that they can be tested using a beta version of `element`.
-
-**To promote `beta` to `master`:**
-
-1. freshen local branches
-  - git checkout beta
-  - git pull
-  - git checkout master
-  - git pull
-4. merge beta into master
-  - git merge beta
-  - git push
-5. merge master into beta
-  - git checkout beta
-  - git merge master
-
-### master
-
-To cut a patch release, commit to master.
-
-Builds against `master` increment the version using `semver -i patch`.
-
-```bash
-0.0.2 => 0.0.3
-0.0.3.beta.0 => 0.0.3
-...
-```
-
-**To do a minor or major release**:
-
-TODO - probably need to do a manual version bump, or maybe have a commit message keyword.
-
-## tests
-
-### unit tests
-
-```shell
-yarn test
-```
-
-### smoke tests
-
-
-```shell
-make smoke
-```
- -->

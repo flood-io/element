@@ -40,31 +40,31 @@ Each release channel has a tag on NPM which points to the latest release for tha
 
 In the `./packages/` directory...
 
-- `core` (`@flood/element-core`)
+#### `core` (`@flood/element-core`)
 
 This package contains the core testing library of Element. The released package contains the TypeScript ambient definitions for the built source code.
 
-- `compiler` (`@flood/element-compiler`)
+#### `compiler` (`@flood/element-compiler`)
 
 Contains the script compiler. This is used to transform the test scripts written by customers in TypeScript to a JavaScript bundle which is loaded into the VM.
 
-- `cli` (`@flood/element-cli`)
+#### `cli` (`@flood/element-cli`)
 
 This package contains the CLI code which you use to interact with Element on the commandline.
 
-- `flood-runner` (`@flood/element-flood-runner`)
+#### `flood-runner` (`@flood/element-flood-runner`)
 
 This is the adapter for running Element tests on Flood.io, it adds an additional command to the CLI (`element agent start`) and a wire protocol reporter which emits results in the Flood Reporting Wire Protocol used by all our tools.
 
-- `element-cli` (`element-cli`)
+#### `element-cli` (`element-cli`)
 
 A work in progress to wrap all Element packages into a single easy to remember package for local usage.
 
-- `element-api` (`@flood/element-api`)
+#### `element-api` (`@flood/element-api`)
 
 Public API for Element testing functionality. DEPRECATED.
 
-- `element` (`@flood/element`)
+#### `element` (`@flood/element`)
 
 Public API for Element testing functionality.
 
@@ -95,3 +95,9 @@ You can of course throw `console.log()` statements everywhere, but a much better
 This project uses Jest for testing. It should automatically be configured to work with VSCode, enabling editor integration, debugging, and inline results.
 
 Alternatively, you can run `yarn jest --watch` in another console window.
+
+## Compiling
+
+Running `yarn build` in the root of this project will build each dependency based on the dependency tree, in correct order.
+
+The compiled code lives in `./packages/*/dist/`

@@ -1,12 +1,42 @@
 # Developing Element
 
-## `lerna` & `yarn` workspaces
-
-We're using [yarn workspaces](https://yarnpkg.com/en/docs/workspaces) to manage dependencies, and [lerna 3.x](https://github.com/lerna/lerna) for versioning and other monorepo tasks.
-
 ## Commit message format
 
 This repo has pre-commit hooks to enforce using semantic commit messagesm please see [CONTRIBUTING](./CONTRIBUTING.md)
+
+## Packages
+
+This project is a Lerna monorepo. We're using [yarn workspaces](https://yarnpkg.com/en/docs/workspaces) to manage dependencies, and [lerna 3.x](https://github.com/lerna/lerna) for versioning and other monorepo tasks.
+
+In the `./packages/` directory...
+
+### `core` (`@flood/element-core`)
+
+This package contains the core testing library of Element. The released package contains the TypeScript ambient definitions for the built source code.
+
+### `compiler` (`@flood/element-compiler`)
+
+Contains the script compiler. This is used to transform the test scripts written by customers in TypeScript to a JavaScript bundle which is loaded into the VM.
+
+### `cli` (`@flood/element-cli`)
+
+This package contains the CLI code which you use to interact with Element on the commandline.
+
+### `flood-runner` (`@flood/element-flood-runner`)
+
+This is the adapter for running Element tests on Flood.io, it adds an additional command to the CLI (`element agent start`) and a wire protocol reporter which emits results in the Flood Reporting Wire Protocol used by all our tools.
+
+### `element-cli` (`element-cli`)
+
+A work in progress to wrap all Element packages into a single easy to remember package for local usage.
+
+### `element-api` (`@flood/element-api`)
+
+Public API for Element testing functionality. DEPRECATED.
+
+### `element` (`@flood/element`)
+
+Public API for Element testing functionality.
 
 ## Releasing
 
@@ -35,38 +65,6 @@ Each release channel has a tag on NPM which points to the latest release for tha
 - stable: `@flood/element-cli@stable`
 - beta: `@flood/element-cli@beta`
 - canary: `@flood/element-cli@canary`
-
-### Packages
-
-In the `./packages/` directory...
-
-#### `core` (`@flood/element-core`)
-
-This package contains the core testing library of Element. The released package contains the TypeScript ambient definitions for the built source code.
-
-#### `compiler` (`@flood/element-compiler`)
-
-Contains the script compiler. This is used to transform the test scripts written by customers in TypeScript to a JavaScript bundle which is loaded into the VM.
-
-#### `cli` (`@flood/element-cli`)
-
-This package contains the CLI code which you use to interact with Element on the commandline.
-
-#### `flood-runner` (`@flood/element-flood-runner`)
-
-This is the adapter for running Element tests on Flood.io, it adds an additional command to the CLI (`element agent start`) and a wire protocol reporter which emits results in the Flood Reporting Wire Protocol used by all our tools.
-
-#### `element-cli` (`element-cli`)
-
-A work in progress to wrap all Element packages into a single easy to remember package for local usage.
-
-#### `element-api` (`@flood/element-api`)
-
-Public API for Element testing functionality. DEPRECATED.
-
-#### `element` (`@flood/element`)
-
-Public API for Element testing functionality.
 
 # Developing
 

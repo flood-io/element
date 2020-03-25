@@ -1,6 +1,13 @@
 import { Device } from '../page/Enums'
 import { Condition } from '../page/Condition'
-import { NavigationOptions, ClickOptions, ScreenshotOptions, Page, Frame } from 'puppeteer'
+import {
+	NavigationOptions,
+	ClickOptions,
+	ScreenshotOptions,
+	Page,
+	Frame,
+	Viewport,
+} from 'puppeteer'
 import { ElementHandle, Locator } from '../page/types'
 import { TargetLocator } from '../page/TargetLocator'
 import { StepDefinition } from './Step'
@@ -312,6 +319,8 @@ export interface Browser {
 	 * Switch the focus of the browser to another frame, tab, or window.
 	 */
 	switchTo(): TargetLocator
+
+	setViewport(viewport: Viewport): Promise<void>
 }
 
 /**

@@ -7,9 +7,10 @@ import {
 	Page,
 	ScreenshotOptions,
 	AuthOptions,
+	Viewport,
 } from 'puppeteer'
-import { Browser as BrowserInterface, NullableLocatable, EvaluateFn } from './types'
 import DeviceDescriptors from 'puppeteer/DeviceDescriptors'
+import { Browser as BrowserInterface, NullableLocatable, EvaluateFn } from './types'
 import CustomDeviceDescriptors from '../utils/CustomDeviceDescriptors'
 import { ElementHandle } from '../page/types'
 import { TargetLocator } from '../page/TargetLocator'
@@ -399,6 +400,11 @@ export class Browser<T> implements BrowserInterface {
 	}
 
 	@rewriteError()
+	public async setViewport(viewport: Viewport): Promise<void> {
+		return this.page.setViewport(viewport)
+	}
+
+	@rewriteError()
 	public async setExtraHTTPHeaders(headers: { [key: string]: string }): Promise<void> {
 		if (Object.keys(headers).length) return this.page.setExtraHTTPHeaders(headers)
 	}
@@ -463,14 +469,6 @@ export class Browser<T> implements BrowserInterface {
 		const elements = await locator.findMany(await this.context)
 		elements.forEach(element => element.bindBrowser(this))
 		return elements
-	}
-
-	public async set(_key: string, _value: string): Promise<void> {
-		return
-	}
-
-	public async get(_key: string): Promise<void> {
-		return
 	}
 
 	/**

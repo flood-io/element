@@ -17,7 +17,7 @@ type JSONRow = { user: number; username: string }
 
 describe('TestDataLoaders', () => {
 	test('can load CSV data', async () => {
-		let data = loaders.fromCSV<Row>('users.csv')
+		const data = loaders.fromCSV<Row>('users.csv')
 		data.circular().filter(line => line.user === '1')
 		await data.load()
 
@@ -28,7 +28,7 @@ describe('TestDataLoaders', () => {
 	})
 
 	test('can load JSON data', async () => {
-		let data = loaders.fromJSON<JSONRow>('users.json')
+		const data = loaders.fromJSON<JSONRow>('users.json')
 
 		data.circular().filter(line => line.user === 1)
 		await data.load()

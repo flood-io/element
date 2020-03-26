@@ -26,6 +26,7 @@ module.exports = {
 				alias: {
 					'@flood/element-compiler': './compiler/src/index.ts',
 					'@flood/element-core': './core/src/index.ts',
+					'@flood/element-cli': './cli/src/index.ts',
 				},
 			},
 		],

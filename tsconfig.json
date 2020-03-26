@@ -25,6 +25,7 @@
 		"paths": {
 			"@flood/element-compiler": ["packages/compiler/src/index.ts"],
 			"@flood/element-core": ["packages/core/index.ts"],
+			"@flood/element-cli": ["packages/cli/src/index.ts"],
 			"@flood/element-*": ["packages/*/src/index.ts"]
 		}
 	},

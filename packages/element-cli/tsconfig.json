@@ -2,8 +2,15 @@
 	"extends": "../../tsconfig.json",
 	"compilerOptions": {
 		"declaration": true,
-		"outDir": "bin"
+		"outDir": "./dist"
 	},
-	"files": ["./src/bin/element.ts"],
+
+	"references": [
+		{
+			"path": "../cli"
+		}
+	],
+
+	"files": ["./bin/element.ts"],
 	"include": ["**/*.ts"]
 }

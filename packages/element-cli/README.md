@@ -1,3 +1,1 @@
-# `element-cli`
-
-Wrapper to install `@flood/element-cli` for local use.
+# Element Command Line Interface `elementctl`

@@ -3,7 +3,7 @@ import startCmd from './agent/start'
 
 export default {
 	command: 'agent <command>',
-	describe: 'Flood Agent commands',
+	describe: false,
 	builder(yargs) {
 		return yargs.command(startCmd)
 	},

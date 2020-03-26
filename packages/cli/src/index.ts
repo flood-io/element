@@ -57,6 +57,7 @@ export async function main(rootPath: string) {
 		.command(planCmd)
 		.command(runCmd)
 		.command(agentCmd)
+		.scriptName('element')
 		.updateStrings({
 			'Commands:': chalk.grey('Commands:\n'),
 			'Options:': chalk.grey('Options:\n'),

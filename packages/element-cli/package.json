@@ -3,7 +3,7 @@
 	"version": "1.0.10-beta.56",
 	"description": "Element is a real browser load testing tool",
 	"bin": {
-		"elementctl": "./dist/bin/element.js"
+		"element": "./dist/bin/element.js"
 	},
 	"keywords": [
 		"load",

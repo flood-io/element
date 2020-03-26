@@ -245,8 +245,8 @@ describe('ElementHandle', () => {
 			element.bindBrowser(browser)
 
 			expect(await element.getProperty('value')).toHaveLength(0)
-			await element.uploadFile('picture.png')
-			expect(await element.getProperty('value')).toBe('C:\\fakepath\\picture.png')
+			await element.uploadFile('users.csv')
+			expect(await element.getProperty('value')).toBe('C:\\fakepath\\users.csv')
 		})
 	})
 })

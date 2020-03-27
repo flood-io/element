@@ -2,7 +2,7 @@
 
 <p align="center">
   <a aria-label="Flood Logo" href="https://github.com/flood-io">
-    <img src="https://img.shields.io/badge/MADE%20BY%20FLOOD-4285f4.svg?style=for-the-badge&labelColor=FFFFFF">
+    <img src="https://img.shields.io/badge/MADE%20BY%20FLOOD-4285f4.svg?style=for-the-badge&labelColor=4285f4&logo=Flood&logoColor=FFFFFF">
   </a>
   <a aria-label="NPM version" href="https://www.npmjs.com/package/@flood/element-cli/">
     <img alt="" src="https://img.shields.io/npm/v/@flood/element-cli.svg?style=for-the-badge&labelColor=000000&color=6554C0">
@@ -27,22 +27,21 @@ The goals of Element scripts are to be:
 * Easy to write and maintain
 * Declarative for expressing user actions
 
-Scaling up Element tests is easy on [Flood](https://flood.io), by spinning up hundreds or even thousands of instances of Google Chrome, and running the scripts you write to drive a load test. We call this Browser Level Load Testing.
+Scaling up Element tests is easy on [Flood](https://flood.io), by launching hundreds or even thousands of instances of Google Chrome, and running the scripts you write to drive a load test. We call this Browser Level Load Testing.
 
-![Flood Element Example code](./packages/element/docs/code-snippet.png)
-
-- [`@flood/element`: Break the network barrier!](#floodelement-break-the-network-barrier)
-  - [Quickstart](#quickstart)
-    - [1. Install Element](#1-install-element)
-    - [2. Initialize Your Project](#2-initialize-your-project)
-    - [3. Write and Validate Your Script](#3-write-and-validate-your-script)
-  - [4. Run a real Load Test on Flood](#4-run-a-real-load-test-on-flood)
-  - [About](#about)
-    - [What can I do with it?](#what-can-i-do-with-it)
-  - [Repository Layout](#repository-layout)
-  - [Documentation](#documentation)
-  - [Reporting Issues](#reporting-issues)
-  - [Contributing](#contributing)
+- [Quickstart](#quickstart)
+  - [1. Install Element](#1-install-element)
+    - [Stable release](#stable-release)
+    - [Beta release channel](#beta-release-channel)
+  - [2. Initialize Your Project](#2-initialize-your-project)
+  - [3. Write and Validate Your Script](#3-write-and-validate-your-script)
+- [4. Run a real Load Test on Flood](#4-run-a-real-load-test-on-flood)
+- [About](#about)
+  - [What can I do with it?](#what-can-i-do-with-it)
+- [Getting Started](#getting-started)
+- [Contributing](#contributing)
+- [Reporting Issues](#reporting-issues)
+- [Authors](#authors)
 
 ## Quickstart
 
@@ -52,12 +51,14 @@ Scaling up Element tests is easy on [Flood](https://flood.io), by spinning up hu
 
 First, make sure you have installed the [latest version of NodeJS](https://nodejs.org) for your platform.
 
+#### Stable release
+
 ```bash
 # Using yarn
-yarn global add @flood/element-cli
+yarn global add element-cli
 
 # Using npm
-npm install -g @flood/element-cli
+npm i -g element-cli
 
 # Verify install
 element --version
@@ -72,6 +73,19 @@ brew install flood-io/taps/element
 ```
 
 This will install `element` along with anything else it needs to run, such as NodeJS.
+
+#### Beta release channel
+
+```bash
+# Using yarn
+yarn global add element-cli@beta
+
+# Using npm
+npm i -g element-cli@beta
+
+# Verify install
+element --version
+```
 
 ### 2. Initialize Your Project
 
@@ -126,20 +140,14 @@ Over the years, countless customers have mentioned that getting started with Loa
 * Measure your application's response time from different regions as experienced by your customers.
 * Create **realistic load scenarios** which stress test your network infrastructure without developing complex protocol level load test scripts.
 
-## Repository Layout
+## Getting Started
 
-Flood Element is developed as a monorepo and comprises two packages:
+Visit <a aria-label="Element documentation" href="https://element.flood.io">https://element.flood.io</a> to view the documentation.
 
-- [`@flood/element`](./packages/element) is the library implementing the Element API.
-- [`@flood/element-cli`](./packages/cli) wraps up the library for you to use from the CLI to develop and debug test scripts.
 
-When you run your script as a load test on [Flood](https://app.flood.io), this same `@flood/element` package is used to execute the test.
+## Contributing
 
-## Documentation
-
-* [Deep dive tutorial](./packages/element/docs/examples/scenario_1_wordpress.md)
-* [Browser API Documentation](./packages/element/docs/api/Browser.md)
-* [API Documentation](./packages/element/docs/SUMMARY.md)
+Please see our [CONTRIBUTING.md](/CONTRIBUTING.md).
 
 ## Reporting Issues
 
@@ -147,6 +155,7 @@ If you encounter any issues with the `@flood/element` project or Flood Element p
 
 If you're encountering issues with Flood itself, please contact Flood Support from within the Flood Dashboard.
 
-## Contributing
+## Authors
 
-We welcome your constributions, please see [CONTRIBUTING.md](/CONTRIBUTING.md)
+- Ivan Vanderbyl ([@ivanderbyl](https://twitter.com/ivanderbyl)) – [Flood](https://flood.io)
+- Lachie Cox ([@lachie](https://twitter.com/lachie)) – [Flood](https://flood.io)

@@ -175,18 +175,18 @@
           // Click
           case "click":
             if (actionMetadata.tagName === "select") {
-              script += "step('" + cleanDescription + "', async browser => {\n\t\t\tawait browser.selectByValue(" + byStatement + ", \"" + elementValue + "\")\n\n\t\t\tawait browser.takeScreenshot()\n\t\t})\n";
+              script += "step('" + cleanDescription + "', async browser => {\n\t\t\tawait browser.wait(Until.elementIsVisible(" + byStatement + "))\n\t\t\tawait browser.selectByValue(" + byStatement + ", \"" + elementValue + "\")\n\n\t\t\tawait browser.takeScreenshot()\n\t\t})\n";
               
             } else {
               mouseButton = "MOUSE_LEFT";
               if (actionMetadata.details.mouseButton != null)
                 mouseButton = actionMetadata.details.mouseButton.name
-                script += "step('" + cleanDescription + "', async browser => {\n\t\t\tlet clickElement = await browser.findElement(" + byStatement + ")\n\t\t\tawait clickElement.click()\n\n\t\t\tawait browser.takeScreenshot()\n\t\t})\n";
+                script += "step('" + cleanDescription + "', async browser => {\n\t\t\tawait browser.wait(Until.elementIsVisible(" + byStatement + "))\n\t\t\tlet clickElement = await browser.findElement(" + byStatement + ")\n\t\t\tawait clickElement.click()\n\n\t\t\tawait browser.takeScreenshot()\n\t\t})\n";
             }
             break;
           // Key
           case "key":
-              script += "step('" + cleanDescription + "', async browser => {\n\t\t\tawait browser.clear(" + byStatement + ")\n\t\t\tawait browser.type(" + byStatement + ", \"" + elementValue + "\")\n\n\t\t\tawait browser.takeScreenshot()\n\t\t})\n";
+              script += "step('" + cleanDescription + "', async browser => {\n\t\t\tawait browser.wait(Until.elementIsVisible(" + byStatement + "))\n\t\t\tawait browser.clear(" + byStatement + ")\n\t\t\tawait browser.type(" + byStatement + ", \"" + elementValue + "\")\n\n\t\t\tawait browser.takeScreenshot()\n\t\t})\n";
             break;
           default:
             script = "// ERROR: cannot generate script for action: '" + action.description + "'";

@@ -1,11 +1,11 @@
-import * as findRoot from 'find-root'
-import * as path from 'path'
-import * as fs from 'fs'
-import * as child_process from 'child_process'
-import * as semver from 'semver'
+import findRoot from 'find-root'
+import path from 'path'
+import fs from 'fs'
+import child_process from 'child_process'
+import semver from 'semver'
 import { sync as which } from 'which'
 import { sync as mkdirp } from 'mkdirp'
-import * as gitP from 'simple-git/promise'
+import gitP from 'simple-git/promise'
 
 const packageJSONFile = path.join(findRoot(path.join(__dirname, '..')), 'packages/cli/package.json')
 const packageJSON = JSON.parse(fs.readFileSync(packageJSONFile, 'utf8'))
@@ -58,12 +58,9 @@ end
 function versionToBrewClassSuffix(version: string): string {
 	if (version.length === 0) return ''
 
-	version = version.replace(
-		/[-_.\s]([a-zA-Z0-9])/g,
-		(x: string, ...captures: any[]): string => {
-			return captures[0].toUpperCase()
-		},
-	)
+	version = version.replace(/[-_.\s]([a-zA-Z0-9])/g, (x: string, ...captures: any[]): string => {
+		return captures[0].toUpperCase()
+	})
 	return `AT${version}`
 }
 

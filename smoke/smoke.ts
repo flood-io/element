@@ -26,12 +26,20 @@ async function runTest(testScript: string, expectPass: boolean): Promise<boolean
 	console.log(chalk`{yellow ============ {magenta running test {blue ${shortName}}} ===========}`)
 	// console.log(process.env)
 	const proc = spawn(
-		'yarn',
-		['element', 'run', testScript, '--chrome', '--verbose', '--test-data-root', dataDir],
+		'node',
+		[
+			'/element/packages/cli/dist/index.js',
+			'run',
+			testScript,
+			'--chrome',
+			'--verbose',
+			'--test-data-root',
+			dataDir,
+		],
 		{
 			stdio: ['inherit', 'pipe', 'pipe'],
 			env: process.env,
-      cwd: elementRoot,
+			cwd: elementRoot,
 		},
 	)
 

@@ -14,7 +14,7 @@ steps:
       queue: "continuous-integration"
 
   # - command: "scripts/ci/smoke.sh"
-    # label: ":fire: Smoke"
+  # label: ":fire: Smoke"
 
   - wait
 

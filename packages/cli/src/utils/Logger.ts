@@ -1,10 +1,9 @@
 import { createLogger, transports, format, Logger } from 'winston'
 import { Format } from 'logform'
-// import * as strftime from 'strftime'
 
-export default function(level: string = 'debug', colourise: boolean = false): Logger {
+export default function(level = 'debug', colourise = false): Logger {
 	const startTime = Date.now()
-	let formats: Format[] = [
+	const formats: Format[] = [
 		// format.label({ label: prefix.padStart(2, '0') }),
 		format.timestamp({ format: () => `+${Math.floor((Date.now() - startTime) / 1000)}s` }),
 	]

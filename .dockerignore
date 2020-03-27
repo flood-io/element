@@ -1,5 +1,9 @@
 node_modules
 **/node_modules
+tmp
+dist
+bin/*.js
+*.log
 
 packages/*/node_modules
 packages/*/tmp
@@ -7,3 +11,19 @@ packages/cli/node_modules
 packages/cli/tmp
 packages/element/node_modules
 packages/element/tmp
+
+dist
+graph.svg
+
+.next
+
+old-packages
+
+packages/*/package-lock.json
+
+puppeteer-*.json
+examples/tmp
+examples/*/tmp
+
+.DS_Store
+

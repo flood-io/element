@@ -1,35 +1,42 @@
-import * as Generator from 'yeoman-generator'
-import * as path from 'path'
-import * as fs from 'fs'
-import * as findRoot from 'find-root'
-import * as commandExists from 'command-exists'
-
-const packageRoot = findRoot(__dirname)
-
-// parse current element version
-const elementPackageFile = path.join(findRoot(require.resolve('@flood/element')), 'package.json')
-const elementPackage = JSON.parse(fs.readFileSync(elementPackageFile, 'utf8'))
-const elementVersion = elementPackage.version
+import Generator from 'yeoman-generator'
+import { join, basename } from 'path'
+import findRoot from 'find-root'
+import commandExists from 'command-exists'
+import { readFileSync } from 'fs'
+import slug from 'slug'
 
 export default class TestEnv extends Generator {
 	public options: { [key: string]: string }
+	public elementVersion: string
 
 	constructor(args: any[], opts: any) {
 		super(args, opts)
 
 		// This makes `dir` a required argument.
 		this.argument('dir', { type: String, required: true })
+		this.argument('skip-install', { type: String, required: false })
 	}
 
 	initializing() {
-		this.sourceRoot(path.join(packageRoot, 'templates'))
+		const packageRoot = findRoot(__dirname)
+
+		// parse current element version
+		const elementPackageFile = join(findRoot(require.resolve('@flood/element')), 'package.json')
+		const elementPackage = JSON.parse(readFileSync(elementPackageFile, 'utf8'))
+		this.elementVersion = elementPackage.version
+
+		this.sourceRoot(join(packageRoot, 'templates'))
 
 		// assume dir is absolute
 		this.destinationRoot(this.options.dir)
 
-		console.log(`initting into ${this.destinationRoot()}`)
+		console.log(`Initializing '${this.destinationRoot()}'`)
 
-		this.options.repoName = path.basename(this.destinationPath())
+		this.options.repoName = basename(this.destinationPath())
+	}
+
+	rootGeneratorName() {
+		return 'flood-element-cli'
 	}
 
 	answers: { [key: string]: string }
@@ -49,34 +56,49 @@ export default class TestEnv extends Generator {
 				default: 'https://challenge.flood.io',
 			},
 		])
+
+		const testScriptPath = slug(this.answers.title)
+		const newAnswers = await this.prompt([
+			{
+				type: 'input',
+				name: 'scriptName',
+				message: 'Test script name',
+				default: `${testScriptPath}.perf.ts`,
+			},
+		])
+
+		this.answers = { ...this.answers, ...newAnswers }
 	}
 
 	writing() {
 		this.fs.writeJSON(this.destinationPath('package.json'), this._packageJSON)
 		this.fs.writeJSON(this.destinationPath('tsconfig.json'), this._tsConfigJSON)
-		this.fs.copyTpl(this.templatePath('test.ts'), this.destinationPath('test.ts'), {
+		this.fs.copyTpl(this.templatePath('test.ts'), this.destinationPath(this.answers.scriptName), {
 			title: this.answers.title,
 			url: this.answers.url,
 		})
+		this.fs.copyTpl(this.templatePath('gitignore'), this.destinationPath('.gitignore'), {})
 	}
 
 	installing() {
-		const prevValue = process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD
-		process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = '1'
-		commandExists('yarn', (err: Error, yes: boolean) => {
-			if (yes) {
+		if (this.options['skip-install']) return
+
+		// const prevValue = process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD
+		// process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = '1'
+		commandExists('yarn', (err: null | Error, exists: boolean) => {
+			if (exists) {
 				this.yarnInstall()
 			} else {
 				this.npmInstall()
 			}
 		})
-		process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = prevValue
+		// process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = prevValue
 	}
 
 	get _packageJSON(): any {
 		return {
 			name: this.options.repoName.split(' ').join('-'),
-			version: '0.0.1',
+			version: '1.0.0',
 			description: 'Flood Element test script',
 			private: true,
 
@@ -93,8 +115,20 @@ export default class TestEnv extends Generator {
 			},
 
 			dependencies: {
-				'@flood/element': `^${elementVersion}`,
-				prettier: '^1.10.2',
+				'@flood/element': `^${this.elementVersion}`,
+				'@flood/element-cli': `^${this.elementVersion}`,
+				assert: `*`,
+				faker: `*`,
+				prettier: '*',
+			},
+
+			devDependencies: {
+				'@types/faker': '*',
+				'@types/assert': '*',
+			},
+
+			element: {
+				testMatch: ['**/*.perf.[tj]s'],
 			},
 		}
 	}
@@ -103,21 +137,27 @@ export default class TestEnv extends Generator {
 		return {
 			compilerOptions: {
 				module: 'commonjs',
-				target: 'ES2017',
+				target: 'es2015',
 				moduleResolution: 'node',
-				lib: ['dom', 'esnext'],
+				removeComments: true,
+				lib: ['esnext', 'dom'],
 				pretty: true,
-				strictNullChecks: false,
+				strictNullChecks: true,
+				forceConsistentCasingInFileNames: true,
 				allowUnreachableCode: false,
 				alwaysStrict: true,
-				noUnusedLocals: false,
-				noUnusedParameters: false,
-				noImplicitAny: false,
+				noUnusedLocals: true,
+				noImplicitAny: true,
 				allowSyntheticDefaultImports: true,
-				types: ['@types/node'],
-				typeRoots: ['node_modules/@types'],
+				esModuleInterop: true,
+				experimentalDecorators: true,
+				emitDecoratorMetadata: true,
+				declaration: true,
+				allowJs: false,
+				checkJs: false,
 			},
-			exclude: ['node_modules', 'node_modules/**'],
+
+			files: [`./${this.answers.scriptName}`],
 		}
 	}
 }

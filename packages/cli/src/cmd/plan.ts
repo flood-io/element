@@ -1,8 +1,10 @@
-import { Argv, Arguments } from 'yargs'
+/* eslint-disable @typescript-eslint/no-use-before-define */
+import { Argv, Arguments, CommandModule } from 'yargs'
 import { inspect } from 'util'
-import { EvaluatedScript, nullRuntimeEnvironment } from '@flood/element/api'
+import { EvaluatedScriptLike } from '@flood/element-core'
 import chalk from 'chalk'
-import * as boxen from 'boxen'
+// eslint-disable-next-line import/default
+import boxen from 'boxen'
 import { checkFile } from './common'
 
 function rpad(n: number, maxN: number, padChar = ' '): string {
@@ -12,7 +14,12 @@ function rpad(n: number, maxN: number, padChar = ' '): string {
 	return ns + padChar.repeat(width - ns.length)
 }
 
-const main = async (args: Arguments) => {
+interface CommandArgs extends Arguments {
+	file: string
+}
+
+const main = async (args: CommandArgs) => {
+	const { EvaluatedScript, nullRuntimeEnvironment } = await import('@flood/element-core')
 	const script = await EvaluatedScript.mustCompileFile(args.file, nullRuntimeEnvironment)
 
 	if (args.json) return printJSON(script)
@@ -35,7 +42,7 @@ const main = async (args: Arguments) => {
 		chalk`{blue The test script has ${String(steps.length)} step${steps.length !== 1 ? 's' : ''}}:`,
 	)
 
-	steps.forEach((step, i) => {
+	steps.forEach((step: any, i: number) => {
 		console.log(chalk`{blue step ${rpad(i + 1, steps.length)}}: ${step.name}`)
 	})
 	console.log()
@@ -45,7 +52,7 @@ const main = async (args: Arguments) => {
 	console.log()
 }
 
-function printJSON(script: EvaluatedScript) {
+function printJSON(script: EvaluatedScriptLike) {
 	const o = {
 		settings: script.settings,
 		steps: script.steps.map(s => s.name),
@@ -53,19 +60,23 @@ function printJSON(script: EvaluatedScript) {
 	console.log(JSON.stringify(o, null, '  '))
 }
 
-export const command = 'plan <file> [options]'
-export const describe = 'Output the test script plan without executing it.'
-export const builder = (yargs: Argv) => {
-	yargs
-		.option('json', {
-			describe: 'Return the test output as JSON',
-			default: !process.stdout.isTTY,
-		})
-		.check(({ file }) => {
-			let fileErr = checkFile(file)
-			if (fileErr) return fileErr
+const cmd: CommandModule = {
+	command: 'plan <file> [options]',
+	describe: 'Output the test script plan without executing it',
+	handler: main,
+	builder(yargs: Argv) {
+		return yargs
+			.option('json', {
+				describe: 'Return the test output as JSON',
+				default: !process.stdout.isTTY,
+			})
+			.check(({ file }) => {
+				const fileErr = checkFile(file as string)
+				if (fileErr) return fileErr
 
-			return true
-		})
+				return true
+			})
+	},
 }
-export const handler = main
+
+export default cmd

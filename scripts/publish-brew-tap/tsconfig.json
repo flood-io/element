@@ -2,14 +2,11 @@
 	"compilerOptions": {
 		"module": "commonjs",
 		"target": "ES2017",
-		"moduleResolution": "node",
-		"inlineSourceMap": true,
 		"outDir": "lib",
-    "declaration": true,
-    "removeComments": false,
-		"lib": ["DOM", "DOM.Iterable", "ES2015", "ES7", "ES2017", "ES2016.Array.Include", "ES2017.Object"],
+		"inlineSourceMap": true,
+		"removeComments": false,
+		"lib": ["esnext"],
 		"pretty": true,
-		"rootDir": ".",
 		"strictNullChecks": true,
 		"forceConsistentCasingInFileNames": false,
 		"allowUnreachableCode": false,
@@ -19,6 +16,6 @@
 		"allowSyntheticDefaultImports": true,
 		"experimentalDecorators": true,
 		"typeRoots": ["node_modules/@types"],
-		"emitDecoratorMetadata": true	
-  }
+		"emitDecoratorMetadata": true
+	}
 }

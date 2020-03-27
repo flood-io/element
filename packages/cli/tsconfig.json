@@ -1,9 +1,24 @@
 {
-	"extends": "../../tsconfig.base.json",
+	"extends": "../../tsconfig.json",
 	"compilerOptions": {
-    "declaration": false,
-		"outDir": "dist"
+		"declaration": true,
+		"outDir": "./dist"
 	},
-	"files": ["./index.ts", "./ambient.d.ts"],
-	"include": ["./src/**/*.ts"]
+
+	"references": [
+		{
+			"path": "../core"
+		},
+
+		{
+			"path": "../element-api"
+		},
+
+		{
+			"path": "../element"
+		}
+	],
+
+	"files": ["./bin/element.ts"],
+	"include": ["**/*.ts"]
 }

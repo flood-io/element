@@ -1,0 +1,32 @@
+{
+	"name": "@flood/element-api",
+	"version": "1.0.10-beta.62",
+	"description": "Internal API definitions for Element",
+	"main": "./dist/index.js",
+	"types": "./dist/index.ts.d",
+	"scripts": {
+		"prebuild": "rm -rf dist",
+		"build": "tsc -b",
+		"prepublishOnly": "yarn build"
+	},
+	"dependencies": {
+		"@flood/element-core": "^1.0.10-beta.62"
+	},
+	"devDependencies": {
+		"@types/node": "12.7.4"
+	},
+	"author": "Ivan Vanderbyl <ivanvanderbyl@gmail.com>",
+	"homepage": "https://element.flood.io",
+	"license": "MIT",
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/flood-io/element.git"
+	},
+	"bugs": {
+		"url": "https://github.com/flood-io/element/issues"
+	},
+	"gitHead": "75ceb903881476ed98cbc911bfce5fe303a57d55"
+}

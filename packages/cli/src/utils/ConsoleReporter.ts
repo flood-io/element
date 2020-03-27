@@ -5,12 +5,10 @@ import {
 	CompoundMeasurement,
 	MeasurementKind,
 	TestScriptError,
-} from '@flood/element/api'
+} from '@flood/element-core'
 import { Logger } from 'winston'
 import chalk from 'chalk'
-
-import * as debugFactory from 'debug'
-const debug = debugFactory('element-cli:console-reporter')
+const debug = require('debug')('element-cli:console-reporter')
 
 export class ConsoleReporter implements IReporter {
 	public responseCode: string
@@ -83,7 +81,7 @@ export class ConsoleReporter implements IReporter {
 		this.logger.error('\n' + str)
 
 		if (this.verbose) {
-			this.logger.error(`Verbose detail: 
+			this.logger.error(`Verbose detail:
 cause.asString(): ${detail.causeAsString}
 cause.stack: ${detail.causeStack}`)
 		}

@@ -15,21 +15,21 @@ else
   branch=$(git rev-parse --abbrev-ref HEAD)
 fi
 
-npm_tag=
-case $branch in
-  beta|feature/open-source-everything)
-    echo --- versioning beta
-    npm_tag=beta
-    ;;
-  master)
-    echo --- versioning master
-    npm_tag=latest
-    ;;
-  *)
-    echo "--- branch is $branch which I won't publish"
-    exit 0
-    ;;
-esac
+# npm_tag=
+# case $branch in
+#   beta|feature/open-source-everything)
+#     echo --- versioning beta
+#     npm_tag=beta
+#     ;;
+#   master)
+#     echo --- versioning master
+#     npm_tag=latest
+#     ;;
+#   *)
+#     echo --- versioning canary
+#     npm_tag=canary
+#     ;;
+# esac
 
 if [[ ${BUILDKITE_BRANCH:-} ]]; then
   cd $root
@@ -40,7 +40,6 @@ if [[ ${BUILDKITE_BRANCH:-} ]]; then
   git config --global user.name ${GIT_USERNAME}
 
   git remote set-url origin https://${GITHUB_TOKEN}:x-oauth-basic@github.com/flood-io/element
-  cat .git/config
   git fetch
 
   # if the branch exists, just check it out
@@ -74,42 +73,31 @@ fi
 # npm publish - both packages should publish unless there's eg an intermitted network problem
 # do the brew publish - can only do this once packages have been published
 
+# echo '--- building @flood/element'
+# cd $root/packages/element
+# ./scripts/build.sh
+
+# echo '--- publishing @flood/element-cli'
+# cd $root/packages/cli
+
+# echo "--- building all packages"
+# yarn build
+
 case $branch in
-  beta|feature/open-source-everything)
-    echo --- versioning beta
-    yarn exec lerna -- version prerelease --force-publish --no-push --yes --ignore-changes scripts/publish.sh -m "release %s\n[skip ci]" --preid beta
+  beta)
+    echo +++ publishing beta
+    yarn lerna publish prerelease --yes --force-publish --dist-tag beta
     ;;
   master)
-    : ${MASTER_SEMVER_BUMP:=patch}
-    echo --- versioning master, incrementing $MASTER_SEMVER_BUMP level
-    yarn exec lerna -- version $MASTER_SEMVER_BUMP --force-publish --no-push --yes --ignore-changes scripts/publish.sh -m "release %s\n[skip ci]"
+    echo +++ publishing stable
+    yarn lerna publish --force-publish --yes --dist-tag latest --conventional-graduate="*"
+
+    echo --- publishing brew tap
+    cd $root
+    yarn publish:brew
     ;;
   *)
-    echo "branch is $branch which I won't publish"
-    exit 0
+    echo +++ publishing canary
+    yarn lerna publish prerelease --canary --yes --force-publish --dist-tag canary
+    ;;
 esac
-
-echo '--- building @flood/element'
-cd $root/packages/element
-./scripts/build.sh
-
-echo '--- publishing @flood/element-cli'
-cd $root/packages/cli
-yarn build
-
-echo '--- pushing with tags'
-git push
-git push --tags
-
-echo '--- building @flood/element'
-cd $root/packages/element
-npm publish --access public --tag $npm_tag dist
-
-echo '--- publishing @flood/element-cli'
-cd $root/packages/cli
-npm publish --access public --tag $npm_tag
-
-echo '--- publishing brew tap'
-cd $root
-yarn
-yarn publish:brew

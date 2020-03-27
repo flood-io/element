@@ -1,23 +1,47 @@
-# `@flood/element`
+[![Flood Element](/assets/Repo-header.png)](https://element.flood.io)
 
-Flood Element combines the familiar power of traditional browser scripting tools with the proven performance of Flood to create an easy to use and maintainable performance testing tool.
+<p align="center">
+  <a aria-label="Flood Logo" href="https://github.com/flood-io">
+    <img src="https://img.shields.io/badge/MADE%20BY%20FLOOD-4285f4.svg?style=for-the-badge&labelColor=4285f4&logo=Flood&logoColor=FFFFFF">
+  </a>
+  <a aria-label="NPM version" href="https://www.npmjs.com/package/@flood/element-cli/">
+    <img alt="" src="https://img.shields.io/npm/v/@flood/element-cli.svg?style=for-the-badge&labelColor=000000&color=6554C0">
+  </a>
+  <a aria-label="License" href="/LICENSE">
+    <img alt="" src="https://img.shields.io/npm/l/@flood/element-cli.svg?style=for-the-badge&labelColor=000000">
+  </a>
+  <a aria-label="join us in spectrum" href="https://spectrum.chat/flood/element">
+    <img alt="" src="https://img.shields.io/badge/Join%20the%20community-blueviolet.svg?style=for-the-badge&labelColor=000000">
+  </a>
+</p>
 
-Flood Element works by spinning up hundreds or even thousands of instances of Google Chrome, and running the scripts you write using `@flood/element` to drive a load test. We call this Browser Level Load Testing.
+---
 
-> This project is currently in beta and APIs are subject to change.
+Flood Element is a browser based load generation tool built on top of Puppeteer. It provides an easy to use set of commands for automating most user interfaces, including mouse actions such as click and drag, keyboard key press actions, and working with inputs, buttons, and menus.
 
-![Flood Element Example code](./packages/element/docs/code-snippet.png)
+Element is designed purely to generate load by simulating real user behaviour within a browser. It does not attempt to manipulate the page or work with any specific front-end framework, although it works great for testing SPAs built in React, Angular, Ember, or any other JS heavy client framework.
+
+The goals of Element scripts are to be:
+
+- Understandable
+- Easy to write and maintain
+- Declarative for expressing user actions
+
+Scaling up Element tests is easy on [Flood](https://flood.io), by launching hundreds or even thousands of instances of Google Chrome, and running the scripts you write to drive a load test. We call this Browser Level Load Testing.
 
 - [Quickstart](#quickstart)
   - [1. Install Element](#1-install-element)
+    - [Stable release](#stable-release)
+    - [Beta release channel](#beta-release-channel)
   - [2. Initialize Your Project](#2-initialize-your-project)
   - [3. Write and Validate Your Script](#3-write-and-validate-your-script)
-  - [4. Run a Real Load Test on Flood](#4-run-a-real-load-test-on-flood)
+- [4. Run a real Load Test on Flood](#4-run-a-real-load-test-on-flood)
 - [About](#about)
   - [What can I do with it?](#what-can-i-do-with-it)
-- [Repository Layout](#repository-layout)
-- [Documentation](#documentation)
+- [Getting Started](#getting-started)
+- [Contributing](#contributing)
 - [Reporting Issues](#reporting-issues)
+- [Authors](#authors)
 
 ## Quickstart
 
@@ -27,12 +51,18 @@ Flood Element works by spinning up hundreds or even thousands of instances of Go
 
 First, make sure you have installed the [latest version of NodeJS](https://nodejs.org) for your platform.
 
+#### Stable release
+
+<a aria-label="NPM version" href="https://www.npmjs.com/package/@flood/element-cli/">
+  <img alt="" src="https://img.shields.io/npm/v/@flood/element-cli.svg?style=for-the-badge&labelColor=000000&color=6554C0">
+</a>
+
 ```bash
 # Using yarn
-yarn global add @flood/element-cli
+yarn global add element-cli
 
 # Using npm
-npm install -g @flood/element-cli
+npm i -g element-cli
 
 # Verify install
 element --version
@@ -47,6 +77,23 @@ brew install flood-io/taps/element
 ```
 
 This will install `element` along with anything else it needs to run, such as NodeJS.
+
+#### Beta release channel
+
+<a aria-label="Beta NPM version" href="https://www.npmjs.com/package/@flood/element-cli/">
+  <img alt="" src="https://img.shields.io/npm/v/@flood/element-cli/beta.svg?style=for-the-badge&labelColor=000000">
+</a>
+
+```bash
+# Using yarn
+yarn global add element-cli@beta
+
+# Using npm
+npm i -g element-cli@beta
+
+# Verify install
+element --version
+```
 
 ### 2. Initialize Your Project
 
@@ -96,28 +143,26 @@ Over the years, countless customers have mentioned that getting started with Loa
 
 ### What can I do with it?
 
-* Flood Element can be used to **apply load to any web accessible application** and measure how it performs as the load is ramped up.
-* **Measure performance regressions** after deploys by integrating it with your CI/CD pipeline.
-* Measure your application's response time from different regions as experienced by your customers.
-* Create **realistic load scenarios** which stress test your network infrastructure without developing complex protocol level load test scripts.
+- Flood Element can be used to **apply load to any web accessible application** and measure how it performs as the load is ramped up.
+- **Measure performance regressions** after deploys by integrating it with your CI/CD pipeline.
+- Measure your application's response time from different regions as experienced by your customers.
+- Create **realistic load scenarios** which stress test your network infrastructure without developing complex protocol level load test scripts.
 
-## Repository Layout
+## Getting Started
 
-Flood Element is developed as a monorepo and comprises two packages:
+Visit <a aria-label="Element documentation" href="https://element.flood.io">https://element.flood.io</a> to view the documentation.
 
-- [`@flood/element`](./packages/element) is the library implementing the Element API.
-- [`@flood/element-cli`](./packages/cli) wraps up the library for you to use from the CLI to develop and debug test scripts.
+## Contributing
 
-When you run your script as a load test on [Flood](https://app.flood.io), this same `@flood/element` package is used to execute the test.
-
-## Documentation
-
-* [Deep dive tutorial](./packages/element/docs/examples/scenario_1_wordpress.md)
-* [Browser API Documentation](./packages/element/docs/api/Browser.md)
-* [API Documentation](./packages/element/docs/SUMMARY.md)
+Please see our [CONTRIBUTING.md](/CONTRIBUTING.md).
 
 ## Reporting Issues
 
 If you encounter any issues with the `@flood/element` project or Flood Element product, please [open an issue](https://github.com/flood-io/element/issues) on the GitHub project.
 
 If you're encountering issues with Flood itself, please contact Flood Support from within the Flood Dashboard.
+
+## Authors
+
+- Ivan Vanderbyl ([@ivanderbyl](https://twitter.com/ivanderbyl)) – [Flood](https://flood.io)
+- Lachie Cox ([@lachie](https://twitter.com/lachie)) – [Flood](https://flood.io)

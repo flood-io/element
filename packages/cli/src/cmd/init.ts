@@ -1,30 +1,50 @@
-import { Argv, Arguments } from 'yargs'
-import * as yeomanEnv from 'yeoman-environment'
+import { Argv, Arguments, CommandModule } from 'yargs'
 import { resolve } from 'path'
 
-export const handler = (args: Arguments) => {
-	const env = yeomanEnv.createEnv()
-	env.register(require.resolve('../generator/test-env'), 'test-env')
+import runCmd from '../utils/cmd'
+import chalk from 'chalk'
 
-	args.dir = resolve(process.cwd(), args.dir)
-
-	env.run(['test-env', args.dir], { 'skip-install': args['skip-install'] })
+interface CommandArgs extends Arguments {
+	dir: string
 }
 
-export const command = 'init [dir] [options]'
-export const describe =
-	'Init a test script and a minimal environment to get you started with Flood Element'
-export const builder = (yargs: Argv) => {
-	yargs
-		.option('verbose', {
-			describe: 'Verbose mode',
+const cmd: CommandModule = {
+	command: 'init [dir] [options]',
+	describe: 'Init a test script and a minimal environment to get you started with Flood Element',
+
+	async handler(args: CommandArgs) {
+		const { default: YoEnv } = await import('yeoman-environment')
+		const { default: TestEnvGenerator } = await import('../generator/test-env/index')
+		const env = YoEnv.createEnv()
+		env.registerStub(TestEnvGenerator as any, 'element/test-env')
+		args.dir = resolve(process.cwd(), args.dir as string)
+		env.run(['element/test-env', args.dir], { 'skip-install': args['skip-install'] }, () => {
+			// eslint-disable-next-line @typescript-eslint/no-var-requires
+			const tsConfig = require(resolve(args.dir, './tsconfig.json'))
+
+			console.log(
+				chalk`{grey New Element project initialized}\nRun ${runCmd(`cd ${args.dir}`)} and ${runCmd(
+					`element run ${tsConfig.files[0]}`,
+				)}`,
+			)
 		})
-		.option('skip-install', {
-			describe: 'Skip yarn/npm install',
-		})
-		.positional('dir', {
-			describe: 'the dir to init',
-			default: process.cwd(),
-			normalize: true,
-		})
+	},
+
+	builder(yargs: Argv): Argv {
+		return yargs
+			.option('verbose', {
+				describe: 'Verbose mode',
+			})
+			.option('skip-install', {
+				describe: 'Skip yarn/npm install',
+				default: false,
+			})
+			.positional('dir', {
+				describe: 'the directory to initialize with an Element test script',
+				default: process.cwd(),
+				normalize: true,
+			})
+	},
 }
+
+export default cmd

@@ -1,0 +1,16 @@
+{
+	"extends": "../../tsconfig.json",
+	"compilerOptions": {
+		"declaration": true,
+		"outDir": "./dist"
+	},
+
+	"references": [
+		{
+			"path": "../cli"
+		}
+	],
+
+	"files": ["./bin/element.ts"],
+	"include": ["**/*.ts"]
+}

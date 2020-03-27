@@ -1,13 +1,14 @@
-import { step, TestSettings, Until, By, MouseButtons, Device, Driver, ENV } from '@flood/element'
-import * as assert from 'assert'
+import { step, TestSettings, Until, By, Device, Driver } from '@flood/element'
+import assert from 'assert'
 export const settings: TestSettings = {
-  loopCount: 1,
-  device: Device.iPadLandscape,
-  userAgent: 'I AM ROBOT',
-  disableCache: true,
-  actionDelay: 1,
-  stepDelay: 2,
-  responseTimeMeasurement: 'step',
+	loopCount: 1,
+	device: Device.iPadLandscape,
+	userAgent: 'I AM ROBOT',
+	disableCache: true,
+	actionDelay: 1,
+	stepDelay: 2,
+	responseTimeMeasurement: 'step',
+	incognito: true,
 }
 
 /**
@@ -15,75 +16,69 @@ export const settings: TestSettings = {
  * Version: 1.0
  */
 export default () => {
-  step('Flood Challenge: Start', async (browser: Driver) => {
-    // await browser.visit('https://chortlepig.local')
+	step('Flood Challenge: Start', async (browser: Driver) => {
+		await browser.visit('https://challenge.flood.io')
 
-    await browser.visit('https://challenge.flood.io')
+		let locator = By.css('#new_challenger > input.btn.btn-xl.btn-default')
+		await browser.wait(Until.elementIsVisible(locator))
 
-    let noElement = await browser.findElement(By.id('foobar'))
-    console.log('no element', noElement)
-    await browser.wait(Until.elementIsVisible(noElement))
+		let element = await browser.findElement(locator)
+		await element.click()
+	})
 
-    let locator = By.css('#new_challenger > input.btn.btn-xl.btn-default')
-    await browser.wait(Until.elementIsVisible(locator))
+	step('Flood Challenge: Step 1', async (browser: Driver) => {
+		// await browser['waitForNavigationComplete']()
+		await browser.wait(Until.elementIsVisible(By.id('challenger_age')))
 
-    let element = await browser.findElement(locator)
-    await element.click({ button: MouseButtons.LEFT })
-  })
+		await browser.selectByValue(By.id('challenger_age'), '28')
+		let select = await browser.findElement(By.id('challenger_age'))
+		await select.takeScreenshot()
 
-  step('Flood Challenge: Step 1', async (browser: Driver) => {
-    // await browser['waitForNavigationComplete']()
-    await browser.wait(Until.elementIsVisible(By.id('challenger_age')))
+		await browser.click(By.css('input.btn'))
+	})
 
-    await browser.selectByValue(By.id('challenger_age'), '28')
-    let select = await browser.findElement(By.id('challenger_age'))
-    await select.takeScreenshot()
+	step('Flood Challenge: Step 2', async (browser: Driver) => {
+		await browser.wait(Until.elementIsVisible('table tbody tr td:first-of-type label'))
+		let orderElements = await browser.findElements(By.css('table tbody tr td:first-of-type label'))
 
-    await browser.click(By.css('input.btn'))
-  })
+		assert(orderElements.length > 0, 'expected to find orders on this page')
 
-  step('Flood Challenge: Step 2', async (browser: Driver) => {
-    await browser.wait(Until.elementIsVisible('table tbody tr td:first-of-type label'))
-    let orderElements = await browser.findElements(By.css('table tbody tr td:first-of-type label'))
+		let orderIDs = await Promise.all(orderElements.map(element => element.text()))
 
-    assert(orderElements.length > 0, 'expected to find orders on this page')
+		// Find largest number by sorting and picking the first item
+		let largestOrder = orderIDs
+			.map(Number)
+			.sort((a, b) => a - b)
+			.reverse()[0]
 
-    let orderIDs = await Promise.all(orderElements.map(element => element.text()))
+		// Fill in text field
+		await browser.type(By.id('challenger_largest_order'), String(largestOrder))
 
-    // Find largest number by sorting and picking the first item
-    let largestOrder = orderIDs
-      .map(Number)
-      .sort((a, b) => a - b)
-      .reverse()[0]
+		// Click label with order ID
+		await browser.click(By.visibleText(String(largestOrder)))
 
-    // Fill in text field
-    await browser.type(By.id('challenger_largest_order'), String(largestOrder))
+		await browser.click(By.css('input.btn'))
+	})
 
-    // Click label with order ID
-    await browser.click(By.visibleText(String(largestOrder)))
+	step('Flood Challenge: Step 3', async (browser: Driver) => {
+		await browser.wait(Until.elementIsVisible('input.btn'))
+		await browser.click('input.btn')
+	})
 
-    await browser.click(By.css('input.btn'))
-  })
+	step('Flood Challenge: Step 4', async (browser: Driver) => {
+		await browser.wait(Until.elementTextMatches('span.token', /\d+/))
+		let element = await browser.findElement('span.token')
+		let token = await element.text()
+		await browser.type(By.id('challenger_one_time_token'), token)
 
-  step('Flood Challenge: Step 3', async (browser: Driver) => {
-    await browser.wait(Until.elementIsVisible('input.btn'))
-    await browser.click('input.btn')
-  })
+		await browser.takeScreenshot()
+		await browser.click('input.btn')
+	})
 
-  step('Flood Challenge: Step 4', async (browser: Driver) => {
-    await browser.wait(Until.elementTextMatches('span.token', /\d+/))
-    let element = await browser.findElement('span.token')
-    let token = await element.text()
-    await browser.type(By.id('challenger_one_time_token'), token)
-
-    await browser.takeScreenshot()
-    await browser.click('input.btn')
-  })
-
-  step('Flood Challenge: Step 5', async (browser: Driver) => {
-    await browser.wait(Until.elementIsVisible('h2'))
-    let element = await browser.findElement('h2')
-    let completionText = await element.text()
-    assert.equal(completionText, "You're Done!")
-  })
+	step('Flood Challenge: Step 5', async (browser: Driver) => {
+		await browser.wait(Until.elementIsVisible('h2'))
+		let element = await browser.findElement('h2')
+		let completionText = await element.text()
+		assert.equal(completionText, "You're Done!")
+	})
 }

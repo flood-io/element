@@ -16,7 +16,7 @@ interface Row {
 	count: number
 }
 
-TestData.fromCSV('googling-test-data.csv').shuffle()
+TestData.fromCSV('googling-test-data.pass/googling-test-data.csv').shuffle()
 
 export default async () => {
 	step('Google Search', async (browser: Browser, row: Row) => {

@@ -24,7 +24,7 @@ You may then use the data in your steps:
 ```typescript
 step('Step 1', async (browser: Browser, row: any) => {
   await browser.visit(`http://examplecorp.com/users/${row.id}.html`)
-  
+
   await browser.wait(Until.elementIsVisible(By.partialVisibleText(String(row.id))))
 })
 ```
@@ -32,7 +32,6 @@ step('Step 1', async (browser: Browser, row: any) => {
 ## Loading data from external files
 
 For larger or more complicated data sets, you may load data from CSV or JSON files.
-
 
 ### Loading data from a CSV file
 
@@ -46,12 +45,11 @@ TestData.fromCSV('test-data.csv')
 
 Note that the first line of each column is taken to be the name of that column.
 
-This means that if your column names contain spaces, you won't be able to use the javascript `.` property access notation.
-Instead use `[]` notation.
+This means that if your column names contain spaces, you won't be able to use the javascript `.` property access notation. Instead use `[]` notation.
 
 The CSV
 
-```csv
+```text
 query name,url
 green,https://en.wikipedia.org/wiki/Green
 ```
@@ -73,7 +71,7 @@ TestData.fromJSON('test-data.json')
 
 ### Data file locations
 
-When running Element in cli mode (`element run`), place the data files in the same directory as your test script.
+When running Element in cli mode \(`element run`\), place the data files in the same directory as your test script.
 
 When its running as a load test on [flood.io](https://flood.io), upload the data files alongside your script.
 
@@ -83,9 +81,9 @@ When it's important that your test data is well-defined, Flood Element provides 
 
 ### type checking
 
-Element test scripts are written in [TypeScript] and are thus type checked before being run. Type checking helps write more reliable code (as well as providing documentation and code completion in your editor).
+Element test scripts are written in [TypeScript](https://www.typescriptlang.org/) and are thus type checked before being run. Type checking helps write more reliable code \(as well as providing documentation and code completion in your editor\).
 
-Its possible to define test data using the `any` type (as in the examples above). However you could also add explicit type annotations:
+Its possible to define test data using the `any` type \(as in the examples above\). However you could also add explicit type annotations:
 
 ```typescript
 import { step, TestData, Browser } from '@flood/element'
@@ -106,17 +104,18 @@ TestData.fromData<UserData>([
 
 step('Step 1 - reports', async (browser: Browser, data: UserData) => {
   await browser.visit(`http://examplecorp.com/users/${data.username}.html`)
-  
+
   const reports = await browser.findElements(By.css('#reports > li'))
-  
+
   assert.equal(reports.length, data.reportCount, 'all user reports found')
 })
 ```
 
 ### manual assertion
-A hidden problem with the type checking approach is that it's not possible to automatically type check data loaded in from a CSV or JSON at runtime (The techinal reason is that [TypeScript]'s type annotations are not available at runtime - they're said to be "erased" once compiled)
 
-When loading in data from a file, we can still validate it by using `assert`. (Note that in this example we're still using type annotations to make the coding experience better)
+A hidden problem with the type checking approach is that it's not possible to automatically type check data loaded in from a CSV or JSON at runtime \(The techinal reason is that [TypeScript](https://www.typescriptlang.org/)'s type annotations are not available at runtime - they're said to be "erased" once compiled\)
+
+When loading in data from a file, we can still validate it by using `assert`. \(Note that in this example we're still using type annotations to make the coding experience better\)
 
 ```typescript
 import { step, TestData, Browser } from '@flood/element'
@@ -133,33 +132,25 @@ TestData.fromCSV<UserData>('users.csv')
 step('Step 1 - reports', async (browser: Browser, data: UserData) => {
   // check that data.username is 'truthy'
   assert.ok(data.username, 'data.username is set')
-  
+
   // check that data.reportCount is defined. 
   // Here we check that row.reportCount  !== undefined because the number 0 is considered to be 'falsy'
   // in javascript
   assert.notEqual(data.reportCount, undefined, 'data.reportCount is set')
-  
+
   ...
 })
 ```
 
 #### truthiness and falsiness
 
-'Truthiness' and 'falsiness' refer to the fact that in Javascript (and thus [TypeScript]), more values than `true` and `false` are considered to be `true` or `false` in an `if` statement.
+'Truthiness' and 'falsiness' refer to the fact that in Javascript \(and thus [TypeScript](https://www.typescriptlang.org/)\), more values than `true` and `false` are considered to be `true` or `false` in an `if` statement.
 
-Falsy values are `false`, `""` (an empty string), `0`, `NaN`, `null` and `undefined`; all other values are truthy.
+Falsy values are `false`, `""` \(an empty string\), `0`, `NaN`, `null` and `undefined`; all other values are truthy.
 
 Its important to understand this when validating data, since for example a value of `0` might be valid, but would be considered to be `false` when tested with `assert.ok(0)`.
 
 ## More information
 
-Find more information in the API reference for [TestData], [TestDataFactory] and [TestDataSource], or check out the [Flood challenge with test data][challenge-with-test-data] example script.
+Find more information in the API reference for [TestData](https://github.com/flood-io/element/tree/f4aa19ffab79b8eded0c80d05aa9e970f650f8ab/packages/element/api/TestData.md#testdata), [TestDataFactory](https://github.com/flood-io/element/tree/f4aa19ffab79b8eded0c80d05aa9e970f650f8ab/packages/element/api/TestData.md#testdatafactory) and [TestDataSource](https://github.com/flood-io/element/tree/f4aa19ffab79b8eded0c80d05aa9e970f650f8ab/packages/element/api/TestData.md#testdatasource), or check out the [Flood challenge with test data](https://github.com/flood-io/element/blob/master/examples/flood-challenge/flood-challenge-with-test-data.ts) example script.
 
-[TypeScript]: https://www.typescriptlang.org/
-<!-- suffix -->
-
-[TypeScript]: https://www.typescriptlang.org/
-[TestData]: ../../api/TestData.md#testdata
-[TestDataFactory]: ../../api/TestData.md#testdatafactory
-[TestDataSource]: ../../api/TestData.md#testdatasource
-[challenge-with-test-data]: https://github.com/flood-io/element/blob/master/examples/flood-challenge/flood-challenge-with-test-data.ts

@@ -2,23 +2,21 @@
 
 A tool for developing Flood Element test scripts.
 
-Install Element CLI on your own machine to quickly iterate the development of your Browser Level User test script.
-Once you're satisfied, upload it to [Tricentis Flood](https://flood.io) use it to generate 1000s of users of load in a full-scale load test.
+Install Element CLI on your own machine to quickly iterate the development of your Browser Level User test script. Once you're satisfied, upload it to [Tricentis Flood](https://flood.io) use it to generate 1000s of users of load in a full-scale load test.
 
-- [Installation](#installation)
-- [Getting started](#getting-started)
-- Commands
-  - [`element run`](#element-run)
-  - [`element plan`](#element-plan)
-  - [`element init`](#element-init)
-  - [`element generate`](#element-generate)
-
+* [Installation](cli.md#installation)
+* [Getting started](cli.md#getting-started)
+* Commands
+  * [`element run`](cli.md#element-run)
+  * [`element plan`](cli.md#element-plan)
+  * [`element init`](cli.md#element-init)
+  * [`element generate`](cli.md#element-generate)
 
 ## Installation
 
 The easiest way to install on MacOS is via [homebrew](https://brew.sh):
 
-```shell
+```text
 brew install flood-io/taps/element
 ```
 
@@ -26,7 +24,7 @@ brew install flood-io/taps/element
 
 If you're installing as an npm package, please first ensure you have the most recent version of node installed.
 
-```shell
+```text
 # npm:
 npm install -g @flood/element-cli
 # yarn
@@ -37,7 +35,7 @@ yarn global add @flood/element-cli
 
 Generate a test script environment
 
-```shell
+```text
 element init my-load-test
 cd my-load-test
 
@@ -46,7 +44,7 @@ cd my-load-test
 code test.ts
 ```
 
-```shell
+```text
 element run test.ts
 ```
 
@@ -58,7 +56,7 @@ Note that if your script loads CSV or JSON test data, the file is assumed to be 
 
 ### `--watch`
 
-`--watch` runs your test script, then re-runs it when the script is changed (when you save it in your editor for example).
+`--watch` runs your test script, then re-runs it when the script is changed \(when you save it in your editor for example\).
 
 `--watch` runs the test script against a single instance of the browser, so combining with `--no-headless` or `--devtools` shows the browser as the script runs, then leaves it open for you to inspect.
 
@@ -96,11 +94,10 @@ Setting a higher `--loop-count` could be useful for things like testing test dat
 
 Set the version of chrome to use. By default, `element run` uses the version of Chromium bundled with puppeteer.
 
-- `--chrome-version` with no arguments attempts to find and use the version of Chrome installed on your system.
-- `--chrome-version /path/to/chrome` will use Chrome at the given path.
+* `--chrome-version` with no arguments attempts to find and use the version of Chrome installed on your system.
+* `--chrome-version /path/to/chrome` will use Chrome at the given path.
 
-Note that when running as a load test [Tricentis Flood](https://flood.io), the versions of Chrome are recent but fixed to particular versions and may not match the custom version you select with this flag.
-Using the puppeteer-bundled version is a safe choice unless you need to test features which Chromium doesn't support such as DRM video playback.
+Note that when running as a load test [Tricentis Flood](https://flood.io), the versions of Chrome are recent but fixed to particular versions and may not match the custom version you select with this flag. Using the puppeteer-bundled version is a safe choice unless you need to test features which Chromium doesn't support such as DRM video playback.
 
 ### `--no-sandbox`
 
@@ -108,20 +105,25 @@ Switch off the chrome sandbox. This is useful for some linux configurations whic
 
 ### `--verbose`
 
-### (advanced) `--strict`
+### \(advanced\) `--strict`
 
 Compile your script with stricter typescript type-checking. This can be useful for writing more robust test scripts and sometimes as a debugging tool for discovering subtle problems with your script.
 
 Specifically, this flag turns on the `strictNullChecks` and `noImplicitAny` TypeScript compiler flags. See the [TypeScript documentation](https://www.typescriptlang.org/docs/handbook/compiler-options.html) for more information.
 
-### (advanced) `--work-root`
-### (advanced) `--test-data-root`
+### \(advanced\) `--work-root`
+
+### \(advanced\) `--test-data-root`
 
 ## `element plan`
+
 TODO
 
 ## `element init`
+
 TODO
 
 ## `element generate`
+
 TODO
+

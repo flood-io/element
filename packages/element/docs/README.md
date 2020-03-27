@@ -1,21 +1,21 @@
-# `@flood/element`
+# @flood/element
 
 Flood Element combines the familiar power of traditional browser scripting tools with the proven performance of Flood to create an easy to use and maintainable performance testing tool.
 
 Flood Element works by spinning up hundreds or even thousands of instances of Google Chrome, and running the scripts you write using `@flood/element` to drive a load test. We call this Browser Level Load Testing.
 
-![Flood Element Example code](./code-snippet.png)
+![Flood Element Example code](../../../.gitbook/assets/code-snippet.png)
 
-- [Quickstart](#quickstart)
-  - [1. Install Element](#1-install-element)
-  - [2. Initialize Your Project](#2-initialize-your-project)
-  - [3. Write and Validate Your Script](#3-write-and-validate-your-script)
-  - [4. Run a Real Load Test on Flood](#4-run-a-real-load-test-on-flood)
-- [About](#about)
-  - [What can I do with it?](#what-can-i-do-with-it)
-- [Repository Layout](#repository-layout)
-- [Documentation](#documentation)
-- [Reporting Issues](#reporting-issues)
+* [Quickstart](./#quickstart)
+  * [1. Install Element](./#1-install-element)
+  * [2. Initialize Your Project](./#2-initialize-your-project)
+  * [3. Write and Validate Your Script](./#3-write-and-validate-your-script)
+  * [4. Run a Real Load Test on Flood](./#4-run-a-real-load-test-on-flood)
+* [About](./#about)
+  * [What can I do with it?](./#what-can-i-do-with-it)
+* [Repository Layout](./#repository-layout)
+* [Documentation](./#documentation)
+* [Reporting Issues](./#reporting-issues)
 
 ## Quickstart
 
@@ -68,7 +68,7 @@ This will create a new file with a single step stubbed out for you.
 
 ### 3. Write and Validate Your Script
 
-Edit `test.ts` in your editor of choice. To learn more about the scripting capabilities we've put together a detailed tutorial on [testing the "Flood Merchandise Store"](./examples/scenario_1_wordpress.md).
+Edit `test.ts` in your editor of choice. To learn more about the scripting capabilities we've put together a detailed tutorial on [testing the "Flood Merchandise Store"](examples/scenario_1_wordpress.md).
 
 As you're writing your script, you can validate it by running it locally using `element run`:
 
@@ -78,15 +78,15 @@ element run test.ts
 
 This will run the script in an instance of Chrome and output the results locally.
 
-For details of the available options see the [`element run`](./../../cli/README.md#element-run) guide.
+For details of the available options see the [`element run`](../../cli.md#element-run) guide.
 
 ## 4. Run a real Load Test on [Flood](https://flood.io)
 
-Now that you have a test script, upload it to [Flood](https://app.flood.io) as a new Stream and launch a Flood (a test).
+Now that you have a test script, upload it to [Flood](https://app.flood.io) as a new Stream and launch a Flood \(a test\).
 
-![Upload your script to Tricentis Flood](./examples/images/upload-script.png)
+![Upload your script to Tricentis Flood](../../../.gitbook/assets/upload-script.png)
 
-Continue learning more Flood Element techniques by starting with our [API documentation](./SUMMARY.md). The main entry point to all tests is the [Browser](./api/Browser.md) class and a great place to get a feel for the capabilities of each test.
+Continue learning more Flood Element techniques by starting with our [API documentation](summary.md). The main entry point to all tests is the [Browser](api/browser.md) class and a great place to get a feel for the capabilities of each test.
 
 ## About
 
@@ -103,16 +103,16 @@ Over the years, countless customers have mentioned that getting started with Loa
 
 Flood Element is developed as a monorepo and comprises two packages:
 
-- [`@flood/element`](./..) is the library implementing the Element API.
-- [`@flood/element-cli`](./../../cli) wraps up the library for you to use from the CLI to develop and debug test scripts.
+* [`@flood/element`](../) is the library implementing the Element API.
+* [`@flood/element-cli`](../../cli.md) wraps up the library for you to use from the CLI to develop and debug test scripts.
 
 When you run your script as a load test on [Flood](https://app.flood.io), this same `@flood/element` package is used to execute the test.
 
 ## Documentation
 
-* [Deep dive tutorial](./examples/scenario_1_wordpress.md)
-* [Browser API Documentation](./packages/element/docs/api/Browser.md)
-* [API Documentation](./SUMMARY.md)
+* [Deep dive tutorial](examples/scenario_1_wordpress.md)
+* [Browser API Documentation](https://github.com/flood-io/element/tree/f4aa19ffab79b8eded0c80d05aa9e970f650f8ab/packages/element/docs/packages/element/docs/api/Browser.md)
+* [API Documentation](summary.md)
 
 ## Reporting Issues
 
@@ -120,6 +120,3 @@ If you encounter any issues with the `@flood/element` project or Flood Element p
 
 If you're encountering issues with Flood itself, please contact Flood Support from within the Flood Dashboard.
 
-
-[Flood]: https://flood.io
-[Browser]: ../../api/Browser.md#browser

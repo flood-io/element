@@ -75,5 +75,4 @@ graph.svg
 packages/**/bin/*.js
 packages/examples/sap/tmp/
 tmp
-examples/customers/mlb/test.perf.ts
-examples/customers/mlb/vmsUsers_0_0.csv
+examples/customers

@@ -17,12 +17,12 @@ We'll show you how you can achieve creating a full user item purchase scenario q
 ## Tools Used
 
 1. **A Tricentis Flood Account** - You will need a Flood account in order to run Flood Element scripts with more than 1 concurrent user.
-2. **Flood Element CLI \(optional\)** - The CLI tool is a great way to verify your script compiles correctly before running it on the Flood platform.
-3. **Google Chrome \(optional\)** - Flood Element identifies page objects by individual properties or identifiers. The Google Chrome browser contains the ability to inspect object properties in realtime. These properties are used by the Flood Element script in order to interact with the given page object.
+2. **Flood Element CLI (optional)** - The CLI tool is a great way to verify your script compiles correctly before running it on the Flood platform.
+3. **Google Chrome (optional)** - Flood Element identifies page objects by individual properties or identifiers. The Google Chrome browser contains the ability to inspect object properties in realtime. These properties are used by the Flood Element script in order to interact with the given page object.
 
 ## Download the entire script
 
-Please find the script used in this detailed scenario here: \(link\)\[./scenario\_1\_wordpress.ts\]
+Please find the script used in this detailed scenario here: (link)[./scenario_1_wordpress.ts]
 
 ## Overview of script configuration settings
 
@@ -36,7 +36,7 @@ import * as assert from 'assert'
 }
 ```
 
-The initial import statement allows you to add classes relating to test steps, test settings, and By functions etc. that are needed by the script to carry out actions against objects you have defined. For basic tests the above included classes shoudl suffice. You will need to review these if you require further functionality from other classes that are not listed above.
+The initial import statement allows you to add classes relating to test steps, test settings, and By functions etc. that are needed by the script to carry out actions against objects you have defined. For basic tests the above included classes shoudl suffice.  You will need to review these if you require further functionality from other classes that are not listed above.
 
 The importing of the assert class is useful if you would like to use assertions to capture and verify strings/integers or any data retrieved from objects during test execution. This can also be reported in the console.
 
@@ -44,30 +44,36 @@ b. **export consts settings { ... }**
 
 ```typescript
 export const settings: TestSettings = {
-    loopCount: 50,
-    description: 'The Flood Store - Detailed Tutorial',
-    screenshotOnFailure: true,
-    disableCache: true,
-    //clearCache: true,
-    clearCookies: true,
-    actionDelay: 1.5,
-    stepDelay: 2.5,
+	loopCount: 50,
+	description: 'The Flood Store - Detailed Tutorial',
+	screenshotOnFailure: true,
+	disableCache: true,
+	//clearCache: true,
+	clearCookies: true,
+	actionDelay: 1.5,
+	stepDelay: 2.5,
 }
 ```
 
 This export block allows you to specify constants related to typical Test Settings used in all load tests:
 
-* loopCount: Used to specify how many iterations \(or loops\) you would like each user to run. If commented out or not included - the test will run forever.
+* loopCount: Used to specify how many iterations (or loops) you would like each user to run. If commented out or not included - the test will run forever.
+
 * description: A simple description sentence describing the aim of the test scenario.
+
 * screenshotOnFailure: A screenshot of the current page will automatically be generated when Flood Element detects a failure has occurred. These are viewable in the captured results for each Flood.
+
 * disableCache / clearCache: No caching is done if this is set to true.
+
 * clearCookies: Any cookies detected will be cleared for each iteration if this is set to true.
+
 * actionDelay: the amount of time in seconds that the Flood Element replay engine will wait in between actions contained within a step.
+
 * stepDelay: the amount of time in seconds that the Flood Element replay engine will wait in between steps.
 
-c. **export default\(\) =&gt; { ... }**
+c. **export default() => { ... }**
 
-The export default\(\) function is the main area housing all the steps for your business process.
+The export default() function is the main area housing all the steps for your business process.
 
 ## Step 1 - Navigation and page verification
 
@@ -76,17 +82,17 @@ The first step we will use contains the step to tell Flood Element to visit the 
 ![The Flood Store - Homepage](https://raw.githubusercontent.com/flood-io/flood-chrome-docs/master/examples/images/step-1-homepage.png)
 
 ```typescript
-    step('The Flood Store: Home', async browser => {
+	step('The Flood Store: Home', async browser => {
 
-        await browser.visit('https://wordpress.loadtest.io')
+		await browser.visit('https://wordpress.loadtest.io')
 
-        let pageTextVerify = By.visibleText('Welcome to the Flood IO Merchandise Store.')
-        await browser.wait(Until.elementIsVisible(pageTextVerify))
+		let pageTextVerify = By.visibleText('Welcome to the Flood IO Merchandise Store.')
+		await browser.wait(Until.elementIsVisible(pageTextVerify))
 
-    })
+	})
 ```
 
-Every step should be named appropriately to tell us what functionality is taking place \(and how long does it take\) within the step contents. So for this step we are timing how long the target URL takes to load from a user's perspective and also the verification that we are on the correct page.
+Every step should be named appropriately to tell us what functionality is taking place (and how long does it take) within the step contents. So for this step we are timing how long the target URL takes to load from a user's perspective and also the verification that we are on the correct page.
 
 The page text verification is purely just telling Flood Element to wait for a specific visible text element to appear before the step completes.
 
@@ -108,17 +114,17 @@ This type of page interaction is very simple and powerful for normal text based 
 
 ```typescript
 step('The Flood Store: Click Hoodies', async browser => {
-    let lnkHoodies = await browser.findElement(By.partialLinkText('Hoodies'))
-    await lnkHoodies.click()
+	let lnkHoodies = await browser.findElement(By.partialLinkText('Hoodies'))
+	await lnkHoodies.click()
 
-    let pageTextVerify = By.visibleText('Hoodie with Logo')
-    await browser.wait(Until.elementIsVisible(pageTextVerify))
+	let pageTextVerify = By.visibleText('Hoodie with Logo')
+	await browser.wait(Until.elementIsVisible(pageTextVerify))
 })
 ```
 
 This step represents the actual click and subsequent page load of the user interaction of your end user clicking on the 'Hoodies' link and waiting for the next page to load.
 
-Here we have the unique step name \(aka. the Transaction name\) - but also a new findElement function which is used by Flood Element to identify the object we need to interact with. Inside this function we can use a number of By.xxx sub functions that will allow us to be more specific in identifying the particular object we want.
+Here we have the unique step name (aka. the Transaction name) - but also a new findElement function which is used by Flood Element to identify the object we need to interact with. Inside this function we can use a number of By.xxx sub functions that will allow us to be more specific in identifying the particular object we want.
 
 For text links, we can use partialLinkText and also linkText. linkText needs to be the exact link string specified within the A HREF link tags. partialLinkText only needs a partial match of the link text to be able to identify the object.
 
@@ -134,10 +140,10 @@ XPath notation is a popular way of identifying objects that you would like to in
 
 ```typescript
 step('The Flood Store: Add To Cart', async (browser: Driver) => {
-    let addHoodieToCart = await browser.findElement(
-        By.xpath('//a[@data-product_id=39]'),
-    )
-    await addHoodieToCart.click()
+	let addHoodieToCart = await browser.findElement(
+		By.xpath('//a[@data-product_id=39]'),
+	)
+	await addHoodieToCart.click()
 })
 ```
 
@@ -155,7 +161,7 @@ So using the above step XPath example we can use the following XPath expression:
 '//a[@data-product_id=39]'
 ```
 
-So we are able to narrow down from the entire page what exact object we wish to interact with. We start by looking at the entire document object model \(denoted by the //\), all links on the page \(denoted by the 'a' html tag\), any links that have the data-product\_id parameter, and lastly only the link that has the data-product\_id parameter equal to the value 39.
+So we are able to narrow down from the entire page what exact object we wish to interact with. We start by looking at the entire document object model (denoted by the //), all links on the page (denoted by the 'a' html tag), any links that have the data-product_id parameter, and lastly only the link that has the data-product_id parameter equal to the value 39.
 
 Flood Element now knows exactly what object it needs to select.
 
@@ -163,15 +169,15 @@ After Flood Element adds this item to the cart, we can navigate to the Cart page
 
 ```typescript
 step('The Flood Store: View Cart', async (browser: Driver) => {
-    await browser.visit('https://wordpress.loadtest.io/cart')
+	await browser.visit('https://wordpress.loadtest.io/cart')
 
-    let pageTextVerify1 = By.visibleText('Free shipping')
-    await browser.wait(Until.elementIsVisible(pageTextVerify1))
+	let pageTextVerify1 = By.visibleText('Free shipping')
+	await browser.wait(Until.elementIsVisible(pageTextVerify1))
 
-    let pageTextVerify2 = By.visibleText('Hoodie with Logo')
-    await browser.wait(Until.elementIsVisible(pageTextVerify2))
+	let pageTextVerify2 = By.visibleText('Hoodie with Logo')
+	await browser.wait(Until.elementIsVisible(pageTextVerify2))
 
-    await browser.takeScreenshot()
+	await browser.takeScreenshot()
 })
 ```
 
@@ -189,47 +195,47 @@ a. Right click on the Proceed to Checkout button and click Inspect. This will br
 
 ![Proceed to Checkout - code](https://raw.githubusercontent.com/flood-io/flood-chrome-docs/master/examples/images/step-4-proceed-checkout-code.png)
 
-b. Click on the ellipsis link \(...\) and click Copy &gt; Copy selector.
+b. Click on the ellipsis link (...) and click Copy > Copy selector.
 
 ![Proceed to Checkout - copy selector](https://raw.githubusercontent.com/flood-io/flood-chrome-docs/master/examples/images/step-4-copy-selector.png)
 
 This will copy the exact CSS selector path that can be used in your step as follows:
 
 ```typescript
-    step('The Flood Store: Proceed to Checkout', async browser => {
+	step('The Flood Store: Proceed to Checkout', async browser => {
 
-        let lnkProceedToCheckout = By.css('#post-14 > div > div > div > div > div > a')
-        await browser.wait(Until.elementIsVisible(lnkProceedToCheckout))
-        let element = await browser.findElement(lnkProceedToCheckout)
-        await element.focus()
-        await element.click()
+		let lnkProceedToCheckout = By.css('#post-14 > div > div > div > div > div > a')
+		await browser.wait(Until.elementIsVisible(lnkProceedToCheckout))
+		let element = await browser.findElement(lnkProceedToCheckout)
+		await element.focus()
+		await element.click()
 
-        let pageTextVerify = By.visibleText('Returning customer?')
-        await browser.wait(Until.elementIsVisible(pageTextVerify))
+		let pageTextVerify = By.visibleText('Returning customer?')
+		await browser.wait(Until.elementIsVisible(pageTextVerify))
 
-    })
+	})
 ```
 
-In this case our Selector produced: '\#post-14 &gt; div &gt; div &gt; div &gt; div &gt; div &gt; a' which is what can be used in the By.css step above.
+In this case our Selector produced: '#post-14 > div > div > div > div > div > a' which is what can be used in the By.css step above.
 
 ## Step 5 - Text entry & form field input
 
 Filling out a form with a number of text entry fields can be very easily achieved with Flood Element. All we need to do is to find out the CSS or unique input ID of the field we would like to enter text into and include it in a step as follows:
 
 ```typescript
-    step('The Flood Store: Checkout Data Entry', async browser => {
+	step('The Flood Store: Checkout Data Entry', async browser => {
 
-        //let billingFirstName = await browser.findElement(By.id('billing_first_name'))
+	    //let billingFirstName = await browser.findElement(By.id('billing_first_name'))
 
-           // Fill in text field - billing First Name
-        await browser.type(By.id('billing_first_name'), 'Jason')
+	   	// Fill in text field - billing First Name
+		await browser.type(By.id('billing_first_name'), 'Jason')
 
-           // Fill in text field - billing First Name
-        await browser.type(By.id('billing_last_name'), 'Rizio')
+	   	// Fill in text field - billing First Name
+		await browser.type(By.id('billing_last_name'), 'Rizio')
 
-        //...    
+		//...	
 
-    })
+	})
 ```
 
 As you can see, a simple line of code per field containing the text string needing to be entered is all that is required to fill out a form.
@@ -239,23 +245,23 @@ As you can see, a simple line of code per field containing the text string needi
 We have now almost completed the full item purchase business process. All that is left is to click the place order button using the following step:
 
 ```typescript
-    step('The Flood Store: Place Order', async browser => {
+	step('The Flood Store: Place Order', async browser => {
 
-        let btnPlaceOrder = By.id('place_order')
-        await browser.wait(Until.elementIsVisible(btnPlaceOrder))
-        let element = await browser.findElement(btnPlaceOrder)
-        await element.focus()
-        await element.click()    
+		let btnPlaceOrder = By.id('place_order')
+		await browser.wait(Until.elementIsVisible(btnPlaceOrder))
+		let element = await browser.findElement(btnPlaceOrder)
+		await element.focus()
+		await element.click()	
 
-        let pageTextVerify = By.visibleText('Thank you. Your order has been received.')
-        await browser.wait(Until.elementIsVisible(pageTextVerify))
+		let pageTextVerify = By.visibleText('Thank you. Your order has been received.')
+		await browser.wait(Until.elementIsVisible(pageTextVerify))
 
-        await browser.takeScreenshot()
+		await browser.takeScreenshot()
 
-    })
+	})	
 ```
 
-When an object has a unique id, it makes our scripting very easy to describe the object. Here the button has an id called 'place\_order' which is all we need to use in order to interact with the object successfully.
+When an object has a unique id, it makes our scripting very easy to describe the object. Here the button has an id called 'place_order' which is all we need to use in order to interact with the object successfully.
 
 This step is almost identicial to the one in Step 4 except the usage of the id in this case. We are still clicking on the button and then verifying the order has gone through by verifying the expected text 'Thank you. Your order has been received'.
 
@@ -265,3 +271,4 @@ So we have completed scripting a full end-to-end purchase of an item in a typica
 
 Usage of a Browser Level User such as Flood Element takes a lot of the complexity out of scripting these types of dynamic sites.
 
+<!-- suffix -->

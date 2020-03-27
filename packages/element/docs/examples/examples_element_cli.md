@@ -4,18 +4,16 @@ position: 1
 articleGroup: Guides
 ---
 
-# examples\_element\_cli
-
 The Element CLI is a powerful tool that makes it fast and easy to get started with browser level performance testing with Flood Element. It helps you scaffold a new project, then generate, write, validate, and run your scripts on your local machine. When you're ready, you can upload your test scripts to [Flood](https://flood.io) and be confident they’ll run exactly as expected, just like they did on your local machine.
 
-* [Installation](examples_element_cli.md#installation)
-* [Getting help](examples_element_cli.md#getting-help)
-* [Initialize a new project](examples_element_cli.md#initialize-a-new-project)
-* [Generate a new test file](examples_element_cli.md#generate-a-new-test-file)
-* [Running a test script locally](examples_element_cli.md#running-a-test-script-locally)
-* [Tips on developing test scripts](examples_element_cli.md#tips-on-developing-test-scripts)
-  * [Watching for changes](examples_element_cli.md#watching-for-changes)
-  * [Inspecting the page](examples_element_cli.md#inspecting-the-page)
+- [Installation](#installation)
+- [Getting help](#getting-help)
+- [Initialize a new project](#initialize-a-new-project)
+- [Generate a new test file](#generate-a-new-test-file)
+- [Running a test script locally](#running-a-test-script-locally)
+- [Tips on developing test scripts](#tips-on-developing-test-scripts)
+  - [Watching for changes](#watching-for-changes)
+  - [Inspecting the page](#inspecting-the-page)
 
 ## Installation
 
@@ -44,6 +42,7 @@ brew install flood-io/taps/element
 
 This will install `element` along with anything else it needs to run, such as NodeJS.
 
+
 ## Getting help
 
 The Element CLI comes with built in help that details the commands and options available. Run:
@@ -59,6 +58,7 @@ For example, to learn more about the `run` command and the options you can pass 
 ```bash
 element run --help
 ```
+
 
 ## Initialize a new project
 
@@ -79,6 +79,7 @@ element init
 With your new project setup, you can start writing a test by editing the newly generated `test.ts` file.
 
 For more information on `element init`, run `element init --help`.
+
 
 ## Generate a new test file
 
@@ -106,7 +107,7 @@ For more information on `element run`, run `element run --help`.
 
 ## Tips on developing test scripts
 
-There are many useful command line flags that help writing and debugging tests scripts. See the command line help for the `run` command \(`element run --help`\) for a full list of options.
+There are many useful command line flags that help writing and debugging tests scripts. See the command line help for the `run` command (`element run --help`) for a full list of options.
 
 ### Watching for changes
 
@@ -122,15 +123,14 @@ Every time you save a change to `my-element-test.ts` the test will run again, sh
 
 Taking screenshots is a fantastic way of getting a glimpse of your page at important points during your test. However, while writing scripts the ability to view and interact with the entire page can be incredibly useful. In the same way DevTools are invaluable when building an application, with Element they can be just as helpful when writing test scripts.
 
-Passing the `--devtools` flag when running a script does two things: run in non-headless mode, and also open DevTools. A GUI instance of Chrome will be used to run your test \(rather than headless, which is the default\) allowing you to see the steps execute on the page as your script runs. Element also opens the DevTools, letting you view the console, select elements and debug the page.
+Passing the `--devtools` flag when running a script does two things: run in non-headless mode, and also open DevTools. A GUI instance of Chrome will be used to run your test (rather than headless, which is the default) allowing you to see the steps execute on the page as your script runs. Element also opens the DevTools, letting you view the console, select elements and debug the page. 
 
 ```bash
 element run my-element-test.ts --devtools
 ```
 
-Running tests in this way is especially useful when used in conjunction with [Browser.wait](https://github.com/flood-io/element/tree/f4aa19ffab79b8eded0c80d05aa9e970f650f8ab/packages/element/api/Browser.md#browserwaittimeoutorcondition) to pause your script at specific points. This is a great technique for debugging a test script, or the page under test itself. If your test script interacts with many elements on a page \(e.g. filling in a form\), it is also an excellent way to capture element selectors.
+Running tests in this way is especially useful when used in conjunction with [Browser.wait](../../api/Browser.md#browserwaittimeoutorcondition) to pause your script at specific points. This is a great technique for debugging a test script, or the page under test itself. If your test script interacts with many elements on a page (e.g. filling in a form), it is also an excellent way to capture element selectors.
 
 > **Tip:**
 >
 > To see test steps execute without opening DevTools, use the `--no-headless` option instead.
-

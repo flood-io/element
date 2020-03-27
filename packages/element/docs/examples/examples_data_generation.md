@@ -6,9 +6,11 @@ title: Examples - Test Data Generation
 
 ## Overview
 
-Sometimes you want to generate random data that seems realistic. For this we bundle the highly capable open-source Faker library [Faker.js](https://github.com/Marak/faker.js) which makes it simple to add rich, unique, on-the-fly test data to your scripts. The Faker library allows us to generate a wide variety of syntax-correct data such as random names, numbers, strings and emails.
+Sometimes you want to generate random data that seems realistic. For this we bundle the highly capable open-source Faker library [Faker.js](https://github.com/Marak/faker.js) which makes it simple to add rich, unique, on-the-fly test data to your scripts.
+The Faker library allows us to generate a wide variety of syntax-correct data such as random names, numbers, strings and emails.
 
-To start using Faker within your Flood Element script you will need to import the part of the Faker library you'd like to make us of. For example, for basic random data we would use import `random` at the top of the script:
+To start using Faker within your Flood Element script you will need to import the part of the Faker library you'd like to make us of.
+For example, for basic random data we would use import `random` at the top of the script:
 
 ```typescript
 import { random } from 'faker'
@@ -66,7 +68,8 @@ step('Write a comment', async (browser: Browser) => {
 })
 ```
 
-Flood Element's [TestData](examples_test_data.md) facility makes it simple to use Faker data across multiple steps. You can also generate a large number of fake records to use when running multiple iterations of a test script. This works the same as loading a pre-populated CSV or JSON file, but with the power of randomised values.
+Flood Element's [TestData](./examples_test_data.md) facility makes it simple to use Faker data across multiple steps. You can also generate a large number of fake records to use when running multiple iterations of a test script.
+This works the same as loading a pre-populated CSV or JSON file, but with the power of randomised values.
 
 ```typescript
 import { name, internet } from 'faker'
@@ -107,5 +110,8 @@ step('Step 1', async (browser: Browser, user: UserData) => {
 
 For more information about what Faker can do for you, please consult the [Faker API Documentation](https://github.com/Marak/faker.js#api)
 
-If you have static test data available as CSV or JSON files, consider using Flood Element's [TestData](examples_test_data.md) facility.
+If you have static test data available as CSV or JSON files, consider using Flood Element's [TestData](./examples_test_data.md) facility.
 
+<!-- suffix -->
+
+[TestData]: ../../api/TestData.md#testdata

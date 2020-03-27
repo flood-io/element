@@ -6,16 +6,15 @@ We're using [yarn workspaces](https://yarnpkg.com/en/docs/workspaces) to manage 
 
 ## publishing
 
-We do a custom build for `@flood/element` \(`packages/element`\) to provide more control over the package structure.
+We do a custom build for `@flood/element` (`packages/element`) to provide more control over the package structure.
 
 Because of that we also use a custom publishing script `scripts/publish.sh`
 
 ## Branching
 
-There are two main branches, `master` and `beta`. Pushing to either one automatically increments the versions using [`semver`](https://www.npmjs.com/package/semver) \(via `lerna`\)
+There are two main branches, `master` and `beta`. Pushing to either one automatically increments the versions using [`semver`](https://www.npmjs.com/package/semver) (via `lerna`)
 
 ### beta
-
 Builds against `beta` increment the version using `semver -i prerelease --preid beta`.
 
 ```bash
@@ -29,16 +28,16 @@ Therefore, PRs should be merged into `beta` so that they can be tested using a b
 **To promote `beta` to `master`:**
 
 1. freshen local branches
-   * git checkout beta
-   * git pull
-   * git checkout master
-   * git pull
-2. merge beta into master
-   * git merge beta
-   * git push
-3. merge master into beta
-   * git checkout beta
-   * git merge master
+  - git checkout beta
+  - git pull
+  - git checkout master
+  - git pull
+4. merge beta into master
+  - git merge beta
+  - git push
+5. merge master into beta
+  - git checkout beta
+  - git merge master
 
 ### master
 
@@ -60,13 +59,14 @@ TODO - probably need to do a manual version bump, or maybe have a commit message
 
 ### unit tests
 
-```text
+```shell
 yarn test
 ```
 
 ### smoke tests
 
-```text
+
+```shell
 make smoke
 ```
 

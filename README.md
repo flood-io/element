@@ -23,9 +23,9 @@ Element is designed purely to generate load by simulating real user behaviour wi
 
 The goals of Element scripts are to be:
 
-* Understandable
-* Easy to write and maintain
-* Declarative for expressing user actions
+- Understandable
+- Easy to write and maintain
+- Declarative for expressing user actions
 
 Scaling up Element tests is easy on [Flood](https://flood.io), by launching hundreds or even thousands of instances of Google Chrome, and running the scripts you write to drive a load test. We call this Browser Level Load Testing.
 
@@ -53,6 +53,10 @@ First, make sure you have installed the [latest version of NodeJS](https://nodej
 
 #### Stable release
 
+<a aria-label="NPM version" href="https://www.npmjs.com/package/@flood/element-cli/">
+  <img alt="" src="https://img.shields.io/npm/v/@flood/element-cli.svg?style=for-the-badge&labelColor=000000&color=6554C0">
+</a>
+
 ```bash
 # Using yarn
 yarn global add element-cli
@@ -75,6 +79,10 @@ brew install flood-io/taps/element
 This will install `element` along with anything else it needs to run, such as NodeJS.
 
 #### Beta release channel
+
+<a aria-label="Beta NPM version" href="https://www.npmjs.com/package/@flood/element-cli/">
+  <img alt="" src="https://img.shields.io/npm/v/@flood/element-cli/beta.svg?style=for-the-badge&labelColor=000000">
+</a>
 
 ```bash
 # Using yarn
@@ -135,15 +143,14 @@ Over the years, countless customers have mentioned that getting started with Loa
 
 ### What can I do with it?
 
-* Flood Element can be used to **apply load to any web accessible application** and measure how it performs as the load is ramped up.
-* **Measure performance regressions** after deploys by integrating it with your CI/CD pipeline.
-* Measure your application's response time from different regions as experienced by your customers.
-* Create **realistic load scenarios** which stress test your network infrastructure without developing complex protocol level load test scripts.
+- Flood Element can be used to **apply load to any web accessible application** and measure how it performs as the load is ramped up.
+- **Measure performance regressions** after deploys by integrating it with your CI/CD pipeline.
+- Measure your application's response time from different regions as experienced by your customers.
+- Create **realistic load scenarios** which stress test your network infrastructure without developing complex protocol level load test scripts.
 
 ## Getting Started
 
 Visit <a aria-label="Element documentation" href="https://element.flood.io">https://element.flood.io</a> to view the documentation.
-
 
 ## Contributing
 

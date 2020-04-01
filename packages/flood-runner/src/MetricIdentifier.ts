@@ -39,7 +39,7 @@ export default class MetricIdentifier {
 	}
 
 	asInfluxTags(): { [name: string]: string } {
-		let tags: { [name: string]: string } = {}
+		const tags: { [name: string]: string } = {}
 		const pairs = [
 			['account', this.accountID],
 			['flood', this.floodID],

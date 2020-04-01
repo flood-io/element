@@ -27,9 +27,6 @@ jobs:
           git config --global user.email octobot@github.com
           git config --global user.name GitHub Actions
 
-      - name: Authenticate with Registry
-        run: |
-          npm whoami
-
       - run: yarn install
-      - run: yarn lerna publish prerelease --yes --preid feat --force-publish --skip-git
+      - name: 'Publish prerelease to NPM'
+        run: yarn lerna publish prerelease --yes --preid feat --force-publish --skip-git

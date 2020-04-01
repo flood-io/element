@@ -17,7 +17,10 @@ jobs:
 
       - uses: actions/setup-node@v1
         with:
+          always-auth: true
           node-version: '12.x'
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.YARN_TOKEN}}
 
       - name: Configure CI Git User
         run: |
@@ -26,11 +29,7 @@ jobs:
 
       - name: Authenticate with Registry
         run: |
-          yarn logout
-          echo "registry=https://registry.npmjs.org/:_authToken=$YARN_TOKEN" > ~/.npmrc
           npm whoami
-        env:
-          YARN_TOKEN: ${{ secrets.YARN_TOKEN }}
 
       - run: yarn install
       - run: yarn lerna publish prerelease --yes --preid feat --force-publish --skip-git

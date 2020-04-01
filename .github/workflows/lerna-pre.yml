@@ -1,10 +1,10 @@
-name: Lerna Publish
+name: Lerna Publish Alpha
 
 on:
   pull_request:
     # branches:
     # - feature/**
-    types: [opened, reopened, synchronize]
+    types: [opened, synchronize]
 
 jobs:
   publish_feat:
@@ -30,6 +30,7 @@ jobs:
 
       - run: yarn install
       - name: 'Publish prerelease to NPM'
-        run: yarn lerna publish prerelease --yes --preid feat --force-publish --dist-tag alpha
+        run: yarn lerna publish --conventional-prerelease --dist-tag alpha --yes --preid feat
+        # run: yarn lerna publish prerelease --yes --preid feat --force-publish --dist-tag alpha
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

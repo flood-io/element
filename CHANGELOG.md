@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 1.1.0-feat.0 (2020-04-01)
+
+
+### Features
+
+* **example:** tesing release version bump to 1.1 ([5dbc19f](https://github.com/flood-io/element/commit/5dbc19fa8ac2dbaabe769786d69da95c8186718f))
+
+
+
+
+
+## 1.0.11-feat.4 (2020-04-01)
+
+**Note:** Version bump only for package flood-element
+
+
+
+
+
 ## 1.0.11-feat.3 (2020-04-01)
 
 **Note:** Version bump only for package flood-element

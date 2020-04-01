@@ -18,7 +18,18 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12.x'
+
+      - name: Configure CI Git User
+        run: |
+          git config --global user.email octobot@github.com
+          git config --global user.name GitHub Actions
+
+      - name: Authenticate with Registry
+        run: |
+          echo "registry=//registry.npmjs.org/:_authToken=$YARN_TOKEN" > ~/.npmrc
+          npm whoami
+        env:
+          YARN_TOKEN: ${{ secrets.YARN_TOKEN }}
+
       - run: yarn install
       - run: yarn lerna publish prerelease --yes --preid feat --force-publish --skip-git
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.YARN_TOKEN }}

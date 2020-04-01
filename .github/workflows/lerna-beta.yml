@@ -1,4 +1,4 @@
-name: Lerna Publish
+name: Lerna Publish Beta
 
 on:
   pull_request:
@@ -30,6 +30,7 @@ jobs:
       - run: yarn install
       - name: 'Publish beta to NPM'
         run: |
-          yarn lerna publish prerelease --conventional-graduate
+          yarn lerna publish preminor --conventional-graduate --dist-tag beta
+        # yarn lerna publish preminor --dist-tag prerelease --preid rc
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

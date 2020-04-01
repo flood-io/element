@@ -26,7 +26,8 @@ jobs:
 
       - name: Authenticate with Registry
         run: |
-          echo "registry=//registry.npmjs.org/:_authToken=$YARN_TOKEN" > ~/.npmrc
+          yarn logout
+          echo "registry=https://registry.npmjs.org/:_authToken=$YARN_TOKEN" > ~/.npmrc
           npm whoami
         env:
           YARN_TOKEN: ${{ secrets.YARN_TOKEN }}

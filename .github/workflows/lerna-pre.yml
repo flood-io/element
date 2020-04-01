@@ -2,8 +2,8 @@ name: Lerna Publish Alpha
 
 on:
   pull_request:
-    # branches:
-    # - feature/**
+    branches:
+      - feature/**
     types: [opened, synchronize]
 
 jobs:

@@ -27,15 +27,6 @@ jobs:
           git config --global user.email octobot@github.com
           git config --global user.name GitHub Actions
 
-      - name: Cache Node.js modules
-        uses: actions/cache@v1
-        with:
-          path: ~/.config/yarn/global
-          key: ${{ runner.OS }}-node-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.OS }}-node-
-            ${{ runner.OS }}-
-
       - run: yarn install
       - name: 'Publish beta to NPM'
         run: |

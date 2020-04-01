@@ -28,22 +28,6 @@ jobs:
           git config --global user.email octobot@github.com
           git config --global user.name GitHub Actions
 
-      - name: Check config
-        run: |
-          echo $NPM_CONFIG_USERCONFIG
-          cat $NPM_CONFIG_USERCONFIG
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Cache Node.js modules
-        uses: actions/cache@v1
-        with:
-          path: ~/.config/yarn/global
-          key: ${{ runner.OS }}-node-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.OS }}-node-
-            ${{ runner.OS }}-
-
       - run: yarn install
       - name: 'Publish prerelease to NPM'
         run: yarn lerna publish prerelease --yes --preid feat --force-publish --dist-tag alpha

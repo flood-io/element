@@ -2,7 +2,7 @@ name: Lerna Publish
 
 on:
   pull_request:
-    branches: [feature/*]
+    # branches: [feature/*]
     types: [opened, reopened, synchronize]
 
 jobs:

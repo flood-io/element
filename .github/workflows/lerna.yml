@@ -27,6 +27,10 @@ jobs:
           git config --global user.email octobot@github.com
           git config --global user.name GitHub Actions
 
+      - name: Check config
+        run: |
+          cat ~/.npmrc
+
       - name: Cache Node.js modules
         uses: actions/cache@v1
         with:

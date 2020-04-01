@@ -30,7 +30,8 @@ jobs:
 
       - name: Check config
         run: |
-          cat ~/.npmrc || exit 0
+          echo $NPM_CONFIG_USERCONFIG
+          cat $NPM_CONFIG_USERCONFIG
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 

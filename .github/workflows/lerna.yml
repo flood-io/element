@@ -18,9 +18,10 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           always-auth: true
+          registry-url: 'https://registry.npmjs.org'
           node-version: '12.x'
         env:
-          NODE_AUTH_TOKEN: ${{secrets.YARN_TOKEN}}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Configure CI Git User
         run: |
@@ -29,9 +30,9 @@ jobs:
 
       - name: Check config
         run: |
-          cat ~/.npmrc
+          cat ~/.npmrc || exit 0
         env:
-          NODE_AUTH_TOKEN: ${{secrets.YARN_TOKEN}}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Cache Node.js modules
         uses: actions/cache@v1
@@ -46,4 +47,4 @@ jobs:
       - name: 'Publish prerelease to NPM'
         run: yarn lerna publish prerelease --yes --preid feat --force-publish --skip-git
         env:
-          NODE_AUTH_TOKEN: ${{secrets.YARN_TOKEN}}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

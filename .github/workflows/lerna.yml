@@ -19,12 +19,12 @@ jobs:
         with:
           node-version: '12.x'
       - run: yarn install
-      - run: yarn lerna version preminor --preid rc
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{ secrets.YARN_TOKEN }}
-      # - uses: actions/setup-node@v1
-      #   with:
-      #     registry-url: 'https://npm.pkg.github.com'
-      # - run: yarn publish
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: yarn lerna publish prerelease --yes --preid feat --force-publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.YARN_TOKEN }}
+# - uses: actions/setup-node@v1
+#   with:
+#     registry-url: 'https://npm.pkg.github.com'
+# - run: yarn publish
+#   env:
+#     NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

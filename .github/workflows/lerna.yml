@@ -1,6 +1,9 @@
 name: Lerna Publish
 
-on: [push]
+on:
+  pull_request:
+    types: [opened]
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -10,7 +13,7 @@ jobs:
         with:
           node-version: '14.x'
       - run: yarn install
-      # - run: yarn publish
+      - run: yarn lerna version preminor --preid rc
       #   env:
       #     NODE_AUTH_TOKEN: ${{ secrets.YARN_TOKEN }}
       # - uses: actions/setup-node@v1

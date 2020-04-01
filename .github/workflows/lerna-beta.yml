@@ -1,0 +1,44 @@
+name: Lerna Publish
+
+on:
+  pull_request:
+    # branches: [beta]
+    types: [closed]
+
+jobs:
+  publish_feat:
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - uses: actions/setup-node@v1
+        with:
+          always-auth: true
+          registry-url: 'https://registry.npmjs.org'
+          node-version: '12.x'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Configure CI Git User
+        run: |
+          git config --global user.email octobot@github.com
+          git config --global user.name GitHub Actions
+
+      - name: Cache Node.js modules
+        uses: actions/cache@v1
+        with:
+          path: ~/.config/yarn/global
+          key: ${{ runner.OS }}-node-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.OS }}-node-
+            ${{ runner.OS }}-
+
+      - run: yarn install
+      - name: 'Publish beta to NPM'
+        run: |
+          yarn lerna publish prerelease --conventional-graduate
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

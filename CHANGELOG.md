@@ -122,6 +122,14 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 **Note:** Version bump only for package flood-element
 
+## [1.0.10](https://github.com/flood-io/element/compare/v1.0.10-beta.62...v1.0.10) (2020-03-27)
+
+
+### Reverts
+
+* Revert "GitBook: [master] 45 pages modified" ([46adb54](https://github.com/flood-io/element/commit/46adb5481073767c04c1cf9111acafc92e804b02))
+
+
 
 
 

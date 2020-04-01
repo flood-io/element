@@ -120,6 +120,8 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [1.0.10-beta.63](https://github.com/flood-io/element/compare/v1.0.10-beta.62...v1.0.10-beta.63) (2020-04-01)
 
+## [1.0.10](https://github.com/flood-io/element/compare/v1.0.10-beta.62...v1.0.10) (2020-03-27)
+
 **Note:** Version bump only for package @flood/element-compiler
 
 

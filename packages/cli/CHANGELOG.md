@@ -3,6 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+
 # [1.2.0](https://github.com/flood-io/element/compare/v1.2.0-feat.2...v1.2.0) (2020-04-01)
 
 **Note:** Version bump only for package @flood/element-cli
@@ -119,6 +120,8 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 ## [1.0.10-beta.63](https://github.com/flood-io/element/compare/v1.0.10-beta.62...v1.0.10-beta.63) (2020-04-01)
+
+## [1.0.10](https://github.com/flood-io/element/compare/v1.0.10-beta.62...v1.0.10) (2020-03-27)
 
 **Note:** Version bump only for package @flood/element-cli
 

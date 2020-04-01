@@ -1,8 +1,8 @@
-name: Lerna Publish Beta
+name: Lerna Publish Stable
 
 on:
   pull_request:
-    branches: [beta]
+    branches: [master]
     types: [closed]
 
 jobs:
@@ -28,9 +28,8 @@ jobs:
           git config --global user.name GitHub Actions
 
       - run: yarn install
-      - name: 'Publish beta to NPM'
+      - name: 'Publish stable to NPM'
         run: |
-          yarn lerna publish --conventional-graduate --dist-tag beta
-        # yarn lerna publish preminor --dist-tag prerelease --preid rc
+          yarn lerna publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

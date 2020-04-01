@@ -5,8 +5,8 @@ Element uses `lerna publish` to semamtically advance version numbers across all 
 Versions are based on branch:
 
 - `master`: stable releases e.g. `v1.0.10`, and tagged `v1` and `latest` on NPM
-- `beta`: next beta release e.g. `v1.0.11-beta.1` and tagged `beta` on NPM
-- `feature/*`: any canary release e.g. `v1.0.11-feat-*.78`, not tagged on NPM
+- `beta`: next beta release e.g. `v1.0.11` and tagged `beta` on NPM
+- `feature/*`: any canary release e.g. `v1.0.11-feat-*.78`, and tagged `alpha` on NPM
 
 Versioning pipeline:
 

@@ -83,6 +83,11 @@ fi
 # echo "--- building all packages"
 # yarn build
 
+
+
+# Bump beta to stable: yarn lerna version  --conventional-graduate --skip-git
+# Initiate next patch: yarn lerna publish prerelease --conventional-graduate
+
 case $branch in
   beta)
     echo +++ publishing beta

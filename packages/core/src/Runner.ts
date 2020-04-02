@@ -7,7 +7,7 @@ import { TestSettings, ConcreteTestSettings } from './runtime/Settings'
 import { IReporter } from './Reporter'
 import { AsyncFactory } from './utils/Factory'
 import { CancellationToken } from './utils/CancellationToken'
-import { TestScriptError } from './TestScript'
+import { TestScriptError } from './TestScriptError'
 
 export interface TestCommander {
 	on(event: 'rerun-test', listener: () => void): this

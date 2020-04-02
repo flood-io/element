@@ -8,7 +8,7 @@ import {
 	MeasurementKind,
 } from './../Reporter'
 import { EventEmitter } from 'events'
-import { TestScriptError } from './../TestScript'
+import { TestScriptError } from './../TestScriptError'
 import { expect } from '../utils/Expect'
 
 export interface TestStepError {
@@ -29,7 +29,7 @@ export declare interface EventEmitterReporter {
 }
 
 export class EventEmitterReporter extends EventEmitter implements IReporter {
-	public responseCode: string = '200'
+	public responseCode = '200'
 	public stepName: string
 
 	reset(stepName: string): void {

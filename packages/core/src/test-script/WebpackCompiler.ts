@@ -2,10 +2,16 @@ import { Compiler, CompilerOutput } from '@flood/element-compiler'
 import parseComments from 'comment-parser'
 import { ITestScript } from '../ITestScript'
 import { VMScript } from 'vm2'
-import { TestScriptOptions, TestScriptDefaultOptions, TestScriptError } from '../TestScript'
+import { TestScriptError } from '../TestScriptError'
+import { TestScriptOptions } from '../TestScriptOptions'
 import { readFileSync } from 'fs-extra'
 import { SourceUnmapper } from './SourceUnmapper'
 import { dirname } from 'path'
+
+export const TestScriptDefaultOptions: TestScriptOptions = {
+	stricterTypeChecking: false,
+	traceResolution: false,
+}
 
 export default class WebpackCompiler implements ITestScript {
 	private vmScriptCache: VMScript

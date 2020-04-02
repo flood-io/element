@@ -1,5 +1,5 @@
 import { IReporter, TraceData, TestEvent, CompoundMeasurement, MeasurementKind } from '../Reporter'
-import { TestScriptError } from '../TestScript'
+import { TestScriptError } from '../TestScriptError'
 
 export class NullReporter implements IReporter {
 	public responseCode: string

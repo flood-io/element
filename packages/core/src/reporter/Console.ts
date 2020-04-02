@@ -5,7 +5,7 @@ import {
 	CompoundMeasurement,
 	MeasurementKind,
 } from './../Reporter'
-import { TestScriptError } from './../TestScript'
+import { TestScriptError } from './../TestScriptError'
 
 type ConsoleMethod = keyof Console
 

@@ -1,6 +1,6 @@
 {
 	"name": "element-cli",
-	"version": "1.2.2-beta.0",
+	"version": "1.2.2-beta.1",
 	"description": "Element is a real browser load testing tool",
 	"bin": {
 		"element": "./dist/bin/element.js"

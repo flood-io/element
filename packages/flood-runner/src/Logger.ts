@@ -1,8 +1,8 @@
 import { createLogger, transports, format, Logger } from 'winston'
 import { Format } from 'logform'
 
-export default function(threadID: number, level: string = 'debug'): Logger {
-	let formats: Format[] = [
+export default function(threadID: number, level = 'debug'): Logger {
+	const formats: Format[] = [
 		format.label({ label: String(threadID).padStart(2, '0') }),
 		format.printf(info => `[${info.label}] ${info.level}: ${info.message}`),
 	]

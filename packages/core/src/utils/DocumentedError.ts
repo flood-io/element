@@ -1,4 +1,4 @@
-interface maybeHasCallContext {
+interface MaybeHasCallContext {
 	callContext?: string
 }
 
@@ -23,8 +23,8 @@ export class DocumentedError extends Error {
 		doc: string,
 		callContext?: string,
 	): DocumentedError {
-		if (callContext === undefined && (<maybeHasCallContext>err).callContext !== undefined) {
-			callContext = (<maybeHasCallContext>err).callContext
+		if (callContext === undefined && (err as MaybeHasCallContext).callContext !== undefined) {
+			callContext = (err as MaybeHasCallContext).callContext
 		}
 		return new DocumentedError(message, doc, callContext, err).copyStackFromOriginalError()
 	}
@@ -37,8 +37,8 @@ export class DocumentedError extends Error {
 	}
 
 	static liftAddingCallContext(err: Error, callCtx: string): Error {
-		if ((<DocumentedError>err)._documented === 'yes') {
-			;(<DocumentedError>err).callContext = callCtx
+		if ((err as DocumentedError)._documented === 'yes') {
+			;(err as DocumentedError).callContext = callCtx
 			return err
 		} else {
 			return DocumentedError.wrapUnhandledError(err, err.message, callCtx)

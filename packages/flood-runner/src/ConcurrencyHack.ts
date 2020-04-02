@@ -2,7 +2,8 @@ import { readdirSync } from 'fs'
 import { join } from 'path'
 import { ensureDirSync } from 'fs-extra'
 
-const lockdirPath = join(process.env.FLOOD_DATA_ROOT ?? '/data/flood', 'lock-files', 'browsers')
+// /data/flood/files/lock/browser_N
+const lockdirPath = join(process.env.FLOOD_DATA_ROOT || '/data/flood', 'files/lock')
 
 // NOTE that this is a hack to be replaced ASAP by aggregating a `thread` tag with concurrency metrics
 // https://github.com/flood-io/grid/blob/feature/go/static/kapacitor/measurements.tick#L175

@@ -83,21 +83,26 @@ fi
 # echo "--- building all packages"
 # yarn build
 
-case $branch in
-  beta)
-    echo +++ publishing beta
-    yarn lerna publish prerelease --yes --force-publish --dist-tag beta
-    ;;
-  master)
-    echo +++ publishing stable
-    yarn lerna publish --force-publish --yes --dist-tag latest --conventional-graduate="*"
 
-    echo --- publishing brew tap
-    cd $root
-    yarn publish:brew
-    ;;
-  *)
-    echo +++ publishing canary
-    yarn lerna publish prerelease --canary --yes --force-publish --dist-tag canary
-    ;;
-esac
+
+# Bump beta to stable: yarn lerna version  --conventional-graduate --skip-git
+# Initiate next patch: yarn lerna publish prerelease --conventional-graduate
+
+# case $branch in
+#   beta)
+#     echo +++ publishing beta
+#     yarn lerna publish prerelease --yes --force-publish --dist-tag beta
+#     ;;
+#   master)
+#     echo +++ publishing stable
+#     yarn lerna publish --force-publish --yes --dist-tag latest --conventional-graduate="*"
+
+#     echo --- publishing brew tap
+#     cd $root
+#     yarn publish:brew
+#     ;;
+#   *)
+#     echo +++ publishing canary
+#     yarn lerna publish prerelease --canary --yes --force-publish --dist-tag canary
+#     ;;
+# esac

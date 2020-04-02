@@ -34,21 +34,21 @@ function yarnUpdateMessage(
 	distTag: string /* , update: Update */,
 ): string | undefined {
 	if (commandExists('yarn')) {
-		return chalk`Get it by running {greenBright yarn global upgrade @flood/element-cli@${distTag}}`
+		return chalk`Get it by running {greenBright yarn global upgrade element-cli@${distTag}}`
 	}
 }
 
 // fallback
 function npmUpdateMessage(version: string, distTag: string /* , update: Update */): string {
-	return chalk`Get it by running {greenBright npm -g update @flood/element-cli@${distTag}}`
+	return chalk`Get it by running {greenBright npm -g update element-cli@${distTag}}`
 }
 
 function printUpdateMessage(version: string, distTag: string, update: Update) {
+	const releaseChannel = distTag === 'latest' ? 'stable' : distTag
+
 	console.log(
 		info(
-			chalk`{bgRed UPDATE AVAILABLE} The latest ${
-				distTag === 'latest' ? '' : distTag
-			}  version of Element CLI is ${update && update.latest}`,
+			chalk`{bgRed UPDATE AVAILABLE} The latest ${releaseChannel} version of element-cli is ${update?.latest}`,
 		),
 	)
 

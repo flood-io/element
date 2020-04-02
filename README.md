@@ -165,4 +165,4 @@ If you're encountering issues with Flood itself, please contact Flood Support fr
 ## Authors
 
 - Ivan Vanderbyl ([@ivanderbyl](https://twitter.com/ivanderbyl)) – [Flood](https://flood.io)
-- Lachie Cox ([@lachie](https://twitter.com/lachie)) – [Flood](https://flood.io)
+- Lachie Cox ([@lachiecox](https://twitter.com/lachiecox)) – [Flood](https://flood.io)

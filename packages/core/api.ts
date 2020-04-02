@@ -22,7 +22,8 @@ export { TestCommander } from './src/Runner'
 
 export { WorkRoot, PuppeteerClient, launch }
 
-export { TestScriptError, TestScriptOptions } from './src/TestScript'
+export { TestScriptOptions } from './src/TestScriptOptions'
+export { TestScriptError } from './src/TestScriptError'
 export { ITestScript } from './src/ITestScript'
 export { EvaluatedScript } from './src/runtime/EvaluatedScript'
 

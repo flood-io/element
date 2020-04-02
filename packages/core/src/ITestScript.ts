@@ -1,5 +1,6 @@
 import { VMScript } from 'vm2'
-import { TestScriptErrorMapper } from './TestScript'
+import { TestScriptErrorMapper } from './TestScriptError'
+
 export interface ITestScript extends TestScriptErrorMapper {
 	sandboxedFilename: string
 	vmScript: VMScript

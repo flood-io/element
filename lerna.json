@@ -3,7 +3,7 @@
 	"packages": [
 		"packages/*"
 	],
-	"version": "1.0.10",
+	"version": "1.2.2-beta.2",
 	"npmClient": "yarn",
 	"useWorkspaces": true,
 	"command": {
@@ -26,7 +26,6 @@
 		}
 	},
 	"ignoreChanges": [
-		"**/*.md",
 		"assets",
 		"coverage",
 		"examples",

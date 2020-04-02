@@ -7,7 +7,7 @@ export class StructuredError<T> extends Error {
 
 	public wrappedUnstructured = false
 	public kind: string
-	public source: string = 'unknown'
+	public source = 'unknown'
 	public callContext?: string
 
 	public data: T
@@ -44,10 +44,10 @@ export class StructuredError<T> extends Error {
 		source: string,
 		callContext: string,
 	): StructuredError<TT | EmptyErrorData> {
-		if ((<StructuredError<TT>>err)._structured === 'yes') {
-			;(<StructuredError<TT>>err).callContext = callContext
-			;(<StructuredError<TT>>err).source = source
-			return <StructuredError<TT>>err
+		if ((err as StructuredError<TT>)._structured === 'yes') {
+			;(err as StructuredError<TT>).callContext = callContext
+			;(err as StructuredError<TT>).source = source
+			return err as StructuredError<TT>
 		} else {
 			return new StructuredError<EmptyErrorData>(
 				err.message,
@@ -60,12 +60,12 @@ export class StructuredError<T> extends Error {
 	}
 
 	static isA<TT>(err: Error): boolean {
-		return (<StructuredError<TT>>err)._structured === 'yes'
+		return (err as StructuredError<TT>)._structured === 'yes'
 	}
 
 	static cast<TT>(err: Error): StructuredError<TT> | undefined {
-		if ((<StructuredError<TT>>err)._structured === 'yes') {
-			return <StructuredError<TT>>err
+		if ((err as StructuredError<TT>)._structured === 'yes') {
+			return err as StructuredError<TT>
 		} else {
 			return undefined
 		}

@@ -1,5 +1,5 @@
 import { StructuredError } from '../../utils/StructuredError'
-import { TestScriptError, TestScriptErrorMapper } from '../../TestScript'
+import { TestScriptErrorMapper, TestScriptError } from '../../TestScriptError'
 import { DocumentedError } from '../../utils/DocumentedError'
 import { AssertionError } from 'assert'
 import {

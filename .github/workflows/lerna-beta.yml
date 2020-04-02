@@ -1,0 +1,42 @@
+name: Lerna Publish Beta
+
+on:
+  pull_request:
+    branches: [beta]
+    types: [closed]
+  push:
+    branches:
+      - beta
+jobs:
+  publish_release:
+    name: Publish NPM release
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.main.ref }}
+      - run: git fetch --prune --unshallow
+
+      - uses: actions/setup-node@v1
+        with:
+          always-auth: true
+          registry-url: 'https://registry.npmjs.org'
+          node-version: '12.x'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Configure CI Git User
+        run: |
+          git config --global user.email octobot@github.com
+          git config --global user.name GitHub Actions
+
+      - run: yarn install
+        env:
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
+      - name: 'Build all'
+        run: yarn build
+      - name: 'Publish beta to NPM'
+        run: yarn lerna publish --conventional-prerelease --dist-tag beta --yes --preid beta --include-merged-tags
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

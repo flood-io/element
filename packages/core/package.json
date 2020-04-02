@@ -5,7 +5,6 @@
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"scripts": {
-		"prepublishOnly": "yarn build",
 		"prebuild": "rm -rf ./dist",
 		"build": "tsc -b",
 		"test": "jest",

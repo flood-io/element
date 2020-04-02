@@ -12,7 +12,6 @@
 	"scripts": {
 		"build": "tsc",
 		"prebuild": "rm -rf ./dist",
-		"prepublishOnly": "yarn build",
 		"dev": "ts-node ./bin/element.ts"
 	},
 	"dependencies": {

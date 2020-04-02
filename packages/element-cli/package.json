@@ -29,7 +29,6 @@
 	},
 	"scripts": {
 		"build": "tsc",
-		"prepublishOnly": "yarn build",
 		"prebuild": "rm -rf ./dist",
 		"dev": "ts-node ./bin/element.ts"
 	},

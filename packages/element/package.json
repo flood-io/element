@@ -16,8 +16,7 @@
 	},
 	"scripts": {
 		"prebuild": "rm -rf ./dist",
-		"build": "tsc -b",
-		"prepublishOnly": "yarn build"
+		"build": "tsc -b"
 	},
 	"bugs": {
 		"url": "https://github.com/flood-io/element/issues"

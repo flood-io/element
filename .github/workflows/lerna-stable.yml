@@ -32,8 +32,9 @@ jobs:
       - run: yarn install
         env:
           PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
+      - name: 'Build all'
+        run: yarn build
       - name: 'Publish stable to NPM'
-        run: |
-          yarn lerna publish --conventional-graduate --dist-tag latest --yes
+        run: yarn lerna publish --conventional-graduate --dist-tag latest --yes
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

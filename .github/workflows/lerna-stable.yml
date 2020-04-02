@@ -30,6 +30,8 @@ jobs:
           git config --global user.name GitHub Actions
 
       - run: yarn install
+        env:
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
       - name: 'Publish stable to NPM'
         run: |
           yarn lerna publish --conventional-graduate --dist-tag latest --yes

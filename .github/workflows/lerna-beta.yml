@@ -32,6 +32,8 @@ jobs:
           git config --global user.name GitHub Actions
 
       - run: yarn install
+        env:
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
       - name: 'Publish beta to NPM'
         run: yarn lerna publish --conventional-prerelease --dist-tag beta --yes --preid beta --include-merged-tags
         env:

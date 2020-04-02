@@ -22,9 +22,9 @@ describe('Recorder', () => {
 		beforeEach(async () => {
 			const reporter = new Reporter()
 			recorder = new NetworkRecorder(puppeteer.page)
-			let observer = new Observer(reporter, recorder)
+			const observer = new Observer(reporter, recorder)
 			await observer.attachToNetworkRecorder()
-			let url = await serve('wait.html')
+			const url = await serve('wait.html')
 			await puppeteer.page.goto(url)
 			await recorder.pendingTaskQueue.chain
 		})
@@ -33,7 +33,7 @@ describe('Recorder', () => {
 			expect(recorder.entries.length).toBe(1)
 			expect(recorder.documentResponseCode).toBe(200)
 			recorder.reset()
-			let url = await serve('notfound.html')
+			const url = await serve('notfound.html')
 			await puppeteer.page.goto(url)
 			await recorder.pendingTaskQueue.chain
 			expect(recorder.documentResponseCode).toBe(404)
@@ -62,7 +62,7 @@ describe('Recorder', () => {
 		})
 
 		test('records request headers for document', async () => {
-			let [document] = recorder.entriesForType('Document')
+			const [document] = recorder.entriesForType('Document')
 			expect(document.request.headers.map(({ name }) => name).sort()).toEqual(
 				expect.arrayContaining([
 					'Accept',
@@ -76,7 +76,7 @@ describe('Recorder', () => {
 		})
 
 		test('records response headers for document', async () => {
-			let [document] = recorder.entriesForType('Document')
+			const [document] = recorder.entriesForType('Document')
 			expect(document.response.headers.map(({ name }) => name).sort()).toEqual([
 				'Accept-Ranges',
 				'Cache-Control',
@@ -92,22 +92,22 @@ describe('Recorder', () => {
 
 		test('records document time', async () => {
 			expect(recorder.timeToFirstByteForType('Document')).toBeGreaterThan(0)
-			let [document] = recorder.entriesForType('Document')
+			const [document] = recorder.entriesForType('Document')
 
-			let now = new Date().valueOf()
+			const now = new Date().valueOf()
 			expect(document.request.timestamp).toBeGreaterThanOrEqual(now - 1000)
 			expect(document.request.timestamp).toBeLessThanOrEqual(now + 1000)
 			expect(document.response.timestamp).toBeGreaterThan(document.request.timestamp)
 		})
 
 		test('records document request url', async () => {
-			let [document] = recorder.entriesForType('Document')
+			const [document] = recorder.entriesForType('Document')
 			expect(document.request.url).toMatch(/http\:\/\/(.+)\/wait\.html/)
 		})
 
 		test.skip('records response body', async () => {
 			// This is pending because we've disabled response body capture
-			let [document] = recorder.entriesForType('Document')
+			const [document] = recorder.entriesForType('Document')
 			expect(document.response.content.text).toEqual(expect.arrayContaining(['<html>']))
 		})
 	})

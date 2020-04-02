@@ -5,28 +5,6 @@ import { tmpdir } from 'os'
 import { writeFileSync } from 'fs-extra'
 import { TestScriptOptions } from './TestScriptOptions'
 
-export function originalError(e: Error): Error {
-	if ((e as ErrorWithOriginalError).originalError !== undefined) {
-		return originalError((e as ErrorWithOriginalError).originalError)
-	} else {
-		return e
-	}
-
-	interface ErrorWithOriginalError extends Error {
-		originalError: Error
-	}
-}
-
-export interface Detail {
-	callsite: string
-	callContext: string | null
-	asString: string
-	unmappedStack: string[]
-	doc: string | null
-	causeAsString: string | undefined
-	causeStack: string | undefined
-}
-
 export async function compileString(
 	source: string,
 	filename: string,

@@ -8,6 +8,7 @@ import { readFileSync } from 'fs-extra'
 import { SourceUnmapper } from './SourceUnmapper'
 import { dirname } from 'path'
 
+// FIXME: WebpackCompiler currently doesn't do anything with this, but it should
 export const TestScriptDefaultOptions: TestScriptOptions = {
 	stricterTypeChecking: false,
 	traceResolution: false,

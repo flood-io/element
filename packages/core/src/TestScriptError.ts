@@ -1,5 +1,26 @@
 import { Callsite, callsiteToString } from './test-script/SourceUnmapper'
-import { originalError, Detail } from './TestScript'
+
+export interface Detail {
+	callsite: string
+	callContext: string | null
+	asString: string
+	unmappedStack: string[]
+	doc: string | null
+	causeAsString: string | undefined
+	causeStack: string | undefined
+}
+
+export function originalError(e: Error): Error {
+	if ((e as ErrorWithOriginalError).originalError !== undefined) {
+		return originalError((e as ErrorWithOriginalError).originalError)
+	} else {
+		return e
+	}
+
+	interface ErrorWithOriginalError extends Error {
+		originalError: Error
+	}
+}
 
 export interface ErrorWithDoc extends Error {
 	errorDoc: string

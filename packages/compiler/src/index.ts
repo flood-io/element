@@ -8,7 +8,7 @@ import { CompilerOutput } from './types'
 
 export { CompilerOutput }
 
-const isProductionGrid = process.env.IS_GRID !=null || process.env.FLOOD_CHROME_VERSION !=null
+const isProductionGrid = process.env.IS_GRID != null || process.env.FLOOD_CHROME_VERSION != null
 
 export class Compiler {
 	private sourceFile: string
@@ -37,7 +37,6 @@ export class Compiler {
 		if (isProductionGrid) {
 			modules.push('/app/node_modules')
 		}
-		console.log(`Module resolve paths: ${modules.join(', ')}`)
 
 		return {
 			entry: this.sourceFile,
@@ -90,7 +89,7 @@ export class Compiler {
 				],
 			},
 
-			externals: ['@flood/element', '@flood/element-api'],//'faker', 'assert'
+			externals: ['@flood/element', '@flood/element-api'], //'faker', 'assert'
 		}
 	}
 

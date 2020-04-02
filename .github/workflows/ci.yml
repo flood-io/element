@@ -3,7 +3,7 @@ name: Tests
 on: [push]
 
 jobs:
-  build:
+  test_linux:
     if: "!contains(github.event.head_commit.message, 'skip ci')"
     runs-on: ubuntu-latest
 
@@ -23,7 +23,7 @@ jobs:
           yarn test
         env:
           CI: true
-  windows:
+  test_windows:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2

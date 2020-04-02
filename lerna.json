@@ -1,8 +1,6 @@
 {
 	"lerna": "2.11.0",
-	"packages": [
-		"packages/*"
-	],
+	"packages": ["packages/*"],
 	"version": "1.2.2-beta.0",
 	"npmClient": "yarn",
 	"useWorkspaces": true,
@@ -15,22 +13,11 @@
 		},
 		"version": {
 			"message": "chore(release): publish %s\n[skip ci]",
-			"allowBranch": [
-				"master",
-				"beta",
-				"feature/*"
-			]
+			"allowBranch": ["master", "beta", "feature/*"]
 		},
 		"bootstrap": {
 			"npmClient": "yarn"
 		}
 	},
-	"ignoreChanges": [
-		"**/*.md",
-		"assets",
-		"coverage",
-		"examples",
-		"scripts",
-		"smoke"
-	]
+	"ignoreChanges": ["assets", "coverage", "examples", "scripts", "smoke"]
 }

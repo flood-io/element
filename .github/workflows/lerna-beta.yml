@@ -4,15 +4,19 @@ on:
   pull_request:
     branches: [beta]
     types: [closed]
-
+  push:
+    branches:
+      - beta
 jobs:
-  publish_feat:
+  publish_release:
+    name: Publish NPM release
     if: "!contains(github.event.head_commit.message, 'skip ci')"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
           ref: ${{ github.event.pull_request.main.ref }}
+      - run: git fetch --prune --unshallow
 
       - uses: actions/setup-node@v1
         with:
@@ -29,7 +33,6 @@ jobs:
 
       - run: yarn install
       - name: 'Publish beta to NPM'
-        run: |
-          yarn lerna publish --conventional-graduate --dist-tag beta --yes
+        run: yarn lerna publish --conventional-prerelease --dist-tag beta --yes --preid beta --include-merged-tags
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

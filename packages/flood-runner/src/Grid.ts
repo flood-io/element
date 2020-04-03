@@ -44,6 +44,5 @@ export async function run(file: string): Promise<void> {
 
 	startConcurrencyTicker(influxReporter, gridConfig.logger)
 
-	await runCommandLine(opts)
-	return
+	return runCommandLine(opts)
 }

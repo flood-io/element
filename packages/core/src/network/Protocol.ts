@@ -6,7 +6,7 @@ export interface RawResponse {
 	type: ResourceType
 	status: number
 	url: string
-	timing: Object
+	timing: Record<string, any>
 	frameId: string
 	loaderId: string
 	requestId: string
@@ -105,13 +105,13 @@ export class Entry {
 }
 
 export class EntryRequest {
-	_epoch: number = -1
-	_issueTime: number = -1
-	_wallIssueTime: number = -1
-	_startTime: number = -1
-	_endTime: number = -1
-	_ttfb: number = -1
-	_responseReceivedTime: number = -1
+	_epoch = -1
+	_issueTime = -1
+	_wallIssueTime = -1
+	_startTime = -1
+	_endTime = -1
+	_ttfb = -1
+	_responseReceivedTime = -1
 	_timing: any = {}
 
 	timestamp: number
@@ -155,7 +155,7 @@ export class EntryRequest {
 		// Take startTime and responseReceivedTime from timing data for better accuracy.
 		// Timing's requestTime is a baseline in seconds, rest of the numbers there are ticks in millis.
 		this._startTime = timingInfo.requestTime * 1e3
-		var headersReceivedTime = timingInfo.requestTime * 1e3 + timingInfo.receiveHeadersEnd
+		const headersReceivedTime = timingInfo.requestTime * 1e3 + timingInfo.receiveHeadersEnd
 		if ((this._responseReceivedTime || -1) < 0 || this._responseReceivedTime > headersReceivedTime)
 			this._responseReceivedTime = headersReceivedTime
 		if (this._startTime > this._responseReceivedTime) this._responseReceivedTime = this._startTime

@@ -30,18 +30,3 @@ export default class WorkRoot implements IWorkRoot {
 		return join(this.rootFor('test-data'), filename)
 	}
 }
-
-// TODO extract
-// const ENV_TEST_DATA_DIRECTORY = process.env.TEST_DATA_DIRECTORY
-
-// // If we're on a Grid Node
-// export const testDataDirectory = ENV_TEST_DATA_DIRECTORY
-// ? ENV_TEST_DATA_DIRECTORY
-// : process.env.FLOOD_SEQUENCE_ID ? '/data/flood' : 'tmp/data/flood'
-
-// export const networkDataDirectory = process.env.FLOOD_SEQUENCE_ID
-// ? '/data/flood/network'
-// : 'tmp/data/flood/network'
-// export const tracesDirectory = process.env.FLOOD_SEQUENCE_ID
-// ? '/data/flood/screenshots'
-// : 'tmp/data/flood/screenshots'

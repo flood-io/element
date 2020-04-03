@@ -1,19 +1,22 @@
 {
 	"lerna": "2.11.0",
-	"packages": ["packages/*"],
+	"npmClient": "yarn",
+	"version": "1.2.2",
+	"useWorkspaces": true,
 	"command": {
-		"exact": true
+		"init": {
+			"exact": true
+		},
+		"publish": {
+			"conventionalCommits": true
+		},
+		"version": {
+			"message": "chore(release): publish %s\n[skip ci]",
+			"allowBranch": ["master", "beta", "feature/*"]
+		},
+		"bootstrap": {
+			"npmClient": "yarn"
+		}
 	},
-	"publish": {
-		"conventionalCommits": true
-	},
-	"version": {
-		"message": "chore(release): publish %s\n[skip ci]",
-		"allowBranch": ["master", "beta", "feature/*"]
-	},
-	"bootstrap": {
-		"npmClient": "yarn"
-	},
-
-	"ignoreChanges": ["assets", "coverage", "examples", "scripts", "smoke"]
+	"ignoreChanges": ["**/*.md", "assets", "coverage", "examples", "scripts", "smoke"]
 }

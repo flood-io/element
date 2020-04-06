@@ -18,7 +18,7 @@ import { PuppeteerClientLike } from '../driver/Puppeteer'
 import { WorkRoot } from '../runtime-environment/types'
 import KSUID from 'ksuid'
 import { Key } from '../page/Enums'
-import termImg from 'term-img'
+// import termImg from 'term-img'
 import { ConcreteTestSettings } from './Settings'
 import { NetworkErrorData, ActionErrorData } from './errors/Types'
 import { StructuredError } from '../utils/StructuredError'
@@ -540,12 +540,12 @@ export class Browser<T> implements BrowserInterface {
 			this.screenshots.push(path)
 			debugScreenshot(`Saved screenshot to: ${path}`)
 
-			termImg(path, {
-				width: '40%',
-				fallback: () => {
-					return `Screenshot path: ${path}`
-				},
-			})
+			// termImg(path, {
+			// 	width: '40%',
+			// 	fallback: () => {
+			// 		return `Screenshot path: ${path}`
+			// 	},
+			// })
 		}
 	}
 }

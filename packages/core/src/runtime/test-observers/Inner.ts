@@ -9,10 +9,12 @@ export default class InnerObserver extends NoOpTestObserver {
 	}
 
 	async beforeStepAction(test: ITest, step: Step, command: string) {
-		if (test.settings.actionDelay > 0 && command !== 'wait') {
+		const actionDelay = test.settings.actionDelay ?? 0
+
+		if (actionDelay > 0 && command !== 'wait') {
 			await new Promise(resolve => {
-				// TODO fix default
-				setTimeout(resolve, test.settings.actionDelay * 1e3 || DEFAULT_ACTION_WAIT_SECONDS * 1e3)
+				// TODO: fix default
+				setTimeout(resolve, actionDelay * 1e3 || DEFAULT_ACTION_WAIT_SECONDS * 1e3)
 			})
 		}
 

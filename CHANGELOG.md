@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.3-beta.1](https://github.com/flood-io/element/compare/v1.2.3-beta.0...v1.2.3-beta.1) (2020-04-06)
+
+
+### Bug Fixes
+
+* flaky locator when target closed ([87eaa86](https://github.com/flood-io/element/commit/87eaa86f884947e85700798c5d2b8d0b02879ef7))
+* package duplicate exports ([b3a8f8b](https://github.com/flood-io/element/commit/b3a8f8bae2e7aba35ea0ebce1f41b1b12fec853f))
+* return types of event conditions ([672da20](https://github.com/flood-io/element/commit/672da2058bd8e4acdec780a6bf68acd054a36194))
+* test settings are partial ([6f81b36](https://github.com/flood-io/element/commit/6f81b36501b0f0ea55918d5b5bbcc1639f2f54ec))
+* wait now returns any ([f0d343d](https://github.com/flood-io/element/commit/f0d343d9d2d2430c98bae8644a1d8b3f474760e7))
+
+
+
+
+
 ## [1.2.3-beta.0](https://github.com/flood-io/element/compare/v1.2.2...v1.2.3-beta.0) (2020-04-03)
 
 

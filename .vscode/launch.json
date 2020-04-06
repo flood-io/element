@@ -34,6 +34,27 @@
 			"console": "internalConsole",
 			"protocol": "inspector"
 		},
+		{
+			"name": "cli agent start",
+			"type": "node",
+			"request": "launch",
+			"args": [
+				"${workspaceFolder}/packages/cli/bin/element.ts",
+				"agent",
+				"start",
+				"./examples/auto-wait/test.ts",
+				"--debug"
+			],
+			"skipFiles": ["<node_internals>/**"],
+			"runtimeArgs": ["--nolazy", "-r", "ts-node/register", "-r", "tsconfig-paths/register"],
+			"sourceMaps": true,
+			"cwd": "${workspaceRoot}",
+			"console": "internalConsole",
+			"protocol": "inspector",
+			"env": {
+				"FLOOD_DATA_ROOT": "./tmp/data/flood"
+			}
+		},
 
 		{
 			"name": "cli init",

@@ -2,6 +2,15 @@ import { join } from 'path'
 import { mkdirpSync } from 'fs-extra'
 import { WorkRoot as IWorkRoot, SubRoot, SpecialSubRoot, WorkRootKind } from './types'
 
+const EnvPaths: Record<SubRoot, string | undefined | null> = {
+	objects: process.env.FLOOD_OBJECTS_PATH,
+	results: process.env.FLOOD_RESULTS_PATH,
+	traces: process.env.FLOOD_TRACES_PATH,
+	files: process.env.FLOOD_FILES_PATH,
+	screenshots: null,
+	network: null,
+}
+
 export default class WorkRoot implements IWorkRoot {
 	// this needs to track SubRoot type
 	subRoots: SubRoot[] = ['objects', 'screenshots', 'files', 'results', 'network', 'traces']
@@ -18,6 +27,9 @@ export default class WorkRoot implements IWorkRoot {
 		if (this.specialSubRoots[root] != null) {
 			return this.specialSubRoots[root as SpecialSubRoot]
 		} else {
+			if (EnvPaths[root] != null) {
+				return EnvPaths[root]
+			}
 			return join(this.root, root)
 		}
 	}

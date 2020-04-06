@@ -34,7 +34,7 @@ export class Until {
 	 *
 	 * Upon successful resolution of this condition, the driver will be left focused on the new frame.
 	 */
-	static ableToSwitchToFrame(frame: Locatable): Condition {
+	static ableToSwitchToFrame(frame: Locatable): FrameCondition {
 		return new FrameCondition('ableToSwitchToFrame', frame)
 	}
 
@@ -42,7 +42,7 @@ export class Until {
 	 * Creates a condition that waits for an alert to be opened. Upon success,
 	 * the returned promise will be fulfilled with the handle for the opened alert.
 	 */
-	static alertIsPresent(): Condition {
+	static alertIsPresent(): DialogCondition {
 		return new DialogCondition('alertIsPresent')
 	}
 

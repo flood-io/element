@@ -24,7 +24,7 @@ export class ElementVisibilityCondition extends ElementCondition {
 		return waitForVisible === isVisible || waitForHidden === !isVisible
 	}
 
-	async waitForEvent() {
+	async waitForEvent(): Promise<any> {
 		return
 	}
 }
@@ -43,7 +43,7 @@ export class ElementLocatedCondition extends ElementCondition {
 		return !!node === isPresent
 	}
 
-	async waitForEvent() {
+	async waitForEvent(): Promise<any> {
 		return
 	}
 }
@@ -68,7 +68,7 @@ export class ElementsLocatedCondition extends ElementCondition {
 		if (typeof nodes === 'undefined') return false
 		return nodes.length >= count
 	}
-	async waitForEvent() {
+	async waitForEvent(): Promise<any> {
 		return
 	}
 }

@@ -27,6 +27,7 @@ describe('Condition', () => {
 			page.click('#alert')
 
 			const alert: Dialog = await condition.waitForEvent(page)
+			expect(alert).not.toBeNull()
 			expect(alert.message()).toBe('ok')
 			await alert.dismiss()
 		})
@@ -36,7 +37,8 @@ describe('Condition', () => {
 
 			page.click('#confirm')
 
-			const alert: Dialog = await condition.waitForEvent(page)
+			const alert: Dialog | null = await condition.waitForEvent(page)
+			expect(alert).not.toBeNull()
 			expect(alert.message()).toBe('set the value')
 			await alert.accept()
 		})
@@ -47,7 +49,8 @@ describe('Condition', () => {
 
 			page.click('#prompt', { delay: 100 })
 
-			const alert = await condition.waitForEvent<Dialog>(page)
+			const alert = await condition.waitForEvent(page)
+			expect(alert).not.toBeNull()
 			expect(alert.message()).toBe('enter your name')
 			await alert.accept('Ivan')
 

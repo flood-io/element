@@ -1,6 +1,10 @@
 import { Condition } from '../Condition'
-import { Frame, Page, Dialog } from 'puppeteer'
+import { Page, Dialog } from 'puppeteer'
 import { clearTimeout } from 'timers'
+
+const isDialog = (thing: any): thing is Dialog => {
+	return typeof thing?.message == 'function'
+}
 
 /**
  * TODO: Generalize waitFor such that we can avoid needing waitForEvent custom
@@ -13,18 +17,20 @@ export class DialogCondition extends Condition {
 
 	hasWaitFor = false
 
-	public async waitFor(_frame: Frame): Promise<boolean> {
+	public async waitFor(): Promise<boolean> {
 		return true
 	}
 
-	public async waitForEvent(page: Page): Promise<Dialog> {
+	public async waitForEvent(page: Page): Promise<Dialog | null> {
 		return new Promise<Dialog>((yeah, nah) => {
 			const timeout = setTimeout(nah, this.timeout)
 
 			page.once('dialog', (dialog: Dialog) => {
-				clearTimeout(timeout)
-				yeah(dialog)
+				if (isDialog(dialog)) {
+					clearTimeout(timeout)
+					yeah(dialog)
+				}
 			})
-		})
+		}).catch(() => null)
 	}
 }

@@ -28,7 +28,7 @@ export class ElementTextCondition extends ElementCondition {
 		return false
 	}
 
-	async waitForEvent() {
+	async waitForEvent(): Promise<any> {
 		return
 	}
 }

@@ -1,4 +1,3 @@
-import { EvaluatedScript } from './EvaluatedScript'
 import Interceptor from '../network/Interceptor'
 import { Browser } from './Browser'
 
@@ -22,6 +21,7 @@ import { PuppeteerClientLike } from '../driver/Puppeteer'
 import { ScreenshotOptions } from 'puppeteer'
 import { TestSettings, ConcreteTestSettings, DEFAULT_STEP_WAIT_SECONDS } from './Settings'
 import { ITest } from './ITest'
+import { EvaluatedScriptLike } from './EvaluatedScriptLike'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:test')
@@ -34,7 +34,9 @@ export default class Test implements ITest {
 
 	public requestInterceptor: Interceptor
 
-	private testCancel: () => Promise<void> = async () => {}
+	private testCancel: () => Promise<void> = async () => {
+		return
+	}
 
 	public iteration = 0
 
@@ -46,7 +48,7 @@ export default class Test implements ITest {
 
 	constructor(
 		public client: PuppeteerClientLike,
-		public script: EvaluatedScript,
+		public script: EvaluatedScriptLike,
 		public reporter: IReporter = new NullReporter(),
 		settingsOverride: TestSettings,
 		public testObserverFactory: (t: TestObserver) => TestObserver = x => x,
@@ -55,7 +57,7 @@ export default class Test implements ITest {
 
 		try {
 			const { settings, steps } = script
-			this.settings = settings
+			this.settings = settings as ConcreteTestSettings
 			this.steps = steps
 
 			// Adds output for console in script

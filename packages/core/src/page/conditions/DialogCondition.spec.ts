@@ -43,12 +43,15 @@ describe('Condition', () => {
 
 		test('waits Until.alertIsPresent prompt', async () => {
 			const condition = Until.alertIsPresent()
+			await page.waitForSelector('#prompt', { visible: true })
 
-			page.click('#prompt')
+			page.click('#prompt', { delay: 100 })
 
-			const alert: Dialog = await condition.waitForEvent(page)
+			const alert = await condition.waitForEvent<Dialog>(page)
 			expect(alert.message()).toBe('enter your name')
 			await alert.accept('Ivan')
+
+			await page.waitForSelector('#prompt', { visible: true })
 		})
 	})
 })

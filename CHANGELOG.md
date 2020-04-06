@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.3-beta.2](https://github.com/flood-io/element/compare/v1.2.3-beta.1...v1.2.3-beta.2) (2020-04-06)
+
+
+### Bug Fixes
+
+* better support for faking agent production mode ([eb2d9b9](https://github.com/flood-io/element/commit/eb2d9b99827397b9946d75f00a92e6bb56d5a250))
+* use paths from environment ([069d931](https://github.com/flood-io/element/commit/069d931c9dcaa9771c500cc9283a5565551c83c5))
+
+
+
+
+
 ## [1.2.3-beta.1](https://github.com/flood-io/element/compare/v1.2.3-beta.0...v1.2.3-beta.1) (2020-04-06)
 
 

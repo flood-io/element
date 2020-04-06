@@ -27,7 +27,7 @@ export abstract class Condition {
 	public abstract toString(): string
 	public abstract async waitFor(frame: Frame, page?: Page): Promise<any>
 
-	public abstract async waitForEvent(page: Page): Promise<any>
+	public abstract async waitForEvent<T = any>(page: Page): Promise<T>
 
 	protected get timeout(): number {
 		return this.settings.waitTimeout * 1e3

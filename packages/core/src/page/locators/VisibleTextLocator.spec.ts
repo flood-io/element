@@ -25,7 +25,7 @@ describe('VisibleTextLocator', () => {
 
 		const maybeElement = await loc.find(ctx)
 
-		expect(maybeElement).toBeDefined()
+		expect(maybeElement).not.toBeNull()
 		expect(await maybeElement.text()).toBe('foo')
 	})
 
@@ -33,7 +33,7 @@ describe('VisibleTextLocator', () => {
 		const loc = new BaseLocator(new VisibleTextLocator("foon't", false), 'By.visibleText')
 		const ctx = await puppeteer.page.mainFrame().executionContext()
 
-		let maybeElement: any
+		let maybeElement: unknown
 
 		expect(async () => {
 			maybeElement = await loc.find(ctx)

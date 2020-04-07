@@ -1,6 +1,6 @@
 {
 	"name": "element-cli",
-	"version": "1.2.2",
+	"version": "1.2.3-beta.2",
 	"description": "Element is a real browser load testing tool",
 	"bin": {
 		"element": "./dist/bin/element.js"
@@ -36,7 +36,7 @@
 		"url": "https://github.com/flood-io/element/issues"
 	},
 	"dependencies": {
-		"@flood/element-cli": "^1.2.2",
+		"@flood/element-cli": "^1.2.3-beta.2",
 		"find-root": "^1.1.0",
 		"import-local": "^3.0.2"
 	},

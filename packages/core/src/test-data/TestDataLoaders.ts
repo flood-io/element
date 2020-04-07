@@ -42,14 +42,14 @@ export class NullTestDataLoaders implements TestDataFactory {
 	}
 }
 
-interface hasATestData {
+interface HasTestData {
 	testData: TestDataSource<any>
 }
 
 export class BoundTestDataLoaders implements TestDataFactory {
 	private innerLoaders: TestDataFactory
 
-	constructor(private target: hasATestData, workRoot: WorkRoot) {
+	constructor(private target: HasTestData, workRoot: WorkRoot) {
 		this.innerLoaders = new TestDataLoaders(workRoot)
 	}
 

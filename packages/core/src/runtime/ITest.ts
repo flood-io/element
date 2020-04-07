@@ -4,9 +4,10 @@ import { TestObserver } from './test-observers/Observer'
 import { Step } from './Step'
 import { CancellationToken } from '../utils/CancellationToken'
 import { ScreenshotOptions } from 'puppeteer'
-import { ConcreteTestSettings } from './Settings'
+import { TestSettings } from './Settings'
+
 export interface ITest {
-	settings: ConcreteTestSettings
+	settings: TestSettings
 	steps: Step[]
 	runningBrowser?: Browser<Step> | null
 	requestInterceptor: Interceptor

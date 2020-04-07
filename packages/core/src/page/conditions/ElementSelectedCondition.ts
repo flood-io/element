@@ -41,7 +41,7 @@ export class ElementSelectedCondition extends ElementCondition {
 		return value === waitForSelected
 	}
 
-	async waitForEvent() {
+	async waitForEvent(): Promise<any> {
 		return
 	}
 }

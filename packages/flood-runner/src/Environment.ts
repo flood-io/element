@@ -48,8 +48,9 @@ export function initFromEnvironment(env: ProcessEnv = process.env): Partial<Grid
 		root = join(projectRoot, 'tmp/data')
 		testDataRoot = join(projectRoot, 'tmp/data/flood/files')
 	} else {
+		// Supplied by Grid
 		root = env.FLOOD_DATA_ROOT || '/data/flood'
-		testDataRoot = env.FLOOD_FILES_PATH || '/data/flood/files'
+		testDataRoot = env.FLOOD_FILES_PATH || join(root, 'files')
 	}
 
 	ensureDirSync(join(root, 'lock'))

@@ -12,20 +12,17 @@ export {
 
 export { runCommandLine, runUntilExit, ElementOptions } from './src/Element'
 
-export { TestSettings, ResponseTiming } from './src/runtime/Settings'
-export { RuntimeEnvironment, FloodProcessEnv } from './src/runtime-environment/types'
-import WorkRoot from './src/runtime-environment/WorkRoot'
+export { RuntimeEnvironment } from './src/runtime-environment/types'
 export { nullRuntimeEnvironment } from './src/runtime-environment/NullRuntimeEnvironment'
 import { launch, PuppeteerClient } from './src/driver/Puppeteer'
 
 export { TestCommander } from './src/Runner'
 
-export { WorkRoot, PuppeteerClient, launch }
+export { PuppeteerClient, launch }
 
 export { TestScriptOptions } from './src/TestScriptOptions'
 export { TestScriptError } from './src/TestScriptError'
 export { ITestScript } from './src/ITestScript'
-export { EvaluatedScript } from './src/runtime/EvaluatedScript'
 
 export { expect } from './src/utils/Expect'
 

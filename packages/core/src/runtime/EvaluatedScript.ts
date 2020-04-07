@@ -23,6 +23,7 @@ import { MouseButtons, Device, Key, userAgents } from '../page/Enums'
 
 import { TestDataSource, TestDataFactory } from '../test-data/TestData'
 import { BoundTestDataLoaders } from '../test-data/TestDataLoaders'
+import { EvaluatedScriptLike } from './EvaluatedScriptLike'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:eval-script')
@@ -49,19 +50,6 @@ function createVirtualMachine(floodElementActual: any, root?: string): NodeVM {
 			},
 		},
 	})
-}
-
-export interface EvaluatedScriptLike {
-	steps: any[]
-	settings: TestSettings
-	isScriptError(error: Error): boolean
-	maybeLiftError(error: Error): Error
-	liftError(error: Error): TestScriptError
-	filterAndUnmapStack(stack: string | Error | undefined): string[]
-	bindTest(test: Test): void
-	beforeTestRun(): Promise<void>
-	evaluate(): EvaluatedScriptLike
-	testData: TestDataSource<any>
 }
 
 export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLike {

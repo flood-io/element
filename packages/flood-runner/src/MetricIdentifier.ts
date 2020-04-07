@@ -1,14 +1,3 @@
-export function newMetricIdentifierFromObject(obj: any): MetricIdentifier {
-	return new MetricIdentifier(
-		obj.accountID,
-		obj.floodID,
-		obj.gridID,
-		obj.nodeID,
-		obj.projectID,
-		obj.region,
-	)
-}
-
 export default class MetricIdentifier {
 	constructor(
 		public accountID: number,
@@ -20,7 +9,7 @@ export default class MetricIdentifier {
 	) {}
 
 	get isValid(): boolean {
-		this.influxTags
+		this.asInfluxTags()
 		// Number.isNaN()
 		return true
 	}
@@ -62,4 +51,15 @@ export default class MetricIdentifier {
 
 		return tags
 	}
+}
+
+export function newMetricIdentifierFromObject(obj: any): MetricIdentifier {
+	return new MetricIdentifier(
+		obj.accountID,
+		obj.floodID,
+		obj.gridID,
+		obj.nodeID,
+		obj.projectID,
+		obj.region,
+	)
 }

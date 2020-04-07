@@ -47,7 +47,7 @@ export type SpecialSubRoot = 'test-data'
 export type SubRoot = 'objects' | 'screenshots' | 'files' | 'results' | 'network' | 'traces'
 export type WorkRootKind = SubRoot | SpecialSubRoot
 export interface WorkRoot {
-	ensureCreated(): void
+	ensureExistsSync(): void
 
 	join(kind: WorkRootKind, ...segments: string[]): string
 

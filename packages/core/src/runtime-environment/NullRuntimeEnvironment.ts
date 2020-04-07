@@ -16,7 +16,9 @@ const nullFloodProcessEnv = {
 }
 
 export class NullWorkRoot {
-	ensureCreated(): void {}
+	ensureExistsSync(): void {
+		return
+	}
 
 	join(kind: WorkRootKind, ...segments: string[]): string {
 		return path.join('/tmp', kind, ...segments)

@@ -49,7 +49,17 @@ export class BaseLocator implements Locator {
 	): Promise<IElementHandle | null> {
 		const args = [...this.pageFuncArgs]
 		if (node) args.push(node)
-		const handle = await context.evaluateHandle(this.pageFunc, ...args)
+
+		const handle = await context.evaluateHandle(this.pageFunc, ...args).catch(err => {
+			if (/Target closed/.test(err.message)) {
+				return null
+			}
+
+			throw err
+		})
+
+		if (handle == null) return null
+
 		const element = handle.asElement()
 
 		const { ElementHandle } = await import('./ElementHandle')
@@ -63,7 +73,13 @@ export class BaseLocator implements Locator {
 	): Promise<IElementHandle[]> {
 		const args = [...this.pageFuncArgs]
 		if (node) args.push(node)
-		const arrayHandle = await context.evaluateHandle(this.pageFuncMany, ...args)
+		const arrayHandle = await context.evaluateHandle(this.pageFuncMany, ...args).catch(err => {
+			if (/Target closed/.test(err.message)) {
+				return null
+			}
+
+			throw err
+		})
 
 		if (!arrayHandle) return []
 

@@ -1,52 +1,44 @@
-import path from 'path'
+import { join } from 'path'
 import { mkdirpSync } from 'fs-extra'
 import { WorkRoot as IWorkRoot, SubRoot, SpecialSubRoot, WorkRootKind } from './types'
 
+const EnvPaths: Record<SubRoot, string | undefined | null> = {
+	objects: process.env.FLOOD_OBJECTS_PATH,
+	results: process.env.FLOOD_RESULTS_PATH,
+	traces: process.env.FLOOD_TRACES_PATH,
+	files: process.env.FLOOD_FILES_PATH,
+	screenshots: null,
+	network: null,
+}
+
 export default class WorkRoot implements IWorkRoot {
-	root: string
 	// this needs to track SubRoot type
 	subRoots: SubRoot[] = ['objects', 'screenshots', 'files', 'results', 'network', 'traces']
-	constructor(
-		public dataRoot: string,
-		public specialSubRoots: { [key in SpecialSubRoot]: string },
-	) {
-		this.root = path.join(this.dataRoot, 'flood')
-		this.ensureCreated()
+	constructor(public root: string, public specialSubRoots: { [key in SpecialSubRoot]: string }) {
+		this.ensureExistsSync()
 	}
 
-	ensureCreated(): void {
-		this.subRoots.forEach(r => mkdirpSync(path.join(this.root, r)))
+	ensureExistsSync(): void {
+		this.subRoots.forEach(r => mkdirpSync(join(this.root, r)))
 	}
 
 	// handles special cases
 	rootFor(root: WorkRootKind): string {
-		if (this.specialSubRoots.hasOwnProperty(root)) {
+		if (this.specialSubRoots[root] != null) {
 			return this.specialSubRoots[root as SpecialSubRoot]
 		} else {
-			return path.join(this.root, root)
+			if (EnvPaths[root] != null) {
+				return EnvPaths[root]
+			}
+			return join(this.root, root)
 		}
 	}
 
 	join(root: WorkRootKind, ...segments: string[]): string {
-		return path.join(this.rootFor(root), ...segments)
+		return join(this.rootFor(root), ...segments)
 	}
 
 	testData(filename: string): string {
-		return path.join(this.rootFor('test-data'), filename)
+		return join(this.rootFor('test-data'), filename)
 	}
 }
-
-// TODO extract
-// const ENV_TEST_DATA_DIRECTORY = process.env.TEST_DATA_DIRECTORY
-
-// // If we're on a Grid Node
-// export const testDataDirectory = ENV_TEST_DATA_DIRECTORY
-// ? ENV_TEST_DATA_DIRECTORY
-// : process.env.FLOOD_SEQUENCE_ID ? '/data/flood' : 'tmp/data/flood'
-
-// export const networkDataDirectory = process.env.FLOOD_SEQUENCE_ID
-// ? '/data/flood/network'
-// : 'tmp/data/flood/network'
-// export const tracesDirectory = process.env.FLOOD_SEQUENCE_ID
-// ? '/data/flood/screenshots'
-// : 'tmp/data/flood/screenshots'

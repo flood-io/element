@@ -46,6 +46,7 @@ export function encodeTraceData(traceData: TraceData) {
 	const compressedData = zlib.gzipSync(new Buffer(JSON.stringify(traceData), 'utf8'))
 	return compressedData.toString('base64')
 }
+
 export function decodeTraceData(traceData: string) {
 	return JSON.parse(zlib.unzipSync(new Buffer(traceData, 'base64')).toString('utf8'))
 }

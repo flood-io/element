@@ -17,7 +17,7 @@ export class ElementStateCondition extends ElementCondition {
 		return (node as any)['disabled'] === waitForDisabled
 	}
 
-	async waitForEvent() {
-		return
+	async waitForEvent(): Promise<any> {
+		return null
 	}
 }

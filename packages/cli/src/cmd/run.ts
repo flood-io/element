@@ -83,12 +83,14 @@ const cmd: CommandModule = {
 			sandbox: args.sandbox ?? true,
 
 			runEnv: initRunEnv(workRootPath, testDataPath),
-			testSettingOverrides: {
-				loopCount: args.loopCount,
-			},
+			testSettingOverrides: {},
 			persistentRunner: false,
 		}
-
+		if (args.loopCount) {
+			opts.testSettingOverrides = {
+				loopCount: args.loopCount,
+			}
+		}
 		opts.testSettingOverrides = setupDelayOverrides(args, opts.testSettingOverrides)
 
 		if (args.watch) {
@@ -167,7 +169,6 @@ const cmd: CommandModule = {
 				describe:
 					'Override the loopCount setting in the test script. This is normally overridden to 1 when running via the cli.',
 				type: 'number',
-				default: 1,
 			})
 			.option('strict', {
 				group: 'Running the test script:',

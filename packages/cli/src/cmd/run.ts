@@ -86,6 +86,7 @@ const cmd: CommandModule = {
 			testSettingOverrides: {},
 			persistentRunner: false,
 		}
+
 		if (args.loopCount) {
 			opts.testSettingOverrides = {
 				loopCount: args.loopCount,

@@ -11,6 +11,10 @@ export default class ErrorObserver extends NoOpTestObserver {
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		test.reporter.testStepError(structuredErrorToDocumentedError(err, test.script)!)
 
+		if (test.settings.screenshotOnFailure) {
+			await test.runningBrowser?.takeScreenshot()
+		}
+
 		return this.next.onStepError(test, step, err)
 	}
 }

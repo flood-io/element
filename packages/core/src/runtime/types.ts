@@ -321,6 +321,8 @@ export interface Browser {
 	switchTo(): TargetLocator
 
 	setViewport(viewport: Viewport): Promise<void>
+
+	getNodeJSProcessEnv(): NodeJS.ProcessEnv
 }
 
 /**

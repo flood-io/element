@@ -530,6 +530,10 @@ export class Browser<T> implements BrowserInterface {
 		return screenshots
 	}
 
+	public getNodeJSProcessEnv(): NodeJS.ProcessEnv {
+		return process.env
+	}
+
 	public async saveScreenshot(fn: (path: string) => Promise<boolean>): Promise<void> {
 		const fileId = KSUID.randomSync().string
 

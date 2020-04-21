@@ -11,3 +11,5 @@ declare module 'comment-parser'
 declare module 'update-check'
 
 declare module 'yeoman-generator'
+
+declare let processEnv: NodeJS.Process

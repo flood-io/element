@@ -6,6 +6,7 @@ import {
 } from './conditions/ElementVisibilityCondition'
 import { ElementStateCondition } from './conditions/ElementStateCondition'
 import { ElementSelectedCondition } from './conditions/ElementSelectedCondition'
+import { ElementTextNotMatchCondition } from './conditions/ElementTextNotMatchCondition'
 import { ElementTextCondition } from './conditions/ElementTextCondition'
 import { URLCondition } from './conditions/URLCondition'
 import { DialogCondition } from './conditions/DialogCondition'
@@ -126,6 +127,13 @@ export class Until {
 	}
 
 	/**
+	 * Creates a condition which will wait until the element's text not matches the target text, excluding leading and trailing whitespace.
+	 */
+	static elementTextIsNot(selectorOrLocator: NullableLocatable, text: string): Condition {
+		return new ElementTextNotMatchCondition('elementTextIsNot', selectorOrLocator, text)
+	}
+
+	/**
 	 * Creates a condition which will wait until the element's text content contains the target text.
 	 */
 	static elementTextContains(selectorOrLocator: NullableLocatable, text: string): Condition {
@@ -137,6 +145,17 @@ export class Until {
 	 */
 	static elementTextMatches(selectorOrLocator: NullableLocatable, regex: RegExp): Condition {
 		return new ElementTextCondition('elementTextMatches', selectorOrLocator, regex.toString())
+	}
+
+	/**
+	 * Creates a condition which will wait until the element's text does not match the target Regular Expression.
+	 */
+	static elementTextDoesNotMatch(selectorOrLocator: NullableLocatable, regex: RegExp): Condition {
+		return new ElementTextNotMatchCondition(
+			'elementTextDoesNotMatch',
+			selectorOrLocator,
+			regex.toString(),
+		)
 	}
 
 	/**

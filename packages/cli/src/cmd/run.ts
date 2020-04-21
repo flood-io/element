@@ -192,6 +192,7 @@ const cmd: CommandModule = {
 			})
 			.option('fail-status-code', {
 				describe: 'Exit code when the test fails',
+				type: 'number',
 			})
 			.positional('file', {
 				describe: 'the test script to run',

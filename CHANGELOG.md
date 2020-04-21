@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0-beta.0](https://github.com/flood-io/element/compare/v1.2.3-beta.4...v1.3.0-beta.0) (2020-04-21)
+
+
+### Features
+
+* text not match waiters ([#131](https://github.com/flood-io/element/issues/131)) ([01c5e05](https://github.com/flood-io/element/commit/01c5e05e129b680f1dbc6853f90ca58235f58454))
+
+
+
+
+
 ## [1.2.3-beta.4](https://github.com/flood-io/element/compare/v1.2.3-beta.3...v1.2.3-beta.4) (2020-04-14)
 
 **Note:** Version bump only for package flood-element

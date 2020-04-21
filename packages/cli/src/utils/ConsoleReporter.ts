@@ -14,7 +14,6 @@ export class ConsoleReporter implements IReporter {
 	public responseCode: string
 	public stepName: string
 	public startTime = 0
-	public endTime = 0
 	constructor(private logger: Logger, private verbose: boolean) {}
 
 	reset(step: string): void {}
@@ -48,8 +47,9 @@ export class ConsoleReporter implements IReporter {
 				this.logger.info(`===> Step '${label}'`)
 				break
 			case TestEvent.AfterStep:
-				this.endTime = new Date().valueOf()
-				this.logger.info(`---> Step '${label}' finished in ${this.endTime - this.startTime}ms`)
+				this.logger.info(
+					`---> Step '${label}' finished in ${new Date().valueOf() - this.startTime}ms`,
+				)
 				break
 			case TestEvent.StepSkipped:
 				this.logger.info(`---- Step '${label}' skipped`)

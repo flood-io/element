@@ -6,7 +6,7 @@ import { initConfig } from './initConfig'
 import { startConcurrencyTicker } from './tickerInterval'
 import { initInfluxReporter } from './initInfluxReporter'
 
-export async function run(file: string): Promise<void> {
+export async function run(file: string): Promise<number> {
 	const gridConfig = initConfig()
 	const influxReporter = initInfluxReporter(gridConfig)
 

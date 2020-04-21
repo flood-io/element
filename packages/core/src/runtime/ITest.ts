@@ -19,7 +19,7 @@ export interface ITest {
 	cancel(): Promise<void>
 	beforeRun(): Promise<void>
 	run(iteration?: number): Promise<void>
-	runWithCancellation(iteration: number, cancelToken: CancellationToken): Promise<void>
+	runWithCancellation(iteration: number, cancelToken: CancellationToken): Promise<boolean>
 	runStep(
 		testObserver: TestObserver,
 		browser: Browser<Step>,

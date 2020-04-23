@@ -30,6 +30,12 @@ describe('Condition', () => {
 			const found = await condition.waitFor(page.mainFrame())
 			expect(found).toBe(true)
 		})
+		test('waits Until.elementTextDoesNotContain', async () => {
+			const condition = Until.elementTextDoesNotContain(By.css('#name'), 'ame')
+			page.click('#name')
+			const found = await condition.waitFor(page.mainFrame())
+			expect(found).toBe(true)
+		})
 
 		test('waits Until.elementTextDoesNotMatch regex starts with', async () => {
 			const condition = Until.elementTextDoesNotMatch(By.css('#name'), /^Na/)

@@ -14,6 +14,7 @@ import { DialogCondition } from './conditions/DialogCondition'
 import { FrameCondition } from './conditions/FrameCondition'
 import { Condition } from './Condition'
 import { NullableLocatable, Locatable } from '../runtime/types'
+import { URLNotMatchCondition } from './conditions/URLNotMatchCondition'
 
 /**
  * Until contains a wealth of useful <Condition>s.
@@ -230,6 +231,13 @@ export class Until {
 	}
 
 	/**
+	 * Creates a condition which waits until the page URL does not contain the expected path.
+	 */
+	static urlDoesNotContain(url: string): Condition {
+		return new URLNotMatchCondition('urlContains', url, true)
+	}
+
+	/**
 	 * Creates a condition which waits until the page URL exactly matches the expected URL.
 	 */
 	static urlIs(url: string): Condition {
@@ -237,9 +245,23 @@ export class Until {
 	}
 
 	/**
+	 * Creates a condition which waits until the page URL does not match the expected URL.
+	 */
+	static urlIsNot(url: string): Condition {
+		return new URLNotMatchCondition('urlIsNot', url, false)
+	}
+
+	/**
 	 * Creates a condition which waits until the page URL matches the supplied `RegExp`.
 	 */
 	static urlMatches(url: RegExp): Condition {
 		return new URLCondition('urlMatches', url.toString(), true)
+	}
+
+	/**
+	 * Creates a condition which waits until the page URL does not match the supplied `RegExp`.
+	 */
+	static urlDoesNotMatch(url: string): Condition {
+		return new URLNotMatchCondition('urlDoesNotMatch', url.toString(), false)
 	}
 }

@@ -139,6 +139,12 @@ export class Until {
 	static elementTextContains(selectorOrLocator: NullableLocatable, text: string): Condition {
 		return new ElementTextCondition('elementTextContains', selectorOrLocator, text, true)
 	}
+	/**
+	 * Creates a condition which will wait until the element's text content does not contain the target text.
+	 */
+	static elementTextDoesNotContain(selectorOrLocator: NullableLocatable, text: string): Condition {
+		return new ElementTextNotMatchCondition('elementTextContains', selectorOrLocator, text, true)
+	}
 
 	/**
 	 * Creates a condition which will wait until the element's text matches the target Regular Expression.

@@ -1,4 +1,5 @@
 import { TitleCondition } from './conditions/TitleCondition'
+import { TitleNotMatchCondition } from './conditions/TitleNotMatchCondition'
 import {
 	ElementVisibilityCondition,
 	ElementLocatedCondition,
@@ -187,6 +188,13 @@ export class Until {
 	}
 
 	/**
+	 * Creates a condition which waits until the page title does not contain the expected text.
+	 */
+	static titleDoesNotContain(title: string): Condition {
+		return new TitleNotMatchCondition('titleContains', title, true)
+	}
+
+	/**
 	 * Creates a condition which waits until the page title exactly matches the expected text.
 	 */
 	static titleIs(title: string): Condition {
@@ -194,10 +202,24 @@ export class Until {
 	}
 
 	/**
+	 * Creates a condition which waits until the page title does not match the expected text.
+	 */
+	static titleIsNot(title: string): Condition {
+		return new TitleNotMatchCondition('titleIs', title, false)
+	}
+
+	/**
 	 * Creates a condition which waits until the page title matches the title `RegExp`.
 	 */
 	static titleMatches(title: RegExp): Condition {
 		return new TitleCondition('titleMatches', `${title}`, false)
+	}
+
+	/**
+	 * Creates a condition which waits until the page title doesn not match the title `RegExp`.
+	 */
+	static titleDoesNotMatch(title: RegExp): Condition {
+		return new TitleNotMatchCondition('titleMatches', `${title}`, false)
 	}
 
 	/**

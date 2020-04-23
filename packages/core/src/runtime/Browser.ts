@@ -363,6 +363,18 @@ export class Browser<T> implements BrowserInterface {
 
 	@autoWaitUntil()
 	@addCallbacks()
+	public async sendKeyCombinations(...keys: string[]): Promise<void> {
+		const handle = this.page.keyboard
+		for (const key of keys) {
+			await handle.down(key)
+		}
+		for (const key of keys.reverse()) {
+			await handle.up(key)
+		}
+	}
+
+	@autoWaitUntil()
+	@addCallbacks()
 	public async blur(locatable: NullableLocatable): Promise<void> {
 		const element = await this.findElement(locatable)
 		return element.blur()

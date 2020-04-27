@@ -13,7 +13,7 @@ const debug = require('debug')('element-cli:console-reporter')
 export class ConsoleReporter implements IReporter {
 	public responseCode: string
 	public stepName: string
-	public startTime = 0
+	private startTime = 0
 	constructor(private logger: Logger, private verbose: boolean) {}
 
 	reset(step: string): void {}

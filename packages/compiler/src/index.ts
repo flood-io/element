@@ -66,9 +66,6 @@ export class Compiler {
 				new WebpackBar({
 					name: 'Script Compiler',
 				}),
-				new webpack.DefinePlugin({
-					'process.env': JSON.stringify(process.env),
-				}),
 			],
 
 			module: {

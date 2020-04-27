@@ -65,6 +65,7 @@ export class Compiler {
 			plugins: [
 				new WebpackBar({
 					name: 'Script Compiler',
+					// reporters: ['fancy']
 				}),
 			],
 

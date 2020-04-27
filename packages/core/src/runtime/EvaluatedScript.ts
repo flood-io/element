@@ -33,9 +33,7 @@ function createVirtualMachine(floodElementActual: any, root?: string): NodeVM {
 	return new NodeVM({
 		// console: 'redirect',
 		console: 'inherit',
-		sandbox: {
-			processEnv: process.env,
-		},
+		sandbox: {},
 		wrapper: 'commonjs',
 		sourceExtensions: ['js', 'ts'],
 

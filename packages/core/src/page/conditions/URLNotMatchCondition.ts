@@ -1,6 +1,5 @@
 import { Condition } from '../Condition'
 import { Frame } from 'puppeteer'
-import { pairs } from 'd3-array'
 
 export class URLNotMatchCondition extends Condition {
 	constructor(desc: string, public url: string, public partial: boolean = false) {

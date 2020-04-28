@@ -54,7 +54,7 @@
 		"strftime": "^0.10.0",
 		"term-img": "^2.1.0",
 		"typedoc": "^0.15.0",
-		"vm2": "^3.5.2",
+		"vm2": "^3.9.1",
 		"winston": "^3.0.0"
 	},
 	"devDependencies": {

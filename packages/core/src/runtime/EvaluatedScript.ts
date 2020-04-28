@@ -30,7 +30,7 @@ const debug = require('debug')('element:runtime:eval-script')
 
 // TODO work out the right type for floodElementActual
 function createVirtualMachine(floodElementActual: any, root?: string): NodeVM {
-	return new NodeVM({
+	const vm = new NodeVM({
 		// console: 'redirect',
 		console: 'inherit',
 		sandbox: {},
@@ -50,6 +50,8 @@ function createVirtualMachine(floodElementActual: any, root?: string): NodeVM {
 			},
 		},
 	})
+	vm.sandbox.process.env = process.env
+	return vm
 }
 
 export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLike {
@@ -213,7 +215,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 		rawSettings.name = this.script.testName
 		rawSettings.description = this.script.testDescription
 
-		const result = this.vm.run(this.script.vmScript, this.script.sandboxedFilename)
+		const result = this.vm.run(this.script.vmScript)
 		debug('eval %O', result)
 
 		// get settings exported from the script

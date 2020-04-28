@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0-beta.1](https://github.com/flood-io/element/compare/v1.3.0-beta.0...v1.3.0-beta.1) (2020-04-28)
+
+
+### Features
+
+* add-text-does-not-contain-waiter ([f79cde4](https://github.com/flood-io/element/commit/f79cde4cfd7027017e186ed19180548654201e1d))
+* add-title-not-match-waiters ([9c49f3a](https://github.com/flood-io/element/commit/9c49f3ae6b4112583038d45b7ce02392f568bc4b))
+* add-url-not-match-waiters ([f56c0c5](https://github.com/flood-io/element/commit/f56c0c5691d9fc45f4978ea55c4ae6d58185ad2c))
+
+
+
+
+
 # [1.3.0-beta.0](https://github.com/flood-io/element/compare/v1.2.3-beta.4...v1.3.0-beta.0) (2020-04-21)
 
 

@@ -288,7 +288,7 @@ export interface Browser {
 	 *
 	 * **Example:**
 	 * ```typescript
-	 * await browser.sendKeyCombination(Key.CONTROL, Key.SHIFT, 'A')
+	 * await browser.sendKeyCombination(Key.SHIFT, 'KeyA')
 	 * ```
 	 */
 	sendKeyCombinations(...keys: string[]): Promise<void>

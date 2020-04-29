@@ -5,6 +5,7 @@ import { Browser } from './Browser'
 import { Until } from '../page/Until'
 import { By } from '../page/By'
 import { DEFAULT_SETTINGS } from './Settings'
+import * as assert from 'assert'
 
 let puppeteer: testPuppeteer
 const workRoot = testWorkRoot()
@@ -163,6 +164,20 @@ describe('Browser', () => {
 			const selectTag = await browser.findElement(By.id('languages'))
 			const selectTagIsVisible = await selectTag.isDisplayed()
 			expect(selectTagIsVisible).toBe(false)
+		})
+	})
+
+	describe('send key combination', () => {
+		test('can send combination keys', async () => {
+			const browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
+			const url = await serve('combination_keys.html')
+			await browser.visit(url)
+			const input = await browser.findElement(By.id('text'))
+			await input.focus()
+			await browser.sendKeyCombinations('KeyA')
+			await browser.sendKeyCombinations('Shift', 'KeyA')
+			const text = await input.getProperty('value')
+			assert.equal(text, 'aA')
 		})
 	})
 })

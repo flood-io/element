@@ -5,7 +5,6 @@ import { Browser } from './Browser'
 import { Until } from '../page/Until'
 import { By } from '../page/By'
 import { DEFAULT_SETTINGS } from './Settings'
-import * as assert from 'assert'
 
 let puppeteer: testPuppeteer
 const workRoot = testWorkRoot()
@@ -177,7 +176,7 @@ describe('Browser', () => {
 			await browser.sendKeyCombinations('KeyA')
 			await browser.sendKeyCombinations('Shift', 'KeyA')
 			const text = await input.getProperty('value')
-			assert.equal(text, 'aA')
+			expect(text).toBe('aA')
 		})
 	})
 })

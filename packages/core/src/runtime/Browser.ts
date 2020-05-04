@@ -109,8 +109,8 @@ export class Browser<T> implements BrowserInterface {
 
 	private getKeyCode(key: string): string {
 		const lowerKey = key.toLowerCase()
-		if (lowerKey.includes('key')) {
-			//if user input `KeyA` then just return inputed key
+		//if key = `KeyA` or function key likes `CONTROL`, just return this key
+		if (lowerKey.includes('key') || Object.values(Key).includes(key)) {
 			return key
 		}
 		//now to process to get the key code
@@ -122,6 +122,7 @@ export class Browser<T> implements BrowserInterface {
 		}
 		return ''
 	}
+
 	@rewriteError()
 	public title(): Promise<string> {
 		return this.page.title()
@@ -381,17 +382,12 @@ export class Browser<T> implements BrowserInterface {
 	public async sendKeyCombinations(...keys: string[]): Promise<void> {
 		const handle = this.page.keyboard
 		for (const key of keys) {
-			if (Object.values(Key).includes(key)) {
-				await handle.down(key)
-			} else {
-				const keyCode = this.getKeyCode(key)
-				await handle.down(keyCode)
-				await handle.up(keyCode)
-			}
+			const keyCode = this.getKeyCode(key)
+			await handle.down(keyCode)
 		}
-		keys.pop()
 		for (const key of keys.reverse()) {
-			await handle.up(key)
+			const keyCode = this.getKeyCode(key)
+			await handle.up(keyCode)
 		}
 	}
 

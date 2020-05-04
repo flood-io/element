@@ -4,6 +4,7 @@ import { launchPuppeteer, testPuppeteer } from '../../tests/support/launch-brows
 import { Browser } from './Browser'
 import { Until } from '../page/Until'
 import { By } from '../page/By'
+import { Key } from '../page/Enums'
 import { DEFAULT_SETTINGS } from './Settings'
 
 let puppeteer: testPuppeteer
@@ -173,9 +174,24 @@ describe('Browser', () => {
 			await browser.visit(url)
 			const input = await browser.findElement(By.id('text'))
 			await input.focus()
-			await browser.sendKeyCombinations('KeyA')
-			await browser.sendKeyCombinations('Shift', 'KeyA')
-			const text = await input.getProperty('value')
+			// use combination key as document
+			await browser.sendKeys('a')
+			await browser.sendKeyCombinations(Key.SHIFT, 'KeyA')
+			let text = await input.getProperty('value')
+			expect(text).toBe('aA')
+
+			await input.clear()
+			// use combination key by normal way with lower case
+			await browser.sendKeys('a')
+			await browser.sendKeyCombinations(Key.SHIFT, 'a')
+			text = await input.getProperty('value')
+			expect(text).toBe('aA')
+
+			await input.clear()
+			// use combination key by normal way with upper case
+			await browser.sendKeys('a')
+			await browser.sendKeyCombinations(Key.SHIFT, 'A')
+			text = await input.getProperty('value')
 			expect(text).toBe('aA')
 		})
 	})

@@ -17,7 +17,7 @@ import { TargetLocator } from '../page/TargetLocator'
 import { PuppeteerClientLike } from '../driver/Puppeteer'
 import { WorkRoot } from '../runtime-environment/types'
 import KSUID from 'ksuid'
-import { Key } from '../page/Enums'
+import { Key, KeyDefinitions } from '../page/Enums'
 // import termImg from 'term-img'
 import { ConcreteTestSettings } from './Settings'
 import { NetworkErrorData, ActionErrorData } from './errors/Types'
@@ -107,6 +107,21 @@ export class Browser<T> implements BrowserInterface {
 		return this.page.url()
 	}
 
+	private getKeyCode(key: string): string {
+		const lowerKey = key.toLowerCase()
+		if (lowerKey.includes('key')) {
+			//if user input `KeyA` then just return inputed key
+			return key
+		}
+		//now to process to get the key code
+		for (const key in KeyDefinitions) {
+			const keyObj = KeyDefinitions[key]
+			if (lowerKey === keyObj.key) {
+				return keyObj.code
+			}
+		}
+		return ''
+	}
 	@rewriteError()
 	public title(): Promise<string> {
 		return this.page.title()
@@ -366,8 +381,15 @@ export class Browser<T> implements BrowserInterface {
 	public async sendKeyCombinations(...keys: string[]): Promise<void> {
 		const handle = this.page.keyboard
 		for (const key of keys) {
-			await handle.down(key)
+			if (Object.values(Key).includes(key)) {
+				await handle.down(key)
+			} else {
+				const keyCode = this.getKeyCode(key)
+				await handle.down(keyCode)
+				await handle.up(keyCode)
+			}
 		}
+		keys.pop()
 		for (const key of keys.reverse()) {
 			await handle.up(key)
 		}

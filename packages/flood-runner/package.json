@@ -7,7 +7,7 @@
 	"license": "Apache-2.0",
 	"scripts": {
 		"test": "jest",
-		"build": "tsc",
+		"build": "tsc -b",
 		"prebuild": "rm -rf dist"
 	},
 	"main": "dist/index.js",
@@ -22,6 +22,7 @@
 		"url": "https://github.com/flood-io/element/issues"
 	},
 	"dependencies": {
+		"@flood/element-core": "^1.2.3-beta.4",
 		"@flood/node-influx": "^5.0.9",
 		"find-root": "^1.1.0",
 		"winston": "^3.2.1"

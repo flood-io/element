@@ -32,6 +32,8 @@ export { Step } from './src/runtime/Step'
 
 export { NoOpTestObserver, TestObserver } from './src/runtime/test-observers/Observer'
 
+export { Timing } from './src/runtime/test-observers/Timing'
+
 export { Assertion } from './src/runtime/Assertion'
 export { AssertionErrorData, castStructuredError } from './src/runtime/errors/Types'
 

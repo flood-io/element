@@ -2,20 +2,20 @@
 # yarn lockfile v1
 
 
-"@flood/element-api@^1.2.2":
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/@flood/element-api/-/element-api-1.2.2.tgz#8dc8f72f42e083c9c9f986997ee33606f9e400c5"
-  integrity sha512-WtMl4H4SiyZC4rIcms4ofXfjix6RWyp+vef+Z7vfAAMxYFjQ3P9B+3y0i5rGVbQIqw/38XuupPsGnDwVox8aqw==
+"@flood/element-api@^1.2.3":
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/@flood/element-api/-/element-api-1.2.3.tgz#0e89c8951bf69778bff9846afd9fa53892e6755a"
+  integrity sha512-zZiaoSxCZ7qdBi7d73FIPOBb26uivH60gUPzMU+2TdUOw1z18UO8+xdkgjBjBgAjoiISbbzrdZUKhis5d0gZuQ==
   dependencies:
-    "@flood/element-core" "^1.2.2"
+    "@flood/element-core" "^1.2.3"
 
 "@flood/element-cli@../../packages/cli":
-  version "1.2.2"
+  version "1.2.3"
   dependencies:
-    "@flood/element" "^1.2.2"
-    "@flood/element-api" "^1.2.2"
-    "@flood/element-core" "^1.2.2"
-    "@flood/element-flood-runner" "^1.2.2"
+    "@flood/element" "^1.2.3"
+    "@flood/element-api" "^1.2.3"
+    "@flood/element-core" "^1.2.3"
+    "@flood/element-flood-runner" "^1.2.3"
     boxen "^3.0"
     chalk "^2.4.1"
     chokidar "^2.0.4"
@@ -32,10 +32,10 @@
     yeoman-environment "2.3.0"
     yeoman-generator "3.1.0"
 
-"@flood/element-compiler@^1.2.2":
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/@flood/element-compiler/-/element-compiler-1.2.2.tgz#3bb40ce12812077723e6d8f448f79b56ad169ade"
-  integrity sha512-+34fSYtABxMxAvT4vJOTMgN9Vo6FIln/VvxQbSdNANARTIq98TSXazow0d2GmuYm5+eaKx9XvATphtMzKFIQ+w==
+"@flood/element-compiler@^1.2.3":
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/@flood/element-compiler/-/element-compiler-1.2.3.tgz#4623de3a109626080df30e98874edf7d2482ab00"
+  integrity sha512-ONoM3vh2APUNbuwrbeq6nTyOCjaPjurJakCmYLXlt6QnqqtsK/L8nQGyBtzqea+eSYgHPhsIVGCppgG+puHEyw==
   dependencies:
     find-root "^1.1.0"
     memory-fs "^0.5.0"
@@ -46,12 +46,12 @@
     webpack "^4.41.5"
     webpackbar "^4.0.0"
 
-"@flood/element-core@^1.2.2":
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/@flood/element-core/-/element-core-1.2.2.tgz#d18b594e78db22e4b041dca971c5889d151bc152"
-  integrity sha512-eH2gWNn2fg4ZcQ4yAa7zltj20xO7lW0z4MWqeVA/Td40z/EVmaB7q+M+K13sLvcHPqcZrVG/Z4M4nQR4MZwL8g==
+"@flood/element-core@^1.2.3":
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/@flood/element-core/-/element-core-1.2.3.tgz#4b79b0dc029546302368eba381ebfe39bcd741ef"
+  integrity sha512-yGoirsdZ/qyYPbPH5ol/N9nG5svjAaebLQ9z+WjKbYWsxNoRLGg6FIF6DkDi7PFb9vFjEaHGembVqtfLR3Zuaw==
   dependencies:
-    "@flood/element-compiler" "^1.2.2"
+    "@flood/element-compiler" "^1.2.3"
     "@types/faker" "^4.1.9"
     "@types/node" "12.7.4"
     "@types/puppeteer" "^2.0.1"
@@ -76,19 +76,19 @@
     vm2 "^3.5.2"
     winston "^3.0.0"
 
-"@flood/element-flood-runner@^1.2.2":
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/@flood/element-flood-runner/-/element-flood-runner-1.2.2.tgz#c358419f09146a4c5522df37457c4623444b028b"
-  integrity sha512-OLrPPxTTyAXaCnmWgGVRIz9+gWsseHGG5b2Bfy5WZSYBLPa9XZEF6ero6l8QHJfbpW2do82IcD6YfrbaSu7yug==
+"@flood/element-flood-runner@^1.2.3":
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/@flood/element-flood-runner/-/element-flood-runner-1.2.3.tgz#c6f9d8cdec64c0818962aae2526867bc0f69d005"
+  integrity sha512-CXJ0XKSXaoS1gDpD4M8RpQmtUL3HX5r13pJOpjoOhY7A/29Z4l5P4iSMeaA/pzGs/ka3dZ/Lo/oIE+KyyTmYVg==
   dependencies:
     "@flood/node-influx" "^5.0.9"
     find-root "^1.1.0"
     winston "^3.2.1"
 
-"@flood/element@../../packages/element", "@flood/element@^1.2.2":
-  version "1.2.2"
+"@flood/element@../../packages/element", "@flood/element@^1.2.3":
+  version "1.2.3"
   dependencies:
-    "@flood/element-core" "^1.2.2"
+    "@flood/element-core" "^1.2.3"
 
 "@flood/node-influx@^5.0.9":
   version "5.0.9"
@@ -2411,9 +2411,9 @@ iterm2-version@^2.1.0:
     plist "^2.0.1"
 
 jquery@^3.4.1:
-  version "3.4.1"
-  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.4.1.tgz#714f1f8d9dde4bdfa55764ba37ef214630d80ef2"
-  integrity sha512-36+AdBzCL+y6qjw5Tx7HgzeGCzC81MDDgaUP8ld2zhx58HdqXGoBd+tHdrBMiyjGQs0Hxs/MLZTu/eHNJJuWPw==
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.5.0.tgz#9980b97d9e4194611c36530e7dc46a58d7340fc9"
+  integrity sha512-Xb7SVYMvygPxbFMpTFQiHh1J7HClEaThguL15N/Gg37Lri/qKyhRGZYzHRyLH8Stq3Aow0LsHO2O2ci86fCrNQ==
 
 json-parse-better-errors@^1.0.1, json-parse-better-errors@^1.0.2:
   version "1.0.2"

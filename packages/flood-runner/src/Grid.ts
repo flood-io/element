@@ -6,7 +6,7 @@ import { initConfig } from './initConfig'
 import { startConcurrencyTicker } from './tickerInterval'
 import { initInfluxReporter } from './initInfluxReporter'
 
-export async function run(file: string): Promise<number> {
+export async function run(file: string): Promise<void> {
 	const gridConfig = initConfig()
 	const influxReporter = initInfluxReporter(gridConfig)
 
@@ -32,6 +32,7 @@ export async function run(file: string): Promise<number> {
 		testSettingOverrides: {},
 		testObserverFactory,
 		persistentRunner: false,
+		failStatusCode: 1,
 	}
 
 	if (gridConfig.testDuration !== undefined) {

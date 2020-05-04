@@ -10,7 +10,7 @@ export {
 
 // XYZ
 
-export { runCommandLine, runUntilExit, ElementOptions } from '@flood/element-core'
+export { runCommandLine, ElementOptions } from '@flood/element-core'
 
 export { TestSettings, ResponseTiming } from '@flood/element-core'
 export { RuntimeEnvironment, FloodProcessEnv } from '@flood/element-core'

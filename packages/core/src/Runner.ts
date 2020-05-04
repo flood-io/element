@@ -14,7 +14,7 @@ export interface TestCommander {
 }
 
 export interface IRunner {
-	run(testScriptFactory: AsyncFactory<EvaluatedScript>): Promise<boolean>
+	run(testScriptFactory: AsyncFactory<EvaluatedScript>): Promise<void>
 	stop(): Promise<void>
 }
 
@@ -109,12 +109,12 @@ export class Runner {
 		return
 	}
 
-	async run(testScriptFactory: AsyncFactory<EvaluatedScript>): Promise<boolean> {
+	async run(testScriptFactory: AsyncFactory<EvaluatedScript>): Promise<void> {
 		const testScript = await testScriptFactory()
 
 		this.clientPromise = this.launchClient(testScript)
 
-		return this.runTestScript(testScript, this.clientPromise)
+		await this.runTestScript(testScript, this.clientPromise)
 	}
 
 	async launchClient(testScript: EvaluatedScript): Promise<PuppeteerClient> {
@@ -137,8 +137,8 @@ export class Runner {
 	async runTestScript(
 		testScript: EvaluatedScript,
 		clientPromise: Promise<PuppeteerClient>,
-	): Promise<boolean> {
-		if (!this.running) return true
+	): Promise<void> {
+		if (!this.running) return
 
 		let testToCancel: Test | undefined
 
@@ -173,7 +173,6 @@ export class Runner {
 			await test.beforeRun()
 
 			const cancelToken = new CancellationToken()
-			let result = false
 
 			this.looper = new Looper(settings, this.running)
 			this.looper.killer = () => cancelToken.cancel()
@@ -182,7 +181,7 @@ export class Runner {
 
 				const startTime = new Date()
 				try {
-					result = await test.runWithCancellation(iteration, cancelToken)
+					await test.runWithCancellation(iteration, cancelToken)
 				} catch (err) {
 					this.logger.error(
 						`[Iteration: ${iteration}] Error in Runner Loop: ${err.name}: ${err.message}\n${err.stack}`,
@@ -194,7 +193,6 @@ export class Runner {
 			})
 
 			this.logger.info(`Test completed after ${this.looper.iterations} iterations`)
-			return result
 		} catch (err) {
 			if (err instanceof TestScriptError) {
 				this.logger.error('\n' + err.toStringNodeFormat())
@@ -206,13 +204,12 @@ export class Runner {
 			// if (process.env.NODE_ENV !== 'production') {
 			this.logger.debug(err.stack)
 			// }
+			throw err
 		}
 
 		if (testToCancel !== undefined) {
 			await testToCancel.cancel()
 		}
-
-		return false
 	}
 }
 
@@ -287,7 +284,7 @@ export class PersistentRunner extends Runner {
 		}
 	}
 
-	async run(testScriptFactory: AsyncFactory<EvaluatedScript>): Promise<boolean> {
+	async run(testScriptFactory: AsyncFactory<EvaluatedScript>): Promise<void> {
 		this.testScriptFactory = testScriptFactory
 
 		// TODO detect changes in testScript settings affecting the client
@@ -296,6 +293,5 @@ export class PersistentRunner extends Runner {
 		this.rerunTest()
 		await this.waitUntilStopped()
 		// return new Promise<void>((resolve, reject) => {})
-		return true
 	}
 }

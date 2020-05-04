@@ -27,22 +27,10 @@ export interface ElementOptions {
 	testObserverFactory?: (t: TestObserver) => TestObserver
 	persistentRunner: boolean
 	testCommander?: TestCommander
-	failStatusCode?: number
+	failStatusCode: number
 }
 
-export function runUntilExit(fn: () => Promise<number>) {
-	fn()
-		.then((code: number) => {
-			process.exit(code)
-		})
-		.catch(err => {
-			console.log('Element exited with error')
-			console.error(err)
-			process.exit(1)
-		})
-}
-
-export async function runCommandLine(opts: ElementOptions): Promise<number> {
+export async function runCommandLine(opts: ElementOptions): Promise<void> {
 	const { logger, testScript, clientFactory } = opts
 
 	// TODO proper types for args
@@ -96,8 +84,12 @@ export async function runCommandLine(opts: ElementOptions): Promise<number> {
 		return new EvaluatedScript(opts.runEnv, await mustCompileFile(testScript, testScriptOptions))
 	}
 
-	const result = await runner.run(testScriptFactory)
-	const exitCode = opts.failStatusCode ? opts.failStatusCode : 0
-
-	return result ? 0 : exitCode
+	try {
+		await runner.run(testScriptFactory)
+		process.exit(0)
+	} catch (err) {
+		console.log('Element exited with error')
+		console.error(err)
+		process.exit(opts.failStatusCode)
+	}
 }

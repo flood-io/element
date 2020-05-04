@@ -92,7 +92,7 @@ export default class Test implements ITest {
 	public async runWithCancellation(
 		iteration: number,
 		cancelToken: CancellationToken,
-	): Promise<boolean> {
+	): Promise<void> {
 		console.assert(this.client, `client is not configured in Test`)
 
 		const testObserver = new ErrorObserver(
@@ -154,11 +154,11 @@ export default class Test implements ITest {
 					cancelToken.promise,
 				])
 
-				if (cancelToken.isCancellationRequested) return true
+				if (cancelToken.isCancellationRequested) return
 
 				if (this.failed) {
 					console.log('failed, bailing out of steps')
-					break
+					throw Error('test failed')
 				}
 			}
 		} catch (err) {
@@ -171,8 +171,6 @@ export default class Test implements ITest {
 
 		// TODO report skipped steps
 		await testObserver.after(this)
-
-		return !this.failed
 	}
 
 	get currentURL(): string {

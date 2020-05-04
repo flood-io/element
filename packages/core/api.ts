@@ -10,7 +10,7 @@ export {
 
 // XYZ
 
-export { runCommandLine, runUntilExit, ElementOptions } from './src/Element'
+export { runCommandLine, ElementOptions } from './src/Element'
 
 export { RuntimeEnvironment } from './src/runtime-environment/types'
 export { nullRuntimeEnvironment } from './src/runtime-environment/NullRuntimeEnvironment'

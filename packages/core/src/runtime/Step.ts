@@ -60,6 +60,11 @@ export interface StepOptions {
 	 * @default `inherit`
 	 */
 	waitUntil?: ElementPresence
+
+	/**
+	 * step will run one time
+	 */
+	onceOff?: boolean
 }
 
 /**

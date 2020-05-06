@@ -284,6 +284,17 @@ export interface Browser {
 	sendKeys(...keys: string[]): Promise<void>
 
 	/**
+	 * `sendKeyCombinations` simulates the key combinations.
+	 *
+	 * **Example:**
+	 * ```typescript
+	 * await browser.sendKeyCombination(Key.SHIFT, 'A')
+	 * await browser.sendKeyCombination(Key.SHIFT, 'KeyA')
+	 * ```
+	 */
+	sendKeyCombinations(...keys: string[]): Promise<void>
+
+	/**
 	 * The Mouse class operates in main-frame CSS pixels relative to the top-left corner of the viewport.
 	 * Every page has its own <[Mouse]>, accessible with `browser.mouse`.
 	 */

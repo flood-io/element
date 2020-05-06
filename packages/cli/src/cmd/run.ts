@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import {
 	runCommandLine,
-	runUntilExit,
 	ElementOptions,
 	WorkRoot,
 	FloodProcessEnv,
@@ -32,6 +31,7 @@ interface RunArguments extends Arguments {
 	slowMo?: number
 	'work-root'?: string
 	'test-data-root'?: string
+	'fail-status-code': number
 }
 
 function setupDelayOverrides(args: RunArguments, testSettingOverrides: TestSettings) {
@@ -85,6 +85,7 @@ const cmd: CommandModule = {
 			runEnv: initRunEnv(workRootPath, testDataPath),
 			testSettingOverrides: {},
 			persistentRunner: false,
+			failStatusCode: args['fail-status-code'],
 		}
 
 		if (args.loopCount) {
@@ -99,7 +100,7 @@ const cmd: CommandModule = {
 			opts.testCommander = makeTestCommander(file)
 		}
 
-		runUntilExit(() => runCommandLine(opts))
+		runCommandLine(opts)
 	},
 	builder(yargs: Argv): Argv {
 		return yargs
@@ -187,6 +188,11 @@ const cmd: CommandModule = {
 			})
 			.option('verbose', {
 				describe: 'Verbose mode',
+			})
+			.option('fail-status-code', {
+				describe: 'Exit code when the test fails',
+				type: 'number',
+				default: 1,
 			})
 			.positional('file', {
 				describe: 'the test script to run',

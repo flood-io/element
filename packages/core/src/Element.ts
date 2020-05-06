@@ -27,18 +27,7 @@ export interface ElementOptions {
 	testObserverFactory?: (t: TestObserver) => TestObserver
 	persistentRunner: boolean
 	testCommander?: TestCommander
-}
-
-export function runUntilExit(fn: () => Promise<void>) {
-	fn()
-		.then(() => {
-			process.exit(0)
-		})
-		.catch(err => {
-			console.log('Element exited with error')
-			console.error(err)
-			process.exit(1)
-		})
+	failStatusCode: number
 }
 
 export async function runCommandLine(opts: ElementOptions): Promise<void> {
@@ -95,5 +84,12 @@ export async function runCommandLine(opts: ElementOptions): Promise<void> {
 		return new EvaluatedScript(opts.runEnv, await mustCompileFile(testScript, testScriptOptions))
 	}
 
-	await runner.run(testScriptFactory)
+	try {
+		await runner.run(testScriptFactory)
+		process.exit(0)
+	} catch (err) {
+		console.log('Element exited with error')
+		console.error(err)
+		process.exit(opts.failStatusCode)
+	}
 }

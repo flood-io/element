@@ -193,7 +193,6 @@ export class Runner {
 			})
 
 			this.logger.info(`Test completed after ${this.looper.iterations} iterations`)
-			return
 		} catch (err) {
 			if (err instanceof TestScriptError) {
 				this.logger.error('\n' + err.toStringNodeFormat())
@@ -205,6 +204,7 @@ export class Runner {
 			// if (process.env.NODE_ENV !== 'production') {
 			this.logger.debug(err.stack)
 			// }
+			throw err
 		}
 
 		if (testToCancel !== undefined) {

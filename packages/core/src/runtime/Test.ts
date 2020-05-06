@@ -158,7 +158,7 @@ export default class Test implements ITest {
 
 				if (this.failed) {
 					console.log('failed, bailing out of steps')
-					break
+					throw Error('test failed')
 				}
 			}
 		} catch (err) {

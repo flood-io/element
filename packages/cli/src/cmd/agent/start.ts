@@ -1,7 +1,6 @@
 import { CommandModule, Arguments } from 'yargs'
 import { checkFile } from '../common'
 import run from '@flood/element-flood-runner'
-import { runUntilExit } from '@flood/element-api'
 
 interface RunArguments extends Arguments {
 	file: string
@@ -14,7 +13,7 @@ const cmd: CommandModule = {
 	handler(args: RunArguments) {
 		const { file } = args
 
-		return runUntilExit(() => run(file))
+		run(file)
 	},
 
 	builder(yargs) {

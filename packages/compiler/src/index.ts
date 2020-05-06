@@ -42,6 +42,7 @@ export class Compiler {
 			entry: this.sourceFile,
 			// mode: this.productionMode ? 'production' : 'development',
 			mode: 'none',
+			target: 'node',
 			// devtool: 'cheap-module-eval-source-map',
 			devtool: 'cheap-module-source-map',
 			output: {

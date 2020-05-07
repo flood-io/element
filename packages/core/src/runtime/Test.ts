@@ -22,6 +22,9 @@ import { ScreenshotOptions } from 'puppeteer'
 import { TestSettings, ConcreteTestSettings, DEFAULT_STEP_WAIT_SECONDS } from './Settings'
 import { ITest } from './ITest'
 import { EvaluatedScriptLike } from './EvaluatedScriptLike'
+import { TimingObserver } from './test-observers/TimingObserver'
+import { Context } from './test-observers/Context'
+import { NetworkRecordingTestObserver } from './test-observers/NetworkRecordingTestObserver'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:test')
@@ -95,8 +98,17 @@ export default class Test implements ITest {
 	): Promise<void> {
 		console.assert(this.client, `client is not configured in Test`)
 
+		const ctx = new Context()
+
 		const testObserver = new ErrorObserver(
-			new LifecycleObserver(this.testObserverFactory(new InnerObserver(new NullTestObserver()))),
+			new LifecycleObserver(
+				this.testObserverFactory(
+					new TimingObserver(
+						ctx,
+						new NetworkRecordingTestObserver(ctx, new InnerObserver(new NullTestObserver())),
+					),
+				),
+			),
 		)
 
 		await (await this.client).reopenPage(this.settings.incognito)

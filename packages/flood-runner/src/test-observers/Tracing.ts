@@ -12,7 +12,7 @@ import {
 	NetworkRecorder,
 	StructuredError,
 } from '@flood/element-api'
-import { NetworkRecordingTestObserver } from './NetworkRecordingTestObserver'
+import { NetworkRecordingTestObserver } from '@flood/element-core'
 
 import debugFactory from 'debug'
 const debug = debugFactory('element:grid:tracing')

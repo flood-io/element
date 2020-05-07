@@ -1,15 +1,12 @@
-import {
-	expect,
-	Test,
-	Step,
-	NetworkRecorder,
-	ResponseTiming,
-	StructuredError,
-} from '@flood/element-api'
-import { Timing } from '@flood/element-core'
-import { NetworkRecordingTestObserver } from './NetworkRecordingTestObserver'
-
 import debugFactory from 'debug'
+import { NetworkRecordingTestObserver } from './NetworkRecordingTestObserver'
+import { Timing } from './Timing'
+import Test from '../Test'
+import { Step } from '../Step'
+import { StructuredError } from '../../utils/StructuredError'
+import { ResponseTiming } from '../Settings'
+import NetworkRecorder from '../../network/Recorder'
+import { expect } from '../../utils/Expect'
 const debug = debugFactory('element:grid:timing')
 
 // TODO re-enable when browser_performance decoupled
@@ -22,7 +19,7 @@ const debug = debugFactory('element:grid:timing')
 export class TimingObserver extends NetworkRecordingTestObserver {
 	private passed = 0
 	private failed = 0
-	private t: Timing = new Timing()
+	private timing: Timing = new Timing()
 
 	/**
 	 * Public callback before all steps are run
@@ -39,10 +36,10 @@ export class TimingObserver extends NetworkRecordingTestObserver {
 
 	async beforeStep(test: Test, step: Step) {
 		debug('beforeStep')
-		this.t.reset()
+		this.timing.reset()
 		this.passed = 0
 		this.failed = 0
-		this.t.start('beforeStep')
+		this.timing.start('beforeStep')
 
 		const name = step.name
 		const reporter = test.reporter
@@ -51,14 +48,14 @@ export class TimingObserver extends NetworkRecordingTestObserver {
 
 		reporter.reset(name)
 
-		this.t.end('beforeStep')
-		this.t.start('step')
+		this.timing.end('beforeStep')
+		this.timing.start('step')
 		debug(`Before step: ${name}`)
 	}
 
 	async afterStep(test: Test, step: Step) {
-		this.t.end('step')
-		this.t.start('afterStep')
+		this.timing.end('step')
+		this.timing.start('afterStep')
 
 		await this.syncNetworkRecorder()
 
@@ -68,7 +65,7 @@ export class TimingObserver extends NetworkRecordingTestObserver {
 
 		await this.reportResult(test, step)
 
-		this.t.end('afterStep')
+		this.timing.end('afterStep')
 	}
 
 	async onStepPassed(test: Test, step: Step): Promise<void> {
@@ -82,7 +79,7 @@ export class TimingObserver extends NetworkRecordingTestObserver {
 	}
 
 	async beforeStepAction(test: Test, step: Step, action: string): Promise<void> {
-		await this.t.measureThinkTime('step', async () => {
+		await this.timing.measureThinkTime('step', async () => {
 			debug(`Before action: '${action}()' waiting on networkRecorder sync`)
 			await this.syncNetworkRecorder()
 			await this.next.beforeStepAction(test, step, action)
@@ -90,7 +87,7 @@ export class TimingObserver extends NetworkRecordingTestObserver {
 	}
 
 	async afterStepAction(test: Test, step: Step, action: string): Promise<void> {
-		await this.t.measureThinkTime('step', async () => {
+		await this.timing.measureThinkTime('step', async () => {
 			debug(`After action: ${action}`)
 			// Force reporting concurrency to ensure steps which take >15s don't skew metrics
 			// this.reporter.addMeasurement('concurrency', this.numberOfBrowsers, name)
@@ -167,7 +164,13 @@ export class TimingObserver extends NetworkRecordingTestObserver {
 		await reporter.flushMeasurements()
 	}
 
-	private getResponseTimeMeasurement(
+	async getMeasurementTime(responseTiming: ResponseTiming): Promise<number> {
+		await this.syncNetworkRecorder()
+		const { networkRecorder } = this.ctx
+		return this.getResponseTimeMeasurement(responseTiming, networkRecorder)
+	}
+
+	getResponseTimeMeasurement(
 		responseTimeMeasurement: ResponseTiming,
 		networkRecorder: NetworkRecorder,
 	): number {
@@ -177,14 +180,14 @@ export class TimingObserver extends NetworkRecordingTestObserver {
 			case 'network':
 				return networkRecorder.meanResponseTime()
 			case 'step': {
-				const value = this.t.getDurationWithoutThinkTimeForSegment('step')
-				const thinkTime = this.t.getThinkTimeForSegment('step')
+				const value = this.timing.getDurationWithoutThinkTimeForSegment('step')
+				const thinkTime = this.timing.getThinkTimeForSegment('step')
 				debug(`Step Timing: thinking=${thinkTime} ms, interaction: ${value} ms`)
 				return value
 			}
 			case 'stepWithThinkTime': {
-				const value = this.t.getDurationForSegment('step')
-				const thinkTime = this.t.getThinkTimeForSegment('step')
+				const value = this.timing.getDurationForSegment('step')
+				const thinkTime = this.timing.getThinkTimeForSegment('step')
 				debug(`Step Timing: thinking=${thinkTime} ms, step: ${value} ms`)
 				return value
 			}

@@ -3,9 +3,10 @@ import { TestObserver } from './Observer'
 import { Step } from '../Step'
 import { TestEvent } from '../../Reporter'
 import { StructuredError } from '../../utils/StructuredError'
+import { TimingObserver } from './TimingObserver'
 
 export default class LifecycleObserver implements TestObserver {
-	constructor(private next: TestObserver) {}
+	constructor(public next: TestObserver) {}
 	async before(test: Test) {
 		test.reporter.testLifecycle(TestEvent.BeforeTest, 'test')
 		return this.next.before(test)
@@ -40,8 +41,13 @@ export default class LifecycleObserver implements TestObserver {
 		test.reporter.testLifecycle(TestEvent.StepSkipped, step.name)
 	}
 	async afterStep(test: Test, step: Step) {
-		await this.next.afterStep(test, step)
-		test.reporter.testLifecycle(TestEvent.AfterStep, step.name)
+		const testObserver: TestObserver = this.next
+		await testObserver.afterStep(test, step)
+		let timing = 0
+		if (testObserver instanceof TimingObserver) {
+			timing = await testObserver.getMeasurementTime(test.settings.responseTimeMeasurement)
+		}
+		test.reporter.testLifecycle(TestEvent.AfterStep, step.name, timing)
 	}
 
 	async beforeStepAction(test: Test, step: Step, command: string) {

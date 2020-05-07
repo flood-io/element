@@ -5,7 +5,6 @@ import {
 	CompoundMeasurement,
 	MeasurementKind,
 	TestScriptError,
-	Timing,
 } from '@flood/element-core'
 import { Logger } from 'winston'
 import chalk from 'chalk'
@@ -14,7 +13,6 @@ const debug = require('debug')('element-cli:console-reporter')
 export class ConsoleReporter implements IReporter {
 	public responseCode: string
 	public stepName: string
-	private t: Timing = new Timing()
 
 	constructor(private logger: Logger, private verbose: boolean) {}
 
@@ -38,7 +36,7 @@ export class ConsoleReporter implements IReporter {
 
 	async flushMeasurements(): Promise<void> {}
 
-	testLifecycle(stage: TestEvent, label: string): void {
+	testLifecycle(stage: TestEvent, label: string, timing?: number): void {
 		switch (stage) {
 			case TestEvent.AfterStepAction:
 				this.logger.info(`---> ${label}()`)
@@ -46,15 +44,9 @@ export class ConsoleReporter implements IReporter {
 			case TestEvent.BeforeStep:
 				this.logger.info('')
 				this.logger.info(`===> Step '${label}'`)
-				this.t.start('step')
 				break
 			case TestEvent.AfterStep:
-				this.t.end('step')
-				this.logger.info(
-					`---> Step '${label}' finished in ${this.t.getDurationWithoutThinkTimeForSegment(
-						'step',
-					)}ms`,
-				)
+				this.logger.info(`---> Step '${label}' finished in ${timing}ms`)
 				break
 			case TestEvent.StepSkipped:
 				this.logger.info(`---- Step '${label}' skipped`)

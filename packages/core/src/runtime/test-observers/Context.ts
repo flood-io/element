@@ -1,4 +1,4 @@
-import { Test, NetworkRecorder, NetworkObserver, IReporter } from '@flood/element-api'
+import { Test, NetworkRecorder, NetworkObserver, IReporter } from '@flood/element-core'
 import { Page } from 'puppeteer'
 
 export class Context {
@@ -18,7 +18,7 @@ export class Context {
 	public attachToPage(reporter: IReporter, page: Page) {
 		this.networkRecorder = new NetworkRecorder(page)
 		this.observer = new NetworkObserver(reporter, this.networkRecorder)
-    this.observer.attachToNetworkRecorder()
+		this.observer.attachToNetworkRecorder()
 	}
 
 	public async syncNetworkRecorder() {

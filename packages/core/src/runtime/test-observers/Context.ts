@@ -1,5 +1,8 @@
-import { Test, NetworkRecorder, NetworkObserver, IReporter } from '@flood/element-core'
 import { Page } from 'puppeteer'
+import { IReporter } from '../../Reporter'
+import Test from '../Test'
+import NetworkRecorder from '../../network/Recorder'
+import NetworkObserver from '../Observer'
 
 export class Context {
 	public networkRecorder: NetworkRecorder

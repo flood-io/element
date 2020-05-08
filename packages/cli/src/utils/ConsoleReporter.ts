@@ -46,7 +46,7 @@ export class ConsoleReporter implements IReporter {
 				this.logger.info(`===> Step '${label}'`)
 				break
 			case TestEvent.AfterStep:
-				this.logger.info(`---> Step '${label}' finished in ${timing}ms`)
+				this.logger.info(`---> Step '${label}' finished in ${timing?.toLocaleString()}ms`)
 				break
 			case TestEvent.StepSkipped:
 				this.logger.info(`---- Step '${label}' skipped`)

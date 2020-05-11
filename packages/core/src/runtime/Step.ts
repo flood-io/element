@@ -8,7 +8,7 @@ import { ElementPresence } from './Settings'
  *
  * ```typescript
  * export default () => {
- *   step("Step 1", async (browser: Browser) => {
+ *   step.once("Step 1", async (browser: Browser) => {
  *     await browser.visit("https://example.com")
  *   })
  *
@@ -21,7 +21,13 @@ import { ElementPresence } from './Settings'
  * @param name Step Name
  * @param fn Actual implementation of step
  */
-export declare function step<T>(name: string, fn: StepFunction<T>): void
+// export declare function step<T>(name: string, fn: StepFunction<T>): void
+export const step = (() => {
+	function step<T>(name: string, fn: StepFunction<T>): void {}
+	function once<T>(name: string, fn: StepFunction<T>): void {}
+	step.once = once
+	return step
+})()
 /**
  * `step` can also be called with an overridden subset of Test settings (`options`) valid for just this step.
  *
@@ -32,7 +38,7 @@ export declare function step<T>(name: string, fn: StepFunction<T>): void
  *   }
  * ```
  */
-export declare function step<T>(name: string, options: StepOptions, fn: StepFunction<T>): void
+// export declare function step<T>(name: string, options: StepOptions, fn: StepFunction<T>): void
 
 export type StepDefinition<T> = (name: string, fn: StepFunction<T>) => Promise<any>
 
@@ -60,11 +66,6 @@ export interface StepOptions {
 	 * @default `inherit`
 	 */
 	waitUntil?: ElementPresence
-
-	/**
-	 * step will run one time
-	 */
-	onceOff?: boolean
 }
 
 /**

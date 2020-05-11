@@ -147,9 +147,6 @@ export default class Test implements ITest {
 
 			debug('running steps')
 			for (const step of this.steps) {
-				if (step.stepOptions.onceOff && iteration > 1) {
-					continue
-				}
 				browser.customContext = step
 
 				await Promise.race([

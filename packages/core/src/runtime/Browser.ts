@@ -88,6 +88,10 @@ export class Browser<T> implements BrowserInterface {
 		return this.client.page
 	}
 
+	public get pages(): Promise<Page[]> {
+		return this.client.browser.pages()
+	}
+
 	public get frames(): Frame[] {
 		return getFrames(this.page.frames())
 	}
@@ -577,5 +581,43 @@ export class Browser<T> implements BrowserInterface {
 			// 	},
 			// })
 		}
+	}
+
+	public async newPage(): Promise<Page> {
+		const newPage = await this.client.browser.newPage()
+
+		this.client.page = newPage
+		await newPage.bringToFront()
+		return newPage
+	}
+
+	private newPageCallback = function(resolve) {
+		this.client.browser.once('targetcreated', async target => {
+			this.client.page = await target.page()
+			await this.client.page.bringToFront()
+			resolve()
+		})
+	}
+
+	private newPagePromise = new Promise(resolve => {
+		this.newPageCallback(resolve)
+	})
+
+	public async waitForNewPage(): Promise<void> {
+		await this.newPagePromise
+
+		// wait for another page to be opened
+		this.newPagePromise = new Promise(resolve => {
+			this.newPageCallback(resolve)
+		})
+	}
+
+	public async switchPage(page: Page | number): Promise<void> {
+		if (typeof page === 'number') {
+			this.client.page = (await this.pages)[page]
+		} else {
+			this.client.page = page
+		}
+		await this.client.page.bringToFront()
 	}
 }

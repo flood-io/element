@@ -102,6 +102,11 @@ export interface Browser {
 	page: Page
 
 	/**
+	 * The list of current puppeteer Pages in the browser
+	 */
+	pages: Promise<Page[]>
+
+	/**
 	 * The list of puppeteer Frames
 	 */
 	frames: Frame[]
@@ -332,6 +337,21 @@ export interface Browser {
 	switchTo(): TargetLocator
 
 	setViewport(viewport: Viewport): Promise<void>
+
+	/**
+	 * Create a blank page in the browser and switch the focus to that page.
+	 */
+	newPage(): Promise<Page>
+
+	/**
+	 * Wait for a new page to be opened in the browser.
+	 */
+	waitForNewPage(): Promise<void>
+
+	/**
+	 * Switch the focus to another page in the browser.
+	 */
+	switchPage(page: Page | number): Promise<void>
 }
 
 /**

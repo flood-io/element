@@ -56,7 +56,7 @@ export class Browser<T> implements BrowserInterface {
 		public settings: ConcreteTestSettings,
 		public beforeFunc: (b: Browser<T>, name: string) => Promise<void> = async () => undefined,
 		public afterFunc: (b: Browser<T>, name: string) => Promise<void> = async () => undefined,
-		private activeFrame?: Frame | null,
+		public activeFrame?: Frame | null,
 	) {
 		this.beforeFunc && this.afterFunc
 		this.screenshots = []
@@ -509,9 +509,13 @@ export class Browser<T> implements BrowserInterface {
 	 * Switch the focus of the browser to another frame or window
 	 */
 	public switchTo(): TargetLocator {
-		return new TargetLocator(this.page, frame => {
-			this.activeFrame = frame
-		})
+		return new TargetLocator(
+			this.page,
+			frame => {
+				this.activeFrame = frame
+			},
+			page => this.switchPage(page),
+		)
 	}
 
 	public async performanceTiming(): Promise<PerformanceTiming> {
@@ -583,12 +587,13 @@ export class Browser<T> implements BrowserInterface {
 		}
 	}
 
-	public async newPage(): Promise<Page> {
-		const newPage = await this.client.browser.newPage()
-
-		this.client.page = newPage
-		await newPage.bringToFront()
-		return newPage
+	private async switchPage(page: Page | number): Promise<void> {
+		if (typeof page === 'number') {
+			this.client.page = (await this.pages)[page]
+		} else {
+			this.client.page = page
+		}
+		await this.client.page.bringToFront()
 	}
 
 	private newPageCallback = function(resolve) {
@@ -610,14 +615,5 @@ export class Browser<T> implements BrowserInterface {
 		this.newPagePromise = new Promise(resolve => {
 			this.newPageCallback(resolve)
 		})
-	}
-
-	public async switchPage(page: Page | number): Promise<void> {
-		if (typeof page === 'number') {
-			this.client.page = (await this.pages)[page]
-		} else {
-			this.client.page = page
-		}
-		await this.client.page.bringToFront()
 	}
 }

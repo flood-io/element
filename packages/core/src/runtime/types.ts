@@ -339,19 +339,9 @@ export interface Browser {
 	setViewport(viewport: Viewport): Promise<void>
 
 	/**
-	 * Create a blank page in the browser and switch the focus to that page.
-	 */
-	newPage(): Promise<Page>
-
-	/**
 	 * Wait for a new page to be opened in the browser.
 	 */
 	waitForNewPage(): Promise<void>
-
-	/**
-	 * Switch the focus to another page in the browser.
-	 */
-	switchPage(page: Page | number): Promise<void>
 }
 
 /**

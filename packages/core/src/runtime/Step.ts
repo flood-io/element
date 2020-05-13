@@ -12,7 +12,7 @@ import { ElementPresence } from './Settings'
  *     await browser.visit("https://example.com")
  *   })
  *
- *   step("Step 2", async (browser: Browser) => {})
+ *   step("Step 2", async (browser: Browser) => {}, { waitTimeout: 90 })
  *
  *   step("Step 3", async (browser: Browser) => {})
  * }
@@ -23,8 +23,8 @@ import { ElementPresence } from './Settings'
  */
 // export declare function step<T>(name: string, fn: StepFunction<T>): void
 export const step = (() => {
-	function step<T>(name: string, fn: StepFunction<T>): void {}
-	function once<T>(name: string, fn: StepFunction<T>): void {}
+	function step<T>(name: string, fn: StepFunction<T>, options?: StepOptions): void {}
+	function once<T>(name: string, fn: StepFunction<T>, options?: StepOptions): void {}
 	step.once = once
 	return step
 })()

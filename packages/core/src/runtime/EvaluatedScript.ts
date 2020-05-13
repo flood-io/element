@@ -161,7 +161,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			let stepOptions: StepOptions = {}
 
 			if (args.length === 3) {
-				;[name, stepOptions, fn] = args
+				;[name, fn, stepOptions] = args
 				stepOptions = normalizeStepOptions(stepOptions)
 			} else {
 				;[name, fn] = args

@@ -20,26 +20,14 @@ import { ElementPresence } from './Settings'
  *
  * @param name Step Name
  * @param fn Actual implementation of step
+ * @param options step options
  */
-// export declare function step<T>(name: string, fn: StepFunction<T>): void
 export const step = (() => {
 	function step<T>(name: string, fn: StepFunction<T>, options?: StepOptions): void {}
 	function once<T>(name: string, fn: StepFunction<T>, options?: StepOptions): void {}
 	step.once = once
 	return step
 })()
-
-/**
- * `step` can also be called with an overridden subset of Test settings (`options`) valid for just this step.
- *
- * ```typescript
- *   // Step 1 takes longer than the default `waitTimeout` of 30s.
- *   step("Step 1", { waitTimeout: 90 }, async browser => {
- *     ...
- *   }
- * ```
- */
-// export declare function step<T>(name: string, options: StepOptions, fn: StepFunction<T>): void
 
 export type StepDefinition<T> = (name: string, fn: StepFunction<T>) => Promise<any>
 

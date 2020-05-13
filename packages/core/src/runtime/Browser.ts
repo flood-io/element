@@ -56,7 +56,7 @@ export class Browser<T> implements BrowserInterface {
 		public settings: ConcreteTestSettings,
 		public beforeFunc: (b: Browser<T>, name: string) => Promise<void> = async () => undefined,
 		public afterFunc: (b: Browser<T>, name: string) => Promise<void> = async () => undefined,
-		public activeFrame?: Frame | null,
+		private activeFrame?: Frame | null,
 	) {
 		this.beforeFunc && this.afterFunc
 		this.screenshots = []

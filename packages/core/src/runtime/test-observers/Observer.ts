@@ -18,7 +18,7 @@ export interface TestObserver {
 }
 
 export class NoOpTestObserver implements TestObserver {
-	constructor(protected next: TestObserver) {}
+	constructor(public next: TestObserver) {}
 
 	async before(test: ITest): Promise<void> {
 		return this.next.before(test)

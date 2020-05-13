@@ -28,6 +28,7 @@ export const step = (() => {
 	step.once = once
 	return step
 })()
+
 /**
  * `step` can also be called with an overridden subset of Test settings (`options`) valid for just this step.
  *
@@ -91,6 +92,7 @@ export interface Step {
 	fn: StepFunction<any>
 	name: string
 	stepOptions: StepOptions
+	type: string
 }
 
 /**
@@ -105,4 +107,9 @@ export function normalizeStepOptions(stepOpts: StepOptions): StepOptions {
 	}
 
 	return stepOpts
+}
+
+export enum StepType {
+	STEP = 'step',
+	ONCE = 'once',
 }

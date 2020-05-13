@@ -13,7 +13,7 @@ import InnerObserver from './test-observers/Inner'
 import { AnyErrorData, EmptyErrorData, AssertionErrorData } from './errors/Types'
 import { StructuredError } from '../utils/StructuredError'
 
-import { Step } from './Step'
+import { Step, StepType } from './Step'
 
 import { CancellationToken } from '../utils/CancellationToken'
 
@@ -147,6 +147,11 @@ export default class Test implements ITest {
 
 			debug('running steps')
 			for (const step of this.steps) {
+				const stepType = step.type
+				if (stepType === StepType.ONCE && iteration > 1) {
+					continue
+				}
+
 				browser.customContext = step
 
 				await Promise.race([

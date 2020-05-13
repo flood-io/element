@@ -7,7 +7,14 @@ import fs from 'fs'
 import { promisify } from 'util'
 const exists = promisify(fs.exists)
 
-import { Step, StepFunction, StepOptions, normalizeStepOptions, StepDefinition } from './Step'
+import {
+	Step,
+	StepDefinition,
+	StepFunction,
+	StepOptions,
+	normalizeStepOptions,
+	StepType,
+} from './Step'
 import { SuiteDefinition } from './types'
 import Test from './Test'
 import { mustCompileFile } from '../TestScript'
@@ -147,7 +154,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 		const ENV = this.runEnv.stepEnv()
 
 		// closes over steps: Step[]
-		function captureStep(...args: any[]) {
+		function captureStep(args: any[], type: string) {
 			// name: string, fn: (driver: Browser) => Promise<void>
 			let name: string
 			let fn: StepFunction<any>
@@ -165,7 +172,16 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 				console.warn(`Duplicate step name: ${name}, skipping step`)
 				return
 			}
-			steps.push({ fn, name, stepOptions })
+
+			steps.push({ fn, name, stepOptions, type })
+		}
+
+		function captureStepNormal(...args: any[]) {
+			captureStep(args, StepType.STEP)
+		}
+
+		function captureStepOnce(...args: any[]) {
+			captureStep(args, StepType.ONCE)
 		}
 
 		// re-scope this for captureSuite to close over:
@@ -188,6 +204,13 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			},
 		)
 
+		const step = (() => {
+			const step: any = captureStepNormal
+			const once = captureStepOnce
+			step.once = once
+			return step
+		})()
+
 		const context = {
 			setup: (setupSettings: TestSettings) => {
 				Object.assign(rawSettings, setupSettings)
@@ -196,7 +219,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			ENV,
 
 			// Supports either 2 or 3 args
-			step: captureStep,
+			step,
 
 			// Actual implementation of @flood/chrome
 			By,
@@ -229,7 +252,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 		/**
 		 * Evaluate default function
 		 */
-		testFn.apply(null, [captureStep])
+		testFn.apply(null, [])
 
 		// layer up the final settings
 		this.settings = {

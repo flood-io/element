@@ -5,6 +5,7 @@
 		"rootDir": ".",
 		"declaration": true
 	},
+	"references": [{ "path": "../core" }],
 	"include": ["**/*.ts"],
 	"files": ["./index.ts"]
 }

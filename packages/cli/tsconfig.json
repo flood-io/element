@@ -9,11 +9,9 @@
 		{
 			"path": "../core"
 		},
-
 		{
 			"path": "../element-api"
 		},
-
 		{
 			"path": "../element"
 		}

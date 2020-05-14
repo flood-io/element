@@ -50,6 +50,9 @@ export class Browser<T> implements BrowserInterface {
 	public screenshots: string[]
 	customContext: T
 
+	private newPageCallback: (resolve: () => void) => void
+	private newPagePromise: Promise<void>
+
 	constructor(
 		public workRoot: WorkRoot,
 		private client: PuppeteerClientLike,
@@ -60,6 +63,18 @@ export class Browser<T> implements BrowserInterface {
 	) {
 		this.beforeFunc && this.afterFunc
 		this.screenshots = []
+
+		this.newPageCallback = resolve => {
+			this.client.browser.once('targetcreated', async target => {
+				this.client.page = await target.page()
+				await this.client.page.bringToFront()
+				resolve()
+			})
+		}
+
+		this.newPagePromise = new Promise(resolve => {
+			this.newPageCallback(resolve)
+		})
 	}
 
 	private get context(): Promise<ExecutionContext> {
@@ -595,18 +610,6 @@ export class Browser<T> implements BrowserInterface {
 		}
 		await this.client.page.bringToFront()
 	}
-
-	private newPageCallback = function(resolve) {
-		this.client.browser.once('targetcreated', async target => {
-			this.client.page = await target.page()
-			await this.client.page.bringToFront()
-			resolve()
-		})
-	}
-
-	private newPagePromise = new Promise(resolve => {
-		this.newPageCallback(resolve)
-	})
 
 	public async waitForNewPage(): Promise<void> {
 		await this.newPagePromise

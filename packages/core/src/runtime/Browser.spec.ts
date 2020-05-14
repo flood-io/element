@@ -195,4 +195,27 @@ describe('Browser', () => {
 			expect(text).toBe('aA')
 		})
 	})
+
+	test('Multiple pages handling', async () => {
+		const browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
+		const url = await serve('page_1.html')
+
+		await browser.visit(url)
+		await browser.click(By.tagName('a'))
+		await browser.waitForNewPage()
+		expect(browser.url).toContain('/page_2.html')
+
+		const pages = await browser.pages
+
+		// 3 tabs - about:blank, page_1.html & page_2.html
+		expect(pages.length).toEqual(3)
+
+		// switch page using page index
+		await browser.switchTo().page(1)
+		expect(browser.url).toContain('/page_1.html')
+
+		// switch page using the page itself
+		await browser.switchTo().page(pages[2])
+		expect(browser.url).toContain('/page_2.html')
+	})
 })

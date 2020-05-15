@@ -14,6 +14,7 @@ import {
 	StepOptions,
 	normalizeStepOptions,
 	extractOptionsAndCallback,
+	ConditionFn,
 } from './Step'
 import { SuiteDefinition } from './types'
 import Test from './Test'
@@ -206,10 +207,15 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			captureStep([name, { ...option, once: true }, fn])
 		}
 
+		const stepIf = async (conditionFn: ConditionFn, name: string, ...optionsOrFn: any[]) => {
+			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
+			captureStep([name, { ...option, ifFn: conditionFn }, fn])
+		}
+
 		const step = (() => {
 			const step: any = stepNomal
-			const once = stepOnce
-			step.once = once
+			step.once = stepOnce
+			step.if = stepIf
 			return step
 		})()
 

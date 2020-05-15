@@ -24,6 +24,8 @@ import { ElementPresence } from './Settings'
  */
 export const step: StepExtended = (name: string, ...optionsOrFn: any[]) => {}
 step.once = (name: string, ...optionsOrFn: any[]) => {}
+step.if = (condition: ConditionFn, name: string, ...optionsOrFn: any[]) => {}
+step.unless = (condition: ConditionFn, name: string, ...optionsOrFn: any[]) => {}
 
 export interface StepBase {
 	(stepName: string, options: StepOptions, testFn: TestFn): void
@@ -31,18 +33,36 @@ export interface StepBase {
 	(stepName: string, ...optionsOrFn: any[]): void
 }
 
+export interface StepConditionBase {
+	(condition: ConditionFn, name: string, options: StepOptions, testFn: TestFn)
+	(condition: ConditionFn, name: string, testFn: TestFn)
+	(condition: ConditionFn, ...optionsOrFn: any[])
+}
+
 export interface StepExtended extends StepBase {
 	/**
 	 * Defines a test step which will run in all iterations assuming the previous step succeeded
 	 */
 	once: StepBase
+
+	/**
+	 * Creates a conditional step, which will only run if the preceeding predicate returns true
+	 */
+	if: StepConditionBase
+
+	/**
+	 * Creates a conditional step, which will only run if the preceeding predicate returns false
+	 */
+	unless: StepConditionBase
 }
 
 export type StepDefinition = (name: string, fn: TestFn) => Promise<any>
 export type TestFn = (this: void, browser: Browser) => Promise<any>
+export type ConditionFn = (this: void, browser: Browser) => boolean | Promise<boolean>
 export type StepOptions = {
 	pending?: boolean
 	once?: boolean
+	ifFn?: (this: void, browser: Browser) => boolean | Promise<boolean>
 	waitTimeout?: number
 	waitUntil?: ElementPresence
 }

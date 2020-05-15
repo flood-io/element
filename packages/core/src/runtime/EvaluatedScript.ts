@@ -208,8 +208,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 
 		const step = (() => {
 			const step: any = stepNomal
-			const once = stepOnce
-			step.once = once
+			step.once = stepOnce
 			return step
 		})()
 

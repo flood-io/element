@@ -108,7 +108,7 @@ export {
 /**
  * @docPage DSL
  */
-export { step, StepFunction, StepOptions } from './src/runtime/Step'
+export { step, TestFn, StepFunction, StepOptions } from './src/runtime/Step'
 
 /**
  * @docPage DSL

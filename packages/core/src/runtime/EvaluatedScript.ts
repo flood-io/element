@@ -10,10 +10,10 @@ const exists = promisify(fs.exists)
 import {
 	Step,
 	StepDefinition,
-	StepFunction,
+	TestFn,
 	StepOptions,
 	normalizeStepOptions,
-	StepType,
+	extractOptionsAndCallback,
 } from './Step'
 import { SuiteDefinition } from './types'
 import Test from './Test'
@@ -154,15 +154,15 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 		const ENV = this.runEnv.stepEnv()
 
 		// closes over steps: Step[]
-		function captureStep(args: any[], type: string) {
+		function captureStep(args: any[]) {
 			// name: string, fn: (driver: Browser) => Promise<void>
 			let name: string
-			let fn: StepFunction<any>
-			let stepOptions: StepOptions = {}
+			let fn: TestFn
+			let options: StepOptions = {}
 
 			if (args.length === 3) {
-				;[name, fn, stepOptions] = args
-				stepOptions = normalizeStepOptions(stepOptions)
+				;[name, options, fn] = args
+				options = normalizeStepOptions(options)
 			} else {
 				;[name, fn] = args
 			}
@@ -173,40 +173,42 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 				return
 			}
 
-			steps.push({ fn, name, stepOptions, type })
-		}
-
-		function captureStepNormal(...args: any[]) {
-			captureStep(args, StepType.STEP)
-		}
-
-		function captureStepOnce(...args: any[]) {
-			captureStep(args, StepType.ONCE)
+			steps.push({ fn, name, options })
 		}
 
 		// re-scope this for captureSuite to close over:
 		const evalScope = this as EvaluatedScript
 
-		type WithDataCallback<T> = (this: null, s: StepDefinition<T>) => void
+		type WithDataCallback = (this: null, s: StepDefinition) => void
 
 		// closes over evalScope (this) and ENV
 		const captureSuite: SuiteDefinition = Object.assign(
 			(
-				callback: (this: null, s: StepDefinition<null>) => void,
-			): ((this: null, s: StepDefinition<null>) => void) => {
+				callback: (this: null, s: StepDefinition) => void,
+			): ((this: null, s: StepDefinition) => void) => {
 				return callback
 			},
 			{
-				withData: <T>(data: TestDataSource<T>, callback: WithDataCallback<T>) => {
+				withData: <T>(data: TestDataSource<T>, callback: WithDataCallback) => {
 					evalScope.testData = expect(data, 'TestData is not present')
 					return callback
 				},
 			},
 		)
 
+		const stepNomal = (name: string, ...optionsOrFn: any[]) => {
+			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
+			captureStep([name, option, fn])
+		}
+
+		const stepOnce = (name: string, ...optionsOrFn: any[]) => {
+			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
+			captureStep([name, { ...option, once: true }, fn])
+		}
+
 		const step = (() => {
-			const step: any = captureStepNormal
-			const once = captureStepOnce
+			const step: any = stepNomal
+			const once = stepOnce
 			step.once = once
 			return step
 		})()

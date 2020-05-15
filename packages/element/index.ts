@@ -104,7 +104,7 @@ export {
 /**
  * @docPage DSL
  */
-export { step, StepFunction, StepOptions } from '@flood/element-core'
+export { step, TestFn, StepFunction, StepOptions } from '@flood/element-core'
 
 /**
  * @docPage DSL

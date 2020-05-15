@@ -6,10 +6,10 @@ export const settings: TestSettings = {
 
 export default () => {
 	step.once('Test: 1', async browser => {
-		console.log('step 1')
+		console.log('This step run only 1 time')
 	})
 
 	step('Test: 2', async browser => {
-		console.log('step 2')
+		console.log('This step run 2 times')
 	})
 }

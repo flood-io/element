@@ -12,7 +12,7 @@ import { ElementPresence } from './Settings'
  *     await browser.visit("https://example.com")
  *   })
  *
- *   step("Step 2", async (browser: Browser) => {}, { waitTimeout: 90 })
+ *   step("Step 2", async (browser: Browser) => {})
  *
  *   step("Step 3", async (browser: Browser) => {})
  * }
@@ -22,39 +22,40 @@ import { ElementPresence } from './Settings'
  * @param fn Actual implementation of step
  * @param options step options
  */
-export const step = (() => {
-	function step<T>(name: string, fn: StepFunction<T>, options?: StepOptions): void {}
-	function once<T>(name: string, fn: StepFunction<T>, options?: StepOptions): void {}
-	step.once = once
-	return step
-})()
+export const step: StepExtended = (name: string, ...optionsOrFn: any[]) => {}
+step.once = (name: string, ...optionsOrFn: any[]) => {}
 
-export type StepDefinition<T> = (name: string, fn: StepFunction<T>) => Promise<any>
+export interface StepBase {
+	(stepName: string, options: StepOptions, testFn: TestFn): void
+	(stepName: string, testFn: TestFn): void
+	(stepName: string, ...optionsOrFn: any[]): void
+}
 
-/**
- * Specifies the available options which can be supplied to a step to override global settings.
- *
- * **Example:**
- *
- * ```typescript
- * step("Step 1", { waitTimeout: 300 }, async (browser: Browser) => {
- * 	await browser.click(...)
- * })
- * ```
- */
-export interface StepOptions {
+export interface StepExtended extends StepBase {
 	/**
-	 * Timeout in seconds for all wait and navigation operations within this <[step]>.
-	 * @default `30` seconds
+	 * Defines a test step which will run in all iterations assuming the previous step succeeded
 	 */
+	once: StepBase
+}
+
+export type StepDefinition = (name: string, fn: TestFn) => Promise<any>
+export type TestFn = (this: void, browser: Browser) => Promise<any>
+export type StepOptions = {
+	pending?: boolean
+	once?: boolean
 	waitTimeout?: number
-
-	/**
-	 * Override global auto wait setting. Uses `waitTimeout` from step if defined.
-	 *
-	 * @default `inherit`
-	 */
 	waitUntil?: ElementPresence
+}
+
+export function extractOptionsAndCallback(args: any[]): [Partial<StepOptions>, TestFn] {
+	if (args.length === 0) return [{ pending: true }, () => Promise.resolve()]
+	if (args.length === 1) {
+		return [{}, args[0]]
+	} else if (args.length === 2) {
+		const [options, fn] = args as [StepOptions, TestFn]
+		return [options, fn]
+	}
+	throw new Error(`Step called with too many arguments`)
 }
 
 /**
@@ -65,7 +66,7 @@ export interface StepOptions {
  *
  * **Example:**
  *
- * ```typescript
+ * ```
  * const step1: StepFunction = async (browser: Browser) => {
  * 	await browser.click(...)
  * }
@@ -76,11 +77,10 @@ export type StepFunction<T> = (driver: Browser, data?: T) => Promise<void>
 /**
  * @internal
  */
-export interface Step {
-	fn: StepFunction<any>
+export type Step = {
 	name: string
-	stepOptions: StepOptions
-	type: string
+	options: Partial<StepOptions>
+	fn: TestFn
 }
 
 /**
@@ -95,9 +95,4 @@ export function normalizeStepOptions(stepOpts: StepOptions): StepOptions {
 	}
 
 	return stepOpts
-}
-
-export enum StepType {
-	STEP = 'step',
-	ONCE = 'once',
 }

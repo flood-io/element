@@ -59,11 +59,8 @@ export type NullableLocatable = Locatable | null
 export declare const suite: SuiteDefinition
 
 export interface SuiteDefinition {
-	(callback: (this: null, s: StepDefinition<null>) => void): void
-	withData<T>(
-		data: TestDataSource<T>,
-		callback: (this: null, step: StepDefinition<T>) => void,
-	): void
+	(callback: (this: null, s: StepDefinition) => void): void
+	withData<T>(data: TestDataSource<T>, callback: (this: null, step: StepDefinition) => void): void
 }
 
 /**

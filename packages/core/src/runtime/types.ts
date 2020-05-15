@@ -339,9 +339,9 @@ export interface Browser {
 	setViewport(viewport: Viewport): Promise<void>
 
 	/**
-	 * Wait for a new page to be opened in the browser.
+	 * Wait for a new page to be opened in the browser then return that page.
 	 */
-	waitForNewPage(): Promise<void>
+	waitForNewPage(): Promise<Page>
 }
 
 /**

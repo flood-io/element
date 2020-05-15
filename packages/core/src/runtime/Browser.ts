@@ -50,8 +50,8 @@ export class Browser<T> implements BrowserInterface {
 	public screenshots: string[]
 	customContext: T
 
-	private newPageCallback: (resolve: () => void) => void
-	private newPagePromise: Promise<void>
+	private newPageCallback: (resolve: (page: Page) => void) => void
+	private newPagePromise: Promise<Page>
 
 	constructor(
 		public workRoot: WorkRoot,
@@ -66,9 +66,10 @@ export class Browser<T> implements BrowserInterface {
 
 		this.newPageCallback = resolve => {
 			this.client.browser.once('targetcreated', async target => {
-				this.client.page = await target.page()
-				await this.client.page.bringToFront()
-				resolve()
+				const newPage = await target.page()
+				this.client.page = newPage
+				await newPage.bringToFront()
+				resolve(newPage)
 			})
 		}
 
@@ -611,12 +612,14 @@ export class Browser<T> implements BrowserInterface {
 		await this.client.page.bringToFront()
 	}
 
-	public async waitForNewPage(): Promise<void> {
-		await this.newPagePromise
+	public async waitForNewPage(): Promise<Page> {
+		const newPage = await this.newPagePromise
 
 		// wait for another page to be opened
 		this.newPagePromise = new Promise(resolve => {
 			this.newPageCallback(resolve)
 		})
+
+		return newPage
 	}
 }

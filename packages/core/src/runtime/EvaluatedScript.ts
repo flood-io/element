@@ -197,7 +197,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			},
 		)
 
-		const stepNomal = (name: string, ...optionsOrFn: any[]) => {
+		const stepNormal = (name: string, ...optionsOrFn: any[]) => {
 			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
 			captureStep([name, option, fn])
 		}
@@ -209,11 +209,11 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 
 		const stepIf = async (conditionFn: ConditionFn, name: string, ...optionsOrFn: any[]) => {
 			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
-			captureStep([name, { ...option, ifFn: conditionFn }, fn])
+			captureStep([name, { ...option, predicate: conditionFn }, fn])
 		}
 
 		const step = (() => {
-			const step: any = stepNomal
+			const step: any = stepNormal
 			step.once = stepOnce
 			step.if = stepIf
 			return step

@@ -159,13 +159,14 @@ export default class Test implements ITest {
 
 			debug('running steps')
 			for (const step of this.steps) {
-				const { once, ifFn } = step.options
+				const { once, predicate } = step.options
 				if (once && iteration > 1) {
 					continue
 				}
-
-				const ifCondition = ifFn && (await ifFn(browser))
-				if (!ifCondition) continue
+				if (predicate) {
+					const ifCondition = await predicate.call(null, browser)
+					if (!ifCondition) continue
+				}
 
 				browser.customContext = step
 

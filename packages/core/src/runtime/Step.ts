@@ -62,7 +62,7 @@ export type ConditionFn = (this: void, browser: Browser) => boolean | Promise<bo
 export type StepOptions = {
 	pending?: boolean
 	once?: boolean
-	ifFn?: (this: void, browser: Browser) => boolean | Promise<boolean>
+	predicate?: (this: void, browser: Browser) => boolean | Promise<boolean>
 	waitTimeout?: number
 	waitUntil?: ElementPresence
 }

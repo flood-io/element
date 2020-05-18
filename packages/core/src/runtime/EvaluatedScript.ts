@@ -198,22 +198,22 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			},
 		)
 
-		const stepNormal: StepExtended = (name: string, ...optionsOrFn: any[]) => {
+		const step: StepExtended = (name: string, ...optionsOrFn: any[]) => {
 			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
 			captureStep([name, option, fn])
 		}
 
-		stepNormal.once = (name: string, ...optionsOrFn: any[]) => {
+		step.once = (name: string, ...optionsOrFn: any[]) => {
 			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
 			captureStep([name, { ...option, once: true }, fn])
 		}
 
-		stepNormal.if = async (conditionFn: ConditionFn, name: string, ...optionsOrFn: any[]) => {
+		step.if = async (conditionFn: ConditionFn, name: string, ...optionsOrFn: any[]) => {
 			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
 			captureStep([name, { ...option, predicate: conditionFn }, fn])
 		}
 
-		stepNormal.unless = async (conditionFn: ConditionFn, name: string, ...optionsOrFn: any[]) => {
+		step.unless = async (conditionFn: ConditionFn, name: string, ...optionsOrFn: any[]) => {
 			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
 			captureStep([
 				name,
@@ -225,14 +225,6 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 				fn,
 			])
 		}
-
-		const step = (() => {
-			const step: StepExtended = stepNormal
-			step.once = stepNormal.once
-			step.if = stepNormal.if
-			step.unless = stepNormal.unless
-			return step
-		})()
 
 		const context = {
 			setup: (setupSettings: TestSettings) => {

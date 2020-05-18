@@ -14,6 +14,7 @@ import {
 	StepOptions,
 	normalizeStepOptions,
 	extractOptionsAndCallback,
+	StepExtended,
 } from './Step'
 import { SuiteDefinition } from './types'
 import Test from './Test'
@@ -196,21 +197,15 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			},
 		)
 
-		const stepNomal = (name: string, ...optionsOrFn: any[]) => {
+		const step: StepExtended = (name: string, ...optionsOrFn: any[]) => {
 			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
 			captureStep([name, option, fn])
 		}
 
-		const stepOnce = (name: string, ...optionsOrFn: any[]) => {
+		step.once = (name: string, ...optionsOrFn: any[]) => {
 			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
 			captureStep([name, { ...option, once: true }, fn])
 		}
-
-		const step = (() => {
-			const step: any = stepNomal
-			step.once = stepOnce
-			return step
-		})()
 
 		const context = {
 			setup: (setupSettings: TestSettings) => {

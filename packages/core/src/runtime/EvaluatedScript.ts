@@ -15,8 +15,9 @@ import {
 	normalizeStepOptions,
 	extractOptionsAndCallback,
 	ConditionFn,
+	StepExtended,
 } from './Step'
-import { SuiteDefinition } from './types'
+import { SuiteDefinition, Browser } from './types'
 import Test from './Test'
 import { mustCompileFile } from '../TestScript'
 import { TestScriptError, TestScriptErrorMapper } from '../TestScriptError'
@@ -197,25 +198,39 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			},
 		)
 
-		const stepNormal = (name: string, ...optionsOrFn: any[]) => {
+		const stepNormal: StepExtended = (name: string, ...optionsOrFn: any[]) => {
 			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
 			captureStep([name, option, fn])
 		}
 
-		const stepOnce = (name: string, ...optionsOrFn: any[]) => {
+		stepNormal.once = (name: string, ...optionsOrFn: any[]) => {
 			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
 			captureStep([name, { ...option, once: true }, fn])
 		}
 
-		const stepIf = async (conditionFn: ConditionFn, name: string, ...optionsOrFn: any[]) => {
+		stepNormal.if = async (conditionFn: ConditionFn, name: string, ...optionsOrFn: any[]) => {
 			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
 			captureStep([name, { ...option, predicate: conditionFn }, fn])
 		}
 
+		stepNormal.unless = async (conditionFn: ConditionFn, name: string, ...optionsOrFn: any[]) => {
+			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
+			captureStep([
+				name,
+				{
+					...option,
+					predicate: (brower: Browser) =>
+						Promise.resolve(conditionFn(brower)).then(result => !result),
+				},
+				fn,
+			])
+		}
+
 		const step = (() => {
-			const step: any = stepNormal
-			step.once = stepOnce
-			step.if = stepIf
+			const step: StepExtended = stepNormal
+			step.once = stepNormal.once
+			step.if = stepNormal.if
+			step.unless = stepNormal.unless
 			return step
 		})()
 

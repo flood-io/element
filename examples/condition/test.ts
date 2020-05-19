@@ -28,4 +28,10 @@ export default () => {
 			console.log('Test unless runs with condition false')
 		},
 	)
+
+	step.skip('Test skip', async browser => {
+		console.log('Test skip')
+	})
+
+	step('Step pending')
 }

@@ -26,6 +26,7 @@ export const step: StepExtended = (name: string, ...optionsOrFn: any[]) => {}
 step.once = (name: string, ...optionsOrFn: any[]) => {}
 step.if = (condition: ConditionFn, name: string, ...optionsOrFn: any[]) => {}
 step.unless = (condition: ConditionFn, name: string, ...optionsOrFn: any[]) => {}
+step.skip = (name: string, ...optionsOrFn: any[]) => {}
 
 export interface StepBase {
 	(stepName: string, options: StepOptions, testFn: TestFn): void
@@ -54,6 +55,11 @@ export interface StepExtended extends StepBase {
 	 * Creates a conditional step, which will only run if the preceeding predicate returns false
 	 */
 	unless: StepConditionBase
+
+	/**
+	 * Creates a conditional step, which will skip this test
+	 */
+	skip: StepBase
 }
 
 export type StepDefinition = (name: string, fn: TestFn) => Promise<any>
@@ -63,6 +69,7 @@ export type StepOptions = {
 	pending?: boolean
 	once?: boolean
 	predicate?: (this: void, browser: Browser) => boolean | Promise<boolean>
+	skip?: boolean
 	waitTimeout?: number
 	waitUntil?: ElementPresence
 }

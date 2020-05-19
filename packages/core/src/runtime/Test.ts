@@ -172,7 +172,12 @@ export default class Test implements ITest {
 					continue
 				}
 				if (predicate) {
-					const ifCondition = await predicate.call(null, browser)
+					let ifCondition = false
+					try {
+						ifCondition = await predicate.call(null, browser)
+					} catch (err) {
+						console.log(err.message)
+					}
 					if (!ifCondition) {
 						debug('condition failling')
 						continue

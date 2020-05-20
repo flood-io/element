@@ -210,7 +210,7 @@ describe('Browser', () => {
 		// 3 tabs - about:blank, page_1.html & page_2.html
 		expect(pages.length).toEqual(3)
 
-		// switch page using page index
+		// switch page using page index in browser.pages
 		await browser.switchTo().page(1)
 		expect(browser.url).toContain('/page_1.html')
 

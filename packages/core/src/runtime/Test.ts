@@ -13,7 +13,7 @@ import InnerObserver from './test-observers/Inner'
 import { AnyErrorData, EmptyErrorData, AssertionErrorData } from './errors/Types'
 import { StructuredError } from '../utils/StructuredError'
 
-import { Step, ConditionFn } from './Step'
+import { Step } from './Step'
 
 import { CancellationToken } from '../utils/CancellationToken'
 
@@ -157,38 +157,8 @@ export default class Test implements ITest {
 				debug(JSON.stringify(testDataRecord))
 			}
 
-			const callPredicate = async (predicate: ConditionFn): Promise<boolean> => {
-				let condition = false
-				try {
-					condition = await predicate.call(null, browser)
-				} catch (err) {
-					console.log(err.message)
-				}
-				return condition
-			}
-
 			debug('running steps')
 			for (const step of this.steps) {
-				const { once, predicate, skip, pending } = step.options
-				if (pending) {
-					console.log(`(Pending) ${step.name}`)
-					continue
-				}
-				if (once && iteration > 1) {
-					continue
-				}
-				if (skip) {
-					console.log(`Skip test ${step.name}`)
-					continue
-				}
-				if (predicate) {
-					const condition = await callPredicate(predicate)
-					if (!condition) {
-						debug('condition failling')
-						continue
-					}
-				}
-
 				browser.customContext = step
 
 				await Promise.race([
@@ -237,7 +207,7 @@ export default class Test implements ITest {
 		try {
 			debug(`Run step: ${step.name}`) // ${step.fn.toString()}`)
 
-			browser.settings = { ...this.settings, ...step.options }
+			browser.settings = { ...this.settings, ...step.stepOptions }
 			await step.fn.call(null, browser, testDataRecord)
 		} catch (err) {
 			error = err

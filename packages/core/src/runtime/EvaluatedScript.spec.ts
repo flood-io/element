@@ -70,7 +70,7 @@ describe('EvaluatedScript', () => {
 			const { settings, steps } = new EvaluatedScript(runEnv, vmFeaturesTestScript)
 
 			expect(settings.waitTimeout).toBe(5)
-			expect(steps[0].stepOptions).toEqual({ waitTimeout: 60 })
+			expect(steps[0].options).toEqual({ waitTimeout: 60 })
 
 			// TODO move to Test.spec ?
 			// let actionSpy = Sinon.spy()

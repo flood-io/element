@@ -7,16 +7,10 @@ import { getFrames } from '../runtime/Browser'
  * @internal
  */
 export class TargetLocator implements ITargetLocator {
-	constructor(
-		private currentPage: Page,
-		private applyFrame: (frame: Frame | null) => void,
-		private applyPage: (page: number | Page) => void,
-	) {}
+	constructor(private page: Page, private apply: (frame: Frame | null) => void) {}
 
 	public async activeElement(): Promise<ElementHandle | null> {
-		const jsHandle = await this.currentPage.evaluateHandle(
-			() => document.activeElement || document.body,
-		)
+		const jsHandle = await this.page.evaluateHandle(() => document.activeElement || document.body)
 		if (!jsHandle) return null
 
 		const element = jsHandle.asElement()
@@ -29,7 +23,7 @@ export class TargetLocator implements ITargetLocator {
 	 * Navigates to the topmost frame
 	 */
 	public async defaultContent(): Promise<void> {
-		this.applyFrame(null)
+		this.apply(null)
 	}
 
 	/**
@@ -44,18 +38,18 @@ export class TargetLocator implements ITargetLocator {
 	 * @param id number | string | ElementHandle
 	 */
 	public async frame(id: number | string | IElementHandle) {
+		let nextFrame: Frame | null
+
 		if (id === null) {
 			this.defaultContent()
 			return
 		}
 
-		let nextFrame: Frame | null
-
-		const frames = getFrames(this.currentPage.frames())
+		const frames = getFrames(this.page.frames())
 
 		if (typeof id === 'number') {
 			// Assume frame index
-			const frameElementName = await this.currentPage.evaluate((index: number) => {
+			const frameElementName = await this.page.evaluate((index: number) => {
 				// NOTE typescript lib.dom lacks proper index signature for frames: Window to work
 				const frame = (window as any).frames[Number(index)]
 
@@ -66,13 +60,13 @@ export class TargetLocator implements ITargetLocator {
 			nextFrame = frames.find(frame => frame.name() === frameElementName) || null
 			if (!nextFrame) throw new Error(`Could not match frame by name or id: '${frameElementName}'`)
 
-			this.applyFrame(nextFrame)
+			this.apply(nextFrame)
 		} else if (typeof id === 'string') {
 			// Assume id or name attr
 			nextFrame = frames.find(frame => frame.name() === id) || null
 
 			if (nextFrame == null) {
-				const frameElementName = await this.currentPage.evaluate((id: string) => {
+				const frameElementName = await this.page.evaluate((id: string) => {
 					// NOTE typescript lib.dom lacks proper index signature for frames: Window to work
 					const frame = Array.from(window.frames).find(frame => frame.frameElement.id === id)
 
@@ -84,7 +78,7 @@ export class TargetLocator implements ITargetLocator {
 			}
 
 			if (!nextFrame) throw new Error(`Could not match frame by name or id: '${id}'`)
-			this.applyFrame(nextFrame)
+			this.apply(nextFrame)
 		} else if (id instanceof ElementHandle) {
 			const tagName = await id.tagName()
 			if (!tagName || !['FRAME', 'WINDOW', 'IFRAME'].includes(tagName))
@@ -99,21 +93,7 @@ export class TargetLocator implements ITargetLocator {
 			nextFrame = frames.find(frame => frame.name() === name) || null
 			if (!nextFrame) throw new Error(`Could not match frame by name or id: '${name}'`)
 
-			this.applyFrame(nextFrame)
+			this.apply(nextFrame)
 		}
-	}
-
-	/**
-	 * Switch the focus to another page in the browser.
-	 *
-	 * Accepts either:
-	 *
-	 * number: The index of the page in Browser.pages,
-	 * Page: The page to switch to.
-	 *
-	 * @param page number | Page
-	 */
-	public async page(page: number | Page) {
-		await this.applyPage(page)
 	}
 }

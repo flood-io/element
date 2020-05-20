@@ -36,7 +36,7 @@ export class ConsoleReporter implements IReporter {
 
 	async flushMeasurements(): Promise<void> {}
 
-	testLifecycle(stage: TestEvent, label: string): void {
+	testLifecycle(stage: TestEvent, label: string, timing?: number): void {
 		switch (stage) {
 			case TestEvent.AfterStepAction:
 				this.logger.info(`---> ${label}()`)
@@ -46,7 +46,7 @@ export class ConsoleReporter implements IReporter {
 				this.logger.info(`===> Step '${label}'`)
 				break
 			case TestEvent.AfterStep:
-				this.logger.info(`---> Step '${label}' finished`)
+				this.logger.info(`---> Step '${label}' finished in ${timing?.toLocaleString()}ms`)
 				break
 			case TestEvent.StepSkipped:
 				this.logger.info(`---- Step '${label}' skipped`)

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0-beta.5](https://github.com/flood-io/element/compare/v1.3.0-beta.4...v1.3.0-beta.5) (2020-05-20)
+
+
+### Reverts
+
+* Revert "Feature/Allow to add step condition (#150)" (#157) ([0fc6193](https://github.com/flood-io/element/commit/0fc6193853f77afdd47524b51990929d1d5933a6)), closes [#150](https://github.com/flood-io/element/issues/150) [#157](https://github.com/flood-io/element/issues/157)
+
+
+
+
+
 # [1.3.0-beta.4](https://github.com/flood-io/element/compare/v1.3.0-beta.3...v1.3.0-beta.4) (2020-05-20)
 
 **Note:** Version bump only for package @flood/element

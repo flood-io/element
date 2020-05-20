@@ -50,6 +50,9 @@ export class Browser<T> implements BrowserInterface {
 	public screenshots: string[]
 	customContext: T
 
+	private newPageCallback: (resolve: (page: Page) => void) => void
+	private newPagePromise: Promise<Page>
+
 	constructor(
 		public workRoot: WorkRoot,
 		private client: PuppeteerClientLike,
@@ -60,6 +63,19 @@ export class Browser<T> implements BrowserInterface {
 	) {
 		this.beforeFunc && this.afterFunc
 		this.screenshots = []
+
+		this.newPageCallback = resolve => {
+			this.client.browser.once('targetcreated', async target => {
+				const newPage = await target.page()
+				this.client.page = newPage
+				await newPage.bringToFront()
+				resolve(newPage)
+			})
+		}
+
+		this.newPagePromise = new Promise(resolve => {
+			this.newPageCallback(resolve)
+		})
 	}
 
 	private get context(): Promise<ExecutionContext> {
@@ -86,6 +102,10 @@ export class Browser<T> implements BrowserInterface {
 
 	public get page(): Page {
 		return this.client.page
+	}
+
+	public get pages(): Promise<Page[]> {
+		return this.client.browser.pages()
 	}
 
 	public get frames(): Frame[] {
@@ -505,9 +525,13 @@ export class Browser<T> implements BrowserInterface {
 	 * Switch the focus of the browser to another frame or window
 	 */
 	public switchTo(): TargetLocator {
-		return new TargetLocator(this.page, frame => {
-			this.activeFrame = frame
-		})
+		return new TargetLocator(
+			this.page,
+			frame => {
+				this.activeFrame = frame
+			},
+			page => this.switchPage(page),
+		)
 	}
 
 	public async performanceTiming(): Promise<PerformanceTiming> {
@@ -577,5 +601,25 @@ export class Browser<T> implements BrowserInterface {
 			// 	},
 			// })
 		}
+	}
+
+	private async switchPage(page: Page | number): Promise<void> {
+		if (typeof page === 'number') {
+			this.client.page = (await this.pages)[page]
+		} else {
+			this.client.page = page
+		}
+		await this.client.page.bringToFront()
+	}
+
+	public async waitForNewPage(): Promise<Page> {
+		const newPage = await this.newPagePromise
+
+		// wait for another page to be opened
+		this.newPagePromise = new Promise(resolve => {
+			this.newPageCallback(resolve)
+		})
+
+		return newPage
 	}
 }

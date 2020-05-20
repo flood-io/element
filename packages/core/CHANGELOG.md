@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0-beta.4](https://github.com/flood-io/element/compare/v1.3.0-beta.3...v1.3.0-beta.4) (2020-05-20)
+
+
+### Reverts
+
+* Revert "Feature/multi tabs or windows (#154)" (#155) ([65e669f](https://github.com/flood-io/element/commit/65e669f48d1d290ec7ab740b0de6cef61ce7f291)), closes [#154](https://github.com/flood-io/element/issues/154) [#155](https://github.com/flood-io/element/issues/155)
+* Revert "Handle multiple Tabs/Windows (#149)" (#153) ([ab00731](https://github.com/flood-io/element/commit/ab00731494a2821a7c24527786335beaa7b9b8eb)), closes [#149](https://github.com/flood-io/element/issues/149) [#153](https://github.com/flood-io/element/issues/153)
+
+
+
+
+
 # [1.3.0-beta.3](https://github.com/flood-io/element/compare/v1.3.0-beta.2...v1.3.0-beta.3) (2020-05-06)
 
 **Note:** Version bump only for package @flood/element-core

@@ -7,8 +7,17 @@ import fs from 'fs'
 import { promisify } from 'util'
 const exists = promisify(fs.exists)
 
-import { Step, StepFunction, StepOptions, normalizeStepOptions, StepDefinition } from './Step'
-import { SuiteDefinition } from './types'
+import {
+	Step,
+	StepDefinition,
+	TestFn,
+	StepOptions,
+	normalizeStepOptions,
+	extractOptionsAndCallback,
+	ConditionFn,
+	StepExtended,
+} from './Step'
+import { SuiteDefinition, Browser } from './types'
 import Test from './Test'
 import { mustCompileFile } from '../TestScript'
 import { TestScriptError, TestScriptErrorMapper } from '../TestScriptError'
@@ -147,15 +156,15 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 		const ENV = this.runEnv.stepEnv()
 
 		// closes over steps: Step[]
-		function captureStep(...args: any[]) {
+		function captureStep(args: any[]) {
 			// name: string, fn: (driver: Browser) => Promise<void>
 			let name: string
-			let fn: StepFunction<any>
-			let stepOptions: StepOptions = {}
+			let fn: TestFn
+			let options: StepOptions = {}
 
 			if (args.length === 3) {
-				;[name, stepOptions, fn] = args
-				stepOptions = normalizeStepOptions(stepOptions)
+				;[name, options, fn] = args
+				options = normalizeStepOptions(options)
 			} else {
 				;[name, fn] = args
 			}
@@ -165,28 +174,62 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 				console.warn(`Duplicate step name: ${name}, skipping step`)
 				return
 			}
-			steps.push({ fn, name, stepOptions })
+
+			steps.push({ fn, name, options })
 		}
 
 		// re-scope this for captureSuite to close over:
 		const evalScope = this as EvaluatedScript
 
-		type WithDataCallback<T> = (this: null, s: StepDefinition<T>) => void
+		type WithDataCallback = (this: null, s: StepDefinition) => void
 
 		// closes over evalScope (this) and ENV
 		const captureSuite: SuiteDefinition = Object.assign(
 			(
-				callback: (this: null, s: StepDefinition<null>) => void,
-			): ((this: null, s: StepDefinition<null>) => void) => {
+				callback: (this: null, s: StepDefinition) => void,
+			): ((this: null, s: StepDefinition) => void) => {
 				return callback
 			},
 			{
-				withData: <T>(data: TestDataSource<T>, callback: WithDataCallback<T>) => {
+				withData: <T>(data: TestDataSource<T>, callback: WithDataCallback) => {
 					evalScope.testData = expect(data, 'TestData is not present')
 					return callback
 				},
 			},
 		)
+
+		const step: StepExtended = (name: string, ...optionsOrFn: any[]) => {
+			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
+			captureStep([name, option, fn])
+		}
+
+		step.once = (name: string, ...optionsOrFn: any[]) => {
+			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
+			captureStep([name, { ...option, once: true }, fn])
+		}
+
+		step.if = async (conditionFn: ConditionFn, name: string, ...optionsOrFn: any[]) => {
+			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
+			captureStep([name, { ...option, predicate: conditionFn }, fn])
+		}
+
+		step.unless = async (conditionFn: ConditionFn, name: string, ...optionsOrFn: any[]) => {
+			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
+			captureStep([
+				name,
+				{
+					...option,
+					predicate: (brower: Browser) =>
+						Promise.resolve(conditionFn(brower)).then(result => !result),
+				},
+				fn,
+			])
+		}
+
+		step.skip = async (name: string, ...optionsOrFn: any[]) => {
+			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
+			captureStep([name, { ...option, skip: true }, fn])
+		}
 
 		const context = {
 			setup: (setupSettings: TestSettings) => {
@@ -196,7 +239,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			ENV,
 
 			// Supports either 2 or 3 args
-			step: captureStep,
+			step,
 
 			// Actual implementation of @flood/chrome
 			By,
@@ -229,7 +272,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 		/**
 		 * Evaluate default function
 		 */
-		testFn.apply(null, [captureStep])
+		testFn.apply(null, [])
 
 		// layer up the final settings
 		this.settings = {

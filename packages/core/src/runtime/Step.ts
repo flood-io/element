@@ -27,6 +27,7 @@ step.once = (name: string, ...optionsOrFn: any[]) => {}
 step.if = (condition: ConditionFn, name: string, ...optionsOrFn: any[]) => {}
 step.unless = (condition: ConditionFn, name: string, ...optionsOrFn: any[]) => {}
 step.skip = (name: string, ...optionsOrFn: any[]) => {}
+step.recovery = (name: string, ...optionsOrFn: any[]) => {}
 
 export interface StepBase {
 	(stepName: string, options: StepOptions, testFn: TestFn): void
@@ -60,6 +61,11 @@ export interface StepExtended extends StepBase {
 	 * Creates a conditional step, which will skip this test
 	 */
 	skip: StepBase
+
+	/**
+	 * Creates a recovery step
+	 */
+	recovery: StepBase
 }
 
 export type StepDefinition = (name: string, fn: TestFn) => Promise<any>

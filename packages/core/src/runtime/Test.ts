@@ -13,7 +13,7 @@ import InnerObserver from './test-observers/Inner'
 import { AnyErrorData, EmptyErrorData, AssertionErrorData } from './errors/Types'
 import { StructuredError } from '../utils/StructuredError'
 
-import { Step } from './Step'
+import { Step, ConditionFn } from './Step'
 
 import { CancellationToken } from '../utils/CancellationToken'
 
@@ -157,6 +157,16 @@ export default class Test implements ITest {
 				debug(JSON.stringify(testDataRecord))
 			}
 
+			const callPredicate = async (predicate: ConditionFn): Promise<boolean> => {
+				let condition = false
+				try {
+					condition = await predicate.call(null, browser)
+				} catch (err) {
+					console.log(err.message)
+				}
+				return condition
+			}
+
 			debug('running steps')
 			for (const step of this.steps) {
 				const { once, predicate, skip, pending } = step.options
@@ -172,13 +182,8 @@ export default class Test implements ITest {
 					continue
 				}
 				if (predicate) {
-					let ifCondition = false
-					try {
-						ifCondition = await predicate.call(null, browser)
-					} catch (err) {
-						console.log(err.message)
-					}
-					if (!ifCondition) {
+					const condition = await callPredicate(predicate)
+					if (!condition) {
 						debug('condition failling')
 						continue
 					}

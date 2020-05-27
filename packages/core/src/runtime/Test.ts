@@ -169,37 +169,45 @@ export default class Test implements ITest {
 				} catch (err) {
 					console.log(err.message)
 				}
+				if (!condition) this.stepCount += 1
 				return condition
+			}
+
+			const callCondition = (step: Step): boolean => {
+				const { once, skip, pending } = step.options
+				if (once || skip || pending) this.stepCount += 1
+				if (pending) {
+					console.log(`(Pending) ${step.name}`)
+					return false
+				}
+				if (once && iteration > 1) {
+					return false
+				}
+				if (skip) {
+					console.log(`Skip test ${step.name}`)
+					return false
+				}
+				return true
 			}
 
 			const callRecovery = async (step: Step): Promise<boolean> => {
 				const recoveryStep = this.recoverySteps[step.name]
-				if (recoveryStep) {
-					const result = await recoveryStep.fn.call(null, browser)
-					if (result !== RecoveryOption.ERROR) {
-						if (result === RecoveryOption.RESTART) this.stepCount = 0
-						this.failed = false
-						return true
-					}
-				}
-				return false
+				if (!recoveryStep) return false
+
+				const result = await recoveryStep.fn.call(null, browser)
+				if (result === RecoveryOption.ERROR) return false
+
+				if (result === RecoveryOption.RESTART) this.stepCount = 0
+				this.failed = false
+				return true
 			}
 
 			debug('running steps')
 			while (this.stepCount < this.steps.length) {
 				const step = this.steps[this.stepCount]
-				const { once, predicate, skip, pending } = step.options
-				if (pending) {
-					console.log(`(Pending) ${step.name}`)
-					continue
-				}
-				if (once && iteration > 1) {
-					continue
-				}
-				if (skip) {
-					console.log(`Skip test ${step.name}`)
-					continue
-				}
+				const { predicate } = step.options
+				if (!callCondition(step)) continue
+
 				if (predicate) {
 					const condition = await callPredicate(predicate)
 					if (!condition) {

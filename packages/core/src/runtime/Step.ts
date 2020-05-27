@@ -83,7 +83,7 @@ export type StepOptions = {
 export function extractOptionsAndCallback(args: any[]): [Partial<StepOptions>, TestFn] {
 	if (args.length === 0) return [{ pending: true }, () => Promise.resolve()]
 	if (args.length === 1) {
-		return [{}, args[0]]
+		return [{}, args[0] as TestFn]
 	} else if (args.length === 2) {
 		const [options, fn] = args as [StepOptions, TestFn]
 		return [options, fn]
@@ -106,6 +106,23 @@ export function extractOptionsAndCallback(args: any[]): [Partial<StepOptions>, T
  * ```
  */
 export type StepFunction<T> = (driver: Browser, data?: T) => Promise<void>
+export type StepRecoveryObject = {
+	[name: string]: Step
+}
+
+/**
+ * The `RecoveryOption` represents action which we will do after the recovery step has finished
+ * ```
+ * RETRY: retry the step failed
+ * RESTART: re-run the first step
+ * ERROR: throw an error
+ * ```
+ */
+export enum RecoveryOption {
+	RETRY = 'retry',
+	RESTART = 'restart',
+	ERROR = 'error',
+}
 
 /**
  * @internal

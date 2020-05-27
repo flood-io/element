@@ -13,7 +13,7 @@ import InnerObserver from './test-observers/Inner'
 import { AnyErrorData, EmptyErrorData, AssertionErrorData } from './errors/Types'
 import { StructuredError } from '../utils/StructuredError'
 
-import { Step, ConditionFn } from './Step'
+import { Step, ConditionFn, StepRecoveryObject, RecoveryOption } from './Step'
 
 import { CancellationToken } from '../utils/CancellationToken'
 
@@ -32,6 +32,7 @@ const debug = require('debug')('element:runtime:test')
 export default class Test implements ITest {
 	public settings: ConcreteTestSettings
 	public steps: Step[]
+	public recoverySteps: StepRecoveryObject
 
 	public runningBrowser: Browser<Step> | null
 
@@ -44,6 +45,8 @@ export default class Test implements ITest {
 	public iteration = 0
 
 	public failed: boolean
+
+	public stepCount: number
 
 	get skipping(): boolean {
 		return this.failed
@@ -59,9 +62,10 @@ export default class Test implements ITest {
 		this.script = script
 
 		try {
-			const { settings, steps } = script
+			const { settings, steps, recoverySteps } = script
 			this.settings = settings as ConcreteTestSettings
 			this.steps = steps
+			this.recoverySteps = recoverySteps
 
 			// Adds output for console in script
 			script.bindTest(this)
@@ -120,6 +124,7 @@ export default class Test implements ITest {
 
 		this.failed = false
 		this.runningBrowser = null
+		this.stepCount = 0
 
 		// await this.observer.attachToNetworkRecorder()
 
@@ -167,8 +172,22 @@ export default class Test implements ITest {
 				return condition
 			}
 
+			const callRecovery = async (step: Step): Promise<boolean> => {
+				const recoveryStep = this.recoverySteps[step.name]
+				if (recoveryStep) {
+					const result = await recoveryStep.fn.call(null, browser)
+					if (result !== RecoveryOption.ERROR) {
+						if (result === RecoveryOption.RESTART) this.stepCount = 0
+						this.failed = false
+						return true
+					}
+				}
+				return false
+			}
+
 			debug('running steps')
-			for (const step of this.steps) {
+			while (this.stepCount < this.steps.length) {
+				const step = this.steps[this.stepCount]
 				const { once, predicate, skip, pending } = step.options
 				if (pending) {
 					console.log(`(Pending) ${step.name}`)
@@ -199,9 +218,12 @@ export default class Test implements ITest {
 				if (cancelToken.isCancellationRequested) return
 
 				if (this.failed) {
+					const result = await callRecovery(step)
+					if (result) continue
 					console.log('failed, bailing out of steps')
 					throw Error('test failed')
 				}
+				this.stepCount += 1
 			}
 		} catch (err) {
 			console.log('error -> failed', err)

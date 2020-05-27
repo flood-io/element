@@ -110,3 +110,8 @@ export { step, TestFn, StepFunction, StepOptions } from '@flood/element-core'
  * @docPage DSL
  */
 export { suite } from '@flood/element-core'
+
+/**
+ * @docPage helpers
+ */
+export { RecoveryOption } from '@flood/element-core'

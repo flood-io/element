@@ -16,6 +16,8 @@ import {
 	extractOptionsAndCallback,
 	ConditionFn,
 	StepExtended,
+	StepRecoveryObject,
+	RecoveryOption,
 } from './Step'
 import { SuiteDefinition, Browser } from './types'
 import Test from './Test'
@@ -65,6 +67,7 @@ function createVirtualMachine(floodElementActual: any, root?: string): NodeVM {
 
 export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLike {
 	public steps: Step[]
+	public recoverySteps: StepRecoveryObject
 	public settings: ConcreteTestSettings
 
 	private vm: NodeVM
@@ -149,6 +152,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 
 		// Clear existing steps
 		const steps: Step[] = []
+		const recoverySteps: StepRecoveryObject = {}
 
 		// establish base settings
 		let rawSettings = DEFAULT_SETTINGS
@@ -231,6 +235,11 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			captureStep([name, { ...option, skip: true }, fn])
 		}
 
+		step.recovery = async (name: string, ...optionsOrFn: any[]) => {
+			const [options, fn] = extractOptionsAndCallback(optionsOrFn)
+			recoverySteps[name] = { name, options, fn }
+		}
+
 		const context = {
 			setup: (setupSettings: TestSettings) => {
 				Object.assign(rawSettings, setupSettings)
@@ -248,6 +257,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			MouseButtons,
 			TestData: this.testDataLoaders,
 			Key,
+			RecoveryOption,
 			userAgents,
 			suite: captureSuite,
 		}
@@ -281,6 +291,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 		}
 
 		this.steps = steps
+		this.recoverySteps = recoverySteps
 
 		debug('settings', this.settings)
 		debug('steps', this.steps)

@@ -1,6 +1,7 @@
 import { Condition, NullableLocatable } from '../Condition'
 import { Frame, Page } from 'puppeteer'
 import { getFrames } from '../../runtime/Browser'
+import { setTimeout } from 'timers'
 
 export class FrameCondition extends Condition {
 	constructor(desc: string, public id: NullableLocatable) {

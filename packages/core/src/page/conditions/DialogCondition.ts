@@ -1,6 +1,6 @@
 import { Condition } from '../Condition'
 import { Page, Dialog } from 'puppeteer'
-import { clearTimeout } from 'timers'
+import { clearTimeout, setTimeout } from 'timers'
 
 const isDialog = (thing: any): thing is Dialog => {
 	return typeof thing?.message == 'function'

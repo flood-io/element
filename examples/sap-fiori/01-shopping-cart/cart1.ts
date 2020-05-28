@@ -14,7 +14,6 @@ import { random, name, internet, address } from 'faker'
 
 export const settings: TestSettings = {
 	loopCount: -1,
-	screenshotOnFailure: true,
 	description: 'Quickstart Demo App - SAPUI5',
 	actionDelay: 7.5,
 	stepDelay: 7.5,
@@ -38,8 +37,8 @@ export default () => {
 			'https://sapui5.hana.ondemand.com/test-resources/sap/m/demokit/cart/webapp/index.html#/categories',
 		)
 
-		//Verify that we are on the correct page by checking that 'Employee List' text is shown on the page
-		const pageTextVerify = By.visibleText('Product Catalog')
+		//Verify that we are on the correct page by checking that 'Recently Viewed Items' text is shown on the page
+		const pageTextVerify = By.visibleText('Recently Viewed Items')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 
 		//Take a screenshot
@@ -85,12 +84,14 @@ export default () => {
 	step('Shopping Cart Demo App: Add Item to Cart', async browser => {
 		//Click on the Add to Cart
 		let obj_btn_Item = By.css('#__button4-container-cart---welcomeView--promotedRow-0-img')
+		//let obj_btn_Item = By.xpath("//bdi[contains(text(),'Add to Cart')]")
 		await browser.wait(Until.elementIsVisible(obj_btn_Item))
 		let element1 = await browser.findElement(obj_btn_Item)
 		await element1.click()
 
 		//View your cart by clicking on the 'Shopping Trolley' icon in the top right hand corner
-		let obj_btn_ViewCart = By.css('#__button3-img')
+		//Show Shopping Cart
+		let obj_btn_ViewCart = By.xpath("//button[contains(@title, 'Show Shopping Cart')]")
 		await browser.wait(Until.elementIsVisible(obj_btn_ViewCart))
 		let element2 = await browser.findElement(obj_btn_ViewCart)
 		await element2.click()
@@ -308,13 +309,24 @@ export default () => {
 		const pageTextVerifyOrder = By.visibleText('Thank you for your order!')
 		await browser.wait(Until.elementIsVisible(pageTextVerifyOrder))
 
+		//Take a screenshot
+		await browser.takeScreenshot()
+	})
+
+	step('Shopping Cart Demo App: Verify Order Number', async browser => {
+		//Check that we get - Thank you for your order!
+		const pageTextVerifyOrder = By.visibleText('Your order number:')
+		await browser.wait(Until.elementIsVisible(pageTextVerifyOrder))
+
+		//returnToShopButton
+		//let obj_btn_ConfirmYes = By.xpath("//bdi[contains(@id, 'returnToShopButton')]")
+		//await browser.wait(Until.elementIsVisible(obj_btn_ConfirmYes))
+
 		//record order number
-		////*[@id="__text170"]/p[1]/strong
-		//let obj_txt_OrderNum = By.xpath('//*[@id="__text170"]')
-		//await browser.wait(Until.elementIsVisible(obj_txt_OrderNum))
-		//let element3 = await browser.findElement(obj_txt_OrderNum)
-		//let orderText = await element3.text()
-		//console.log(orderText)
+		//await browser.wait(Until.elementIsVisible(By.xpath('//*[@id="__text170"]/p[1]/strong')))
+		//let orderNumber = await browser.findElement(By.xpath('//*[@id="__text170"]/p[1]/strong'))
+		//let valOrderText = await orderNumber.text()
+		//console.log(valOrderText)
 
 		//Take a screenshot
 		await browser.takeScreenshot()

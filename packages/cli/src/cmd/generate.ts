@@ -1,14 +1,19 @@
 import { Argv, Arguments, CommandModule } from 'yargs'
 
+interface CommandArgs extends Arguments {
+	file: string
+}
+
 const cmd: CommandModule = {
 	command: 'generate <file> [options]',
 	describe: 'Generate a basic test script from a template',
 
-	async handler(args: Arguments) {
+	async handler(args: CommandArgs) {
 		const { default: yeomanEnv } = await import('yeoman-environment')
 		const env = yeomanEnv.createEnv()
-		env.register(require.resolve('../generator/test-script'), 'test-script')
-		env.run(() => `test-script ${args.file}`)
+		const { default: TestScriptGenerator } = await import('../generator/test-script/index')
+		env.registerStub(TestScriptGenerator as any, 'element/test-script')
+		env.run(['element/test-script', args.file], () => `test-script ${args.file}`)
 	},
 
 	builder(yargs: Argv) {

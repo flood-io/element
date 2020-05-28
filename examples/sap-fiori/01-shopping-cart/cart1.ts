@@ -15,9 +15,9 @@ import { random, name, internet, address } from 'faker'
 export const settings: TestSettings = {
 	loopCount: -1,
 	screenshotOnFailure: true,
-	description: 'Quickstart Demo App - SAP',
-	actionDelay: 3.5,
-	stepDelay: 3.5,
+	description: 'Quickstart Demo App - SAPUI5',
+	actionDelay: 7.5,
+	stepDelay: 7.5,
 	clearCache: true,
 	disableCache: true,
 	clearCookies: true,
@@ -46,7 +46,7 @@ export default () => {
 		await browser.takeScreenshot()
 	})
 
-	step('Shopping Cart Demo App: Flat Screen TVs', async browser => {
+	step('Shopping Cart Demo App: View Product Category', async browser => {
 		//Click on the text link item called 'Flat Screen TVs'
 		let obj_itm_FSTVs = By.xpath("//div[contains(text(),'Flat Screen TVs')]")
 		await browser.wait(Until.elementIsVisible(obj_itm_FSTVs))
@@ -61,7 +61,7 @@ export default () => {
 		await browser.takeScreenshot()
 	})
 
-	step('Shopping Cart Demo App: Select TV Model', async browser => {
+	step('Shopping Cart Demo App: Select Item', async browser => {
 		//Click on the text link item called 'Flat Watch HD37'
 		let obj_btn_HD37 = By.xpath("//span[contains(text(),'Flat Watch HD37')]")
 		await browser.wait(Until.elementIsVisible(obj_btn_HD37))
@@ -163,8 +163,8 @@ export default () => {
 		var randFirstname = name.firstName()
 		var randSurname = name.lastName()
 		var randPhoneNumber = random.number(999999999).toString()
-		//var randEmail = internet.email()
-		var randEmail = 'jason@flood.io'
+		var randEmail = internet.email()
+		//var randEmail = 'jason@flood.io'
 
 		//we need to use the Browser.page object so we can type in Form details to simulate the keyboard
 		const page = browser.page
@@ -174,18 +174,18 @@ export default () => {
 
 		//Type in form details with a keyboard typing delay of 100 to simulate a real user
 		await page.type('#container-cart---checkoutView--cashOnDeliveryName-inner', randFirstname, {
-			delay: 100,
+			delay: 200,
 		})
 		await page.type('#container-cart---checkoutView--cashOnDeliveryLastName-inner', randSurname, {
-			delay: 100,
+			delay: 200,
 		})
 		await page.type(
 			'#container-cart---checkoutView--cashOnDeliveryPhoneNumber-inner',
 			'+61' + randPhoneNumber,
-			{ delay: 100 },
+			{ delay: 200 },
 		)
 		await page.type('#container-cart---checkoutView--cashOnDeliveryEmail-inner', randEmail, {
-			delay: 100,
+			delay: 200,
 		})
 
 		//Press the 'Enter' key after the email to fire events to show the next Step button
@@ -217,7 +217,7 @@ export default () => {
 		const page = browser.page
 
 		var randAddressStreet = address.streetName()
-		var randAddressCity = address.city()
+		var randAddressCity = 'Melbourne'
 		var randAddressZip = '3000'
 		var randAddressCountry = 'Australia'
 
@@ -230,20 +230,20 @@ export default () => {
 			'#container-cart---checkoutView--invoiceAddressAddress-inner',
 			randAddressStreet,
 			{
-				delay: 100,
+				delay: 200,
 			},
 		)
 		await page.type('#container-cart---checkoutView--invoiceAddressCity-inner', randAddressCity, {
-			delay: 100,
+			delay: 200,
 		})
 		await page.type('#container-cart---checkoutView--invoiceAddressZip-inner', randAddressZip, {
-			delay: 100,
+			delay: 200,
 		})
 		await page.type(
 			'#container-cart---checkoutView--invoiceAddressCountry-inner',
 			randAddressCountry,
 			{
-				delay: 100,
+				delay: 200,
 			},
 		)
 

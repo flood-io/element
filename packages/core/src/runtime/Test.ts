@@ -195,11 +195,13 @@ export default class Test implements ITest {
 			const callRecovery = async (step: Step): Promise<boolean> => {
 				const recoveryStep = this.recoverySteps[step.name]
 				if (!recoveryStep) return false
-
-				const result = await recoveryStep.fn.call(null, browser)
-				if (result === RecoveryOption.ERROR) return false
-
-				if (result === RecoveryOption.RESTART) this.stepCount = 0
+				try {
+					const result = await recoveryStep.fn.call(null, browser)
+					if (result === RecoveryOption.ERROR) return false
+					if (result === RecoveryOption.RESTART) this.stepCount = 0
+				} catch (err) {
+					return false
+				}
 				this.failed = false
 				return true
 			}

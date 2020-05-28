@@ -12,6 +12,13 @@ import { ElementPresence } from './Settings'
  *     await browser.visit("https://example.com")
  *   })
  *
+ *   step.recovery("Step 2", async (browser: Browser) => {
+ *     // do stuff
+ *     return RecoveryOption.RETRY //retry step 2 (default)
+ *     return RecoveryOption.RESTART //restart step 1
+ *     return RecoveryOption.ERROR //throw an error
+ *   })
+ *
  *   step("Step 2", async (browser: Browser) => {})
  *
  *   step("Step 3", async (browser: Browser) => {})

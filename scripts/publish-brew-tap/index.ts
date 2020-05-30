@@ -25,8 +25,6 @@ const home = process.env.HOME
 if (home === undefined) throw new Error('no $HOME set')
 const tap = path.join(home, '.cache/flood-element/tap-tmp')
 
-console.log('tap', tap)
-
 const sum = child_process
 	.execSync(`curl -sL ${eltURL} | shasum -a 256 -b`, { encoding: 'utf8' })
 	.split(' ')[0]
@@ -67,7 +65,7 @@ function versionToBrewClassSuffix(version: string): string {
 const writeBrew = root => {
 	if (prerelease) {
 		if (prerelease[0] === 'beta' || prerelease[0] === 'alpha') {
-			// this writes formula for each beta versione.g. element@0.0.2-beta.16
+			// this writes formula for each beta version e.g. element@0.0.2-beta.16
 			// which isn't terribly useful
 			// fs.writeFileSync(path.join(root, `element@${version}.rb`), formula(version), 'utf8')
 

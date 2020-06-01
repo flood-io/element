@@ -23,7 +23,7 @@ export default () => {
 		},
 	)
 	step.skip('Test skip', async browser => {
-		console.log('Test skip')
+		console.log('This step will not be run')
 	})
 	step('Step pending')
 

@@ -118,9 +118,9 @@ export type StepRecoveryObject = {
 }
 
 /**
- * The `RecoveryOption` represents action which we will do after the recovery step has finished
+ * The `RecoveryOption` represents an action which we will do after the recovery step has finished
  * ```
- * RETRY: retry the step failed
+ * RETRY: retry the failed step
  * RESTART: re-run the first step
  * ERROR: throw an error
  * ```

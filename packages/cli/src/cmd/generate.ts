@@ -11,9 +11,9 @@ const cmd: CommandModule = {
 	async handler(args: CommandArgs) {
 		const { default: yeomanEnv } = await import('yeoman-environment')
 		const env = yeomanEnv.createEnv()
-		const { default: TestScriptGenerator } = await import('../generator/test-script/index')
+		const { default: TestScriptGenerator } = await import('../generator/test-script')
 		env.registerStub(TestScriptGenerator as any, 'element/test-script')
-		env.run(['element/test-script', args.file], () => `test-script ${args.file}`)
+		env.run(['element/test-script', args.file], () => 'Generate success')
 	},
 
 	builder(yargs: Argv) {

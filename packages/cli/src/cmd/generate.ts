@@ -1,27 +1,31 @@
 import { Argv, Arguments, CommandModule } from 'yargs'
+import chalk from 'chalk'
+import generateScriptCmd from '../cmd/generate_cmds/generateTestScript'
+import generateConfigurationCmd from '../cmd/generate_cmds/generateTestConfiguration'
 
 const cmd: CommandModule = {
-	command: 'generate <file> [options]',
-	describe: 'Generate a basic test script from a template',
+    command: 'generate <command>',
+    describe: 'Generate a basic [test script|test configuration]',
 
-	async handler(args: Arguments) {
-		const { default: yeomanEnv } = await import('yeoman-environment')
-		const env = yeomanEnv.createEnv()
-		env.register(require.resolve('../generator/test-script'), 'test-script')
-		env.run(() => `test-script ${args.file}`)
-	},
+    async handler(args: Arguments) {
+    },
 
-	builder(yargs: Argv) {
-		return yargs
-			.option('verbose', {
-				describe: 'Verbose mode',
-			})
-			.check(({ file }) => {
-				if (!(file as string).length)
-					return new Error('Please provide the path to the test script to write')
-				return true
-			})
-	},
+    builder(yargs: Argv) {
+        return yargs
+            .usage('usage: generate <command>')
+            .command(generateScriptCmd)
+            .command(generateConfigurationCmd)
+            .updateStrings({
+                'Commands:': chalk.grey('Commands:\n'),
+            })
+            .demandCommand()
+            .help('help')
+            .fail(msg => {
+                // if (err) throw err // preserve stack
+                console.error(chalk.redBright(msg))
+                process.exit(1)
+            })
+    },
 }
 
 export default cmd

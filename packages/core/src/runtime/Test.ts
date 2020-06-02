@@ -194,6 +194,7 @@ export default class Test implements ITest {
 
 			const callRecovery = async (step: Step): Promise<boolean> => {
 				const recoveryStep = this.recoverySteps[step.name]
+				delete this.recoverySteps[step.name] // step recovery should be run 1 time
 				if (!recoveryStep) return false
 				try {
 					const result = await recoveryStep.fn.call(null, browser)

@@ -1,14 +1,8 @@
 module.exports = {
-    browsers: {
-        chrome: {
-        },
-        firefox: {
-        }
-    },
     options: {
-        Headless: true,
+        headless: true,
         devtools: false,
-        Sandbox: true,
+        sandbox: true,
         watch: false,
         stepDelay: -1,
         actionDelay: -1,
@@ -22,7 +16,9 @@ module.exports = {
         testPathMatch: ['./*.perf..ts']
     },
     flood: {
-        hosted: false,
+        token: '',
+        project: '',
+        hosted: fe,
         vu: 500,
         duration: 15,
         rampup: 0,

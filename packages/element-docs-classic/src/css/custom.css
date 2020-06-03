@@ -42,3 +42,11 @@ html[data-theme="dark"] {
 .navbar__search-input:focus {
   width: 17.5rem;
 }
+
+[role="banner"] {
+  position: relative;
+  width: 100%;
+  height: var(--docusaurus-announcement-bar-height);
+  background-color: var(--ifm-color-primary);
+  color: var(--ifm-color-primary-lightest) !important;
+}

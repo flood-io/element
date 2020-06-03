@@ -326,28 +326,6 @@ or a [Condition][], for more flexible conditions.
 
 - returns: [Promise<`any`>][promise]
 
-## `Driver`
-
-Driver is an alias to Browser. Please use Browser when possible.
-
-> Notice:
->
-> This is kept for simplifying migrations from Selenium WebDriver.js.
-
-## `Locatable`
-
-Locatable represents anything able to be located, either a string selector or a [Locator][locator]. [Locators][locator] are generally created using [By][] methods.
-
-    [Locator][] | [ElementHandle][] | string
-
-## `NullableLocatable`
-
-NullableLocatable represents a [Locatable][locatable] which could also be null.
-
-Note that most Element location API methods accept a NullableLocatable but will throw an [Error][] if its actually [null][].
-
-    [Locatable][] | null
-
 [step]: api/DSL
 [promise]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
 [nullablelocatable]: api/Browser

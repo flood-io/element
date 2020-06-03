@@ -1,3 +1,7 @@
+// const versions = require("./versions.json");
+
+const versions = ["1.0", "1.2"];
+
 module.exports = {
   title: "Flood Element",
   tagline: "Break the network barrier",
@@ -7,6 +11,11 @@ module.exports = {
   organizationName: "flood-io", // Usually your GitHub org/user name.
   projectName: "element", // Usually your repo name.
   themeConfig: {
+    announcementBar: {
+      id: "supportus",
+      content:
+        '⭐️ If you like Flood Element, give it a star on <a target="_blank" rel="noopener noreferrer" href="https://github.com/flood-io/element">GitHub</a>! ⭐️',
+    },
     algolia: {
       apiKey: "api-key",
       indexName: "index-name",
@@ -15,21 +24,52 @@ module.exports = {
     },
     navbar: {
       title: "Element",
+      hideOnScroll: true,
+
       logo: {
         alt: "Element",
         src: "img/Element-Logo-Mark.svg",
       },
       links: [
+        // {
+        //   to: "docs/",
+        //   activeBasePath: "docs",
+        //   label: "Docs",
+        //   position: "left",
+        // },
+
         {
-          to: "docs/",
-          activeBasePath: "docs",
           label: "Docs",
+          to: "docs/introduction", // "fake" link
           position: "left",
+          activeBaseRegex: `docs`,
+          items: [
+            {
+              label: versions[0],
+              to: "docs/",
+              activeBaseRegex: `docs/(?!${versions.join("|")}|next)`,
+            },
+            ...versions.slice(1).map((version) => ({
+              label: version,
+              to: `docs/${version}/`,
+            })),
+            {
+              label: "Master/Unreleased",
+              to: "docs/next/",
+              activeBaseRegex: `docs/next/(?!support|team|resources)`,
+            },
+          ],
         },
         { to: "blog", label: "Blog", position: "left" },
         {
           href: "https://github.com/flood-io/element",
           label: "GitHub",
+          position: "right",
+          "aria-label": "GitHub repository",
+        },
+        {
+          to: "versions",
+          label: `v${versions[0]}`,
           position: "right",
         },
       ],

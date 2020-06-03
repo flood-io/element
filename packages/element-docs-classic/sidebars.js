@@ -12,7 +12,7 @@ module.exports = {
         "Browser Interaction": ["guides/mouse"],
       },
     ],
-    "API reference": ["api/browser"],
+    "API reference": ["api/browser", "api/element-handle"],
     Tutorials: [
       "tutorials/youtube",
       "tutorials/woocommerce",

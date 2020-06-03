@@ -1,4 +1,4 @@
-import { step, TestSettings, RecoveryOption } from '@flood/element'
+import { step, TestSettings, RecoverWith } from '@flood/element'
 
 export const settings: TestSettings = {
 	loopCount: 1,
@@ -32,17 +32,17 @@ export default () => {
 
 	step.recovery('Step 1', async browser => {
 		console.log('Recovery step 1 done, retry step 1')
-		return RecoveryOption.RETRY
+		return RecoverWith.RETRY
 	})
 
 	step.recovery('Step 2', async browser => {
 		console.log('Recovery step 2 done, restart step 1')
-		return RecoveryOption.RESTART
+		return RecoverWith.RESTART
 	})
 
 	step.recovery('Step 3', async browser => {
 		console.log('Recovery step 3 done, throw an error')
-		return RecoveryOption.ERROR
+		return RecoverWith.CONTINUE
 	})
 
 	step('Step 1', async browser => {

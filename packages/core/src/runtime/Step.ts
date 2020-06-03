@@ -14,9 +14,9 @@ import { ElementPresence } from './Settings'
  *
  *   step.recovery("Step 2", async (browser: Browser) => {
  *     // do stuff
- *     return RecoveryOption.RETRY //retry step 2 (default)
- *     return RecoveryOption.RESTART //restart step 1
- *     return RecoveryOption.ERROR //throw an error
+ *     return RecoverWith.RETRY //retry step 2 (default)
+ *     return RecoverWith.RESTART //restart step 1
+ *     return RecoverWith.CONTINUE //continue next step
  *   })
  *
  *   step("Step 2", async (browser: Browser) => {})
@@ -85,6 +85,7 @@ export type StepOptions = {
 	skip?: boolean
 	waitTimeout?: number
 	waitUntil?: ElementPresence
+	maxRecovery?: number
 }
 
 export function extractOptionsAndCallback(args: any[]): [Partial<StepOptions>, TestFn] {
@@ -114,21 +115,24 @@ export function extractOptionsAndCallback(args: any[]): [Partial<StepOptions>, T
  */
 export type StepFunction<T> = (driver: Browser, data?: T) => Promise<void>
 export type StepRecoveryObject = {
-	[name: string]: Step
+	[name: string]: {
+		recoveryStep: Step
+		loopCount: number
+	}
 }
 
 /**
- * The `RecoveryOption` represents an action which we will do after the recovery step has finished
+ * The `RecoverWith` represents an action which we will do after the recovery step has finished
  * ```
  * RETRY: retry the failed step
  * RESTART: re-run the first step
- * ERROR: throw an error
+ * CONTINUE: continue next step
  * ```
  */
-export enum RecoveryOption {
+export enum RecoverWith {
 	RETRY = 'retry',
 	RESTART = 'restart',
-	ERROR = 'error',
+	CONTINUE = 'continue',
 }
 
 /**
@@ -149,6 +153,8 @@ export function normalizeStepOptions(stepOpts: StepOptions): StepOptions {
 		stepOpts.waitTimeout = stepOpts.waitTimeout / 1e3
 	} else if (Number(stepOpts.waitTimeout) === 0) {
 		stepOpts.waitTimeout = 30
+	} else if (Number(stepOpts.maxRecovery) === 0) {
+		stepOpts.maxRecovery = 1
 	}
 
 	return stepOpts

@@ -13,7 +13,8 @@ import InnerObserver from './test-observers/Inner'
 import { AnyErrorData, EmptyErrorData, AssertionErrorData } from './errors/Types'
 import { StructuredError } from '../utils/StructuredError'
 
-import { Step, ConditionFn, StepRecoveryObject, RecoveryOption } from './Step'
+import { Step, ConditionFn, StepRecoveryObject, RecoverWith } from './Step'
+import { Looper } from '../Runner'
 
 import { CancellationToken } from '../utils/CancellationToken'
 
@@ -47,6 +48,8 @@ export default class Test implements ITest {
 	public failed: boolean
 
 	public stepCount: number
+
+	public recoveryCount: number
 
 	get skipping(): boolean {
 		return this.failed
@@ -93,12 +96,17 @@ export default class Test implements ITest {
 	 * @return {Promise<void|Error>}
 	 */
 	public async run(iteration?: number): Promise<void> | never {
-		await this.runWithCancellation(iteration || 0, new CancellationToken())
+		await this.runWithCancellation(
+			iteration || 0,
+			new CancellationToken(),
+			new Looper(this.settings),
+		)
 	}
 
 	public async runWithCancellation(
 		iteration: number,
 		cancelToken: CancellationToken,
+		looper: Looper,
 	): Promise<void> {
 		console.assert(this.client, `client is not configured in Test`)
 
@@ -125,6 +133,7 @@ export default class Test implements ITest {
 		this.failed = false
 		this.runningBrowser = null
 		this.stepCount = 0
+		this.recoveryCount = 0
 
 		// await this.observer.attachToNetworkRecorder()
 
@@ -193,13 +202,18 @@ export default class Test implements ITest {
 			}
 
 			const callRecovery = async (step: Step): Promise<boolean> => {
-				const recoveryStep = this.recoverySteps[step.name]
-				delete this.recoverySteps[step.name] // step recovery should be run 1 time
-				if (!recoveryStep) return false
+				const { recoveryStep, loopCount } = this.recoverySteps[step.name]
+				const { maxRecovery } = this.settings
+				const settingRecoverCount = loopCount !== -1 ? loopCount : maxRecovery || 1
+				if (!recoveryStep || this.recoveryCount >= settingRecoverCount) return false
+				this.recoveryCount += 1
 				try {
 					const result = await recoveryStep.fn.call(null, browser)
-					if (result === RecoveryOption.ERROR) return false
-					if (result === RecoveryOption.RESTART) this.stepCount = 0
+					if (result === RecoverWith.CONTINUE) return true
+					if (result === RecoverWith.RESTART) {
+						looper.restartLoop()
+						this.stepCount = this.steps.length
+					}
 				} catch (err) {
 					return false
 				}

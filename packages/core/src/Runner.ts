@@ -24,7 +24,7 @@ function delay(t: number, v?: any) {
 	})
 }
 
-class Looper {
+export class Looper {
 	public iterations = 0
 	private timeout: any
 	private cancelled = false
@@ -72,6 +72,10 @@ class Looper {
 		const hasLoopsLeft = this.iterations < this.loopCount
 
 		return !this.cancelled && (hasLoopsLeft || hasInfiniteLoops)
+	}
+
+	restartLoop() {
+		this.iterations -= 1
 	}
 
 	async run(iterator: (iteration: number) => Promise<void>): Promise<number> {
@@ -181,7 +185,7 @@ export class Runner {
 
 				const startTime = new Date()
 				try {
-					await test.runWithCancellation(iteration, cancelToken)
+					await test.runWithCancellation(iteration, cancelToken, this.looper)
 				} catch (err) {
 					this.logger.error(
 						`[Iteration: ${iteration}] Error in Runner Loop: ${err.name}: ${err.message}\n${err.stack}`,

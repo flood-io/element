@@ -35,6 +35,7 @@ step.if = (condition: ConditionFn, name: string, ...optionsOrFn: any[]) => {}
 step.unless = (condition: ConditionFn, name: string, ...optionsOrFn: any[]) => {}
 step.skip = (name: string, ...optionsOrFn: any[]) => {}
 step.recovery = (name: string, ...optionsOrFn: any[]) => {}
+step.repeat = (count: number, name: string, ...optionsOrFn: any[]) => {}
 
 export interface StepBase {
 	(stepName: string, options: StepOptions, testFn: TestFn): void
@@ -46,6 +47,12 @@ export interface StepConditionBase {
 	(condition: ConditionFn, name: string, options: StepOptions, testFn: TestFn)
 	(condition: ConditionFn, name: string, testFn: TestFn)
 	(condition: ConditionFn, ...optionsOrFn: any[])
+}
+
+export interface StepRepeatablebase {
+	(count: number, name: string, options: StepOptions, testFn: TestFn)
+	(count: number, name: string, testFn: TestFn)
+	(count: number, ...optionsOrFn: any[])
 }
 
 export interface StepExtended extends StepBase {
@@ -73,6 +80,11 @@ export interface StepExtended extends StepBase {
 	 * Creates a recovery step
 	 */
 	recovery: StepBase
+
+	/**
+	 * Creates a repeatable step
+	 */
+	repeat: StepRepeatablebase
 }
 
 export type StepDefinition = (name: string, fn: TestFn) => Promise<any>

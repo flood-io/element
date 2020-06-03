@@ -70,6 +70,7 @@ describe('Test', () => {
 			extraHTTPHeaders: {},
 			launchArgs: [],
 			viewport: null,
+			maxRecovery: 0,
 		}
 		expect(test.settings).toEqual(defaultSettings)
 	})

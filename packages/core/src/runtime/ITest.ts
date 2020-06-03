@@ -5,6 +5,7 @@ import { Step } from './Step'
 import { CancellationToken } from '../utils/CancellationToken'
 import { ScreenshotOptions } from 'puppeteer'
 import { TestSettings } from './Settings'
+import { Looper } from '../Looper'
 
 export interface ITest {
 	settings: TestSettings
@@ -19,7 +20,11 @@ export interface ITest {
 	cancel(): Promise<void>
 	beforeRun(): Promise<void>
 	run(iteration?: number): Promise<void>
-	runWithCancellation(iteration: number, cancelToken: CancellationToken): Promise<void>
+	runWithCancellation(
+		iteration: number,
+		cancelToken: CancellationToken,
+		looper: Looper,
+	): Promise<void>
 	runStep(
 		testObserver: TestObserver,
 		browser: Browser<Step>,

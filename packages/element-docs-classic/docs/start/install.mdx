@@ -1,0 +1,74 @@
+---
+title: Install
+id: install
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+:::info Choosing Yarn or NPM
+
+We use the Yarn package manager throughout these docs, however, each command is has a compatible NPM equivelant.
+
+:::
+
+
+<Tabs
+  groupId="operating-systems"
+  defaultValue="mac"
+  values={[
+    {label: 'Windows', value: 'win'},
+    {label: 'macOS', value: 'mac'},
+    {label: 'Linux', value: 'linux'},
+  ]
+}>
+  <TabItem value="mac">
+Install using Homebrew:
+
+```bash title="brew"
+brew install floodio/taps/element
+```
+
+Or if you prefer using Yarn or NPM:
+
+```bash title="yarn"
+yarn global install element-cli
+```
+
+```bash title="NPM"
+npm -g install element-cli
+```
+
+
+  </TabItem>
+  <TabItem value="win">
+Install using Yarn or NPM:
+
+```bash title="yarn"
+yarn global install element-cli
+```
+
+```bash title="NPM"
+npm -g install element-cli
+```
+
+  </TabItem>
+  <TabItem value="linux">
+    Install using Yarn or NPM:
+
+```bash title="yarn"
+yarn global install element-cli
+```
+
+```bash title="NPM"
+npm -g install element-cli
+```
+
+  </TabItem>
+</Tabs>
+
+## Local versioning
+
+Element is smart enough to detect whether you're using a custom version of Element locally or using the global install.
+
+If you add element-cli to your local project `package.json`, Element will use that version, otherwise, it will default to your global version.

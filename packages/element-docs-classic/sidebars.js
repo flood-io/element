@@ -1,7 +1,18 @@
 module.exports = {
-  someSidebar: {
-    "Getting Started": ["doc1", "doc2", "doc3"],
-    Guides: [],
+  main: {
+    "Getting Started": [
+      "start/overview",
+      "start/install",
+      "start/init",
+      "start/scripting",
+      "start/browser-load-testing",
+    ],
+    Guides: [
+      {
+        "Browser Interaction": ["guides/mouse"],
+      },
+    ],
+    "API reference": ["api/browser"],
     Tutorials: [
       "tutorials/youtube",
       "tutorials/woocommerce",

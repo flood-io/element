@@ -1,5 +1,5 @@
 ---
-id: tutorials/magento
+id: magento
 title: Magento Shop
 ---
 

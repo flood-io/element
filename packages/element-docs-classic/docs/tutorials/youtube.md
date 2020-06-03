@@ -1,5 +1,5 @@
 ---
-id: tutorials/youtube
+id: youtube
 title: Video Streaming
 ---
 

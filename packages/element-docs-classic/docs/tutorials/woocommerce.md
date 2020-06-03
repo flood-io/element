@@ -1,5 +1,5 @@
 ---
-id: tutorials/woocommerce
+id: woocommerce
 title: WooCommerce
 ---
 

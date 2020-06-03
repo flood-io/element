@@ -29,6 +29,8 @@ import { ElementPresence } from './Settings'
  * @param fn Actual implementation of step
  * @param options step options
  */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-empty-function */
 export const step: StepExtended = (name: string, ...optionsOrFn: any[]) => {}
 step.once = (name: string, ...optionsOrFn: any[]) => {}
 step.if = (condition: ConditionFn, name: string, ...optionsOrFn: any[]) => {}

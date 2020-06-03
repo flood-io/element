@@ -17,7 +17,7 @@ import {
 	ConditionFn,
 	StepExtended,
 	StepRecoveryObject,
-	RecoveryOption,
+	RecoverWith,
 } from './Step'
 import { SuiteDefinition, Browser } from './types'
 import Test from './Test'
@@ -237,7 +237,10 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 
 		step.recovery = async (name: string, ...optionsOrFn: any[]) => {
 			const [options, fn] = extractOptionsAndCallback(optionsOrFn)
-			recoverySteps[name] = { name, options, fn }
+			recoverySteps[name] = {
+				recoveryStep: { name, options, fn },
+				loopCount: options.maxRecovery || -1,
+			}
 		}
 
 		const context = {
@@ -257,7 +260,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			MouseButtons,
 			TestData: this.testDataLoaders,
 			Key,
-			RecoveryOption,
+			RecoverWith,
 			userAgents,
 			suite: captureSuite,
 		}

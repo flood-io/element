@@ -239,7 +239,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			const [options, fn] = extractOptionsAndCallback(optionsOrFn)
 			recoverySteps[name] = {
 				recoveryStep: { name, options, fn },
-				loopCount: options.maxRecovery || -1,
+				loopCount: options.maxRecovery || 0,
 			}
 		}
 

@@ -14,7 +14,7 @@ import { AnyErrorData, EmptyErrorData, AssertionErrorData } from './errors/Types
 import { StructuredError } from '../utils/StructuredError'
 
 import { Step, ConditionFn, StepRecoveryObject, RecoverWith } from './Step'
-import { Looper } from '../Runner'
+import { Looper } from '../Looper'
 
 import { CancellationToken } from '../utils/CancellationToken'
 

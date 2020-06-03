@@ -5,7 +5,7 @@ import { Step } from './Step'
 import { CancellationToken } from '../utils/CancellationToken'
 import { ScreenshotOptions } from 'puppeteer'
 import { TestSettings } from './Settings'
-import { Looper } from '../Runner'
+import { Looper } from '../Looper'
 
 export interface ITest {
 	settings: TestSettings

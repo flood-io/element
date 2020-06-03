@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0-beta.8](https://github.com/flood-io/element/compare/v1.3.0-beta.7...v1.3.0-beta.8) (2020-06-03)
+
+
+### Bug Fixes
+
+* element expected a response code 200-299 or 300-399 ([#168](https://github.com/flood-io/element/issues/168)) ([1e39317](https://github.com/flood-io/element/commit/1e39317d826c2b9dcb483d3e3f8378645b860ec0))
+
+
+
+
+
 # [1.3.0-beta.6](https://github.com/flood-io/element/compare/v1.3.0-beta.5...v1.3.0-beta.6) (2020-05-27)
 
 

@@ -16,6 +16,7 @@
 		"allowSyntheticDefaultImports": true,
 		"experimentalDecorators": true,
 		"typeRoots": ["node_modules/@types"],
-		"emitDecoratorMetadata": true
+		"emitDecoratorMetadata": true,
+		"esModuleInterop": true
 	}
 }

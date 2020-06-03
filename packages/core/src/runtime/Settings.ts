@@ -238,7 +238,7 @@ export interface TestSettings {
 	/**
 	 * Define the loop count of the recovery step
 	 */
-	maxRecovery?: number
+	recoveryTries?: number
 }
 
 /**
@@ -255,7 +255,7 @@ export const DEFAULT_SETTINGS: ConcreteTestSettings = {
 	clearCache: false,
 	waitTimeout: 30,
 	responseTimeMeasurement: 'step',
-	maxRecovery: 0,
+	recoveryTries: 0,
 	/**
 	 * by default, don't filter any console messages from the browser
 	 */

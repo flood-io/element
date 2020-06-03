@@ -99,7 +99,7 @@ export type StepOptions = {
 	skip?: boolean
 	waitTimeout?: number
 	waitUntil?: ElementPresence
-	maxRecovery?: number
+	recoveryTries?: number
 }
 
 export function extractOptionsAndCallback(args: any[]): [Partial<StepOptions>, TestFn] {
@@ -167,8 +167,8 @@ export function normalizeStepOptions(stepOpts: StepOptions): StepOptions {
 		stepOpts.waitTimeout = stepOpts.waitTimeout / 1e3
 	} else if (Number(stepOpts.waitTimeout) === 0) {
 		stepOpts.waitTimeout = 30
-	} else if (Number(stepOpts.maxRecovery) === 0) {
-		stepOpts.maxRecovery = 1
+	} else if (Number(stepOpts.recoveryTries) === 0) {
+		stepOpts.recoveryTries = 1
 	}
 
 	return stepOpts

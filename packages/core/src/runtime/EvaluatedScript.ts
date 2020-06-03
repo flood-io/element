@@ -235,11 +235,16 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			captureStep([name, { ...option, skip: true }, fn])
 		}
 
+		step.repeat = async (repeat: number, name: string, ...optionsOrFn: any[]) => {
+			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
+			captureStep([name, { ...option, repeat }, fn])
+		}
+
 		step.recovery = async (name: string, ...optionsOrFn: any[]) => {
 			const [options, fn] = extractOptionsAndCallback(optionsOrFn)
 			recoverySteps[name] = {
 				recoveryStep: { name, options, fn },
-				loopCount: options.maxRecovery || 0,
+				loopCount: options.recoveryTries || 0,
 			}
 		}
 

@@ -37,17 +37,16 @@ interface RunArguments extends Arguments {
 function setupDelayOverrides(args: RunArguments, testSettingOverrides: TestSettings) {
 	if (testSettingOverrides == null) testSettingOverrides = {}
 
+	testSettingOverrides.actionDelay = args.actionDelay ?? 0
+	testSettingOverrides.stepDelay = args.stepDelay ?? 0
+
 	if (args.fastForward ?? false) {
 		testSettingOverrides.stepDelay = args.fastForward
 		testSettingOverrides.actionDelay = args.fastForward
 	} else if (args.slowMo ?? false) {
-		testSettingOverrides.stepDelay = args.slowMo ?? testSettingOverrides.stepDelay
-		testSettingOverrides.actionDelay = args.slowMo ?? testSettingOverrides.actionDelay
+		testSettingOverrides.stepDelay = args.slowMo
+		testSettingOverrides.actionDelay = args.slowMo
 	}
-
-	testSettingOverrides.actionDelay = args.actionDelay ?? testSettingOverrides.actionDelay
-	testSettingOverrides.actionDelay = args.stepDelay ?? testSettingOverrides.stepDelay
-
 	return testSettingOverrides
 }
 
@@ -89,9 +88,7 @@ const cmd: CommandModule = {
 		}
 
 		if (args.loopCount) {
-			opts.testSettingOverrides = {
-				loopCount: args.loopCount,
-			}
+			opts.testSettingOverrides.loopCount = args.loopCount
 		}
 		opts.testSettingOverrides = setupDelayOverrides(args, opts.testSettingOverrides)
 

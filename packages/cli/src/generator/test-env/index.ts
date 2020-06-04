@@ -45,19 +45,13 @@ export default class TestEnv extends Generator {
 		this.answers = await this.prompt([
 			{
 				type: 'input',
-				name: 'title',
-				message: 'The title of this test.',
-				default: this.options.repoName,
-			},
-			{
-				type: 'input',
 				name: 'url',
 				message: 'A URL to use in the generated test script.',
 				default: 'https://challenge.flood.io',
 			},
 		])
 
-		const testScriptPath = slug(this.answers.title)
+		const testScriptPath = slug(this.options.repoName)
 		const newAnswers = await this.prompt([
 			{
 				type: 'input',
@@ -74,10 +68,11 @@ export default class TestEnv extends Generator {
 		this.fs.writeJSON(this.destinationPath('package.json'), this._packageJSON)
 		this.fs.writeJSON(this.destinationPath('tsconfig.json'), this._tsConfigJSON)
 		this.fs.copyTpl(this.templatePath('test.ts'), this.destinationPath(this.answers.scriptName), {
-			title: this.answers.title,
 			url: this.answers.url,
 		})
 		this.fs.copyTpl(this.templatePath('gitignore'), this.destinationPath('.gitignore'), {})
+		this.fs.copyTpl(this.templatePath('element.config.js'), this.destinationPath('element.config.js'), {})
+
 	}
 
 	installing() {

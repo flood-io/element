@@ -11,8 +11,20 @@ module.exports = {
       {
         "Browser Interaction": ["guides/mouse"],
       },
+      "guides/script",
+      "guides/editor",
+      "guides/cli",
     ],
-    "API reference": ["api/browser", "api/element-handle"],
+    "API reference": [
+      "api/browser",
+      "api/locators",
+      "api/waiters",
+      "api/element-handle",
+      "api/target-locator",
+      "api/test-data",
+      "api/settings",
+      "api/env",
+    ],
     Tutorials: [
       "tutorials/youtube",
       "tutorials/woocommerce",

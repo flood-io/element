@@ -49,8 +49,6 @@ export default class Test implements ITest {
 
 	public stepCount: number
 
-	public recoveryCount: number
-
 	get skipping(): boolean {
 		return this.failed
 	}
@@ -133,7 +131,6 @@ export default class Test implements ITest {
 		this.failed = false
 		this.runningBrowser = null
 		this.stepCount = 0
-		this.recoveryCount = 0
 
 		// await this.observer.attachToNetworkRecorder()
 
@@ -212,15 +209,20 @@ export default class Test implements ITest {
 			}
 
 			const callRecovery = async (step: Step): Promise<boolean> => {
+				let { iteration } = this.recoverySteps[step.name]
 				const { recoveryStep, loopCount } = this.recoverySteps[step.name]
 				const { recoveryTries } = this.settings
 				const settingRecoveryCount = loopCount || recoveryTries || 1
-				if (!recoveryStep || this.recoveryCount >= settingRecoveryCount) return false
-				this.recoveryCount += 1
+				if (!recoveryStep || iteration >= settingRecoveryCount) {
+					iteration = 0
+					return false
+				}
+				iteration += 1
 				try {
 					const result = await recoveryStep.fn.call(null, browser)
-					if (result === RecoverWith.CONTINUE) return true
-					if (result === RecoverWith.RESTART) {
+					if (result === RecoverWith.CONTINUE) {
+						this.stepCount += 1
+					} else if (result === RecoverWith.RESTART) {
 						looper.restartLoop()
 						this.stepCount = this.steps.length
 					}

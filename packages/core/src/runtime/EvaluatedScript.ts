@@ -256,6 +256,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			recoverySteps[name] = {
 				recoveryStep: { name, options, fn },
 				loopCount: options.recoveryTries || 0,
+				iteration: 0,
 			}
 		}
 

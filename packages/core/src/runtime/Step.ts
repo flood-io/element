@@ -137,6 +137,7 @@ export type StepRecoveryObject = {
 	[name: string]: {
 		recoveryStep: Step
 		loopCount: number
+		iteration: number
 	}
 }
 

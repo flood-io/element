@@ -41,7 +41,7 @@ export default () => {
 	})
 
 	step.recovery('Step 3', async browser => {
-		console.log('Recovery step 3 done, throw an error')
+		console.log('Recovery step 3 done, continue the next step')
 		return RecoverWith.CONTINUE
 	})
 
@@ -72,5 +72,9 @@ export default () => {
 
 	step('Step 4', async browser => {
 		console.log('Done step 4')
+	})
+
+	step.repeat(2, 'Step 5', async browser => {
+		console.log('Step 5')
 	})
 }

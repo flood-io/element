@@ -4,8 +4,8 @@ module.exports = {
         devtools: false,
         sandbox: true,
         watch: false,
-        stepDelay: -1,
-        actionDelay: -1,
+        stepDelay: 0,
+        actionDelay: 0,
         loopCount: 1,
         strict: false,
         failStatusCode: 1
@@ -18,7 +18,7 @@ module.exports = {
     flood: {
         token: '',
         project: '',
-        hosted: fe,
+        hosted: false,
         vu: 500,
         duration: 15,
         rampup: 0,

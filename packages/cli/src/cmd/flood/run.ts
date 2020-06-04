@@ -1,0 +1,63 @@
+import { Argv, Arguments, CommandModule } from 'yargs'
+// import fetch from 'node-fetch'
+
+// import { error } from '../../utils/error'
+
+import { checkFile } from '../common'
+
+interface RunArguments extends Arguments {
+	file: string
+	hosted: boolean
+	vu: number
+	duration: number
+	rampup: number
+}
+
+const cmd: CommandModule = {
+	command: 'run <file> [options]',
+	describe: 'Run a flood from Element CLI',
+
+	async handler(args: RunArguments) {
+		// TODO
+	},
+	builder(yargs: Argv): Argv {
+		return yargs
+			.option('hosted', {
+				group: 'Flood options:',
+				describe: 'Run a flood using hosted grid, otherwise using on-demand grid',
+				type: 'boolean',
+				default: false,
+			})
+			.option('virtual-user', {
+				group: 'Flood options:',
+				alias: 'vu',
+				describe:
+					'Number of users per region (when using hosted grid) or per node (when using on-demand grid)',
+				type: 'number',
+				default: 500,
+			})
+			.option('duration', {
+				group: 'Flood options:',
+				describe: 'Duration in minutes',
+				type: 'number',
+				default: 15,
+			})
+			.option('rampup', {
+				group: 'Flood options:',
+				describe: 'Ramp up in minutes',
+				type: 'number',
+				default: 0,
+			})
+			.positional('file', {
+				describe: 'The test script to run',
+			})
+			.check(({ file }) => {
+				const fileErr = checkFile(file as string)
+				if (fileErr) return fileErr
+
+				return true
+			})
+	},
+}
+
+export default cmd

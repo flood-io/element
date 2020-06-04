@@ -183,7 +183,8 @@ export default class Test implements ITest {
 			}
 
 			const callCondition = (step: Step): boolean => {
-				const { once, skip, pending } = step.options
+				const { once, skip, pending, repeat } = step.options
+
 				if (pending) {
 					console.log(`(Pending) ${step.name}`)
 					this.stepCount += 1
@@ -197,6 +198,15 @@ export default class Test implements ITest {
 					console.log(`Skip test ${step.name}`)
 					this.stepCount += 1
 					return false
+				}
+
+				if (repeat) {
+					if (repeat.iteration < repeat.count - 1) {
+						this.stepCount -= 1
+						repeat.iteration += 1
+					} else {
+						repeat.iteration = 0
+					}
 				}
 				return true
 			}

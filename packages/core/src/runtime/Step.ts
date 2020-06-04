@@ -100,6 +100,10 @@ export type StepOptions = {
 	waitTimeout?: number
 	waitUntil?: ElementPresence
 	recoveryTries?: number
+	repeat?: {
+		count: number
+		iteration: number
+	}
 }
 
 export function extractOptionsAndCallback(args: any[]): [Partial<StepOptions>, TestFn] {
@@ -108,7 +112,8 @@ export function extractOptionsAndCallback(args: any[]): [Partial<StepOptions>, T
 		return [{}, args[0] as TestFn]
 	} else if (args.length === 2) {
 		const [options, fn] = args as [StepOptions, TestFn]
-		return [options, fn]
+		const { waitTimeout, waitUntil, recoveryTries } = options
+		return [{ waitTimeout, waitUntil, recoveryTries }, fn]
 	}
 	throw new Error(`Step called with too many arguments`)
 }
@@ -167,8 +172,6 @@ export function normalizeStepOptions(stepOpts: StepOptions): StepOptions {
 		stepOpts.waitTimeout = stepOpts.waitTimeout / 1e3
 	} else if (Number(stepOpts.waitTimeout) === 0) {
 		stepOpts.waitTimeout = 30
-	} else if (Number(stepOpts.recoveryTries) === 0) {
-		stepOpts.recoveryTries = 1
 	}
 
 	return stepOpts

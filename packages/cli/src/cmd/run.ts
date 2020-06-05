@@ -37,8 +37,8 @@ interface RunArguments extends Arguments {
 function setupDelayOverrides(args: RunArguments, testSettingOverrides: TestSettings) {
 	if (testSettingOverrides == null) testSettingOverrides = {}
 
-	testSettingOverrides.actionDelay = args.actionDelay ?? 0
-	testSettingOverrides.stepDelay = args.stepDelay ?? 0
+	testSettingOverrides.actionDelay = args.actionDelay && args.actionDelay > 0 ? args.actionDelay : 0
+	testSettingOverrides.stepDelay = args.stepDelay && args.stepDelay > 0 ? args.stepDelay : 0
 
 	if (args.fastForward) {
 		testSettingOverrides.stepDelay = 1

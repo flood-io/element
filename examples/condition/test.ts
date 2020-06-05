@@ -74,7 +74,13 @@ export default () => {
 		console.log('Done step 4')
 	})
 
-	step.repeat(2, 'Step 5', async browser => {
-		console.log('Step 5')
-	})
+	let count = 0
+	step.while(
+		() => count < 3,
+		'Step 5',
+		async browser => {
+			count += 1
+			console.log('Step 5')
+		},
+	)
 }

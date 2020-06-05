@@ -179,18 +179,20 @@ export default class Test implements ITest {
 				return condition
 			}
 
-			const callCondition = (step: Step): boolean => {
-				const { once, skip, pending, repeat } = step.options
+			const callCondition = async (step: Step): Promise<boolean> => {
+				const { once, skip, pending, repeat, stepWhile } = step.options
 
 				if (pending) {
 					console.log(`(Pending) ${step.name}`)
 					this.stepCount += 1
 					return false
 				}
+
 				if (once && iteration > 1) {
 					this.stepCount += 1
 					return false
 				}
+
 				if (skip) {
 					console.log(`Skip test ${step.name}`)
 					this.stepCount += 1
@@ -205,6 +207,14 @@ export default class Test implements ITest {
 						repeat.iteration = 0
 					}
 				}
+
+				if (stepWhile) {
+					const { predicate } = stepWhile
+					const result = await callPredicate(predicate)
+					if (result) this.stepCount -= 1
+					return result
+				}
+
 				return true
 			}
 
@@ -236,9 +246,10 @@ export default class Test implements ITest {
 			debug('running steps')
 			while (this.stepCount < this.steps.length) {
 				const step = this.steps[this.stepCount]
-				const { predicate } = step.options
-				if (!callCondition(step)) continue
+				const condition = await callCondition(step)
+				if (!condition) continue
 
+				const { predicate } = step.options
 				if (predicate) {
 					const condition = await callPredicate(predicate)
 					if (!condition) {

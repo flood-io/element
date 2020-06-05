@@ -38,6 +38,7 @@ step.unless = (condition: ConditionFn, name: string, ...optionsOrFn: any[]) => {
 step.skip = (name: string, ...optionsOrFn: any[]) => {}
 step.recovery = (name: string, ...optionsOrFn: any[]) => {}
 step.repeat = (count: number, name: string, ...optionsOrFn: any[]) => {}
+step.while = (condition: ConditionFn, name: string, ...optionsOrFn: any[]) => {}
 
 export interface StepBase {
 	(stepName: string, options: StepOptions, testFn: TestFn): void
@@ -87,6 +88,11 @@ export interface StepExtended extends StepBase {
 	 * Creates a repeatable step
 	 */
 	repeat: StepRepeatablebase
+
+	/**
+	 * Creates a while step
+	 */
+	while: StepConditionBase
 }
 
 export type StepDefinition = (name: string, fn: TestFn) => Promise<any>
@@ -95,7 +101,7 @@ export type ConditionFn = (this: void, browser: Browser) => boolean | Promise<bo
 export type StepOptions = {
 	pending?: boolean
 	once?: boolean
-	predicate?: (this: void, browser: Browser) => boolean | Promise<boolean>
+	predicate?: ConditionFn
 	skip?: boolean
 	waitTimeout?: number
 	waitUntil?: ElementPresence
@@ -103,6 +109,9 @@ export type StepOptions = {
 	repeat?: {
 		count: number
 		iteration: number
+	}
+	stepWhile?: {
+		predicate: ConditionFn
 	}
 }
 

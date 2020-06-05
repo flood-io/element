@@ -223,8 +223,8 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 				name,
 				{
 					...option,
-					predicate: (brower: Browser) =>
-						Promise.resolve(conditionFn(brower)).then(result => !result),
+					predicate: (browser: Browser) =>
+						Promise.resolve(conditionFn(browser)).then(result => !result),
 				},
 				fn,
 			])
@@ -245,6 +245,20 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 					repeat: {
 						count: repeat,
 						iteration: 0,
+					},
+				},
+				fn,
+			])
+		}
+
+		step.while = async (condition: ConditionFn, name: string, ...optionsOrFn: any[]) => {
+			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
+			captureStep([
+				name,
+				{
+					...option,
+					stepWhile: {
+						predicate: condition,
 					},
 				},
 				fn,

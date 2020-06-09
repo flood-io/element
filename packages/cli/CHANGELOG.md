@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0-beta.10](https://github.com/flood-io/element/compare/v1.3.0-beta.9...v1.3.0-beta.10) (2020-06-09)
+
+
+### Features
+
+* enhance logic of element options [#172](https://github.com/flood-io/element/issues/172) ([#173](https://github.com/flood-io/element/issues/173)) ([325801e](https://github.com/flood-io/element/commit/325801e095dfe53665e1d1d7a8ccf732cc8b91ed))
+
+
+
+
+
 # [1.3.0-beta.9](https://github.com/flood-io/element/compare/v1.3.0-beta.8...v1.3.0-beta.9) (2020-06-03)
 
 **Note:** Version bump only for package @flood/element-cli

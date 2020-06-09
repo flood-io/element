@@ -12,6 +12,13 @@ import { ElementPresence } from './Settings'
  *     await browser.visit("https://example.com")
  *   })
  *
+ *   step.recovery("Step 2", async (browser: Browser) => {
+ *     // do stuff
+ *     return RecoverWith.RETRY //retry step 2 (default)
+ *     return RecoverWith.RESTART //restart step 1
+ *     return RecoverWith.CONTINUE //continue next step
+ *   })
+ *
  *   step("Step 2", async (browser: Browser) => {})
  *
  *   step("Step 3", async (browser: Browser) => {})
@@ -27,6 +34,7 @@ step.once = (name: string, ...optionsOrFn: any[]) => {}
 step.if = (condition: ConditionFn, name: string, ...optionsOrFn: any[]) => {}
 step.unless = (condition: ConditionFn, name: string, ...optionsOrFn: any[]) => {}
 step.skip = (name: string, ...optionsOrFn: any[]) => {}
+step.recovery = (name: string, ...optionsOrFn: any[]) => {}
 
 export interface StepBase {
 	(stepName: string, options: StepOptions, testFn: TestFn): void
@@ -60,6 +68,11 @@ export interface StepExtended extends StepBase {
 	 * Creates a conditional step, which will skip this test
 	 */
 	skip: StepBase
+
+	/**
+	 * Creates a recovery step
+	 */
+	recovery: StepBase
 }
 
 export type StepDefinition = (name: string, fn: TestFn) => Promise<any>
@@ -72,12 +85,13 @@ export type StepOptions = {
 	skip?: boolean
 	waitTimeout?: number
 	waitUntil?: ElementPresence
+	maxRecovery?: number
 }
 
 export function extractOptionsAndCallback(args: any[]): [Partial<StepOptions>, TestFn] {
 	if (args.length === 0) return [{ pending: true }, () => Promise.resolve()]
 	if (args.length === 1) {
-		return [{}, args[0]]
+		return [{}, args[0] as TestFn]
 	} else if (args.length === 2) {
 		const [options, fn] = args as [StepOptions, TestFn]
 		return [options, fn]
@@ -100,6 +114,26 @@ export function extractOptionsAndCallback(args: any[]): [Partial<StepOptions>, T
  * ```
  */
 export type StepFunction<T> = (driver: Browser, data?: T) => Promise<void>
+export type StepRecoveryObject = {
+	[name: string]: {
+		recoveryStep: Step
+		loopCount: number
+	}
+}
+
+/**
+ * The `RecoverWith` represents an action which we will do after the recovery step has finished
+ * ```
+ * RETRY: retry the failed step
+ * RESTART: re-run the first step
+ * CONTINUE: continue next step
+ * ```
+ */
+export enum RecoverWith {
+	RETRY = 'retry',
+	RESTART = 'restart',
+	CONTINUE = 'continue',
+}
 
 /**
  * @internal
@@ -119,6 +153,8 @@ export function normalizeStepOptions(stepOpts: StepOptions): StepOptions {
 		stepOpts.waitTimeout = stepOpts.waitTimeout / 1e3
 	} else if (Number(stepOpts.waitTimeout) === 0) {
 		stepOpts.waitTimeout = 30
+	} else if (Number(stepOpts.maxRecovery) === 0) {
+		stepOpts.maxRecovery = 1
 	}
 
 	return stepOpts

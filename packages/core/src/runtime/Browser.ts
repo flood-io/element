@@ -193,11 +193,11 @@ export class Browser<T> implements BrowserInterface {
 	}
 
 	@addCallbacks()
-	public async visit(url: string, options: NavigationOptions = {}): Promise<void> {
+	public async visit(url: string, options: NavigationOptions = {}): Promise<any> {
 		const timeout = this.settings.waitTimeout * 1e3
-		let response
+
 		try {
-			response = await this.page.goto(url, {
+			return this.page.goto(url, {
 				timeout,
 				waitUntil: ['load', 'domcontentloaded', 'networkidle0', 'networkidle2'],
 				...options,
@@ -230,30 +230,6 @@ export class Browser<T> implements BrowserInterface {
 			}
 			throw finalErr
 		}
-
-		if (response == null) {
-			throw new StructuredError<NetworkErrorData>('no response', {
-				url,
-				_kind: 'net',
-				kind: 'http',
-				subKind: 'no-response',
-			})
-		}
-
-		// response needs to be 2xx or 3xx
-		// TODO make configurable
-		const status = response.status()
-		if (!response.ok() && !(status >= 300 && status <= 399)) {
-			throw new StructuredError<NetworkErrorData>('http response code not OK', {
-				url,
-				_kind: 'net',
-				kind: 'http',
-				subKind: 'not-ok',
-				code: response.status().toString(),
-			})
-		}
-
-		return
 	}
 
 	/**

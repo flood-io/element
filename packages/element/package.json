@@ -1,6 +1,6 @@
 {
 	"name": "@flood/element",
-	"version": "1.3.0-beta.6",
+	"version": "1.3.0-beta.9",
 	"description": "Element real browser load testing tool",
 	"author": "Ivan Vanderbyl <ivanvanderbyl@gmail.com>",
 	"homepage": "https://element.flood.io",
@@ -22,6 +22,6 @@
 		"url": "https://github.com/flood-io/element/issues"
 	},
 	"dependencies": {
-		"@flood/element-core": "^1.3.0-beta.6"
+		"@flood/element-core": "^1.3.0-beta.9"
 	}
 }

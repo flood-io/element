@@ -129,7 +129,7 @@ export function makeTestCommander(file: string): TestCommander {
 	return commander
 }
 
-export function runTestScript(args: RunCommonArguments) {
+export async function runTestScript(args: RunCommonArguments) {
 	const { file, verbose } = args
 	const workRootPath = getWorkRootPath(file, args['work-root'])
 	const testDataPath = getTestDataPath(file, args['test-data-root'])
@@ -172,5 +172,5 @@ export function runTestScript(args: RunCommonArguments) {
 		opts.testCommander = makeTestCommander(file)
 	}
 
-	runCommandLine(opts)
+	await runCommandLine(opts)
 }

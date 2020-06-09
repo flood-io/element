@@ -1,25 +1,25 @@
 import { Argv, Arguments, CommandModule } from 'yargs'
 import { join } from 'path'
 import { checkFile, RunCommonArguments, runTestScript } from '../common'
+import glob from 'glob'
 
 interface RunConfigurationArguments extends Arguments {
-	configFile: string
+	file: string
 }
 
 const cmd: CommandModule = {
-	command: 'config [options]',
+	command: 'config [file]',
 	describe: 'Run test scripts locally with configuration',
 
-	handler(args: RunConfigurationArguments) {
+	async handler(args: RunConfigurationArguments) {
 		const rootPath = process.cwd()
 		// eslint-disable-next-line @typescript-eslint/no-var-requires
-		const { options, paths } = require(join(rootPath, args.configFile))
+		const { options, paths } = require(join(rootPath, args.file))
 
 		if (!paths.testPathMatch || !paths.testPathMatch.length) {
-			return new Error(`Please provide values of testPathMatch in ${args.configFile}`)
+			return new Error(`Please provide values of testPathMatch in ${args.file}`)
 		}
-		// eslint-disable-next-line @typescript-eslint/no-var-requires
-		const glob = require('glob')
+
 		const files = paths.testPathMatch.reduce((arr, item) => arr.concat(glob.sync(item)), [])
 		if (!files.length) {
 			return new Error(
@@ -27,19 +27,24 @@ const cmd: CommandModule = {
 			)
 		}
 
-		console.log(`Preparing to run test scripts: ${files}`)
-		files.forEach(file => {
-			const arg: RunCommonArguments = {
-				...options,
-				...paths,
-				file: file,
+		console.log(`Preparing to run test scripts: ${files} ...`)
+		for (const file of files) {
+			try {
+				const arg: RunCommonArguments = {
+					...options,
+					...paths,
+					file: file,
+				}
+				await runTestScript(arg)
+			} catch {
+				console.log(`Run test script ${file} failed`)
 			}
-			runTestScript(arg)
-		})
+		}
+		console.log('Completely run test scripts with configuration')
 	},
 	builder(yargs: Argv): Argv {
 		return yargs
-			.option('config-file', {
+			.option('file', {
 				describe: 'run with configuration',
 				type: 'string',
 				default: 'element.config.js',
@@ -47,8 +52,8 @@ const cmd: CommandModule = {
 			.option('verbose', {
 				describe: 'Verbose mode',
 			})
-			.check(({ configFile }) => {
-				const fileErr = checkFile(configFile as string)
+			.check(({ file }) => {
+				const fileErr = checkFile(file as string)
 				if (fileErr) return fileErr
 				return true
 			})

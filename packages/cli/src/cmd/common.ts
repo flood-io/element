@@ -45,9 +45,10 @@ export function checkFile(file: string, paramName = 'Test script'): Error | unde
 
 export function setupDelayOverrides(args: RunCommonArguments, testSettingOverrides: TestSettings) {
 	if (testSettingOverrides == null) testSettingOverrides = {}
+	const { actionDelay, stepDelay } = args
 
-	testSettingOverrides.actionDelay = args.actionDelay && args.actionDelay > 0 ? args.actionDelay : 0
-	testSettingOverrides.stepDelay = args.stepDelay && args.stepDelay > 0 ? args.stepDelay : 0
+	testSettingOverrides.actionDelay = actionDelay && actionDelay > 0 ? actionDelay : 0
+	testSettingOverrides.stepDelay = stepDelay && stepDelay > 0 ? stepDelay : 0
 
 	if (args.fastForward) {
 		testSettingOverrides.stepDelay = 1

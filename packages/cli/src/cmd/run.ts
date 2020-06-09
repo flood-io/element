@@ -7,8 +7,7 @@ const cmd: CommandModule = {
 	command: 'run [command]',
 	describe: 'Run a [test script |test script with configuration] locally',
 
-	async handler(args: Arguments) {
-	},
+	async handler(args: Arguments) {},
 
 	builder(yargs: Argv) {
 		return yargs

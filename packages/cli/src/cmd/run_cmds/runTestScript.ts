@@ -1,75 +1,12 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
-import {
-	runCommandLine,
-	ElementOptions,
-} from '@flood/element-core'
-
-import { ConsoleReporter } from '../../utils/ConsoleReporter'
 import { Argv, CommandModule } from 'yargs'
-import createLogger from '../../utils/Logger'
-import { checkFile } from '../common'
-import {
-	getWorkRootPath,
-	getTestDataPath,
-	initRunEnv,
-	makeTestCommander,
-	setupDelayOverrides,
-	RunCommonArguments,
-} from '../run_cmds/runCommon'
-
-interface RunScriptArguments extends RunCommonArguments {
-	file: string
-	chrome?: string
-}
+import { checkFile, RunCommonArguments, runTestScript } from '../common'
 
 const cmd: CommandModule = {
 	command: '$0 <file> [options]',
 	describe: 'Run a test script locally',
 
-	handler(args: RunScriptArguments) {
-		const { file, verbose } = args
-		const workRootPath = getWorkRootPath(file, args['work-root'])
-		const testDataPath = getTestDataPath(file, args['test-data-root'])
-
-		const verboseBool = !!verbose
-
-		let logLevel = 'info'
-		if (verboseBool) logLevel = 'debug'
-
-		const logger = createLogger(logLevel, true)
-		const reporter = new ConsoleReporter(logger, verboseBool)
-
-		logger.info(`workRootPath: ${workRootPath}`)
-		logger.info(`testDataPath: ${testDataPath}`)
-
-		const opts: ElementOptions = {
-			logger: logger,
-			testScript: file,
-			strictCompilation: args.strict ?? false,
-			reporter: reporter,
-			verbose: verboseBool,
-			headless: args.headless ?? true,
-			devtools: args.devtools ?? false,
-			chromeVersion: args.chrome,
-			sandbox: args.sandbox ?? true,
-
-			runEnv: initRunEnv(workRootPath, testDataPath),
-			testSettingOverrides: {},
-			persistentRunner: false,
-			failStatusCode: args['fail-status-code'],
-		}
-
-		if (args.loopCount) {
-			opts.testSettingOverrides.loopCount = args.loopCount
-		}
-		opts.testSettingOverrides = setupDelayOverrides(args, opts.testSettingOverrides)
-
-		if (args.watch) {
-			opts.persistentRunner = true
-			opts.testCommander = makeTestCommander(file)
-		}
-
-		runCommandLine(opts)
+	handler(args: RunCommonArguments) {
+		runTestScript(args)
 	},
 	builder(yargs: Argv): Argv {
 		return yargs

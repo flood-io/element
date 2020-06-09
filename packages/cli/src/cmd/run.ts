@@ -36,9 +36,10 @@ interface RunArguments extends Arguments {
 
 function setupDelayOverrides(args: RunArguments, testSettingOverrides: TestSettings) {
 	if (testSettingOverrides == null) testSettingOverrides = {}
+	const { actionDelay, stepDelay } = args
 
-	testSettingOverrides.actionDelay = args.actionDelay && args.actionDelay > 0 ? args.actionDelay : 0
-	testSettingOverrides.stepDelay = args.stepDelay && args.stepDelay > 0 ? args.stepDelay : 0
+	testSettingOverrides.actionDelay = actionDelay && actionDelay > 0 ? actionDelay : 0
+	testSettingOverrides.stepDelay = stepDelay && stepDelay > 0 ? stepDelay : 0
 
 	if (args.fastForward) {
 		testSettingOverrides.stepDelay = 1
@@ -144,14 +145,14 @@ const cmd: CommandModule = {
 				describe:
 					'Run the script in fast-forward: override the actionDelay and stepDelay settings to 1 second in the test script.',
 				conflicts: 'slow-mo',
-				type: 'boolean'
+				type: 'boolean',
 			})
 			.options('slow-mo', {
 				group: 'Running the test script:',
 				describe:
 					'Run the script in slow-motion: Increase the actionDelay and stepDelay settings in the test script to 10 seconds.',
 				conflicts: 'fast-forward',
-				type: 'boolean'
+				type: 'boolean',
 			})
 			.options('step-delay', {
 				group: 'Running the test script:',

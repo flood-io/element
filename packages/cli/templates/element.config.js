@@ -13,7 +13,7 @@ module.exports = {
     paths: {
         workRoot: '.',
         testDataRoot: '.',
-        testPathMatch: ['./*.perf..ts']
+        testPathMatch: ['./*.perf*.ts']
     },
     flood: {
         token: '',

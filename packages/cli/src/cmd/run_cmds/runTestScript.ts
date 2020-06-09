@@ -2,60 +2,31 @@
 import {
 	runCommandLine,
 	ElementOptions,
-	WorkRoot,
-	FloodProcessEnv,
-	TestCommander,
-	TestSettings,
 } from '@flood/element-core'
 
 import { ConsoleReporter } from '../../utils/ConsoleReporter'
-import { Argv, Arguments, CommandModule } from 'yargs'
+import { Argv, CommandModule } from 'yargs'
 import createLogger from '../../utils/Logger'
-import { watch } from 'chokidar'
-import { EventEmitter } from 'events'
 import { checkFile } from '../common'
-import sanitize from 'sanitize-filename'
-import { extname, basename, join, dirname, resolve } from 'path'
+import {
+	getWorkRootPath,
+	getTestDataPath,
+	initRunEnv,
+	makeTestCommander,
+	setupDelayOverrides,
+	RunCommonArguments,
+} from '../run_cmds/runCommon'
 
-interface RunArguments extends Arguments {
+interface RunScriptArguments extends RunCommonArguments {
 	file: string
-	strict?: boolean
-	headless?: boolean
-	devtools?: boolean
 	chrome?: string
-	sandbox?: boolean
-	loopCount?: number
-	fastForward?: number
-	stepDelay?: number
-	actionDelay?: number
-	slowMo?: number
-	'work-root'?: string
-	'test-data-root'?: string
-	'fail-status-code': number
-}
-
-function setupDelayOverrides(args: RunArguments, testSettingOverrides: TestSettings) {
-	if (testSettingOverrides == null) testSettingOverrides = {}
-
-	if (args.fastForward ?? false) {
-		testSettingOverrides.stepDelay = args.fastForward
-		testSettingOverrides.actionDelay = args.fastForward
-	} else if (args.slowMo ?? false) {
-		testSettingOverrides.stepDelay = args.slowMo ?? testSettingOverrides.stepDelay
-		testSettingOverrides.actionDelay = args.slowMo ?? testSettingOverrides.actionDelay
-	}
-
-	testSettingOverrides.actionDelay = args.actionDelay ?? testSettingOverrides.actionDelay
-	testSettingOverrides.actionDelay = args.stepDelay ?? testSettingOverrides.stepDelay
-
-	return testSettingOverrides
 }
 
 const cmd: CommandModule = {
 	command: '$0 <file> [options]',
 	describe: 'Run a test script locally',
 
-	handler(args: RunArguments) {
+	handler(args: RunScriptArguments) {
 		const { file, verbose } = args
 		const workRootPath = getWorkRootPath(file, args['work-root'])
 		const testDataPath = getTestDataPath(file, args['test-data-root'])
@@ -89,9 +60,7 @@ const cmd: CommandModule = {
 		}
 
 		if (args.loopCount) {
-			opts.testSettingOverrides = {
-				loopCount: args.loopCount,
-			}
+			opts.testSettingOverrides.loopCount = args.loopCount
 		}
 		opts.testSettingOverrides = setupDelayOverrides(args, opts.testSettingOverrides)
 
@@ -145,16 +114,16 @@ const cmd: CommandModule = {
 				group: 'Running the test script:',
 				alias: 'ff',
 				describe:
-					'Run the script in fast-forward: override the actionDelay and stepDelay settings to 1 second in the test script. Specify a number to set a different delay.',
-				coerce: x => coerceDelay('fast-forward', x, 1),
+					'Run the script in fast-forward: override the actionDelay and stepDelay settings to 1 second in the test script.',
 				conflicts: 'slow-mo',
+				type: 'boolean',
 			})
 			.options('slow-mo', {
 				group: 'Running the test script:',
 				describe:
-					'Run the script in slow-motion: Increase the actionDelay and stepDelay settings in the test script to 10 seconds.  Specify a number to set a different delay.',
-				coerce: x => coerceDelay('slow-mo', x, 10),
+					'Run the script in slow-motion: Increase the actionDelay and stepDelay settings in the test script to 10 seconds.',
 				conflicts: 'fast-forward',
+				type: 'boolean',
 			})
 			.options('step-delay', {
 				group: 'Running the test script:',
@@ -207,90 +176,3 @@ const cmd: CommandModule = {
 }
 
 export default cmd
-
-function makeTestCommander(file: string): TestCommander {
-	const commander = new EventEmitter()
-
-	// hax
-	// const dir = path.dirname(file)
-	// const [first, ...rest] = path.basename(file)
-	// const globPath = path.join(dir, `{${first}}${rest.join('')}`)
-
-	// console.log('watching', file, globPath)
-
-	// watch(path.dirname(file)).on('change', (path, stats) => {
-	// console.log('changed dir', path, stats)
-	// })
-
-	// TODO make this more reliable on linux
-	const watcher = watch(file, { persistent: true })
-	watcher.on('change', path => {
-		if (path === file) {
-			commander.emit('rerun-test')
-		}
-	})
-	return commander
-}
-
-function getWorkRootPath(file: string, root?: string): string {
-	const ext = extname(file)
-	const bare = basename(file, ext)
-
-	if (root == null) {
-		root = join(dirname(file), 'tmp', 'element-results', bare)
-	}
-
-	const dateString = sanitize(new Date().toISOString())
-
-	return resolve(root, dateString)
-}
-
-function getTestDataPath(file: string, root?: string): string {
-	root = root || dirname(file)
-
-	// return root
-	return resolve(root)
-}
-
-function initRunEnv(root: string, testDataRoot: string) {
-	const workRoot = new WorkRoot(root, {
-		'test-data': testDataRoot,
-	})
-
-	return {
-		workRoot,
-		stepEnv(): FloodProcessEnv {
-			return {
-				BROWSER_ID: 0,
-				FLOOD_GRID_REGION: 'local',
-				FLOOD_GRID_SQEUENCE_ID: 0,
-				FLOOD_GRID_SEQUENCE_ID: 0,
-				FLOOD_GRID_INDEX: 0,
-				FLOOD_GRID_NODE_SEQUENCE_ID: 0,
-				FLOOD_NODE_INDEX: 0,
-				FLOOD_SEQUENCE_ID: 0,
-				FLOOD_PROJECT_ID: 0,
-				SEQUENCE: 0,
-				FLOOD_LOAD_TEST: false,
-			}
-		},
-	}
-}
-
-function coerceDelay(desc: string, val: boolean | string | undefined, defaultVal: number): number {
-	if (typeof val === 'boolean') {
-		if (val) {
-			return defaultVal
-		} else {
-			return -1
-		}
-	} else if (typeof val === 'string') {
-		const coerced = Number(val)
-		if (isNaN(coerced)) {
-			throw new Error(`Unable to recognise ${desc} value ${val}`)
-		}
-		return coerced
-	} else {
-		throw new Error(`Unable to recognise ${desc} value ${val}`)
-	}
-}

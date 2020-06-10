@@ -10,7 +10,7 @@ const cmd: CommandModule = {
 	command: 'start <file> [options]',
 	describe: 'Flood Agent runner entrypoint',
 
-	async handler(args: RunArguments) {
+	async handler(args: RunArguments): Promise<void> {
 		const { file } = args
 
 		await run(file)

@@ -10,7 +10,7 @@ const cmd: CommandModule = {
 	command: 'config [file]',
 	describe: 'Run test scripts locally with configuration',
 
-	async handler(args: RunConfigurationArguments) {
+	async handler(args: RunConfigurationArguments): Promise<void> {
 		const { options, paths } = await readConfigFile(args.file)
 
 		if (!paths.testPathMatch || !paths.testPathMatch.length) {

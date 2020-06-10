@@ -8,7 +8,7 @@ const cmd: CommandModule = {
 	command: '$0 <file> [options]',
 	describe: 'Generate a basic test script from a template',
 
-	async handler(args: CommandArgs) {
+	async handler(args: CommandArgs): Promise<void> {
 		const { default: yeomanEnv } = await import('yeoman-environment')
 		const env = yeomanEnv.createEnv()
 		const { default: TestScriptGenerator } = await import('../../generator/test-script')
@@ -16,7 +16,7 @@ const cmd: CommandModule = {
 		env.run(['element/test-script', args.file], () => 'Generate success')
 	},
 
-	builder(yargs: Argv) {
+	builder(yargs: Argv): Argv {
 		return yargs
 			.option('verbose', {
 				describe: 'Verbose mode',

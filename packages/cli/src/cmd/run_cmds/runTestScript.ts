@@ -5,7 +5,7 @@ const cmd: CommandModule = {
 	command: '$0 <file> [options]',
 	describe: 'Run a test script locally',
 
-	async handler(args: RunCommonArguments) {
+	async handler(args: RunCommonArguments): Promise<void> {
 		await runTestScript(args)
 		process.exit(0)
 	},

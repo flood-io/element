@@ -11,7 +11,7 @@ const cmd: CommandModule = {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	async handler(args: Arguments): Promise<void> {},
 
-	builder(yargs: Argv) {
+	builder(yargs: Argv): Argv {
 		return yargs
 			.usage('usage: run <command>')
 			.command(runScriptCmd)

@@ -119,8 +119,7 @@ export async function getHostedGrids(): Promise<Grid[]> {
 export async function authenticate(username: string): Promise<void> {
 	const token = Buffer.from(`${username}:`).toString('base64')
 	const res = await (
-		await fetch({
-			url: 'https://api.flood.io/account',
+		await fetch('https://api.flood.io/account', {
 			headers: {
 				Authorization: `Basic ${token}`,
 			},
@@ -153,7 +152,7 @@ export async function launchOnDemand(
 	selectedRegions.forEach(id => {
 		body.append('flood[grids][][infrastructure]', 'demand')
 		body.append('flood[grids][][instance_quantity]', 1)
-		body.append('flood[grids][][instance_type]', 'm4.xlarge')
+		body.append('flood[grids][][instance_type]', 'm5.xlarge')
 		body.append('flood[grids][][region]', id)
 		body.append('flood[grids][][stop_after]', options.duration)
 	})

@@ -6,7 +6,7 @@ import lsCmd from './project/ls'
 
 export default {
 	command: 'project <command>',
-	describe: false,
+	describe: 'View/select project(s) to run floods into',
 	builder(yargs) {
 		return yargs
 			.command({

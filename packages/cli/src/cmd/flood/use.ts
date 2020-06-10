@@ -8,7 +8,7 @@ interface UseArguments extends Arguments {
 
 const cmd: CommandModule = {
 	command: 'use <name>',
-	describe: 'Select a project (by name) to run floods',
+	describe: 'Select a project (by name) to run floods into',
 
 	async handler(args: UseArguments) {
 		const { name } = args

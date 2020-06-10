@@ -8,7 +8,7 @@ import runCmd from './flood/run'
 
 export default {
 	command: 'flood <command>',
-	describe: false,
+	describe: 'A set of commands to support running floods from Element CLI to https://app.flood.io',
 	builder(yargs) {
 		return yargs
 			.command(authenticateCmd)

@@ -137,6 +137,7 @@ export default class Test implements ITest {
 		debug('run() start')
 
 		const { testData } = this.script
+
 		try {
 			const browser = new Browser<Step>(
 				this.script.runEnv.workRoot,
@@ -281,6 +282,7 @@ export default class Test implements ITest {
 		} finally {
 			await this.requestInterceptor.detach(this.client.page)
 		}
+
 		// TODO report skipped steps
 		await testObserver.after(this)
 	}

@@ -25,10 +25,10 @@ interface RunArguments extends Arguments {
 	chrome?: string
 	sandbox?: boolean
 	loopCount?: number
-	fastForward?: number
+	fastForward?: boolean
 	stepDelay?: number
 	actionDelay?: number
-	slowMo?: number
+	slowMo?: boolean
 	'work-root'?: string
 	'test-data-root'?: string
 	'fail-status-code': number
@@ -36,18 +36,18 @@ interface RunArguments extends Arguments {
 
 function setupDelayOverrides(args: RunArguments, testSettingOverrides: TestSettings) {
 	if (testSettingOverrides == null) testSettingOverrides = {}
+	const { actionDelay, stepDelay } = args
 
-	if (args.fastForward ?? false) {
-		testSettingOverrides.stepDelay = args.fastForward
-		testSettingOverrides.actionDelay = args.fastForward
-	} else if (args.slowMo ?? false) {
-		testSettingOverrides.stepDelay = args.slowMo ?? testSettingOverrides.stepDelay
-		testSettingOverrides.actionDelay = args.slowMo ?? testSettingOverrides.actionDelay
+	testSettingOverrides.actionDelay = actionDelay && actionDelay > 0 ? actionDelay : 0
+	testSettingOverrides.stepDelay = stepDelay && stepDelay > 0 ? stepDelay : 0
+
+	if (args.fastForward) {
+		testSettingOverrides.stepDelay = 1
+		testSettingOverrides.actionDelay = 1
+	} else if (args.slowMo) {
+		testSettingOverrides.stepDelay = 10
+		testSettingOverrides.actionDelay = 10
 	}
-
-	testSettingOverrides.actionDelay = args.actionDelay ?? testSettingOverrides.actionDelay
-	testSettingOverrides.actionDelay = args.stepDelay ?? testSettingOverrides.stepDelay
-
 	return testSettingOverrides
 }
 
@@ -89,9 +89,7 @@ const cmd: CommandModule = {
 		}
 
 		if (args.loopCount) {
-			opts.testSettingOverrides = {
-				loopCount: args.loopCount,
-			}
+			opts.testSettingOverrides.loopCount = args.loopCount
 		}
 		opts.testSettingOverrides = setupDelayOverrides(args, opts.testSettingOverrides)
 
@@ -145,16 +143,16 @@ const cmd: CommandModule = {
 				group: 'Running the test script:',
 				alias: 'ff',
 				describe:
-					'Run the script in fast-forward: override the actionDelay and stepDelay settings to 1 second in the test script. Specify a number to set a different delay.',
-				coerce: x => coerceDelay('fast-forward', x, 1),
+					'Run the script in fast-forward: override the actionDelay and stepDelay settings to 1 second in the test script.',
 				conflicts: 'slow-mo',
+				type: 'boolean',
 			})
 			.options('slow-mo', {
 				group: 'Running the test script:',
 				describe:
-					'Run the script in slow-motion: Increase the actionDelay and stepDelay settings in the test script to 10 seconds.  Specify a number to set a different delay.',
-				coerce: x => coerceDelay('slow-mo', x, 10),
+					'Run the script in slow-motion: Increase the actionDelay and stepDelay settings in the test script to 10 seconds.',
 				conflicts: 'fast-forward',
+				type: 'boolean',
 			})
 			.options('step-delay', {
 				group: 'Running the test script:',
@@ -274,23 +272,5 @@ function initRunEnv(root: string, testDataRoot: string) {
 				FLOOD_LOAD_TEST: false,
 			}
 		},
-	}
-}
-
-function coerceDelay(desc: string, val: boolean | string | undefined, defaultVal: number): number {
-	if (typeof val === 'boolean') {
-		if (val) {
-			return defaultVal
-		} else {
-			return -1
-		}
-	} else if (typeof val === 'string') {
-		const coerced = Number(val)
-		if (isNaN(coerced)) {
-			throw new Error(`Unable to recognise ${desc} value ${val}`)
-		}
-		return coerced
-	} else {
-		throw new Error(`Unable to recognise ${desc} value ${val}`)
 	}
 }

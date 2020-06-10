@@ -29,12 +29,16 @@ import { ElementPresence } from './Settings'
  * @param fn Actual implementation of step
  * @param options step options
  */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-empty-function */
 export const step: StepExtended = (name: string, ...optionsOrFn: any[]) => {}
 step.once = (name: string, ...optionsOrFn: any[]) => {}
 step.if = (condition: ConditionFn, name: string, ...optionsOrFn: any[]) => {}
 step.unless = (condition: ConditionFn, name: string, ...optionsOrFn: any[]) => {}
 step.skip = (name: string, ...optionsOrFn: any[]) => {}
 step.recovery = (name: string, ...optionsOrFn: any[]) => {}
+step.repeat = (count: number, name: string, ...optionsOrFn: any[]) => {}
+step.while = (condition: ConditionFn, name: string, ...optionsOrFn: any[]) => {}
 
 export interface StepBase {
 	(stepName: string, options: StepOptions, testFn: TestFn): void
@@ -46,6 +50,12 @@ export interface StepConditionBase {
 	(condition: ConditionFn, name: string, options: StepOptions, testFn: TestFn)
 	(condition: ConditionFn, name: string, testFn: TestFn)
 	(condition: ConditionFn, ...optionsOrFn: any[])
+}
+
+export interface StepRepeatablebase {
+	(count: number, name: string, options: StepOptions, testFn: TestFn)
+	(count: number, name: string, testFn: TestFn)
+	(count: number, ...optionsOrFn: any[])
 }
 
 export interface StepExtended extends StepBase {
@@ -73,6 +83,16 @@ export interface StepExtended extends StepBase {
 	 * Creates a recovery step
 	 */
 	recovery: StepBase
+
+	/**
+	 * Creates a repeatable step
+	 */
+	repeat: StepRepeatablebase
+
+	/**
+	 * Creates a while step
+	 */
+	while: StepConditionBase
 }
 
 export type StepDefinition = (name: string, fn: TestFn) => Promise<any>
@@ -81,11 +101,18 @@ export type ConditionFn = (this: void, browser: Browser) => boolean | Promise<bo
 export type StepOptions = {
 	pending?: boolean
 	once?: boolean
-	predicate?: (this: void, browser: Browser) => boolean | Promise<boolean>
+	predicate?: ConditionFn
 	skip?: boolean
 	waitTimeout?: number
 	waitUntil?: ElementPresence
-	maxRecovery?: number
+	recoveryTries?: number
+	repeat?: {
+		count: number
+		iteration: number
+	}
+	stepWhile?: {
+		predicate: ConditionFn
+	}
 }
 
 export function extractOptionsAndCallback(args: any[]): [Partial<StepOptions>, TestFn] {
@@ -94,7 +121,8 @@ export function extractOptionsAndCallback(args: any[]): [Partial<StepOptions>, T
 		return [{}, args[0] as TestFn]
 	} else if (args.length === 2) {
 		const [options, fn] = args as [StepOptions, TestFn]
-		return [options, fn]
+		const { waitTimeout, waitUntil, recoveryTries } = options
+		return [{ waitTimeout, waitUntil, recoveryTries }, fn]
 	}
 	throw new Error(`Step called with too many arguments`)
 }
@@ -118,6 +146,7 @@ export type StepRecoveryObject = {
 	[name: string]: {
 		recoveryStep: Step
 		loopCount: number
+		iteration: number
 	}
 }
 
@@ -153,8 +182,6 @@ export function normalizeStepOptions(stepOpts: StepOptions): StepOptions {
 		stepOpts.waitTimeout = stepOpts.waitTimeout / 1e3
 	} else if (Number(stepOpts.waitTimeout) === 0) {
 		stepOpts.waitTimeout = 30
-	} else if (Number(stepOpts.maxRecovery) === 0) {
-		stepOpts.maxRecovery = 1
 	}
 
 	return stepOpts

@@ -25,11 +25,11 @@ export default class Interceptor {
 	}
 
 	private requestBlocker = (interceptedRequest: Request) => {
-		let url = new URL(interceptedRequest.url())
+		const url = new URL(interceptedRequest.url())
 
 		if (
 			this.blockedDomains.some(domain => {
-				let matchee = domain.includes(':') ? url.host : url.hostname
+				const matchee = domain.includes(':') ? url.host : url.hostname
 				return isMatch(matchee, domain)
 			})
 		) {

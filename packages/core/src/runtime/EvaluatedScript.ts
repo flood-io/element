@@ -223,8 +223,8 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 				name,
 				{
 					...option,
-					predicate: (brower: Browser) =>
-						Promise.resolve(conditionFn(brower)).then(result => !result),
+					predicate: (browser: Browser) =>
+						Promise.resolve(conditionFn(browser)).then(result => !result),
 				},
 				fn,
 			])
@@ -235,11 +235,42 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			captureStep([name, { ...option, skip: true }, fn])
 		}
 
+		step.repeat = async (repeatVal: number, name: string, ...optionsOrFn: any[]) => {
+			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
+			const repeat = repeatVal < 0 ? 0 : repeatVal
+			captureStep([
+				name,
+				{
+					...option,
+					repeat: {
+						count: repeat,
+						iteration: 0,
+					},
+				},
+				fn,
+			])
+		}
+
+		step.while = async (condition: ConditionFn, name: string, ...optionsOrFn: any[]) => {
+			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
+			captureStep([
+				name,
+				{
+					...option,
+					stepWhile: {
+						predicate: condition,
+					},
+				},
+				fn,
+			])
+		}
+
 		step.recovery = async (name: string, ...optionsOrFn: any[]) => {
 			const [options, fn] = extractOptionsAndCallback(optionsOrFn)
 			recoverySteps[name] = {
 				recoveryStep: { name, options, fn },
-				loopCount: options.maxRecovery || 0,
+				loopCount: options.recoveryTries || 0,
+				iteration: 0,
 			}
 		}
 

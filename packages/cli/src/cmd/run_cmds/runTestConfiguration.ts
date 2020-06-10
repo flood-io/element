@@ -16,10 +16,13 @@ const cmd: CommandModule = {
 		if (!paths.testPathMatch || !paths.testPathMatch.length) {
 			throw Error('Found no test scripts matching testPathMatch pattern')
 		}
-		const files = []
+		const files: string[] = []
 		try {
 			files.push(
-				...(paths.testPathMatch.reduce((arr, item) => arr.concat(glob.sync(item)), []) as []),
+				...(paths.testPathMatch.reduce(
+					(arr: string[], item: string) => arr.concat(glob.sync(item)),
+					[],
+				) as []),
 			)
 			if (!files.length) {
 				throw Error('Found no test scripts matching testPathMatch pattern')
@@ -34,7 +37,7 @@ const cmd: CommandModule = {
 			const arg: RunCommonArguments = {
 				...options,
 				...paths,
-				file: file,
+				file,
 			}
 			await runTestScript(arg)
 		}

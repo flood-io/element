@@ -43,7 +43,10 @@ export function checkFile(file: string, paramName = 'Test script'): Error | unde
 		return new Error(`${paramName} '${file}' is not a file`)
 }
 
-export function setupDelayOverrides(args: RunCommonArguments, testSettingOverrides: TestSettings) {
+export function setupDelayOverrides(
+	args: RunCommonArguments,
+	testSettingOverrides: TestSettings,
+): TestSettings {
 	if (testSettingOverrides == null) testSettingOverrides = {}
 	const { actionDelay, stepDelay } = args
 
@@ -107,18 +110,6 @@ export function initRunEnv(root: string, testDataRoot: string) {
 
 export function makeTestCommander(file: string): TestCommander {
 	const commander = new EventEmitter()
-
-	// hax
-	// const dir = path.dirname(file)
-	// const [first, ...rest] = path.basename(file)
-	// const globPath = path.join(dir, `{${first}}${rest.join('')}`)
-
-	// console.log('watching', file, globPath)
-
-	// watch(path.dirname(file)).on('change', (path, stats) => {
-	// console.log('changed dir', path, stats)
-	// })
-
 	// TODO make this more reliable on linux
 	const watcher = watch(file, { persistent: true })
 	watcher.on('change', path => {
@@ -129,15 +120,14 @@ export function makeTestCommander(file: string): TestCommander {
 	return commander
 }
 
-export async function runTestScript(args: RunCommonArguments) {
+export async function runTestScript(args: RunCommonArguments): Promise<void> {
 	const { file, verbose } = args
 	const workRootPath = getWorkRootPath(file, args['work-root'])
 	const testDataPath = getTestDataPath(file, args['test-data-root'])
 
 	const verboseBool = !!verbose
 
-	let logLevel = 'info'
-	if (verboseBool) logLevel = 'debug'
+	const logLevel = verboseBool ? 'debug' : 'info'
 
 	const logger = createLogger(logLevel, true)
 	const reporter = new ConsoleReporter(logger, verboseBool)
@@ -175,10 +165,10 @@ export async function runTestScript(args: RunCommonArguments) {
 	await runCommandLine(opts)
 }
 
-export async function readConfigFile(file: string) {
+export async function readConfigFile(file: string): Promise<any> {
 	const rootPath = process.cwd()
 	try {
-		return await import(join(rootPath, file))
+		return import(join(rootPath, file))
 	} catch {
 		throw Error('The config file was not structured correctly. Please check and try again')
 	}

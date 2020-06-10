@@ -9,7 +9,7 @@ const cmd: CommandModule = {
 	describe: 'Generate a basic [test script|test configuration]',
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	async handler(args: Arguments) {},
+	async handler(args: Arguments): Promise<void> {},
 
 	builder(yargs: Argv) {
 		return yargs

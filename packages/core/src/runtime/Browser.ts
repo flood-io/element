@@ -600,6 +600,6 @@ export class Browser<T> implements BrowserInterface {
 	}
 
 	public async close(): Promise<void> {
-		return await this.client.close()
+		await this.client.browser.close()
 	}
 }

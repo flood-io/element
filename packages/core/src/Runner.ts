@@ -131,6 +131,7 @@ export class Runner {
 			})
 
 			this.logger.info(`Test completed after ${this.looper.iterations} iterations`)
+			await test.runningBrowser?.close()
 		} catch (err) {
 			if (err instanceof TestScriptError) {
 				this.logger.error('\n' + err.toStringNodeFormat())

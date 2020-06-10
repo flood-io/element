@@ -174,3 +174,12 @@ export async function runTestScript(args: RunCommonArguments) {
 
 	await runCommandLine(opts)
 }
+
+export async function readConfigFile(file: string) {
+	const rootPath = process.cwd()
+	try {
+		return await import(join(rootPath, file))
+	} catch {
+		throw Error('The config file was not structured correctly. Please check and try again')
+	}
+}

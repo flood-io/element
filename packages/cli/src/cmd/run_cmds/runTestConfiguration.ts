@@ -1,6 +1,5 @@
 import { Argv, Arguments, CommandModule } from 'yargs'
-import { join } from 'path'
-import { checkFile, RunCommonArguments, runTestScript } from '../common'
+import { checkFile, RunCommonArguments, runTestScript, readConfigFile } from '../common'
 import glob from 'glob'
 
 interface RunConfigurationArguments extends Arguments {
@@ -12,21 +11,25 @@ const cmd: CommandModule = {
 	describe: 'Run test scripts locally with configuration',
 
 	async handler(args: RunConfigurationArguments) {
-		const rootPath = process.cwd()
-		const { options, paths } = await import(join(rootPath, args.file))
+		const { options, paths } = await readConfigFile(args.file)
 
 		if (!paths.testPathMatch || !paths.testPathMatch.length) {
-			return new Error(`Please provide values of testPathMatch in ${args.file}`)
+			throw Error('Found no test scripts matching testPathMatch pattern')
 		}
-
-		const files = paths.testPathMatch.reduce((arr, item) => arr.concat(glob.sync(item)), []) as []
-		if (!files.length) {
-			return new Error(
-				`Can not find any test script to run with configuration. Please check values of testPathMatch in ${args.configFile} file again`,
+		const files = []
+		try {
+			files.push(
+				...(paths.testPathMatch.reduce((arr, item) => arr.concat(glob.sync(item)), []) as []),
 			)
+			if (!files.length) {
+				throw Error('Found no test scripts matching testPathMatch pattern')
+			}
+		} catch {
+			throw Error('Found no test scripts matching testPathMatch pattern')
 		}
-
-		console.log(`Preparing to run test scripts: ${files} ...`)
+		console.info(
+			'The following test scripts that matched the testPathMatch pattern are going to be executed:',
+		)
 		for (const file of files.sort()) {
 			const arg: RunCommonArguments = {
 				...options,
@@ -35,7 +38,7 @@ const cmd: CommandModule = {
 			}
 			await runTestScript(arg)
 		}
-		console.log('Completely run test scripts with configuration')
+		console.info('Test running with the config file has finished')
 		process.exit(0)
 	},
 	builder(yargs: Argv): Argv {
@@ -49,7 +52,7 @@ const cmd: CommandModule = {
 				describe: 'Verbose mode',
 			})
 			.check(({ file }) => {
-				const fileErr = checkFile(file as string)
+				const fileErr = checkFile(file as string, 'Configuration file')
 				if (fileErr) return fileErr
 				return true
 			})

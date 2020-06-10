@@ -47,7 +47,9 @@ export default class RegionsSelect extends Generator {
 		this.runningGrids = await getHostedGrids()
 
 		if (this.runningGrids.length === 0) {
-			console.log("There're no running grids. Please go to the Flood UI to launch a grid first")
+			console.log(
+				"There're no running grids. Please go to https://app.flood.io to launch a grid first",
+			)
 			return
 		}
 

@@ -21,9 +21,9 @@ const cmd: CommandModule = {
 			})
 			.demandCommand()
 			.help('help')
-			.fail(msg => {
-				// if (err) throw err // preserve stack
-				console.error(chalk.redBright(msg))
+			.fail((msg, err) => {
+				if (err) console.error(chalk.redBright(err.message))
+				if (msg) console.error(chalk.redBright(msg))
 				process.exit(1)
 			})
 	},

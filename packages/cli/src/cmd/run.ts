@@ -23,7 +23,7 @@ const cmd: CommandModule = {
 			.help('help')
 			.fail((msg, err) => {
 				if (err) console.error(chalk.redBright(err.message))
-				console.error(chalk.redBright(msg))
+				if (msg) console.error(chalk.redBright(msg))
 				process.exit(1)
 			})
 	},

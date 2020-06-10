@@ -168,7 +168,7 @@ export async function runTestScript(args: RunCommonArguments): Promise<void> {
 export async function readConfigFile(file: string): Promise<any> {
 	const rootPath = process.cwd()
 	try {
-		return import(join(rootPath, file))
+		return await import(join(rootPath, file))
 	} catch {
 		throw Error('The config file was not structured correctly. Please check and try again')
 	}

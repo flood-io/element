@@ -49,8 +49,6 @@ export default class Test implements ITest {
 
 	public stepCount: number
 
-	public recoveryCount: number
-
 	get skipping(): boolean {
 		return this.failed
 	}
@@ -133,7 +131,6 @@ export default class Test implements ITest {
 		this.failed = false
 		this.runningBrowser = null
 		this.stepCount = 0
-		this.recoveryCount = 0
 
 		// await this.observer.attachToNetworkRecorder()
 
@@ -182,35 +179,60 @@ export default class Test implements ITest {
 				return condition
 			}
 
-			const callCondition = (step: Step): boolean => {
-				const { once, skip, pending } = step.options
+			const callCondition = async (step: Step): Promise<boolean> => {
+				const { once, skip, pending, repeat, stepWhile } = step.options
+
 				if (pending) {
 					console.log(`(Pending) ${step.name}`)
 					this.stepCount += 1
 					return false
 				}
+
 				if (once && iteration > 1) {
 					this.stepCount += 1
 					return false
 				}
+
 				if (skip) {
 					console.log(`Skip test ${step.name}`)
 					this.stepCount += 1
 					return false
 				}
+
+				if (repeat) {
+					if (repeat.iteration < repeat.count - 1) {
+						this.stepCount -= 1
+						repeat.iteration += 1
+					} else {
+						repeat.iteration = 0
+					}
+				}
+
+				if (stepWhile) {
+					const { predicate } = stepWhile
+					const result = await callPredicate(predicate)
+					if (result) this.stepCount -= 1
+					return result
+				}
+
 				return true
 			}
 
 			const callRecovery = async (step: Step): Promise<boolean> => {
+				let { iteration } = this.recoverySteps[step.name]
 				const { recoveryStep, loopCount } = this.recoverySteps[step.name]
-				const { maxRecovery } = this.settings
-				const settingRecoveryCount = loopCount || maxRecovery || 1
-				if (!recoveryStep || this.recoveryCount >= settingRecoveryCount) return false
-				this.recoveryCount += 1
+				const { recoveryTries } = this.settings
+				const settingRecoveryCount = loopCount || recoveryTries || 1
+				if (!recoveryStep || iteration >= settingRecoveryCount) {
+					iteration = 0
+					return false
+				}
+				iteration += 1
 				try {
 					const result = await recoveryStep.fn.call(null, browser)
-					if (result === RecoverWith.CONTINUE) return true
-					if (result === RecoverWith.RESTART) {
+					if (result === RecoverWith.CONTINUE) {
+						this.stepCount += 1
+					} else if (result === RecoverWith.RESTART) {
 						looper.restartLoop()
 						this.stepCount = this.steps.length
 					}
@@ -224,9 +246,10 @@ export default class Test implements ITest {
 			debug('running steps')
 			while (this.stepCount < this.steps.length) {
 				const step = this.steps[this.stepCount]
-				const { predicate } = step.options
-				if (!callCondition(step)) continue
+				const condition = await callCondition(step)
+				if (!condition) continue
 
+				const { predicate } = step.options
 				if (predicate) {
 					const condition = await callPredicate(predicate)
 					if (!condition) {

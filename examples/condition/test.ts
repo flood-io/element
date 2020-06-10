@@ -41,7 +41,7 @@ export default () => {
 	})
 
 	step.recovery('Step 3', async browser => {
-		console.log('Recovery step 3 done, throw an error')
+		console.log('Recovery step 3 done, continue the next step')
 		return RecoverWith.CONTINUE
 	})
 
@@ -73,4 +73,14 @@ export default () => {
 	step('Step 4', async browser => {
 		console.log('Done step 4')
 	})
+
+	let count = 0
+	step.while(
+		() => count < 3,
+		'Step 5',
+		async browser => {
+			count += 1
+			console.log('Step 5')
+		},
+	)
 }

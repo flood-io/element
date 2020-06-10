@@ -1,7 +1,13 @@
 import Generator from 'yeoman-generator'
 import ora from 'ora'
 
-import { LaunchOptions, getRegions, getProject, launchOnDemand } from '../../../utils/flood'
+import {
+	LaunchOptions,
+	getRegions,
+	getProject,
+	launchOnDemand,
+	countVUH,
+} from '../../../utils/flood'
 
 export default class RegionsSelect extends Generator {
 	options: LaunchOptions
@@ -26,13 +32,7 @@ export default class RegionsSelect extends Generator {
 	}
 
 	get _vuh(): number {
-		const {
-			options: { virtualUser, duration },
-			answers: { regions },
-		} = this
-		const billingDuration = (duration - (duration % 15) + (duration % 15 ? 1 : 0) * 15) / 60
-
-		return virtualUser * regions.length * billingDuration
+		return countVUH(this.options, this.answers.regions.length)
 	}
 
 	get _confirmMessage(): string {

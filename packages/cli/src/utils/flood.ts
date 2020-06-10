@@ -116,6 +116,13 @@ export async function getHostedGrids(): Promise<Grid[]> {
 	return grids.filter(grid => grid.infrastructure === 'hosted')
 }
 
+export function countVUH(options: LaunchOptions, gridCount: number) {
+	const { virtualUser, duration } = options
+	const billingDuration = (duration - (duration % 15) + (duration % 15 ? 1 : 0) * 15) / 60
+
+	return virtualUser * gridCount * billingDuration
+}
+
 export async function authenticate(username: string): Promise<void> {
 	const token = Buffer.from(`${username}:`).toString('base64')
 	const res = await (

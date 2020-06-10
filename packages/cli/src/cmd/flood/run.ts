@@ -67,9 +67,7 @@ const cmd: CommandModule = {
 
 				return true
 			})
-			.check(() => {
-				return isAuthenticated() && getProject()
-			})
+			.check(() => isAuthenticated() && getProject())
 	},
 }
 

@@ -34,9 +34,7 @@ const cmd: CommandModule = {
 			.positional('name', {
 				describe: 'Project name from Flood',
 			})
-			.check(() => {
-				return isAuthenticated()
-			})
+			.check(() => isAuthenticated())
 	},
 }
 

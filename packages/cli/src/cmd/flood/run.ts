@@ -1,14 +1,13 @@
 import { Argv, Arguments, CommandModule } from 'yargs'
-// import fetch from 'node-fetch'
-
-// import { error } from '../../utils/error'
+import chalk from 'chalk'
 
 import { checkFile } from '../common'
+import { isAuthenticated, getProject } from '../../utils/flood'
 
-interface RunArguments extends Arguments {
+interface FloodRunArguments extends Arguments {
 	file: string
 	hosted: boolean
-	vu: number
+	virtualUser: number
 	duration: number
 	rampup: number
 }
@@ -17,8 +16,19 @@ const cmd: CommandModule = {
 	command: 'run <file> [options]',
 	describe: 'Run a flood from Element CLI',
 
-	async handler(args: RunArguments) {
-		// TODO
+	async handler(args: FloodRunArguments) {
+		const { default: YoEnv } = await import('yeoman-environment')
+		const { default: InfrastructureSelect } = args.hosted
+			? await import('../../generator/flood/grids-select')
+			: await import('../../generator/flood/regions-select')
+		const env = YoEnv.createEnv()
+
+		env.on('error', err => {
+			console.error(chalk.redBright(err))
+			process.exit(1)
+		})
+		env.registerStub(InfrastructureSelect as any, 'element/infrastructure-select')
+		env.run('element/infrastructure-select', args, null as any)
 	},
 	builder(yargs: Argv): Argv {
 		return yargs
@@ -56,6 +66,9 @@ const cmd: CommandModule = {
 				if (fileErr) return fileErr
 
 				return true
+			})
+			.check(() => {
+				return isAuthenticated() && getProject()
 			})
 	},
 }

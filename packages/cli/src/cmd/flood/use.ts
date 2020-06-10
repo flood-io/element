@@ -1,6 +1,6 @@
 import { Argv, Arguments, CommandModule } from 'yargs'
 
-import { Project, floodFetch, setProject, isAuthenticated } from '../../utils/flood'
+import { getProjects, setProject, isAuthenticated } from '../../utils/flood'
 
 interface UseArguments extends Arguments {
 	name: string
@@ -13,11 +13,17 @@ const cmd: CommandModule = {
 	async handler(args: UseArguments) {
 		const { name } = args
 
-		const data = await floodFetch('https://api.flood.io/projects')
-		const projects: Project[] = data._embedded.projects
+		const projects = await getProjects()
 
-		if (projects.some(project => project.name === name)) {
-			setProject(name)
+		if (
+			projects.some(project => {
+				if (project.name === name) {
+					setProject({ id: project.id, name: project.name })
+					return true
+				}
+				return false
+			})
+		) {
 			console.log(`Using "${name}"`)
 		} else {
 			throw `No project found with name "${name}". Please check and try again`

@@ -13,14 +13,13 @@ const cmd: CommandModule = {
 
 	async handler(args: RunConfigurationArguments) {
 		const rootPath = process.cwd()
-		// eslint-disable-next-line @typescript-eslint/no-var-requires
-		const { options, paths } = require(join(rootPath, args.file))
+		const { options, paths } = await import(join(rootPath, args.file))
 
 		if (!paths.testPathMatch || !paths.testPathMatch.length) {
 			return new Error(`Please provide values of testPathMatch in ${args.file}`)
 		}
 
-		const files = paths.testPathMatch.reduce((arr, item) => arr.concat(glob.sync(item)), [])
+		const files = paths.testPathMatch.reduce((arr, item) => arr.concat(glob.sync(item)), []) as []
 		if (!files.length) {
 			return new Error(
 				`Can not find any test script to run with configuration. Please check values of testPathMatch in ${args.configFile} file again`,
@@ -28,19 +27,16 @@ const cmd: CommandModule = {
 		}
 
 		console.log(`Preparing to run test scripts: ${files} ...`)
-		for (const file of files) {
-			try {
-				const arg: RunCommonArguments = {
-					...options,
-					...paths,
-					file: file,
-				}
-				await runTestScript(arg)
-			} catch {
-				console.log(`Run test script ${file} failed`)
+		for (const file of files.sort()) {
+			const arg: RunCommonArguments = {
+				...options,
+				...paths,
+				file: file,
 			}
+			await runTestScript(arg)
 		}
 		console.log('Completely run test scripts with configuration')
+		process.exit(0)
 	},
 	builder(yargs: Argv): Argv {
 		return yargs

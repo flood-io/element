@@ -598,4 +598,8 @@ export class Browser<T> implements BrowserInterface {
 
 		return newPage
 	}
+
+	public async close(): Promise<void> {
+		return await this.client.close()
+	}
 }

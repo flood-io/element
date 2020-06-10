@@ -10,10 +10,11 @@ const cmd: CommandModule = {
 	command: 'start <file> [options]',
 	describe: 'Flood Agent runner entrypoint',
 
-	handler(args: RunArguments) {
+	async handler(args: RunArguments) {
 		const { file } = args
 
-		run(file)
+		await run(file)
+		process.exit(0)
 	},
 
 	builder(yargs) {

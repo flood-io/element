@@ -167,6 +167,8 @@ async function runTestScript(args: RunCommonArguments): Promise<void> {
 }
 
 async function runTestScriptWithConfiguration(args: RunCommonArguments): Promise<void> {
+	const fileErr = checkFile(args.configFile, 'Configuration file')
+	if (fileErr) throw fileErr
 	const { options, paths } = await readConfigFile(args.configFile)
 
 	if (!paths.testPathMatch || !paths.testPathMatch.length) {
@@ -315,11 +317,6 @@ const cmd: CommandModule = {
 			.option('config-file', {
 				describe: 'Run test scripts with configuration',
 				type: 'string',
-				coerce: file => {
-					const fileErr = checkFile(file as string, 'Configuration file')
-					if (fileErr) throw fileErr
-					return file
-				},
 				default: 'element.config.js',
 			})
 			.fail((msg, err) => {

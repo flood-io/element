@@ -1,9 +1,9 @@
 import Interceptor from '../network/Interceptor'
-import { Browser } from './Browser'
-import { TestObserver } from './test-observers/Observer'
-import { Step } from './Step'
+import { Browser } from '../runtime/Browser'
+import { TestObserver } from '../runtime/test-observers/Observer'
+import { Step } from '../runtime/Step'
 import { CancellationToken } from '../utils/CancellationToken'
-import { TestSettings } from './Settings'
+import { TestSettings } from '../runtime/Settings'
 import { Looper } from '../Looper'
 import { ScreenshotOptions } from '../page/types'
 

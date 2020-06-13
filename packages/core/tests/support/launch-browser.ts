@@ -1,7 +1,7 @@
-import { PuppeteerClientLike, launch } from '../../src/driver/Puppeteer'
-export { PuppeteerClientLike as testPuppeteer }
+import { PlaywrightClientLike, launch } from '../../src/driver/Playwright'
+export { PlaywrightClientLike as testPlaywright }
 
-export async function launchPuppeteer(): Promise<PuppeteerClientLike> {
+export async function launchPlaywright(): Promise<PlaywrightClientLike> {
 	let opts = {
 		sandbox: true,
 	}

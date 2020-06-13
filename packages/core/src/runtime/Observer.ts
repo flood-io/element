@@ -2,6 +2,7 @@ import NetworkRecorder from '../network/Recorder'
 import { RawResponse } from '../network/Protocol'
 import { ConsoleMethod } from './Settings'
 import { IReporter } from '../Reporter'
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:observer')
 
 interface Event {
@@ -36,17 +37,16 @@ export default class Observer {
 		this.networkRecorder.attachEvent('domcontentloaded', event => this.onDOMContentLoaded(event))
 
 		this.networkRecorder.attachEvent('framenavigated', event => this.onNavigate(event))
-		this.networkRecorder.attachEvent('Page.frameStartedLoading', event =>
-			this.onFrameStartedLoading(event),
-		)
-		this.networkRecorder.attachEvent('Page.frameStoppedLoading', event =>
-			this.onFrameStoppedLoading(event),
-		)
-		this.networkRecorder.attachEvent('Page.frameClearedScheduledNavigation', event =>
-			this.onFrameClearedScheduledNavigation(event),
-		)
+		// this.networkRecorder.attachEvent('Page.frameStartedLoading', event =>
+		// 	this.onFrameStartedLoading(event),
+		// )
+		// this.networkRecorder.attachEvent('Page.frameStoppedLoading', event =>
+		// 	this.onFrameStoppedLoading(event),
+		// )
+		// this.networkRecorder.attachEvent('Page.frameClearedScheduledNavigation', event =>
+		// 	this.onFrameClearedScheduledNavigation(event),
+		// )
 
-		// this.networkRecorder.attachEvent('response', event => this.onNetworkResponse(event))
 		this.networkRecorder.attachEvent('Network.requestWillBeSent', event =>
 			this.onRawNetworkRequestWillBeSent(event),
 		)
@@ -81,7 +81,6 @@ export default class Observer {
 
 	private onRawNetworkLoadingFinished({ requestId, encodedDataLength, timestamp }: RequestEvent) {
 		debug('onRawNetworkLoadingFinished', requestId)
-		// console.log(`onRawNetworkLoadingFinished: ${requestId}`)
 		if (!this.requests.has(requestId)) {
 			console.error(`Unknown request: ${requestId}`)
 			return
@@ -89,7 +88,7 @@ export default class Observer {
 
 		this.removePendingRequest(requestId)
 
-		let promise = new Promise((yeah, nah) => {
+		const promise = new Promise((yeah, nah) => {
 			this.networkRecorder
 				.recordResponseCompleted({
 					requestId,
@@ -105,21 +104,14 @@ export default class Observer {
 	}
 
 	private async onRawNetworkLoadingFailed(event: Event) {
-		let { requestId /*, errorText*/ } = event
+		const { requestId } = event
 		debug('onRawNetworkLoadingFailed', requestId)
 		this.removePendingRequest(requestId)
 		this.failedRequests.push(requestId)
-
-		// console.log(`Network.loadingFailed ${requestId} - ${errorText}`)
 	}
-
-	// private onNetworkResponse(response: Response) {
-	// 	// console.log(response.url)
-	// }
 
 	private removePendingRequest(requestId: string) {
 		this.requests.delete(requestId)
-		// console.log(`Pending requests: ${this.requests.size}`)
 	}
 
 	private onFrameAttached(event: any): void {}
@@ -127,21 +119,5 @@ export default class Observer {
 		this.networkRecorder.recordDOMContentLoadedEvent()
 	}
 
-	private onNavigate(event: any): void {
-		// this.logger.debug(`Frame scheduled navigation ${event}`)
-	}
-
-	private onFrameStartedLoading(event: any): void {
-		// this.pendingFrameTransition = this.env.waitForNavigation({
-		// 	waitUntil: 'load',
-		// })
-		// this.logger.debug(`Page: Frame started loading id:${event.frameId}`)
-	}
-
-	private onFrameClearedScheduledNavigation(event: any) {
-		// this.logger.debug(`Cancel frame navigation: id:${event.frameId}`)
-	}
-	private onFrameStoppedLoading(event: any) {
-		// this.logger.debug(`Page: Frame stoppped loading id:${event.frameId}`)
-	}
+	private onNavigate(event: any): void {}
 }

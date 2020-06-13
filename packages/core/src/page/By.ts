@@ -10,8 +10,7 @@ import {
 	EvalLocator,
 } from './locators/index'
 
-import { Locator } from './types'
-import { EvaluateFn } from 'puppeteer'
+import { Locator, EvaluateFn } from './types'
 
 /**
  * By is used to create <[Locator]>s to find Elements or use in any place which accepts a Locator or <[Locatable]>.

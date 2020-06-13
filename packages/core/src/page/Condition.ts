@@ -1,5 +1,5 @@
-import { PageFnOptions, Page, EvaluateFn, Frame } from 'puppeteer'
-import { Locator } from './types'
+import { Page, Frame } from 'playwright'
+import { Locator, EvaluateFn } from './types'
 import { DEFAULT_SETTINGS } from '../runtime/Settings'
 import recast from 'recast'
 import { locatableToLocator } from '../runtime/toLocatorError'
@@ -79,7 +79,7 @@ export abstract class ElementCondition extends LocatorCondition {
 
 	public async waitFor(frame: Frame): Promise<boolean> {
 		const argSeparator = '-SEP-'
-		const options: PageFnOptions = { polling: 'raf', timeout: this.timeout }
+		const options: any = { polling: 'raf', timeout: this.timeout }
 		const locatorFunc = this.locatorPageFunc
 		const conditionFunc = this.pageFunc
 

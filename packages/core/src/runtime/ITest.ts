@@ -3,10 +3,11 @@ import { Browser } from './Browser'
 import { TestObserver } from './test-observers/Observer'
 import { Step } from './Step'
 import { CancellationToken } from '../utils/CancellationToken'
-import { ScreenshotOptions } from 'puppeteer'
 import { TestSettings } from './Settings'
 import { Looper } from '../Looper'
+import { ScreenshotOptions } from '../page/types'
 
+// eslint-disable-next-line @typescript-eslint/interface-name-prefix
 export interface ITest {
 	settings: TestSettings
 	steps: Step[]

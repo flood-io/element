@@ -1,10 +1,4 @@
-import {
-	EvaluateFn,
-	ExecutionContext,
-	ElementHandle as PElementHandle,
-	ClickOptions,
-	ScreenshotOptions,
-} from 'puppeteer'
+import { ElementHandle as PElementHandle, Page } from 'playwright'
 import { Point } from './Point'
 
 export interface LocatorBuilder {
@@ -19,6 +13,13 @@ export interface LocatorBuilder {
 	toString(): string
 }
 
+export type EvaluateFn<T = any> = string | ((arg1: T, ...args: any[]) => any)
+export interface PageGoToOptions {
+	timeout?: number
+	waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' | undefined
+	referer: string
+}
+
 /**
  * A Locator represents an object used to locate elements on the page. It is usually constructed using the helper methods of <[By]>.
  * An <[ElementHandle]> can also be used as a Locator which finds itself.
@@ -26,9 +27,9 @@ export interface LocatorBuilder {
  * @docOpaque
  */
 export interface Locator extends LocatorBuilder {
-	find(context: ExecutionContext, node?: PElementHandle): Promise<ElementHandle | null>
+	find(page: Page, node?: PElementHandle): Promise<ElementHandle | null>
 
-	findMany(context: ExecutionContext, node?: PElementHandle): Promise<ElementHandle[]>
+	findMany(page: Page, node?: PElementHandle): Promise<ElementHandle[]>
 }
 
 /**
@@ -56,7 +57,7 @@ export interface ElementHandle {
 	 * Sends a click event to the element attached to this handle. If the element is
 	 * currently outside the viewport it will first scroll to that element.
 	 */
-	click(options?: ClickOptions): Promise<void>
+	click(options?: any): Promise<void>
 
 	/**
 	 * Schedules a command to clear the value of this element.
@@ -90,7 +91,7 @@ export interface ElementHandle {
 	/**
 	 * Takes a screenshot of this element and saves it to the results folder with a random name.
 	 */
-	takeScreenshot(options?: ScreenshotOptions): Promise<void>
+	takeScreenshot(options?: any): Promise<void>
 
 	/**
 	 * Locates an element using the supplied <[Locator]>, returning an <[ElementHandle]>.
@@ -195,4 +196,50 @@ export interface TargetLocator {
 	 * @param id number | string | ElementHandle
 	 */
 	frame(id: number | string | ElementHandle): Promise<void>
+}
+
+export interface BoundingBox {
+	/** The x-coordinate of top-left corner. */
+	x: number
+	/** The y-coordinate of top-left corner. */
+	y: number
+	/** The width. */
+	width: number
+	/** The height. */
+	height: number
+}
+
+export interface ScreenshotOptions {
+	/**
+	 * The file path to save the image to. The screenshot type will be inferred from file extension.
+	 * If `path` is a relative path, then it is resolved relative to current working directory.
+	 * If no path is provided, the image won't be saved to the disk.
+	 */
+	path?: string
+	/**
+	 * The screenshot type.
+	 * @default png
+	 */
+	type?: 'jpeg' | 'png'
+	/** The quality of the image, between 0-100. Not applicable to png images. */
+	quality?: number
+	/**
+	 * When true, takes a screenshot of the full scrollable page.
+	 * @default false
+	 */
+	fullPage?: boolean
+	/**
+	 * An object which specifies clipping region of the page.
+	 */
+	clip?: BoundingBox
+	/**
+	 * Hides default white background and allows capturing screenshots with transparency.
+	 * @default false
+	 */
+	omitBackground?: boolean
+	/**
+	 * The encoding of the image, can be either base64 or binary.
+	 * @default binary
+	 */
+	encoding?: 'base64' | 'binary'
 }

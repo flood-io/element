@@ -6,6 +6,7 @@ import {
 	FloodProcessEnv,
 	TestCommander,
 	TestSettings,
+	BROWSER_TYPE,
 } from '@flood/element-core'
 
 import { ConsoleReporter } from '../utils/ConsoleReporter'
@@ -29,6 +30,7 @@ interface RunArguments extends Arguments {
 	stepDelay?: number
 	actionDelay?: number
 	slowMo?: boolean
+	browserType?: string
 	'work-root'?: string
 	'test-data-root'?: string
 	'fail-status-code': number
@@ -79,7 +81,7 @@ const cmd: CommandModule = {
 			verbose: verboseBool,
 			headless: args.headless ?? true,
 			devtools: args.devtools ?? false,
-			chromeVersion: args.chrome,
+			browserType: args.browserType ?? BROWSER_TYPE.CHROME,
 			sandbox: args.sandbox ?? true,
 
 			runEnv: initRunEnv(workRootPath, testDataPath),

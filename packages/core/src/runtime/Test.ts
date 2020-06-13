@@ -18,14 +18,14 @@ import { Looper } from '../Looper'
 
 import { CancellationToken } from '../utils/CancellationToken'
 
-import { PuppeteerClientLike } from '../driver/Puppeteer'
-import { ScreenshotOptions } from 'puppeteer'
 import { TestSettings, ConcreteTestSettings, DEFAULT_STEP_WAIT_SECONDS } from './Settings'
 import { ITest } from './ITest'
 import { EvaluatedScriptLike } from './EvaluatedScriptLike'
 import { TimingObserver } from './test-observers/TimingObserver'
 import { Context } from './test-observers/Context'
 import { NetworkRecordingTestObserver } from './test-observers/NetworkRecordingTestObserver'
+import { PlaywrightClientLike } from '../driver/Playwright'
+import { ScreenshotOptions } from '../page/types'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:test')
@@ -54,7 +54,7 @@ export default class Test implements ITest {
 	}
 
 	constructor(
-		public client: PuppeteerClientLike,
+		public client: PlaywrightClientLike,
 		public script: EvaluatedScriptLike,
 		public reporter: IReporter = new NullReporter(),
 		settingsOverride: TestSettings,

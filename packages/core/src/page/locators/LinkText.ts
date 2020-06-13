@@ -1,5 +1,4 @@
-import { EvaluateFn } from 'puppeteer'
-import { LocatorBuilder } from '../types'
+import { LocatorBuilder, EvaluateFn } from '../types'
 
 export class LinkTextLocator implements LocatorBuilder {
 	constructor(public linkText: string, public partial: boolean = false) {}

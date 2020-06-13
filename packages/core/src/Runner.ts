@@ -1,4 +1,4 @@
-import { ConcreteLaunchOptions, PuppeteerClient } from './driver/Puppeteer'
+import { ConcreteLaunchOptions, PlaywrightClient } from './driver/Playwright'
 import { Logger } from 'winston'
 import Test from './runtime/Test'
 import { EvaluatedScript } from './runtime/EvaluatedScript'
@@ -14,6 +14,7 @@ export interface TestCommander {
 	on(event: 'rerun-test', listener: () => void): this
 }
 
+// eslint-disable-next-line @typescript-eslint/interface-name-prefix
 export interface IRunner {
 	run(testScriptFactory: AsyncFactory<EvaluatedScript>): Promise<void>
 	stop(): Promise<void>
@@ -28,10 +29,10 @@ function delay(t: number, v?: any) {
 export class Runner {
 	protected looper: Looper
 	running = true
-	public clientPromise: Promise<PuppeteerClient> | undefined
+	public clientPromise: Promise<PlaywrightClient> | undefined
 
 	constructor(
-		private clientFactory: AsyncFactory<PuppeteerClient>,
+		private clientFactory: AsyncFactory<PlaywrightClient>,
 		protected testCommander: TestCommander | undefined,
 		private reporter: IReporter,
 		protected logger: Logger,
@@ -55,16 +56,15 @@ export class Runner {
 		await this.runTestScript(testScript, this.clientPromise)
 	}
 
-	async launchClient(testScript: EvaluatedScript): Promise<PuppeteerClient> {
+	async launchClient(testScript: EvaluatedScript): Promise<PlaywrightClient> {
 		const { settings } = testScript
 
 		const options: Partial<ConcreteLaunchOptions> = this.launchOptionOverrides
-		options.ignoreHTTPSErrors = settings.ignoreHTTPSErrors
+		options.ignoreHTTPSError = settings.ignoreHTTPSError
 		if (settings.viewport) {
 			options.defaultViewport = settings.viewport
 			settings.device = null
 		}
-		if (options.chromeVersion == null) options.chromeVersion = settings.chromeVersion
 
 		if (options.args == null) options.args = []
 		if (Array.isArray(settings.launchArgs)) options.args.push(...settings.launchArgs)
@@ -74,7 +74,7 @@ export class Runner {
 
 	async runTestScript(
 		testScript: EvaluatedScript,
-		clientPromise: Promise<PuppeteerClient>,
+		clientPromise: Promise<PlaywrightClient>,
 	): Promise<void> {
 		if (!this.running) return
 
@@ -153,11 +153,11 @@ export class Runner {
 
 export class PersistentRunner extends Runner {
 	public testScriptFactory: AsyncFactory<EvaluatedScript> | undefined
-	public clientPromise: Promise<PuppeteerClient> | undefined
+	public clientPromise: Promise<PlaywrightClient> | undefined
 	private stopped = false
 
 	constructor(
-		clientFactory: AsyncFactory<PuppeteerClient>,
+		clientFactory: AsyncFactory<PlaywrightClient>,
 		testCommander: TestCommander | undefined,
 		reporter: IReporter,
 		logger: Logger,
@@ -230,6 +230,5 @@ export class PersistentRunner extends Runner {
 
 		this.rerunTest()
 		await this.waitUntilStopped()
-		// return new Promise<void>((resolve, reject) => {})
 	}
 }

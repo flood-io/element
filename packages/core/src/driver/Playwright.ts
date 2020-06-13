@@ -11,6 +11,8 @@ export type ConcreteLaunchOptions = LaunchOptions & {
 	sandbox: boolean
 	debug: boolean
 	browserType: string
+	defaultViewport: playwright.ViewportSize | null
+	ignoreHTTPSError: boolean
 }
 
 const defaultLaunchOptions: ConcreteLaunchOptions = {
@@ -22,6 +24,8 @@ const defaultLaunchOptions: ConcreteLaunchOptions = {
 	timeout: 60e3,
 	debug: false,
 	browserType: BROWSER_TYPE.CHROME,
+	defaultViewport: null,
+	ignoreHTTPSError: false,
 }
 
 export interface PlaywrightClientLike {

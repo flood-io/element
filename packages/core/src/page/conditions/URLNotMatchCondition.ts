@@ -1,5 +1,5 @@
 import { Condition } from '../Condition'
-import { Frame } from 'puppeteer'
+import { Frame } from 'playwright'
 
 export class URLNotMatchCondition extends Condition {
 	constructor(desc: string, public url: string, public partial: boolean = false) {
@@ -12,7 +12,7 @@ export class URLNotMatchCondition extends Condition {
 
 	public async waitFor(frame: Frame): Promise<boolean> {
 		await frame.waitForFunction(
-			(url: string, partial: boolean) => {
+			(url: string) => {
 				if (typeof url === 'string') {
 					if (url.startsWith('/') && url.endsWith('/')) {
 						// RegExp
@@ -22,16 +22,15 @@ export class URLNotMatchCondition extends Condition {
 
 					const currentUrl = window.location.href.trim().toLowerCase()
 					const expectedUrl = url.trim().toLowerCase()
-					if (partial) {
+					if (this.partial) {
 						return currentUrl.indexOf(expectedUrl) === -1
 					} else {
 						return currentUrl !== expectedUrl
 					}
 				}
 			},
-			{ polling: 'raf', timeout: 30e3 },
 			this.url,
-			this.partial === true,
+			{ timeout: 30e3 },
 		)
 		return true
 	}

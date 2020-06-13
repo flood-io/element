@@ -1,5 +1,5 @@
 import { ElementHandle } from './ElementHandle'
-import { Page, Frame } from 'puppeteer'
+import { Page, Frame } from 'playwright'
 import { TargetLocator as ITargetLocator, ElementHandle as IElementHandle } from './types'
 import { getFrames } from '../runtime/Browser'
 
@@ -22,7 +22,7 @@ export class TargetLocator implements ITargetLocator {
 		const element = jsHandle.asElement()
 		if (!element) return null
 
-		return new ElementHandle(element).initErrorString()
+		return new ElementHandle(element, this.currentPage).initErrorString()
 	}
 
 	/**

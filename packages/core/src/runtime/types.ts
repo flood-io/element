@@ -1,21 +1,12 @@
 import { Device } from '../page/Enums'
 import { Condition } from '../page/Condition'
-import {
-	NavigationOptions,
-	ClickOptions,
-	ScreenshotOptions,
-	Page,
-	Frame,
-	Viewport,
-} from 'puppeteer'
-import { ElementHandle, Locator } from '../page/types'
+import { Page, Frame, ViewportSize } from 'playwright'
+import { ElementHandle, Locator, PageGoToOptions, ScreenshotOptions } from '../page/types'
 import { TargetLocator } from '../page/TargetLocator'
 import { StepDefinition } from './Step'
 import { TestDataSource } from '../test-data/TestData'
-import Mouse from '../page/Mouse'
+import Mouse, { ClickOptions } from '../page/Mouse'
 import { TestSettings } from './Settings'
-
-export { NavigationOptions }
 
 /**
  * EvaluateFn represents a function which can be evaluated on the browser.
@@ -101,7 +92,7 @@ export interface Browser {
 	/**
 	 * The list of current puppeteer Pages in the browser
 	 */
-	pages: Promise<Page[]>
+	pages: Page[]
 
 	/**
 	 * The list of puppeteer Frames
@@ -153,7 +144,7 @@ export interface Browser {
 	 * @param url  url to visit
 	 * @param options  puppeteer navigation options
 	 */
-	visit(url: string, options?: NavigationOptions): Promise<void>
+	visit(url: string, options?: PageGoToOptions): Promise<void>
 
 	/**
 	 * Creates a waiter which will pause the test until a condition is met or a timeout is reached. This can be used for validation or control flow.
@@ -333,7 +324,7 @@ export interface Browser {
 	 */
 	switchTo(): TargetLocator
 
-	setViewport(viewport: Viewport): Promise<void>
+	setViewport(viewport: ViewportSize): Promise<void>
 
 	/**
 	 * Wait for a new page to be opened in the browser then return that page.

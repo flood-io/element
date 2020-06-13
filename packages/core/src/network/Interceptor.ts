@@ -1,4 +1,4 @@
-import { Page, Request } from 'puppeteer'
+import { Page, Request } from 'playwright'
 import debugFactory from 'debug'
 const debug = debugFactory('network:intercept')
 import { isMatch } from 'micromatch'
@@ -8,7 +8,7 @@ export default class Interceptor {
 
 	async attach(page: Page) {
 		if (this.blockedDomains.length) {
-			await page.setRequestInterception(true)
+			// await page.setRequestInterception(true)
 			page.on('request', this.requestBlocker)
 
 			debug(
@@ -21,7 +21,7 @@ export default class Interceptor {
 
 	async detach(page: Page) {
 		page.off('request', this.requestBlocker)
-		await page.setRequestInterception(false)
+		// await page.setRequestInterception(false)
 	}
 
 	private requestBlocker = (interceptedRequest: Request) => {
@@ -34,10 +34,10 @@ export default class Interceptor {
 			})
 		) {
 			debug(`Blocked request to "${url.host}"`)
-			interceptedRequest.abort()
+			// interceptedRequest.abort()
 		} else {
 			debug(`Accepted request to "${url.host}"`)
-			interceptedRequest.continue()
+			// interceptedRequest.continue()
 		}
 	}
 }

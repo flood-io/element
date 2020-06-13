@@ -1,4 +1,4 @@
-import { Page } from 'puppeteer'
+import { Page } from 'playwright'
 import { EventEmitter } from 'events'
 
 interface RequestEvent {
@@ -68,9 +68,6 @@ export class Manager {
 	}
 
 	private onRequestWillBeSent(event: Event): void {
-		if (event.redirectResponse) {
-		}
-
 		this.handleRequestStart(
 			event.requestId,
 			event.request.url,

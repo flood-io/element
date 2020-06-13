@@ -1,20 +1,20 @@
 import { serve } from '../../../tests/support/fixture-server'
-import { launchPuppeteer, testPuppeteer } from '../../../tests/support/launch-browser'
-import { Page } from 'puppeteer'
+import { launchPlaywright, testPlaywright } from '../../../tests/support/launch-browser'
+import { Page } from 'playwright'
 import { Until } from '../Until'
 import { URL } from 'url'
-let page: Page, puppeteer: testPuppeteer
+let page: Page, playwright: testPlaywright
 
 describe('Condition', () => {
 	jest.setTimeout(10e3)
 	describe('URLCondition', () => {
 		beforeAll(async () => {
-			puppeteer = await launchPuppeteer()
-			page = puppeteer.page
+			playwright = await launchPlaywright()
+			page = playwright.page
 		})
 
 		afterAll(async () => {
-			await puppeteer.close()
+			await playwright.close()
 		})
 
 		let url: any

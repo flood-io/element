@@ -1,11 +1,11 @@
 import { serve } from '../../tests/support/fixture-server'
-import { launchPuppeteer, testPuppeteer } from '../../tests/support/launch-browser'
-import { Page } from 'puppeteer'
+import { launchPlaywright, testPlaywright } from '../../tests/support/launch-browser'
+import { Page } from 'playwright'
 import { Locator, ElementHandle } from './types'
 import { By } from './By'
 
 let page: Page
-let puppeteer: testPuppeteer
+let playwright: testPlaywright
 
 function ensureElement(value: ElementHandle | undefined | null): ElementHandle | never {
 	if (value !== null && value !== undefined) {
@@ -16,7 +16,7 @@ function ensureElement(value: ElementHandle | undefined | null): ElementHandle |
 }
 
 async function findEl(locator: Locator): Promise<ElementHandle> {
-	return ensureElement(await locator.find(await page.mainFrame().executionContext()))
+	return ensureElement(await locator.find(page))
 }
 
 describe('Locator', () => {

@@ -1,12 +1,5 @@
-import {
-	EvaluateFn,
-	ExecutionContext,
-	ElementHandle as PuppeteerElementHandle,
-	Frame,
-	ElementHandle,
-} from 'puppeteer'
-// import { ElementHandle } from './Locators'
-import { Locator, ElementHandle as IElementHandle, LocatorBuilder } from './types'
+import { ElementHandle as PlaywrightElementHandle, Frame, ElementHandle, Page } from 'playwright'
+import { Locator, ElementHandle as IElementHandle, LocatorBuilder, EvaluateFn } from './types'
 
 export class NotImplementedError extends Error {
 	constructor(public message = 'Method not implemented in DSL') {
@@ -35,7 +28,7 @@ export class BaseLocator implements Locator {
 		return this.builder.pageFuncMany
 	}
 
-	get pageFuncArgs(): (string | ElementHandle<Element>)[] {
+	get pageFuncArgs(): (string | ElementHandle<Node>)[] {
 		return this.builder.pageFuncArgs
 	}
 
@@ -43,43 +36,41 @@ export class BaseLocator implements Locator {
 		return this.errorString
 	}
 
-	async find(
-		context: ExecutionContext,
-		node?: PuppeteerElementHandle,
-	): Promise<IElementHandle | null> {
+	async find(page: Page, node?: PlaywrightElementHandle): Promise<IElementHandle | null> {
 		const args = [...this.pageFuncArgs]
 		if (node) args.push(node)
 
-		const handle = await context.evaluateHandle(this.pageFunc, ...args).catch(err => {
-			if (/Target closed/.test(err.message)) {
-				return null
-			}
+		const handle = await page
+			.evaluateHandle(() => this.pageFunc, ...args)
+			.catch(err => {
+				if (/Target closed/.test(err.message)) {
+					return null
+				}
 
-			throw err
-		})
+				throw err
+			})
 
 		if (handle == null) return null
 
 		const element = handle.asElement()
 
 		const { ElementHandle } = await import('./ElementHandle')
-		if (element) return new ElementHandle(element).initErrorString(this.toErrorString())
+		if (element) return new ElementHandle(element, page).initErrorString(this.toErrorString())
 		return null
 	}
 
-	async findMany(
-		context: ExecutionContext,
-		node?: PuppeteerElementHandle,
-	): Promise<IElementHandle[]> {
+	async findMany(page: Page, node?: PlaywrightElementHandle): Promise<IElementHandle[]> {
 		const args = [...this.pageFuncArgs]
 		if (node) args.push(node)
-		const arrayHandle = await context.evaluateHandle(this.pageFuncMany, ...args).catch(err => {
-			if (/Target closed/.test(err.message)) {
-				return null
-			}
+		const arrayHandle = await page
+			.evaluateHandle(() => this.pageFuncMany, ...args)
+			.catch(err => {
+				if (/Target closed/.test(err.message)) {
+					return null
+				}
 
-			throw err
-		})
+				throw err
+			})
 
 		if (!arrayHandle) return []
 
@@ -95,7 +86,7 @@ export class BaseLocator implements Locator {
 		for (const property of properties.values()) {
 			const elementHandle = property.asElement()
 			if (elementHandle)
-				elements.push(new ElementHandle(elementHandle).initErrorString(thisErrorString))
+				elements.push(new ElementHandle(elementHandle, page).initErrorString(thisErrorString))
 		}
 
 		return Promise.all(elements)

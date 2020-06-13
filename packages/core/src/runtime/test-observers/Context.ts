@@ -1,4 +1,4 @@
-import { Page } from 'puppeteer'
+import { Page } from 'playwright'
 import { IReporter } from '../../Reporter'
 import Test from '../Test'
 import NetworkRecorder from '../../network/Recorder'

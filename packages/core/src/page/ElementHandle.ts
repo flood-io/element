@@ -1,10 +1,5 @@
-import {
-	ElementHandle as PElementHandle,
-	ClickOptions,
-	ScreenshotOptions,
-	EvaluateFn,
-} from 'puppeteer'
-import { ElementHandle as IElementHandle, Locator } from './types'
+import { ElementHandle as PElementHandle, Page } from 'playwright'
+import { ElementHandle as IElementHandle, Locator, EvaluateFn, ScreenshotOptions } from './types'
 import {
 	ErrorInterpreter,
 	AnyErrorData,
@@ -19,6 +14,7 @@ import debugFactory from 'debug'
 import { Point } from './Point'
 import { CSSLocator } from './locators/index'
 import { BaseLocator } from './Locator'
+import { ClickOptions } from './Mouse'
 // import { By } from './Locators'
 const debug = debugFactory('element:page:element-handle')
 
@@ -138,8 +134,11 @@ export class ElementHandle implements IElementHandle, Locator {
 	 * @internal
 	 */
 	public element: PElementHandle
-	constructor(elt: PElementHandle) {
+	public page: Page
+
+	constructor(elt: PElementHandle, page: Page) {
 		this.element = elt
+		this.page = page
 	}
 
 	public async initErrorString(foundVia?: string): Promise<ElementHandle> {
@@ -218,13 +217,12 @@ export class ElementHandle implements IElementHandle, Locator {
 	public async clear(): Promise<void> {
 		const tagName = await this.tagName()
 		if (tagName === 'SELECT') {
-			await this.element
-				.executionContext()
-				.evaluate((element: HTMLSelectElement) => (element.selectedIndex = -1), this.element)
+			await this.element.evaluate(
+				(element: HTMLSelectElement) => (element.selectedIndex = -1),
+				this.element,
+			)
 		} else if (tagName === 'INPUT') {
-			await this.element
-				.executionContext()
-				.evaluate((element: HTMLInputElement) => (element.value = ''), this.element)
+			await this.element.evaluate((element: HTMLInputElement) => (element.value = ''), this.element)
 		}
 	}
 
@@ -241,9 +239,7 @@ export class ElementHandle implements IElementHandle, Locator {
 	 */
 	@wrapDescriptiveError()
 	public async blur(): Promise<void> {
-		return await this.element
-			.executionContext()
-			.evaluate((node: HTMLElement) => node.blur(), this.element)
+		return await this.element.evaluate((node: HTMLElement) => node.blur(), this.element)
 	}
 
 	/**
@@ -281,7 +277,7 @@ export class ElementHandle implements IElementHandle, Locator {
 	 */
 	@wrapDescriptiveError()
 	public async uploadFile(...names: string[]): Promise<void> {
-		return this.element.uploadFile(...names.map(name => this.fs.testData(name)))
+		return this.element.setInputFiles([...names.map(name => this.fs.testData(name))])
 	}
 
 	/**
@@ -306,7 +302,8 @@ export class ElementHandle implements IElementHandle, Locator {
 		if (typeof locator === 'string') {
 			locator = new BaseLocator(new CSSLocator(locator), 'handle.findElement')
 		}
-		return locator.find(this.element.executionContext(), this.element)
+
+		return locator.find(this.page, this.element)
 	}
 
 	/**
@@ -316,7 +313,7 @@ export class ElementHandle implements IElementHandle, Locator {
 		if (typeof locator === 'string') {
 			locator = new BaseLocator(new CSSLocator(locator), 'handle.findElements')
 		}
-		return locator.findMany(this.element.executionContext(), this.element)
+		return locator.findMany(this.page, this.element)
 	}
 
 	/**
@@ -337,12 +334,14 @@ export class ElementHandle implements IElementHandle, Locator {
 	 * Fetches the value of an attribute on this element
 	 */
 	public async getAttribute(key: string): Promise<string | null> {
-		const handle = this.element.asElement()
-		if (!handle) return null
-
-		return handle
-			.executionContext()
-			.evaluate((element: HTMLElement, key: string) => element.getAttribute(key), this.element, key)
+		// const handle = this.element.asElement()
+		// if (!handle) return null
+		// return this.page.evaluate(
+		// 	(element: HTMLElement, key: string) => element.getAttribute(key),
+		// 	this.element,
+		// 	key,
+		// )
+		return ''
 	}
 
 	/**
@@ -413,12 +412,10 @@ export class ElementHandle implements IElementHandle, Locator {
 	 * @memberof ElementHandle
 	 */
 	public async text(): Promise<string> {
-		return this.element
-			.executionContext()
-			.evaluate(
-				(element: HTMLElement) => (element.textContent ? element.textContent.trim() : ''),
-				this.element,
-			)
+		return this.element.evaluate(
+			(element: HTMLElement) => (element.textContent ? element.textContent.trim() : ''),
+			this.element,
+		)
 	}
 
 	/**

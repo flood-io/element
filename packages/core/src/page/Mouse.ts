@@ -1,6 +1,33 @@
-import { MousePressOptions, ClickOptions, Page } from 'puppeteer'
+import { Page } from 'playwright'
 import { Point, isPoint } from './Point'
 import { ElementHandle } from './types'
+
+export type MouseButtons = 'left' | 'right' | 'middle'
+
+export interface ClickOptions {
+	/** @default MouseButtons.Left */
+	button?: MouseButtons
+	/** @default 1 */
+	clickCount?: number
+	/**
+	 * Time to wait between mousedown and mouseup in milliseconds.
+	 * @default 0
+	 */
+	delay?: number
+}
+
+export interface MousePressOptions {
+	/**
+	 * left, right, or middle.
+	 * @default left
+	 */
+	button?: MouseButtons
+	/**
+	 * The number of clicks.
+	 * @default 1
+	 */
+	clickCount?: number
+}
 
 const isElementHandle = (thing: any): thing is ElementHandle => {
 	return typeof thing === 'object' && typeof thing.centerPoint === 'function'

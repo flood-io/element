@@ -2,7 +2,7 @@ import { Page } from 'playwright'
 import { IReporter } from '../../Reporter'
 import Test from '../Test'
 import NetworkRecorder from '../../network/Recorder'
-import NetworkObserver from '../Observer'
+import NetworkObserver from './NetworkObserver'
 
 export class Context {
 	public networkRecorder: NetworkRecorder

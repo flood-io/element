@@ -1,5 +1,5 @@
 import { Context } from './Context'
-import { NoOpTestObserver, TestObserver } from './Observer'
+import { NoOpTestObserver, TestObserver } from './TestObserver'
 import Test from '../Test'
 
 export class NetworkRecordingTestObserver extends NoOpTestObserver {

@@ -1,7 +1,7 @@
-import NetworkRecorder from '../network/Recorder'
-import { RawResponse } from '../network/Protocol'
-import { ConsoleMethod } from './Settings'
-import { IReporter } from '../Reporter'
+import NetworkRecorder from '../../network/Recorder'
+import { RawResponse } from '../../network/Protocol'
+import { ConsoleMethod } from '../Settings'
+import { IReporter } from '../../Reporter'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:observer')
 

@@ -1,7 +1,7 @@
 import Test from '../Test'
 import { Step } from '../Step'
 import { StructuredError } from '../../utils/StructuredError'
-import { NoOpTestObserver } from './Observer'
+import { NoOpTestObserver } from './TestObserver'
 import { structuredErrorToDocumentedError } from '../errors/Documentation'
 import { AnyErrorData } from '../errors/Types'
 

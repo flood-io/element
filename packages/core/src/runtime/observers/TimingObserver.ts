@@ -9,13 +9,6 @@ import NetworkRecorder from '../../network/Recorder'
 import { expect } from '../../utils/Expect'
 const debug = debugFactory('element:grid:timing')
 
-// TODO re-enable when browser_performance decoupled
-// import { CompoundMeasurement } from '../../Reporter'
-// const measurementKeysForDOM = {
-// 'first-contentful-paint': 'first_contentful_paint',
-// 'first-paint': 'first_paint',
-// }
-
 export class TimingObserver extends NetworkRecordingTestObserver {
 	private passed = 0
 	private failed = 0

@@ -10,7 +10,7 @@ export type ConcreteLaunchOptions = LaunchOptions & {
 	args: string[]
 	sandbox: boolean
 	debug: boolean
-	browserType: string
+	browserType: BROWSER_TYPE
 	defaultViewport: playwright.ViewportSize | null
 	ignoreHTTPSError: boolean
 }

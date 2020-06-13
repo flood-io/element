@@ -2,7 +2,7 @@ import { ConcreteLaunchOptions, PlaywrightClient } from './driver/Playwright'
 import { Logger } from 'winston'
 import Test from './runtime/Test'
 import { EvaluatedScript } from './runtime/EvaluatedScript'
-import { TestObserver } from './runtime/test-observers/Observer'
+import { TestObserver } from './runtime/observers/TestObserver'
 import { TestSettings } from './runtime/Settings'
 import { IReporter } from './Reporter'
 import { AsyncFactory } from './utils/Factory'
@@ -65,7 +65,9 @@ export class Runner {
 			options.defaultViewport = settings.viewport
 			settings.device = null
 		}
-
+		if (settings.browserType) {
+			options.browserType = settings.browserType
+		}
 		if (options.args == null) options.args = []
 		if (Array.isArray(settings.launchArgs)) options.args.push(...settings.launchArgs)
 

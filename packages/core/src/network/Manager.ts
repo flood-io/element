@@ -59,12 +59,18 @@ export class Manager {
 	}
 
 	private attachEvents() {
+		/**
+		 * NOTES
+		 * should update this for playwright
+		 */
 		const client: EventEmitter = (this.page as any)['_client']
-		client.on('Network.requestWillBeSent', this.onRequestWillBeSent.bind(this))
-		client.on('Network.requestIntercepted', this.onRequestIntercepted.bind(this))
-		client.on('Network.responseReceived', this.onResponseReceived.bind(this))
-		client.on('Network.loadingFinished', this.onLoadingFinished.bind(this))
-		client.on('Network.loadingFailed', this.onLoadingFailed.bind(this))
+		if (client) {
+			client.on('Network.requestWillBeSent', this.onRequestWillBeSent.bind(this))
+			client.on('Network.requestIntercepted', this.onRequestIntercepted.bind(this))
+			client.on('Network.responseReceived', this.onResponseReceived.bind(this))
+			client.on('Network.loadingFinished', this.onLoadingFinished.bind(this))
+			client.on('Network.loadingFailed', this.onLoadingFailed.bind(this))
+		}
 	}
 
 	private onRequestWillBeSent(event: Event): void {

@@ -1,20 +1,20 @@
 import { Logger } from 'winston'
 import { IReporter } from './Reporter'
-import { PuppeteerClient, launch } from './driver/Puppeteer'
+import { PlaywrightClient, launch, BROWSER_TYPE } from './driver/Playwright'
 import { RuntimeEnvironment } from './runtime-environment/types'
 import { IRunner, Runner, PersistentRunner, TestCommander } from './Runner'
 import { mustCompileFile } from './TestScript'
 import { TestScriptOptions } from './TestScriptOptions'
 import { EvaluatedScript } from './runtime/EvaluatedScript'
 import { TestSettings } from './runtime/Settings'
-import { TestObserver } from './runtime/test-observers/Observer'
+import { TestObserver } from './runtime/observers/TestObserver'
 import { AsyncFactory } from './utils/Factory'
 
 export interface ElementOptions {
 	logger: Logger
 	runEnv: RuntimeEnvironment
 	reporter: IReporter
-	clientFactory?: AsyncFactory<PuppeteerClient>
+	clientFactory?: AsyncFactory<PlaywrightClient>
 	testScript: string
 	strictCompilation: boolean
 	headless: boolean
@@ -22,7 +22,7 @@ export interface ElementOptions {
 	sandbox: boolean
 	process?: NodeJS.Process
 	verbose: boolean
-	browserType: string
+	browserType: BROWSER_TYPE
 	testSettingOverrides: TestSettings
 	testObserverFactory?: (t: TestObserver) => TestObserver
 	persistentRunner: boolean

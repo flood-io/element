@@ -30,7 +30,7 @@ interface RunArguments extends Arguments {
 	stepDelay?: number
 	actionDelay?: number
 	slowMo?: boolean
-	browserType?: string
+	browserType?: BROWSER_TYPE
 	'work-root'?: string
 	'test-data-root'?: string
 	'fail-status-code': number

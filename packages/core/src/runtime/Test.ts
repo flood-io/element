@@ -5,10 +5,10 @@ import { IReporter } from '../Reporter'
 import { NullReporter } from '../reporter/Null'
 import { ObjectTrace } from '../utils/ObjectTrace'
 
-import { TestObserver, NullTestObserver } from './test-observers/Observer'
-import LifecycleObserver from './test-observers/Lifecycle'
-import ErrorObserver from './test-observers/Errors'
-import InnerObserver from './test-observers/Inner'
+import { TestObserver, NullTestObserver } from './observers/TestObserver'
+import LifecycleObserver from './observers/Lifecycle'
+import ErrorObserver from './observers/Errors'
+import InnerObserver from './observers/Inner'
 
 import { AnyErrorData, EmptyErrorData, AssertionErrorData } from './errors/Types'
 import { StructuredError } from '../utils/StructuredError'
@@ -21,9 +21,9 @@ import { CancellationToken } from '../utils/CancellationToken'
 import { TestSettings, ConcreteTestSettings, DEFAULT_STEP_WAIT_SECONDS } from './Settings'
 import { ITest } from '../interface/ITest'
 import { EvaluatedScriptLike } from './EvaluatedScriptLike'
-import { TimingObserver } from './test-observers/TimingObserver'
-import { Context } from './test-observers/Context'
-import { NetworkRecordingTestObserver } from './test-observers/NetworkRecordingTestObserver'
+import { TimingObserver } from './observers/TimingObserver'
+import { Context } from './observers/Context'
+import { NetworkRecordingTestObserver } from './observers/NetworkRecordingTestObserver'
 import { PlaywrightClientLike } from '../driver/Playwright'
 import { ScreenshotOptions } from '../page/types'
 
@@ -107,9 +107,7 @@ export default class Test implements ITest {
 		looper: Looper,
 	): Promise<void> {
 		console.assert(this.client, `client is not configured in Test`)
-
 		const ctx = new Context()
-
 		const testObserver = new ErrorObserver(
 			new LifecycleObserver(
 				this.testObserverFactory(

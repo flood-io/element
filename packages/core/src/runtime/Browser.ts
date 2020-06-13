@@ -1,9 +1,9 @@
 import { Condition } from '../page/Condition'
-import { Frame, Page, ViewportSize, devices } from 'playwright'
+import { Frame, Page, ViewportSize, devices, ChromiumBrowserContext } from 'playwright'
 import { Browser as BrowserInterface, NullableLocatable, EvaluateFn } from './types'
 import { ElementHandle, PageGoToOptions, ScreenshotOptions } from '../page/types'
 import { TargetLocator } from '../page/TargetLocator'
-import { PlaywrightClientLike } from '../driver/Playwright'
+import { PlaywrightClientLike, BROWSER_TYPE } from '../driver/Playwright'
 import { WorkRoot } from '../runtime-environment/types'
 import KSUID from 'ksuid'
 import { Key, KeyDefinitions } from '../page/Enums'
@@ -53,13 +53,17 @@ export class Browser<T> implements BrowserInterface {
 		this.screenshots = []
 
 		this.newPageCallback = resolve => {
+			/**
+			 * NOTES
+			 * update this one for ms playwright
+			 */
+			resolve(this.client.page)
 			// this.client.browser.once('targetcreated', async target => {
 			// 	const newPage = await target.page()
 			// 	this.client.page = newPage
 			// 	await newPage.bringToFront()
 			// 	resolve(newPage)
 			// })
-			resolve(this.client.page) // need to resolve event `targetcreated` in playwright
 		}
 
 		this.newPagePromise = new Promise(resolve => {
@@ -86,6 +90,10 @@ export class Browser<T> implements BrowserInterface {
 		} else {
 			return this.page.mainFrame()
 		}
+	}
+
+	public get browserType(): BROWSER_TYPE {
+		return this.settings.browserType
 	}
 
 	public get page(): Page {
@@ -388,14 +396,19 @@ export class Browser<T> implements BrowserInterface {
 
 	@rewriteError()
 	public async clearBrowserCookies(): Promise<any> {
-		const client = await this.page['target']().createCDPSession()
-		await client.send('Network.clearBrowserCookies')
+		await this.page.context().clearCookies()
+		// await client.send('Network.clearBrowserCookies')
 	}
 
 	@rewriteError()
 	public async clearBrowserCache(): Promise<any> {
-		const client = await this.page['target']().createCDPSession()
-		await client.send('Network.clearBrowserCache')
+		if (this.browserType === BROWSER_TYPE.CHROME) {
+			const context = (await this.page.context()) as ChromiumBrowserContext
+			const client = await context.newCDPSession(this.page)
+			await client.send('Network.clearBrowserCache')
+		} else {
+			console.log('Not Implemented')
+		}
 	}
 
 	@rewriteError()

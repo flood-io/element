@@ -35,6 +35,7 @@ import { MouseButtons, Device, Key, userAgents } from '../page/Enums'
 import { TestDataSource, TestDataFactory } from '../test-data/TestData'
 import { BoundTestDataLoaders } from '../test-data/TestDataLoaders'
 import { EvaluatedScriptLike } from './EvaluatedScriptLike'
+import { BROWSER_TYPE } from '../driver/Playwright'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:eval-script')
@@ -294,6 +295,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			RecoverWith,
 			userAgents,
 			suite: captureSuite,
+			BROWSER_TYPE,
 		}
 
 		this.vm = createVirtualMachine(context, this.script.scriptRoot)

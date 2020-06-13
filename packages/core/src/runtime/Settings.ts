@@ -261,7 +261,7 @@ export const DEFAULT_SETTINGS: ConcreteTestSettings = {
 	 */
 	consoleFilter: [],
 	userAgent: CustomDeviceDescriptors['Chrome Desktop Large'].userAgent,
-	device: 'Chrome Desktop Large',
+	device: null,
 	ignoreHTTPSError: false,
 	browserType: BROWSER_TYPE.CHROME,
 	blockedDomains: [],

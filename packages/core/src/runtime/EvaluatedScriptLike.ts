@@ -1,7 +1,7 @@
 import { TestScriptError } from '../TestScriptError'
 import { TestSettings } from './Settings'
 import { TestDataSource } from '../test-data/TestData'
-import { ITest } from './ITest'
+import { ITest } from '../interface/ITest'
 import { RuntimeEnvironment } from '../runtime-environment/types'
 import { Step, StepRecoveryObject } from './Step'
 

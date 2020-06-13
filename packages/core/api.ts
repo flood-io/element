@@ -22,7 +22,7 @@ export { PuppeteerClient, launch }
 
 export { TestScriptOptions } from './src/TestScriptOptions'
 export { TestScriptError } from './src/TestScriptError'
-export { ITestScript } from './src/ITestScript'
+export { ITestScript } from './src/interface/ITestScript'
 
 export { expect } from './src/utils/Expect'
 

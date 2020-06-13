@@ -19,7 +19,7 @@ import { Looper } from '../Looper'
 import { CancellationToken } from '../utils/CancellationToken'
 
 import { TestSettings, ConcreteTestSettings, DEFAULT_STEP_WAIT_SECONDS } from './Settings'
-import { ITest } from './ITest'
+import { ITest } from '../interface/ITest'
 import { EvaluatedScriptLike } from './EvaluatedScriptLike'
 import { TimingObserver } from './test-observers/TimingObserver'
 import { Context } from './test-observers/Context'

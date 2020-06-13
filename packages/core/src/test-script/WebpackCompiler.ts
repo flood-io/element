@@ -1,6 +1,6 @@
 import { Compiler, CompilerOutput } from '@flood/element-compiler'
 import parseComments from 'comment-parser'
-import { ITestScript } from '../ITestScript'
+import { ITestScript } from '../interface/ITestScript'
 import { VMScript } from 'vm2'
 import { TestScriptError } from '../TestScriptError'
 import { TestScriptOptions } from '../TestScriptOptions'

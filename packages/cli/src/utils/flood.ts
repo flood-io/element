@@ -60,6 +60,9 @@ function setToken(token: string): void {
 }
 
 function getToken(): string | undefined {
+	if (process.env.FLOOD_API_TOKEN) {
+		return Buffer.from(`${process.env.FLOOD_API_TOKEN}:`).toString('base64')
+	}
 	return getConfig().token
 }
 
@@ -81,6 +84,10 @@ export async function getRegions(): Promise<{ [key: string]: string }> {
 }
 
 export function isAuthenticated(): boolean {
+	if (process.env.FLOOD_API_TOKEN) {
+		console.log('Using Flood API token from user environment')
+		return true
+	}
 	if (!getToken()) {
 		throw 'You need to be authenticated first. Please use this command: element flood authenticate <your_api_token>'
 	}

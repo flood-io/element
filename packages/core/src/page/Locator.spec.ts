@@ -23,13 +23,13 @@ describe('Locator', () => {
 	jest.setTimeout(30e3)
 
 	beforeAll(async () => {
-		puppeteer = await launchPuppeteer()
-		page = puppeteer.page
+		playwright = await launchPlaywright()
+		page = playwright.page
 		page.on('console', msg => console.log(`>> console.${msg.type()}: ${msg.text()}`))
 	})
 
 	afterAll(async () => {
-		await puppeteer.close()
+		await playwright.close()
 	})
 
 	beforeEach(async () => {
@@ -49,7 +49,7 @@ describe('Locator', () => {
 		test('findMany()', async () => {
 			const locator = By.linkText('show bar')
 
-			const elements = await locator.findMany(await page.mainFrame().executionContext())
+			const elements = await locator.findMany(await page)
 			expect(elements.length).toBe(1)
 
 			expect(await elements[0].getAttribute('id')).toEqual('show_bar')
@@ -68,7 +68,7 @@ describe('Locator', () => {
 		test('findMany()', async () => {
 			const locator = By.linkText('show bar')
 
-			const elements = await locator.findMany(await page.mainFrame().executionContext())
+			const elements = await locator.findMany(page)
 			expect(elements.length).toBe(1)
 
 			expect(await elements[0].getAttribute('id')).toEqual('show_bar')
@@ -88,7 +88,7 @@ describe('Locator', () => {
 		test('findMany()', async () => {
 			const locator = By.css('a:first-child')
 
-			const elements = await locator.findMany(await page.mainFrame().executionContext())
+			const elements = await locator.findMany(page)
 			expect(elements.length).toBe(1)
 
 			expect(await elements[0].getAttribute('id')).toEqual('change_select')
@@ -109,7 +109,7 @@ describe('Locator', () => {
 		test('findMany()', async () => {
 			const locator = By.visibleText('show bar')
 
-			const elements = await locator.findMany(await page.mainFrame().executionContext())
+			const elements = await locator.findMany(page)
 			expect(elements.length).toBe(1)
 
 			expect(await elements[0].getAttribute('id')).toEqual('show_bar')
@@ -129,7 +129,7 @@ describe('Locator', () => {
 		test('findMany()', async () => {
 			const locator = By.partialVisibleText('change select list')
 
-			const elements = await locator.findMany(await page.mainFrame().executionContext())
+			const elements = await locator.findMany(page)
 			expect(elements.length).toBe(4)
 
 			for (const element of elements) {
@@ -151,7 +151,7 @@ describe('Locator', () => {
 		test('findMany()', async () => {
 			const locator = By.js(() => document.querySelectorAll('a[href]'))
 
-			const elements = await locator.findMany(await page.mainFrame().executionContext())
+			const elements = await locator.findMany(page)
 			expect(elements.length).toBe(8)
 
 			for (const element of elements) {
@@ -173,7 +173,7 @@ describe('Locator', () => {
 		test('findMany()', async () => {
 			const locator = By.nameAttr('add_select')
 
-			const elements = await locator.findMany(await page.mainFrame().executionContext())
+			const elements = await locator.findMany(page)
 			expect(elements.length).toBe(1)
 
 			for (const element of elements) {
@@ -195,7 +195,7 @@ describe('Locator', () => {
 		test('findMany()', async () => {
 			const locator = By.tagName('a')
 
-			const elements = await locator.findMany(await page.mainFrame().executionContext())
+			const elements = await locator.findMany(page)
 			expect(elements.length).toBe(8)
 
 			for (const element of elements) {
@@ -217,7 +217,7 @@ describe('Locator', () => {
 		test('findMany()', async () => {
 			const locator = By.xpath('//a')
 
-			const elements = await locator.findMany(await page.mainFrame().executionContext())
+			const elements = await locator.findMany(page)
 			expect(elements.length).toBe(8)
 
 			for (const element of elements) {

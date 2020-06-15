@@ -1,19 +1,19 @@
 import { serve } from '../../tests/support/fixture-server'
 import Reporter from '../../tests/support/test-reporter'
 import NetworkRecorder from './Recorder'
-import Observer from '../runtime/Observer'
-import { launchPuppeteer, testPuppeteer } from '../../tests/support/launch-browser'
+import Observer from '../runtime/observers/NetworkObserver'
+import { launchPlaywright, testPlaywright } from '../../tests/support/launch-browser'
 
-let puppeteer: testPuppeteer
+let playwright: testPlaywright
 describe('Recorder', () => {
 	jest.setTimeout(30e3)
 
 	beforeEach(async () => {
-		puppeteer = await launchPuppeteer()
+		playwright = await launchPlaywright()
 	})
 
 	afterEach(async () => {
-		await puppeteer.close()
+		await playwright.close()
 	})
 
 	describe('Recorder', () => {
@@ -21,11 +21,11 @@ describe('Recorder', () => {
 
 		beforeEach(async () => {
 			const reporter = new Reporter()
-			recorder = new NetworkRecorder(puppeteer.page)
+			recorder = new NetworkRecorder(playwright.page)
 			const observer = new Observer(reporter, recorder)
 			await observer.attachToNetworkRecorder()
 			const url = await serve('wait.html')
-			await puppeteer.page.goto(url)
+			await playwright.page.goto(url)
 			await recorder.pendingTaskQueue.chain
 		})
 
@@ -34,7 +34,7 @@ describe('Recorder', () => {
 			expect(recorder.documentResponseCode).toBe(200)
 			recorder.reset()
 			const url = await serve('notfound.html')
-			await puppeteer.page.goto(url)
+			await playwright.page.goto(url)
 			await recorder.pendingTaskQueue.chain
 			expect(recorder.documentResponseCode).toBe(404)
 		})

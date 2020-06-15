@@ -569,13 +569,6 @@ export class Browser<T> implements BrowserInterface {
 		if (await fn(path)) {
 			this.screenshots.push(path)
 			debugScreenshot(`Saved screenshot to: ${path}`)
-
-			// termImg(path, {
-			// 	width: '40%',
-			// 	fallback: () => {
-			// 		return `Screenshot path: ${path}`
-			// 	},
-			// })
 		}
 	}
 

@@ -1,6 +1,6 @@
 import { EvaluatedScript } from './EvaluatedScript'
 import { mustCompileFile } from '../TestScript'
-import { ITestScript } from '../ITestScript'
+import { ITestScript } from '../interface/ITestScript'
 import { join } from 'path'
 import testRunEnv from '../../tests/support/test-run-env'
 import { DEFAULT_SETTINGS } from './Settings'
@@ -27,9 +27,6 @@ describe('EvaluatedScript', () => {
 		noSettingsTestScript = await mustCompileFile(
 			join(__dirname, '../../tests/fixtures/test-without-settings.ts'),
 		)
-		// dogfoodWaitTestScript = await mustCompileFile(
-		// join(__dirname, '../../tests/fixtures/dogfood-test-wait.ts'),
-		// )
 	})
 
 	describe('evaluate', () => {
@@ -50,7 +47,7 @@ describe('EvaluatedScript', () => {
 			expect(settings.userAgent).toBe(DEFAULT_SETTINGS.userAgent)
 
 			expect(settings.device).toBe(DEFAULT_SETTINGS.device)
-			expect(settings.ignoreHTTPSErrors).toBe(DEFAULT_SETTINGS.ignoreHTTPSErrors)
+			expect(settings.ignoreHTTPSError).toBe(DEFAULT_SETTINGS.ignoreHTTPSError)
 		})
 
 		test('captures test settings', async () => {
@@ -61,7 +58,7 @@ describe('EvaluatedScript', () => {
 			expect(settings.duration).toBe(30e3)
 			expect(settings.waitTimeout).toBe(5)
 			expect(settings.userAgent).toBe('I AM ROBOT')
-			expect(settings.ignoreHTTPSErrors).toBe(false)
+			expect(settings.ignoreHTTPSError).toBe(false)
 
 			expect(steps.map(step => step.name)).toEqual(['Step 1', 'Step 2', 'Step 3'])
 		})

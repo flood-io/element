@@ -8,6 +8,10 @@ export default class Interceptor {
 
 	async attach(page: Page) {
 		if (this.blockedDomains.length) {
+			/**
+			 * NOTES
+			 * this function does not supported on playwright
+			 */
 			// await page.setRequestInterception(true)
 			page.on('request', this.requestBlocker)
 
@@ -21,6 +25,10 @@ export default class Interceptor {
 
 	async detach(page: Page) {
 		page.off('request', this.requestBlocker)
+		/**
+		 * NOTES
+		 * this function does not supported on playwright
+		 */
 		// await page.setRequestInterception(false)
 	}
 

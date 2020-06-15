@@ -12,20 +12,21 @@ export class URLCondition extends Condition {
 
 	public async waitFor(frame: Frame): Promise<boolean> {
 		await frame.waitForFunction(
-			(url: string) => {
+			(args: string) => {
+				const [url, partial] = JSON.parse(args)
 				if (typeof url === 'string') {
 					if (url.startsWith('/') && url.endsWith('/')) {
 						// RegExp
 						const exp = new RegExp(url.slice(1, url.length - 1))
 						return exp.test(window.location.href)
-					} else if (this.partial) {
+					} else if (partial) {
 						return window.location.href.toLowerCase().indexOf(url.toLowerCase()) > -1
 					} else {
 						return window.location.href.trim().toLowerCase() === url.trim().toLowerCase()
 					}
 				}
 			},
-			this.url,
+			JSON.stringify([this.url, this.partial]),
 			{ timeout: 30e3 },
 		)
 		return true

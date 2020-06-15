@@ -195,7 +195,7 @@ export class Browser<T> implements BrowserInterface {
 		try {
 			return this.page.goto(url, {
 				timeout,
-				waitUntil: 'load',
+				waitUntil: 'networkidle',
 				...options,
 			})
 		} catch (e) {

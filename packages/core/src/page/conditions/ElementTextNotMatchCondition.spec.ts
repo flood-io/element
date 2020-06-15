@@ -26,41 +26,41 @@ describe('Condition', () => {
 	describe('ElementTextNotMatchCondition', () => {
 		test('waits Until.elementTextIsNot', async () => {
 			const condition = Until.elementTextIsNot(By.css('#name'), 'Name')
-			page.click('#name')
+			await page.click('#name')
 			const found = await condition.waitFor(page.mainFrame())
 			expect(found).toBe(true)
 		})
 		test('waits Until.elementTextDoesNotContain', async () => {
 			const condition = Until.elementTextDoesNotContain(By.css('#name'), 'ame')
-			page.click('#name')
+			await page.click('#name')
 			const found = await condition.waitFor(page.mainFrame())
 			expect(found).toBe(true)
 		})
 
 		test('waits Until.elementTextDoesNotMatch regex starts with', async () => {
 			const condition = Until.elementTextDoesNotMatch(By.css('#name'), /^Na/)
-			page.click('#name')
+			await page.click('#name')
 			const found = await condition.waitFor(page.mainFrame())
 			expect(found).toBe(true)
 		})
 
 		test('waits Until.elementTextDoesNotMatch regex ends with', async () => {
 			const condition = Until.elementTextDoesNotMatch(By.css('#name'), /me$/)
-			page.click('#name')
+			await page.click('#name')
 			const found = await condition.waitFor(page.mainFrame())
 			expect(found).toBe(true)
 		})
 
 		test('waits Until.elementTextDoesNotMatch regex full match', async () => {
 			const condition = Until.elementTextDoesNotMatch(By.css('#name'), /^Name$/)
-			page.click('#name')
+			await page.click('#name')
 			const found = await condition.waitFor(page.mainFrame())
 			expect(found).toBe(true)
 		})
 
 		test('waits Until.elementTextDoesNotMatch regex contains', async () => {
 			const condition = Until.elementTextDoesNotMatch(By.css('#name'), /am/)
-			page.click('#name')
+			await page.click('#name')
 			const found = await condition.waitFor(page.mainFrame())
 			expect(found).toBe(true)
 		})

@@ -83,7 +83,8 @@ export abstract class ElementCondition extends LocatorCondition {
 		const locatorFunc = this.locatorPageFunc
 		const conditionFunc = this.pageFunc
 
-		const fn = function predicate(...args: any[]) {
+		const fn = function predicate(mArgs: any) {
+			const args = JSON.parse(mArgs)
 			const argSeparator = '-SEP-'
 
 			const args1: any[] = []
@@ -143,16 +144,14 @@ export abstract class ElementCondition extends LocatorCondition {
 			},
 		})
 
-		let code = recast.print(fnAST).code
+		const code = recast.print(fnAST).code
 
 		debug('waitFor code', code)
 
 		const args = Array.prototype.concat(this.locator.pageFuncArgs, argSeparator, this.pageFuncArgs)
 		debug('waitFor args', args)
 
-		code = `(${code})(...args)`
-
-		await frame.waitForFunction(code, options, ...args)
+		await frame.waitForFunction(code, JSON.stringify(args), options)
 
 		return true
 	}

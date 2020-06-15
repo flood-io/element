@@ -26,21 +26,21 @@ describe('Condition', () => {
 	describe('ElementTextCondition', () => {
 		test('waits Until.elementTextIs', async () => {
 			const condition = Until.elementTextIs(By.css('#name'), 'changed!')
-			page.click('#name')
+			await page.click('#name')
 			const found = await condition.waitFor(page.mainFrame())
 			expect(found).toBe(true)
 		})
 
 		test('waits Until.elementTextMatches', async () => {
 			const condition = Until.elementTextMatches(By.css('#name'), /changed/)
-			page.click('#name')
+			await page.click('#name')
 			const found = await condition.waitFor(page.mainFrame())
 			expect(found).toBe(true)
 		})
 
 		test('waits Until.elementTextContains', async () => {
 			const condition = Until.elementTextContains(By.css('#name'), 'changed')
-			page.click('#name')
+			await page.click('#name')
 			const found = await condition.waitFor(page.mainFrame())
 			expect(found).toBe(true)
 		})

@@ -219,8 +219,11 @@ export default class Test implements ITest {
 			}
 
 			const callRecovery = async (step: Step): Promise<boolean> => {
-				let { iteration } = this.recoverySteps[step.name]
-				const { recoveryStep, loopCount } = this.recoverySteps[step.name]
+				const recoveryObject = this.recoverySteps[step.name]
+				if (!recoveryObject) return false
+
+				let { iteration } = recoveryObject
+				const { recoveryStep, loopCount } = recoveryObject
 				const { recoveryTries } = this.settings
 				const settingRecoveryCount = loopCount || recoveryTries || 1
 				if (!recoveryStep || iteration >= settingRecoveryCount) {

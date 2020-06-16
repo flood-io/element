@@ -26,7 +26,6 @@ const setupTest = async (scriptName: string) => {
 	writeFileSync(tmpFile, testScriptFile)
 
 	const script = await EvaluatedScript.mustCompileFile(tmpFile, runEnv)
-
 	const test = new Test(playwright, script, testReporter, {})
 
 	await test.beforeRun()
@@ -50,7 +49,7 @@ describe('Test', () => {
 			actionDelay: 5,
 			stepDelay: 0,
 			clearCache: false,
-			device: 'Chrome Desktop Large',
+			device: null,
 			browserType: BROWSER_TYPE.CHROME,
 			ignoreHTTPSError: false,
 			userAgent:

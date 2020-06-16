@@ -9,7 +9,6 @@ export class NotImplementedError extends Error {
 
 function serializeArgument(arg: any | undefined): string {
 	if (Object.is(arg, undefined)) return 'undefined'
-	// if (typeof arg === 'function') return evaluationString(arg)
 	return JSON.stringify(arg)
 }
 
@@ -39,14 +38,16 @@ export class BaseLocator implements Locator {
 	async find(page: Page, node?: PlaywrightElementHandle): Promise<IElementHandle | null> {
 		const args = [...this.pageFuncArgs]
 		if (node) args.push(node)
-
+		/**
+		 * NOTES
+		 * we don't have executionContext, page.evaluateHandle does not cause different context
+		 */
 		const handle = await page
-			.evaluateHandle(() => this.pageFunc, ...args)
+			.evaluateHandle(() => this.pageFunc, JSON.stringify(args))
 			.catch(err => {
 				if (/Target closed/.test(err.message)) {
 					return null
 				}
-
 				throw err
 			})
 
@@ -63,7 +64,7 @@ export class BaseLocator implements Locator {
 		const args = [...this.pageFuncArgs]
 		if (node) args.push(node)
 		const arrayHandle = await page
-			.evaluateHandle(() => this.pageFuncMany, ...args)
+			.evaluateHandle(() => this.pageFuncMany, JSON.stringify(args))
 			.catch(err => {
 				if (/Target closed/.test(err.message)) {
 					return null

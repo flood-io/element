@@ -119,8 +119,8 @@ Element offers the ability to control what happens after a step has been recover
 
 By returning one of these instructions, the test will change its course:
 
-- `RecoverWith.RETRY`: Retry the previous step again. Element will only do this to `recoveryTries` count.
-- `RecoverWith.CONTINUE`: COntinue to the next step. This is the default behaviour.
+- `RecoverWith.RETRY`: Retry the previous step again. Element will only do this to `recoveryTries` count, which takes `1` as the default value. You can apply a general value for the whole test by putting this option within the `TestSettings`, or even override this value for a specific step by putting it into the recovery step as in the code snippet below.
+- `RecoverWith.CONTINUE`: Continue to the next step. This is the default behaviour.
 - `RecoverWith.RESTART`: Exit this loop and restart the test at the beginning, resetting the browser in the process.
 
 ```ts title="my-test.perf.ts"
@@ -131,7 +131,7 @@ export default () => {
     await browser.visit("https://google.com");
   });
 
-  step.recovery("Step 1", async (browser) => {
+  step.recovery("Step 1", { recoveryTries: 2 }, async (browser) => {
     let alertCloser = await browser.findElement(By.id("close"));
     if (alertCloser != null) await alertCloser.click();
 
@@ -167,3 +167,81 @@ Deciding on which recovery method to use depends on whether you want the recover
 Using `try/catch` will include the catch time in the total time because Element isn't aware of the time you're spending on this step.
 
 Using a recovery step will measure the time separately as "Step 1 (Recovery)"
+
+## Conditional steps
+Flood Element supports conditional execution. If you want to execute a specific chain of actions only when a condition is satisfied, you can do so using either `step.if()` or `step.unless()`.
+
+### step.if()
+Executed only when a condition is met
+```ts title="my-test.perf.ts"
+import { step } from "@flood/element";
+
+export default () => {
+  step.if(condition, 'Step name', async browser => {
+     // do something
+})
+};
+```
+
+### step.unless()
+Executed only when a the opposite of a condition is met
+```ts title="my-test.perf.ts"
+import { step } from "@flood/element";
+
+export default () => {
+  step.unless(condition, 'Step name', async browser => {
+     // do something
+})
+};
+```
+
+## Repeatable steps
+In case you want a step to run repeatedly for several times, or keep running while a condition is still true, you can do so using `step.repeat()` or `step.while()`
+
+### step.repeat()
+Repeat a step for a pre-defined number of times
+```ts title="my-test.perf.ts"
+import { step } from "@flood/element";
+
+export default () => {
+  step.repeat(number, 'Step name', async browser => {
+     // do something
+})
+};
+```
+
+### step.while()
+Repeat a step while a condition is still true
+```ts title="my-test.perf.ts"
+import { step } from "@flood/element";
+
+export default () => {
+  step.while(condition, 'Step name', async browser => {
+     // do something
+})
+};
+```
+
+## Run a step once off
+For some specific steps like `authentication`, you might want to run only once in the whole test, regardless of how many times you test will iterate. In that case, `step.once()` is what you need.
+
+```ts title="my-test.perf.ts"
+import { step } from "@flood/element";
+
+export default () => {
+  step.once('Step name', async browser => {
+     // do something
+})
+};
+```
+
+## Mark a step as `skipped`
+Use `step.skip()` to skip the execution of a step in your test. 
+```ts title="my-test.perf.ts"
+import { step } from "@flood/element";
+
+export default () => {
+  step.skip('Step name', async browser => {
+     // do something
+})
+};

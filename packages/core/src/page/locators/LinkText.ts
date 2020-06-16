@@ -8,8 +8,7 @@ export class LinkTextLocator implements LocatorBuilder {
 	}
 
 	get pageFunc(): EvaluateFn {
-		return (args: string) => {
-			const [targetText, partial] = JSON.parse(args)
+		return (targetText: string, partial: boolean) => {
 			const links = Array.from(document.querySelectorAll('body a'))
 			return links.find(link => {
 				if (!link.textContent) return false

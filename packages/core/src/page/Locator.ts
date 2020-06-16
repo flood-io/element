@@ -38,12 +38,18 @@ export class BaseLocator implements Locator {
 	async find(page: Page, node?: PlaywrightElementHandle): Promise<IElementHandle | null> {
 		const args = [...this.pageFuncArgs]
 		if (node) args.push(node)
+
 		/**
 		 * NOTES
 		 * we don't have executionContext, page.evaluateHandle does not cause different context
+		 * this.pageFunc = undefined in evaluateHandle context
+		 * so we need input this function as argument
 		 */
 		const handle = await page
-			.evaluateHandle(() => this.pageFunc, JSON.stringify(args))
+			.evaluateHandle((mArgs: string) => {
+				const [fn, args] = JSON.parse(mArgs)
+				return eval(fn)(...JSON.parse(args))
+			}, JSON.stringify([this.pageFunc.toString(), JSON.stringify(args)]))
 			.catch(err => {
 				if (/Target closed/.test(err.message)) {
 					return null
@@ -54,7 +60,6 @@ export class BaseLocator implements Locator {
 		if (handle == null) return null
 
 		const element = handle.asElement()
-
 		const { ElementHandle } = await import('./ElementHandle')
 		if (element) return new ElementHandle(element, page).initErrorString(this.toErrorString())
 		return null
@@ -64,7 +69,10 @@ export class BaseLocator implements Locator {
 		const args = [...this.pageFuncArgs]
 		if (node) args.push(node)
 		const arrayHandle = await page
-			.evaluateHandle(() => this.pageFuncMany, JSON.stringify(args))
+			.evaluateHandle((mArgs: string) => {
+				const [fn, args] = JSON.parse(mArgs)
+				return eval(fn)(...JSON.parse(args))
+			}, JSON.stringify([this.pageFuncMany.toString(), JSON.stringify(args)]))
 			.catch(err => {
 				if (/Target closed/.test(err.message)) {
 					return null

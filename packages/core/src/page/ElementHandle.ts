@@ -334,14 +334,10 @@ export class ElementHandle implements IElementHandle, Locator {
 	 * Fetches the value of an attribute on this element
 	 */
 	public async getAttribute(key: string): Promise<string | null> {
-		// const handle = this.element.asElement()
-		// if (!handle) return null
-		// return this.page.evaluate(
-		// 	(element: HTMLElement, key: string) => element.getAttribute(key),
-		// 	this.element,
-		// 	key,
-		// )
-		return ''
+		const handle = this.element.asElement()
+		if (!handle) return null
+
+		return handle.evaluate((element: HTMLElement, key: string) => element.getAttribute(key), key)
 	}
 
 	/**

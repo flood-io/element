@@ -450,8 +450,6 @@ export class Browser<T> implements BrowserInterface {
 	@autoWaitUntil()
 	@rewriteError()
 	public async highlightElement(element: ElementHandle): Promise<void> {
-		// let session = await this.page.target().createCDPSession()
-		// session.send('DOM.highlightNode', { nodeId: element })
 		return element.highlight()
 	}
 

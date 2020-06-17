@@ -57,7 +57,6 @@ export class Browser<T> implements BrowserInterface {
 			 * NOTES
 			 * update this one for ms playwright
 			 */
-			resolve(this.client.page)
 			// this.client.browser.once('targetcreated', async target => {
 			// 	const newPage = await target.page()
 			// 	this.client.page = newPage
@@ -71,6 +70,10 @@ export class Browser<T> implements BrowserInterface {
 		})
 	}
 
+	/**
+	 * NOTES
+	 * comment for unuse function
+	 */
 	// private get context(): Promise<BrowserContext> {
 	// 	return Promise.resolve(this.page.context())
 	// }
@@ -151,6 +154,10 @@ export class Browser<T> implements BrowserInterface {
 
 	@rewriteError()
 	public async authenticate(username?: string, password?: string): Promise<void> {
+		/**
+		 * NOTES
+		 * page authenticate does not exits
+		 */
 		// let authOptions: AuthOptions | null = null
 		// if (username !== undefined && password !== undefined) {
 		// 	authOptions = { username, password }
@@ -397,7 +404,6 @@ export class Browser<T> implements BrowserInterface {
 	@rewriteError()
 	public async clearBrowserCookies(): Promise<any> {
 		await this.page.context().clearCookies()
-		// await client.send('Network.clearBrowserCookies')
 	}
 
 	@rewriteError()
@@ -407,6 +413,10 @@ export class Browser<T> implements BrowserInterface {
 			const client = await context.newCDPSession(this.page)
 			await client.send('Network.clearBrowserCache')
 		} else {
+			/**
+			 * NOTES
+			 * need to implement clear cache for firefox and safari
+			 */
 			console.log('Not Implemented')
 		}
 	}

@@ -45,11 +45,12 @@ export class BaseLocator implements Locator {
 		 * this.pageFunc = undefined in evaluateHandle context
 		 * so we need input this function as argument
 		 */
+		const passedArgs = JSON.stringify([this.pageFunc.toString(), JSON.stringify(args)])
 		const handle = await page
 			.evaluateHandle((mArgs: string) => {
 				const [fn, args] = JSON.parse(mArgs)
 				return eval(fn)(...JSON.parse(args))
-			}, JSON.stringify([this.pageFunc.toString(), JSON.stringify(args)]))
+			}, passedArgs)
 			.catch(err => {
 				if (/Target closed/.test(err.message)) {
 					return null

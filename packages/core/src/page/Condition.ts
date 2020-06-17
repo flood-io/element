@@ -83,39 +83,18 @@ export abstract class ElementCondition extends LocatorCondition {
 		const locatorFunc = this.locatorPageFunc
 		const conditionFunc = this.pageFunc
 
-		const fn = function predicate(mArgs: any) {
-			const args = JSON.parse(mArgs)
-			const argSeparator = '-SEP-'
+		const fn = (args: string[]) => {
+			const indexSep = args.indexOf('-SEP-')
+			const args1: string[] = args.slice(0, indexSep)
+			const args2: boolean[] = args.slice(indexSep + 1, args.length).map(item => Boolean(item))
 
-			const args1: any[] = []
-			const args2: any[] = []
-			let foundSep = false
-			for (const a of args) {
-				if (!foundSep) {
-					if (a === argSeparator) {
-						foundSep = true
-					} else {
-						args1.push(a)
-					}
-				} else {
-					args2.push(a)
-				}
-			}
-
-			const locatorFunc: EvaluateFn = function() {
-				return null
-			}
+			const locatorFunc: EvaluateFn = () => null
+			const conditionFunc = (node: HTMLElement, ...args: any[]) => false
 
 			const [arg1, ...rest] = args1
 
 			const node: HTMLElement | null = locatorFunc(arg1, ...rest)
 			if (node === null) return false
-
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			const conditionFunc = function(node: HTMLElement, ...args2: any[]) {
-				return false
-			}
-
 			return conditionFunc(node, ...args2)
 		}
 
@@ -144,15 +123,22 @@ export abstract class ElementCondition extends LocatorCondition {
 			},
 		})
 
-		const code = recast.print(fnAST).code
-
-		debug('waitFor code', code)
+		const compiledFunc = recast.print(fnAST).code
+		debug('waitFor code', compiledFunc)
 
 		const args = Array.prototype.concat(this.locator.pageFuncArgs, argSeparator, this.pageFuncArgs)
 		debug('waitFor args', args)
 
-		await frame.waitForFunction(code, JSON.stringify(args), options)
-
+		await frame
+			.waitForFunction(
+				args => {
+					const [fn, ...rest] = args
+					return eval(fn)(rest)
+				},
+				[compiledFunc, ...args],
+				options,
+			)
+			.catch(err => console.log(err))
 		return true
 	}
 }

@@ -113,6 +113,7 @@ export {
 	beforeEach,
 	afterAll,
 	afterEach,
+	HookFn,
 } from '@flood/element-core'
 
 /**

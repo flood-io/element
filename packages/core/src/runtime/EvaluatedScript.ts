@@ -35,6 +35,7 @@ import { MouseButtons, Device, Key, userAgents } from '../page/Enums'
 import { TestDataSource, TestDataFactory } from '../test-data/TestData'
 import { BoundTestDataLoaders } from '../test-data/TestDataLoaders'
 import { EvaluatedScriptLike } from './EvaluatedScriptLike'
+import { Hook } from './Hook'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:eval-script')
@@ -67,6 +68,7 @@ function createVirtualMachine(floodElementActual: any, root?: string): NodeVM {
 
 export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLike {
 	public steps: Step[]
+	public hook: Hook
 	public recoverySteps: StepRecoveryObject
 	public settings: ConcreteTestSettings
 
@@ -153,6 +155,12 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 		// Clear existing steps
 		const steps: Step[] = []
 		const recoverySteps: StepRecoveryObject = {}
+		const hook: Hook = {
+			afterAll: [],
+			afterEach: [],
+			beforeAll: [],
+			beforeEach: [],
+		}
 
 		// establish base settings
 		let rawSettings = DEFAULT_SETTINGS
@@ -180,6 +188,26 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			}
 
 			steps.push({ fn, name, options })
+		}
+
+		function captureHookWithAfterAll(...args: any[]) {
+			const [fnc, timeout] = args
+			hook.afterAll.push({ fnc, timeout })
+		}
+
+		function captureHookWithAfterEach(...args: any[]) {
+			const [fnc, timeout] = args
+			hook.afterEach.push({ fnc, timeout })
+		}
+
+		function captureHookWithBeforeAll(...args: any[]) {
+			const [fnc, timeout] = args
+			hook.beforeAll.push({ fnc, timeout })
+		}
+
+		function captureHookWithBeforeEach(...args: any[]) {
+			const [fnc, timeout] = args
+			hook.beforeEach.push({ fnc, timeout })
 		}
 
 		// re-scope this for captureSuite to close over:
@@ -284,6 +312,12 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			// Supports either 2 or 3 args
 			step,
 
+			//Hook
+			afterAll: captureHookWithAfterAll,
+			afterEach: captureHookWithAfterEach,
+			beforeAll: captureHookWithBeforeAll,
+			beforeEach: captureHookWithBeforeEach,
+
 			// Actual implementation of @flood/chrome
 			By,
 			Until,
@@ -326,6 +360,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 
 		this.steps = steps
 		this.recoverySteps = recoverySteps
+		this.hook = hook
 
 		debug('settings', this.settings)
 		debug('steps', this.steps)

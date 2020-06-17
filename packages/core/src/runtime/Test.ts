@@ -26,6 +26,7 @@ import { EvaluatedScriptLike } from './EvaluatedScriptLike'
 import { TimingObserver } from './test-observers/TimingObserver'
 import { Context } from './test-observers/Context'
 import { NetworkRecordingTestObserver } from './test-observers/NetworkRecordingTestObserver'
+import { Hook } from './Hook'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:test')
@@ -33,6 +34,7 @@ const debug = require('debug')('element:runtime:test')
 export default class Test implements ITest {
 	public settings: ConcreteTestSettings
 	public steps: Step[]
+	public hook: Hook
 	public recoverySteps: StepRecoveryObject
 
 	public runningBrowser: Browser<Step> | null
@@ -63,10 +65,11 @@ export default class Test implements ITest {
 		this.script = script
 
 		try {
-			const { settings, steps, recoverySteps } = script
+			const { settings, steps, recoverySteps, hook } = script
 			this.settings = settings as ConcreteTestSettings
 			this.steps = steps
 			this.recoverySteps = recoverySteps
+			this.hook = hook
 
 			// Adds output for console in script
 			script.bindTest(this)
@@ -159,6 +162,9 @@ export default class Test implements ITest {
 
 			debug('running this.before(browser)')
 			await testObserver.before(this)
+
+			debug('running hook function: beforeAll')
+			this.hook.beforeAll.forEach(item => item.fnc())
 
 			debug('Feeding data')
 			const testDataRecord = testData.feed()
@@ -283,6 +289,9 @@ export default class Test implements ITest {
 			await this.requestInterceptor.detach(this.client.page)
 		}
 
+		debug('running hook function: afterAll')
+		this.hook.afterAll.forEach(item => item.fnc())
+
 		// TODO report skipped steps
 		await testObserver.after(this)
 	}
@@ -303,6 +312,9 @@ export default class Test implements ITest {
 	) {
 		let error: Error | null = null
 		await testObserver.beforeStep(this, step)
+
+		debug('running hook function: beforeEach')
+		this.hook.beforeEach.forEach(item => item.fnc())
 
 		const originalBrowserSettings = { ...browser.settings }
 
@@ -326,6 +338,9 @@ export default class Test implements ITest {
 		} else {
 			await testObserver.onStepPassed(this, step)
 		}
+
+		debug('running hook function: afterEach')
+		this.hook.afterEach.forEach(item => item.fnc())
 
 		await testObserver.afterStep(this, step)
 

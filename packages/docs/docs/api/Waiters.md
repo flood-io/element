@@ -107,7 +107,7 @@ Creates a condition that will wait for the given element to be in the DOM, yet n
 
 ### `Until.elementIsNotVisible(selectorOrLocator)`
 
-Creates a condition that will wait for the given element to become visible.
+Creates a condition that will wait for the given element to become invisible.
 
 Example:
 
@@ -125,7 +125,7 @@ step("Step 1", async (browser) => {
 
 ### `Until.elementIsSelected(selectorOrLocator)`
 
-Creates a condition that will wait for the given element to be deselected.
+Creates a condition that will wait for the given element to be selected.
 
 **Parameters**
 
@@ -134,7 +134,7 @@ Creates a condition that will wait for the given element to be deselected.
 
 ### `Until.elementIsVisible(selectorOrLocator)`
 
-Creates a condition that will wait for the given element to be selected.
+Creates a condition that will wait for the given element to become visible.
 
 Example:
 

@@ -60,9 +60,6 @@ function setToken(token: string): void {
 }
 
 function getToken(): string | undefined {
-	if (process.env.FLOOD_API_TOKEN) {
-		return Buffer.from(`${process.env.FLOOD_API_TOKEN}:`).toString('base64')
-	}
 	return getConfig().token
 }
 
@@ -84,28 +81,43 @@ export async function getRegions(): Promise<{ [key: string]: string }> {
 }
 
 export function isAuthenticated(): boolean {
-	if (process.env.FLOOD_API_TOKEN) {
-		console.log('Using Flood API token from user environment')
-		return true
-	}
 	if (!getToken()) {
 		throw 'You need to be authenticated first. Please use this command: element flood authenticate <your_api_token>'
 	}
 	return true
 }
 
-export async function getProjects(): Promise<Project[]> {
+export function configAvailable(): boolean {
+	const { FLOOD_API_TOKEN, PROJECT } = process.env
+	return !!(FLOOD_API_TOKEN || isAuthenticated()) && !!(PROJECT || getProject())
+}
+
+export async function fetchProjects(apiToken?: string): Promise<Project[]> {
 	const res = await (
 		await fetch('https://api.flood.io/projects', {
 			headers: {
-				Authorization: `Basic ${getToken()}`,
+				Authorization: `Basic ${apiToken || getToken()}`,
 			},
 		})
 	).json()
 	const errors = res.errors || res.error
 	if (errors) throw new Error(errors)
 
-	return res._embedded.projects
+	return res._embedded.projects.map(project => {
+		return {
+			id: project.id,
+			name: project.name,
+		}
+	})
+}
+
+export async function fetchProject(idOrName: string, apiToken?: string): Promise<Project> {
+	const projects = await fetchProjects(apiToken)
+	const project = projects.find(p => p.id === idOrName || p.name === idOrName)
+	if (!project) {
+		throw `No project found with id or name "${idOrName}". Please check and try again`
+	}
+	return project
 }
 
 export async function getHostedGrids(): Promise<Grid[]> {
@@ -145,23 +157,33 @@ export async function authenticate(username: string): Promise<void> {
 	setToken(token)
 }
 
-function createFormData(options: LaunchOptions): FormData {
-	const { file, virtualUser, rampup } = options
+function createFormData(config: Config, options: LaunchOptions): FormData {
+	const { file, virtualUser, rampup, duration } = options
 	const data = new FormData()
 
 	data.append('flood[tool]', 'flood-chrome')
-	data.append('flood[project]', getProject().name)
+	data.append('flood[project]', (config.project as any).name)
 	data.append('flood_files[]', createReadStream(file))
 	data.append('flood[threads]', virtualUser)
 	data.append('flood[rampup]', rampup)
+	data.append('flood[duration]', duration * 60)
 	return data
+}
+
+async function getConfigFromEnv(): Promise<Config> {
+	const { FLOOD_API_TOKEN, PROJECT } = process.env
+	const token = FLOOD_API_TOKEN ? Buffer.from(`${FLOOD_API_TOKEN}:`).toString('base64') : getToken()
+
+	const project = PROJECT ? await fetchProject(PROJECT, token) : getProject()
+	return { token, project }
 }
 
 export async function launchOnDemand(
 	options: LaunchOptions,
 	selectedRegions: string[],
 ): Promise<string> {
-	const body = createFormData(options)
+	const config = await getConfigFromEnv()
+	const body = createFormData(config, options)
 
 	selectedRegions.forEach(id => {
 		body.append('flood[grids][][infrastructure]', 'demand')
@@ -172,7 +194,7 @@ export async function launchOnDemand(
 	})
 
 	const headers = body.getHeaders()
-	headers.Authorization = `Basic ${getToken()}`
+	headers.Authorization = `Basic ${config.token}`
 
 	const res = await (
 		await fetch('https://api.flood.io/floods', {
@@ -184,14 +206,15 @@ export async function launchOnDemand(
 	const errors = res.errors || res.error
 	if (errors) throw new Error(errors)
 
-	return res.uuid
+	return `https://app.flood.io/projects/${(config.project as any).id}/flood/${res.uuid}`
 }
 
 export async function launchHosted(
 	options: LaunchOptions,
 	selectedGrid: string[],
 ): Promise<string> {
-	const body = createFormData(options)
+	const config = await getConfigFromEnv()
+	const body = createFormData(config, options)
 
 	selectedGrid.forEach(uuid => {
 		body.append('flood[grids][][uuid]', uuid)
@@ -210,5 +233,5 @@ export async function launchHosted(
 	const errors = res.errors || res.error
 	if (errors) throw new Error(errors)
 
-	return res.uuid
+	return `https://app.flood.io/projects/${(config.project as any).id}/flood/${res.uuid}`
 }

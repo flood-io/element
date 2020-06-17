@@ -1,14 +1,7 @@
 import Generator from 'yeoman-generator'
 import ora from 'ora'
 
-import {
-	LaunchOptions,
-	getProject,
-	getHostedGrids,
-	launchHosted,
-	Grid,
-	countVUH,
-} from '../../../utils/flood'
+import { LaunchOptions, getHostedGrids, launchHosted, Grid, countVUH } from '../../../utils/flood'
 
 export default class RegionsSelect extends Generator {
 	options: LaunchOptions
@@ -82,11 +75,11 @@ export default class RegionsSelect extends Generator {
 			const throbber = ora('Flood is queued and will begin shortly').start()
 			try {
 				const { options, _selectedGridIds } = this
-				const uuid = await launchHosted(options, _selectedGridIds)
+				const url = await launchHosted(options, _selectedGridIds)
 
 				throbber.stop()
 				console.log('Click on the link below to view the flood details:')
-				console.log(`https://app.flood.io/projects/${getProject().id}/flood/${uuid}`)
+				console.log(url)
 			} catch (err) {
 				throbber.stop()
 				this.env.error(err)

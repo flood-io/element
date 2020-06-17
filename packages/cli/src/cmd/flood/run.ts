@@ -2,7 +2,7 @@ import { Argv, Arguments, CommandModule } from 'yargs'
 import chalk from 'chalk'
 
 import { checkFile } from '../common'
-import { isAuthenticated, getProject } from '../../utils/flood'
+import { configAvailable } from '../../utils/flood'
 
 interface FloodRunArguments extends Arguments {
 	file: string
@@ -67,7 +67,9 @@ const cmd: CommandModule = {
 
 				return true
 			})
-			.check(() => isAuthenticated() && getProject())
+			.check(() => {
+				return configAvailable()
+			})
 	},
 }
 

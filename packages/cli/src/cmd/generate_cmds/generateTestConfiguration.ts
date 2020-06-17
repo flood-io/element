@@ -15,7 +15,7 @@ const cmd: CommandModule = {
 			'../../generator/test-configuration'
 		)
 		env.registerStub(TestConfigurationGenerator as any, 'element/test-configuration')
-		env.run(['element/test-configuration', args.file], () => 'Generate success')
+		env.run(['element/test-configuration', args.file], () => 'Generated successfully')
 	},
 
 	builder(yargs: Argv): Argv {
@@ -24,7 +24,7 @@ const cmd: CommandModule = {
 				describe: 'Verbose mode',
 			})
 			.positional('file', {
-				describe: 'the file name to generate to a new basic test configuration',
+				describe: 'The file name of the generated config file',
 				default: 'element.config.js',
 			})
 	},

@@ -2,13 +2,15 @@ import { TestSettings, step, afterAll, afterEach, beforeAll, beforeEach } from '
 
 export const settings: TestSettings = {
 	loopCount: 1,
+	waitTimeout: 30,
 }
 export default () => {
-	beforeAll(() => {
+	beforeAll(async browser => {
+		await browser.visit('https://challenge.flood.io')
 		console.log('before all is running ....')
 	}, 1)
 
-	beforeEach(async () => {
+	beforeEach(async browser => {
 		console.log('before each is running ....')
 	}, 1)
 
@@ -19,11 +21,11 @@ export default () => {
 		console.log('Step 1')
 	})
 
-	afterEach(async () => {
+	afterEach(async browser => {
 		console.log('after each is running ....')
 	}, 1)
 
-	afterAll(async () => {
+	afterAll(async browser => {
 		console.log('after all is running ....')
 	})
 }

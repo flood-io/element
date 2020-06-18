@@ -27,6 +27,7 @@ import { TimingObserver } from './test-observers/TimingObserver'
 import { Context } from './test-observers/Context'
 import { NetworkRecordingTestObserver } from './test-observers/NetworkRecordingTestObserver'
 import { Hook, HookBase } from './Hook'
+import { Browser as BrowserInterface } from './types'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:test')
@@ -149,7 +150,6 @@ export default class Test implements ITest {
 				this.willRunCommand.bind(this, testObserver),
 				this.didRunCommand.bind(this, testObserver),
 			)
-
 			this.runningBrowser = browser
 
 			if (this.settings.clearCache) await browser.clearBrowserCache()
@@ -164,7 +164,7 @@ export default class Test implements ITest {
 			await testObserver.before(this)
 
 			debug('running hook function: beforeAll')
-			this.hook.beforeAll.forEach(item => this.runHookFunction(item))
+			await this.runHookFnc(this.hook.beforeAll, browser)
 
 			debug('Feeding data')
 			const testDataRecord = testData.feed()
@@ -281,16 +281,16 @@ export default class Test implements ITest {
 				}
 				this.stepCount += 1
 			}
+
+			debug('running hook function: afterAll')
+			await this.runHookFnc(this.hook.afterAll, browser)
 		} catch (err) {
-			console.log('error -> failed', err)
+			console.log('error -> failed', err.message)
 			this.failed = true
 			throw err
 		} finally {
 			await this.requestInterceptor.detach(this.client.page)
 		}
-
-		debug('running hook function: afterAll')
-		this.hook.afterAll.forEach(item => this.runHookFunction(item))
 
 		// TODO report skipped steps
 		await testObserver.after(this)
@@ -314,7 +314,7 @@ export default class Test implements ITest {
 		await testObserver.beforeStep(this, step)
 
 		debug('running hook function: beforeEach')
-		this.hook.beforeEach.forEach(item => this.runHookFunction(item))
+		await this.runHookFnc(this.hook.beforeEach, browser)
 
 		const originalBrowserSettings = { ...browser.settings }
 
@@ -340,7 +340,7 @@ export default class Test implements ITest {
 		}
 
 		debug('running hook function: afterEach')
-		this.hook.afterEach.forEach(item => this.runHookFunction(item))
+		await this.runHookFnc(this.hook.afterEach, browser)
 
 		await testObserver.afterStep(this, step)
 
@@ -412,8 +412,14 @@ export default class Test implements ITest {
 		return new ObjectTrace(this.script.runEnv.workRoot, step.name)
 	}
 
-	private runHookFunction(hookBase: HookBase): void {
-		hookBase.fnc()
-		setTimeout(this.runHookFunction, hookBase.timeout)
+	async runHookFnc(hooks: HookBase[], browser: BrowserInterface): Promise<void> {
+		try {
+			for (const hook of hooks) {
+				await hook.fnc.call(null, browser)
+				setTimeout(this.runHookFnc, hook.timeout)
+			}
+		} catch (error) {
+			throw new Error(error)
+		}
 	}
 }

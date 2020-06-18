@@ -190,25 +190,25 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			steps.push({ fn, name, options })
 		}
 
-		function captureHookWithAfterAll(...args: any[]) {
+		function afterAll(...args: any[]) {
 			const [fnc, timeout] = args
 			const hookBase = normalizeHookBase({ fnc, timeout })
 			hook.afterAll.push(hookBase)
 		}
 
-		function captureHookWithAfterEach(...args: any[]) {
+		function afterEach(...args: any[]) {
 			const [fnc, timeout] = args
 			const hookBase = normalizeHookBase({ fnc, timeout })
 			hook.afterEach.push(hookBase)
 		}
 
-		function captureHookWithBeforeAll(...args: any[]) {
+		function beforeAll(...args: any[]) {
 			const [fnc, timeout] = args
 			const hookBase = normalizeHookBase({ fnc, timeout })
 			hook.beforeAll.push(hookBase)
 		}
 
-		function captureHookWithBeforeEach(...args: any[]) {
+		function beforeEach(...args: any[]) {
 			const [fnc, timeout] = args
 			const hookBase = normalizeHookBase({ fnc, timeout })
 			hook.beforeEach.push(hookBase)
@@ -317,10 +317,10 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			step,
 
 			//Hook
-			afterAll: captureHookWithAfterAll,
-			afterEach: captureHookWithAfterEach,
-			beforeAll: captureHookWithBeforeAll,
-			beforeEach: captureHookWithBeforeEach,
+			afterAll,
+			afterEach,
+			beforeAll,
+			beforeEach,
 
 			// Actual implementation of @flood/chrome
 			By,

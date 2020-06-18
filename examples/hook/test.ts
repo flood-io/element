@@ -6,11 +6,11 @@ export const settings: TestSettings = {
 }
 export default () => {
 	beforeAll(async browser => {
-		await browser.visit('https://challenge.flood.io')
+		//await browser.visit('https://challenge.flood.io')
 		console.log('before all is running ....')
 	}, 1)
 
-	beforeEach(async browser => {
+	beforeEach(async () => {
 		console.log('before each is running ....')
 	}, 1)
 
@@ -21,11 +21,11 @@ export default () => {
 		console.log('Step 1')
 	})
 
-	afterEach(async browser => {
+	afterEach(async () => {
 		console.log('after each is running ....')
 	}, 1)
 
-	afterAll(async browser => {
+	afterAll(async () => {
 		console.log('after all is running ....')
 	})
 }

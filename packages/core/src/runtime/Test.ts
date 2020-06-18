@@ -26,8 +26,7 @@ import { EvaluatedScriptLike } from './EvaluatedScriptLike'
 import { TimingObserver } from './test-observers/TimingObserver'
 import { Context } from './test-observers/Context'
 import { NetworkRecordingTestObserver } from './test-observers/NetworkRecordingTestObserver'
-import { Hook, HookBase } from './Hook'
-import { Browser as BrowserInterface } from './types'
+import { Hook, HookBase, HookFn } from './Hook'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:test')
@@ -412,14 +411,31 @@ export default class Test implements ITest {
 		return new ObjectTrace(this.script.runEnv.workRoot, step.name)
 	}
 
-	async runHookFnc(hooks: HookBase[], browser: BrowserInterface): Promise<void> {
+	private async runHookFnc(hooks: HookBase[], browser: Browser<Step>): Promise<void> {
 		try {
 			for (const hook of hooks) {
-				await hook.fnc.call(null, browser)
-				setTimeout(this.runHookFnc, hook.timeout)
+				await this.doHookFncWithTimeout(browser, hook.fn, hook.timeout)
 			}
 		} catch (error) {
 			throw new Error(error)
 		}
+	}
+
+	private async doHookFncWithTimeout(
+		browser: Browser<Step>,
+		func: HookFn,
+		timeout?: number,
+	): Promise<any> {
+		// Create a promise that rejects in <ms> milliseconds
+		const promiseTimeout = new Promise((resolve, reject) => {
+			const id = setTimeout(() => {
+				clearTimeout(id)
+				reject()
+			}, timeout)
+		})
+
+		const hookFunc = func.bind(null, browser)
+		// Returns a race between our timeout and the passed in promise
+		return Promise.race([hookFunc(), promiseTimeout])
 	}
 }

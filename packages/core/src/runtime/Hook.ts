@@ -7,7 +7,7 @@ export declare function beforeEach(fnc: HookFn, timeout?: number): void
 
 export type HookFn = (this: void, browser: Browser) => Promise<any>
 export interface HookBase {
-	fnc: HookFn
+	fn: HookFn
 	timeout?: number
 }
 

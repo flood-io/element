@@ -190,27 +190,27 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			steps.push({ fn, name, options })
 		}
 
-		function afterAll(...args: any[]) {
-			const [fnc, timeout] = args
-			const hookBase = normalizeHookBase({ fnc, timeout })
+		const afterAll = (...args: any[]) => {
+			const [fn, timeout] = args
+			const hookBase = normalizeHookBase({ fn, timeout })
 			hook.afterAll.push(hookBase)
 		}
 
-		function afterEach(...args: any[]) {
-			const [fnc, timeout] = args
-			const hookBase = normalizeHookBase({ fnc, timeout })
+		const afterEach = (...args: any[]) => {
+			const [fn, timeout] = args
+			const hookBase = normalizeHookBase({ fn, timeout })
 			hook.afterEach.push(hookBase)
 		}
 
-		function beforeAll(...args: any[]) {
-			const [fnc, timeout] = args
-			const hookBase = normalizeHookBase({ fnc, timeout })
+		const beforeAll = (...args: any[]) => {
+			const [fn, timeout] = args
+			const hookBase = normalizeHookBase({ fn, timeout })
 			hook.beforeAll.push(hookBase)
 		}
 
-		function beforeEach(...args: any[]) {
-			const [fnc, timeout] = args
-			const hookBase = normalizeHookBase({ fnc, timeout })
+		const beforeEach = (...args: any[]) => {
+			const [fn, timeout] = args
+			const hookBase = normalizeHookBase({ fn, timeout })
 			hook.beforeEach.push(hookBase)
 		}
 

@@ -5,18 +5,12 @@ export const settings: TestSettings = {
 }
 export default () => {
 	beforeAll(() => {
-		console.log('before all 0 is running ....')
-	}, 300)
-	beforeAll(() => {
-		console.log('before all 1 is running ....')
-	}, 300)
+		console.log('before all is running ....')
+	}, 1)
 
 	beforeEach(async () => {
-		console.log('before each 0 is running ....')
-	}, 300)
-	beforeEach(async () => {
-		console.log('before each 1 is running ....')
-	}, 300)
+		console.log('before each is running ....')
+	}, 1)
 
 	step('Step 0', async browser => {
 		console.log('Step 0')
@@ -25,17 +19,11 @@ export default () => {
 		console.log('Step 1')
 	})
 
-	afterAll(async () => {
-		console.log('after all 0 is running ....')
-	}, 300)
-	afterAll(async () => {
-		console.log('after all 1 is running ....')
-	}, 300)
+	afterEach(async () => {
+		console.log('after each is running ....')
+	}, 1)
 
-	afterEach(async () => {
-		console.log('after each 0 is running ....')
-	}, 300)
-	afterEach(async () => {
-		console.log('after each 1 is running ....')
-	}, 300)
+	afterAll(async () => {
+		console.log('after all is running ....')
+	})
 }

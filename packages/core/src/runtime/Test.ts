@@ -26,7 +26,7 @@ import { EvaluatedScriptLike } from './EvaluatedScriptLike'
 import { TimingObserver } from './test-observers/TimingObserver'
 import { Context } from './test-observers/Context'
 import { NetworkRecordingTestObserver } from './test-observers/NetworkRecordingTestObserver'
-import { Hook } from './Hook'
+import { Hook, HookBase } from './Hook'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:test')
@@ -164,7 +164,7 @@ export default class Test implements ITest {
 			await testObserver.before(this)
 
 			debug('running hook function: beforeAll')
-			this.hook.beforeAll.forEach(item => item.fnc())
+			this.hook.beforeAll.forEach(item => this.runHookFunction(item))
 
 			debug('Feeding data')
 			const testDataRecord = testData.feed()
@@ -290,7 +290,7 @@ export default class Test implements ITest {
 		}
 
 		debug('running hook function: afterAll')
-		this.hook.afterAll.forEach(item => item.fnc())
+		this.hook.afterAll.forEach(item => this.runHookFunction(item))
 
 		// TODO report skipped steps
 		await testObserver.after(this)
@@ -314,7 +314,7 @@ export default class Test implements ITest {
 		await testObserver.beforeStep(this, step)
 
 		debug('running hook function: beforeEach')
-		this.hook.beforeEach.forEach(item => item.fnc())
+		this.hook.beforeEach.forEach(item => this.runHookFunction(item))
 
 		const originalBrowserSettings = { ...browser.settings }
 
@@ -340,7 +340,7 @@ export default class Test implements ITest {
 		}
 
 		debug('running hook function: afterEach')
-		this.hook.afterEach.forEach(item => item.fnc())
+		this.hook.afterEach.forEach(item => this.runHookFunction(item))
 
 		await testObserver.afterStep(this, step)
 
@@ -410,5 +410,10 @@ export default class Test implements ITest {
 	/* @deprecated */
 	newTrace(step: Step): ObjectTrace {
 		return new ObjectTrace(this.script.runEnv.workRoot, step.name)
+	}
+
+	private runHookFunction(hookBase: HookBase): void {
+		hookBase.fnc()
+		setTimeout(this.runHookFunction, hookBase.timeout)
 	}
 }

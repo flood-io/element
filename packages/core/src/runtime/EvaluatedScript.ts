@@ -35,7 +35,7 @@ import { MouseButtons, Device, Key, userAgents } from '../page/Enums'
 import { TestDataSource, TestDataFactory } from '../test-data/TestData'
 import { BoundTestDataLoaders } from '../test-data/TestDataLoaders'
 import { EvaluatedScriptLike } from './EvaluatedScriptLike'
-import { Hook } from './Hook'
+import { Hook, normalizeHookBase } from './Hook'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:eval-script')
@@ -192,22 +192,26 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 
 		function captureHookWithAfterAll(...args: any[]) {
 			const [fnc, timeout] = args
-			hook.afterAll.push({ fnc, timeout })
+			const hookBase = normalizeHookBase({ fnc, timeout })
+			hook.afterAll.push(hookBase)
 		}
 
 		function captureHookWithAfterEach(...args: any[]) {
 			const [fnc, timeout] = args
-			hook.afterEach.push({ fnc, timeout })
+			const hookBase = normalizeHookBase({ fnc, timeout })
+			hook.afterEach.push(hookBase)
 		}
 
 		function captureHookWithBeforeAll(...args: any[]) {
 			const [fnc, timeout] = args
-			hook.beforeAll.push({ fnc, timeout })
+			const hookBase = normalizeHookBase({ fnc, timeout })
+			hook.beforeAll.push(hookBase)
 		}
 
 		function captureHookWithBeforeEach(...args: any[]) {
 			const [fnc, timeout] = args
-			hook.beforeEach.push({ fnc, timeout })
+			const hookBase = normalizeHookBase({ fnc, timeout })
+			hook.beforeEach.push(hookBase)
 		}
 
 		// re-scope this for captureSuite to close over:

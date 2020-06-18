@@ -26,7 +26,7 @@ import { EvaluatedScriptLike } from './EvaluatedScriptLike'
 import { TimingObserver } from './test-observers/TimingObserver'
 import { Context } from './test-observers/Context'
 import { NetworkRecordingTestObserver } from './test-observers/NetworkRecordingTestObserver'
-import { Hook, HookBase, HookFn } from './Hook'
+import { Hook, HookBase } from './Hook'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:test')
@@ -162,9 +162,6 @@ export default class Test implements ITest {
 			debug('running this.before(browser)')
 			await testObserver.before(this)
 
-			debug('running hook function: beforeAll')
-			await this.runHookFnc(this.hook.beforeAll, browser)
-
 			debug('Feeding data')
 			const testDataRecord = testData.feed()
 			if (testDataRecord === null) {
@@ -248,6 +245,10 @@ export default class Test implements ITest {
 				return true
 			}
 
+			debug('running hook function: beforeAll')
+			browser.settings = { ...this.settings }
+			await this.runHookFnc(this.hook.beforeAll, browser, testDataRecord)
+
 			debug('running steps')
 			while (this.stepCount < this.steps.length) {
 				const step = this.steps[this.stepCount]
@@ -282,9 +283,9 @@ export default class Test implements ITest {
 			}
 
 			debug('running hook function: afterAll')
-			await this.runHookFnc(this.hook.afterAll, browser)
+			await this.runHookFnc(this.hook.afterAll, browser, testDataRecord)
 		} catch (err) {
-			console.log('error -> failed', err.message)
+			console.log('error -> failed', err)
 			this.failed = true
 			throw err
 		} finally {
@@ -312,15 +313,14 @@ export default class Test implements ITest {
 		let error: Error | null = null
 		await testObserver.beforeStep(this, step)
 
-		debug('running hook function: beforeEach')
-		await this.runHookFnc(this.hook.beforeEach, browser)
-
 		const originalBrowserSettings = { ...browser.settings }
+		debug(`Run step: ${step.name}`) // ${step.fn.toString()}`)
+		browser.settings = { ...this.settings, ...step.options }
 
 		try {
-			debug(`Run step: ${step.name}`) // ${step.fn.toString()}`)
+			debug('running hook function: beforeEach')
+			await this.runHookFnc(this.hook.beforeEach, browser, testDataRecord)
 
-			browser.settings = { ...this.settings, ...step.options }
 			await step.fn.call(null, browser, testDataRecord)
 		} catch (err) {
 			error = err
@@ -339,7 +339,7 @@ export default class Test implements ITest {
 		}
 
 		debug('running hook function: afterEach')
-		await this.runHookFnc(this.hook.afterEach, browser)
+		await this.runHookFnc(this.hook.afterEach, browser, testDataRecord)
 
 		await testObserver.afterStep(this, step)
 
@@ -411,21 +411,22 @@ export default class Test implements ITest {
 		return new ObjectTrace(this.script.runEnv.workRoot, step.name)
 	}
 
-	private async runHookFnc(hooks: HookBase[], browser: Browser<Step>): Promise<void> {
+	private async runHookFnc(
+		hooks: HookBase[],
+		browser: Browser<Step>,
+		testDataRecord: any,
+	): Promise<void> {
 		try {
 			for (const hook of hooks) {
-				await this.doHookFncWithTimeout(browser, hook.fn, hook.timeout)
+				const hookFunc = hook.fn.bind(null, browser, testDataRecord)
+				await this.doHookFncWithTimeout(hookFunc, hook.timeout)
 			}
 		} catch (error) {
 			throw new Error(error)
 		}
 	}
 
-	private async doHookFncWithTimeout(
-		browser: Browser<Step>,
-		func: HookFn,
-		timeout?: number,
-	): Promise<any> {
+	private async doHookFncWithTimeout(func: any, timeout?: number): Promise<any> {
 		// Create a promise that rejects in <ms> milliseconds
 		const promiseTimeout = new Promise((resolve, reject) => {
 			const id = setTimeout(() => {
@@ -433,9 +434,7 @@ export default class Test implements ITest {
 				reject()
 			}, timeout)
 		})
-
-		const hookFunc = func.bind(null, browser)
 		// Returns a race between our timeout and the passed in promise
-		return Promise.race([hookFunc(), promiseTimeout])
+		return Promise.race([func(), promiseTimeout])
 	}
 }

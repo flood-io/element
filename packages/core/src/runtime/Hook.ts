@@ -9,7 +9,7 @@ export interface HookBase {
 	timeout?: number
 }
 
-export type Hook = {
+export interface Hook {
 	afterAll: HookBase[]
 	afterEach: HookBase[]
 	beforeAll: HookBase[]

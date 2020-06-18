@@ -83,16 +83,15 @@ export abstract class ElementCondition extends LocatorCondition {
 		const locatorFunc = this.locatorPageFunc
 		const conditionFunc = this.pageFunc
 
-		const fn = (args: string[]) => {
+		const fn = (args: any[]) => {
 			const indexSep = args.indexOf('-SEP-')
-			const args1: string[] = args.slice(0, indexSep)
-			const args2: boolean[] = args.slice(indexSep + 1, args.length).map(item => Boolean(item))
+			const args1: any[] = args.slice(0, indexSep)
+			const args2: any[] = args.slice(indexSep + 1, args.length)
 
 			const locatorFunc: EvaluateFn = () => null
 			const conditionFunc = (node: HTMLElement, ...args: any[]) => false
 
 			const [arg1, ...rest] = args1
-
 			const node: HTMLElement | null = locatorFunc(arg1, ...rest)
 			if (node === null) return false
 			return conditionFunc(node, ...args2)

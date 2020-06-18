@@ -72,10 +72,13 @@ export class BaseLocator implements Locator {
 		const args = [...this.pageFuncArgs]
 		if (node) args.push(node)
 		const arrayHandle = await page
-			.evaluateHandle((mArgs: string) => {
-				const [fn, args] = JSON.parse(mArgs)
-				return eval(fn)(...JSON.parse(args))
-			}, JSON.stringify([this.pageFuncMany.toString(), JSON.stringify(args)]))
+			.evaluateHandle(
+				(args: string[]) => {
+					const [fn, ...rest] = args
+					return eval(fn)(...rest)
+				},
+				[this.pageFuncMany.toString(), ...args],
+			)
 			.catch(err => {
 				if (/Target closed/.test(err.message)) {
 					return null

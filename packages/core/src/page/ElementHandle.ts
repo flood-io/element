@@ -15,21 +15,17 @@ import { Point } from './Point'
 import { CSSLocator } from './locators/index'
 import { BaseLocator } from './Locator'
 import { ClickOptions } from './Mouse'
-// import { By } from './Locators'
 const debug = debugFactory('element:page:element-handle')
 
 /**
  * @internal
  */
 async function getProperty<T>(element: PElementHandle, prop: string): Promise<T | null> {
-	if (!element) {
-		return null
-	} else {
-		const handle = await element.getProperty(prop)
-		const value = (await handle.jsonValue()) as T
-		handle.dispose()
-		return value
-	}
+	if (!element) return null
+	const handle = await element.getProperty(prop)
+	const value = (await handle.jsonValue()) as T
+	handle.dispose()
+	return value
 }
 
 /**
@@ -357,13 +353,13 @@ export class ElementHandle implements IElementHandle, Locator {
 
 		let propertyName = 'selected'
 		const tagName = await this.tagName()
+		const type = (tagName && tagName.toUpperCase()) || ''
 
-		const type = tagName && tagName.toUpperCase()
-		if ('CHECKBOX' == type || 'RADIO' == type) {
+		if (['CHECKBOX', 'RADIO'].includes(type)) {
 			propertyName = 'checked'
 		}
 
-		const value = getProperty<string>(this.element, propertyName)
+		const value = await this.element.getAttribute(propertyName)
 		return !!value
 	}
 

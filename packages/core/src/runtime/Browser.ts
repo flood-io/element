@@ -1,5 +1,12 @@
 import { Condition } from '../page/Condition'
-import { Frame, Page, ViewportSize, devices, ChromiumBrowserContext } from 'playwright'
+import {
+	Frame,
+	Page,
+	ViewportSize,
+	devices,
+	ChromiumBrowserContext,
+	BrowserContext,
+} from 'playwright'
 import { Browser as BrowserInterface, NullableLocatable, EvaluateFn } from './types'
 import { ElementHandle, PageGoToOptions, ScreenshotOptions } from '../page/types'
 import { TargetLocator } from '../page/TargetLocator'
@@ -57,12 +64,10 @@ export class Browser<T> implements BrowserInterface {
 			 * NOTES
 			 * update this one for ms playwright
 			 */
-			// this.client.browser.once('targetcreated', async target => {
-			// 	const newPage = await target.page()
-			// 	this.client.page = newPage
-			// 	await newPage.bringToFront()
-			// 	resolve(newPage)
-			// })
+			this.client.page.context().on('page', async newPage => {
+				this.client.page = newPage
+				resolve(newPage)
+			})
 		}
 
 		this.newPagePromise = new Promise(resolve => {
@@ -70,13 +75,9 @@ export class Browser<T> implements BrowserInterface {
 		})
 	}
 
-	/**
-	 * NOTES
-	 * comment for unuse function
-	 */
-	// private get context(): Promise<BrowserContext> {
-	// 	return Promise.resolve(this.page.context())
-	// }
+	public context(): BrowserContext {
+		return this.page.context()
+	}
 
 	public testData(name: string): string {
 		return this.workRoot.testData(name)
@@ -582,7 +583,7 @@ export class Browser<T> implements BrowserInterface {
 
 	private async switchPage(page: Page | number): Promise<void> {
 		if (typeof page === 'number') {
-			this.client.page = (await this.pages)[page]
+			this.client.page = this.pages[page]
 		} else {
 			this.client.page = page
 		}

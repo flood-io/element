@@ -5,6 +5,7 @@ import { isMatch } from 'micromatch'
 
 export default class Interceptor {
 	constructor(public blockedDomains: string[]) {}
+	private enableInterceptor = false
 
 	async attach(page: Page) {
 		if (this.blockedDomains.length) {
@@ -12,8 +13,8 @@ export default class Interceptor {
 			 * NOTES
 			 * this function does not supported on playwright
 			 */
-			// await page.setRequestInterception(true)
-			page.on('request', this.requestBlocker)
+			this.enableInterceptor = true
+			page.on('request', request => this.requestBlocker(page, request))
 
 			debug(
 				`Attched network request interceptor with blocked domains: "${this.blockedDomains.join(
@@ -24,28 +25,30 @@ export default class Interceptor {
 	}
 
 	async detach(page: Page) {
-		page.off('request', this.requestBlocker)
 		/**
 		 * NOTES
 		 * this function does not supported on playwright
 		 */
-		// await page.setRequestInterception(false)
+		this.enableInterceptor = false
+		page.off('request', request => this.requestBlocker(page, request))
 	}
 
-	private requestBlocker = (interceptedRequest: Request) => {
+	private requestBlocker = (page: Page, interceptedRequest: Request) => {
 		const url = new URL(interceptedRequest.url())
 
-		if (
-			this.blockedDomains.some(domain => {
-				const matchee = domain.includes(':') ? url.host : url.hostname
-				return isMatch(matchee, domain)
-			})
-		) {
-			debug(`Blocked request to "${url.host}"`)
-			// interceptedRequest.abort()
-		} else {
-			debug(`Accepted request to "${url.host}"`)
-			// interceptedRequest.continue()
+		debug(`Blocked request to "${url.host}"`)
+		for (const domain of this.blockedDomains) {
+			const matchee = domain.includes(':') ? url.host : url.hostname
+			if (isMatch(matchee, domain) && this.enableInterceptor) {
+				const regex = new RegExp(domain.replace(/\*/g, ''), 'g')
+				page.route(regex, route => {
+					return route.abort()
+				})
+			} else {
+				page.route(domain, route => {
+					return route.continue()
+				})
+			}
 		}
 	}
 }

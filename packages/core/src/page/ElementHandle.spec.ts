@@ -65,7 +65,7 @@ describe('ElementHandle', () => {
 	})
 
 	test('isSelected()', async () => {
-		const handle = await locateEl('#languages option')
+		const handle = await locateEl('#languages > option:nth-child(2)')
 		const element = await new ElementHandle(handle, playwright.page)
 		expect(await element.isSelected()).toBe(true)
 		await handle.dispose()

@@ -11,7 +11,7 @@ export type ConcreteLaunchOptions = LaunchOptions & {
 	sandbox: boolean
 	debug: boolean
 	browserType: BROWSER_TYPE
-	defaultViewport: playwright.ViewportSize | null
+	viewport: playwright.ViewportSize | null
 	ignoreHTTPSError: boolean
 }
 
@@ -24,7 +24,7 @@ const defaultLaunchOptions: ConcreteLaunchOptions = {
 	timeout: 60e3,
 	debug: false,
 	browserType: BROWSER_TYPE.CHROME,
-	defaultViewport: null,
+	viewport: null,
 	ignoreHTTPSError: false,
 }
 
@@ -46,7 +46,10 @@ export class PlaywrightClient implements PlaywrightClientLike {
 	}
 
 	async reopenPage(incognito = false): Promise<void> {
-		this.browser.close
+		for (const page of await this.page.context().pages()) {
+			await page.close()
+		}
+
 		if (incognito) {
 			const context = await this.browser.newContext()
 			this.page = await context.newPage()

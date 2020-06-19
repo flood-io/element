@@ -62,7 +62,7 @@ export class Runner {
 		const options: Partial<ConcreteLaunchOptions> = this.launchOptionOverrides
 		options.ignoreHTTPSError = settings.ignoreHTTPSError
 		if (settings.viewport) {
-			options.defaultViewport = settings.viewport
+			options.viewport = settings.viewport
 			settings.device = null
 		}
 		if (settings.browserType) {
@@ -118,7 +118,6 @@ export class Runner {
 			this.looper.killer = () => cancelToken.cancel()
 			await this.looper.run(async iteration => {
 				this.logger.info(`Starting iteration ${iteration}`)
-
 				const startTime = new Date()
 				try {
 					await test.runWithCancellation(iteration, cancelToken, this.looper)

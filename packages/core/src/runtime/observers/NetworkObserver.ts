@@ -37,15 +37,15 @@ export default class Observer {
 		this.networkRecorder.attachEvent('domcontentloaded', event => this.onDOMContentLoaded(event))
 
 		this.networkRecorder.attachEvent('framenavigated', event => this.onNavigate(event))
-		// this.networkRecorder.attachEvent('Page.frameStartedLoading', event =>
-		// 	this.onFrameStartedLoading(event),
-		// )
-		// this.networkRecorder.attachEvent('Page.frameStoppedLoading', event =>
-		// 	this.onFrameStoppedLoading(event),
-		// )
-		// this.networkRecorder.attachEvent('Page.frameClearedScheduledNavigation', event =>
-		// 	this.onFrameClearedScheduledNavigation(event),
-		// )
+		this.networkRecorder.attachEvent('Page.frameStartedLoading', event =>
+			this.onFrameStartedLoading(event),
+		)
+		this.networkRecorder.attachEvent('Page.frameStoppedLoading', event =>
+			this.onFrameStoppedLoading(event),
+		)
+		this.networkRecorder.attachEvent('Page.frameClearedScheduledNavigation', event =>
+			this.onFrameClearedScheduledNavigation(event),
+		)
 
 		this.networkRecorder.attachEvent('Network.requestWillBeSent', event =>
 			this.onRawNetworkRequestWillBeSent(event),
@@ -120,4 +120,7 @@ export default class Observer {
 	}
 
 	private onNavigate(event: any): void {}
+	private onFrameStartedLoading(event: any): void {}
+	private onFrameClearedScheduledNavigation(event: any) {}
+	private onFrameStoppedLoading(event: any) {}
 }

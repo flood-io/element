@@ -119,7 +119,7 @@ export default class Test implements ITest {
 			),
 		)
 
-		await (await this.client).reopenPage(this.settings.incognito)
+		await this.client.reopenPage(this.settings.incognito)
 		await this.requestInterceptor.attach(this.client.page)
 
 		this.testCancel = async () => {

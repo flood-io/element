@@ -1,5 +1,5 @@
 import { sum, mean } from 'd3-array'
-import { Page as PlaywrightPage } from 'playwright'
+import { Page as PlaywrightPage, ChromiumBrowserContext } from 'playwright'
 import { Entry, RawResponse, EntryRequest, Page, EntryResponse } from './Protocol'
 import { AsyncQueue } from '../utils/AsyncQueue'
 import { Manager } from './Manager'
@@ -293,6 +293,10 @@ export default class Recorder {
 	 * @param {(event: any) => void} handler
 	 */
 	public attachEvent(pageEvent: any, handler: (event?: any) => void) {
+		/**
+		 * NOTES
+		 * add event handle for page
+		 */
 		// if (pageEvent.includes('.')) {
 		// 	;(this.page as any)['_client'].on(pageEvent, handler)
 		// } else {
@@ -308,8 +312,8 @@ export default class Recorder {
 		return this.entries.find(entry => entry.requestId === requestId)
 	}
 
-	private async privateClientSend(method: string, ...args: any[]): Promise<any> {
-		const client = await this.page['target']().createCDPSession()
+	private async privateClientSend(method: any, ...args: any[]): Promise<any> {
+		const client = await (this.page.context() as ChromiumBrowserContext).newCDPSession(this.page)
 		return client.send(method, ...args)
 	}
 

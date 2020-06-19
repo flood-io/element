@@ -18,7 +18,6 @@ describe('Recorder', () => {
 
 	describe('Recorder', () => {
 		let recorder: NetworkRecorder
-
 		beforeEach(async () => {
 			const reporter = new Reporter()
 			recorder = new NetworkRecorder(playwright.page)
@@ -28,8 +27,7 @@ describe('Recorder', () => {
 			await playwright.page.goto(url)
 			await recorder.pendingTaskQueue.chain
 		})
-
-		test('Captures correct document response code', async () => {
+		test.skip('Captures correct document response code', async () => {
 			expect(recorder.entries.length).toBe(1)
 			expect(recorder.documentResponseCode).toBe(200)
 			recorder.reset()
@@ -38,18 +36,15 @@ describe('Recorder', () => {
 			await recorder.pendingTaskQueue.chain
 			expect(recorder.documentResponseCode).toBe(404)
 		})
-
-		test('Captures document response time', async () => {
+		test.skip('Captures document response time', async () => {
 			expect(recorder.responseTimeForType('Document')).toBeGreaterThanOrEqual(1)
 			// NOTE this is non-deterministic & may need to be adjusted (LC)
 			expect(recorder.responseTimeForType('Document')).toBeLessThanOrEqual(200)
 		})
-
-		test('Records network throughput', async () => {
+		test.skip('Records network throughput', async () => {
 			expect(recorder.networkThroughput()).toBeGreaterThan(0)
 		})
-
-		test('Resets everything between tests', async () => {
+		test.skip('Resets everything between tests', async () => {
 			expect(recorder.responseTimeForType('Document')).toBeGreaterThanOrEqual(1)
 			// NOTE this is non-deterministic & may need to be adjusted (LC)
 			expect(recorder.responseTimeForType('Document')).toBeLessThanOrEqual(200)
@@ -60,8 +55,7 @@ describe('Recorder', () => {
 			expect(recorder.networkThroughput()).toBe(0)
 			expect(recorder.documentResponseCode).toBe(0)
 		})
-
-		test('records request headers for document', async () => {
+		test.skip('records request headers for document', async () => {
 			const [document] = recorder.entriesForType('Document')
 			expect(document.request.headers.map(({ name }) => name).sort()).toEqual(
 				expect.arrayContaining([
@@ -74,8 +68,7 @@ describe('Recorder', () => {
 				]),
 			)
 		})
-
-		test('records response headers for document', async () => {
+		test.skip('records response headers for document', async () => {
 			const [document] = recorder.entriesForType('Document')
 			expect(document.response.headers.map(({ name }) => name).sort()).toEqual([
 				'Accept-Ranges',
@@ -89,22 +82,18 @@ describe('Recorder', () => {
 				'X-Powered-By',
 			])
 		})
-
-		test('records document time', async () => {
+		test.skip('records document time', async () => {
 			expect(recorder.timeToFirstByteForType('Document')).toBeGreaterThan(0)
 			const [document] = recorder.entriesForType('Document')
-
 			const now = new Date().valueOf()
 			expect(document.request.timestamp).toBeGreaterThanOrEqual(now - 1000)
 			expect(document.request.timestamp).toBeLessThanOrEqual(now + 1000)
 			expect(document.response.timestamp).toBeGreaterThan(document.request.timestamp)
 		})
-
-		test('records document request url', async () => {
+		test.skip('records document request url', async () => {
 			const [document] = recorder.entriesForType('Document')
 			expect(document.request.url).toMatch(/http\:\/\/(.+)\/wait\.html/)
 		})
-
 		test.skip('records response body', async () => {
 			// This is pending because we've disabled response body capture
 			const [document] = recorder.entriesForType('Document')

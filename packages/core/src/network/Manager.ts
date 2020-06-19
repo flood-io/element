@@ -63,6 +63,9 @@ export class Manager {
 		 * NOTES
 		 * should update this for playwright
 		 */
+		// const browserContext = this.page.context() as ChromiumBrowserContext
+		// const client = await browserContext.newCDPSession(this.page)
+
 		const client: EventEmitter = (this.page as any)['_client']
 		if (client) {
 			client.on('Network.requestWillBeSent', this.onRequestWillBeSent.bind(this))
@@ -90,6 +93,7 @@ export class Manager {
 		requestPayload: any,
 		frameId: string,
 	) {
+		console.log(requestId)
 		if (requestId) this.requestIdToRequest.set(requestId, null)
 	}
 

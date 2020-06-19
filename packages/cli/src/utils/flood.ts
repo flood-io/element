@@ -23,7 +23,7 @@ interface Config {
 export interface LaunchOptions {
 	file: string
 	hosted: boolean
-	virtualUser: number
+	virtualUsers: number
 	duration: number
 	rampup: number
 }
@@ -136,10 +136,10 @@ export async function getHostedGrids(): Promise<Grid[]> {
 }
 
 export function countVUH(options: LaunchOptions, gridCount: number) {
-	const { virtualUser, duration } = options
+	const { virtualUsers, duration } = options
 	const billingDuration = (duration - (duration % 15) + (duration % 15 ? 1 : 0) * 15) / 60
 
-	return virtualUser * gridCount * billingDuration
+	return virtualUsers * gridCount * billingDuration
 }
 
 export async function authenticate(username: string): Promise<void> {
@@ -158,13 +158,13 @@ export async function authenticate(username: string): Promise<void> {
 }
 
 function createFormData(config: Config, options: LaunchOptions): FormData {
-	const { file, virtualUser, rampup, duration } = options
+	const { file, virtualUsers, rampup, duration } = options
 	const data = new FormData()
 
 	data.append('flood[tool]', 'flood-chrome')
 	data.append('flood[project]', (config.project as any).name)
 	data.append('flood_files[]', createReadStream(file))
-	data.append('flood[threads]', virtualUser)
+	data.append('flood[threads]', virtualUsers)
 	data.append('flood[rampup]', rampup)
 	data.append('flood[duration]', duration * 60)
 	return data

@@ -7,7 +7,7 @@ import { configAvailable } from '../../utils/flood'
 interface FloodRunArguments extends Arguments {
 	file: string
 	hosted: boolean
-	virtualUser: number
+	virtualUsers: number
 	duration: number
 	rampup: number
 }
@@ -38,11 +38,11 @@ const cmd: CommandModule = {
 				type: 'boolean',
 				default: false,
 			})
-			.option('virtual-user', {
+			.option('virtual-users', {
 				group: 'Flood options:',
 				alias: 'vu',
 				describe:
-					'Number of users per region (when using hosted grid) or per node (when using on-demand grid)',
+					'Number of users per region (when using on-demand grid) or per node (when using hosted grid)',
 				type: 'number',
 				default: 500,
 			})

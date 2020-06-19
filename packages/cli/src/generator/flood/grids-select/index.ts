@@ -3,7 +3,7 @@ import ora from 'ora'
 
 import { LaunchOptions, getHostedGrids, launchHosted, Grid, countVUH } from '../../../utils/flood'
 
-export default class RegionsSelect extends Generator {
+export default class GridsSelect extends Generator {
 	options: LaunchOptions
 	runningGrids: Grid[]
 	answers: {
@@ -25,10 +25,10 @@ export default class RegionsSelect extends Generator {
 
 	get _confirmMessage(): string {
 		const {
-			options: { virtualUser },
+			options: { virtualUsers },
 			answers: { grids },
 		} = this
-		const totalUsers = virtualUser * grids.length
+		const totalUsers = virtualUsers * grids.length
 
 		return `You're about to simulate ${totalUsers} total user${
 			totalUsers === 1 ? '' : 's'

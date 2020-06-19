@@ -31,11 +31,11 @@ export default class RegionsSelect extends Generator {
 
 	get _confirmMessage(): string {
 		const {
-			options: { virtualUser },
+			options: { virtualUsers },
 			answers: { regions },
 			_regionsString,
 		} = this
-		const totalUsers = virtualUser * regions.length
+		const totalUsers = virtualUsers * regions.length
 
 		return `You're about to simulate ${totalUsers} total user${
 			totalUsers === 1 ? '' : 's'

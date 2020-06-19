@@ -12,18 +12,16 @@ import {
 import assert from 'assert'
 
 export const settings: TestSettings = {
-	loopCount: 1,
-	waitTimeout: 10,
+	loopCount: 2,
 }
 export default () => {
 	beforeAll(async browser => {
 		await browser.visit('https://challenge.flood.io')
-		console.log('before all is running ....')
-	}, 15)
+	})
 
 	beforeEach(async () => {
 		console.log('before each is running ....')
-	}, 1)
+	})
 
 	step('Step 0', async browser => {
 		let locator = By.css('#new_challenger > input.btn.btn-xl.btn-default')
@@ -32,6 +30,7 @@ export default () => {
 		let element = await browser.findElement(locator)
 		await element.click()
 	})
+
 	step('Step 1', async browser => {
 		// await browser['waitForNavigationComplete']()
 		await browser.wait(Until.elementIsVisible(By.id('challenger_age')))

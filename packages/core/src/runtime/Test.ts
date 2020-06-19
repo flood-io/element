@@ -140,8 +140,10 @@ export default class Test implements ITest {
 		debug('run() start')
 
 		const { testData } = this.script
+		let browser: Browser<Step>
+		let testDataRecord: any
 		try {
-			const browser = new Browser<Step>(
+			browser = new Browser<Step>(
 				this.script.runEnv.workRoot,
 				this.client,
 				this.settings,
@@ -162,7 +164,7 @@ export default class Test implements ITest {
 			await testObserver.before(this)
 
 			debug('Feeding data')
-			const testDataRecord = testData.feed()
+			testDataRecord = testData.feed()
 			if (testDataRecord === null) {
 				throw new Error('Test data exhausted, consider making it circular?')
 			} else {
@@ -249,6 +251,8 @@ export default class Test implements ITest {
 
 			debug('running steps')
 			while (this.stepCount < this.steps.length) {
+				debug('running hook function: beforeEach')
+				await this.runHookFnc(this.hook.beforeEach, browser, testDataRecord)
 				const step = this.steps[this.stepCount]
 				const condition = await callCondition(step)
 				if (!condition) continue
@@ -278,10 +282,10 @@ export default class Test implements ITest {
 					throw Error('test failed')
 				}
 				this.stepCount += 1
-			}
 
-			debug('running hook function: afterAll')
-			await this.runHookFnc(this.hook.afterAll, browser, testDataRecord)
+				debug('running hook function: afterEach')
+				await this.runHookFnc(this.hook.afterEach, browser, testDataRecord)
+			}
 		} catch (err) {
 			console.log('error -> failed', err)
 			this.failed = true
@@ -289,9 +293,11 @@ export default class Test implements ITest {
 		} finally {
 			await this.requestInterceptor.detach(this.client.page)
 		}
-
 		// TODO report skipped steps
 		await testObserver.after(this)
+
+		debug('running hook function: afterAll')
+		await this.runHookFnc(this.hook.afterAll, browser, testDataRecord)
 	}
 
 	get currentURL(): string {
@@ -314,9 +320,6 @@ export default class Test implements ITest {
 		const originalBrowserSettings = { ...browser.settings }
 
 		try {
-			debug('running hook function: beforeEach')
-			await this.runHookFnc(this.hook.beforeEach, browser, testDataRecord)
-
 			debug(`Run step: ${step.name}`) // ${step.fn.toString()}`)
 			browser.settings = { ...this.settings, ...step.options }
 			await step.fn.call(null, browser, testDataRecord)
@@ -335,9 +338,6 @@ export default class Test implements ITest {
 		} else {
 			await testObserver.onStepPassed(this, step)
 		}
-
-		debug('running hook function: afterEach')
-		await this.runHookFnc(this.hook.afterEach, browser, testDataRecord)
 
 		await testObserver.afterStep(this, step)
 

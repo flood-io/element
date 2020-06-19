@@ -267,7 +267,9 @@ export class Browser<T> implements BrowserInterface {
 		const element = await this.findElement(locatable)
 
 		return this.evaluate(
-			(element: HTMLSelectElement, values) => {
+			(args: any[]) => {
+				const [element, values] = args as [HTMLSelectElement, any]
+
 				if (element.nodeName.toLowerCase() !== 'select')
 					throw new Error('Element is not a <select> element.')
 
@@ -278,8 +280,7 @@ export class Browser<T> implements BrowserInterface {
 				element.dispatchEvent(new Event('change', { bubbles: true }))
 				return options.filter(option => option.selected).map(option => option.value)
 			},
-			element.element,
-			values,
+			[element.element, values],
 		)
 	}
 
@@ -290,7 +291,8 @@ export class Browser<T> implements BrowserInterface {
 		const element = await this.findElement(locatable)
 
 		return this.evaluate(
-			(element: HTMLSelectElement, index: number) => {
+			(args: any[]) => {
+				const [element, index] = args as [HTMLSelectElement, number]
 				if (element.nodeName.toLowerCase() !== 'select')
 					throw new Error('Element is not a <select> element.')
 
@@ -302,8 +304,7 @@ export class Browser<T> implements BrowserInterface {
 				element.dispatchEvent(new Event('change', { bubbles: true }))
 				return options.filter(option => option.selected).map(option => option.value)
 			},
-			element.element,
-			index,
+			[element.element, index],
 		)
 	}
 
@@ -313,7 +314,8 @@ export class Browser<T> implements BrowserInterface {
 		const element = await this.findElement(locatable)
 
 		return this.evaluate(
-			(element: HTMLSelectElement, text) => {
+			(args: any[]) => {
+				const [element, text] = args as [HTMLSelectElement, string]
 				if (element.nodeName.toLowerCase() !== 'select')
 					throw new Error('Element is not a <select> element.')
 
@@ -327,8 +329,7 @@ export class Browser<T> implements BrowserInterface {
 				element.dispatchEvent(new Event('change', { bubbles: true }))
 				return options.filter(option => option.selected).map(option => option.value)
 			},
-			element.element,
-			text,
+			[element.element, text],
 		)
 	}
 
@@ -559,8 +560,16 @@ export class Browser<T> implements BrowserInterface {
 	}
 
 	public async setCacheDisabled(cacheDisabled = true): Promise<void> {
-		const client = await this.page['target']().createCDPSession()
-		await client.send('Network.setCacheDisabled', { cacheDisabled })
+		/**
+		 * NOTES
+		 * handle CDPSession
+		 */
+		if (this.browserType === BROWSER_TYPE.CHROME) {
+			const client = await (this.page.context() as ChromiumBrowserContext).newCDPSession(this.page)
+			await client.send('Network.setCacheDisabled', { cacheDisabled })
+		} else {
+			console.warn('This kind of browser does not support CDPSession')
+		}
 	}
 
 	public fetchScreenshots() {

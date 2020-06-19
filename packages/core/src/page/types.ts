@@ -17,7 +17,7 @@ export type EvaluateFn<T = any> = string | ((arg1: T, ...args: any[]) => any)
 export interface PageGoToOptions {
 	timeout?: number
 	waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' | undefined
-	referer: string
+	referer?: string
 }
 
 /**

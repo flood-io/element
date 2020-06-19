@@ -140,7 +140,6 @@ export default class Test implements ITest {
 		debug('run() start')
 
 		const { testData } = this.script
-
 		try {
 			const browser = new Browser<Step>(
 				this.script.runEnv.workRoot,
@@ -246,7 +245,6 @@ export default class Test implements ITest {
 			}
 
 			debug('running hook function: beforeAll')
-			browser.settings = { ...this.settings }
 			await this.runHookFnc(this.hook.beforeAll, browser, testDataRecord)
 
 			debug('running steps')
@@ -314,13 +312,13 @@ export default class Test implements ITest {
 		await testObserver.beforeStep(this, step)
 
 		const originalBrowserSettings = { ...browser.settings }
-		debug(`Run step: ${step.name}`) // ${step.fn.toString()}`)
-		browser.settings = { ...this.settings, ...step.options }
 
 		try {
 			debug('running hook function: beforeEach')
 			await this.runHookFnc(this.hook.beforeEach, browser, testDataRecord)
 
+			debug(`Run step: ${step.name}`) // ${step.fn.toString()}`)
+			browser.settings = { ...this.settings, ...step.options }
 			await step.fn.call(null, browser, testDataRecord)
 		} catch (err) {
 			error = err
@@ -386,14 +384,16 @@ export default class Test implements ITest {
 	}
 
 	public async willRunCommand(testObserver: TestObserver, browser: Browser<Step>, command: string) {
-		const step: Step = browser.customContext
-		await testObserver.beforeStepAction(this, step, command)
-
-		debug(`Before action: '${command}()' waiting on actionDelay: ${this.settings.actionDelay}`)
+		if (browser.customContext) {
+			await testObserver.beforeStepAction(this, browser.customContext, command)
+			debug(`Before action: '${command}()' waiting on actionDelay: ${this.settings.actionDelay}`)
+		}
 	}
 
 	async didRunCommand(testObserver: TestObserver, browser: Browser<Step>, command: string) {
-		await testObserver.afterStepAction(this, browser.customContext, command)
+		if (browser.customContext) {
+			await testObserver.afterStepAction(this, browser.customContext, command)
+		}
 	}
 
 	public async takeScreenshot(options?: ScreenshotOptions) {
@@ -418,21 +418,23 @@ export default class Test implements ITest {
 	): Promise<void> {
 		try {
 			for (const hook of hooks) {
+				browser.settings = { ...this.settings }
+				browser.settings.waitTimeout = hook.waitTimeout
 				const hookFunc = hook.fn.bind(null, browser, testDataRecord)
-				await this.doHookFncWithTimeout(hookFunc, hook.timeout)
+				await this.doHookFncWithTimeout(hookFunc, hook.waitTimeout)
 			}
 		} catch (error) {
 			throw new Error(error)
 		}
 	}
 
-	private async doHookFncWithTimeout(func: any, timeout?: number): Promise<any> {
+	private async doHookFncWithTimeout(func: any, timeout: number): Promise<any> {
 		// Create a promise that rejects in <ms> milliseconds
-		const promiseTimeout = new Promise((resolve, reject) => {
+		const promiseTimeout = new Promise((_, reject) => {
 			const id = setTimeout(() => {
 				clearTimeout(id)
 				reject()
-			}, timeout)
+			}, timeout * 1e3)
 		})
 		// Returns a race between our timeout and the passed in promise
 		return Promise.race([func(), promiseTimeout])

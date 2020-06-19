@@ -1,17 +1,17 @@
 import { Browser } from './types'
 
-export declare function afterAll(fnc: HookFn, timeout?: number): void
-export declare function afterEach(fnc: HookFn, timeout?: number): void
-export declare function beforeAll(fnc: HookFn, timeout?: number): void
-export declare function beforeEach(fnc: HookFn, timeout?: number): void
+export declare function afterAll(fnc: HookFn, waitTimeout?: number): void
+export declare function afterEach(fnc: HookFn, waitTimeout?: number): void
+export declare function beforeAll(fnc: HookFn, waitTimeout?: number): void
+export declare function beforeEach(fnc: HookFn, waitTimeout?: number): void
 
 export type HookFn = (this: void, browser: Browser) => Promise<any>
-export interface HookBase {
+export type HookBase = {
 	fn: HookFn
-	timeout?: number
+	waitTimeout: number
 }
 
-export interface Hook {
+export type Hook = {
 	afterAll: HookBase[]
 	afterEach: HookBase[]
 	beforeAll: HookBase[]
@@ -22,7 +22,7 @@ export interface Hook {
  * @internal
  */
 export function normalizeHookBase(hookBase: HookBase): HookBase {
-	const { timeout } = hookBase
-	hookBase.timeout = timeout && timeout > 0 ? timeout : 30 * 1e3
+	const { waitTimeout } = hookBase
+	hookBase.waitTimeout = waitTimeout && waitTimeout > 0 ? waitTimeout : 30 * 1e3
 	return hookBase
 }

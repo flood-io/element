@@ -23,7 +23,7 @@
 			"args": [
 				"${workspaceFolder}/packages/cli/bin/element.ts",
 				"run",
-				"./examples/condition/test.ts",
+				"./examples/auto-wait/test.ts",
 				"--devtools",
 				"--debug"
 			],

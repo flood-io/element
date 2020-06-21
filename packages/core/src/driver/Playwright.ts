@@ -40,6 +40,8 @@ export class PlaywrightClient implements PlaywrightClientLike {
 	constructor(public browser: Browser, public page: Page) {}
 
 	private _isClosed = false
+	private firstRun = true
+
 	async close(): Promise<void> {
 		if (this._isClosed) return
 		await this.browser.close()
@@ -47,8 +49,11 @@ export class PlaywrightClient implements PlaywrightClientLike {
 	}
 
 	async reopenPage(incognito = false): Promise<void> {
+		if (this.firstRun) {
+			this.firstRun = false
+			return
+		}
 		await this.closePages()
-
 		if (incognito) {
 			const context = await this.browser.newContext()
 			this.page = await context.newPage()

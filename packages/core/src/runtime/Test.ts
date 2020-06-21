@@ -161,23 +161,22 @@ export default class Test implements ITest {
 		iteration += 1
 		try {
 			const result = await recoveryStep.fn.call(null, browser)
+			const { repeat } = step.options
 			if (result === RecoverWith.CONTINUE) {
 				this.stepCount += 1
 			} else if (result === RecoverWith.RESTART) {
 				looper.restartLoop()
 				this.stepCount = this.steps.length
-				if (step.options.repeat) {
-					step.options.repeat.iteration = 0
-				}
+				if (repeat) repeat.iteration = 0
 			} else if (result === RecoverWith.RETRY) {
-				if (step.options.repeat) {
-					step.options.repeat.iteration -= 1
+				if (repeat) {
+					repeat.iteration -= 1
+					this.stepCount += 1
 				}
 			}
 		} catch (err) {
 			return false
 		}
-		if (this.failed) this.stepCount += 1
 
 		this.failed = false
 		return true

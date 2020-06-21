@@ -1,14 +1,15 @@
 import Interceptor from '../network/Interceptor'
 import { Browser } from './Browser'
+import { Browser as BrowserInterface } from './types'
 
 import { IReporter } from '../Reporter'
 import { NullReporter } from '../reporter/Null'
 import { ObjectTrace } from '../utils/ObjectTrace'
 
-import { TestObserver, NullTestObserver } from './observers/TestObserver'
-import LifecycleObserver from './observers/Lifecycle'
-import ErrorObserver from './observers/Errors'
-import InnerObserver from './observers/Inner'
+import { TestObserver, NullTestObserver } from './test-observers/Observer'
+import LifecycleObserver from './test-observers/Lifecycle'
+import ErrorObserver from './test-observers/Errors'
+import InnerObserver from './test-observers/Inner'
 
 import { AnyErrorData, EmptyErrorData, AssertionErrorData } from './errors/Types'
 import { StructuredError } from '../utils/StructuredError'
@@ -18,14 +19,14 @@ import { Looper } from '../Looper'
 
 import { CancellationToken } from '../utils/CancellationToken'
 
+import { PuppeteerClientLike } from '../driver/Puppeteer'
+import { ScreenshotOptions } from 'puppeteer'
 import { TestSettings, ConcreteTestSettings, DEFAULT_STEP_WAIT_SECONDS } from './Settings'
-import { ITest } from '../interface/ITest'
+import { ITest } from './ITest'
 import { EvaluatedScriptLike } from './EvaluatedScriptLike'
-import { TimingObserver } from './observers/TimingObserver'
-import { Context } from './observers/Context'
-import { NetworkRecordingTestObserver } from './observers/NetworkRecordingTestObserver'
-import { PlaywrightClientLike } from '../driver/Playwright'
-import { ScreenshotOptions } from '../page/types'
+import { TimingObserver } from './test-observers/TimingObserver'
+import { Context } from './test-observers/Context'
+import { NetworkRecordingTestObserver } from './test-observers/NetworkRecordingTestObserver'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:test')
@@ -54,7 +55,7 @@ export default class Test implements ITest {
 	}
 
 	constructor(
-		public client: PlaywrightClientLike,
+		public client: PuppeteerClientLike,
 		public script: EvaluatedScriptLike,
 		public reporter: IReporter = new NullReporter(),
 		settingsOverride: TestSettings,
@@ -89,6 +90,98 @@ export default class Test implements ITest {
 		await this.script.beforeTestRun()
 	}
 
+	public async callPredicate(predicate: ConditionFn, browser: BrowserInterface): Promise<boolean> {
+		let condition = false
+		try {
+			condition = await predicate.call(null, browser)
+		} catch (err) {
+			console.log(err.message)
+		}
+		if (!condition) this.stepCount += 1
+		return condition
+	}
+
+	public async callCondition(
+		step: Step,
+		iteration: number,
+		browser: BrowserInterface,
+	): Promise<boolean> {
+		const { once, skip, pending, repeat, stepWhile } = step.options
+
+		if (pending) {
+			console.log(`(Pending) ${step.name}`)
+			this.stepCount += 1
+			return false
+		}
+
+		if (once && iteration > 1) {
+			this.stepCount += 1
+			return false
+		}
+
+		if (skip) {
+			console.log(`Skip test ${step.name}`)
+			this.stepCount += 1
+			return false
+		}
+
+		if (repeat) {
+			if (repeat.iteration < repeat.count - 1) {
+				this.stepCount -= 1
+				repeat.iteration += 1
+			} else {
+				repeat.iteration = 0
+			}
+		}
+
+		if (stepWhile) {
+			const { predicate } = stepWhile
+			const result = await this.callPredicate(predicate, browser)
+			if (result) this.stepCount -= 1
+			return result
+		}
+
+		return true
+	}
+
+	public async callRecovery(
+		step: Step,
+		looper: Looper,
+		browser: BrowserInterface,
+	): Promise<boolean> {
+		if (!this.recoverySteps[step.name]) return false
+		let { iteration } = this.recoverySteps[step.name]
+		const { recoveryStep, loopCount } = this.recoverySteps[step.name]
+		const { recoveryTries } = this.settings
+		const settingRecoveryCount = loopCount || recoveryTries || 1
+		if (!recoveryStep || iteration >= settingRecoveryCount) {
+			iteration = 0
+			return false
+		}
+		iteration += 1
+		try {
+			const result = await recoveryStep.fn.call(null, browser)
+			const { repeat } = step.options
+			if (result === RecoverWith.CONTINUE) {
+				this.stepCount += 1
+			} else if (result === RecoverWith.RESTART) {
+				looper.restartLoop()
+				this.stepCount = this.steps.length
+				if (repeat) repeat.iteration = 0
+			} else if (result === RecoverWith.RETRY) {
+				if (repeat) {
+					repeat.iteration -= 1
+					this.stepCount += 1
+				}
+			}
+		} catch (err) {
+			return false
+		}
+
+		this.failed = false
+		return true
+	}
+
 	/**
 	 * Runs the group of steps
 	 * @return {Promise<void|Error>}
@@ -107,7 +200,9 @@ export default class Test implements ITest {
 		looper: Looper,
 	): Promise<void> {
 		console.assert(this.client, `client is not configured in Test`)
+
 		const ctx = new Context()
+
 		const testObserver = new ErrorObserver(
 			new LifecycleObserver(
 				this.testObserverFactory(
@@ -119,7 +214,7 @@ export default class Test implements ITest {
 			),
 		)
 
-		await this.client.reopenPage(this.settings.incognito)
+		await (await this.client).reopenPage(this.settings.incognito)
 		await this.requestInterceptor.attach(this.client.page)
 
 		this.testCancel = async () => {
@@ -166,91 +261,15 @@ export default class Test implements ITest {
 				debug(JSON.stringify(testDataRecord))
 			}
 
-			const callPredicate = async (predicate: ConditionFn): Promise<boolean> => {
-				let condition = false
-				try {
-					condition = await predicate.call(null, browser)
-				} catch (err) {
-					console.log(err.message)
-				}
-				if (!condition) this.stepCount += 1
-				return condition
-			}
-
-			const callCondition = async (step: Step): Promise<boolean> => {
-				const { once, skip, pending, repeat, stepWhile } = step.options
-
-				if (pending) {
-					console.log(`(Pending) ${step.name}`)
-					this.stepCount += 1
-					return false
-				}
-
-				if (once && iteration > 1) {
-					this.stepCount += 1
-					return false
-				}
-
-				if (skip) {
-					console.log(`Skip test ${step.name}`)
-					this.stepCount += 1
-					return false
-				}
-
-				if (repeat) {
-					if (repeat.iteration < repeat.count - 1) {
-						this.stepCount -= 1
-						repeat.iteration += 1
-					} else {
-						repeat.iteration = 0
-					}
-				}
-
-				if (stepWhile) {
-					const { predicate } = stepWhile
-					const result = await callPredicate(predicate)
-					if (result) this.stepCount -= 1
-					return result
-				}
-
-				return true
-			}
-
-			const callRecovery = async (step: Step): Promise<boolean> => {
-				if (!this.recoverySteps.length) return false
-				let { iteration } = this.recoverySteps[step.name]
-				const { recoveryStep, loopCount } = this.recoverySteps[step.name]
-				const { recoveryTries } = this.settings
-				const settingRecoveryCount = loopCount || recoveryTries || 1
-				if (!recoveryStep || iteration >= settingRecoveryCount) {
-					iteration = 0
-					return false
-				}
-				iteration += 1
-				try {
-					const result = await recoveryStep.fn.call(null, browser)
-					if (result === RecoverWith.CONTINUE) {
-						this.stepCount += 1
-					} else if (result === RecoverWith.RESTART) {
-						looper.restartLoop()
-						this.stepCount = this.steps.length
-					}
-				} catch (err) {
-					return false
-				}
-				this.failed = false
-				return true
-			}
-
 			debug('running steps')
 			while (this.stepCount < this.steps.length) {
 				const step = this.steps[this.stepCount]
-				const condition = await callCondition(step)
+				const condition = await this.callCondition(step, iteration, browser)
 				if (!condition) continue
 
 				const { predicate } = step.options
 				if (predicate) {
-					const condition = await callPredicate(predicate)
+					const condition = await this.callPredicate(predicate, browser)
 					if (!condition) {
 						debug('condition failling')
 						continue
@@ -267,7 +286,7 @@ export default class Test implements ITest {
 				if (cancelToken.isCancellationRequested) return
 
 				if (this.failed) {
-					const result = await callRecovery(step)
+					const result = await this.callRecovery(step, looper, browser)
 					if (result) continue
 					console.log('failed, bailing out of steps')
 					throw Error('test failed')

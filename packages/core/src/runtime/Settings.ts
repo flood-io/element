@@ -1,4 +1,3 @@
-import CustomDeviceDescriptors from '../utils/CustomDeviceDescriptors'
 import { ViewportSize } from 'playwright'
 import { BROWSER_TYPE } from '../driver/Playwright'
 /**
@@ -260,7 +259,7 @@ export const DEFAULT_SETTINGS: ConcreteTestSettings = {
 	 * by default, don't filter any console messages from the browser
 	 */
 	consoleFilter: [],
-	userAgent: CustomDeviceDescriptors['Chrome Desktop Large'].userAgent,
+	userAgent: '',
 	device: null,
 	ignoreHTTPSError: false,
 	browserType: BROWSER_TYPE.CHROME,

@@ -119,7 +119,7 @@ export default class Test implements ITest {
 			),
 		)
 
-		await this.client.reopenPage(this.settings.incognito)
+		// await this.client.reopenPage(this.settings.incognito)
 		await this.requestInterceptor.attach(this.client.page)
 
 		this.testCancel = async () => {
@@ -129,8 +129,6 @@ export default class Test implements ITest {
 		this.failed = false
 		this.runningBrowser = null
 		this.stepCount = 0
-
-		// await this.observer.attachToNetworkRecorder()
 
 		debug('run() start')
 
@@ -217,7 +215,7 @@ export default class Test implements ITest {
 			}
 
 			const callRecovery = async (step: Step): Promise<boolean> => {
-				if (!this.recoverySteps.length) return false
+				if (!this.recoverySteps[step.name]) return false
 				let { iteration } = this.recoverySteps[step.name]
 				const { recoveryStep, loopCount } = this.recoverySteps[step.name]
 				const { recoveryTries } = this.settings
@@ -229,11 +227,18 @@ export default class Test implements ITest {
 				iteration += 1
 				try {
 					const result = await recoveryStep.fn.call(null, browser)
+					const { repeat } = step.options
 					if (result === RecoverWith.CONTINUE) {
 						this.stepCount += 1
 					} else if (result === RecoverWith.RESTART) {
 						looper.restartLoop()
 						this.stepCount = this.steps.length
+						if (repeat) repeat.iteration = 0
+					} else if (result === RecoverWith.RETRY) {
+						if (repeat) {
+							repeat.iteration -= 1
+							this.stepCount += 1
+						}
 					}
 				} catch (err) {
 					return false

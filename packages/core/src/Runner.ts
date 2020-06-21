@@ -29,7 +29,7 @@ function delay(t: number, v?: any) {
 export class Runner {
 	protected looper: Looper
 	running = true
-	public clientPromise: Promise<PlaywrightClient> | undefined
+	public client: PlaywrightClient | undefined
 
 	constructor(
 		private clientFactory: AsyncFactory<PlaywrightClient>,
@@ -44,16 +44,16 @@ export class Runner {
 	async stop(): Promise<void> {
 		this.running = false
 		if (this.looper) await this.looper.kill()
-		if (this.clientPromise) (await this.clientPromise).close()
+		if (this.client) (await this.client).close()
 		return
 	}
 
 	async run(testScriptFactory: AsyncFactory<EvaluatedScript>): Promise<void> {
 		const testScript = await testScriptFactory()
 
-		this.clientPromise = this.launchClient(testScript)
+		this.client = await this.launchClient(testScript)
 
-		await this.runTestScript(testScript, this.clientPromise)
+		await this.runTestScript(testScript, this.client)
 	}
 
 	async launchClient(testScript: EvaluatedScript): Promise<PlaywrightClient> {
@@ -74,17 +74,14 @@ export class Runner {
 		return this.clientFactory(options)
 	}
 
-	async runTestScript(
-		testScript: EvaluatedScript,
-		clientPromise: Promise<PlaywrightClient>,
-	): Promise<void> {
+	async runTestScript(testScript: EvaluatedScript, client: PlaywrightClient): Promise<void> {
 		if (!this.running) return
 
 		let testToCancel: Test | undefined
 
 		try {
 			const test = new Test(
-				await clientPromise,
+				client,
 				testScript,
 				this.reporter,
 				this.testSettingOverrides,
@@ -154,7 +151,7 @@ export class Runner {
 
 export class PersistentRunner extends Runner {
 	public testScriptFactory: AsyncFactory<EvaluatedScript> | undefined
-	public clientPromise: Promise<PlaywrightClient> | undefined
+	public client: PlaywrightClient | undefined
 	private stopped = false
 
 	constructor(
@@ -188,8 +185,8 @@ export class PersistentRunner extends Runner {
 
 	async runNextTest() {
 		// destructure for type checking (narrowing past undefined)
-		const { clientPromise, testScriptFactory } = this
-		if (clientPromise === undefined) {
+		const { client, testScriptFactory } = this
+		if (client === undefined) {
 			return
 		}
 		if (testScriptFactory === undefined) {
@@ -201,7 +198,7 @@ export class PersistentRunner extends Runner {
 		}
 
 		try {
-			await this.runTestScript(await testScriptFactory(), clientPromise)
+			await this.runTestScript(await testScriptFactory(), client)
 		} catch (err) {
 			this.logger.error('an error occurred in the script')
 			this.logger.error(err)
@@ -227,7 +224,7 @@ export class PersistentRunner extends Runner {
 		this.testScriptFactory = testScriptFactory
 
 		// TODO detect changes in testScript settings affecting the client
-		this.clientPromise = this.launchClient(await testScriptFactory())
+		this.client = await this.launchClient(await testScriptFactory())
 
 		this.rerunTest()
 		await this.waitUntilStopped()

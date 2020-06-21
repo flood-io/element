@@ -33,6 +33,7 @@ export interface PlaywrightClientLike {
 	page: Page
 	close(): Promise<void>
 	reopenPage(incognito: boolean): Promise<void>
+	closePages(): Promise<void>
 }
 
 export class PlaywrightClient implements PlaywrightClientLike {
@@ -46,15 +47,20 @@ export class PlaywrightClient implements PlaywrightClientLike {
 	}
 
 	async reopenPage(incognito = false): Promise<void> {
-		for (const page of await this.page.context().pages()) {
-			await page.close()
-		}
+		await this.closePages()
 
 		if (incognito) {
 			const context = await this.browser.newContext()
 			this.page = await context.newPage()
 		} else {
 			this.page = await this.browser.newPage()
+		}
+	}
+
+	async closePages(): Promise<void> {
+		const pages = await this.page.context().pages()
+		for (const page of pages) {
+			await page.close()
 		}
 	}
 }
@@ -94,7 +100,11 @@ export class NullPlaywrightClient implements PlaywrightClientLike {
 	async close(): Promise<void> {
 		return
 	}
-	async reopenPage() {
+	async reopenPage(): Promise<void> {
+		return
+	}
+
+	async closePages(): Promise<void> {
 		return
 	}
 }

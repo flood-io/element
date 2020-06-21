@@ -219,6 +219,7 @@ export default class Test implements ITest {
 			}
 
 			const callRecovery = async (step: Step): Promise<boolean> => {
+				if (!this.recoverySteps[step.name]) return false
 				let { iteration } = this.recoverySteps[step.name]
 				const { recoveryStep, loopCount } = this.recoverySteps[step.name]
 				const { recoveryTries } = this.settings
@@ -235,10 +236,19 @@ export default class Test implements ITest {
 					} else if (result === RecoverWith.RESTART) {
 						looper.restartLoop()
 						this.stepCount = this.steps.length
+						if (step.options.repeat) {
+							step.options.repeat.iteration = 0
+						}
+					} else if (result === RecoverWith.RETRY) {
+						if (step.options.repeat) {
+							step.options.repeat.iteration -= 1
+						}
 					}
 				} catch (err) {
 					return false
 				}
+				if (this.failed) this.stepCount += 1
+
 				this.failed = false
 				return true
 			}

@@ -22,7 +22,7 @@ export class Context {
 		this.networkRecorder = new NetworkRecorder(page)
 		await this.networkRecorder.attachEvents()
 		this.observer = new NetworkObserver(reporter, this.networkRecorder)
-		this.observer.attachToNetworkRecorder()
+		await this.observer.attachToNetworkRecorder()
 	}
 
 	public async syncNetworkRecorder() {

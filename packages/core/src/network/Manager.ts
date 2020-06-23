@@ -61,14 +61,17 @@ export class Manager {
 		 * should update this for playwright
 		 */
 		try {
-			const browserContext = this.page.context() as ChromiumBrowserContext
+			const browserContext = (await this.page.context()) as ChromiumBrowserContext
 			const client = await browserContext.newCDPSession(this.page)
 			if (client) {
+				// aborted at https://github.com/microsoft/playwright/pull/2254
 				client.on('Network.requestWillBeSent', this.onRequestWillBeSent.bind(this))
 				client.on('Network.requestIntercepted', this.onRequestIntercepted.bind(this))
 				client.on('Network.responseReceived', this.onResponseReceived.bind(this))
 				client.on('Network.loadingFinished', this.onLoadingFinished.bind(this))
 				client.on('Network.loadingFailed', this.onLoadingFailed.bind(this))
+			} else {
+				console.warn('This browser does not support CDPSession')
 			}
 		} catch (err) {
 			console.warn('This browser does not support CDPSession')

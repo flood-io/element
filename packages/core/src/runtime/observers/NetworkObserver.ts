@@ -23,44 +23,46 @@ export default class Observer {
 
 	constructor(private reporter: IReporter, public networkRecorder: NetworkRecorder) {}
 
-	public attachToNetworkRecorder() {
+	public async attachToNetworkRecorder() {
 		if (this.attached) return
 		debug('attachToNetworkRecorder()')
 		this.attached = true
 		this.failedRequests = []
 		this.requests = new Set()
-		this.attachPageEvents()
+		await this.attachPageEvents()
 	}
 
-	private attachPageEvents() {
-		this.networkRecorder.attachEvent('frameattached', event => this.onFrameAttached(event))
-		this.networkRecorder.attachEvent('domcontentloaded', event => this.onDOMContentLoaded(event))
+	private async attachPageEvents() {
+		await this.networkRecorder.attachEvent('frameattached', event => this.onFrameAttached(event))
+		await this.networkRecorder.attachEvent('domcontentloaded', event =>
+			this.onDOMContentLoaded(event),
+		)
 
-		this.networkRecorder.attachEvent('framenavigated', event => this.onNavigate(event))
-		this.networkRecorder.attachEvent('Page.frameStartedLoading', event =>
+		await this.networkRecorder.attachEvent('framenavigated', event => this.onNavigate(event))
+		await this.networkRecorder.attachEvent('Page.frameStartedLoading', event =>
 			this.onFrameStartedLoading(event),
 		)
-		this.networkRecorder.attachEvent('Page.frameStoppedLoading', event =>
+		await this.networkRecorder.attachEvent('Page.frameStoppedLoading', event =>
 			this.onFrameStoppedLoading(event),
 		)
-		this.networkRecorder.attachEvent('Page.frameClearedScheduledNavigation', event =>
+		await this.networkRecorder.attachEvent('Page.frameClearedScheduledNavigation', event =>
 			this.onFrameClearedScheduledNavigation(event),
 		)
 
-		this.networkRecorder.attachEvent('Network.requestWillBeSent', event =>
+		await this.networkRecorder.attachEvent('Network.requestWillBeSent', event =>
 			this.onRawNetworkRequestWillBeSent(event),
 		)
-		this.networkRecorder.attachEvent('Network.responseReceived', event =>
+		await this.networkRecorder.attachEvent('Network.responseReceived', event =>
 			this.onRawNetworkResponse(event),
 		)
-		this.networkRecorder.attachEvent('Network.loadingFinished', event =>
+		await this.networkRecorder.attachEvent('Network.loadingFinished', event =>
 			this.onRawNetworkLoadingFinished(event),
 		)
-		this.networkRecorder.attachEvent('Network.loadingFailed', event =>
+		await this.networkRecorder.attachEvent('Network.loadingFailed', event =>
 			this.onRawNetworkLoadingFailed(event),
 		)
 
-		this.networkRecorder.attachEvent('console', msg => {
+		await this.networkRecorder.attachEvent('console', msg => {
 			if (this.consoleFilters.length == 0 || !this.consoleFilters.includes(msg.type())) {
 				this.reporter.testScriptConsole(msg.type(), msg.text())
 			}

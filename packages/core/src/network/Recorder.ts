@@ -294,16 +294,18 @@ export default class Recorder {
 	 * @param {(playwright.PageEvents)} pageEvent
 	 * @param {(event: any) => void} handler
 	 */
-	public attachEvent(pageEvent: any, handler: (event?: any) => void) {
-		/**
-		 * NOTES
-		 * add event handle for page
-		 */
-		// if (pageEvent.includes('.')) {
-		// 	;(this.page as any)['_client'].on(pageEvent, handler)
-		// } else {
-		this.page.on(pageEvent, handler)
-		// }
+	public async attachEvent(pageEvent: any, handler: (event?: any) => void) {
+		if (pageEvent.includes('.')) {
+			const browserContext = (await this.page.context()) as ChromiumBrowserContext
+			const client = await browserContext.newCDPSession(this.page)
+			if (client) {
+				client.on(pageEvent, handler)
+			} else {
+				console.warn('This browser does not support CDPSession')
+			}
+		} else {
+			this.page.on(pageEvent, handler)
+		}
 	}
 
 	private recordPageResponse(payload: Page) {

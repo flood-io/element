@@ -1,5 +1,4 @@
-import { Page } from 'playwright'
-import { EventEmitter } from 'events'
+import { Page, ChromiumBrowserContext } from 'playwright'
 
 interface RequestEvent {
 	requestId: string
@@ -18,9 +17,7 @@ export class Manager {
 	private networkIdlePromise: Promise<any> | null
 	public timeout = 10e3
 
-	constructor(private page: Page, private requestIdToRequest = new Map<string, any>()) {
-		this.attachEvents()
-	}
+	constructor(private page: Page, private requestIdToRequest = new Map<string, any>()) {}
 
 	public async getIdlePromise(): Promise<void> {
 		console.log('get idle promise')
@@ -58,21 +55,23 @@ export class Manager {
 		this.updateIdlePromise()
 	}
 
-	private attachEvents() {
+	public async attachEvents() {
 		/**
 		 * NOTES
 		 * should update this for playwright
 		 */
-		// const browserContext = this.page.context() as ChromiumBrowserContext
-		// const client = await browserContext.newCDPSession(this.page)
-
-		const client: EventEmitter = (this.page as any)['_client']
-		if (client) {
-			client.on('Network.requestWillBeSent', this.onRequestWillBeSent.bind(this))
-			client.on('Network.requestIntercepted', this.onRequestIntercepted.bind(this))
-			client.on('Network.responseReceived', this.onResponseReceived.bind(this))
-			client.on('Network.loadingFinished', this.onLoadingFinished.bind(this))
-			client.on('Network.loadingFailed', this.onLoadingFailed.bind(this))
+		try {
+			const browserContext = this.page.context() as ChromiumBrowserContext
+			const client = await browserContext.newCDPSession(this.page)
+			if (client) {
+				client.on('Network.requestWillBeSent', this.onRequestWillBeSent.bind(this))
+				client.on('Network.requestIntercepted', this.onRequestIntercepted.bind(this))
+				client.on('Network.responseReceived', this.onResponseReceived.bind(this))
+				client.on('Network.loadingFinished', this.onLoadingFinished.bind(this))
+				client.on('Network.loadingFailed', this.onLoadingFailed.bind(this))
+			}
+		} catch (err) {
+			console.warn('This browser does not support CDPSession')
 		}
 	}
 

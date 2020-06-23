@@ -12,7 +12,7 @@ export class NetworkRecordingTestObserver extends NoOpTestObserver {
 	}
 
 	async before(test: Test): Promise<void> {
-		this.ctx.attachTest(test)
+		await this.ctx.attachTest(test)
 		return this.next.before(test)
 	}
 }

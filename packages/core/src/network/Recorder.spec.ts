@@ -21,6 +21,7 @@ describe('Recorder', () => {
 		beforeEach(async () => {
 			const reporter = new Reporter()
 			recorder = new NetworkRecorder(playwright.page)
+			await recorder.manager.attachEvents()
 			const observer = new Observer(reporter, recorder)
 			await observer.attachToNetworkRecorder()
 			const url = await serve('wait.html')

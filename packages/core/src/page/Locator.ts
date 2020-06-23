@@ -39,12 +39,6 @@ export class BaseLocator implements Locator {
 		const args = [...this.pageFuncArgs]
 		if (node) args.push(node)
 
-		/**
-		 * NOTES
-		 * we don't have executionContext, page.evaluateHandle does not cause different context
-		 * this.pageFunc = undefined in evaluateHandle context
-		 * so we need input this function as argument
-		 */
 		const handle = await page
 			.evaluateHandle(
 				(args: string[]) => {

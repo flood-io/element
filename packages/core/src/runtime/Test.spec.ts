@@ -52,8 +52,7 @@ describe('Test', () => {
 			device: null,
 			browserType: BROWSER_TYPE.CHROME,
 			ignoreHTTPSError: false,
-			userAgent:
-				'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36',
+			userAgent: '',
 			clearCookies: true,
 			duration: -1,
 			loopCount: Infinity,

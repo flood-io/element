@@ -3,7 +3,7 @@ import playwright, { LaunchOptions, Browser, Page } from 'playwright'
 export enum BROWSER_TYPE {
 	CHROME = 'chromium',
 	FIREFOX = 'firefox',
-	SAFARI = 'webkit',
+	WEBKIT = 'webkit',
 }
 
 export type ConcreteLaunchOptions = LaunchOptions & {

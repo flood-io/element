@@ -11,10 +11,6 @@ export class CSSLocator implements LocatorBuilder {
 		return (selector: string, node?: HTMLElement) => {
 			const elm = (node ?? document).querySelector(selector)
 			if (elm) return elm
-			/**
-			 * NOTES
-			 * query element inside the frame is null, so we need to continue digger element in the frame
-			 */
 			const frames: HTMLFrameElement | null = (node ?? document).querySelector('frame')
 			return frames?.contentDocument?.querySelector(selector)
 		}

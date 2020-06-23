@@ -6,6 +6,7 @@ import {
 	devices,
 	ChromiumBrowserContext,
 	BrowserContext,
+	HTTPCredentials,
 } from 'playwright'
 import { Browser as BrowserInterface, NullableLocatable, EvaluateFn } from './types'
 import { ElementHandle, PageGoToOptions, ScreenshotOptions } from '../page/types'
@@ -60,10 +61,6 @@ export class Browser<T> implements BrowserInterface {
 		this.screenshots = []
 
 		this.newPageCallback = resolve => {
-			/**
-			 * NOTES
-			 * update this one for ms playwright
-			 */
 			this.client.page.context().on('page', async newPage => {
 				this.client.page = newPage
 				resolve(newPage)
@@ -155,15 +152,11 @@ export class Browser<T> implements BrowserInterface {
 
 	@rewriteError()
 	public async authenticate(username?: string, password?: string): Promise<void> {
-		/**
-		 * NOTES
-		 * page authenticate does not exits
-		 */
-		// let authOptions: AuthOptions | null = null
-		// if (username !== undefined && password !== undefined) {
-		// 	authOptions = { username, password }
-		// }
-		// await this.page.authenticate(authOptions)
+		let authOptions: HTTPCredentials | null = null
+		if (username !== undefined && password !== undefined) {
+			authOptions = { username, password }
+		}
+		await this.page.context().setHTTPCredentials(authOptions)
 	}
 
 	@addCallbacks()

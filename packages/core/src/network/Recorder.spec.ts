@@ -21,14 +21,14 @@ describe('Recorder', () => {
 		beforeEach(async () => {
 			const reporter = new Reporter()
 			recorder = new NetworkRecorder(playwright.page)
-			await recorder.manager.attachEvents()
+			await recorder.attachEvents()
 			const observer = new Observer(reporter, recorder)
 			await observer.attachToNetworkRecorder()
 			const url = await serve('wait.html')
 			await playwright.page.goto(url)
 			await recorder.pendingTaskQueue.chain
 		})
-		test.skip('Captures correct document response code', async () => {
+		test('Captures correct document response code', async () => {
 			expect(recorder.entries.length).toBe(1)
 			expect(recorder.documentResponseCode).toBe(200)
 			recorder.reset()

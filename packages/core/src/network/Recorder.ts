@@ -285,6 +285,9 @@ export default class Recorder {
 
 	public recordDOMContentLoadedEvent() {}
 
+	public async attachEvents() {
+		this.manager.attachEvents()
+	}
 	/**
 	 * Attaches an event to the Pupeteer page or internal client
 	 *

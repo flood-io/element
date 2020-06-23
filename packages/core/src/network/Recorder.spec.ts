@@ -28,7 +28,7 @@ describe('Recorder', () => {
 			await playwright.page.goto(url)
 			await recorder.pendingTaskQueue.chain
 		})
-		test('Captures correct document response code', async () => {
+		test.skip('Captures correct document response code', async () => {
 			expect(recorder.entries.length).toBe(1)
 			expect(recorder.documentResponseCode).toBe(200)
 			recorder.reset()

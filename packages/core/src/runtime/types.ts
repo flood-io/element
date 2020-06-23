@@ -1,7 +1,7 @@
 import { Device } from '../page/Enums'
 import { Condition } from '../page/Condition'
 import { Page, Frame, ViewportSize } from 'playwright'
-import { ElementHandle, Locator, PageGoToOptions, ScreenshotOptions } from '../page/types'
+import { ElementHandle, Locator, NavigationOptions, ScreenshotOptions } from '../page/types'
 import { TargetLocator } from '../page/TargetLocator'
 import { StepDefinition } from './Step'
 import { TestDataSource } from '../test-data/TestData'
@@ -144,7 +144,7 @@ export interface Browser {
 	 * @param url  url to visit
 	 * @param options  puppeteer navigation options
 	 */
-	visit(url: string, options?: PageGoToOptions): Promise<void>
+	visit(url: string, options?: NavigationOptions): Promise<void>
 
 	/**
 	 * Creates a waiter which will pause the test until a condition is met or a timeout is reached. This can be used for validation or control flow.

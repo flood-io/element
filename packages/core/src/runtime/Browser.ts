@@ -9,7 +9,7 @@ import {
 	HTTPCredentials,
 } from 'playwright'
 import { Browser as BrowserInterface, NullableLocatable, EvaluateFn } from './types'
-import { ElementHandle, PageGoToOptions, ScreenshotOptions } from '../page/types'
+import { ElementHandle, NavigationOptions, ScreenshotOptions } from '../page/types'
 import { TargetLocator } from '../page/TargetLocator'
 import { PlaywrightClientLike, BROWSER_TYPE } from '../driver/Playwright'
 import { WorkRoot } from '../runtime-environment/types'
@@ -190,7 +190,7 @@ export class Browser<T> implements BrowserInterface {
 	}
 
 	@addCallbacks()
-	public async visit(url: string, options?: PageGoToOptions): Promise<any> {
+	public async visit(url: string, options?: NavigationOptions): Promise<any> {
 		const timeout = this.settings.waitTimeout * 1e3
 
 		try {

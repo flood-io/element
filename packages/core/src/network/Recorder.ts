@@ -84,14 +84,13 @@ export default class Recorder {
 	public async recordRequest(payload: any) {
 		debug('Recorder.recordRequest(%o)', payload)
 
-		// let pageRef = this.nextPageId
-		const pageRef = payload.frameId
-		const timestamp = payload.wallTime * 1e3
-		const basetime = timestamp - payload.timestamp * 1e3
-
 		if (payload.request.url.startsWith('data:')) {
 			return
 		}
+
+		const pageRef = payload.frameId
+		const timestamp = payload.wallTime * 1e3
+		const basetime = timestamp - payload.timestamp * 1e3
 
 		const entry = new Entry({
 			type: payload.type,

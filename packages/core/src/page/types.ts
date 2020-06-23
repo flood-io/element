@@ -1,5 +1,6 @@
 import { ElementHandle as PElementHandle, Page } from 'playwright'
 import { Point } from './Point'
+import { ClickOptions } from './Mouse'
 
 export interface LocatorBuilder {
 	pageFunc: EvaluateFn
@@ -14,7 +15,7 @@ export interface LocatorBuilder {
 }
 
 export type EvaluateFn<T = any> = string | ((arg1: T, ...args: any[]) => any)
-export interface PageGoToOptions {
+export interface NavigationOptions {
 	timeout?: number
 	waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' | undefined
 	referer?: string
@@ -57,7 +58,7 @@ export interface ElementHandle {
 	 * Sends a click event to the element attached to this handle. If the element is
 	 * currently outside the viewport it will first scroll to that element.
 	 */
-	click(options?: any): Promise<void>
+	click(options?: ClickOptions): Promise<void>
 
 	/**
 	 * Schedules a command to clear the value of this element.
@@ -91,7 +92,7 @@ export interface ElementHandle {
 	/**
 	 * Takes a screenshot of this element and saves it to the results folder with a random name.
 	 */
-	takeScreenshot(options?: any): Promise<void>
+	takeScreenshot(options?: ScreenshotOptions): Promise<void>
 
 	/**
 	 * Locates an element using the supplied <[Locator]>, returning an <[ElementHandle]>.

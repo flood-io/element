@@ -92,7 +92,6 @@ export class Manager {
 		requestPayload: any,
 		frameId: string,
 	) {
-		console.log(requestId)
 		if (requestId) this.requestIdToRequest.set(requestId, null)
 	}
 

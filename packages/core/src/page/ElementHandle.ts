@@ -1,4 +1,9 @@
-import { ElementHandle as PElementHandle, Page } from 'playwright'
+import {
+	ElementHandle as PElementHandle,
+	Page,
+	ChromiumBrowserContext,
+	CDPSession,
+} from 'playwright'
 import { ElementHandle as IElementHandle, Locator, EvaluateFn, ScreenshotOptions } from './types'
 import {
 	ErrorInterpreter,
@@ -449,14 +454,17 @@ export class ElementHandle implements IElementHandle, Locator {
 		return { x, y }
 	}
 
-	// TODO fix with better typings
-	private get elementClient(): any {
-		return (this.element as any)['_client']
+	private async elementClient(): Promise<CDPSession | null> {
+		try {
+			const context = (await this.page.context()) as ChromiumBrowserContext
+			return context.newCDPSession(this.page)
+		} catch (err) {
+			return null
+		}
 	}
 
-	// TODO fix with better typings
 	private get elementRemoteObject(): any {
-		return (this.element as any)['_remoteObject']
+		return (this.element as any)['_objectId']
 	}
 
 	public async dispose(): Promise<void> {
@@ -464,19 +472,26 @@ export class ElementHandle implements IElementHandle, Locator {
 	}
 
 	public async highlight() {
-		await this.elementClient.send('Overlay.highlightNode', {
-			highlightConfig: {
-				showInfo: true,
-				displayAsMaterial: true,
-				borderColor: { r: 76, g: 175, b: 80, a: 1 },
-				contentColor: { r: 76, g: 175, b: 80, a: 0.24 },
-				shapeColor: { r: 76, g: 175, b: 80, a: 0.24 },
-			},
-			objectId: this.elementRemoteObject.objectId,
-		})
+		const client: CDPSession | null = await this.elementClient()
+		if (client) {
+			await client.send('DOM.enable')
+			await client.send('Overlay.enable')
+			await client.send('Overlay.highlightNode', {
+				highlightConfig: {
+					showInfo: true,
+					borderColor: { r: 76, g: 175, b: 80, a: 1 },
+					contentColor: { r: 76, g: 175, b: 80, a: 0.24 },
+					shapeColor: { r: 76, g: 175, b: 80, a: 0.24 },
+				},
+				objectId: this.elementRemoteObject,
+			})
+		}
 	}
 
 	public async clearHighlights() {
-		await this.elementClient.send('Overlay.hideHighlight', {})
+		const client: CDPSession | null = await this.elementClient()
+		if (client) {
+			await client.send('Overlay.hideHighlight', {})
+		}
 	}
 }

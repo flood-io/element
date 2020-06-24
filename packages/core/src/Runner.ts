@@ -71,8 +71,7 @@ export class Runner {
 		if (options.args == null) options.args = []
 		if (Array.isArray(settings.launchArgs)) options.args.push(...settings.launchArgs)
 
-		options.userAgent = settings.userAgent
-		return this.clientFactory(options)
+		return this.clientFactory(options, settings)
 	}
 
 	async runTestScript(testScript: EvaluatedScript, client: PlaywrightClient): Promise<void> {

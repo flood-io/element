@@ -1,4 +1,5 @@
 import playwright, { LaunchOptions, Browser, Page } from 'playwright'
+import { ConcreteTestSettings } from '../runtime/Settings'
 
 export enum BROWSER_TYPE {
 	CHROME = 'chromium',
@@ -13,7 +14,6 @@ export type ConcreteLaunchOptions = LaunchOptions & {
 	browserType: BROWSER_TYPE
 	viewport: playwright.ViewportSize | null
 	ignoreHTTPSError: boolean
-	userAgent: string
 }
 
 const defaultLaunchOptions: ConcreteLaunchOptions = {
@@ -27,7 +27,6 @@ const defaultLaunchOptions: ConcreteLaunchOptions = {
 	browserType: BROWSER_TYPE.CHROME,
 	viewport: null,
 	ignoreHTTPSError: false,
-	userAgent: '',
 }
 
 export interface PlaywrightClientLike {
@@ -79,6 +78,7 @@ export class PlaywrightClient implements PlaywrightClientLike {
 
 export async function launch(
 	passedOptions: Partial<ConcreteLaunchOptions> = {},
+	pageSettings: ConcreteTestSettings,
 ): Promise<PlaywrightClient> {
 	const options: ConcreteLaunchOptions = {
 		...defaultLaunchOptions,
@@ -100,14 +100,7 @@ export async function launch(
 
 	const browserType = options.browserType || BROWSER_TYPE.CHROME
 	const browser = await playwright[browserType].launch(options)
-	let page: Page
-	const userAgent = options.userAgent
-	if (userAgent) {
-		page = await browser.newPage({ userAgent })
-	} else {
-		page = await browser.newPage()
-	}
-
+	const page = await browser.newPage(pageSettings)
 	return new PlaywrightClient(browser, page)
 }
 

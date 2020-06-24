@@ -346,9 +346,6 @@ export default class Test implements ITest {
 		if (error === null) {
 			await this.doStepDelay()
 		}
-
-		// await this.syncNetworkRecorder()
-		// this.networkRecorder.reset()
 		debug('step done')
 	}
 

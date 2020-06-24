@@ -296,12 +296,13 @@ export default class Recorder {
 	 */
 	public async attachEvent(pageEvent: any, handler: (event?: any) => void) {
 		if (pageEvent.includes('.')) {
-			const browserContext = (await this.page.context()) as ChromiumBrowserContext
-			const client = await browserContext.newCDPSession(this.page)
-			if (client) {
+			try {
+				const browserContext = (await this.page.context()) as ChromiumBrowserContext
+				const client = await browserContext.newCDPSession(this.page)
+				await client.send('Network.enable')
 				client.on(pageEvent, handler)
-			} else {
-				console.warn('This browser does not support CDPSession')
+			} catch (err) {
+				debug(err)
 			}
 		} else {
 			this.page.on(pageEvent, handler)

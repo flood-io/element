@@ -428,8 +428,10 @@ export class Browser<T> implements BrowserInterface {
 
 	@rewriteError()
 	public async setUserAgent(userAgent: string): Promise<void> {
-		await this.client.closePages()
-		this.client.page = await this.client.browser.newPage({ userAgent })
+		if (!this.client.isFirstRun()) {
+			await this.client.closePages()
+			this.client.page = await this.client.browser.newPage({ userAgent })
+		}
 	}
 
 	@rewriteError()

@@ -212,7 +212,6 @@ export default class Test implements ITest {
 			),
 		)
 
-		await this.client.reopenPage(this.settings.incognito)
 		await this.requestInterceptor.attach(this.client.page)
 
 		this.testCancel = async () => {
@@ -241,7 +240,12 @@ export default class Test implements ITest {
 			if (this.settings.clearCache) await browser.clearBrowserCache()
 			if (this.settings.clearCookies) await browser.clearBrowserCookies()
 			if (this.settings.device) await browser.emulateDevice(this.settings.device)
-			if (this.settings.userAgent) await browser.setUserAgent(this.settings.userAgent)
+			if (this.settings.userAgent) {
+				await browser.setUserAgent(this.settings.userAgent)
+			} else {
+				await this.client.reopenPage(this.settings.incognito)
+			}
+
 			if (this.settings.disableCache) await browser.setCacheDisabled(true)
 			if (this.settings.extraHTTPHeaders)
 				await browser.setExtraHTTPHeaders(this.settings.extraHTTPHeaders)

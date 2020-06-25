@@ -44,6 +44,7 @@ export interface StepBase {
 	(stepName: string, options: StepOptions, testFn: TestFn): void
 	(stepName: string, testFn: TestFn): void
 	(stepName: string, ...optionsOrFn: any[]): void
+	//(options: StepOptions, testFn: TestFn): void
 }
 
 export interface StepConditionBase {
@@ -143,11 +144,17 @@ export function extractOptionsAndCallback(args: any[]): [Partial<StepOptions>, T
  */
 export type StepFunction<T> = (driver: Browser, data?: T) => Promise<void>
 export type StepRecoveryObject = {
-	[name: string]: {
-		recoveryStep: Step
-		loopCount: number
-		iteration: number
-	}
+	// [name: string]: {
+	// 	recoveryStep: Step
+	// 	loopCount: number
+	// 	iteration: number
+	// }
+	[name: string]: GlobalRecoveryObject
+}
+export type GlobalRecoveryObject = {
+	recoveryStep: Step
+	loopCount: number
+	iteration: number
 }
 
 /**

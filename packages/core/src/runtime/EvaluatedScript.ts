@@ -18,6 +18,7 @@ import {
 	StepExtended,
 	StepRecoveryObject,
 	RecoverWith,
+	GlobalRecoveryObject,
 } from './Step'
 import { SuiteDefinition, Browser } from './types'
 import Test from './Test'
@@ -68,6 +69,7 @@ function createVirtualMachine(floodElementActual: any, root?: string): NodeVM {
 export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLike {
 	public steps: Step[]
 	public recoverySteps: StepRecoveryObject
+	public globalRecoverySteps: GlobalRecoveryObject
 	public settings: ConcreteTestSettings
 
 	private vm: NodeVM

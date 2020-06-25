@@ -69,7 +69,7 @@ function createVirtualMachine(floodElementActual: any, root?: string): NodeVM {
 export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLike {
 	public steps: Step[]
 	public recoverySteps: StepRecoveryObject
-	public globalRecoverySteps: GlobalRecoveryObject
+	public globalRecoveryStep: GlobalRecoveryObject | null
 	public settings: ConcreteTestSettings
 
 	private vm: NodeVM
@@ -155,6 +155,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 		// Clear existing steps
 		const steps: Step[] = []
 		const recoverySteps: StepRecoveryObject = {}
+		const globalRecoverySteps: GlobalRecoveryObject[] = []
 
 		// establish base settings
 		let rawSettings = DEFAULT_SETTINGS
@@ -276,6 +277,17 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			}
 		}
 
+		step.globalRecovery = async (...optionsOrFn: any[]) => {
+			if (globalRecoverySteps.length)
+				throw new Error('Global recovery step called with too many times')
+			const [options, fn] = extractOptionsAndCallback(optionsOrFn)
+			globalRecoverySteps.push({
+				recoveryStep: { name: 'global', options, fn },
+				loopCount: options.recoveryTries || 0,
+				iteration: 0,
+			})
+		}
+
 		const context = {
 			setup: (setupSettings: TestSettings) => {
 				Object.assign(rawSettings, setupSettings)
@@ -328,6 +340,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 
 		this.steps = steps
 		this.recoverySteps = recoverySteps
+		this.globalRecoveryStep = globalRecoverySteps.length === 1 ? globalRecoverySteps[0] : null
 
 		debug('settings', this.settings)
 		debug('steps', this.steps)

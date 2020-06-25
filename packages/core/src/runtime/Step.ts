@@ -39,12 +39,12 @@ step.skip = (name: string, ...optionsOrFn: any[]) => {}
 step.recovery = (name: string, ...optionsOrFn: any[]) => {}
 step.repeat = (count: number, name: string, ...optionsOrFn: any[]) => {}
 step.while = (condition: ConditionFn, name: string, ...optionsOrFn: any[]) => {}
+step.globalRecovery = (...optionsOrFn: any[]) => {}
 
 export interface StepBase {
 	(stepName: string, options: StepOptions, testFn: TestFn): void
 	(stepName: string, testFn: TestFn): void
 	(stepName: string, ...optionsOrFn: any[]): void
-	//(options: StepOptions, testFn: TestFn): void
 }
 
 export interface StepConditionBase {
@@ -57,6 +57,12 @@ export interface StepRepeatablebase {
 	(count: number, name: string, options: StepOptions, testFn: TestFn)
 	(count: number, name: string, testFn: TestFn)
 	(count: number, ...optionsOrFn: any[])
+}
+
+export interface StepGlobal {
+	(options: StepOptions, testFn: TestFn): void
+	(testFn: TestFn): void
+	(...optionsOrFn: any[]): void
 }
 
 export interface StepExtended extends StepBase {
@@ -94,6 +100,11 @@ export interface StepExtended extends StepBase {
 	 * Creates a while step
 	 */
 	while: StepConditionBase
+
+	/**
+	 * Creates a global recovery step
+	 */
+	globalRecovery: StepGlobal
 }
 
 export type StepDefinition = (name: string, fn: TestFn) => Promise<any>
@@ -144,11 +155,6 @@ export function extractOptionsAndCallback(args: any[]): [Partial<StepOptions>, T
  */
 export type StepFunction<T> = (driver: Browser, data?: T) => Promise<void>
 export type StepRecoveryObject = {
-	// [name: string]: {
-	// 	recoveryStep: Step
-	// 	loopCount: number
-	// 	iteration: number
-	// }
 	[name: string]: GlobalRecoveryObject
 }
 export type GlobalRecoveryObject = {

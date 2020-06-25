@@ -86,20 +86,18 @@ export default () => {
 
 	let count = 0
 	step('Step 1', async browser => {
-		if (count == 2) {
-			console.log('Done')
-		} else {
-			count++
-			console.log('Throw error step 1')
-			throw Error('Fail')
-		}
+		console.log('Throw error step 1')
+		throw Error('Throw error step 1')
 	})
 	// step.recovery(async () => {
 	// 	console.log('Done failed step')
 	// 	return RecoverWith.RETRY
 	// })
-	step.recovery('Step 1', { recoveryTries: 2 }, async () => {
-		console.log('Done step 1')
+	// step.recovery('Step 1', { recoveryTries: 2 }, async () => {
+	// 	console.log('Done step 1')
+	// 	return RecoverWith.RETRY
+	// })
+	step.recovery('Step 1', { recoveryTries: 3 }, async browser => {
 		return RecoverWith.RETRY
 	})
 }

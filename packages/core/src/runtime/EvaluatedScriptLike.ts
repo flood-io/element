@@ -8,7 +8,7 @@ import { Step, StepRecoveryObject, GlobalRecoveryObject } from './Step'
 export interface EvaluatedScriptLike {
 	steps: Step[]
 	recoverySteps: StepRecoveryObject
-	globalRecoverySteps: GlobalRecoveryObject
+	globalRecoveryStep: GlobalRecoveryObject | null
 	settings: TestSettings
 	isScriptError(error: Error): boolean
 	maybeLiftError(error: Error): Error

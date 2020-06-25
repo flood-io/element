@@ -35,7 +35,7 @@ export default class Test implements ITest {
 	public settings: ConcreteTestSettings
 	public steps: Step[]
 	public recoverySteps: StepRecoveryObject
-	public globalRecoverySteps: GlobalRecoveryObject
+	public globalRecoveryStep: GlobalRecoveryObject | null
 
 	public runningBrowser: Browser<Step> | null
 

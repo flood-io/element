@@ -65,11 +65,11 @@ export default class Test implements ITest {
 		this.script = script
 
 		try {
-			const { settings, steps, recoverySteps, globalRecoverySteps } = script
+			const { settings, steps, recoverySteps, globalRecoveryStep } = script
 			this.settings = settings as ConcreteTestSettings
 			this.steps = steps
 			this.recoverySteps = recoverySteps
-			this.globalRecoverySteps = globalRecoverySteps
+			this.globalRecoveryStep = globalRecoveryStep
 
 			// Adds output for console in script
 			script.bindTest(this)
@@ -151,8 +151,14 @@ export default class Test implements ITest {
 		looper: Looper,
 		browser: BrowserInterface,
 	): Promise<boolean> {
-		const stepRecover = this.recoverySteps[step.name]
-		if (!stepRecover) return false
+		let stepRecover: { iteration: any; recoveryStep?: any; loopCount?: any }
+		if (this.globalRecoveryStep) {
+			stepRecover = this.globalRecoveryStep
+			if (!stepRecover) return false
+		} else {
+			stepRecover = this.recoverySteps[step.name]
+			if (!stepRecover) return false
+		}
 		const { recoveryStep, loopCount, iteration } = stepRecover
 		const { recoveryTries } = this.settings
 		const settingRecoveryCount = loopCount || recoveryTries || 1

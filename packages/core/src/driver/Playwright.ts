@@ -111,6 +111,7 @@ export class NullPlaywrightClient implements PlaywrightClientLike {
 	async close(): Promise<void> {
 		return
 	}
+
 	async reopenPage(): Promise<void> {
 		return
 	}

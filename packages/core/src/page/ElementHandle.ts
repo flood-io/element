@@ -464,7 +464,7 @@ export class ElementHandle implements IElementHandle, Locator {
 	}
 
 	private get elementRemoteObject(): any {
-		return (this.element as any)['_objectId']
+		return this.element['_objectId']
 	}
 
 	public async dispose(): Promise<void> {
@@ -474,8 +474,6 @@ export class ElementHandle implements IElementHandle, Locator {
 	public async highlight() {
 		const client: CDPSession | null = await this.elementClient()
 		if (client) {
-			await client.send('DOM.enable')
-			await client.send('Overlay.enable')
 			await client.send('Overlay.highlightNode', {
 				highlightConfig: {
 					showInfo: true,

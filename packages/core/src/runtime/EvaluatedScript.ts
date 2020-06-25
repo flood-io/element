@@ -13,12 +13,12 @@ import {
 	TestFn,
 	StepOptions,
 	normalizeStepOptions,
-	extractOptionsAndCallback,
 	ConditionFn,
 	StepExtended,
 	StepRecoveryObject,
 	RecoverWith,
 	GlobalRecoveryObject,
+	extractNameAndOptionsAndCallback,
 } from './Step'
 import { SuiteDefinition, Browser } from './types'
 import Test from './Test'
@@ -205,23 +205,23 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			},
 		)
 
-		const step: StepExtended = (name: string, ...optionsOrFn: any[]) => {
-			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
+		const step: StepExtended = (...nameOrOptionsOrFn: any[]) => {
+			const [name, option, fn] = extractNameAndOptionsAndCallback(nameOrOptionsOrFn)
 			captureStep([name, option, fn])
 		}
 
-		step.once = (name: string, ...optionsOrFn: any[]) => {
-			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
+		step.once = (...nameOrOptionsOrFn: any[]) => {
+			const [name, option, fn] = extractNameAndOptionsAndCallback(nameOrOptionsOrFn)
 			captureStep([name, { ...option, once: true }, fn])
 		}
 
-		step.if = async (conditionFn: ConditionFn, name: string, ...optionsOrFn: any[]) => {
-			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
+		step.if = async (conditionFn: ConditionFn, ...nameOrOptionsOrFn: any[]) => {
+			const [name, option, fn] = extractNameAndOptionsAndCallback(nameOrOptionsOrFn)
 			captureStep([name, { ...option, predicate: conditionFn }, fn])
 		}
 
-		step.unless = async (conditionFn: ConditionFn, name: string, ...optionsOrFn: any[]) => {
-			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
+		step.unless = async (conditionFn: ConditionFn, ...nameOrOptionsOrFn: any[]) => {
+			const [name, option, fn] = extractNameAndOptionsAndCallback(nameOrOptionsOrFn)
 			captureStep([
 				name,
 				{
@@ -233,13 +233,13 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			])
 		}
 
-		step.skip = async (name: string, ...optionsOrFn: any[]) => {
-			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
+		step.skip = async (...nameOrOptionsOrFn: any[]) => {
+			const [name, option, fn] = extractNameAndOptionsAndCallback(nameOrOptionsOrFn)
 			captureStep([name, { ...option, skip: true }, fn])
 		}
 
-		step.repeat = async (repeatVal: number, name: string, ...optionsOrFn: any[]) => {
-			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
+		step.repeat = async (repeatVal: number, ...nameOrOptionsOrFn: any[]) => {
+			const [name, option, fn] = extractNameAndOptionsAndCallback(nameOrOptionsOrFn)
 			const repeat = repeatVal < 0 ? 0 : repeatVal
 			captureStep([
 				name,
@@ -254,8 +254,8 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			])
 		}
 
-		step.while = async (condition: ConditionFn, name: string, ...optionsOrFn: any[]) => {
-			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
+		step.while = async (condition: ConditionFn, ...nameOrOptionsOrFn: any[]) => {
+			const [name, option, fn] = extractNameAndOptionsAndCallback(nameOrOptionsOrFn)
 			captureStep([
 				name,
 				{
@@ -268,25 +268,35 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			])
 		}
 
-		step.recovery = async (name: string, ...optionsOrFn: any[]) => {
-			const [options, fn] = extractOptionsAndCallback(optionsOrFn)
-			recoverySteps[name] = {
-				recoveryStep: { name, options, fn },
-				loopCount: options.recoveryTries || 0,
-				iteration: 0,
+		step.recovery = async (...nameOrOptionsOrFn: any[]) => {
+			const [name, options, fn] = extractNameAndOptionsAndCallback(nameOrOptionsOrFn)
+			if (name === 'global') {
+				if (globalRecoverySteps.length)
+					throw Error('Global recovery step called with too many times')
+				globalRecoverySteps.push({
+					recoveryStep: { name, options, fn },
+					loopCount: options.recoveryTries || 0,
+					iteration: 0,
+				})
+			} else {
+				recoverySteps[name] = {
+					recoveryStep: { name, options, fn },
+					loopCount: options.recoveryTries || 0,
+					iteration: 0,
+				}
 			}
 		}
 
-		step.globalRecovery = async (...optionsOrFn: any[]) => {
-			if (globalRecoverySteps.length)
-				throw new Error('Global recovery step called with too many times')
-			const [options, fn] = extractOptionsAndCallback(optionsOrFn)
-			globalRecoverySteps.push({
-				recoveryStep: { name: 'global', options, fn },
-				loopCount: options.recoveryTries || 0,
-				iteration: 0,
-			})
-		}
+		// step.globalRecovery = async (...optionsOrFn: any[]) => {
+		// 	if (globalRecoverySteps.length)
+		// 		throw new Error('Global recovery step called with too many times')
+		// 	const [options, fn] = extractOptionsAndCallback(optionsOrFn)
+		// 	globalRecoverySteps.push({
+		// 		recoveryStep: { name: 'global', options, fn },
+		// 		loopCount: options.recoveryTries || 0,
+		// 		iteration: 0,
+		// 	})
+		// }
 
 		const context = {
 			setup: (setupSettings: TestSettings) => {

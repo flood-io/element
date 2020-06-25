@@ -151,13 +151,14 @@ export default class Test implements ITest {
 		looper: Looper,
 		browser: BrowserInterface,
 	): Promise<boolean> {
-		let stepRecover: { iteration: any; recoveryStep?: any; loopCount?: any }
-		if (this.globalRecoveryStep) {
-			stepRecover = this.globalRecoveryStep
-			if (!stepRecover) return false
-		} else {
-			stepRecover = this.recoverySteps[step.name]
-			if (!stepRecover) return false
+		let stepRecover = this.recoverySteps[step.name]
+		if (!stepRecover) {
+			if (this.globalRecoveryStep) {
+				stepRecover = this.globalRecoveryStep
+				if (!stepRecover) return false
+			} else {
+				return false
+			}
 		}
 		const { recoveryStep, loopCount, iteration } = stepRecover
 		const { recoveryTries } = this.settings

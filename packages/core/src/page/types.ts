@@ -78,6 +78,12 @@ export interface ElementHandle {
 	type(text: string): Promise<void>
 
 	/**
+	 *
+	 * @param names Send file uploading
+	 */
+	uploadFile(...names: string[]): Promise<void>
+
+	/**
 	 * Sends focus to this element so that it receives keyboard inputs.
 	 */
 	focus(): Promise<void>

@@ -1,5 +1,4 @@
-import { step, TestSettings, Until, By, Device, Key } from '@flood/element'
-import * as assert from 'assert'
+import { step, TestSettings, Until, By } from '@flood/element'
 
 export const settings: TestSettings = {
 	clearCache: false,

@@ -287,17 +287,6 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			}
 		}
 
-		// step.globalRecovery = async (...optionsOrFn: any[]) => {
-		// 	if (globalRecoverySteps.length)
-		// 		throw new Error('Global recovery step called with too many times')
-		// 	const [options, fn] = extractOptionsAndCallback(optionsOrFn)
-		// 	globalRecoverySteps.push({
-		// 		recoveryStep: { name: 'global', options, fn },
-		// 		loopCount: options.recoveryTries || 0,
-		// 		iteration: 0,
-		// 	})
-		// }
-
 		const context = {
 			setup: (setupSettings: TestSettings) => {
 				Object.assign(rawSettings, setupSettings)

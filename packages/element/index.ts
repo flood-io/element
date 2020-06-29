@@ -107,11 +107,6 @@ export {
 export { step, TestFn, StepFunction, StepOptions } from '@flood/element-core'
 
 /**
- * @docPage DSL
- */
-export { suite } from '@flood/element-core'
-
-/**
  * @docPage helpers
  */
 export { RecoverWith } from '@flood/element-core'

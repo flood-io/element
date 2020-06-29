@@ -110,11 +110,6 @@ export {
  */
 export { step, TestFn, StepFunction, StepOptions, RecoverWith } from './src/runtime/Step'
 
-/**
- * @docPage DSL
- */
-export { suite } from './src/runtime/types'
-
 export * from './api'
 
 export { EvaluatedScript } from './src/runtime/EvaluatedScript'

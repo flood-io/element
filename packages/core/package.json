@@ -8,11 +8,9 @@
 		"prebuild": "rm -rf ./dist",
 		"build": "tsc -b",
 		"test": "jest",
-		"doc": "yarn typedoc && yarn typedoc:puppeteer && ts-node --project ./tsconfig.doc.json ./scripts/docs/docs.ts",
 		"doc:watch": "node --trace-warnings $(npm bin)/nodemon --ext ts --exec ts-node -- --project ./tsconfig.doc.json ./scripts/docs/docs.ts",
 		"doc:once": "ts-node --project ./tsconfig.doc.json ./scripts/docs/docs.ts",
-		"typedoc": "typedoc --tsconfig ./tsconfig.doc.json --json docs.json ./index.ts",
-		"typedoc:puppeteer": "typedoc --json puppeteer-1.6-docs.json --includeDeclarations ../../node_modules/@types/puppeteer/index.d.ts"
+		"typedoc": "typedoc --tsconfig ./tsconfig.doc.json --json docs.json ./index.ts"
 	},
 	"repository": {
 		"type": "git",
@@ -20,7 +18,7 @@
 	},
 	"keywords": [
 		"load",
-		"puppeteer",
+		"playwright",
 		"chrome",
 		"browser",
 		"testing"
@@ -47,7 +45,6 @@
 		"knuth-shuffle": "^1.0.8",
 		"ksuid": "^1.2.0",
 		"micromatch": "^4.0.2",
-		"puppeteer": "^2.1.1",
 		"playwright": "^1.1.1",
 		"recast": "^0.13.0",
 		"sanitize-filename": "^1.6.1",

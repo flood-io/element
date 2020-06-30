@@ -122,21 +122,18 @@ export type StepOptions = {
 	}
 }
 
-export function extractNameAndOptionsAndCallback(
-	args: any[],
-): [string, Partial<StepOptions>, TestFn] {
+export function extractStep(args: any[]): [string, Partial<StepOptions>, TestFn] {
 	if (args.length === 0) throw new Error('Step called with at least one argument') // [{ pending: true }, () => Promise.resolve()]
 	if (args.length === 1) {
 		return ['global', {}, args[0] as TestFn]
 	} else if (args.length === 2) {
-		const [name, fn] = args as [string, TestFn]
+		const [name, fnc] = args as [string, TestFn]
 		if (typeof name === 'string') {
-			return [name, {}, fn]
-		} else {
-			const [options, fn] = args as [StepOptions, TestFn]
-			const { waitTimeout, waitUntil, recoveryTries } = options
-			return ['global', { waitTimeout, waitUntil, recoveryTries }, fn]
+			return [name, {}, fnc]
 		}
+		const [options, fn] = args as [StepOptions, TestFn]
+		const { waitTimeout, waitUntil, recoveryTries } = options
+		return ['global', { waitTimeout, waitUntil, recoveryTries }, fn]
 	} else if (args.length === 3) {
 		const [name, options, fn] = args as [string, StepOptions, TestFn]
 		const { waitTimeout, waitUntil, recoveryTries } = options
@@ -161,12 +158,11 @@ export function extractNameAndOptionsAndCallback(
  */
 export type StepFunction<T> = (driver: Browser, data?: T) => Promise<void>
 export type StepRecoveryObject = {
-	[name: string]: GlobalRecoveryObject
-}
-export type GlobalRecoveryObject = {
-	recoveryStep: Step
-	loopCount: number
-	iteration: number
+	[name: string]: {
+		recoveryStep: Step
+		loopCount: number
+		iteration: number
+	}
 }
 
 /**

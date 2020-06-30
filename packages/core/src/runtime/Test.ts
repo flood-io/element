@@ -14,7 +14,7 @@ import InnerObserver from './test-observers/Inner'
 import { AnyErrorData, EmptyErrorData, AssertionErrorData } from './errors/Types'
 import { StructuredError } from '../utils/StructuredError'
 
-import { Step, ConditionFn, StepRecoveryObject, RecoverWith, GlobalRecoveryObject } from './Step'
+import { Step, ConditionFn, StepRecoveryObject, RecoverWith } from './Step'
 import { Looper } from '../Looper'
 
 import { CancellationToken } from '../utils/CancellationToken'
@@ -35,7 +35,6 @@ export default class Test implements ITest {
 	public settings: ConcreteTestSettings
 	public steps: Step[]
 	public recoverySteps: StepRecoveryObject
-	public globalRecoveryStep: GlobalRecoveryObject | null
 
 	public runningBrowser: Browser<Step> | null
 
@@ -65,11 +64,10 @@ export default class Test implements ITest {
 		this.script = script
 
 		try {
-			const { settings, steps, recoverySteps, globalRecoveryStep } = script
+			const { settings, steps, recoverySteps } = script
 			this.settings = settings as ConcreteTestSettings
 			this.steps = steps
 			this.recoverySteps = recoverySteps
-			this.globalRecoveryStep = globalRecoveryStep
 
 			// Adds output for console in script
 			script.bindTest(this)
@@ -153,12 +151,8 @@ export default class Test implements ITest {
 	): Promise<boolean> {
 		let stepRecover = this.recoverySteps[step.name]
 		if (!stepRecover) {
-			if (this.globalRecoveryStep) {
-				stepRecover = this.globalRecoveryStep
-				if (!stepRecover) return false
-			} else {
-				return false
-			}
+			stepRecover = this.recoverySteps['global']
+			if (!stepRecover) return false
 		}
 		const { recoveryStep, loopCount, iteration } = stepRecover
 		const { recoveryTries } = this.settings

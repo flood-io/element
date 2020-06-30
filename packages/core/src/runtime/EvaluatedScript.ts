@@ -17,8 +17,7 @@ import {
 	StepExtended,
 	StepRecoveryObject,
 	RecoverWith,
-	GlobalRecoveryObject,
-	extractNameAndOptionsAndCallback,
+	extractStep,
 } from './Step'
 import { SuiteDefinition, Browser } from './types'
 import Test from './Test'
@@ -69,7 +68,6 @@ function createVirtualMachine(floodElementActual: any, root?: string): NodeVM {
 export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLike {
 	public steps: Step[]
 	public recoverySteps: StepRecoveryObject
-	public globalRecoveryStep: GlobalRecoveryObject | null
 	public settings: ConcreteTestSettings
 
 	private vm: NodeVM
@@ -155,7 +153,6 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 		// Clear existing steps
 		const steps: Step[] = []
 		const recoverySteps: StepRecoveryObject = {}
-		const globalRecoverySteps: GlobalRecoveryObject[] = []
 
 		// establish base settings
 		let rawSettings = DEFAULT_SETTINGS
@@ -206,22 +203,22 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 		)
 
 		const step: StepExtended = (...nameOrOptionsOrFn: any[]) => {
-			const [name, option, fn] = extractNameAndOptionsAndCallback(nameOrOptionsOrFn)
+			const [name, option, fn] = extractStep(nameOrOptionsOrFn)
 			captureStep([name, option, fn])
 		}
 
 		step.once = (...nameOrOptionsOrFn: any[]) => {
-			const [name, option, fn] = extractNameAndOptionsAndCallback(nameOrOptionsOrFn)
+			const [name, option, fn] = extractStep(nameOrOptionsOrFn)
 			captureStep([name, { ...option, once: true }, fn])
 		}
 
 		step.if = async (conditionFn: ConditionFn, ...nameOrOptionsOrFn: any[]) => {
-			const [name, option, fn] = extractNameAndOptionsAndCallback(nameOrOptionsOrFn)
+			const [name, option, fn] = extractStep(nameOrOptionsOrFn)
 			captureStep([name, { ...option, predicate: conditionFn }, fn])
 		}
 
 		step.unless = async (conditionFn: ConditionFn, ...nameOrOptionsOrFn: any[]) => {
-			const [name, option, fn] = extractNameAndOptionsAndCallback(nameOrOptionsOrFn)
+			const [name, option, fn] = extractStep(nameOrOptionsOrFn)
 			captureStep([
 				name,
 				{
@@ -234,12 +231,12 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 		}
 
 		step.skip = async (...nameOrOptionsOrFn: any[]) => {
-			const [name, option, fn] = extractNameAndOptionsAndCallback(nameOrOptionsOrFn)
+			const [name, option, fn] = extractStep(nameOrOptionsOrFn)
 			captureStep([name, { ...option, skip: true }, fn])
 		}
 
 		step.repeat = async (repeatVal: number, ...nameOrOptionsOrFn: any[]) => {
-			const [name, option, fn] = extractNameAndOptionsAndCallback(nameOrOptionsOrFn)
+			const [name, option, fn] = extractStep(nameOrOptionsOrFn)
 			const repeat = repeatVal < 0 ? 0 : repeatVal
 			captureStep([
 				name,
@@ -255,7 +252,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 		}
 
 		step.while = async (condition: ConditionFn, ...nameOrOptionsOrFn: any[]) => {
-			const [name, option, fn] = extractNameAndOptionsAndCallback(nameOrOptionsOrFn)
+			const [name, option, fn] = extractStep(nameOrOptionsOrFn)
 			captureStep([
 				name,
 				{
@@ -269,21 +266,13 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 		}
 
 		step.recovery = async (...nameOrOptionsOrFn: any[]) => {
-			const [name, options, fn] = extractNameAndOptionsAndCallback(nameOrOptionsOrFn)
-			if (name === 'global') {
-				if (globalRecoverySteps.length)
-					throw Error('Global recovery step called with too many times')
-				globalRecoverySteps.push({
-					recoveryStep: { name, options, fn },
-					loopCount: options.recoveryTries || 0,
-					iteration: 0,
-				})
-			} else {
-				recoverySteps[name] = {
-					recoveryStep: { name, options, fn },
-					loopCount: options.recoveryTries || 0,
-					iteration: 0,
-				}
+			const [name, options, fn] = extractStep(nameOrOptionsOrFn)
+			if (name === 'global' && recoverySteps[name])
+				throw Error('Global recovery step called with too many times')
+			recoverySteps[name] = {
+				recoveryStep: { name, options, fn },
+				loopCount: options.recoveryTries || 0,
+				iteration: 0,
 			}
 		}
 
@@ -339,7 +328,6 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 
 		this.steps = steps
 		this.recoverySteps = recoverySteps
-		this.globalRecoveryStep = globalRecoverySteps.length === 1 ? globalRecoverySteps[0] : null
 
 		debug('settings', this.settings)
 		debug('steps', this.steps)

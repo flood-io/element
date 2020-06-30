@@ -3,12 +3,11 @@ import { TestSettings } from './Settings'
 import { TestDataSource } from '../test-data/TestData'
 import { ITest } from './ITest'
 import { RuntimeEnvironment } from '../runtime-environment/types'
-import { Step, StepRecoveryObject, GlobalRecoveryObject } from './Step'
+import { Step, StepRecoveryObject } from './Step'
 
 export interface EvaluatedScriptLike {
 	steps: Step[]
 	recoverySteps: StepRecoveryObject
-	globalRecoveryStep: GlobalRecoveryObject | null
 	settings: TestSettings
 	isScriptError(error: Error): boolean
 	maybeLiftError(error: Error): Error

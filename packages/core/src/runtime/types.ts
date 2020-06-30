@@ -35,11 +35,6 @@ export type Locatable = Locator | ElementHandle | string
  */
 export type NullableLocatable = Locatable | null
 
-export interface SuiteDefinition {
-	(callback: (this: null, s: StepDefinition) => void): void
-	withData<T>(data: TestDataSource<T>, callback: (this: null, step: StepDefinition) => void): void
-}
-
 /**
  * Browser is the main entry point in each <[step]>, it's your direct connection to the browser running the test.
  *

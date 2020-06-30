@@ -9,7 +9,6 @@ const exists = promisify(fs.exists)
 
 import {
 	Step,
-	StepDefinition,
 	TestFn,
 	StepOptions,
 	normalizeStepOptions,
@@ -19,7 +18,7 @@ import {
 	StepRecoveryObject,
 	RecoverWith,
 } from './Step'
-import { SuiteDefinition, Browser } from './types'
+import { Browser } from './types'
 import Test from './Test'
 import { mustCompileFile } from '../TestScript'
 import { TestScriptError, TestScriptErrorMapper } from '../TestScriptError'
@@ -182,26 +181,6 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			steps.push({ fn, name, options })
 		}
 
-		// re-scope this for captureSuite to close over:
-		const evalScope = this as EvaluatedScript
-
-		type WithDataCallback = (this: null, s: StepDefinition) => void
-
-		// closes over evalScope (this) and ENV
-		const captureSuite: SuiteDefinition = Object.assign(
-			(
-				callback: (this: null, s: StepDefinition) => void,
-			): ((this: null, s: StepDefinition) => void) => {
-				return callback
-			},
-			{
-				withData: <T>(data: TestDataSource<T>, callback: WithDataCallback) => {
-					evalScope.testData = expect(data, 'TestData is not present')
-					return callback
-				},
-			},
-		)
-
 		const step: StepExtended = (name: string, ...optionsOrFn: any[]) => {
 			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
 			captureStep([name, option, fn])
@@ -293,7 +272,6 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			Key,
 			RecoverWith,
 			userAgents,
-			suite: captureSuite,
 		}
 
 		this.vm = createVirtualMachine(context, this.script.scriptRoot)

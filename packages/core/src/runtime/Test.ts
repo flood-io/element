@@ -265,12 +265,12 @@ export default class Test implements ITest {
 			}
 
 			debug('running hook function: beforeAll')
-			await this.runHookFnc(this.hook.beforeAll, browser, testDataRecord)
+			await this.runHookFn(this.hook.beforeAll, browser, testDataRecord)
 
 			debug('running steps')
 			while (this.stepCount < this.steps.length) {
 				debug('running hook function: beforeEach')
-				await this.runHookFnc(this.hook.beforeEach, browser, testDataRecord)
+				await this.runHookFn(this.hook.beforeEach, browser, testDataRecord)
 
 				const step = this.steps[this.stepCount]
 				const condition = await this.callCondition(step, iteration, browser)
@@ -303,7 +303,7 @@ export default class Test implements ITest {
 				this.stepCount += 1
 
 				debug('running hook function: afterEach')
-				await this.runHookFnc(this.hook.afterEach, browser, testDataRecord)
+				await this.runHookFn(this.hook.afterEach, browser, testDataRecord)
 			}
 		} catch (err) {
 			console.log('error -> failed', err)
@@ -316,7 +316,7 @@ export default class Test implements ITest {
 		await testObserver.after(this)
 
 		debug('running hook function: afterAll')
-		await this.runHookFnc(this.hook.afterAll, browser, testDataRecord)
+		await this.runHookFn(this.hook.afterAll, browser, testDataRecord)
 	}
 
 	get currentURL(): string {
@@ -430,7 +430,7 @@ export default class Test implements ITest {
 		return new ObjectTrace(this.script.runEnv.workRoot, step.name)
 	}
 
-	private async runHookFnc(
+	private async runHookFn(
 		hooks: HookBase[],
 		browser: Browser<Step>,
 		testDataRecord: any,
@@ -439,15 +439,15 @@ export default class Test implements ITest {
 			for (const hook of hooks) {
 				browser.settings = { ...this.settings }
 				browser.settings.waitTimeout = hook.waitTimeout
-				const hookFunc = hook.fn.bind(null, browser, testDataRecord)
-				await this.doHookFncWithTimeout(hookFunc, hook.waitTimeout)
+				const hookFn = hook.fn.bind(null, browser, testDataRecord)
+				await this.doHookFnWithTimeout(hookFn, hook.waitTimeout)
 			}
 		} catch (error) {
 			throw new Error(error)
 		}
 	}
 
-	private async doHookFncWithTimeout(func: any, timeout: number): Promise<any> {
+	private async doHookFnWithTimeout(fn: any, timeout: number): Promise<any> {
 		// Create a promise that rejects in <ms> milliseconds
 		const promiseTimeout = new Promise((_, reject) => {
 			const id = setTimeout(() => {
@@ -456,6 +456,6 @@ export default class Test implements ITest {
 			}, timeout * 1e3)
 		})
 		// Returns a race between our timeout and the passed in promise
-		return Promise.race([func(), promiseTimeout])
+		return Promise.race([fn(), promiseTimeout])
 	}
 }

@@ -1,9 +1,9 @@
 import { Browser } from './types'
 
-export declare function afterAll(fnc: HookFn, waitTimeout?: number): void
-export declare function afterEach(fnc: HookFn, waitTimeout?: number): void
-export declare function beforeAll(fnc: HookFn, waitTimeout?: number): void
-export declare function beforeEach(fnc: HookFn, waitTimeout?: number): void
+export declare function afterAll(fn: HookFn, waitTimeout?: number): void
+export declare function afterEach(fn: HookFn, waitTimeout?: number): void
+export declare function beforeAll(fn: HookFn, waitTimeout?: number): void
+export declare function beforeEach(fn: HookFn, waitTimeout?: number): void
 
 export type HookFn = (this: void, browser: Browser) => Promise<any>
 export type HookBase = {

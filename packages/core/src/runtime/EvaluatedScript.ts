@@ -271,7 +271,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 				throw Error('Global recovery step called with too many times')
 			recoverySteps[name] = {
 				recoveryStep: { name, options, fn },
-				loopCount: options.recoveryTries || 0,
+				loopCount: options.tries || 0,
 				iteration: 0,
 			}
 		}

@@ -86,7 +86,7 @@ export default () => {
 	step('Step 6', async browser => {
 		throw Error('Throw error step 6')
 	})
-	step.recovery({ recoveryTries: 2 }, async browser => {
+	step.recovery({ tries: 2 }, async browser => {
 		console.log('Global recovery')
 		return RecoverWith.RETRY
 	})

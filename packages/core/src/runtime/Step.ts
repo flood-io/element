@@ -59,12 +59,6 @@ export interface StepRepeatablebase {
 	(count: number, ...optionsOrFn: any[])
 }
 
-export interface StepGlobal {
-	(options: StepOptions, testFn: TestFn): void
-	(testFn: TestFn): void
-	(...optionsOrFn: any[]): void
-}
-
 export interface StepExtended extends StepBase {
 	/**
 	 * Defines a test step which will run in all iterations assuming the previous step succeeded
@@ -112,7 +106,7 @@ export type StepOptions = {
 	skip?: boolean
 	waitTimeout?: number
 	waitUntil?: ElementPresence
-	recoveryTries?: number
+	tries?: number
 	repeat?: {
 		count: number
 		iteration: number
@@ -132,12 +126,12 @@ export function extractStep(args: any[]): [string, Partial<StepOptions>, TestFn]
 			return [name, {}, fnc]
 		}
 		const [options, fn] = args as [StepOptions, TestFn]
-		const { waitTimeout, waitUntil, recoveryTries } = options
-		return ['global', { waitTimeout, waitUntil, recoveryTries }, fn]
+		const { waitTimeout, waitUntil, tries } = options
+		return ['global', { waitTimeout, waitUntil, tries }, fn]
 	} else if (args.length === 3) {
 		const [name, options, fn] = args as [string, StepOptions, TestFn]
-		const { waitTimeout, waitUntil, recoveryTries } = options
-		return [name, { waitTimeout, waitUntil, recoveryTries }, fn]
+		const { waitTimeout, waitUntil, tries } = options
+		return [name, { waitTimeout, waitUntil, tries }, fn]
 	}
 	throw new Error(`Step called with too many arguments`)
 }

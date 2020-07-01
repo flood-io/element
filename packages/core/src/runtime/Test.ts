@@ -155,8 +155,8 @@ export default class Test implements ITest {
 			if (!stepRecover) return false
 		}
 		const { recoveryStep, loopCount, iteration } = stepRecover
-		const { recoveryTries } = this.settings
-		const settingRecoveryCount = loopCount || recoveryTries || 1
+		const { tries } = this.settings
+		const settingRecoveryCount = loopCount || tries || 1
 		if (!recoveryStep || iteration >= settingRecoveryCount) {
 			stepRecover.iteration = 0
 			return false

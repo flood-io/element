@@ -4,7 +4,7 @@ import { TestDataSource } from '../test-data/TestData'
 import { ITest } from './ITest'
 import { RuntimeEnvironment } from '../runtime-environment/types'
 import { Step, StepRecoveryObject } from './Step'
-import { Hook } from './Hook'
+import { Hook } from './StepLifeCycle'
 
 export interface EvaluatedScriptLike {
 	steps: Step[]

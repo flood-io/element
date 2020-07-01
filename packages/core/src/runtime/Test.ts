@@ -7,7 +7,7 @@ import { NullReporter } from '../reporter/Null'
 import { ObjectTrace } from '../utils/ObjectTrace'
 
 import { TestObserver, NullTestObserver } from './test-observers/Observer'
-import LifecycleObserver from './test-observers/Lifecycle'
+import LifecycleObserver from './test-observers/LifecycleObserver'
 import ErrorObserver from './test-observers/Errors'
 import InnerObserver from './test-observers/Inner'
 
@@ -27,7 +27,7 @@ import { EvaluatedScriptLike } from './EvaluatedScriptLike'
 import { TimingObserver } from './test-observers/TimingObserver'
 import { Context } from './test-observers/Context'
 import { NetworkRecordingTestObserver } from './test-observers/NetworkRecordingTestObserver'
-import { Hook, HookBase } from './Hook'
+import { Hook, HookBase } from './StepLifeCycle'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:test')

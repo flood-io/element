@@ -5,7 +5,7 @@ interface CommandArgs extends Arguments {
 }
 
 const cmd: CommandModule = {
-	command: '$0 <file> [options]',
+	command: '$0 <file>',
 	describe: 'Generate a basic test script from a template',
 
 	async handler(args: CommandArgs): Promise<void> {
@@ -17,15 +17,11 @@ const cmd: CommandModule = {
 	},
 
 	builder(yargs: Argv): Argv {
-		return yargs
-			.option('verbose', {
-				describe: 'Verbose mode',
-			})
-			.check(({ file }) => {
-				if (!(file as string).length)
-					return new Error('Please provide the path to the test script to write')
-				return true
-			})
+		return yargs.check(({ file }) => {
+			if (!(file as string).length)
+				return new Error('Please provide the path to the test script to write')
+			return true
+		})
 	},
 }
 

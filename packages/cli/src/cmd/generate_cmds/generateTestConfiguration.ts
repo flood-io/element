@@ -5,7 +5,7 @@ interface CommandArgs extends Arguments {
 }
 
 const cmd: CommandModule = {
-	command: 'config [file] [options]',
+	command: 'config [file]',
 	describe: 'Generate a basic test configuration from a template',
 
 	async handler(args: CommandArgs): Promise<void> {
@@ -19,14 +19,10 @@ const cmd: CommandModule = {
 	},
 
 	builder(yargs: Argv): Argv {
-		return yargs
-			.option('verbose', {
-				describe: 'Verbose mode',
-			})
-			.positional('file', {
-				describe: 'The file name of the generated config file',
-				default: 'element.config.js',
-			})
+		return yargs.option('file', {
+			describe: 'The file name of the generated config file',
+			default: 'element.config.js',
+		})
 	},
 }
 

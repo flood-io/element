@@ -44,7 +44,7 @@ export type ConsoleMethod = 'log' | 'info' | 'debug' | 'warn' | 'error'
  *
  * literal | description
  * --------|-----------
- * The browser bundled with playwright: 'chromium', 'firefox', 'webkit'
+ * The browser bundled with playwright: 'chromium' | 'firefox' | 'webkit'
  */
 export type BrowserType = BROWSER_TYPE
 

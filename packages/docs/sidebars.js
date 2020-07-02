@@ -12,6 +12,7 @@ module.exports = {
         "Browser Interaction": ["guides/mouse"],
       },
       "guides/script",
+      "guides/hook",
       "guides/editor",
       "guides/cli",
     ],

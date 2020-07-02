@@ -38,5 +38,10 @@ export default () => {
 	step('Test: 03 - Open a new Tab', async browser => {
 		let linkHref = await browser.findElement(By.css('#content > div > a'))
 		await linkHref.click()
+		await browser.waitForNewPage()
+		let pageTextVerify = By.visibleText('New Window')
+		await browser.wait(Until.elementIsVisible(pageTextVerify))
+		const pages = await browser.pages
+		assert.strictEqual(pages.length, 2, 'There should be 2 windows')
 	})
 }

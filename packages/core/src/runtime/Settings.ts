@@ -44,8 +44,7 @@ export type ConsoleMethod = 'log' | 'info' | 'debug' | 'warn' | 'error'
  *
  * literal | description
  * --------|-----------
- * puppeteer | (Default) The browser bundled with [puppeteer]. It is a curated version of [chromium](https://www.chromium.org) (the open source version of Google Chrome). Using the puppeteer-bundled Chromium ensures the best compatibility with puppeteer, but lacks some features such as video support.
- * stable | The latest version of [Google Chrome](https://www.chromium.org/). Google Chrome has more features than chromium, but isn't tested as thoroughly against puppeteer, which can result in intermittent errors. If you don't need the extra features, please use `bundled`.
+ * The browser bundled with playwright: 'chromium', 'firefox', 'webkit'
  */
 export type BrowserType = BROWSER_TYPE
 

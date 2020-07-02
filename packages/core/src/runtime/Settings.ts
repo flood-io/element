@@ -40,7 +40,7 @@ export type ResponseTiming = 'page' | 'network' | 'step' | 'stepWithThinkTime'
 export type ConsoleMethod = 'log' | 'info' | 'debug' | 'warn' | 'error'
 
 /**
- * Represents the versions of chrome that the test script will run against.
+ * Represents the browser that the test script will run against.
  *
  * literal | description
  * --------|-----------

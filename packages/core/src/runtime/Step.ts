@@ -31,19 +31,20 @@ import { ElementPresence } from './Settings'
  */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-empty-function */
-export const step: StepExtended = (name: string, ...optionsOrFn: any[]) => {}
-step.once = (name: string, ...optionsOrFn: any[]) => {}
-step.if = (condition: ConditionFn, name: string, ...optionsOrFn: any[]) => {}
-step.unless = (condition: ConditionFn, name: string, ...optionsOrFn: any[]) => {}
-step.skip = (name: string, ...optionsOrFn: any[]) => {}
-step.recovery = (name: string, ...optionsOrFn: any[]) => {}
-step.repeat = (count: number, name: string, ...optionsOrFn: any[]) => {}
-step.while = (condition: ConditionFn, name: string, ...optionsOrFn: any[]) => {}
+export const step: StepExtended = (...nameOrOptionsOrFn: any[]) => {}
+step.once = (...nameOrOptionsOrFn: any[]) => {}
+step.if = (condition: ConditionFn, ...nameOrOptionsOrFn: any[]) => {}
+step.unless = (condition: ConditionFn, ...nameOrOptionsOrFn: any[]) => {}
+step.skip = (...nameOrOptionsOrFn: any[]) => {}
+step.recovery = (...nameOrOptionsOrFn: any[]) => {}
+step.repeat = (count: number, ...nameOrOptionsOrFn: any[]) => {}
+step.while = (condition: ConditionFn, ...nameOrOptionsOrFn: any[]) => {}
 
 export interface StepBase {
 	(stepName: string, options: StepOptions, testFn: TestFn): void
 	(stepName: string, testFn: TestFn): void
-	(stepName: string, ...optionsOrFn: any[]): void
+	(options: StepOptions, testFn: TestFn): void
+	(testFn: TestFn): void
 }
 
 export interface StepConditionBase {
@@ -105,7 +106,7 @@ export type StepOptions = {
 	skip?: boolean
 	waitTimeout?: number
 	waitUntil?: ElementPresence
-	recoveryTries?: number
+	tries?: number
 	repeat?: {
 		count: number
 		iteration: number
@@ -115,14 +116,22 @@ export type StepOptions = {
 	}
 }
 
-export function extractOptionsAndCallback(args: any[]): [Partial<StepOptions>, TestFn] {
-	if (args.length === 0) return [{ pending: true }, () => Promise.resolve()]
+export function extractStep(args: any[]): [string, Partial<StepOptions>, TestFn] {
+	if (args.length === 0) throw new Error('Step called with at least one argument') // [{ pending: true }, () => Promise.resolve()]
 	if (args.length === 1) {
-		return [{}, args[0] as TestFn]
+		return ['global', {}, args[0] as TestFn]
 	} else if (args.length === 2) {
+		const [name, fnc] = args as [string, TestFn]
+		if (typeof name === 'string') {
+			return [name, {}, fnc]
+		}
 		const [options, fn] = args as [StepOptions, TestFn]
-		const { waitTimeout, waitUntil, recoveryTries } = options
-		return [{ waitTimeout, waitUntil, recoveryTries }, fn]
+		const { waitTimeout, waitUntil, tries } = options
+		return ['global', { waitTimeout, waitUntil, tries }, fn]
+	} else if (args.length === 3) {
+		const [name, options, fn] = args as [string, StepOptions, TestFn]
+		const { waitTimeout, waitUntil, tries } = options
+		return [name, { waitTimeout, waitUntil, tries }, fn]
 	}
 	throw new Error(`Step called with too many arguments`)
 }

@@ -6,7 +6,7 @@ import { CancellationToken } from '../utils/CancellationToken'
 import { ScreenshotOptions } from 'puppeteer'
 import { TestSettings } from './Settings'
 import { Looper } from '../Looper'
-import { Hook } from './Hook'
+import { Hook } from './StepLifeCycle'
 
 export interface ITest {
 	settings: TestSettings

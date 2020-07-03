@@ -6,10 +6,12 @@ import { CancellationToken } from '../utils/CancellationToken'
 import { ScreenshotOptions } from 'puppeteer'
 import { TestSettings } from './Settings'
 import { Looper } from '../Looper'
+import { Hook } from './Hook'
 
 export interface ITest {
 	settings: TestSettings
 	steps: Step[]
+	hook: Hook
 	runningBrowser?: Browser<Step> | null
 	requestInterceptor: Interceptor
 	iteration: number

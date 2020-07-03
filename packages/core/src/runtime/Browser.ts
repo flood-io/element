@@ -66,10 +66,16 @@ export class Browser<T> implements BrowserInterface {
 
 		this.newPageCallback = resolve => {
 			this.client.browser.once('targetcreated', async target => {
-				const newPage = await target.page()
-				this.client.page = newPage
-				await newPage.bringToFront()
-				resolve(newPage)
+				if (target.type() === 'page') {
+					const newPage = await target.page()
+					this.client.page = newPage
+					await newPage.bringToFront()
+					resolve(newPage)
+				} else {
+					this.newPagePromise = new Promise(resolve => {
+						this.newPageCallback(resolve)
+					})
+				}
 			})
 		}
 

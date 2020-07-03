@@ -13,11 +13,11 @@ import {
 	TestFn,
 	StepOptions,
 	normalizeStepOptions,
-	extractOptionsAndCallback,
 	ConditionFn,
 	StepExtended,
 	StepRecoveryObject,
 	RecoverWith,
+	extractStep,
 } from './Step'
 import { SuiteDefinition, Browser } from './types'
 import Test from './Test'
@@ -35,6 +35,7 @@ import { MouseButtons, Device, Key, userAgents } from '../page/Enums'
 import { TestDataSource, TestDataFactory } from '../test-data/TestData'
 import { BoundTestDataLoaders } from '../test-data/TestDataLoaders'
 import { EvaluatedScriptLike } from './EvaluatedScriptLike'
+import { Hook, normalizeHookBase } from './StepLifeCycle'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:eval-script')
@@ -67,6 +68,7 @@ function createVirtualMachine(floodElementActual: any, root?: string): NodeVM {
 
 export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLike {
 	public steps: Step[]
+	public hook: Hook
 	public recoverySteps: StepRecoveryObject
 	public settings: ConcreteTestSettings
 
@@ -153,6 +155,12 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 		// Clear existing steps
 		const steps: Step[] = []
 		const recoverySteps: StepRecoveryObject = {}
+		const hook: Hook = {
+			afterAll: [],
+			afterEach: [],
+			beforeAll: [],
+			beforeEach: [],
+		}
 
 		// establish base settings
 		let rawSettings = DEFAULT_SETTINGS
@@ -182,6 +190,30 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			steps.push({ fn, name, options })
 		}
 
+		const afterAll = (...args: any[]) => {
+			const [fn, waitTimeout] = args
+			const hookBase = normalizeHookBase({ fn, waitTimeout })
+			hook.afterAll.push(hookBase)
+		}
+
+		const afterEach = (...args: any[]) => {
+			const [fn, waitTimeout] = args
+			const hookBase = normalizeHookBase({ fn, waitTimeout })
+			hook.afterEach.push(hookBase)
+		}
+
+		const beforeAll = (...args: any[]) => {
+			const [fn, waitTimeout] = args
+			const hookBase = normalizeHookBase({ fn, waitTimeout })
+			hook.beforeAll.push(hookBase)
+		}
+
+		const beforeEach = (...args: any[]) => {
+			const [fn, waitTimeout] = args
+			const hookBase = normalizeHookBase({ fn, waitTimeout })
+			hook.beforeEach.push(hookBase)
+		}
+
 		// re-scope this for captureSuite to close over:
 		const evalScope = this as EvaluatedScript
 
@@ -202,23 +234,23 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			},
 		)
 
-		const step: StepExtended = (name: string, ...optionsOrFn: any[]) => {
-			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
+		const step: StepExtended = (...nameOrOptionsOrFn: any[]) => {
+			const [name, option, fn] = extractStep(nameOrOptionsOrFn)
 			captureStep([name, option, fn])
 		}
 
-		step.once = (name: string, ...optionsOrFn: any[]) => {
-			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
+		step.once = (...nameOrOptionsOrFn: any[]) => {
+			const [name, option, fn] = extractStep(nameOrOptionsOrFn)
 			captureStep([name, { ...option, once: true }, fn])
 		}
 
-		step.if = async (conditionFn: ConditionFn, name: string, ...optionsOrFn: any[]) => {
-			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
+		step.if = async (conditionFn: ConditionFn, ...nameOrOptionsOrFn: any[]) => {
+			const [name, option, fn] = extractStep(nameOrOptionsOrFn)
 			captureStep([name, { ...option, predicate: conditionFn }, fn])
 		}
 
-		step.unless = async (conditionFn: ConditionFn, name: string, ...optionsOrFn: any[]) => {
-			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
+		step.unless = async (conditionFn: ConditionFn, ...nameOrOptionsOrFn: any[]) => {
+			const [name, option, fn] = extractStep(nameOrOptionsOrFn)
 			captureStep([
 				name,
 				{
@@ -230,13 +262,13 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			])
 		}
 
-		step.skip = async (name: string, ...optionsOrFn: any[]) => {
-			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
+		step.skip = async (...nameOrOptionsOrFn: any[]) => {
+			const [name, option, fn] = extractStep(nameOrOptionsOrFn)
 			captureStep([name, { ...option, skip: true }, fn])
 		}
 
-		step.repeat = async (repeatVal: number, name: string, ...optionsOrFn: any[]) => {
-			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
+		step.repeat = async (repeatVal: number, ...nameOrOptionsOrFn: any[]) => {
+			const [name, option, fn] = extractStep(nameOrOptionsOrFn)
 			const repeat = repeatVal < 0 ? 0 : repeatVal
 			captureStep([
 				name,
@@ -251,8 +283,8 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			])
 		}
 
-		step.while = async (condition: ConditionFn, name: string, ...optionsOrFn: any[]) => {
-			const [option, fn] = extractOptionsAndCallback(optionsOrFn)
+		step.while = async (condition: ConditionFn, ...nameOrOptionsOrFn: any[]) => {
+			const [name, option, fn] = extractStep(nameOrOptionsOrFn)
 			captureStep([
 				name,
 				{
@@ -265,11 +297,13 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			])
 		}
 
-		step.recovery = async (name: string, ...optionsOrFn: any[]) => {
-			const [options, fn] = extractOptionsAndCallback(optionsOrFn)
+		step.recovery = async (...nameOrOptionsOrFn: any[]) => {
+			const [name, options, fn] = extractStep(nameOrOptionsOrFn)
+			if (name === 'global' && recoverySteps[name])
+				throw Error('Global recovery step called with too many times')
 			recoverySteps[name] = {
 				recoveryStep: { name, options, fn },
-				loopCount: options.recoveryTries || 0,
+				loopCount: options.tries || 0,
 				iteration: 0,
 			}
 		}
@@ -283,6 +317,12 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 
 			// Supports either 2 or 3 args
 			step,
+
+			//Hook
+			afterAll,
+			afterEach,
+			beforeAll,
+			beforeEach,
 
 			// Actual implementation of @flood/chrome
 			By,
@@ -326,6 +366,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 
 		this.steps = steps
 		this.recoverySteps = recoverySteps
+		this.hook = hook
 
 		debug('settings', this.settings)
 		debug('steps', this.steps)

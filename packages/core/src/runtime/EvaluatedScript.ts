@@ -35,6 +35,7 @@ import { MouseButtons, Device, Key, userAgents } from '../page/Enums'
 import { TestDataSource, TestDataFactory } from '../test-data/TestData'
 import { BoundTestDataLoaders } from '../test-data/TestDataLoaders'
 import { EvaluatedScriptLike } from './EvaluatedScriptLike'
+import { Hook, normalizeHookBase } from './StepLifeCycle'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:eval-script')
@@ -67,6 +68,7 @@ function createVirtualMachine(floodElementActual: any, root?: string): NodeVM {
 
 export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLike {
 	public steps: Step[]
+	public hook: Hook
 	public recoverySteps: StepRecoveryObject
 	public settings: ConcreteTestSettings
 
@@ -153,6 +155,12 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 		// Clear existing steps
 		const steps: Step[] = []
 		const recoverySteps: StepRecoveryObject = {}
+		const hook: Hook = {
+			afterAll: [],
+			afterEach: [],
+			beforeAll: [],
+			beforeEach: [],
+		}
 
 		// establish base settings
 		let rawSettings = DEFAULT_SETTINGS
@@ -180,6 +188,30 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			}
 
 			steps.push({ fn, name, options })
+		}
+
+		const afterAll = (...args: any[]) => {
+			const [fn, waitTimeout] = args
+			const hookBase = normalizeHookBase({ fn, waitTimeout })
+			hook.afterAll.push(hookBase)
+		}
+
+		const afterEach = (...args: any[]) => {
+			const [fn, waitTimeout] = args
+			const hookBase = normalizeHookBase({ fn, waitTimeout })
+			hook.afterEach.push(hookBase)
+		}
+
+		const beforeAll = (...args: any[]) => {
+			const [fn, waitTimeout] = args
+			const hookBase = normalizeHookBase({ fn, waitTimeout })
+			hook.beforeAll.push(hookBase)
+		}
+
+		const beforeEach = (...args: any[]) => {
+			const [fn, waitTimeout] = args
+			const hookBase = normalizeHookBase({ fn, waitTimeout })
+			hook.beforeEach.push(hookBase)
 		}
 
 		// re-scope this for captureSuite to close over:
@@ -286,6 +318,12 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			// Supports either 2 or 3 args
 			step,
 
+			//Hook
+			afterAll,
+			afterEach,
+			beforeAll,
+			beforeEach,
+
 			// Actual implementation of @flood/chrome
 			By,
 			Until,
@@ -328,6 +366,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 
 		this.steps = steps
 		this.recoverySteps = recoverySteps
+		this.hook = hook
 
 		debug('settings', this.settings)
 		debug('steps', this.steps)

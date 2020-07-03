@@ -8,7 +8,8 @@ import {
 	Frame,
 	Viewport,
 } from 'puppeteer'
-import { ElementHandle, Locator } from '../page/types'
+import { ElementHandle } from '../page/types'
+import { NullableLocatable } from './Locatable'
 import { TargetLocator } from '../page/TargetLocator'
 import { StepDefinition } from './Step'
 import { TestDataSource } from '../test-data/TestData'
@@ -22,18 +23,6 @@ export { NavigationOptions }
  * It can either be a [string] or a function.
  */
 export type EvaluateFn = string | ((...args: any[]) => any)
-
-/**
- * Locatable represents anything able to be located, either a string selector or a <[Locator]>. <[Locator]>s are generally created using <[By]> methods.
- */
-export type Locatable = Locator | ElementHandle | string
-
-/**
- * NullableLocatable represents a <[Locatable]> which could also be null.
- *
- * Note that most Element location API methods accept a NullableLocatable but will throw an <[Error]> if its actually <[null]>.
- */
-export type NullableLocatable = Locatable | null
 
 /**
  * Defines a test suite of steps to run.

@@ -1,4 +1,5 @@
-import { Browser, Locatable } from '../types'
+import { Browser } from '../types'
+import { Locatable } from '../Locatable'
 import { Until } from '../../page/Until'
 
 const isLocatable = (arg: Locatable | any): arg is Locatable => {

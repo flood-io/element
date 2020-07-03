@@ -29,22 +29,10 @@ import { addCallbacks } from './decorators/addCallbacks'
 import { autoWaitUntil } from './decorators/autoWait'
 import { locatableToLocator, toLocatorError } from './toLocatorError'
 import { Keyboard } from '../page/Keyboard'
+import { getFrames } from '../utils/frames'
 
 export const debug = debugFactory('element:runtime:browser')
 const debugScreenshot = debugFactory('element:runtime:browser:screenshot')
-
-export const getFrames = (childFrames: Frame[], collection?: Set<Frame>): Frame[] => {
-	if (typeof collection === 'undefined') collection = new Set<Frame>()
-
-	childFrames.forEach(frame => {
-		if (!collection?.has(frame)) {
-			collection?.add(frame)
-			getFrames(frame.childFrames(), collection)
-		}
-	})
-
-	return Array.from(collection.values())
-}
 
 export class Browser<T> implements BrowserInterface {
 	public screenshots: string[]

@@ -161,6 +161,7 @@ export default class Test implements ITest {
 			stepRecover.iteration = 0
 			return false
 		}
+		console.log(`Recovery for ${recoveryStep.name} step`)
 		stepRecover.iteration += 1
 		try {
 			const result = await recoveryStep.fn.call(null, browser)

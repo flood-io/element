@@ -1,4 +1,4 @@
-import { Browser } from './types'
+import { Browser } from './IBrowser'
 
 export declare function afterAll(fn: HookFn, waitTimeout?: number): void
 export declare function afterEach(fn: HookFn, waitTimeout?: number): void

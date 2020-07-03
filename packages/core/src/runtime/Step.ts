@@ -1,4 +1,4 @@
-import { Browser } from './types'
+import { Browser } from './IBrowser'
 import { ElementPresence } from './Settings'
 
 /**

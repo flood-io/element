@@ -1,6 +1,6 @@
 import Interceptor from '../network/Interceptor'
 import { Browser } from './Browser'
-import { Browser as BrowserInterface } from './types'
+import { Browser as BrowserInterface } from './IBrowser'
 
 import { IReporter } from '../Reporter'
 import { NullReporter } from '../reporter/Null'

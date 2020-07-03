@@ -92,7 +92,7 @@ export const ENV: FloodProcessEnv = nullFloodProcessEnv
 /**
  * @docPage Browser
  */
-export { Browser, Browser as Driver } from './src/runtime/types'
+export { Browser, Browser as Driver } from './src/runtime/IBrowser'
 
 /**
  * @docPage Browser

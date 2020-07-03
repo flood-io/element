@@ -1,4 +1,4 @@
-import { Browser } from '../types'
+import { Browser } from '../IBrowser'
 import { Locatable } from '../Locatable'
 import { Until } from '../../page/Until'
 

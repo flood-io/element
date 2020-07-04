@@ -8,9 +8,9 @@ import {
 	ScreenshotOptions,
 	AuthOptions,
 	Viewport,
+	EvaluateFn,
 } from 'puppeteer'
 import DeviceDescriptors from 'puppeteer/DeviceDescriptors'
-import { EvaluateFn } from './types'
 import { Browser as BrowserInterface } from './IBrowser'
 import { NullableLocatable } from './Locatable'
 import CustomDeviceDescriptors from '../utils/CustomDeviceDescriptors'

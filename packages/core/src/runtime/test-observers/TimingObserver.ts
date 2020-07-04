@@ -1,7 +1,7 @@
 import debugFactory from 'debug'
 import { NetworkRecordingTestObserver } from './NetworkRecordingTestObserver'
 import { Timing } from './Timing'
-import Test from '../Test'
+import { Test } from './testTypes'
 import { Step } from '../Step'
 import { StructuredError } from '../../utils/StructuredError'
 import { ResponseTiming } from '../Settings'

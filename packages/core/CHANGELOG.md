@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0-beta.15](https://github.com/flood-io/element/compare/v1.3.0-beta.14...v1.3.0-beta.15) (2020-07-03)
+
+**Note:** Version bump only for package @flood/element-core
+
+
+
+
+
+# [1.3.0-beta.14](https://github.com/flood-io/element/compare/v1.3.0-beta.13...v1.3.0-beta.14) (2020-07-01)
+
+
+### Bug Fixes
+
+* handle multiple tabs that contain frame ([#193](https://github.com/flood-io/element/issues/193)) ([4729fdf](https://github.com/flood-io/element/commit/4729fdfc41ddb4aed0d2428a9a7bb1f2774b1dcd))
+
+
+
+
+
 # [1.3.0-beta.13](https://github.com/flood-io/element/compare/v1.3.0-beta.12...v1.3.0-beta.13) (2020-06-24)
 
 **Note:** Version bump only for package @flood/element-core

@@ -1,6 +1,6 @@
 import Interceptor from '../network/Interceptor'
 import { Browser } from '../runtime/Browser'
-import { TestObserver } from '../runtime/observers/TestObserver'
+import { TestObserver } from '../runtime/test-observers/TestObserver'
 import { Step } from '../runtime/Step'
 import { CancellationToken } from '../utils/CancellationToken'
 import { TestSettings } from '../runtime/Settings'
@@ -11,6 +11,7 @@ import { ScreenshotOptions } from '../page/types'
 export interface ITest {
 	settings: TestSettings
 	steps: Step[]
+	hook: Hook
 	runningBrowser?: Browser<Step> | null
 	requestInterceptor: Interceptor
 	iteration: number

@@ -30,12 +30,12 @@ export { expect } from './src/utils/Expect'
 export { default as Test } from './src/runtime/Test'
 export { Step } from './src/runtime/Step'
 
-export { NoOpTestObserver, TestObserver } from './src/runtime/observers/TestObserver'
+export { NoOpTestObserver, TestObserver } from './src/runtime/test-observers/TestObserver'
 
-export { Timing } from './src/runtime/observers/Timing'
-export { NetworkRecordingTestObserver } from './src/runtime/observers/NetworkRecordingTestObserver'
-export { Context } from './src/runtime/observers/Context'
-export { TimingObserver } from './src/runtime/observers/TimingObserver'
+export { Timing } from './src/runtime/test-observers/Timing'
+export { NetworkRecordingTestObserver } from './src/runtime/test-observers/NetworkRecordingTestObserver'
+export { Context } from './src/runtime/test-observers/Context'
+export { TimingObserver } from './src/runtime/test-observers/TimingObserver'
 
 export { Assertion } from './src/runtime/Assertion'
 export { AssertionErrorData, castStructuredError } from './src/runtime/errors/Types'
@@ -46,4 +46,4 @@ export { StructuredError } from './src/utils/StructuredError'
 
 export { default as NetworkRecorder } from './src/network/Recorder'
 export { Entry } from './src/network/Protocol'
-export { default as NetworkObserver } from './src/runtime/observers/NetworkObserver'
+export { default as NetworkObserver } from './src/runtime/test-observers/NetworkObserver'

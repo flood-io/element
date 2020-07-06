@@ -7,7 +7,7 @@ import { mustCompileFile } from './TestScript'
 import { TestScriptOptions } from './TestScriptOptions'
 import { EvaluatedScript } from './runtime/EvaluatedScript'
 import { TestSettings } from './runtime/Settings'
-import { TestObserver } from './runtime/observers/TestObserver'
+import { TestObserver } from './runtime/test-observers/TestObserver'
 import { AsyncFactory } from './utils/Factory'
 
 export interface ElementOptions {

@@ -1,7 +1,7 @@
 import { serve } from '../../tests/support/fixture-server'
 import Reporter from '../../tests/support/test-reporter'
 import NetworkRecorder from './Recorder'
-import Observer from '../runtime/observers/NetworkObserver'
+import Observer from '../runtime/test-observers/NetworkObserver'
 import { launchPlaywright, testPlaywright } from '../../tests/support/launch-browser'
 
 let playwright: testPlaywright

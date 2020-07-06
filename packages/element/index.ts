@@ -104,7 +104,17 @@ export {
 /**
  * @docPage DSL
  */
-export { step, TestFn, StepFunction, StepOptions } from '@flood/element-core'
+export {
+	step,
+	TestFn,
+	StepFunction,
+	StepOptions,
+	beforeAll,
+	beforeEach,
+	afterAll,
+	afterEach,
+	HookFn,
+} from '@flood/element-core'
 
 /**
  * @docPage helpers

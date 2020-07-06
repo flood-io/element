@@ -7,7 +7,7 @@ import { NullReporter } from '../reporter/Null'
 import { ObjectTrace } from '../utils/ObjectTrace'
 
 import { TestObserver, NullTestObserver } from './test-observers/Observer'
-import LifecycleObserver from './test-observers/Lifecycle'
+import LifecycleObserver from './test-observers/LifecycleObserver'
 import ErrorObserver from './test-observers/Errors'
 import InnerObserver from './test-observers/Inner'
 
@@ -27,6 +27,7 @@ import { EvaluatedScriptLike } from './EvaluatedScriptLike'
 import { TimingObserver } from './test-observers/TimingObserver'
 import { Context } from './test-observers/Context'
 import { NetworkRecordingTestObserver } from './test-observers/NetworkRecordingTestObserver'
+import { Hook, HookBase } from './StepLifeCycle'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:test')
@@ -34,6 +35,7 @@ const debug = require('debug')('element:runtime:test')
 export default class Test implements ITest {
 	public settings: ConcreteTestSettings
 	public steps: Step[]
+	public hook: Hook
 	public recoverySteps: StepRecoveryObject
 
 	public runningBrowser: Browser<Step> | null
@@ -64,10 +66,11 @@ export default class Test implements ITest {
 		this.script = script
 
 		try {
-			const { settings, steps, recoverySteps } = script
+			const { settings, steps, recoverySteps, hook } = script
 			this.settings = settings as ConcreteTestSettings
 			this.steps = steps
 			this.recoverySteps = recoverySteps
+			this.hook = hook
 
 			// Adds output for console in script
 			script.bindTest(this)
@@ -149,15 +152,19 @@ export default class Test implements ITest {
 		looper: Looper,
 		browser: BrowserInterface,
 	): Promise<boolean> {
-		const stepRecover = this.recoverySteps[step.name]
-		if (!stepRecover) return false
+		let stepRecover = this.recoverySteps[step.name]
+		if (!stepRecover) {
+			stepRecover = this.recoverySteps['global']
+			if (!stepRecover) return false
+		}
 		const { recoveryStep, loopCount, iteration } = stepRecover
-		const { recoveryTries } = this.settings
-		const settingRecoveryCount = loopCount || recoveryTries || 1
+		const { tries } = this.settings
+		const settingRecoveryCount = loopCount || tries || 1
 		if (!recoveryStep || iteration >= settingRecoveryCount) {
 			stepRecover.iteration = 0
 			return false
 		}
+		console.log(`Recovery for ${recoveryStep.name} step`)
 		stepRecover.iteration += 1
 		try {
 			const result = await recoveryStep.fn.call(null, browser)
@@ -230,16 +237,16 @@ export default class Test implements ITest {
 		debug('run() start')
 
 		const { testData } = this.script
-
+		let browser: Browser<Step>
+		let testDataRecord: any
 		try {
-			const browser = new Browser<Step>(
+			browser = new Browser<Step>(
 				this.script.runEnv.workRoot,
 				this.client,
 				this.settings,
 				this.willRunCommand.bind(this, testObserver),
 				this.didRunCommand.bind(this, testObserver),
 			)
-
 			this.runningBrowser = browser
 
 			if (this.settings.clearCache) await browser.clearBrowserCache()
@@ -254,15 +261,21 @@ export default class Test implements ITest {
 			await testObserver.before(this)
 
 			debug('Feeding data')
-			const testDataRecord = testData.feed()
+			testDataRecord = testData.feed()
 			if (testDataRecord === null) {
 				throw new Error('Test data exhausted, consider making it circular?')
 			} else {
 				debug(JSON.stringify(testDataRecord))
 			}
 
+			debug('running hook function: beforeAll')
+			await this.runHookFn(this.hook.beforeAll, browser, testDataRecord)
+
 			debug('running steps')
 			while (this.stepCount < this.steps.length) {
+				debug('running hook function: beforeEach')
+				await this.runHookFn(this.hook.beforeEach, browser, testDataRecord)
+
 				const step = this.steps[this.stepCount]
 				const condition = await this.callCondition(step, iteration, browser)
 				if (!condition) continue
@@ -292,6 +305,9 @@ export default class Test implements ITest {
 					throw Error('test failed')
 				}
 				this.stepCount += 1
+
+				debug('running hook function: afterEach')
+				await this.runHookFn(this.hook.afterEach, browser, testDataRecord)
 			}
 		} catch (err) {
 			console.log('error -> failed', err)
@@ -300,9 +316,11 @@ export default class Test implements ITest {
 		} finally {
 			await this.requestInterceptor.detach(this.client.page)
 		}
-
 		// TODO report skipped steps
 		await testObserver.after(this)
+
+		debug('running hook function: afterAll')
+		await this.runHookFn(this.hook.afterAll, browser, testDataRecord)
 	}
 
 	get currentURL(): string {
@@ -326,7 +344,6 @@ export default class Test implements ITest {
 
 		try {
 			debug(`Run step: ${step.name}`) // ${step.fn.toString()}`)
-
 			browser.settings = { ...this.settings, ...step.options }
 			await step.fn.call(null, browser, testDataRecord)
 		} catch (err) {
@@ -390,14 +407,16 @@ export default class Test implements ITest {
 	}
 
 	public async willRunCommand(testObserver: TestObserver, browser: Browser<Step>, command: string) {
-		const step: Step = browser.customContext
-		await testObserver.beforeStepAction(this, step, command)
-
-		debug(`Before action: '${command}()' waiting on actionDelay: ${this.settings.actionDelay}`)
+		if (browser.customContext) {
+			await testObserver.beforeStepAction(this, browser.customContext, command)
+			debug(`Before action: '${command}()' waiting on actionDelay: ${this.settings.actionDelay}`)
+		}
 	}
 
 	async didRunCommand(testObserver: TestObserver, browser: Browser<Step>, command: string) {
-		await testObserver.afterStepAction(this, browser.customContext, command)
+		if (browser.customContext) {
+			await testObserver.afterStepAction(this, browser.customContext, command)
+		}
 	}
 
 	public async takeScreenshot(options?: ScreenshotOptions) {
@@ -413,5 +432,34 @@ export default class Test implements ITest {
 	/* @deprecated */
 	newTrace(step: Step): ObjectTrace {
 		return new ObjectTrace(this.script.runEnv.workRoot, step.name)
+	}
+
+	private async runHookFn(
+		hooks: HookBase[],
+		browser: Browser<Step>,
+		testDataRecord: any,
+	): Promise<void> {
+		try {
+			for (const hook of hooks) {
+				browser.settings = { ...this.settings }
+				browser.settings.waitTimeout = hook.waitTimeout
+				const hookFn = hook.fn.bind(null, browser, testDataRecord)
+				await this.doHookFnWithTimeout(hookFn, hook.waitTimeout)
+			}
+		} catch (error) {
+			throw new Error(error)
+		}
+	}
+
+	private async doHookFnWithTimeout(fn: any, timeout: number): Promise<any> {
+		// Create a promise that rejects in <ms> milliseconds
+		const promiseTimeout = new Promise((_, reject) => {
+			const id = setTimeout(() => {
+				clearTimeout(id)
+				reject()
+			}, timeout * 1e3)
+		})
+		// Returns a race between our timeout and the passed in promise
+		return Promise.race([fn(), promiseTimeout])
 	}
 }

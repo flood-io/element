@@ -1,0 +1,28 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"target": "ES2018",
+		"moduleResolution": "node",
+		"removeComments": true,
+		"lib": ["esnext", "dom"],
+		"pretty": true,
+		"strictNullChecks": true,
+		"forceConsistentCasingInFileNames": true,
+		"allowUnreachableCode": false,
+		"alwaysStrict": true,
+		"noUnusedLocals": true,
+		"noImplicitAny": true,
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"declaration": true,
+		"allowJs": false,
+		"checkJs": false,
+		"baseUrl": "./",
+		"paths": {
+			"@flood/element": ["../../packages/core/index.ts"]
+		}
+	},
+	"files": ["test.ts"]
+}

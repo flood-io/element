@@ -6,6 +6,7 @@ import { CancellationToken } from '../utils/CancellationToken'
 import { TestSettings } from '../runtime/Settings'
 import { Looper } from '../Looper'
 import { ScreenshotOptions } from '../page/types'
+import { Hook } from '../runtime/StepLifeCycle'
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 export interface ITest {

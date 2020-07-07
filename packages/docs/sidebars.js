@@ -25,6 +25,7 @@ module.exports = {
       "api/test-data",
       "api/settings",
       "api/env",
+      "api/constants"
     ],
     Tutorials: [
       "tutorials/youtube",

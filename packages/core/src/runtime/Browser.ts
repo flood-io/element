@@ -594,4 +594,8 @@ export class Browser<T> implements BrowserInterface {
 
 		return newPage
 	}
+
+	public async close(): Promise<void> {
+		await this.client.browser.close()
+	}
 }

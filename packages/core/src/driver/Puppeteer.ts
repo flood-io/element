@@ -1,4 +1,4 @@
-import puppeteer, { LaunchOptions, Browser, Page } from 'puppeteer'
+import { LaunchOptions, Browser, Page, launch as pLaunch } from 'puppeteer'
 
 import { ChromeVersion } from '../runtime/Settings'
 
@@ -107,7 +107,7 @@ export async function launch(
 
 	options.args.push('--auth-server-whitelist="hostname/domain"')
 
-	const browser = await puppeteer.launch(options)
+	const browser = await pLaunch(options)
 	const page = await browser.newPage()
 
 	return new PuppeteerClient(browser, page)

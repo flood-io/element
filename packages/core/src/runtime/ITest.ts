@@ -1,6 +1,6 @@
 import Interceptor from '../network/Interceptor'
 import { Browser } from './Browser'
-import { TestObserver } from './test-observers/Observer'
+import { TestObserver } from './test-observers'
 import { Step } from './Step'
 import { CancellationToken } from '../utils/CancellationToken'
 import { ScreenshotOptions } from 'puppeteer'

@@ -13,7 +13,7 @@ import { URLCondition } from './conditions/URLCondition'
 import { DialogCondition } from './conditions/DialogCondition'
 import { FrameCondition } from './conditions/FrameCondition'
 import { Condition } from './Condition'
-import { NullableLocatable, Locatable } from '../runtime/types'
+import { NullableLocatable, Locatable } from '../runtime/Locatable'
 import { URLNotMatchCondition } from './conditions/URLNotMatchCondition'
 
 /**

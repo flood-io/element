@@ -1,7 +1,7 @@
 import { AnyErrorData, interpretError } from '../errors/Types'
 import interpretPuppeteerError from '../errors/interpretPuppeteerError'
 import { StructuredError } from '../../utils/StructuredError'
-import { Browser } from '../types'
+import { Browser } from '../IBrowser'
 
 /**
  * Defines a Function Decorator which wraps a method with class local before and after

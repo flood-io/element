@@ -1,6 +1,6 @@
-import { Browser } from './types'
 import { DEFAULT_WAIT_TIMEOUT_SECONDS } from './Settings'
 import ms from 'ms'
+import { Browser } from './IBrowser'
 
 export declare function afterAll(fn: HookFn, waitTimeout?: any): void
 export declare function afterEach(fn: HookFn, waitTimeout?: any): void

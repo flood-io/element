@@ -1,6 +1,6 @@
-import { Browser } from './types'
 import { ElementPresence, DEFAULT_WAIT_TIMEOUT_SECONDS } from './Settings'
 import ms from 'ms'
+import { Browser } from './IBrowser'
 
 /**
  * Declares each step in your test. This must go within your main test expression.

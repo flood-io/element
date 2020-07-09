@@ -1,7 +1,7 @@
 import { ElementHandle } from './ElementHandle'
 import { Page, Frame } from 'puppeteer'
 import { TargetLocator as ITargetLocator, ElementHandle as IElementHandle } from './types'
-import { getFrames } from '../runtime/Browser'
+import { getFrames } from '../utils/frames'
 
 /**
  * @internal

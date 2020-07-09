@@ -1,15 +1,21 @@
 import Interceptor from '../network/Interceptor'
 import { Browser } from './Browser'
-import { Browser as BrowserInterface } from './types'
+import { Browser as BrowserInterface } from './IBrowser'
 
 import { IReporter } from '../Reporter'
 import { NullReporter } from '../reporter/Null'
 import { ObjectTrace } from '../utils/ObjectTrace'
 
-import { TestObserver, NullTestObserver } from './test-observers/Observer'
-import LifecycleObserver from './test-observers/LifecycleObserver'
-import ErrorObserver from './test-observers/Errors'
-import InnerObserver from './test-observers/Inner'
+import {
+	TestObserver,
+	NullTestObserver,
+	LifecycleObserver,
+	ErrorObserver,
+	InnerObserver,
+	TimingObserver,
+	Context,
+	NetworkRecordingTestObserver,
+} from './test-observers'
 
 import { AnyErrorData, EmptyErrorData, AssertionErrorData } from './errors/Types'
 import { StructuredError } from '../utils/StructuredError'
@@ -24,9 +30,6 @@ import { ScreenshotOptions } from 'puppeteer'
 import { TestSettings, ConcreteTestSettings, DEFAULT_STEP_WAIT_SECONDS } from './Settings'
 import { ITest } from './ITest'
 import { EvaluatedScriptLike } from './EvaluatedScriptLike'
-import { TimingObserver } from './test-observers/TimingObserver'
-import { Context } from './test-observers/Context'
-import { NetworkRecordingTestObserver } from './test-observers/NetworkRecordingTestObserver'
 import { Hook, HookBase } from './StepLifeCycle'
 import ms from 'ms'
 

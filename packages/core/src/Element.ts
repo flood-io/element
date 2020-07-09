@@ -1,6 +1,6 @@
 import { Logger } from 'winston'
 import { IReporter } from './Reporter'
-import { PlaywrightClient, launch, BROWSER_TYPE } from './driver/Playwright'
+import { PlaywrightClient, launch } from './driver/Playwright'
 import { RuntimeEnvironment } from './runtime-environment/types'
 import { IRunner, Runner, PersistentRunner, TestCommander } from './Runner'
 import { mustCompileFile } from './TestScript'
@@ -9,6 +9,7 @@ import { EvaluatedScript } from './runtime/EvaluatedScript'
 import { TestSettings } from './runtime/Settings'
 import { TestObserver } from './runtime/test-observers/TestObserver'
 import { AsyncFactory } from './utils/Factory'
+import { BROWSER_TYPE } from './page/types'
 
 export interface ElementOptions {
 	logger: Logger

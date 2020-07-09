@@ -1,5 +1,6 @@
 import { ViewportSize } from 'playwright'
-import { BROWSER_TYPE } from '../driver/Playwright'
+import { BROWSER_TYPE } from '../page/types'
+
 /**
  * Declares the settings for the test, overriding the settings constant exported in the test script.
  *

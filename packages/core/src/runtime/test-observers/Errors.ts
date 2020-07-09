@@ -1,4 +1,4 @@
-import Test from '../Test'
+import { Test } from './testTypes'
 import { Step } from '../Step'
 import { StructuredError } from '../../utils/StructuredError'
 import { NoOpTestObserver } from './TestObserver'

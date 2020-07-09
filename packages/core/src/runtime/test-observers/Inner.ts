@@ -1,5 +1,5 @@
 import { NoOpTestObserver, TestObserver } from './TestObserver'
-import { ITest } from '../../interface/ITest'
+import { ITest } from './testTypes'
 import { Step } from '../Step'
 import { DEFAULT_ACTION_WAIT_SECONDS } from '../Settings'
 

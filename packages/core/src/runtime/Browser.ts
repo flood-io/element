@@ -8,10 +8,18 @@ import {
 	BrowserContext,
 	HTTPCredentials,
 } from 'playwright'
-import { Browser as BrowserInterface, NullableLocatable, EvaluateFn } from './types'
-import { ElementHandle, NavigationOptions, ScreenshotOptions } from '../page/types'
+import { Browser as BrowserInterface } from '../interface/IBrowser'
+import { NullableLocatable } from './Locatable'
+import {
+	ElementHandle,
+	NavigationOptions,
+	ScreenshotOptions,
+	EvaluateFn,
+	ClickOptions,
+	BROWSER_TYPE,
+} from '../page/types'
 import { TargetLocator } from '../page/TargetLocator'
-import { PlaywrightClientLike, BROWSER_TYPE } from '../driver/Playwright'
+import { PlaywrightClientLike } from '../driver/Playwright'
 import { WorkRoot } from '../runtime-environment/types'
 import KSUID from 'ksuid'
 import { Key, KeyDefinitions } from '../page/Enums'
@@ -19,28 +27,16 @@ import { ConcreteTestSettings } from './Settings'
 import { NetworkErrorData, ActionErrorData } from './errors/Types'
 import { StructuredError } from '../utils/StructuredError'
 import debugFactory from 'debug'
-import Mouse, { ClickOptions } from '../page/Mouse'
+import Mouse from '../page/Mouse'
 import { rewriteError } from './decorators/rewriteError'
 import { addCallbacks } from './decorators/addCallbacks'
 import { autoWaitUntil } from './decorators/autoWait'
 import { locatableToLocator, toLocatorError } from './toLocatorError'
 import { Keyboard } from '../page/Keyboard'
+import { getFrames } from '../utils/frames'
 
 export const debug = debugFactory('element:runtime:browser')
 const debugScreenshot = debugFactory('element:runtime:browser:screenshot')
-
-export const getFrames = (childFrames: Frame[], collection?: Set<Frame>): Frame[] => {
-	if (typeof collection === 'undefined') collection = new Set<Frame>()
-
-	childFrames.forEach(frame => {
-		if (!collection?.has(frame)) {
-			collection?.add(frame)
-			getFrames(frame.childFrames(), collection)
-		}
-	})
-
-	return Array.from(collection.values())
-}
 
 export class Browser<T> implements BrowserInterface {
 	public screenshots: string[]

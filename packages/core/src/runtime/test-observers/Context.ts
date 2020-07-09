@@ -1,5 +1,5 @@
 import { IReporter } from '../../Reporter'
-import Test from '../Test'
+import { Test } from './testTypes'
 import NetworkRecorder from '../../network/Recorder'
 import NetworkObserver from './NetworkObserver'
 import { Page } from 'playwright'

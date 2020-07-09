@@ -1,5 +1,6 @@
 import { PlaywrightClientLike, launch } from '../../src/driver/Playwright'
 export { PlaywrightClientLike as testPlaywright }
+import { DEFAULT_SETTINGS } from '../../src/runtime/Settings'
 
 export async function launchPlaywright(): Promise<PlaywrightClientLike> {
 	let opts = {
@@ -10,5 +11,5 @@ export async function launchPlaywright(): Promise<PlaywrightClientLike> {
 		opts.sandbox = false
 	}
 
-	return launch(opts)
+	return launch(opts, DEFAULT_SETTINGS)
 }

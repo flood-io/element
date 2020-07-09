@@ -1,6 +1,38 @@
 import { ElementHandle as PElementHandle, Page } from 'playwright'
 import { Point } from './Point'
-import { ClickOptions } from './Mouse'
+
+export enum BROWSER_TYPE {
+	CHROME = 'chromium',
+	FIREFOX = 'firefox',
+	WEBKIT = 'webkit',
+}
+
+export type MouseButtons = 'left' | 'right' | 'middle'
+
+export interface MousePressOptions {
+	/**
+	 * left, right, or middle.
+	 * @default left
+	 */
+	button?: MouseButtons
+	/**
+	 * The number of clicks.
+	 * @default 1
+	 */
+	clickCount?: number
+}
+
+export interface ClickOptions {
+	/** @default MouseButtons.Left */
+	button?: MouseButtons
+	/** @default 1 */
+	clickCount?: number
+	/**
+	 * Time to wait between mousedown and mouseup in milliseconds.
+	 * @default 0
+	 */
+	delay?: number
+}
 
 export interface LocatorBuilder {
 	pageFunc: EvaluateFn

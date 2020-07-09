@@ -1,6 +1,6 @@
 import Interceptor from '../network/Interceptor'
 import { Browser } from '../runtime/Browser'
-import { TestObserver } from '../runtime/test-observers/TestObserver'
+import { TestObserver } from '../runtime/test-observers'
 import { Step } from '../runtime/Step'
 import { CancellationToken } from '../utils/CancellationToken'
 import { TestSettings } from '../runtime/Settings'

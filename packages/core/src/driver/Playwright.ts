@@ -1,11 +1,6 @@
 import playwright, { LaunchOptions, Browser, Page } from 'playwright'
 import { ConcreteTestSettings } from '../runtime/Settings'
-
-export enum BROWSER_TYPE {
-	CHROME = 'chromium',
-	FIREFOX = 'firefox',
-	WEBKIT = 'webkit',
-}
+import { BROWSER_TYPE } from '../page/types'
 
 export type ConcreteLaunchOptions = LaunchOptions & {
 	args: string[]

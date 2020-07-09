@@ -4,7 +4,13 @@ import {
 	ChromiumBrowserContext,
 	CDPSession,
 } from 'playwright'
-import { ElementHandle as IElementHandle, Locator, EvaluateFn, ScreenshotOptions } from './types'
+import {
+	ElementHandle as IElementHandle,
+	Locator,
+	EvaluateFn,
+	ScreenshotOptions,
+	ClickOptions,
+} from './types'
 import {
 	ErrorInterpreter,
 	AnyErrorData,
@@ -12,14 +18,12 @@ import {
 	EmptyErrorData,
 	interpretError,
 } from '../runtime/errors/Types'
-import interpretPuppeteerError from '../runtime/errors/interpretPuppeteerError'
+// import interpretPuppeteerError from '../runtime/errors/interpretPuppeteerError'
 import { StructuredError } from '../utils/StructuredError'
 import { Key } from './Enums'
 import debugFactory from 'debug'
 import { Point } from './Point'
 import { CSSLocator } from './locators/index'
-import { BaseLocator } from './Locator'
-import { ClickOptions } from './Mouse'
 const debug = debugFactory('element:page:element-handle')
 
 /**
@@ -39,7 +43,7 @@ async function getProperty<T>(element: PElementHandle, prop: string): Promise<T 
 function wrapDescriptiveError(
 	...errorInterpreters: ErrorInterpreter<ElementHandle, AnyErrorData>[]
 ) {
-	errorInterpreters.push(interpretPuppeteerError)
+	// errorInterpreters.push(interpretPuppeteerError)
 
 	return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
 		const originalFn = descriptor.value
@@ -301,6 +305,7 @@ export class ElementHandle implements IElementHandle, Locator {
 	// TODO wrap
 	public async findElement(locator: string | Locator): Promise<IElementHandle | null> {
 		if (typeof locator === 'string') {
+			const { BaseLocator } = await import('./Locator')
 			locator = new BaseLocator(new CSSLocator(locator), 'handle.findElement')
 		}
 
@@ -312,6 +317,7 @@ export class ElementHandle implements IElementHandle, Locator {
 	 */
 	public async findElements(locator: string | Locator): Promise<IElementHandle[]> {
 		if (typeof locator === 'string') {
+			const { BaseLocator } = await import('./Locator')
 			locator = new BaseLocator(new CSSLocator(locator), 'handle.findElements')
 		}
 		return locator.findMany(this.page, this.element)

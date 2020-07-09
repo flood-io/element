@@ -1,6 +1,6 @@
 import { Context } from './Context'
 import { NoOpTestObserver, TestObserver } from './TestObserver'
-import Test from '../Test'
+import { Test } from './testTypes'
 
 export class NetworkRecordingTestObserver extends NoOpTestObserver {
 	constructor(protected ctx: Context, public next: TestObserver) {

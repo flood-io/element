@@ -1,13 +1,13 @@
 import { AnyErrorData, interpretError } from '../errors/Types'
-import interpretPuppeteerError from '../errors/interpretPuppeteerError'
+// import interpretPuppeteerError from '../errors/interpretPuppeteerError'
 import { StructuredError } from '../../utils/StructuredError'
-import { Browser } from '../types'
+import { Browser } from '../../interface/IBrowser'
 
 /**
  * Defines a Function Decorator which wraps a method with class local before and after
  */
 export function addCallbacks() {
-	const errorInterpreters = [interpretPuppeteerError]
+	const errorInterpreters = []
 	return function(_target: Browser, propertyKey: string, descriptor: PropertyDescriptor) {
 		const originalFn = descriptor.value
 		descriptor.value = async function(...args: any[]) {

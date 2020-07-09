@@ -19,7 +19,8 @@ import {
 	RecoverWith,
 	extractStep,
 } from './Step'
-import { SuiteDefinition, Browser } from './types'
+import { SuiteDefinition } from './types'
+import { Browser } from '../interface/IBrowser'
 import Test from './Test'
 import { mustCompileFile } from '../TestScript'
 import { TestScriptError, TestScriptErrorMapper } from '../TestScriptError'
@@ -36,7 +37,7 @@ import { TestDataSource, TestDataFactory } from '../test-data/TestData'
 import { BoundTestDataLoaders } from '../test-data/TestDataLoaders'
 import { EvaluatedScriptLike } from './EvaluatedScriptLike'
 import { Hook, normalizeHookBase } from './StepLifeCycle'
-import { BROWSER_TYPE } from '../driver/Playwright'
+import { BROWSER_TYPE } from '../page/types'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:eval-script')

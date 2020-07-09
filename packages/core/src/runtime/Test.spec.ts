@@ -8,7 +8,7 @@ import { EventEmitterReporter } from '../reporter/EventEmitter'
 import { ConcreteTestSettings } from './Settings'
 import { readFileSync, writeFileSync } from 'fs-extra'
 import { tmpdir } from 'os'
-import { BROWSER_TYPE } from '../driver/Playwright'
+import { BROWSER_TYPE } from '../page/types'
 
 let playwright: testPlaywright
 let testReporter: EventEmitterReporter = new EventEmitterReporter()

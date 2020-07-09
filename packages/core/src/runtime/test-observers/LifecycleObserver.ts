@@ -1,4 +1,4 @@
-import Test from '../Test'
+import { Test } from './testTypes'
 import { TestObserver } from './TestObserver'
 import { Step } from '../Step'
 import { TestEvent } from '../../Reporter'

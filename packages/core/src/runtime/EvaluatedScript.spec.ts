@@ -39,7 +39,7 @@ describe('EvaluatedScript', () => {
 
 			expect(settings.name).toBe('Empty test for evaluating defaults')
 			expect(settings.description).toBe('Use this in the test environment.')
-			expect(settings.duration).toBe(DEFAULT_SETTINGS.duration)
+			expect(settings.duration).toBe(`${DEFAULT_SETTINGS.duration}`)
 			expect(settings.loopCount).toBe(DEFAULT_SETTINGS.loopCount)
 			expect(settings.actionDelay).toBe(DEFAULT_SETTINGS.actionDelay)
 			expect(settings.stepDelay).toBe(DEFAULT_SETTINGS.stepDelay)
@@ -59,7 +59,7 @@ describe('EvaluatedScript', () => {
 			expect(settings.name).toBe('Test Script for evaluating VM features')
 			expect(settings.description).toBe('Use this in the test environment.')
 			expect(settings.duration).toBe(30e3)
-			expect(settings.waitTimeout).toBe(5)
+			expect(settings.waitTimeout).toBe(5000)
 			expect(settings.userAgent).toBe('I AM ROBOT')
 			expect(settings.ignoreHTTPSErrors).toBe(false)
 
@@ -69,8 +69,8 @@ describe('EvaluatedScript', () => {
 		test('allows overriding settings per step', async () => {
 			const { settings, steps } = new EvaluatedScript(runEnv, vmFeaturesTestScript)
 
-			expect(settings.waitTimeout).toBe(5)
-			expect(steps[0].options).toEqual({ waitTimeout: 60 })
+			expect(settings.waitTimeout).toBe(5000)
+			expect(steps[0].options).toEqual({ waitTimeout: 60000 })
 
 			// TODO move to Test.spec ?
 			// let actionSpy = Sinon.spy()

@@ -7,8 +7,8 @@ export const settings: TestSettings = {
 	clearCookies: false,
 	responseTimeMeasurement: 'step',
 	userAgent: 'I AM ROBOT',
-	actionDelay: 1,
-	stepDelay: 1,
+	actionDelay: '1s',
+	stepDelay: '1s',
 }
 
 let data = [{ age: 42 }, { age: 16 }, { age: 29 }, { age: 54 }, { age: 31 }]

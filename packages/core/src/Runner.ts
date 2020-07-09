@@ -103,7 +103,7 @@ export class Runner {
 			}
 
 			if (settings.duration > 0) {
-				this.logger.debug(`Test timeout set to ${settings.duration}s`)
+				this.logger.debug(`Test timeout set to ${settings.duration} ms`)
 			}
 			this.logger.debug(`Test loop count set to ${settings.loopCount} iterations`)
 			this.logger.debug(`Settings: ${JSON.stringify(settings, null, 2)}`)

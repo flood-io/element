@@ -28,6 +28,7 @@ import { TimingObserver } from './test-observers/TimingObserver'
 import { Context } from './test-observers/Context'
 import { NetworkRecordingTestObserver } from './test-observers/NetworkRecordingTestObserver'
 import { Hook, HookBase } from './StepLifeCycle'
+import ms from 'ms'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:test')
@@ -402,7 +403,7 @@ export default class Test implements ITest {
 				resolve()
 				return
 			}
-			setTimeout(resolve, this.settings.stepDelay * 1e3 || DEFAULT_STEP_WAIT_SECONDS * 1e3)
+			setTimeout(resolve, this.settings.stepDelay || ms(DEFAULT_STEP_WAIT_SECONDS))
 		})
 	}
 
@@ -442,7 +443,7 @@ export default class Test implements ITest {
 		try {
 			for (const hook of hooks) {
 				browser.settings = { ...this.settings }
-				browser.settings.waitTimeout = hook.waitTimeout
+				browser.settings.waitTimeout = Math.max(browser.settings.waitTimeout, hook.waitTimeout)
 				const hookFn = hook.fn.bind(null, browser, testDataRecord)
 				await this.doHookFnWithTimeout(hookFn, hook.waitTimeout)
 			}
@@ -457,7 +458,7 @@ export default class Test implements ITest {
 			const id = setTimeout(() => {
 				clearTimeout(id)
 				reject()
-			}, timeout * 1e3)
+			}, timeout)
 		})
 		// Returns a race between our timeout and the passed in promise
 		return Promise.race([fn(), promiseTimeout])

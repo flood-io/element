@@ -1,5 +1,6 @@
 import CustomDeviceDescriptors from '../utils/CustomDeviceDescriptors'
 import { Viewport } from 'puppeteer'
+import ms from 'ms'
 
 /**
  * Declares the settings for the test, overriding the settings constant exported in the test script.
@@ -20,8 +21,9 @@ import { Viewport } from 'puppeteer'
 export declare function setup(settings: TestSettings): void
 
 // Waits is seconds
-export const DEFAULT_STEP_WAIT_SECONDS = 5
-export const DEFAULT_ACTION_WAIT_SECONDS = 0.5
+export const DEFAULT_STEP_WAIT_SECONDS = '5s'
+export const DEFAULT_ACTION_WAIT_SECONDS = '0.5s'
+export const DEFAULT_WAIT_TIMEOUT_SECONDS = '30s'
 
 /**
  * Specifies a method for recording response times.
@@ -84,7 +86,7 @@ export interface TestSettings {
 	 *
 	 * Defaults to `-1` for no timeout.
 	 */
-	duration?: number
+	duration?: any
 
 	/**
 	 * Number of times to run this test.
@@ -98,12 +100,12 @@ export interface TestSettings {
 	 *
 	 * Waiting between actions simulates the behaviour of a real user as they read, think and act on the page's content.
 	 */
-	actionDelay?: number
+	actionDelay?: any
 
 	/**
 	 * Specifies the time (in seconds) to wait after each step.
 	 */
-	stepDelay?: number
+	stepDelay?: any
 
 	/**
 	 * Specifies a custom User Agent (UA) string to send.
@@ -124,7 +126,7 @@ export interface TestSettings {
 	/**
 	 * Global wait timeout applied to all wait tasks.
 	 */
-	waitTimeout?: number
+	waitTimeout?: any
 
 	/**
 	 * Specifies whether cookies should be cleared after each test loop.
@@ -246,14 +248,14 @@ export interface TestSettings {
  */
 export const DEFAULT_SETTINGS: ConcreteTestSettings = {
 	waitUntil: false,
-	duration: -1,
+	duration: '-1',
 	loopCount: Infinity,
-	actionDelay: 2,
-	stepDelay: 6,
+	actionDelay: '2s',
+	stepDelay: '6s',
 	screenshotOnFailure: true,
 	clearCookies: true,
 	clearCache: false,
-	waitTimeout: 30,
+	waitTimeout: '30s',
 	responseTimeMeasurement: 'step',
 	tries: 0,
 	/**
@@ -290,24 +292,32 @@ export type ConcreteTestSettings = Required<TestSettings>
  */
 export function normalizeSettings(settings: TestSettings): TestSettings {
 	// Convert user inputted seconds to milliseconds
-	if (typeof settings.waitTimeout === 'number' && settings.waitTimeout > 1e3) {
-		settings.waitTimeout = settings.waitTimeout / 1e3
-	} else if (Number(settings.waitTimeout) === 0) {
-		settings.waitTimeout = 30
+	if (typeof settings.waitTimeout === 'string' && settings.waitTimeout) {
+		settings.waitTimeout = ms(settings.waitTimeout)
+	}
+	if (settings.waitTimeout <= 0) {
+		settings.waitTimeout = ms(DEFAULT_WAIT_TIMEOUT_SECONDS)
 	}
 
-	// Ensure action delay is stored in seconds (assuming any value greater than 60 seconds would be ms)
-	if (typeof settings.actionDelay === 'number' && settings.actionDelay > 60) {
-		settings.actionDelay = settings.actionDelay / 1e3
-	} else if (Number(settings.actionDelay) === 0) {
-		settings.actionDelay = DEFAULT_ACTION_WAIT_SECONDS
+	// Ensure action delay is stored in milliseconds
+	if (typeof settings.actionDelay === 'string' && settings.actionDelay) {
+		settings.actionDelay = ms(settings.actionDelay)
+	}
+	if (settings.actionDelay <= 0) {
+		settings.actionDelay = ms(DEFAULT_ACTION_WAIT_SECONDS)
 	}
 
 	// Ensure step delay is stored in seconds
-	if (typeof settings.stepDelay === 'number' && settings.stepDelay > 60) {
-		settings.stepDelay = settings.stepDelay / 1e3
-	} else if (Number(settings.stepDelay) === 0) {
-		settings.actionDelay = DEFAULT_STEP_WAIT_SECONDS
+	if (typeof settings.stepDelay === 'string' && settings.stepDelay) {
+		settings.stepDelay = ms(settings.stepDelay)
+	}
+	if (settings.stepDelay <= 0) {
+		settings.stepDelay = ms(DEFAULT_STEP_WAIT_SECONDS)
+	}
+
+	// Convert user inputted seconds to milliseconds
+	if (typeof settings.duration === 'string' && settings.duration) {
+		settings.duration = ms(settings.duration)
 	}
 
 	return settings

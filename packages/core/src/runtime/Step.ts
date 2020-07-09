@@ -1,5 +1,6 @@
 import { Browser } from './types'
-import { ElementPresence } from './Settings'
+import { ElementPresence, DEFAULT_WAIT_TIMEOUT_SECONDS } from './Settings'
+import ms from 'ms'
 
 /**
  * Declares each step in your test. This must go within your main test expression.
@@ -104,7 +105,7 @@ export type StepOptions = {
 	once?: boolean
 	predicate?: ConditionFn
 	skip?: boolean
-	waitTimeout?: number
+	waitTimeout?: any
 	waitUntil?: ElementPresence
 	tries?: number
 	repeat?: {
@@ -187,10 +188,11 @@ export type Step = {
  */
 export function normalizeStepOptions(stepOpts: StepOptions): StepOptions {
 	// Convert user inputted seconds to milliseconds
-	if (typeof stepOpts.waitTimeout === 'number' && stepOpts.waitTimeout > 1e3) {
-		stepOpts.waitTimeout = stepOpts.waitTimeout / 1e3
-	} else if (Number(stepOpts.waitTimeout) === 0) {
-		stepOpts.waitTimeout = 30
+	if (typeof stepOpts.waitTimeout === 'string' && stepOpts.waitTimeout) {
+		stepOpts.waitTimeout = ms(stepOpts.waitTimeout)
+	}
+	if (stepOpts.waitTimeout <= 0) {
+		stepOpts.waitTimeout = ms(DEFAULT_WAIT_TIMEOUT_SECONDS)
 	}
 
 	return stepOpts

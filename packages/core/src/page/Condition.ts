@@ -30,7 +30,7 @@ export abstract class Condition {
 	public abstract async waitForEvent(page: Page): Promise<unknown>
 
 	protected get timeout(): number {
-		return this.settings.waitTimeout * 1e3
+		return this.settings.waitTimeout
 	}
 }
 

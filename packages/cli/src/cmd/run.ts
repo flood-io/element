@@ -16,6 +16,8 @@ import createLogger from '.././utils/Logger'
 import { ConsoleReporter } from '.././utils/ConsoleReporter'
 import glob from 'glob'
 import chalk from 'chalk'
+import ms from 'ms'
+
 interface RunCommonArguments extends Arguments {
 	file: string
 	chrome?: string
@@ -24,8 +26,8 @@ interface RunCommonArguments extends Arguments {
 	devtools?: boolean
 	sandbox?: boolean
 	loopCount?: number
-	stepDelay?: number
-	actionDelay?: number
+	stepDelay?: any
+	actionDelay?: any
 	fastForward?: boolean
 	slowMo?: boolean
 	watch?: boolean
@@ -42,15 +44,26 @@ function setupDelayOverrides(
 	if (testSettingOverrides == null) testSettingOverrides = {}
 	const { actionDelay, stepDelay } = args
 
-	testSettingOverrides.actionDelay = actionDelay && actionDelay > 0 ? actionDelay : 0
-	testSettingOverrides.stepDelay = stepDelay && stepDelay > 0 ? stepDelay : 0
+	if (typeof actionDelay === 'string' && actionDelay) {
+		testSettingOverrides.actionDelay = ms(actionDelay)
+	}
+	if (testSettingOverrides.actionDelay <= 0) {
+		testSettingOverrides.actionDelay = 0
+	}
+
+	if (typeof stepDelay === 'string' && stepDelay) {
+		testSettingOverrides.stepDelay = ms(stepDelay)
+	}
+	if (testSettingOverrides.stepDelay <= 0) {
+		testSettingOverrides.stepDelay = 0
+	}
 
 	if (args.fastForward) {
-		testSettingOverrides.stepDelay = 1
-		testSettingOverrides.actionDelay = 1
+		testSettingOverrides.stepDelay = ms('1s')
+		testSettingOverrides.actionDelay = ms('1s')
 	} else if (args.slowMo) {
-		testSettingOverrides.stepDelay = 10
-		testSettingOverrides.actionDelay = 10
+		testSettingOverrides.stepDelay = ms('10s')
+		testSettingOverrides.actionDelay = ms('10s')
 	}
 	return testSettingOverrides
 }
@@ -271,12 +284,12 @@ const cmd: CommandModule = {
 			.options('step-delay', {
 				group: 'Running the test script:',
 				describe: 'Override stepDelay test script setting',
-				type: 'number',
+				type: 'string',
 			})
 			.options('action-delay', {
 				group: 'Running the test script:',
 				describe: 'Override actionDelay test script setting',
-				type: 'number',
+				type: 'string',
 			})
 			.option('loop-count', {
 				group: 'Running the test script:',

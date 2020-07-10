@@ -191,7 +191,7 @@ export function normalizeStepOptions(stepOpts: StepOptions): StepOptions {
 	if (typeof stepOpts.waitTimeout === 'string' && stepOpts.waitTimeout) {
 		stepOpts.waitTimeout = ms(stepOpts.waitTimeout)
 	}
-	if (stepOpts.waitTimeout <= 0) {
+	if (typeof stepOpts.waitTimeout !== 'string' && stepOpts.waitTimeout <= 0) {
 		stepOpts.waitTimeout = ms(DEFAULT_WAIT_TIMEOUT_SECONDS)
 	}
 

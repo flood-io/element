@@ -295,7 +295,7 @@ export function normalizeSettings(settings: TestSettings): TestSettings {
 	if (typeof settings.waitTimeout === 'string' && settings.waitTimeout) {
 		settings.waitTimeout = ms(settings.waitTimeout)
 	}
-	if (settings.waitTimeout <= 0) {
+	if (typeof settings.waitTimeout !== 'string' && settings.waitTimeout <= 0) {
 		settings.waitTimeout = ms(DEFAULT_WAIT_TIMEOUT_SECONDS)
 	}
 
@@ -303,7 +303,7 @@ export function normalizeSettings(settings: TestSettings): TestSettings {
 	if (typeof settings.actionDelay === 'string' && settings.actionDelay) {
 		settings.actionDelay = ms(settings.actionDelay)
 	}
-	if (settings.actionDelay <= 0) {
+	if (typeof settings.actionDelay !== 'string' && settings.actionDelay <= 0) {
 		settings.actionDelay = ms(DEFAULT_ACTION_WAIT_SECONDS)
 	}
 
@@ -311,13 +311,15 @@ export function normalizeSettings(settings: TestSettings): TestSettings {
 	if (typeof settings.stepDelay === 'string' && settings.stepDelay) {
 		settings.stepDelay = ms(settings.stepDelay)
 	}
-	if (settings.stepDelay <= 0) {
+	if (typeof settings.stepDelay !== 'string' && settings.stepDelay <= 0) {
 		settings.stepDelay = ms(DEFAULT_STEP_WAIT_SECONDS)
 	}
 
 	// Convert user inputted seconds to milliseconds
 	if (typeof settings.duration === 'string' && settings.duration) {
 		settings.duration = ms(settings.duration)
+	} else {
+		settings.duration = ms('-1')
 	}
 
 	return settings

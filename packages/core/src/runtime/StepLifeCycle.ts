@@ -1,6 +1,6 @@
-import { DEFAULT_WAIT_TIMEOUT_SECONDS } from './Settings'
 import ms from 'ms'
 import { Browser } from './IBrowser'
+import { DEFAULT_WAIT_TIMEOUT_MILLISECONDS } from './Settings'
 
 export declare function afterAll(fn: HookFn, waitTimeout?: string | number): void
 export declare function afterEach(fn: HookFn, waitTimeout?: string | number): void
@@ -32,6 +32,6 @@ export function normalizeHookBase(hookBase: HookBase): HookBase {
 		convertedWaitTimeout = waitTimeout
 	}
 	hookBase.waitTimeout =
-		convertedWaitTimeout > 0 ? convertedWaitTimeout : ms(DEFAULT_WAIT_TIMEOUT_SECONDS)
+		convertedWaitTimeout > 0 ? convertedWaitTimeout : DEFAULT_WAIT_TIMEOUT_MILLISECONDS
 	return hookBase
 }

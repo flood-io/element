@@ -27,11 +27,10 @@ import { CancellationToken } from '../utils/CancellationToken'
 
 import { PuppeteerClientLike } from '../driver/Puppeteer'
 import { ScreenshotOptions } from 'puppeteer'
-import { TestSettings, ConcreteTestSettings, DEFAULT_STEP_WAIT_SECONDS } from './Settings'
+import { TestSettings, ConcreteTestSettings, DEFAULT_STEP_WAIT_MILLISECONDS } from './Settings'
 import { ITest } from './ITest'
 import { EvaluatedScriptLike } from './EvaluatedScriptLike'
 import { Hook, HookBase } from './StepLifeCycle'
-import ms from 'ms'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:test')
@@ -406,7 +405,7 @@ export default class Test implements ITest {
 				resolve()
 				return
 			}
-			setTimeout(resolve, Number(this.settings.stepDelay) || ms(DEFAULT_STEP_WAIT_SECONDS))
+			setTimeout(resolve, Number(this.settings.stepDelay) || DEFAULT_STEP_WAIT_MILLISECONDS)
 		})
 	}
 

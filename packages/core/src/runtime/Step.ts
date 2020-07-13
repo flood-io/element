@@ -1,4 +1,4 @@
-import { ElementPresence, DEFAULT_WAIT_TIMEOUT_SECONDS } from './Settings'
+import { ElementPresence, DEFAULT_WAIT_TIMEOUT_MILLISECONDS } from './Settings'
 import ms from 'ms'
 import { Browser } from './IBrowser'
 
@@ -195,7 +195,7 @@ export function normalizeStepOptions(stepOpts: StepOptions): StepOptions {
 		convertedWaitTimeout = stepOpts.waitTimeout
 	}
 	stepOpts.waitTimeout =
-		convertedWaitTimeout > 0 ? convertedWaitTimeout : ms(DEFAULT_WAIT_TIMEOUT_SECONDS)
+		convertedWaitTimeout > 0 ? convertedWaitTimeout : DEFAULT_WAIT_TIMEOUT_MILLISECONDS
 
 	return stepOpts
 }

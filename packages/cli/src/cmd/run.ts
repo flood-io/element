@@ -61,11 +61,11 @@ function setupDelayOverrides(
 	testSettingOverrides.stepDelay = convertedStepDelay > 0 ? convertedStepDelay : 0
 
 	if (args.fastForward) {
-		testSettingOverrides.stepDelay = ms('1s')
-		testSettingOverrides.actionDelay = ms('1s')
+		testSettingOverrides.stepDelay = 1000
+		testSettingOverrides.actionDelay = 1000
 	} else if (args.slowMo) {
-		testSettingOverrides.stepDelay = ms('10s')
-		testSettingOverrides.actionDelay = ms('10s')
+		testSettingOverrides.stepDelay = 10000
+		testSettingOverrides.actionDelay = 10000
 	}
 	return testSettingOverrides
 }

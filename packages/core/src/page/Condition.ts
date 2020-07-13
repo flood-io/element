@@ -1,6 +1,6 @@
 import { PageFnOptions, Page, EvaluateFn, Frame } from 'puppeteer'
 import { Locator } from './types'
-import { DEFAULT_SETTINGS, DEFAULT_WAIT_TIMEOUT_SECONDS } from '../runtime/Settings'
+import { DEFAULT_SETTINGS, DEFAULT_WAIT_TIMEOUT_MILLISECONDS } from '../runtime/Settings'
 import recast from 'recast'
 import { locatableToLocator } from '../runtime/toLocatorError'
 import { NullableLocatable } from '../runtime/Locatable'
@@ -35,7 +35,7 @@ export abstract class Condition {
 			return ms(this.settings.waitTimeout)
 		}
 		if (typeof this.settings.waitTimeout === 'number' && this.settings.waitTimeout <= 0) {
-			return ms(DEFAULT_WAIT_TIMEOUT_SECONDS)
+			return DEFAULT_WAIT_TIMEOUT_MILLISECONDS
 		}
 		return this.settings.waitTimeout
 	}

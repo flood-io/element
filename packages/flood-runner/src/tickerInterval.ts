@@ -1,7 +1,6 @@
 import InfluxReporter from './InfluxReporter'
 import { Logger } from 'winston'
-import ms from 'ms'
-const tickerInterval = ms('15s')
+const tickerInterval = 15000
 
 export async function startConcurrencyTicker(influxReporter: InfluxReporter, logger: Logger) {
 	logger.debug('ticking concurrency')

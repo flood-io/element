@@ -21,9 +21,9 @@ import ms from 'ms'
 export declare function setup(settings: TestSettings): void
 
 // Waits is seconds
-export const DEFAULT_STEP_WAIT_SECONDS = '5s'
-export const DEFAULT_ACTION_WAIT_SECONDS = '0.5s'
-export const DEFAULT_WAIT_TIMEOUT_SECONDS = '30s'
+export const DEFAULT_STEP_WAIT_MILLISECONDS = 5000
+export const DEFAULT_ACTION_WAIT_MILLISECONDS = 500
+export const DEFAULT_WAIT_TIMEOUT_MILLISECONDS = 30000
 
 /**
  * Specifies a method for recording response times.
@@ -248,14 +248,14 @@ export interface TestSettings {
  */
 export const DEFAULT_SETTINGS: ConcreteTestSettings = {
 	waitUntil: false,
-	duration: '-1',
+	duration: -1,
 	loopCount: Infinity,
-	actionDelay: '2s',
-	stepDelay: '6s',
+	actionDelay: 2000,
+	stepDelay: 6000,
 	screenshotOnFailure: true,
 	clearCookies: true,
 	clearCache: false,
-	waitTimeout: '30s',
+	waitTimeout: 30000,
 	responseTimeMeasurement: 'step',
 	tries: 0,
 	/**
@@ -303,7 +303,7 @@ export function normalizeSettings(settings: TestSettings): TestSettings {
 	}
 
 	settings.waitTimeout =
-		convertedWaitTimeout > 0 ? convertedWaitTimeout : ms(DEFAULT_WAIT_TIMEOUT_SECONDS)
+		convertedWaitTimeout > 0 ? convertedWaitTimeout : DEFAULT_WAIT_TIMEOUT_MILLISECONDS
 
 	// Ensure action delay is stored in milliseconds
 	if (typeof settings.actionDelay === 'string' && settings.actionDelay) {
@@ -313,7 +313,7 @@ export function normalizeSettings(settings: TestSettings): TestSettings {
 	}
 
 	settings.actionDelay =
-		convertedActionDelay > 0 ? convertedActionDelay : ms(DEFAULT_ACTION_WAIT_SECONDS)
+		convertedActionDelay > 0 ? convertedActionDelay : DEFAULT_ACTION_WAIT_MILLISECONDS
 
 	// Ensure step delay is stored in seconds
 	if (typeof settings.stepDelay === 'string' && settings.stepDelay) {
@@ -322,7 +322,7 @@ export function normalizeSettings(settings: TestSettings): TestSettings {
 		convertedStepDelay = settings.stepDelay
 	}
 
-	settings.stepDelay = convertedStepDelay > 0 ? convertedStepDelay : ms(DEFAULT_STEP_WAIT_SECONDS)
+	settings.stepDelay = convertedStepDelay > 0 ? convertedStepDelay : DEFAULT_STEP_WAIT_MILLISECONDS
 
 	// Convert user inputted seconds to milliseconds
 	if (typeof settings.duration === 'string' && settings.duration) {

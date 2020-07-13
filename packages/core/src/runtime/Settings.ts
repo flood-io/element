@@ -86,7 +86,7 @@ export interface TestSettings {
 	 *
 	 * Defaults to `-1` for no timeout.
 	 */
-	duration?: any
+	duration?: string | number
 
 	/**
 	 * Number of times to run this test.
@@ -100,12 +100,12 @@ export interface TestSettings {
 	 *
 	 * Waiting between actions simulates the behaviour of a real user as they read, think and act on the page's content.
 	 */
-	actionDelay?: any
+	actionDelay?: string | number
 
 	/**
 	 * Specifies the time (in seconds) to wait after each step.
 	 */
-	stepDelay?: any
+	stepDelay?: string | number
 
 	/**
 	 * Specifies a custom User Agent (UA) string to send.
@@ -126,7 +126,7 @@ export interface TestSettings {
 	/**
 	 * Global wait timeout applied to all wait tasks.
 	 */
-	waitTimeout?: any
+	waitTimeout?: string | number
 
 	/**
 	 * Specifies whether cookies should be cleared after each test loop.
@@ -291,36 +291,46 @@ export type ConcreteTestSettings = Required<TestSettings>
  * @internal
  */
 export function normalizeSettings(settings: TestSettings): TestSettings {
+	let convertedWaitTimeout = 0
+	let convertedActionDelay = 0
+	let convertedStepDelay = 0
+	let convertedDuration = 0
 	// Convert user inputted seconds to milliseconds
 	if (typeof settings.waitTimeout === 'string' && settings.waitTimeout) {
-		settings.waitTimeout = ms(settings.waitTimeout)
+		convertedWaitTimeout = ms(settings.waitTimeout)
+	} else if (typeof settings.waitTimeout === 'number') {
+		convertedWaitTimeout = settings.waitTimeout
 	}
-	if (typeof settings.waitTimeout !== 'string' && settings.waitTimeout <= 0) {
-		settings.waitTimeout = ms(DEFAULT_WAIT_TIMEOUT_SECONDS)
-	}
+
+	settings.waitTimeout =
+		convertedWaitTimeout > 0 ? convertedWaitTimeout : ms(DEFAULT_WAIT_TIMEOUT_SECONDS)
 
 	// Ensure action delay is stored in milliseconds
 	if (typeof settings.actionDelay === 'string' && settings.actionDelay) {
-		settings.actionDelay = ms(settings.actionDelay)
+		convertedActionDelay = ms(settings.actionDelay)
+	} else if (typeof settings.actionDelay === 'number') {
+		convertedActionDelay = settings.actionDelay
 	}
-	if (typeof settings.actionDelay !== 'string' && settings.actionDelay <= 0) {
-		settings.actionDelay = ms(DEFAULT_ACTION_WAIT_SECONDS)
-	}
+
+	settings.actionDelay =
+		convertedActionDelay > 0 ? convertedActionDelay : ms(DEFAULT_ACTION_WAIT_SECONDS)
 
 	// Ensure step delay is stored in seconds
 	if (typeof settings.stepDelay === 'string' && settings.stepDelay) {
-		settings.stepDelay = ms(settings.stepDelay)
+		convertedStepDelay = ms(settings.stepDelay)
+	} else if (typeof settings.stepDelay === 'number') {
+		convertedStepDelay = settings.stepDelay
 	}
-	if (typeof settings.stepDelay !== 'string' && settings.stepDelay <= 0) {
-		settings.stepDelay = ms(DEFAULT_STEP_WAIT_SECONDS)
-	}
+
+	settings.stepDelay = convertedStepDelay > 0 ? convertedStepDelay : ms(DEFAULT_STEP_WAIT_SECONDS)
 
 	// Convert user inputted seconds to milliseconds
 	if (typeof settings.duration === 'string' && settings.duration) {
-		settings.duration = ms(settings.duration)
-	} else {
-		settings.duration = ms('-1')
+		convertedDuration = ms(settings.duration)
+	} else if (typeof settings.duration === 'number') {
+		convertedDuration = settings.duration
 	}
+	settings.duration = convertedDuration > 0 ? convertedDuration : -1
 
 	return settings
 }

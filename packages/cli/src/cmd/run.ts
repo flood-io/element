@@ -26,8 +26,8 @@ interface RunCommonArguments extends Arguments {
 	devtools?: boolean
 	sandbox?: boolean
 	loopCount?: number
-	stepDelay?: any
-	actionDelay?: any
+	stepDelay?: string | number
+	actionDelay?: string | number
 	fastForward?: boolean
 	slowMo?: boolean
 	watch?: boolean
@@ -43,20 +43,22 @@ function setupDelayOverrides(
 ): TestSettings {
 	if (testSettingOverrides == null) testSettingOverrides = {}
 	const { actionDelay, stepDelay } = args
+	let convertedActionDelay = 0
+	let convertedStepDelay = 0
 
 	if (typeof actionDelay === 'string' && actionDelay) {
-		testSettingOverrides.actionDelay = ms(actionDelay)
+		convertedActionDelay = ms(actionDelay)
+	} else if (typeof actionDelay === 'number') {
+		convertedActionDelay = actionDelay
 	}
-	if (testSettingOverrides.actionDelay <= 0) {
-		testSettingOverrides.actionDelay = 0
-	}
+	testSettingOverrides.actionDelay = convertedActionDelay > 0 ? convertedActionDelay : 0
 
 	if (typeof stepDelay === 'string' && stepDelay) {
-		testSettingOverrides.stepDelay = ms(stepDelay)
+		convertedStepDelay = ms(stepDelay)
+	} else if (typeof stepDelay === 'number') {
+		convertedStepDelay = stepDelay
 	}
-	if (testSettingOverrides.stepDelay <= 0) {
-		testSettingOverrides.stepDelay = 0
-	}
+	testSettingOverrides.stepDelay = convertedStepDelay > 0 ? convertedStepDelay : 0
 
 	if (args.fastForward) {
 		testSettingOverrides.stepDelay = ms('1s')

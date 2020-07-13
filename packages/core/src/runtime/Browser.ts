@@ -193,7 +193,7 @@ export class Browser<T> implements BrowserInterface {
 	public async visit(url: string, options: NavigationOptions = {}): Promise<any> {
 		try {
 			return this.page.goto(url, {
-				timeout: this.settings.waitTimeout,
+				timeout: Number(this.settings.waitTimeout),
 				waitUntil: ['load', 'domcontentloaded', 'networkidle0', 'networkidle2'],
 				...options,
 			})

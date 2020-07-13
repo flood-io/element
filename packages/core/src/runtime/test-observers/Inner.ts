@@ -15,7 +15,7 @@ export default class InnerObserver extends NoOpTestObserver {
 		if (actionDelay > 0 && command !== 'wait') {
 			await new Promise(resolve => {
 				// TODO: fix default
-				setTimeout(resolve, actionDelay || ms(DEFAULT_ACTION_WAIT_SECONDS))
+				setTimeout(resolve, Number(actionDelay) || ms(DEFAULT_ACTION_WAIT_SECONDS))
 			})
 		}
 

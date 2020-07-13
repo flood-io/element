@@ -105,7 +105,7 @@ export type StepOptions = {
 	once?: boolean
 	predicate?: ConditionFn
 	skip?: boolean
-	waitTimeout?: any
+	waitTimeout?: string | number
 	waitUntil?: ElementPresence
 	tries?: number
 	repeat?: {
@@ -188,12 +188,14 @@ export type Step = {
  */
 export function normalizeStepOptions(stepOpts: StepOptions): StepOptions {
 	// Convert user inputted seconds to milliseconds
+	let convertedWaitTimeout = 0
 	if (typeof stepOpts.waitTimeout === 'string' && stepOpts.waitTimeout) {
-		stepOpts.waitTimeout = ms(stepOpts.waitTimeout)
+		convertedWaitTimeout = ms(stepOpts.waitTimeout)
+	} else if (typeof stepOpts.waitTimeout === 'number') {
+		convertedWaitTimeout = stepOpts.waitTimeout
 	}
-	if (typeof stepOpts.waitTimeout !== 'string' && stepOpts.waitTimeout <= 0) {
-		stepOpts.waitTimeout = ms(DEFAULT_WAIT_TIMEOUT_SECONDS)
-	}
+	stepOpts.waitTimeout =
+		convertedWaitTimeout > 0 ? convertedWaitTimeout : ms(DEFAULT_WAIT_TIMEOUT_SECONDS)
 
 	return stepOpts
 }

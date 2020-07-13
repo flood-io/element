@@ -406,7 +406,7 @@ export default class Test implements ITest {
 				resolve()
 				return
 			}
-			setTimeout(resolve, this.settings.stepDelay || ms(DEFAULT_STEP_WAIT_SECONDS))
+			setTimeout(resolve, Number(this.settings.stepDelay) || ms(DEFAULT_STEP_WAIT_SECONDS))
 		})
 	}
 
@@ -446,9 +446,12 @@ export default class Test implements ITest {
 		try {
 			for (const hook of hooks) {
 				browser.settings = { ...this.settings }
-				browser.settings.waitTimeout = Math.max(browser.settings.waitTimeout, hook.waitTimeout)
+				browser.settings.waitTimeout = Math.max(
+					Number(browser.settings.waitTimeout),
+					Number(hook.waitTimeout),
+				)
 				const hookFn = hook.fn.bind(null, browser, testDataRecord)
-				await this.doHookFnWithTimeout(hookFn, hook.waitTimeout)
+				await this.doHookFnWithTimeout(hookFn, Number(hook.waitTimeout))
 			}
 		} catch (error) {
 			throw new Error(error)

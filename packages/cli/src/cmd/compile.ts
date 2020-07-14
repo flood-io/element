@@ -1,13 +1,18 @@
-import { Argv, CommandModule } from 'yargs'
+import { Argv, Arguments, CommandModule } from 'yargs'
 import { webpackCompiler } from '../utils/compile'
+import { checkFile } from './common'
+
+interface CommandArgs extends Arguments {
+	file: string
+}
 
 const cmd: CommandModule = {
-	command: 'compile [dir] [options]',
-	describe: 'Compile extenal deb',
+	command: 'transpile <file>',
+	describe: 'Transpile extenal debs',
 
-	async handler() {
+	async handler(args: CommandArgs) {
 		try {
-			const result = await webpackCompiler('Test.perf.ts')
+			const result = await webpackCompiler(args.file)
 			console.log(result)
 		} catch (err) {
 			console.log(err)
@@ -15,8 +20,13 @@ const cmd: CommandModule = {
 	},
 
 	builder(yargs: Argv): Argv {
-		return yargs.option('verbose', {
-			describe: 'Verbose mode',
+		return yargs.option('file', {
+			describe: 'entry file to run the test',
+			coerce: file => {
+				const fileErr = checkFile(file as string)
+				if (fileErr) throw fileErr
+				return file
+			},
 		})
 	},
 }

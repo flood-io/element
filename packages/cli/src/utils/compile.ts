@@ -1,8 +1,11 @@
 import webpack, { Configuration as WebpackConfig } from 'webpack'
-import findRoot from 'find-root'
 import { resolve, dirname } from 'path'
 
 const isProductionGrid = process.env.IS_GRID != null || process.env.FLOOD_CHROME_VERSION != null
+
+function getFileName(file: string): string {
+	return file.substring(file.lastIndexOf('/') + 1, file.length - 3)
+}
 
 function webpackConfig(sourceFile: string): WebpackConfig {
 	const loader = require.resolve('ts-loader')
@@ -45,7 +48,7 @@ function webpackConfig(sourceFile: string): WebpackConfig {
 		},
 		output: {
 			path: process.cwd(),
-			filename: 'bundled.js',
+			filename: `${getFileName(sourceFile)}_bundled.js`,
 			globalObject: 'this',
 			libraryTarget: 'umd',
 		},
@@ -54,8 +57,7 @@ function webpackConfig(sourceFile: string): WebpackConfig {
 }
 
 export async function webpackCompiler(sourceFile: string): Promise<string> {
-	const compiler = webpack(webpackConfig(`${findRoot(__dirname)}/${sourceFile}`))
-	// compiler.context = findRoot(__dirname)
+	const compiler = webpack(webpackConfig(resolve(sourceFile)))
 	return new Promise((resolve, reject) => {
 		compiler.run((err, stats) => {
 			if (err || stats.hasErrors()) {
@@ -66,7 +68,7 @@ export async function webpackCompiler(sourceFile: string): Promise<string> {
 						}),
 					),
 				)
-			} else resolve('Success')
+			} else resolve('Transpile success')
 		})
 	})
 }

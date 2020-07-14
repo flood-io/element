@@ -13,7 +13,7 @@ function webpackConfig(sourceFile: string): WebpackConfig {
 	}
 
 	return {
-		entry: sourceFile,
+		entry: resolve(sourceFile),
 		mode: 'none',
 		target: 'node',
 		module: {
@@ -32,7 +32,7 @@ function webpackConfig(sourceFile: string): WebpackConfig {
 								allowJs: true,
 								checkJs: false,
 								sourceMap: false,
-								declaration: false,
+								declaration: true,
 							},
 						},
 					},
@@ -44,17 +44,18 @@ function webpackConfig(sourceFile: string): WebpackConfig {
 			modules,
 		},
 		output: {
-			filename: 'bundle.js',
+			path: process.cwd(),
+			filename: 'bundled.js',
 			globalObject: 'this',
 			libraryTarget: 'umd',
 		},
-		externals: ['@flood/element', '@flood/element-api'],
+		externals: ['@flood/element'],
 	}
 }
 
 export async function webpackCompiler(sourceFile: string): Promise<string> {
 	const compiler = webpack(webpackConfig(`${findRoot(__dirname)}/${sourceFile}`))
-	compiler.context = findRoot(__dirname)
+	// compiler.context = findRoot(__dirname)
 	return new Promise((resolve, reject) => {
 		compiler.run((err, stats) => {
 			if (err || stats.hasErrors()) {

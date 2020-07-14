@@ -48,7 +48,7 @@ function webpackConfig(sourceFile: string): WebpackConfig {
 		},
 		output: {
 			path: process.cwd(),
-			filename: `${getFileName(sourceFile)}_bundled.js`,
+			filename: `${getFileName(sourceFile)}.compiled.js`,
 			globalObject: 'this',
 			libraryTarget: 'umd',
 		},
@@ -68,7 +68,7 @@ export async function webpackCompiler(sourceFile: string): Promise<string> {
 						}),
 					),
 				)
-			} else resolve('Transpile success')
+			} else resolve('Compile success')
 		})
 	})
 }

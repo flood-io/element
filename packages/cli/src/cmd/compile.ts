@@ -7,8 +7,8 @@ interface CommandArgs extends Arguments {
 }
 
 const cmd: CommandModule = {
-	command: 'transpile <file>',
-	describe: 'Transpile extenal debs',
+	command: 'compile <file>',
+	describe: 'Compile extenal debs',
 
 	async handler(args: CommandArgs) {
 		try {

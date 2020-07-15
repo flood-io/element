@@ -13,7 +13,7 @@ const cmd: CommandModule = {
 	async handler(args: CommandArgs) {
 		try {
 			const result = await webpackCompiler(args.file)
-			console.log(result)
+			console.log(result.content)
 		} catch (err) {
 			console.log(err)
 		}

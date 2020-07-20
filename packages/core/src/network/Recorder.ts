@@ -307,7 +307,7 @@ export default class Recorder {
 			})
 			return Buffer.from(response.body, response.base64Encoded ? 'base64' : 'utf8')
 		} catch (err) {
-			console.error(`Recorder.getResponseData: ${err.message}`)
+			console.debug(`Recorder.getResponseData: ${err.message}`)
 			return Buffer.from('', 'utf8')
 		}
 	}

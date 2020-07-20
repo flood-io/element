@@ -36,32 +36,33 @@ export class ConsoleReporter implements IReporter {
 
 	async flushMeasurements(): Promise<void> {}
 
-	testLifecycle(stage: TestEvent, label: string, timing?: number): void {
+	testLifecycle(stage: TestEvent, label: string): void {
 		switch (stage) {
-			case TestEvent.AfterStepAction:
-				this.logger.info(`---> ${label}()`)
-				break
 			case TestEvent.BeforeStep:
-				this.logger.info('')
-				this.logger.info(`===> Step '${label}'`)
+				console.group(`Step '${label}' is executing ...`)
 				break
 			case TestEvent.AfterStep:
-				this.logger.info(`---> Step '${label}' finished in ${timing?.toLocaleString()}ms`)
+				break
+			case TestEvent.StepSucceeded:
+				console.groupEnd()
+				console.log(chalk.greenBright(`Step '${label}' passed`))
 				break
 			case TestEvent.StepSkipped:
-				this.logger.info(`---- Step '${label}' skipped`)
+				console.groupEnd()
+				console.log(chalk.yellowBright(`Step '${label}' skipped`))
 				break
 			case TestEvent.StepFailed:
-				this.logger.error(`xxxx Step '${label}' failed`)
+				console.groupEnd()
+				console.log(chalk.redBright(`Step '${label}' failed`))
 				break
 		}
 	}
 
 	testInternalError(message: string, err: Error): void {
-		this.logger.error('flood-element error:\n' + err)
+		this.logger.debug('flood-element error:\n' + err)
 	}
 	testAssertionError(err: TestScriptError): void {
-		this.logger.error('assertion failed \n' + err.toStringNodeFormat())
+		this.logger.debug('assertion failed \n' + err.toStringNodeFormat())
 	}
 	testStepError(err: TestScriptError): void {
 		const detail = err.toDetailObject(this.verbose)
@@ -78,10 +79,10 @@ export class ConsoleReporter implements IReporter {
 			str += '\n\nDetail:\n' + detail.doc + '\n'
 		}
 
-		this.logger.error('\n' + str)
+		this.logger.debug('\n' + str)
 
 		if (this.verbose) {
-			this.logger.error(`Verbose detail:
+			this.logger.debug(`Verbose detail:
 cause.asString(): ${detail.causeAsString}
 cause.stack: ${detail.causeStack}`)
 		}

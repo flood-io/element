@@ -156,7 +156,7 @@ export class MarkdownDocument {
 			let link: string
 			const ref = references.get(name)
 			if (!ref) {
-				console.warn(`unmet reference ${name}`)
+				console.debug(`unmet reference ${name}`)
 				return
 			}
 			const { target } = ref

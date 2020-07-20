@@ -15,7 +15,7 @@ export class AsyncQueue<Specifier> {
 		}
 
 		this.chain = result.catch((err: Error) => {
-			console.error(`[AsyncQueue] Callback chain error: ${err.message}`, err.stack)
+			console.debug(`[AsyncQueue] Callback chain error: ${err.message}`, err.stack)
 		})
 		return result
 	}

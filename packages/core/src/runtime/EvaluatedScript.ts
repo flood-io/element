@@ -184,7 +184,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 
 			console.assert(typeof name === 'string', 'Step name must be a string')
 			if (steps.find(({ name: stepName }) => name === stepName)) {
-				console.warn(`Duplicate step name: ${name}, skipping step`)
+				console.debug(`Duplicate step name: ${name}, skipping step`)
 				return
 			}
 

@@ -16,8 +16,8 @@ const debug = require('debug')('element:cli')
 export const handleUnexpected = (err: Error) => {
 	debug('handling unexpected error')
 
-	console.error(error(`An unexpected error occurred!\n  ${err.stack} ${err.stack}`))
-	console.error(
+	console.debug(error(`An unexpected error occurred!\n  ${err.stack} ${err.stack}`))
+	console.debug(
 		'this is a bug, please report it here https://github.com/flood-io/element/issues/new?template=bug_report.md',
 	)
 
@@ -31,12 +31,12 @@ const handleRejection = (err: Error) => {
 		if (err instanceof Error) {
 			handleUnexpected(err)
 		} else {
-			console.error(error(`An unexpected rejection occurred\n  ${err}`))
+			console.debug(error(`An unexpected rejection occurred\n  ${err}`))
 		}
 	} else {
-		console.error(error(`An unexpected empty rejection occurred\n rejection: ${err}`))
+		console.debug(error(`An unexpected empty rejection occurred\n rejection: ${err}`))
 	}
-	console.error(
+	console.debug(
 		'this is a bug, please report it here https://github.com/flood-io/element/issues/new?template=bug_report.md',
 	)
 
@@ -72,7 +72,7 @@ export async function main(rootPath: string) {
 		.showHelpOnFail(false, chalk('Specify {blue --help} for available options'))
 		.fail((msg, err) => {
 			if (err) throw err // preserve stack
-			if (msg) console.error(chalk.redBright(msg))
+			if (msg) console.debug(chalk.redBright(msg))
 			process.exit(1)
 		})
 		.example(

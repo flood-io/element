@@ -66,7 +66,7 @@ export async function updateCheck(pkg: Package) {
 	if (!process.stdout.isTTY) return
 
 	if (!pkg.name) {
-		console.error(error(`Failed to read package.json while checking for update`))
+		console.debug(error(`Failed to read package.json while checking for update`))
 		return
 	}
 

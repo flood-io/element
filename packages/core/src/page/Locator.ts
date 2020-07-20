@@ -125,7 +125,7 @@ return predicate(${['element', ...tmpArgs].join(', ')})`
 				...waitFuncArgs,
 			)
 		} catch (err) {
-			console.error(err)
+			console.debug(err)
 			return false
 		}
 

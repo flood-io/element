@@ -17,11 +17,11 @@ export default {
 			.command(runCmd)
 			.fail((msg, err) => {
 				if (msg) {
-					console.error(chalk.redBright(msg))
+					console.debug(chalk.redBright(msg))
 				} else if (err && !(err instanceof Error)) {
-					console.error(chalk.redBright(err))
+					console.debug(chalk.redBright(err))
 				} else {
-					console.error(chalk.redBright(`Error getting data from Flood: ${err.message}`))
+					console.debug(chalk.redBright(`Error getting data from Flood: ${err.message}`))
 				}
 				process.exit(1)
 			})

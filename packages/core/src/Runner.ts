@@ -94,7 +94,7 @@ export class Runner {
 			const { settings } = test
 
 			if (settings.name) {
-				this.logger.info(`
+				this.logger.debug(`
 *************************************************************
 * Loaded test plan: ${settings.name}
 * ${settings.description}
@@ -115,31 +115,33 @@ export class Runner {
 			this.looper = new Looper(settings, this.running)
 			this.looper.killer = () => cancelToken.cancel()
 			await this.looper.run(async iteration => {
-				this.logger.info(`Starting iteration ${iteration}`)
-
+				if (iteration > 1) {
+					console.log('--------------------------------------------')
+				}
+				console.group(`Iteration ${iteration}`)
 				const startTime = new Date()
 				try {
 					await test.runWithCancellation(iteration, cancelToken, this.looper)
 				} catch (err) {
-					this.logger.error(
+					this.logger.debug(
 						`[Iteration: ${iteration}] Error in Runner Loop: ${err.name}: ${err.message}\n${err.stack}`,
 					)
-					throw err
+					//throw err
+				} finally {
+					const duration = new Date().valueOf() - startTime.valueOf()
+					console.groupEnd()
+					console.log(`Iteration ${iteration} completed in ${duration}ms (walltime)`)
 				}
-				const duration = new Date().valueOf() - startTime.valueOf()
-				this.logger.info(`Iteration completed in ${duration}ms (walltime)`)
 			})
 
-			this.logger.info(`Test completed after ${this.looper.iterations} iterations`)
 			await test.runningBrowser?.close()
 		} catch (err) {
 			if (err instanceof TestScriptError) {
-				this.logger.error('\n' + err.toStringNodeFormat())
+				this.logger.debug('\n' + err.toStringNodeFormat())
 			} else {
-				this.logger.error(`flood element error: ${err.message}`)
+				this.logger.debug(`flood element error: ${err.message}`)
 				this.logger.debug(err.stack)
 			}
-
 			// if (process.env.NODE_ENV !== 'production') {
 			this.logger.debug(err.stack)
 			// }
@@ -203,8 +205,8 @@ export class PersistentRunner extends Runner {
 		try {
 			await this.runTestScript(await testScriptFactory(), clientPromise)
 		} catch (err) {
-			this.logger.error('an error occurred in the script')
-			this.logger.error(err)
+			this.logger.debug('an error occurred in the script')
+			this.logger.debug(err)
 		}
 	}
 

@@ -65,7 +65,7 @@ export class ObjectTrace {
 		this.networkTraces.push(filePath)
 
 		return writeFileAsync(filePath, JSON.stringify(trace)).catch(err => {
-			console.error(`Object Trace writing ERROR: ${err.message}`)
+			console.debug(`Object Trace writing ERROR: ${err.message}`)
 		})
 	}
 

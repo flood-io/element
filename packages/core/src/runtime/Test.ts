@@ -31,6 +31,7 @@ import { TestSettings, ConcreteTestSettings, DEFAULT_STEP_WAIT_SECONDS } from '.
 import { ITest } from './ITest'
 import { EvaluatedScriptLike } from './EvaluatedScriptLike'
 import { Hook, HookBase } from './StepLifeCycle'
+import chalk from 'chalk'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:test')
@@ -304,8 +305,8 @@ export default class Test implements ITest {
 				if (this.failed) {
 					const result = await this.callRecovery(step, looper, browser)
 					if (result) continue
-					console.log('failed, bailing out of steps')
-					throw Error('test failed')
+					//console.debug('failed, bailing out of steps')
+					throw Error()
 				}
 				this.stepCount += 1
 
@@ -313,7 +314,6 @@ export default class Test implements ITest {
 				await this.runHookFn(this.hook.afterEach, browser, testDataRecord)
 			}
 		} catch (err) {
-			console.log('error -> failed', err)
 			this.failed = true
 			throw err
 		} finally {
@@ -357,7 +357,7 @@ export default class Test implements ITest {
 
 		if (error !== null) {
 			debug('step error')
-			console.log('step error -> failed')
+			console.log(chalk.redBright('step error -> failed'))
 			this.failed = true
 
 			await testObserver.onStepError(this, step, this.liftToStructuredError(error))

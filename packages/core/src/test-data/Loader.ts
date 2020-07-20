@@ -70,7 +70,7 @@ export class JSONLoader<T> extends Loader<T> {
 	public async load(): Promise<void> {
 		const data = readFilePromise(this.filePath, 'utf8')
 		data.catch(err => {
-			console.error(err)
+			console.debug(err)
 		})
 
 		const jsonData: T[] = JSON.parse(await data)

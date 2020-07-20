@@ -111,6 +111,6 @@ update()
 		console.log('done')
 	})
 	.catch(e => {
-		console.error(e)
+		console.debug(e)
 		process.exit(1)
 	})

@@ -133,9 +133,6 @@ async function runTestScript(args: RunCommonArguments): Promise<void> {
 	const logger = createLogger(logLevel, true)
 	const reporter = new ConsoleReporter(logger, verboseBool)
 
-	logger.info(`workRootPath: ${workRootPath}`)
-	logger.info(`testDataPath: ${testDataPath}`)
-
 	const opts: ElementOptions = {
 		logger: logger,
 		testScript: file,
@@ -162,8 +159,9 @@ async function runTestScript(args: RunCommonArguments): Promise<void> {
 		opts.persistentRunner = true
 		opts.testCommander = makeTestCommander(file)
 	}
-
+	console.group('\n', chalk.white(` Running ${file}`))
 	await runCommandLine(opts)
+	console.groupEnd()
 }
 
 async function runTestScriptWithConfiguration(args: RunCommonArguments): Promise<void> {
@@ -191,13 +189,19 @@ async function runTestScriptWithConfiguration(args: RunCommonArguments): Promise
 	console.info(
 		'The following test scripts that matched the testPathMatch pattern are going to be executed:',
 	)
+	let order = 0
 	for (const file of files.sort()) {
 		const arg: RunCommonArguments = {
 			...options,
 			...paths,
 			file,
 		}
+
+		if (order >= 1) {
+			console.log('------------------------------------------------------------------')
+		}
 		await runTestScript(arg)
+		order++
 	}
 	console.info('Test running with the config file has finished')
 }
@@ -320,8 +324,8 @@ const cmd: CommandModule = {
 				default: 'element.config.js',
 			})
 			.fail((msg, err) => {
-				if (err) console.error(chalk.redBright(err.message))
-				if (msg) console.error(chalk.redBright(msg))
+				if (err) console.debug(chalk.redBright(err.message))
+				if (msg) console.debug(chalk.redBright(msg))
 				process.exit(1)
 			})
 	},

@@ -41,16 +41,17 @@ export class DocumentedError extends Error {
 			;(err as DocumentedError).callContext = callCtx
 			return err
 		} else {
-			return DocumentedError.wrapUnhandledError(err, err.message, callCtx)
+			return err
+			//return DocumentedError.wrapUnhandledError(err, err.message, callCtx)
 		}
 	}
 
 	static wrapUnhandledError(err: Error, message?: string, callContext?: string) {
-		return new DocumentedError(
-			message || err.message,
-			'Documentation needed! Please report this at https://github.com/flood-io/element/issues so that we can improve Element!',
-			callContext,
-			err,
-		)
+		// return new DocumentedError(
+		// 	message || err.message,
+		// 	'Documentation needed! Please report this at https://github.com/flood-io/element/issues so that we can improve Element!',
+		// 	callContext,
+		// 	err,
+		// )
 	}
 }

@@ -256,7 +256,7 @@ class DocsParser {
 				this.processVariable(ctx, node)
 				break
 			default:
-				console.warn(`unknown kind ${node.kindString} (${node.name})`)
+				console.debug(`unknown kind ${node.kindString} (${node.name})`)
 				return
 		}
 	}
@@ -595,18 +595,16 @@ class DocsParser {
 		let readme = readFileSync(readmeFile, 'utf8')
 
 		const linkRe = /\[([^\]]+)?\]\(([^)]+)\)/g
-		readme = searchAndReplace(
-			readme,
-			linkRe,
-			(text: string | null, url: string): string | undefined => {
-				if (!url.startsWith('http') && !url.startsWith('#') && !isAbsolute(url)) {
-					const full = resolve(repoRoot, url)
-					url = relative(bookDir, full)
-					return `[${text}](./${url})`
-				}
-				return
-			},
-		)
+		readme = searchAndReplace(readme, linkRe, (text: string | null, url: string):
+			| string
+			| undefined => {
+			if (!url.startsWith('http') && !url.startsWith('#') && !isAbsolute(url)) {
+				const full = resolve(repoRoot, url)
+				url = relative(bookDir, full)
+				return `[${text}](./${url})`
+			}
+			return
+		})
 
 		writeFileSync(readmeFile, readme, 'utf8')
 	}

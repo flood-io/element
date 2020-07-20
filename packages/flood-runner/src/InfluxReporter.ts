@@ -115,7 +115,7 @@ export default class InfluxReporter implements IReporter {
 				this.options.influxHost,
 				(err: Error, bytes: number) => {
 					if (err) {
-						this.logger.error(`REPORTER.socket.send() ERROR: ${err.message}`)
+						this.logger.debug(`REPORTER.socket.send() ERROR: ${err.message}`)
 					} else {
 						this.logger.debug(
 							`REPORTER.socket.send() wrote ${bytes} bytes to ${this.options.influxHost}:${this.options.influxPort}`,
@@ -243,8 +243,8 @@ export default class InfluxReporter implements IReporter {
 
 	// TODO should we add more detail here?
 	testScriptError(message: string, error: TestScriptError): void {
-		this.logger.error(`=!=> ${message} in ${this.stepName}: ${error.name}: ${error.message}`)
-		error.unmappedStack.forEach(line => this.logger.error(`    ${line}`))
+		this.logger.debug(`=!=> ${message} in ${this.stepName}: ${error.name}: ${error.message}`)
+		error.unmappedStack.forEach(line => this.logger.debug(`    ${line}`))
 	}
 
 	testStepError(error: TestScriptError): void {
@@ -252,7 +252,7 @@ export default class InfluxReporter implements IReporter {
 	}
 
 	testInternalError(message: string, error: Error): void {
-		this.logger.error(`=!=> Internal ${message} error in ${this.stepName}`, error.message)
+		this.logger.debug(`=!=> Internal ${message} error in ${this.stepName}`, error.message)
 	}
 
 	testAssertionError(error: TestScriptError): void {

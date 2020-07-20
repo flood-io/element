@@ -68,8 +68,8 @@ async function runTest(testScript: string, expectPass: boolean): Promise<boolean
 	if (expectPass === passed) {
 		console.info(chalk`{green test script {blue ${shortName}} ran as expected}`)
 	} else {
-		console.error(chalk`{red test script {blue ${shortName}} did not run as expected}`)
-		console.error(
+		console.debug(chalk`{red test script {blue ${shortName}} did not run as expected}`)
+		console.debug(
 			chalk`expected to {blue ${expectPass ? 'pass' : 'fail'}} but instead {red ${
 				passed ? 'passed' : 'failed'
 			}}`,

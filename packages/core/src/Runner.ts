@@ -27,6 +27,14 @@ function delay(t: number, v?: any) {
 	})
 }
 
+export type Iteration = {
+	Iteration: number
+	Passed: number
+	Failed: number
+	Skipped: number
+	Unexecuted: number
+}
+
 export class Runner {
 	protected looper: Looper
 	running = true
@@ -82,6 +90,7 @@ export class Runner {
 		if (!this.running) return
 
 		let testToCancel: Test | undefined
+		const reportTableData: any[] = []
 
 		try {
 			const test = new Test(
@@ -144,9 +153,8 @@ export class Runner {
 					this.summaryIteraion[`Iteration ${iteration}`] = test.summarizeStep()
 					console.groupEnd()
 					if (!this.looper.isRestart) {
-						const duration = new Date().valueOf() - startTime.valueOf()
-						const message = this.summarizeIteration(iteration)
-						console.log(`Iteration ${iteration} completed in ${duration}ms (walltime) ${message}`)
+						const sumarizedData = this.summarizeIteration(iteration, startTime)
+						reportTableData.push(sumarizedData)
 					}
 					isRestart = this.looper.isRestart
 				}
@@ -165,13 +173,15 @@ export class Runner {
 			this.logger.debug(err.stack)
 			// }
 			throw err
+		} finally {
+			console.table(reportTableData)
 		}
 
 		if (testToCancel !== undefined) {
 			await testToCancel.cancel()
 		}
 	}
-	summarizeIteration(iteration: number): string {
+	summarizeIteration(iteration: number, startTime: Date): any {
 		let passedMessage = '',
 			failedMessage = '',
 			skippedMessage = '',
@@ -201,7 +211,16 @@ export class Runner {
 					break
 			}
 		})
-		return chalk(passedMessage, failedMessage, skippedMessage, unexecutedMessage)
+		const finallyMessage = chalk(passedMessage, failedMessage, skippedMessage, unexecutedMessage)
+		const duration = new Date().valueOf() - startTime.valueOf()
+		console.log(`Iteration ${iteration} completed in ${duration}ms (walltime) ${finallyMessage}`)
+		return {
+			Iteration: iteration,
+			Passed: passedNo,
+			Failed: failedNo,
+			Skipped: skippedNo,
+			Unexecuted: unexecutedNo,
+		}
 	}
 }
 

@@ -57,7 +57,7 @@ export default class Test implements ITest {
 	public stepCount: number
 
 	public summaryStep: SummaryStep[] = []
-	public stepCounter: number
+	public subTitle: string
 
 	get skipping(): boolean {
 		return this.failed
@@ -112,7 +112,6 @@ export default class Test implements ITest {
 	}
 
 	public async callCondition(
-		testObserver: TestObserver,
 		step: Step,
 		iteration: number,
 		browser: BrowserInterface,
@@ -246,6 +245,7 @@ export default class Test implements ITest {
 		this.failed = false
 		this.runningBrowser = null
 		this.stepCount = 0
+		this.subTitle = ''
 
 		// await this.observer.attachToNetworkRecorder()
 
@@ -291,7 +291,7 @@ export default class Test implements ITest {
 				debug('running hook function: beforeEach')
 				await this.runHookFn(this.hook.beforeEach, browser, testDataRecord)
 				const step = this.steps[this.stepCount]
-				const condition = await this.callCondition(testObserver, step, iteration, browser)
+				const condition = await this.callCondition(step, iteration, browser)
 				if (!condition) continue
 
 				const { predicate } = step.options
@@ -325,11 +325,11 @@ export default class Test implements ITest {
 			}
 		} catch (err) {
 			this.failed = true
-			this.countFailedStep(this.steps[this.stepCount].name, false)
 			this.stepCount += 1
+			this.countFailedStep(this.steps[this.stepCount].name, false)
 			while (this.stepCount < this.steps.length) {
-				this.countUnexecutedStep(this.steps[this.stepCount].name)
 				this.stepCount += 1
+				this.countUnexecutedStep(this.steps[this.stepCount].name)
 			}
 			throw err
 		} finally {
@@ -380,6 +380,7 @@ export default class Test implements ITest {
 		testDataRecord: any,
 	) {
 		let error: Error | null = null
+		let errorMessage: string = 'step error -> failed'
 		await testObserver.beforeStep(this, step)
 
 		const originalBrowserSettings = { ...browser.settings }
@@ -396,10 +397,16 @@ export default class Test implements ITest {
 
 		if (error !== null) {
 			debug('step error')
-			console.log(chalk.redBright('step error -> failed'))
+			if (error.message) {
+				errorMessage = error.message
+			}
 			this.failed = true
-
 			await testObserver.onStepError(this, step, this.liftToStructuredError(error))
+			console.group()
+			console.group()
+			console.log(chalk.red(errorMessage ?? 'step error -> failed'))
+			console.groupEnd()
+			console.groupEnd()
 		} else {
 			await testObserver.onStepPassed(this, step)
 		}

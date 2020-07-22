@@ -9,7 +9,8 @@ import { AsyncFactory } from './utils/Factory'
 import { CancellationToken } from './utils/CancellationToken'
 import { TestScriptError } from './TestScriptError'
 import { Looper } from './Looper'
-import { RecoverWith, SummaryIteraion, SummaryStep } from './runtime/Step'
+import { StepResult, SummaryIteraion, SummaryStep } from './runtime/Step'
+import chalk from 'chalk'
 
 export interface TestCommander {
 	on(event: 'rerun-test', listener: () => void): this
@@ -128,7 +129,9 @@ export class Runner {
 					}
 					test.resetSummarizeStep()
 					startTime = new Date()
-					titleIteration = `Iteration ${iteration} of ${this.looper.iterations}`
+					titleIteration = `${chalk.bold('\u25CC')} Iteration ${iteration} of ${
+						this.looper.iterations
+					}`
 				}
 				console.group(titleIteration)
 				try {
@@ -142,13 +145,14 @@ export class Runner {
 					console.groupEnd()
 					if (!this.looper.isRestart) {
 						const duration = new Date().valueOf() - startTime.valueOf()
-						console.log(`Iteration ${iteration} completed in ${duration}ms (walltime)`)
+						const message = this.summarizeIteration(iteration)
+						console.log(`Iteration ${iteration} completed in ${duration}ms (walltime) ${message}`)
 					}
 					isRestart = this.looper.isRestart
 				}
 			})
 
-			//console.log(this.summaryIteraion)
+			// console.log(this.summaryIteraion)
 			await test.runningBrowser?.close()
 		} catch (err) {
 			if (err instanceof TestScriptError) {
@@ -167,15 +171,37 @@ export class Runner {
 			await testToCancel.cancel()
 		}
 	}
-	isRestart(iteration: number): boolean {
-		const latestSteps: SummaryStep[] = this.summaryIteraion[`Iteration ${iteration}`]
-		if (latestSteps) {
-			const latestStep: SummaryStep = latestSteps[latestSteps.length - 1]
-			if (latestStep.recovery === RecoverWith.RESTART) {
-				return true
+	summarizeIteration(iteration: number): string {
+		let passedMessage = '',
+			failedMessage = '',
+			skippedMessage = '',
+			unexecutedMessage = ''
+		let passedNo = 0,
+			failedNo = 0,
+			skippedNo = 0,
+			unexecutedNo = 0
+		const steps: SummaryStep[] = this.summaryIteraion[`Iteration ${iteration}`]
+		steps.forEach(step => {
+			switch (step.result) {
+				case StepResult.PASSED:
+					passedNo += 1
+					passedMessage = chalk.green(`${passedNo}`, `${StepResult.PASSED}`)
+					break
+				case StepResult.FAILED:
+					failedNo += 1
+					failedMessage = chalk.red(`${failedNo}`, `${StepResult.FAILED}`)
+					break
+				case StepResult.SKIPPED:
+					skippedNo += 1
+					skippedMessage = chalk.yellow(`${skippedNo}`, `${StepResult.SKIPPED}`)
+					break
+				case StepResult.UNEXECUTED:
+					unexecutedNo += 1
+					unexecutedMessage = chalk(`${unexecutedNo}`, `${StepResult.UNEXECUTED}`)
+					break
 			}
-		}
-		return false
+		})
+		return chalk(passedMessage, failedMessage, skippedMessage, unexecutedMessage)
 	}
 }
 

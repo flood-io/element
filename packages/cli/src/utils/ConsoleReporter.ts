@@ -36,18 +36,17 @@ export class ConsoleReporter implements IReporter {
 
 	async flushMeasurements(): Promise<void> {}
 
-	testLifecycle(stage: TestEvent, label: string, timing?: number): void {
+	testLifecycle(stage: TestEvent, label: string, subtitle?: string, timing?: number): void {
+		const stepName = subtitle ? `'${label}' (${subtitle})` : `'${label}'`
 		switch (stage) {
-			case TestEvent.BeforeStep:
-				console.group(`Step '${label}':`)
-				break
 			case TestEvent.StepSucceeded:
-				console.groupEnd()
-				console.log(chalk.greenBright(`Step '${label}' passed (${timing?.toLocaleString()}ms)`))
+				console.log(
+					chalk.green.bold('✔'),
+					`Step ${stepName} passed (${timing?.toLocaleString()}ms)`,
+				)
 				break
 			case TestEvent.StepFailed:
-				console.groupEnd()
-				console.log(chalk.redBright(`Step '${label}' failed`))
+				console.log(chalk.red.bold('✘'), `Step ${stepName} failed`)
 				break
 		}
 	}

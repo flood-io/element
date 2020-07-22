@@ -15,18 +15,14 @@ const debug = require('debug')('element:cli')
 
 export const handleUnexpected = (err: Error) => {
 	debug('handling unexpected error')
-
 	console.debug(error(`An unexpected error occurred!\n  ${err.stack} ${err.stack}`))
 	console.debug(
 		'this is a bug, please report it here https://github.com/flood-io/element/issues/new?template=bug_report.md',
 	)
-
-	process.exit(1)
 }
 
 const handleRejection = (err: Error) => {
 	debug('handling rejection', err)
-
 	if (err) {
 		if (err instanceof Error) {
 			handleUnexpected(err)
@@ -39,8 +35,6 @@ const handleRejection = (err: Error) => {
 	console.debug(
 		'this is a bug, please report it here https://github.com/flood-io/element/issues/new?template=bug_report.md',
 	)
-
-	process.exit(1)
 }
 
 process.on('unhandledRejection', handleRejection)

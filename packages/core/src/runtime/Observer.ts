@@ -83,7 +83,7 @@ export default class Observer {
 		debug('onRawNetworkLoadingFinished', requestId)
 		// console.log(`onRawNetworkLoadingFinished: ${requestId}`)
 		if (!this.requests.has(requestId)) {
-			console.debug(`Unknown request: ${requestId}`)
+			//throw new Error(`Unknown request: ${requestId}`)
 			return
 		}
 

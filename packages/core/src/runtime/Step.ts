@@ -173,6 +173,23 @@ export enum RecoverWith {
 	CONTINUE = 'continue',
 }
 
+export enum StepResult {
+	PASSED = 'passed',
+	FAILED = 'failed',
+	SKIPPED = 'skipped',
+	UNEXECUTED = 'unexecuted',
+}
+
+export type SummaryIteraion = {
+	[iteration: string]: SummaryStep
+}
+
+export type SummaryStep = {
+	stepName: string
+	result: StepResult
+	recovery: RecoverWith | boolean
+}
+
 /**
  * @internal
  */

@@ -9,6 +9,7 @@ import { AsyncFactory } from './utils/Factory'
 import { CancellationToken } from './utils/CancellationToken'
 import { TestScriptError } from './TestScriptError'
 import { Looper } from './Looper'
+import { RecoverWith, SummaryIteraion, SummaryStep } from './runtime/Step'
 
 export interface TestCommander {
 	on(event: 'rerun-test', listener: () => void): this
@@ -29,6 +30,7 @@ export class Runner {
 	protected looper: Looper
 	running = true
 	public clientPromise: Promise<PuppeteerClient> | undefined
+	public summaryIteraion: SummaryIteraion[] = []
 
 	constructor(
 		private clientFactory: AsyncFactory<PuppeteerClient>,
@@ -114,26 +116,39 @@ export class Runner {
 
 			this.looper = new Looper(settings, this.running)
 			this.looper.killer = () => cancelToken.cancel()
+			let startTime = new Date()
+			let isRestart = false
+			let titleIteration = ''
 			await this.looper.run(async iteration => {
-				if (iteration > 1) {
-					console.log('--------------------------------------------')
+				if (isRestart) {
+					titleIteration = `Restarting iteration ${iteration}`
+				} else {
+					if (iteration > 1) {
+						console.log('--------------------------------------------')
+					}
+					test.resetSummarizeStep()
+					startTime = new Date()
+					titleIteration = `Iteration ${iteration} of ${this.looper.iterations}`
 				}
-				console.group(`Iteration ${iteration}`)
-				const startTime = new Date()
+				console.group(titleIteration)
 				try {
 					await test.runWithCancellation(iteration, cancelToken, this.looper)
 				} catch (err) {
 					this.logger.debug(
 						`[Iteration: ${iteration}] Error in Runner Loop: ${err.name}: ${err.message}\n${err.stack}`,
 					)
-					//throw err
 				} finally {
-					const duration = new Date().valueOf() - startTime.valueOf()
+					this.summaryIteraion[`Iteration ${iteration}`] = test.summarizeStep()
 					console.groupEnd()
-					console.log(`Iteration ${iteration} completed in ${duration}ms (walltime)`)
+					if (!this.looper.isRestart) {
+						const duration = new Date().valueOf() - startTime.valueOf()
+						console.log(`Iteration ${iteration} completed in ${duration}ms (walltime)`)
+					}
+					isRestart = this.looper.isRestart
 				}
 			})
 
+			//console.log(this.summaryIteraion)
 			await test.runningBrowser?.close()
 		} catch (err) {
 			if (err instanceof TestScriptError) {
@@ -151,6 +166,16 @@ export class Runner {
 		if (testToCancel !== undefined) {
 			await testToCancel.cancel()
 		}
+	}
+	isRestart(iteration: number): boolean {
+		const latestSteps: SummaryStep[] = this.summaryIteraion[`Iteration ${iteration}`]
+		if (latestSteps) {
+			const latestStep: SummaryStep = latestSteps[latestSteps.length - 1]
+			if (latestStep.recovery === RecoverWith.RESTART) {
+				return true
+			}
+		}
+		return false
 	}
 }
 

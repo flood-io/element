@@ -5,6 +5,7 @@ export class Looper {
 	private timeout: any
 	private cancelled = false
 	private loopCount: number
+	public isRestart = false
 
 	public done: Promise<void>
 	private doneResolve: () => void
@@ -40,17 +41,19 @@ export class Looper {
 	}
 
 	finish() {
+		this.isRestart = false
 		clearTimeout(this.timeout)
 	}
 
 	get continueLoop(): boolean {
+		this.isRestart = false
 		const hasInfiniteLoops = this.loopCount <= 0
 		const hasLoopsLeft = this.iterations < this.loopCount
-
 		return !this.cancelled && (hasLoopsLeft || hasInfiniteLoops)
 	}
 
 	restartLoop() {
+		this.isRestart = true
 		this.iterations -= 1
 	}
 

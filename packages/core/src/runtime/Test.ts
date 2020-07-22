@@ -20,7 +20,7 @@ import {
 import { AnyErrorData, EmptyErrorData, AssertionErrorData } from './errors/Types'
 import { StructuredError } from '../utils/StructuredError'
 
-import { Step, ConditionFn, StepRecoveryObject, RecoverWith } from './Step'
+import { Step, ConditionFn, StepRecoveryObject, RecoverWith, SummaryStep, StepResult } from './Step'
 import { Looper } from '../Looper'
 
 import { CancellationToken } from '../utils/CancellationToken'
@@ -55,6 +55,9 @@ export default class Test implements ITest {
 	public failed: boolean
 
 	public stepCount: number
+
+	public summaryStep: SummaryStep[] = []
+	public stepCounter: number
 
 	get skipping(): boolean {
 		return this.failed
@@ -109,6 +112,7 @@ export default class Test implements ITest {
 	}
 
 	public async callCondition(
+		testObserver: TestObserver,
 		step: Step,
 		iteration: number,
 		browser: BrowserInterface,
@@ -116,8 +120,8 @@ export default class Test implements ITest {
 		const { once, skip, pending, repeat, stepWhile } = step.options
 
 		if (pending) {
-			console.log(`(Pending) ${step.name}`)
 			this.stepCount += 1
+			this.countUnexecutedStep(step.name)
 			return false
 		}
 
@@ -127,8 +131,8 @@ export default class Test implements ITest {
 		}
 
 		if (skip) {
-			console.log(`Skip test ${step.name}`)
 			this.stepCount += 1
+			this.summaryStep.push({ stepName: step.name, result: StepResult.SKIPPED, recovery: false })
 			return false
 		}
 
@@ -168,7 +172,6 @@ export default class Test implements ITest {
 			stepRecover.iteration = 0
 			return false
 		}
-		console.log(`Recovery for ${recoveryStep.name} step`)
 		stepRecover.iteration += 1
 		try {
 			const result = await recoveryStep.fn.call(null, browser)
@@ -185,12 +188,20 @@ export default class Test implements ITest {
 					this.stepCount += 1
 				}
 			}
+			this.countFailedStep(step.name, result)
 		} catch (err) {
 			return false
 		}
 
 		this.failed = false
 		return true
+	}
+
+	public summarizeStep(): SummaryStep[] {
+		return this.summaryStep
+	}
+	public resetSummarizeStep(): void {
+		this.summaryStep = []
 	}
 
 	/**
@@ -279,9 +290,8 @@ export default class Test implements ITest {
 			while (this.stepCount < this.steps.length) {
 				debug('running hook function: beforeEach')
 				await this.runHookFn(this.hook.beforeEach, browser, testDataRecord)
-
 				const step = this.steps[this.stepCount]
-				const condition = await this.callCondition(step, iteration, browser)
+				const condition = await this.callCondition(testObserver, step, iteration, browser)
 				if (!condition) continue
 
 				const { predicate } = step.options
@@ -309,21 +319,50 @@ export default class Test implements ITest {
 					throw Error()
 				}
 				this.stepCount += 1
-
+				this.countSuccessStep(step.name)
 				debug('running hook function: afterEach')
 				await this.runHookFn(this.hook.afterEach, browser, testDataRecord)
 			}
 		} catch (err) {
 			this.failed = true
+			this.countFailedStep(this.steps[this.stepCount].name, false)
+			this.stepCount += 1
+			while (this.stepCount < this.steps.length) {
+				this.countUnexecutedStep(this.steps[this.stepCount].name)
+				this.stepCount += 1
+			}
 			throw err
 		} finally {
 			await this.requestInterceptor.detach(this.client.page)
 		}
 		// TODO report skipped steps
 		await testObserver.after(this)
-
 		debug('running hook function: afterAll')
 		await this.runHookFn(this.hook.afterAll, browser, testDataRecord)
+	}
+
+	countUnexecutedStep(name: string): void {
+		this.summaryStep.push({
+			stepName: name,
+			result: StepResult.UNEXECUTED,
+			recovery: false,
+		})
+	}
+
+	countFailedStep(name: string, recovery: RecoverWith | boolean): void {
+		this.summaryStep.push({
+			stepName: name,
+			result: StepResult.FAILED,
+			recovery: recovery,
+		})
+	}
+
+	countSuccessStep(name: string): void {
+		this.summaryStep.push({
+			stepName: name,
+			result: StepResult.PASSED,
+			recovery: false,
+		})
 	}
 
 	get currentURL(): string {

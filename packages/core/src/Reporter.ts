@@ -141,7 +141,7 @@ export interface IReporter {
 	 */
 	addTrace(traceData: TraceData, label: string): void
 
-	testLifecycle(event: TestEvent, label: string): void
+	testLifecycle(event: TestEvent, label: string, timing?: number): void
 
 	testAssertionError(err: TestScriptError): void
 	testStepError(err: TestScriptError): void

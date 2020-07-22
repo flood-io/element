@@ -7,6 +7,7 @@ import {
 	TestSettings,
 	runCommandLine,
 	ElementOptions,
+	SummaryStep,
 } from '@flood/element-core'
 import { watch } from 'chokidar'
 import { EventEmitter } from 'events'
@@ -33,6 +34,10 @@ interface RunCommonArguments extends Arguments {
 	'test-data-root'?: string
 	'fail-status-code': number
 	configFile: string
+}
+
+type SummaryRun = {
+	[file: string]: SummaryStep
 }
 
 function setupDelayOverrides(
@@ -121,7 +126,7 @@ async function readConfigFile(file: string): Promise<any> {
 	}
 }
 
-async function runTestScript(args: RunCommonArguments): Promise<void> {
+async function runTestScript(args: RunCommonArguments, subTitle: string): Promise<void> {
 	const { file, verbose } = args
 	const workRootPath = getWorkRootPath(file, args['work-root'])
 	const testDataPath = getTestDataPath(file, args['test-data-root'])
@@ -159,7 +164,7 @@ async function runTestScript(args: RunCommonArguments): Promise<void> {
 		opts.persistentRunner = true
 		opts.testCommander = makeTestCommander(file)
 	}
-	console.group('\n', chalk.white(` Running ${file}`))
+	console.group('\n', chalk.white(` Running ${file} (${subTitle})`))
 	await runCommandLine(opts)
 	console.groupEnd()
 }
@@ -186,10 +191,11 @@ async function runTestScriptWithConfiguration(args: RunCommonArguments): Promise
 	} catch {
 		throw Error('Found no test scripts matching testPathMatch pattern')
 	}
-	console.info(
+	console.log(
 		'The following test scripts that matched the testPathMatch pattern are going to be executed:',
 	)
 	let order = 0
+	const numberOfFile = files.length
 	for (const file of files.sort()) {
 		const arg: RunCommonArguments = {
 			...options,
@@ -200,10 +206,10 @@ async function runTestScriptWithConfiguration(args: RunCommonArguments): Promise
 		if (order >= 1) {
 			console.log('------------------------------------------------------------------')
 		}
-		await runTestScript(arg)
+		await runTestScript(arg, `${order} of ${numberOfFile}`)
 		order++
 	}
-	console.info('Test running with the config file has finished')
+	console.log('Test running with the config file has finished')
 }
 
 const cmd: CommandModule = {
@@ -211,12 +217,19 @@ const cmd: CommandModule = {
 	describe: 'Run [a test script| test scripts with configuration] locally',
 
 	async handler(args: RunCommonArguments): Promise<void> {
-		if (args.file) {
-			await runTestScript(args)
-		} else {
-			await runTestScriptWithConfiguration(args)
+		const summary: SummaryRun[] = []
+		try {
+			if (args.file) {
+				await runTestScript(args, '1 of 1')
+				summary[args.file] = {}
+			} else {
+				await runTestScriptWithConfiguration(args)
+			}
+		} catch (err) {
+			throw new Error(err)
+		} finally {
+			process.exit(0)
 		}
-		process.exit(0)
 	},
 	builder(yargs: Argv): Argv {
 		return yargs

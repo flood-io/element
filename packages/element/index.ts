@@ -124,4 +124,4 @@ export { suite } from '@flood/element-core'
 /**
  * @docPage helpers
  */
-export { RecoverWith } from '@flood/element-core'
+export { RecoverWith, SummaryStep } from '@flood/element-core'

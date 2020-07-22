@@ -113,7 +113,14 @@ export {
 /**
  * @docPage DSL
  */
-export { step, TestFn, StepFunction, StepOptions, RecoverWith } from './src/runtime/Step'
+export {
+	step,
+	TestFn,
+	StepFunction,
+	StepOptions,
+	RecoverWith,
+	SummaryStep,
+} from './src/runtime/Step'
 
 export { beforeAll, afterAll, beforeEach, afterEach, HookFn } from './src/runtime/StepLifeCycle'
 /**

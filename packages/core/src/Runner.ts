@@ -128,21 +128,19 @@ export class Runner {
 			this.looper.killer = () => cancelToken.cancel()
 			let startTime = new Date()
 			let isRestart = false
-			let titleIteration = ''
 			await this.looper.run(async iteration => {
 				if (isRestart) {
-					titleIteration = `Restarting iteration ${iteration}`
+					console.group(`Restarting iteration ${iteration}`)
 				} else {
 					if (iteration > 1) {
 						console.log('--------------------------------------------')
 					}
 					test.resetSummarizeStep()
 					startTime = new Date()
-					titleIteration = `${chalk.bold('\u25CC')} Iteration ${iteration} of ${
-						this.looper.iterations
-					}`
+					console.group(
+						`${chalk.bold('\u25CC')} Iteration ${iteration} of ${this.looper.iterations}`,
+					)
 				}
-				console.group(titleIteration)
 				try {
 					await test.runWithCancellation(iteration, cancelToken, this.looper)
 				} catch (err) {

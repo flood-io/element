@@ -206,8 +206,8 @@ async function runTestScriptWithConfiguration(args: RunCommonArguments): Promise
 		if (order >= 1) {
 			console.log('------------------------------------------------------------------')
 		}
-		await runTestScript(arg, `${order} of ${numberOfFile}`)
 		order++
+		await runTestScript(arg, `${order} of ${numberOfFile}`)
 	}
 	console.log('Test running with the config file has finished')
 }

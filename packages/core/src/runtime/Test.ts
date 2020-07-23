@@ -32,6 +32,7 @@ import { ITest } from './ITest'
 import { EvaluatedScriptLike } from './EvaluatedScriptLike'
 import { Hook, HookBase } from './StepLifeCycle'
 import chalk from 'chalk'
+//import { getNumberWithOrdinal } from '../utils/numerical'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:test')
@@ -57,7 +58,7 @@ export default class Test implements ITest {
 	public stepCount: number
 
 	public summaryStep: SummaryStep[] = []
-	public subTitle: string
+	public subTitle: string = ''
 
 	get skipping(): boolean {
 		return this.failed
@@ -139,8 +140,10 @@ export default class Test implements ITest {
 			if (repeat.iteration < repeat.count - 1) {
 				this.stepCount -= 1
 				repeat.iteration += 1
+				//this.subTitle = `${getNumberWithOrdinal(repeat.iteration)} loop`
 			} else {
 				repeat.iteration = 0
+				//this.subTitle = `${getNumberWithOrdinal(repeat.count)} loop`
 			}
 		}
 
@@ -172,6 +175,7 @@ export default class Test implements ITest {
 			return false
 		}
 		stepRecover.iteration += 1
+		//this.subTitle = `${getNumberWithOrdinal(stepRecover.iteration)} recovery`
 		try {
 			const result = await recoveryStep.fn.call(null, browser)
 			const { repeat } = step.options
@@ -245,7 +249,6 @@ export default class Test implements ITest {
 		this.failed = false
 		this.runningBrowser = null
 		this.stepCount = 0
-		this.subTitle = ''
 
 		// await this.observer.attachToNetworkRecorder()
 
@@ -292,7 +295,9 @@ export default class Test implements ITest {
 				await this.runHookFn(this.hook.beforeEach, browser, testDataRecord)
 				const step = this.steps[this.stepCount]
 				const condition = await this.callCondition(step, iteration, browser)
-				if (!condition) continue
+				if (!condition) {
+					continue
+				}
 
 				const { predicate } = step.options
 				if (predicate) {
@@ -319,6 +324,7 @@ export default class Test implements ITest {
 					throw Error()
 				}
 				this.stepCount += 1
+				this.subTitle = ''
 				this.countSuccessStep(step.name)
 				debug('running hook function: afterEach')
 				await this.runHookFn(this.hook.afterEach, browser, testDataRecord)
@@ -334,6 +340,7 @@ export default class Test implements ITest {
 			throw err
 		} finally {
 			await this.requestInterceptor.detach(this.client.page)
+			this.subTitle = ''
 		}
 		// TODO report skipped steps
 		await testObserver.after(this)
@@ -404,7 +411,7 @@ export default class Test implements ITest {
 			await testObserver.onStepError(this, step, this.liftToStructuredError(error))
 			console.group()
 			console.group()
-			console.log(chalk.red(errorMessage ?? 'step error -> failed'))
+			console.log(chalk.red(errorMessage))
 			console.groupEnd()
 			console.groupEnd()
 		} else {

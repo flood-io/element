@@ -23,6 +23,10 @@ export class Compiler {
 		return this.webpackCompiler()
 	}
 
+	private getFileName(file: string): string {
+		return file.substring(file.lastIndexOf('/') + 1, file.length - 3)
+	}
+
 	get compilerOptions(): CompilerOptions {
 		return {
 			allowJs: true,
@@ -40,14 +44,15 @@ export class Compiler {
 			modules.push('/app/node_modules')
 		}
 
-		return {
+		const options: WebpackConfig = {
 			entry: this.sourceFile,
 			mode: 'none',
 			target: 'node',
-			devtool: 'cheap-module-source-map',
 			output: {
 				path: this.externalDebs ? process.cwd() : '/',
-				filename: join('bundle.js'),
+				filename: this.externalDebs
+					? join(`${this.getFileName(this.sourceFile)}_compiled.js`)
+					: join(`bundle.js`),
 				globalObject: 'this',
 				libraryTarget: 'umd',
 			},
@@ -85,6 +90,9 @@ export class Compiler {
 
 			externals: ['@flood/element', '@flood/element-api'],
 		}
+
+		if (!this.externalDebs) options.devtool = 'cheap-module-source-map'
+		return options
 	}
 
 	private get configFilePath(): string {
@@ -106,7 +114,7 @@ export class Compiler {
 				if (err || stats.hasErrors() || stats.hasWarnings()) {
 					reject(
 						new Error(
-							err.message ||
+							(err && err.message) ||
 								stats.toString({
 									errorDetails: true,
 									warnings: true,
@@ -115,7 +123,7 @@ export class Compiler {
 					)
 				} else {
 					const content = this.externalDebs
-						? 'Compile Success'
+						? `Compile ${this.getFileName(compiler.options.entry as string)} success`
 						: fileSystem.data['bundle.js'].toString()
 					const sourceMap = this.externalDebs ? '' : fileSystem.data['bundle.js.map'].toString()
 					resolve({

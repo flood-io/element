@@ -182,9 +182,10 @@ export default class Test implements ITest {
 		this.subTitle = `${getNumberWithOrdinal(stepRecover.iteration)} recovery`
 		try {
 			const result = await recoveryStep.fn.call(null, browser)
-			const { repeat } = step.options
+			const { repeat, stepWhile } = step.options
 			if (result === RecoverWith.CONTINUE) {
 				this.stepCount += 1
+				if (stepWhile) this.stepCount += 1
 			} else if (result === RecoverWith.RESTART) {
 				looper.restartLoop()
 				this.stepCount = this.steps.length
@@ -306,7 +307,7 @@ export default class Test implements ITest {
 				if (predicate) {
 					const condition = await this.callPredicate(predicate, browser)
 					if (!condition) {
-						debug('condition failling')
+						debug('condition failing')
 						continue
 					}
 				}
@@ -337,10 +338,7 @@ export default class Test implements ITest {
 			this.failed = true
 			throw err
 		} finally {
-			await this.requestInterceptor.detach(this.client.page)
-			this.subTitle = ''
-			this.stepCount += 1
-			//this.countUnexecutedStep()
+			await this.cleanSteps()
 		}
 		// TODO report skipped steps
 		await testObserver.after(this)
@@ -348,21 +346,39 @@ export default class Test implements ITest {
 		await this.runHookFn(this.hook.afterAll, browser, testDataRecord)
 	}
 
-	countUnexecutedStep(): void {
-		for (let i = this.stepCount; i < this.steps.length; i++) {
-			this.summaryStep.push({
-				stepName: this.steps[i].name,
-				result: StepResult.UNEXECUTED,
-			})
+	async cleanSteps(): Promise<void> {
+		await this.requestInterceptor.detach(this.client.page)
+		this.subTitle = ''
+		// this.stepCount += 1
+		//this.countUnexecutedStep()
+		for (const step of this.steps) {
+			const { repeat } = step.options
+			if (repeat) repeat.iteration = 0
 		}
 	}
 
-	get currentURL(): string {
-		if (this.runningBrowser == null) {
-			return ''
-		} else {
-			return this.runningBrowser.url
+	countUnexecutedStep(): void {
+		for (const step of this.steps) {
+			this.summaryStep.push({
+				stepName: step.name,
+				result: StepResult.UNEXECUTED,
+			})
 		}
+		// for (let i = this.stepCount; i < this.steps.length; i++) {
+		// 	this.summaryStep.push({
+		// 		stepName: this.steps[i].name,
+		// 		result: StepResult.UNEXECUTED,
+		// 	})
+		// }
+	}
+
+	get currentURL(): string {
+		return (this.runningBrowser && this.runningBrowser.url) || ''
+		// if (this.runningBrowser == null) {
+		// 	return ''
+		// } else {
+		// 	return this.runningBrowser.url
+		// }
 	}
 
 	async runStep(
@@ -372,7 +388,7 @@ export default class Test implements ITest {
 		testDataRecord: any,
 	) {
 		let error: Error | null = null
-		let errorMessage: string = 'step error -> failed'
+		let errorMessage = 'step error -> failed'
 		await testObserver.beforeStep(this, step)
 
 		const originalBrowserSettings = { ...browser.settings }

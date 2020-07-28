@@ -191,11 +191,10 @@ export default class Test implements ITest {
 				this.stepCount = this.steps.length
 				if (repeat) repeat.iteration = 0
 			} else if (result === RecoverWith.RETRY) {
-				if (repeat) {
-					repeat.iteration -= 1
+				if (repeat || stepWhile) {
+					if (repeat) repeat.iteration -= 1
 					this.stepCount += 1
 				}
-				if (stepWhile) this.stepCount += 1
 			}
 		} catch (err) {
 			return false

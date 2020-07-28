@@ -225,6 +225,15 @@ await browser.sendKeys("Hello, World!", Key.ENTER);
 - keys `string`\[]
 - returns: [Promise<`void`>][promise]
 
+### `sendKeyCombinations(...keys)`
+This will simulate the act of pressing a combination of [keys][] on the keyboard at the same time. Use commas to separate individual keys.
+
+**Example:**
+
+```ts title="my-test.perf.ts"
+await browser.sendKeyCombinations(Key.SHIFT, 'KeyA');
+```
+
 ### `setUserAgent(userAgent)`
 
 Set Browser to send a custom User Agent (UA) string
@@ -326,15 +335,16 @@ or a [Condition][], for more flexible conditions.
 
 - returns: [Promise<`any`>][promise]
 
-[step]: api/DSL
+[step]: ../guides/script
 [promise]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
-[nullablelocatable]: api/Browser
-[locatable]: api/Browser
+[nullablelocatable]: Locators
+[locatable]: Locators
 [clickoptions]: Puppeteer
 [device]: Constants
 [elementhandle]: ElementHandle
 [locator]: Locators
-[key]: api/Constants
+[key]: Constants#key
+[keys]: Constants#key
 [targetlocator]: TargetLocator
 [screenshotoptions]: Puppeteer
 [navigationoptions]: Puppeteer

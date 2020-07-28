@@ -12,6 +12,7 @@ module.exports = {
         "Browser Interaction": ["guides/mouse"],
       },
       "guides/script",
+      "guides/hook",
       "guides/editor",
       "guides/cli",
     ],
@@ -24,6 +25,7 @@ module.exports = {
       "api/test-data",
       "api/settings",
       "api/env",
+      "api/constants"
     ],
     Tutorials: [
       "tutorials/youtube",

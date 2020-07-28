@@ -143,4 +143,5 @@ module.exports = {
 			},
 		],
 	],
+	onBrokenLinks: 'log',
 }

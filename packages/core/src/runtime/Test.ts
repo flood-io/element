@@ -32,7 +32,7 @@ import { ITest } from './ITest'
 import { EvaluatedScriptLike } from './EvaluatedScriptLike'
 import { Hook, HookBase } from './StepLifeCycle'
 import chalk from 'chalk'
-//import { getNumberWithOrdinal } from '../utils/numerical'
+import { getNumberWithOrdinal } from '../utils/numerical'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:test')
@@ -118,10 +118,12 @@ export default class Test implements ITest {
 		browser: BrowserInterface,
 	): Promise<boolean> {
 		const { once, skip, pending, repeat, stepWhile } = step.options
-
 		if (pending) {
 			this.stepCount += 1
-			this.countUnexecutedStep(step.name)
+			this.summaryStep.push({
+				stepName: step.name,
+				result: StepResult.UNEXECUTED,
+			})
 			return false
 		}
 
@@ -132,19 +134,21 @@ export default class Test implements ITest {
 
 		if (skip) {
 			this.stepCount += 1
-			this.summaryStep.push({ stepName: step.name, result: StepResult.SKIPPED, recovery: false })
+			this.summaryStep.push({ stepName: step.name, result: StepResult.SKIPPED })
 			return false
 		}
 
 		if (repeat) {
+			let tempTitle = ''
 			if (repeat.iteration < repeat.count - 1) {
 				this.stepCount -= 1
 				repeat.iteration += 1
-				//this.subTitle = `${getNumberWithOrdinal(repeat.iteration)} loop`
+				tempTitle = `${getNumberWithOrdinal(repeat.iteration)} loop`
 			} else {
 				repeat.iteration = 0
-				//this.subTitle = `${getNumberWithOrdinal(repeat.count)} loop`
+				tempTitle = `${getNumberWithOrdinal(repeat.count)} loop`
 			}
+			this.subTitle = this.subTitle ? `${tempTitle} - ${this.subTitle}` : tempTitle
 		}
 
 		if (stepWhile) {
@@ -175,7 +179,7 @@ export default class Test implements ITest {
 			return false
 		}
 		stepRecover.iteration += 1
-		//this.subTitle = `${getNumberWithOrdinal(stepRecover.iteration)} recovery`
+		this.subTitle = `${getNumberWithOrdinal(stepRecover.iteration)} recovery`
 		try {
 			const result = await recoveryStep.fn.call(null, browser)
 			const { repeat } = step.options
@@ -191,7 +195,6 @@ export default class Test implements ITest {
 					this.stepCount += 1
 				}
 			}
-			this.countFailedStep(step.name, result)
 		} catch (err) {
 			return false
 		}
@@ -318,6 +321,7 @@ export default class Test implements ITest {
 				if (cancelToken.isCancellationRequested) return
 
 				if (this.failed) {
+					this.summaryStep.push({ stepName: step.name, result: StepResult.FAILED })
 					const result = await this.callRecovery(step, looper, browser)
 					if (result) continue
 					//console.debug('failed, bailing out of steps')
@@ -325,22 +329,18 @@ export default class Test implements ITest {
 				}
 				this.stepCount += 1
 				this.subTitle = ''
-				this.countSuccessStep(step.name)
+				this.summaryStep.push({ stepName: step.name, result: StepResult.PASSED })
 				debug('running hook function: afterEach')
 				await this.runHookFn(this.hook.afterEach, browser, testDataRecord)
 			}
 		} catch (err) {
 			this.failed = true
-			this.stepCount += 1
-			this.countFailedStep(this.steps[this.stepCount].name, false)
-			while (this.stepCount < this.steps.length) {
-				this.stepCount += 1
-				this.countUnexecutedStep(this.steps[this.stepCount].name)
-			}
 			throw err
 		} finally {
 			await this.requestInterceptor.detach(this.client.page)
 			this.subTitle = ''
+			this.stepCount += 1
+			//this.countUnexecutedStep()
 		}
 		// TODO report skipped steps
 		await testObserver.after(this)
@@ -348,28 +348,13 @@ export default class Test implements ITest {
 		await this.runHookFn(this.hook.afterAll, browser, testDataRecord)
 	}
 
-	countUnexecutedStep(name: string): void {
-		this.summaryStep.push({
-			stepName: name,
-			result: StepResult.UNEXECUTED,
-			recovery: false,
-		})
-	}
-
-	countFailedStep(name: string, recovery: RecoverWith | boolean): void {
-		this.summaryStep.push({
-			stepName: name,
-			result: StepResult.FAILED,
-			recovery: recovery,
-		})
-	}
-
-	countSuccessStep(name: string): void {
-		this.summaryStep.push({
-			stepName: name,
-			result: StepResult.PASSED,
-			recovery: false,
-		})
+	countUnexecutedStep(): void {
+		for (let i = this.stepCount; i < this.steps.length; i++) {
+			this.summaryStep.push({
+				stepName: this.steps[i].name,
+				result: StepResult.UNEXECUTED,
+			})
+		}
 	}
 
 	get currentURL(): string {

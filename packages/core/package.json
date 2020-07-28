@@ -52,6 +52,7 @@
 		"sanitize-filename": "^1.6.1",
 		"source-map": "^0.7.0",
 		"strftime": "^0.10.0",
+		"table": "^5.4.6",
 		"term-img": "^2.1.0",
 		"typedoc": "^0.15.0",
 		"vm2": "^3.9.1",

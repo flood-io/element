@@ -187,7 +187,6 @@ export type SummaryIteraion = {
 export type SummaryStep = {
 	stepName: string
 	result: StepResult
-	recovery: RecoverWith | boolean
 }
 
 /**

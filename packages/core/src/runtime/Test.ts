@@ -195,6 +195,7 @@ export default class Test implements ITest {
 					repeat.iteration -= 1
 					this.stepCount += 1
 				}
+				if (stepWhile) this.stepCount += 1
 			}
 		} catch (err) {
 			return false

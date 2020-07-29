@@ -1,6 +1,6 @@
 import Interceptor from '../network/Interceptor'
 import { Browser } from './Browser'
-import { Browser as BrowserInterface } from './IBrowser'
+// import { Browser as BrowserInterface } from './IBrowser'
 
 import { IReporter } from '../Reporter'
 import { NullReporter } from '../reporter/Null'
@@ -20,7 +20,7 @@ import {
 import { AnyErrorData, EmptyErrorData, AssertionErrorData } from './errors/Types'
 import { StructuredError } from '../utils/StructuredError'
 
-import { Step, ConditionFn, StepRecoveryObject, RecoverWith, SummaryStep, StepResult } from './Step'
+import { Step, StepRecoveryObject, SummaryStep, StepResult } from './Step'
 import { Looper } from '../Looper'
 
 import { CancellationToken } from '../utils/CancellationToken'
@@ -32,7 +32,8 @@ import { ITest } from './ITest'
 import { EvaluatedScriptLike } from './EvaluatedScriptLike'
 import { Hook, HookBase } from './StepLifeCycle'
 import chalk from 'chalk'
-import { getNumberWithOrdinal } from '../utils/numerical'
+// import { getNumberWithOrdinal } from '../utils/numerical'
+import StepIterator from './StepIterator'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:test')
@@ -58,7 +59,7 @@ export default class Test implements ITest {
 	public stepCount: number
 
 	public summaryStep: SummaryStep[] = []
-	public subTitle: string = ''
+	public subTitle = ''
 
 	get skipping(): boolean {
 		return this.failed
@@ -101,108 +102,108 @@ export default class Test implements ITest {
 		await this.script.beforeTestRun()
 	}
 
-	public async callPredicate(predicate: ConditionFn, browser: BrowserInterface): Promise<boolean> {
-		let condition = false
-		try {
-			condition = await predicate.call(null, browser)
-		} catch (err) {
-			console.log(err.message)
-		}
-		if (!condition) this.stepCount += 1
-		return condition
-	}
+	// public async callPredicate(predicate: ConditionFn, browser: BrowserInterface): Promise<boolean> {
+	// 	let condition = false
+	// 	try {
+	// 		condition = await predicate.call(null, browser)
+	// 	} catch (err) {
+	// 		console.log(err.message)
+	// 	}
+	// 	if (!condition) this.stepCount += 1
+	// 	return condition
+	// }
 
-	public async callCondition(
-		step: Step,
-		iteration: number,
-		browser: BrowserInterface,
-	): Promise<boolean> {
-		const { once, skip, pending, repeat, stepWhile } = step.options
-		if (pending) {
-			this.stepCount += 1
-			this.summaryStep.push({
-				stepName: step.name,
-				result: StepResult.UNEXECUTED,
-			})
-			return false
-		}
+	// public async callCondition(
+	// 	step: Step,
+	// 	iteration: number,
+	// 	browser: BrowserInterface,
+	// ): Promise<boolean> {
+	// 	const { once, skip, pending, repeat, stepWhile } = step.options
+	// 	if (pending) {
+	// 		this.stepCount += 1
+	// 		this.summaryStep.push({
+	// 			stepName: step.name,
+	// 			result: StepResult.UNEXECUTED,
+	// 		})
+	// 		return false
+	// 	}
 
-		if (once && iteration > 1) {
-			this.stepCount += 1
-			return false
-		}
+	// 	if (once && iteration > 1) {
+	// 		this.stepCount += 1
+	// 		return false
+	// 	}
 
-		if (skip) {
-			this.stepCount += 1
-			this.summaryStep.push({ stepName: step.name, result: StepResult.SKIPPED })
-			return false
-		}
+	// 	if (skip) {
+	// 		this.stepCount += 1
+	// 		this.summaryStep.push({ stepName: step.name, result: StepResult.SKIPPED })
+	// 		return false
+	// 	}
 
-		if (repeat) {
-			let tempTitle = ''
-			if (repeat.iteration < repeat.count - 1) {
-				this.stepCount = this.stepCount > 0 ? this.stepCount - 1 : 0
-				repeat.iteration += 1
-				tempTitle = `${getNumberWithOrdinal(repeat.iteration)} loop`
-			} else {
-				repeat.iteration = 0
-				tempTitle = `${getNumberWithOrdinal(repeat.count)} loop`
-			}
-			this.subTitle = this.subTitle ? `${tempTitle} - ${this.subTitle}` : tempTitle
-		}
+	// 	if (repeat) {
+	// 		let tempTitle = ''
+	// 		if (repeat.iteration < repeat.count - 1) {
+	// 			this.stepCount = this.stepCount > 0 ? this.stepCount - 1 : 0
+	// 			repeat.iteration += 1
+	// 			tempTitle = `${getNumberWithOrdinal(repeat.iteration)} loop`
+	// 		} else {
+	// 			repeat.iteration = 0
+	// 			tempTitle = `${getNumberWithOrdinal(repeat.count)} loop`
+	// 		}
+	// 		this.subTitle = this.subTitle ? `${tempTitle} - ${this.subTitle}` : tempTitle
+	// 	}
 
-		if (stepWhile) {
-			const { predicate } = stepWhile
-			const result = await this.callPredicate(predicate, browser)
-			if (result) this.stepCount -= 1
-			return result
-		}
+	// 	if (stepWhile) {
+	// 		const { predicate } = stepWhile
+	// 		const result = await this.callPredicate(predicate, browser)
+	// 		if (result) this.stepCount -= 1
+	// 		return result
+	// 	}
 
-		return true
-	}
+	// 	return true
+	// }
 
-	public async callRecovery(
-		step: Step,
-		looper: Looper,
-		browser: BrowserInterface,
-	): Promise<boolean> {
-		let stepRecover = this.recoverySteps[step.name]
-		if (!stepRecover) {
-			stepRecover = this.recoverySteps['global']
-			if (!stepRecover) return false
-		}
-		const { recoveryStep, loopCount, iteration } = stepRecover
-		const { tries } = this.settings
-		const settingRecoveryCount = loopCount || tries || 1
-		if (!recoveryStep || iteration >= settingRecoveryCount) {
-			stepRecover.iteration = 0
-			return false
-		}
-		stepRecover.iteration += 1
-		this.subTitle = `${getNumberWithOrdinal(stepRecover.iteration)} recovery`
-		try {
-			const result = await recoveryStep.fn.call(null, browser)
-			const { repeat, stepWhile } = step.options
-			if (result === RecoverWith.CONTINUE) {
-				this.stepCount += 1
-				if (stepWhile) this.stepCount += 1
-			} else if (result === RecoverWith.RESTART) {
-				looper.restartLoop()
-				this.stepCount = this.steps.length
-				if (repeat) repeat.iteration = 0
-			} else if (result === RecoverWith.RETRY) {
-				if (repeat || stepWhile) {
-					if (repeat) repeat.iteration -= 1
-					this.stepCount += 1
-				}
-			}
-		} catch (err) {
-			return false
-		}
+	// public async callRecovery(
+	// 	step: Step,
+	// 	looper: Looper,
+	// 	browser: BrowserInterface,
+	// ): Promise<boolean> {
+	// 	let stepRecover = this.recoverySteps[step.name]
+	// 	if (!stepRecover) {
+	// 		stepRecover = this.recoverySteps['global']
+	// 		if (!stepRecover) return false
+	// 	}
+	// 	const { recoveryStep, loopCount, iteration } = stepRecover
+	// 	const { tries } = this.settings
+	// 	const settingRecoveryCount = loopCount || tries || 1
+	// 	if (!recoveryStep || iteration >= settingRecoveryCount) {
+	// 		stepRecover.iteration = 0
+	// 		return false
+	// 	}
+	// 	stepRecover.iteration += 1
+	// 	this.subTitle = `${getNumberWithOrdinal(stepRecover.iteration)} recovery`
+	// 	try {
+	// 		const result = await recoveryStep.fn.call(null, browser)
+	// 		const { repeat, stepWhile } = step.options
+	// 		if (result === RecoverWith.CONTINUE) {
+	// 			this.stepCount += 1
+	// 			if (stepWhile) this.stepCount += 1
+	// 		} else if (result === RecoverWith.RESTART) {
+	// 			looper.restartLoop()
+	// 			this.stepCount = this.steps.length
+	// 			if (repeat) repeat.iteration = 0
+	// 		} else if (result === RecoverWith.RETRY) {
+	// 			if (repeat || stepWhile) {
+	// 				if (repeat) repeat.iteration -= 1
+	// 				this.stepCount += 1
+	// 			}
+	// 		}
+	// 	} catch (err) {
+	// 		return false
+	// 	}
 
-		this.failed = false
-		return true
-	}
+	// 	this.failed = false
+	// 	return true
+	// }
 
 	public summarizeStep(): SummaryStep[] {
 		return this.summaryStep
@@ -294,21 +295,21 @@ export default class Test implements ITest {
 			await this.runHookFn(this.hook.beforeAll, browser, testDataRecord)
 
 			debug('running steps')
-			while (this.stepCount < this.steps.length) {
+			const stepIterator = new StepIterator(this.steps)
+			await stepIterator.run(async (step: Step) => {
 				debug('running hook function: beforeEach')
 				await this.runHookFn(this.hook.beforeEach, browser, testDataRecord)
-				const step = this.steps[this.stepCount]
-				const condition = await this.callCondition(step, iteration, browser)
+				const condition = await stepIterator.callCondition(step, iteration, browser)
 				if (!condition) {
-					continue
+					stepIterator.goNextStep()
 				}
 
 				const { predicate } = step.options
 				if (predicate) {
-					const condition = await this.callPredicate(predicate, browser)
+					const condition = await stepIterator.callPredicate(predicate, browser)
 					if (!condition) {
 						debug('condition failing')
-						continue
+						stepIterator.goNextStep()
 					}
 				}
 
@@ -323,16 +324,24 @@ export default class Test implements ITest {
 
 				if (this.failed) {
 					this.summaryStep.push({ stepName: step.name, result: StepResult.FAILED })
-					const result = await this.callRecovery(step, looper, browser)
-					if (result) continue
-					throw Error()
+					const result = await stepIterator.callRecovery(
+						step,
+						looper,
+						browser,
+						this.recoverySteps,
+						(this.settings.tries = 0),
+					)
+					if (result) {
+						this.failed = false
+					} else {
+						throw Error()
+					}
 				}
-				this.stepCount += 1
 				this.subTitle = ''
 				this.summaryStep.push({ stepName: step.name, result: StepResult.PASSED })
 				debug('running hook function: afterEach')
 				await this.runHookFn(this.hook.afterEach, browser, testDataRecord)
-			}
+			})
 		} catch (err) {
 			this.failed = true
 			throw err
@@ -364,7 +373,7 @@ export default class Test implements ITest {
 		//Count unexecuted of step.repeat
 		let stopStepCount = this.stepCount
 		for (stopStepCount; stopStepCount < this.steps.length; stopStepCount++) {
-			let step = this.steps[stopStepCount]
+			const step = this.steps[stopStepCount]
 			const { repeat } = step.options
 			if (repeat) {
 				if (repeat.iteration > 0) {

@@ -141,7 +141,7 @@ export default class Test implements ITest {
 		if (repeat) {
 			let tempTitle = ''
 			if (repeat.iteration < repeat.count - 1) {
-				this.stepCount -= 1
+				this.stepCount = this.stepCount > 0 ? this.stepCount - 1 : 0
 				repeat.iteration += 1
 				tempTitle = `${getNumberWithOrdinal(repeat.iteration)} loop`
 			} else {
@@ -325,7 +325,6 @@ export default class Test implements ITest {
 					this.summaryStep.push({ stepName: step.name, result: StepResult.FAILED })
 					const result = await this.callRecovery(step, looper, browser)
 					if (result) continue
-					//console.debug('failed, bailing out of steps')
 					throw Error()
 				}
 				this.stepCount += 1
@@ -350,35 +349,45 @@ export default class Test implements ITest {
 		await this.requestInterceptor.detach(this.client.page)
 		this.subTitle = ''
 		// this.stepCount += 1
-		//this.countUnexecutedStep()
-		for (const step of this.steps) {
-			const { repeat } = step.options
-			if (repeat) repeat.iteration = 0
-		}
+		this.countUnexecutedStep()
+		// for (const step of this.steps) {
+		// 	const { repeat } = step.options
+		// 	if (repeat) repeat.iteration = 0
+		// }
 	}
 
 	countUnexecutedStep(): void {
-		for (const step of this.steps) {
-			this.summaryStep.push({
-				stepName: step.name,
-				result: StepResult.UNEXECUTED,
-			})
-		}
-		// for (let i = this.stepCount; i < this.steps.length; i++) {
-		// 	this.summaryStep.push({
-		// 		stepName: this.steps[i].name,
-		// 		result: StepResult.UNEXECUTED,
-		// 	})
+		// for (const step of this.steps) {
+		// 	const { repeat } = step.options
+		// 	if (repeat) repeat.iteration = 0
 		// }
+		//Count unexecuted of step.repeat
+		let stopStepCount = this.stepCount
+		for (stopStepCount; stopStepCount < this.steps.length; stopStepCount++) {
+			let step = this.steps[stopStepCount]
+			const { repeat } = step.options
+			if (repeat) {
+				if (repeat.iteration > 0) {
+					do {
+						repeat.iteration += 1
+						this.summaryStep.push({
+							stepName: step.name,
+							result: StepResult.UNEXECUTED,
+						})
+					} while (repeat.iteration < repeat.count)
+				}
+				repeat.iteration = 0
+				continue
+			}
+			// this.summaryStep.push({
+			// 	stepName: this.steps[stopStepCount].name,
+			// 	result: StepResult.UNEXECUTED,
+			// })
+		}
 	}
 
 	get currentURL(): string {
 		return (this.runningBrowser && this.runningBrowser.url) || ''
-		// if (this.runningBrowser == null) {
-		// 	return ''
-		// } else {
-		// 	return this.runningBrowser.url
-		// }
 	}
 
 	async runStep(
@@ -401,6 +410,11 @@ export default class Test implements ITest {
 			error = err
 		} finally {
 			browser.settings = originalBrowserSettings
+			if (step.options.repeat?.iteration !== 0) {
+				step.prop = { executed: false }
+			} else {
+				step.prop = { executed: true }
+			}
 		}
 
 		if (error !== null) {

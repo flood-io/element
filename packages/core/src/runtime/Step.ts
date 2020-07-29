@@ -196,6 +196,9 @@ export type Step = {
 	name: string
 	options: Partial<StepOptions>
 	fn: TestFn
+	prop?: {
+		executed: boolean
+	}
 }
 
 /**

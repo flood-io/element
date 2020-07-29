@@ -9,7 +9,7 @@ import { AsyncFactory } from './utils/Factory'
 import { CancellationToken } from './utils/CancellationToken'
 import { TestScriptError } from './TestScriptError'
 import { Looper } from './Looper'
-import { StepResult, SummaryIteraion, SummaryStep } from './runtime/Step'
+import { StepResult, SummaryIteration, SummaryStep } from './runtime/Step'
 import chalk from 'chalk'
 import { table, getBorderCharacters } from 'table'
 
@@ -40,7 +40,7 @@ export class Runner {
 	protected looper: Looper
 	running = true
 	public clientPromise: Promise<PuppeteerClient> | undefined
-	public summaryIteraion: SummaryIteraion[] = []
+	public summaryIteration: SummaryIteration[] = []
 
 	constructor(
 		private clientFactory: AsyncFactory<PuppeteerClient>,
@@ -128,8 +128,7 @@ export class Runner {
 			this.looper = new Looper(settings, this.running)
 			this.looper.killer = () => cancelToken.cancel()
 			let startTime = new Date()
-			let isRestart = false
-			await this.looper.run(async iteration => {
+			await this.looper.run(async (iteration: number, isRestart: boolean) => {
 				if (isRestart) {
 					console.group(`Restarting iteration ${iteration}`)
 				} else {
@@ -149,13 +148,12 @@ export class Runner {
 						`[Iteration: ${iteration}] Error in Runner Loop: ${err.name}: ${err.message}\n${err.stack}`,
 					)
 				} finally {
-					this.summaryIteraion[`Iteration ${iteration}`] = test.summarizeStep()
+					this.summaryIteration[`Iteration ${iteration}`] = test.summarizeStep()
 					console.groupEnd()
 					if (!this.looper.isRestart) {
-						const sumarizedData = this.summarizeIteration(iteration, startTime)
-						reportTableData.push(sumarizedData)
+						const summarizedData = this.summarizeIteration(iteration, startTime)
+						reportTableData.push(summarizedData)
 					}
-					isRestart = this.looper.isRestart
 				}
 			})
 

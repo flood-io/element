@@ -180,7 +180,7 @@ export enum StepResult {
 	UNEXECUTED = 'unexecuted',
 }
 
-export type SummaryIteraion = {
+export type SummaryIteration = {
 	[iteration: string]: SummaryStep
 }
 

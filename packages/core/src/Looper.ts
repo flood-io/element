@@ -57,9 +57,9 @@ export class Looper {
 		this.iterations -= 1
 	}
 
-	async run(iterator: (iteration: number) => Promise<void>): Promise<number> {
+	async run(iterator: (iteration: number, isRestart: boolean) => Promise<void>): Promise<number> {
 		while (this.continueLoop) {
-			await iterator(++this.iterations)
+			await iterator(++this.iterations, this.isRestart)
 		}
 		this.finish()
 

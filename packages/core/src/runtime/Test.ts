@@ -157,6 +157,7 @@ export default class Test implements ITest {
 		debug('run() start')
 
 		const { testData } = this.script
+		const stepIterator = new StepIterator(this.steps)
 		let browser: Browser<Step>
 		let testDataRecord: any
 		try {
@@ -192,7 +193,6 @@ export default class Test implements ITest {
 			await this.runHookFn(this.hook.beforeAll, browser, testDataRecord)
 
 			debug('running steps')
-			const stepIterator = new StepIterator(this.steps)
 			await stepIterator.run(async (step: Step) => {
 				debug('running hook function: beforeEach')
 				await this.runHookFn(this.hook.beforeEach, browser, testDataRecord)
@@ -244,11 +244,7 @@ export default class Test implements ITest {
 			this.failed = true
 			throw err
 		} finally {
-			await this.afterRunSteps()
-			for (const step of this.steps) {
-				const { repeat } = step.options
-				if (repeat) repeat.iteration = 0
-			}
+			await this.afterRunSteps(stepIterator)
 		}
 		// TODO report skipped steps
 		await testObserver.after(this)
@@ -272,19 +268,8 @@ export default class Test implements ITest {
 		}
 	}
 
-	summarizeStepAfterRun(): void {}
-
-	async afterRunSteps(): Promise<void> {
-		await this.requestInterceptor.detach(this.client.page)
-		this.subTitle = ''
-		this.summarizeStepAfterRun()
-	}
-
-	countUnexecutedStep(): void {
-		//Count unexecuted of step.repeat
-		let stopStepCount = this.stepCount
-		for (stopStepCount; stopStepCount < this.steps.length; stopStepCount++) {
-			const step = this.steps[stopStepCount]
+	summarizeStepAfterRun(stepIterator: StepIterator): void {
+		const countRepeatStep = (step: Step): boolean => {
 			const { repeat } = step.options
 			if (repeat) {
 				if (repeat.iteration > 0) {
@@ -297,13 +282,29 @@ export default class Test implements ITest {
 					} while (repeat.iteration < repeat.count)
 				}
 				repeat.iteration = 0
-				continue
+				return true
 			}
-			// this.summaryStep.push({
-			// 	stepName: this.steps[stopStepCount].name,
-			// 	result: StepResult.UNEXECUTED,
-			// })
+			return false
 		}
+
+		countRepeatStep(stepIterator.step)
+
+		do {
+			stepIterator.goNextStep()
+			const step = stepIterator.step
+			const countRepeatStepDone = countRepeatStep(step)
+			if (countRepeatStepDone) continue
+			this.summaryStep.push({
+				stepName: step.name,
+				result: StepResult.UNEXECUTED,
+			})
+		} while (stepIterator.isTheLatestStep())
+	}
+
+	async afterRunSteps(stepIterator: StepIterator): Promise<void> {
+		await this.requestInterceptor.detach(this.client.page)
+		this.subTitle = ''
+		this.summarizeStepAfterRun(stepIterator)
 	}
 
 	get currentURL(): string {

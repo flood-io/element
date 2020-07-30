@@ -17,11 +17,8 @@ export default class StepIterator {
 		return this.currentStep
 	}
 
-	cleanSteps(): void {
-		for (const step of this.steps) {
-			const { repeat } = step.options
-			if (repeat) repeat.iteration = 0
-		}
+	isTheLatestStep(): boolean {
+		return this.stepCount === this.steps.length
 	}
 
 	goNextStep(): boolean {

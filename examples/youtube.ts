@@ -10,7 +10,6 @@ export const settings: TestSettings = {
 	screenshotOnFailure: true,
 	stepDelay: 7.5,
 	actionDelay: 7.5,
-	loopCount: 1,
 }
 
 /**

@@ -157,7 +157,7 @@ export class Runner {
 				}
 			})
 
-			// console.log(this.summaryIteraion)
+			// console.log(this.summaryIteration)
 			await test.runningBrowser?.close()
 		} catch (err) {
 			if (err instanceof TestScriptError) {
@@ -226,7 +226,7 @@ export class Runner {
 			failedNo = 0,
 			skippedNo = 0,
 			unexecutedNo = 0
-		const steps: SummaryStep[] = this.summaryIteraion[`Iteration ${iteration}`]
+		const steps: SummaryStep[] = this.summaryIteration[`Iteration ${iteration}`]
 		steps.forEach(step => {
 			switch (step.result) {
 				case StepResult.PASSED:

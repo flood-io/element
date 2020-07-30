@@ -64,7 +64,6 @@ export default class StepIterator {
 		} catch (err) {
 			console.error(err.message)
 		}
-		if (!condition) this.goNextStep()
 		return condition
 	}
 
@@ -89,7 +88,7 @@ export default class StepIterator {
 		stepRecover.iteration += 1
 		try {
 			const result = await recoveryStep.fn.call(null, browser)
-			const { repeat, stepWhile } = step.options
+			const { repeat } = step.options
 			if (result === RecoverWith.CONTINUE) {
 				if (repeat) {
 					return this.goPreviousStep()
@@ -100,12 +99,8 @@ export default class StepIterator {
 				looper.restartLoop()
 				return this.stepEnd()
 			} else if (result === RecoverWith.RETRY) {
-				if (repeat || stepWhile) {
-					if (repeat) repeat.iteration -= 1
-					return this.goPreviousStep()
-				} else {
-					return this.goNextStep()
-				}
+				if (repeat) repeat.iteration -= 1
+				return this.goPreviousStep()
 			}
 		} catch (err) {
 			return false

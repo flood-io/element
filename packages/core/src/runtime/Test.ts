@@ -301,7 +301,7 @@ export default class Test implements ITest {
 				await this.runHookFn(this.hook.beforeEach, browser, testDataRecord)
 				const condition = await stepIterator.callCondition(step, iteration, browser)
 				if (!condition) {
-					stepIterator.goNextStep()
+					return
 				}
 
 				const { predicate } = step.options
@@ -309,7 +309,7 @@ export default class Test implements ITest {
 					const condition = await stepIterator.callPredicate(predicate, browser)
 					if (!condition) {
 						debug('condition failing')
-						stepIterator.goNextStep()
+						return
 					}
 				}
 

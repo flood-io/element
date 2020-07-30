@@ -1,13 +1,11 @@
 import { ConditionFn, RecoverWith, Step, StepRecoveryObject } from './Step'
 import { Browser as BrowserInterface } from './IBrowser'
 import { Looper } from '../Looper'
-import { getNumberWithOrdinal } from '../utils/numerical'
 
 export default class StepIterator {
 	private steps: Step[]
 	private stepCount = 0
 	private currentStep: Step
-	public subStepTitle: string = ''
 
 	constructor(allSteps: Step[]) {
 		this.steps = allSteps
@@ -15,13 +13,6 @@ export default class StepIterator {
 
 	get step(): Step {
 		return this.currentStep
-	}
-
-	cleanSteps(): void {
-		for (const step of this.steps) {
-			const { repeat } = step.options
-			if (repeat) repeat.iteration = 0
-		}
 	}
 
 	goNextStep(): boolean {
@@ -43,7 +34,6 @@ export default class StepIterator {
 		while (this.stepCount < this.steps.length) {
 			this.currentStep = this.steps[this.stepCount]
 			await iterator(this.currentStep)
-			this.subStepTitle = ''
 			this.goNextStep()
 		}
 	}
@@ -54,16 +44,9 @@ export default class StepIterator {
 		if (pending || (once && iteration > 1) || skip) return false
 
 		if (repeat) {
-			let tempTitle = ''
 			const { iteration, count } = repeat
-			if (iteration >= count - 1) {
-				repeat.iteration = 0
-				tempTitle = `${getNumberWithOrdinal(repeat.count)} loop`
-			} else {
-				repeat.iteration += 1
-				tempTitle = `${getNumberWithOrdinal(repeat.iteration)} loop`
-			}
-			this.subStepTitle = this.subStepTitle ? `${tempTitle} - ${this.subStepTitle}` : tempTitle
+			if (iteration >= count - 1) repeat.iteration = 0
+			else repeat.iteration += 1
 		}
 
 		if (stepWhile) {
@@ -103,7 +86,6 @@ export default class StepIterator {
 			return false
 		}
 		stepRecover.iteration += 1
-		this.subStepTitle = `${getNumberWithOrdinal(stepRecover.iteration)} recovery`
 		try {
 			const result = await recoveryStep.fn.call(null, browser)
 			const { repeat } = step.options

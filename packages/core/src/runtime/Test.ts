@@ -205,10 +205,7 @@ export default class Test implements ITest {
 				const { predicate } = step.options
 				if (predicate) {
 					const condition = await stepIterator.callPredicate(predicate, browser)
-					if (!condition) {
-						debug('condition failing')
-						return
-					}
+					if (!condition) return
 				}
 
 				browser.customContext = step

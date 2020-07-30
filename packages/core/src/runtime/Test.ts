@@ -300,17 +300,12 @@ export default class Test implements ITest {
 				debug('running hook function: beforeEach')
 				await this.runHookFn(this.hook.beforeEach, browser, testDataRecord)
 				const condition = await stepIterator.callCondition(step, iteration, browser)
-				if (!condition) {
-					return
-				}
+				if (!condition) return
 
 				const { predicate } = step.options
 				if (predicate) {
 					const condition = await stepIterator.callPredicate(predicate, browser)
-					if (!condition) {
-						debug('condition failing')
-						return
-					}
+					if (!condition) return
 				}
 
 				browser.customContext = step

@@ -11,7 +11,7 @@ import { TestScriptError } from './TestScriptError'
 import { Looper } from './Looper'
 import { StepResult, SummaryIteration, SummaryStep } from './runtime/Step'
 import chalk from 'chalk'
-import { table, getBorderCharacters } from 'table'
+import { reportRunTest } from './utils/Report'
 
 export interface TestCommander {
 	on(event: 'rerun-test', listener: () => void): this
@@ -91,7 +91,7 @@ export class Runner {
 		if (!this.running) return
 
 		let testToCancel: Test | undefined
-		const reportTableData: any[] = []
+		const reportTableData: number[][] = []
 
 		try {
 			const test = new Test(
@@ -158,7 +158,6 @@ export class Runner {
 				}
 			})
 
-			//console.log(this.summaryIteration)
 			await test.runningBrowser?.close()
 		} catch (err) {
 			if (err instanceof TestScriptError) {
@@ -172,53 +171,15 @@ export class Runner {
 			// }
 			throw err
 		} finally {
-			this.reportRunTest(reportTableData)
+			const table = reportRunTest(reportTableData)
+			console.log(table)
 		}
 
 		if (testToCancel !== undefined) {
 			await testToCancel.cancel()
 		}
 	}
-	reportRunTest(reportTableData: any): void {
-		const data: any[] = [
-			[
-				'Iteration',
-				chalk.green('Passed'),
-				chalk.red('Failed'),
-				chalk.yellow('Skipped'),
-				'Unexecuted',
-			],
-		]
-		data.push(...reportTableData)
-		const config = {
-			border: getBorderCharacters('ramac'),
-			columns: {
-				0: {
-					alignment: 'center',
-					width: 10,
-				},
-				1: {
-					alignment: 'center',
-					width: 10,
-				},
-				2: {
-					alignment: 'center',
-					width: 10,
-				},
-				3: {
-					alignment: 'center',
-					width: 10,
-				},
-				4: {
-					alignment: 'center',
-					width: 10,
-				},
-			},
-		}
-		const output = table(data, config)
-		console.log(output)
-	}
-	summarizeIteration(iteration: number, startTime: Date): any {
+	summarizeIteration(iteration: number, startTime: Date): number[] {
 		let passedMessage = '',
 			failedMessage = '',
 			skippedMessage = '',
@@ -251,13 +212,8 @@ export class Runner {
 		const finallyMessage = chalk(passedMessage, failedMessage, skippedMessage, unexecutedMessage)
 		const duration = new Date().valueOf() - startTime.valueOf()
 		console.log(`Iteration ${iteration} completed in ${duration}ms (walltime) ${finallyMessage}`)
-		return [
-			iteration,
-			passedNo > 0 ? chalk.green(`${passedNo}`) : '_',
-			failedNo > 0 ? chalk.red(`${failedNo}`) : '_',
-			skippedNo > 0 ? chalk.yellow(`${skippedNo}`) : '_',
-			unexecutedNo > 0 ? unexecutedNo : '_',
-		]
+
+		return [iteration, passedNo, failedNo, skippedNo, unexecutedNo]
 	}
 }
 

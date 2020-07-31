@@ -53,7 +53,7 @@ export interface StepConditionBase {
 	(condition: ConditionFn, ...optionsOrFn: any[])
 }
 
-export interface StepRepeatablebase {
+export interface StepRepeatableBase {
 	(count: number, name: string, options: StepOptions, testFn: TestFn)
 	(count: number, name: string, testFn: TestFn)
 	(count: number, ...optionsOrFn: any[])
@@ -88,7 +88,7 @@ export interface StepExtended extends StepBase {
 	/**
 	 * Creates a repeatable step
 	 */
-	repeat: StepRepeatablebase
+	repeat: StepRepeatableBase
 
 	/**
 	 * Creates a while step
@@ -197,8 +197,10 @@ export type Step = {
 	options: Partial<StepOptions>
 	fn: TestFn
 	prop?: {
-		executed?: boolean
 		recoveryTries?: number
+		skipped?: boolean
+		unexecuted?: boolean
+		passed?: boolean
 	}
 }
 

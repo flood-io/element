@@ -58,7 +58,7 @@ export default class Test implements ITest {
 	public failed: boolean
 
 	public summaryStep: SummaryStep[] = []
-	public subTitle: string
+	public subTitle: string = ''
 
 	get skipping(): boolean {
 		return this.failed
@@ -149,7 +149,6 @@ export default class Test implements ITest {
 
 		this.failed = false
 		this.runningBrowser = null
-		this.subTitle = ''
 
 		// await this.observer.attachToNetworkRecorder()
 
@@ -196,17 +195,8 @@ export default class Test implements ITest {
 				await this.runHookFn(this.hook.beforeEach, browser, testDataRecord)
 				const condition = await stepIterator.callCondition(step, iteration, browser)
 				if (!condition) {
-					this.summarizeStepBeforeRun(step, iteration)
+					this.summarizeStepBeforeRunStep(step)
 					return
-				}
-
-				const { predicate } = step.options
-				if (predicate) {
-					const condition = await stepIterator.callPredicate(predicate, browser)
-					if (!condition) {
-						debug('condition failing')
-						return
-					}
 				}
 
 				browser.customContext = step
@@ -214,6 +204,8 @@ export default class Test implements ITest {
 					this.runStep(testObserver, browser, step, testDataRecord),
 					cancelToken.promise,
 				])
+
+				this.summarizeStepAfterRunStep(step)
 
 				if (cancelToken.isCancellationRequested) return
 
@@ -253,9 +245,8 @@ export default class Test implements ITest {
 		this.summarizeStepAfterStopRunning(stepIterator)
 	}
 
-	summarizeStepBeforeRun(step: Step, iteration: number): void {
-		const { skip, pending, once } = step.options
-		if (pending || (once && iteration > 1)) {
+	summarizeStepBeforeRunStep(step: Step): void {
+		if (step.prop?.unexecuted) {
 			this.summaryStep.push({
 				stepName: step.name,
 				result: StepResult.UNEXECUTED,
@@ -263,8 +254,24 @@ export default class Test implements ITest {
 			return
 		}
 
-		if (skip) {
+		if (step.prop?.skipped) {
 			this.summaryStep.push({ stepName: step.name, result: StepResult.SKIPPED })
+			return
+		}
+	}
+
+	summarizeStepAfterRunStep(step: Step): void {
+		if (step.prop?.passed) {
+			this.summaryStep.push({
+				stepName: step.name,
+				result: StepResult.PASSED,
+			})
+			return
+		} else if (!step.prop?.passed) {
+			this.summaryStep.push({
+				stepName: step.name,
+				result: StepResult.FAILED,
+			})
 			return
 		}
 	}
@@ -307,8 +314,9 @@ export default class Test implements ITest {
 		const { repeat } = step.options
 		const recoveryTries = step.prop?.recoveryTries
 		let subTitle = ''
-		if (recoveryTries) {
+		if (recoveryTries && recoveryTries > 0) {
 			subTitle = `${getNumberWithOrdinal(recoveryTries)} recovery`
+			this.summaryStep.pop()
 		}
 		if (repeat) {
 			let tempTitle = ''
@@ -332,6 +340,7 @@ export default class Test implements ITest {
 		let error: Error | null = null
 		let errorMessage = 'step error -> failed'
 		await testObserver.beforeStep(this, step)
+
 		this.subTitle = this.getStepSubtitle(step)
 
 		const originalBrowserSettings = { ...browser.settings }
@@ -344,11 +353,6 @@ export default class Test implements ITest {
 			error = err
 		} finally {
 			browser.settings = originalBrowserSettings
-			if (step.options.repeat?.iteration !== 0) {
-				step.prop = { executed: false }
-			} else {
-				step.prop = { executed: true }
-			}
 		}
 
 		if (error !== null) {
@@ -363,16 +367,10 @@ export default class Test implements ITest {
 			console.log(chalk.red(errorMessage))
 			console.groupEnd()
 			console.groupEnd()
-			this.summaryStep.push({
-				stepName: step.name,
-				result: StepResult.FAILED,
-			})
+			step.prop = { passed: false }
 		} else {
 			await testObserver.onStepPassed(this, step)
-			this.summaryStep.push({
-				stepName: step.name,
-				result: StepResult.PASSED,
-			})
+			step.prop = { passed: true }
 		}
 		await testObserver.afterStep(this, step)
 

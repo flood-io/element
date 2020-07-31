@@ -164,7 +164,8 @@ async function runTestScript(args: RunCommonArguments, subTitle: string): Promis
 		opts.persistentRunner = true
 		opts.testCommander = makeTestCommander(file)
 	}
-	console.group('\n', chalk.white(` Running ${file} (${subTitle})`))
+	const fileTitle = chalk.grey(`${file} (${subTitle})`)
+	console.group('\n', chalk(' Running', fileTitle))
 	await runCommandLine(opts)
 	console.groupEnd()
 }
@@ -192,7 +193,9 @@ async function runTestScriptWithConfiguration(args: RunCommonArguments): Promise
 		throw Error('Found no test scripts matching testPathMatch pattern')
 	}
 	console.log(
-		'The following test scripts that matched the testPathMatch pattern are going to be executed:',
+		chalk.grey(
+			'The following test scripts that matched the testPathMatch pattern are going to be executed:',
+		),
 	)
 	let order = 0
 	const numberOfFile = files.length
@@ -204,12 +207,12 @@ async function runTestScriptWithConfiguration(args: RunCommonArguments): Promise
 		}
 
 		if (order >= 1) {
-			console.log('------------------------------------------------------------------')
+			console.log(chalk.grey('------------------------------------------------------------------'))
 		}
 		order++
 		await runTestScript(arg, `${order} of ${numberOfFile}`)
 	}
-	console.log('Test running with the config file has finished')
+	console.log(chalk.grey('Test running with the config file has finished'))
 }
 
 const cmd: CommandModule = {

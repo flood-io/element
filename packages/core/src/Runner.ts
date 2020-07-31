@@ -131,11 +131,11 @@ export class Runner {
 			await this.looper.run(async (iteration: number, isRestart: boolean) => {
 				if (isRestart) {
 					console.group(`Restarting iteration ${iteration}`)
+					this.looper.restartLoopDone()
 				} else {
 					if (iteration > 1) {
-						console.log('--------------------------------------------')
+						console.log(chalk.grey('--------------------------------------------'))
 					}
-					test.resetSummarizeStep()
 					startTime = new Date()
 					console.group(
 						`${chalk.bold('\u25CC')} Iteration ${iteration} of ${this.looper.iterations}`,
@@ -154,10 +154,11 @@ export class Runner {
 						const summarizedData = this.summarizeIteration(iteration, startTime)
 						reportTableData.push(summarizedData)
 					}
+					test.resetSummarizeStep()
 				}
 			})
 
-			console.log(this.summaryIteration)
+			//console.log(this.summaryIteration)
 			await test.runningBrowser?.close()
 		} catch (err) {
 			if (err instanceof TestScriptError) {

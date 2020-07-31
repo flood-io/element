@@ -42,11 +42,11 @@ export class ConsoleReporter implements IReporter {
 			case TestEvent.StepSucceeded:
 				console.log(
 					chalk.green.bold('✔'),
-					`Step ${stepName} passed (${timing?.toLocaleString()}ms)`,
+					chalk.grey(`Step ${stepName} passed ${timing?.toLocaleString()}ms)`),
 				)
 				break
 			case TestEvent.StepFailed:
-				console.log(chalk.red.bold('✘'), `Step ${stepName} failed`)
+				console.log(chalk.redBright.bold('✘'), chalk.grey(`Step ${stepName} failed`))
 				break
 		}
 	}

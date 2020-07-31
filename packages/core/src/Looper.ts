@@ -46,7 +46,6 @@ export class Looper {
 	}
 
 	get continueLoop(): boolean {
-		this.isRestart = false
 		const hasInfiniteLoops = this.loopCount <= 0
 		const hasLoopsLeft = this.iterations < this.loopCount
 		return !this.cancelled && (hasLoopsLeft || hasInfiniteLoops)
@@ -56,7 +55,9 @@ export class Looper {
 		this.isRestart = true
 		this.iterations -= 1
 	}
-
+	restartLoopDone() {
+		this.isRestart = false
+	}
 	async run(iterator: (iteration: number, isRestart: boolean) => Promise<void>): Promise<number> {
 		while (this.continueLoop) {
 			await iterator(++this.iterations, this.isRestart)

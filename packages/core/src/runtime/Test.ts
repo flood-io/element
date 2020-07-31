@@ -34,6 +34,7 @@ import { Hook, HookBase } from './StepLifeCycle'
 import chalk from 'chalk'
 // import { getNumberWithOrdinal } from '../utils/numerical'
 import StepIterator from './StepIterator'
+import { getNumberWithOrdinal } from '../utils/numerical'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:test')
@@ -56,10 +57,8 @@ export default class Test implements ITest {
 
 	public failed: boolean
 
-	public stepCount: number
-
 	public summaryStep: SummaryStep[] = []
-	public subTitle = ''
+	public subTitle: string
 
 	get skipping(): boolean {
 		return this.failed
@@ -150,7 +149,7 @@ export default class Test implements ITest {
 
 		this.failed = false
 		this.runningBrowser = null
-		this.stepCount = 0
+		this.subTitle = ''
 
 		// await this.observer.attachToNetworkRecorder()
 
@@ -158,16 +157,15 @@ export default class Test implements ITest {
 
 		const { testData } = this.script
 		const stepIterator = new StepIterator(this.steps)
-		let browser: Browser<Step>
+		const browser = new Browser<Step>(
+			this.script.runEnv.workRoot,
+			this.client,
+			this.settings,
+			this.willRunCommand.bind(this, testObserver),
+			this.didRunCommand.bind(this, testObserver),
+		)
 		let testDataRecord: any
 		try {
-			browser = new Browser<Step>(
-				this.script.runEnv.workRoot,
-				this.client,
-				this.settings,
-				this.willRunCommand.bind(this, testObserver),
-				this.didRunCommand.bind(this, testObserver),
-			)
 			this.runningBrowser = browser
 
 			if (this.settings.clearCache) await browser.clearBrowserCache()
@@ -198,7 +196,7 @@ export default class Test implements ITest {
 				await this.runHookFn(this.hook.beforeEach, browser, testDataRecord)
 				const condition = await stepIterator.callCondition(step, iteration, browser)
 				if (!condition) {
-					this.summarizeStepBeforeRun(step)
+					this.summarizeStepBeforeRun(step, iteration)
 					return
 				}
 
@@ -212,7 +210,6 @@ export default class Test implements ITest {
 				}
 
 				browser.customContext = step
-
 				await Promise.race([
 					this.runStep(testObserver, browser, step, testDataRecord),
 					cancelToken.promise,
@@ -221,7 +218,6 @@ export default class Test implements ITest {
 				if (cancelToken.isCancellationRequested) return
 
 				if (this.failed) {
-					this.summaryStep.push({ stepName: step.name, result: StepResult.FAILED })
 					const result = await stepIterator.callRecovery(
 						step,
 						looper,
@@ -229,14 +225,13 @@ export default class Test implements ITest {
 						this.recoverySteps,
 						(this.settings.tries = 0),
 					)
+
 					if (result) {
 						this.failed = false
 					} else {
 						throw Error()
 					}
 				}
-				this.subTitle = stepIterator.subStepTitle
-				this.summaryStep.push({ stepName: step.name, result: StepResult.PASSED })
 				debug('running hook function: afterEach')
 				await this.runHookFn(this.hook.afterEach, browser, testDataRecord)
 			})
@@ -245,30 +240,36 @@ export default class Test implements ITest {
 			throw err
 		} finally {
 			await this.afterRunSteps(stepIterator)
+			// TODO report skipped steps
+			await testObserver.after(this)
+			debug('running hook function: afterAll')
+			await this.runHookFn(this.hook.afterAll, browser, testDataRecord)
 		}
-		// TODO report skipped steps
-		await testObserver.after(this)
-		debug('running hook function: afterAll')
-		await this.runHookFn(this.hook.afterAll, browser, testDataRecord)
 	}
 
-	summarizeStepBeforeRun(step: Step): void {
-		const { skip, pending } = step.options
-		if (pending) {
-			this.stepCount += 1
+	async afterRunSteps(stepIterator: StepIterator): Promise<void> {
+		await this.requestInterceptor.detach(this.client.page)
+		this.subTitle = ''
+		this.summarizeStepAfterStopRunning(stepIterator)
+	}
+
+	summarizeStepBeforeRun(step: Step, iteration: number): void {
+		const { skip, pending, once } = step.options
+		if (pending || (once && iteration > 1)) {
 			this.summaryStep.push({
 				stepName: step.name,
 				result: StepResult.UNEXECUTED,
 			})
+			return
 		}
 
 		if (skip) {
-			this.stepCount += 1
 			this.summaryStep.push({ stepName: step.name, result: StepResult.SKIPPED })
+			return
 		}
 	}
 
-	summarizeStepAfterRun(stepIterator: StepIterator): void {
+	summarizeStepAfterStopRunning(stepIterator: StepIterator): void {
 		const countRepeatStep = (step: Step): boolean => {
 			const { repeat } = step.options
 			if (repeat) {
@@ -287,28 +288,39 @@ export default class Test implements ITest {
 			return false
 		}
 
-		countRepeatStep(stepIterator.step)
-
-		do {
-			stepIterator.goNextStep()
-			const step = stepIterator.step
+		const summarizedUnexecutedStep = (step: Step): void => {
 			const countRepeatStepDone = countRepeatStep(step)
-			if (countRepeatStepDone) continue
+			if (countRepeatStepDone) return
 			this.summaryStep.push({
 				stepName: step.name,
 				result: StepResult.UNEXECUTED,
 			})
-		} while (stepIterator.isTheLatestStep())
-	}
-
-	async afterRunSteps(stepIterator: StepIterator): Promise<void> {
-		await this.requestInterceptor.detach(this.client.page)
-		this.subTitle = ''
-		this.summarizeStepAfterRun(stepIterator)
+		}
+		stepIterator.loopUnexecutedSteps(summarizedUnexecutedStep)
 	}
 
 	get currentURL(): string {
 		return (this.runningBrowser && this.runningBrowser.url) || ''
+	}
+
+	getStepSubtitle(step: Step): string {
+		const { repeat } = step.options
+		const recoveryTries = step.prop?.recoveryTries
+		let subTitle = ''
+		if (recoveryTries) {
+			subTitle = `${getNumberWithOrdinal(recoveryTries)} recovery`
+		}
+		if (repeat) {
+			let tempTitle = ''
+			const { iteration, count } = repeat
+			if (iteration >= count || iteration === 0) {
+				tempTitle = `${getNumberWithOrdinal(repeat.count)} loop`
+			} else {
+				tempTitle = `${getNumberWithOrdinal(repeat.iteration)} loop`
+			}
+			subTitle = subTitle ? `${tempTitle} - ${subTitle}` : tempTitle
+		}
+		return subTitle
 	}
 
 	async runStep(
@@ -320,6 +332,7 @@ export default class Test implements ITest {
 		let error: Error | null = null
 		let errorMessage = 'step error -> failed'
 		await testObserver.beforeStep(this, step)
+		this.subTitle = this.getStepSubtitle(step)
 
 		const originalBrowserSettings = { ...browser.settings }
 
@@ -350,10 +363,17 @@ export default class Test implements ITest {
 			console.log(chalk.red(errorMessage))
 			console.groupEnd()
 			console.groupEnd()
+			this.summaryStep.push({
+				stepName: step.name,
+				result: StepResult.FAILED,
+			})
 		} else {
 			await testObserver.onStepPassed(this, step)
+			this.summaryStep.push({
+				stepName: step.name,
+				result: StepResult.PASSED,
+			})
 		}
-
 		await testObserver.afterStep(this, step)
 
 		if (error === null) {

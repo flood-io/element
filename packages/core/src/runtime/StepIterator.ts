@@ -1,13 +1,11 @@
 import { ConditionFn, RecoverWith, Step, StepRecoveryObject } from './Step'
 import { Browser as BrowserInterface } from './IBrowser'
 import { Looper } from '../Looper'
-import { getNumberWithOrdinal } from '../utils/numerical'
 
 export default class StepIterator {
 	private steps: Step[]
 	private stepCount = 0
 	private currentStep: Step
-	public subStepTitle: string = ''
 
 	constructor(allSteps: Step[]) {
 		this.steps = allSteps
@@ -15,10 +13,6 @@ export default class StepIterator {
 
 	get step(): Step {
 		return this.currentStep
-	}
-
-	isTheLatestStep(): boolean {
-		return this.stepCount === this.steps.length
 	}
 
 	goNextStep(): boolean {
@@ -40,27 +34,40 @@ export default class StepIterator {
 		while (this.stepCount < this.steps.length) {
 			this.currentStep = this.steps[this.stepCount]
 			await iterator(this.currentStep)
-			this.subStepTitle = ''
 			this.goNextStep()
+		}
+	}
+
+	loopUnexecutedSteps(callBackFn: (step: Step) => void): void {
+		const { repeat } = this.currentStep.options
+		if (repeat) {
+			callBackFn(this.currentStep)
+		}
+		while (this.stepCount < this.steps.length) {
+			this.stepCount = Math.max(this.stepCount, 0)
+			this.goNextStep()
+			this.currentStep = this.steps[this.stepCount]
+			if (this.currentStep) {
+				callBackFn(this.currentStep)
+			}
 		}
 	}
 
 	async callCondition(step: Step, iteration: number, browser: BrowserInterface): Promise<boolean> {
 		const { once, skip, pending, repeat, stepWhile } = step.options
 
-		if (pending || (once && iteration > 1) || skip) return false
+		if (pending || (once && iteration > 1) || skip) {
+			return false
+		}
 
 		if (repeat) {
-			let tempTitle = ''
 			const { iteration, count } = repeat
 			if (iteration >= count - 1) {
 				repeat.iteration = 0
-				tempTitle = `${getNumberWithOrdinal(repeat.count)} loop`
 			} else {
 				repeat.iteration += 1
-				tempTitle = `${getNumberWithOrdinal(repeat.iteration)} loop`
+				this.goPreviousStep()
 			}
-			this.subStepTitle = this.subStepTitle ? `${tempTitle} - ${this.subStepTitle}` : tempTitle
 		}
 
 		if (stepWhile) {
@@ -100,22 +107,19 @@ export default class StepIterator {
 			return false
 		}
 		stepRecover.iteration += 1
-		this.subStepTitle = `${getNumberWithOrdinal(stepRecover.iteration)} recovery`
+		step.prop = { recoveryTries: stepRecover.iteration }
 		try {
 			const result = await recoveryStep.fn.call(null, browser)
 			const { repeat } = step.options
 			if (result === RecoverWith.CONTINUE) {
-				if (repeat) {
-					return this.goPreviousStep()
-				}
-				return this.goNextStep()
+				if (!repeat) return this.goNextStep()
 			} else if (result === RecoverWith.RESTART) {
 				if (repeat) repeat.iteration = 0
 				looper.restartLoop()
 				return this.stepEnd()
 			} else if (result === RecoverWith.RETRY) {
 				if (repeat) repeat.iteration -= 1
-				return this.goPreviousStep()
+				else return this.goPreviousStep()
 			}
 		} catch (err) {
 			return false

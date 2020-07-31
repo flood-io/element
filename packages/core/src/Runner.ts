@@ -157,7 +157,7 @@ export class Runner {
 				}
 			})
 
-			// console.log(this.summaryIteration)
+			console.log(this.summaryIteration)
 			await test.runningBrowser?.close()
 		} catch (err) {
 			if (err instanceof TestScriptError) {

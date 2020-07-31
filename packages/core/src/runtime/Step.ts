@@ -197,7 +197,8 @@ export type Step = {
 	options: Partial<StepOptions>
 	fn: TestFn
 	prop?: {
-		executed: boolean
+		executed?: boolean
+		recoveryTries?: number
 	}
 }
 

@@ -39,13 +39,21 @@ export class ConsoleReporter implements IReporter {
 	testLifecycle(stage: TestEvent, label: string, subtitle?: string, timing?: number): void {
 		const stepName = subtitle ? `'${label}' (${subtitle})` : `'${label}'`
 		switch (stage) {
+			case TestEvent.BeforeStep:
+				console.group()
+				console.group()
+				break
 			case TestEvent.StepSucceeded:
+				console.groupEnd()
+				console.groupEnd()
 				console.log(
 					chalk.green.bold('✔'),
 					chalk.grey(`Step ${stepName} passed (${timing?.toLocaleString()}ms)`),
 				)
 				break
 			case TestEvent.StepFailed:
+				console.groupEnd()
+				console.groupEnd()
 				console.log(chalk.redBright.bold('✘'), chalk.grey(`Step ${stepName} failed`))
 				break
 		}

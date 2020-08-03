@@ -1,6 +1,5 @@
 import Interceptor from '../network/Interceptor'
 import { Browser } from './Browser'
-// import { Browser as BrowserInterface } from './IBrowser'
 
 import { IReporter } from '../Reporter'
 import { NullReporter } from '../reporter/Null'
@@ -32,7 +31,6 @@ import { ITest } from './ITest'
 import { EvaluatedScriptLike } from './EvaluatedScriptLike'
 import { Hook, HookBase } from './StepLifeCycle'
 import chalk from 'chalk'
-// import { getNumberWithOrdinal } from '../utils/numerical'
 import StepIterator from './StepIterator'
 import { getNumberWithOrdinal } from '../utils/numerical'
 

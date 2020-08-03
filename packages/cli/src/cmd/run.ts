@@ -7,7 +7,6 @@ import {
 	TestSettings,
 	runCommandLine,
 	ElementOptions,
-	SummaryStep,
 } from '@flood/element-core'
 import { watch } from 'chokidar'
 import { EventEmitter } from 'events'
@@ -34,10 +33,6 @@ interface RunCommonArguments extends Arguments {
 	'test-data-root'?: string
 	'fail-status-code': number
 	configFile: string
-}
-
-type SummaryRun = {
-	[file: string]: SummaryStep
 }
 
 function setupDelayOverrides(
@@ -220,11 +215,9 @@ const cmd: CommandModule = {
 	describe: 'Run [a test script| test scripts with configuration] locally',
 
 	async handler(args: RunCommonArguments): Promise<void> {
-		const summary: SummaryRun[] = []
 		try {
 			if (args.file) {
 				await runTestScript(args, '1 of 1')
-				summary[args.file] = {}
 			} else {
 				await runTestScriptWithConfiguration(args)
 			}

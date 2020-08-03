@@ -87,8 +87,6 @@ export async function runCommandLine(opts: ElementOptions): Promise<void> {
 	try {
 		await runner.run(testScriptFactory)
 	} catch (err) {
-		// console.log('Element exited with error')
-		// console.log('\n', err)
 		process.exit(opts.failStatusCode)
 	}
 }

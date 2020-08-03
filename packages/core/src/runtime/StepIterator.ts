@@ -15,19 +15,16 @@ export default class StepIterator {
 		return this.currentStep
 	}
 
-	goNextStep(): boolean {
+	goNextStep(): void {
 		this.stepCount += 1
-		return true
 	}
 
-	goPreviousStep(): boolean {
+	goPreviousStep(): void {
 		this.stepCount -= 1
-		return true
 	}
 
-	stepEnd() {
+	stepEnd(): void {
 		this.stepCount = this.steps.length
-		return true
 	}
 
 	async run(iterator: (step: Step) => Promise<void>): Promise<void> {
@@ -137,15 +134,16 @@ export default class StepIterator {
 			const { repeat } = step.options
 			if (result === RecoverWith.CONTINUE) {
 				step.prop.recoveryTries = 0
-				//if (!repeat) return this.goNextStep()
 			} else if (result === RecoverWith.RESTART) {
 				if (repeat) repeat.iteration = 0
 				looper.restartLoop()
 				step.prop.recoveryTries = 0
-				return this.stepEnd()
+				this.stepEnd()
 			} else if (result === RecoverWith.RETRY) {
 				if (repeat) repeat.iteration -= 1
-				else return this.goPreviousStep()
+				else {
+					this.goPreviousStep()
+				}
 			}
 		} catch (err) {
 			return false

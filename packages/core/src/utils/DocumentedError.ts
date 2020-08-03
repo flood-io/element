@@ -42,16 +42,6 @@ export class DocumentedError extends Error {
 			return err
 		} else {
 			return err
-			//return DocumentedError.wrapUnhandledError(err, err.message, callCtx)
 		}
-	}
-
-	static wrapUnhandledError(err: Error, message?: string, callContext?: string) {
-		// return new DocumentedError(
-		// 	message || err.message,
-		// 	'Documentation needed! Please report this at https://github.com/flood-io/element/issues so that we can improve Element!',
-		// 	callContext,
-		// 	err,
-		// )
 	}
 }

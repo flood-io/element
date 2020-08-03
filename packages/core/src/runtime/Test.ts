@@ -56,7 +56,7 @@ export default class Test implements ITest {
 	public failed: boolean
 
 	public summaryStep: SummaryStep[] = []
-	public subTitle: string = ''
+	public subTitle = ''
 
 	get skipping(): boolean {
 		return this.failed

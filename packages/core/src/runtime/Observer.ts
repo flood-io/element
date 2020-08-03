@@ -81,9 +81,7 @@ export default class Observer {
 
 	private onRawNetworkLoadingFinished({ requestId, encodedDataLength, timestamp }: RequestEvent) {
 		debug('onRawNetworkLoadingFinished', requestId)
-		// console.log(`onRawNetworkLoadingFinished: ${requestId}`)
 		if (!this.requests.has(requestId)) {
-			//throw new Error(`Unknown request: ${requestId}`)
 			return
 		}
 

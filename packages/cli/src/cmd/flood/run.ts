@@ -24,7 +24,7 @@ const cmd: CommandModule = {
 		const env = YoEnv.createEnv()
 
 		env.on('error', err => {
-			console.debug(chalk.redBright(err))
+			console.error(chalk.redBright(err))
 			process.exit(1)
 		})
 		env.registerStub(InfrastructureSelect as any, 'element/infrastructure-select')

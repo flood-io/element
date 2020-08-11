@@ -141,9 +141,7 @@ export default class StepIterator {
 				this.stepEnd()
 			} else if (result === RecoverWith.RETRY) {
 				if (repeat) repeat.iteration -= 1
-				else {
-					this.goPreviousStep()
-				}
+				else this.goPreviousStep()
 			}
 		} catch (err) {
 			return false

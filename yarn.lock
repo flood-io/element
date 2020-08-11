@@ -1155,7 +1155,7 @@
     webpack "^4.41.5"
     webpackbar "^4.0.0"
 
-"@flood/element-core@^1.2.3-beta.4":
+"@flood/element-core@^1.2.3-beta.2", "@flood/element-core@^1.2.3-beta.4":
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/@flood/element-core/-/element-core-1.2.3.tgz#4b79b0dc029546302368eba381ebfe39bcd741ef"
   integrity sha512-yGoirsdZ/qyYPbPH5ol/N9nG5svjAaebLQ9z+WjKbYWsxNoRLGg6FIF6DkDi7PFb9vFjEaHGembVqtfLR3Zuaw==
@@ -2428,6 +2428,13 @@
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/@types/memory-fs/-/memory-fs-0.3.2.tgz#5d4753f9b390cb077c8c8af97bc96463399ceccd"
   integrity sha512-j5AcZo7dbMxHoOimcHEIh0JZe5e1b8q8AqGSpZJrYc7xOgCIP79cIjTdx5jSDLtySnQDwkDTqwlC7Xw7uXw7qg==
+  dependencies:
+    "@types/node" "*"
+
+"@types/merge-stream@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@types/merge-stream/-/merge-stream-1.1.2.tgz#a880ff66b1fbbb5eef4958d015c5947a9334dbb1"
+  integrity sha512-7faLmaE99g/yX0Y9pF1neh2IUqOf/fXMOWCVzsXjqI1EJ91lrgXmaBKf6bRWM164lLyiHxHt6t/ZO/cIzq61XA==
   dependencies:
     "@types/node" "*"
 
@@ -5800,6 +5807,11 @@ fecha@^2.3.3:
   version "2.3.3"
   resolved "https://registry.yarnpkg.com/fecha/-/fecha-2.3.3.tgz#948e74157df1a32fd1b12c3a3c3cdcb6ec9d96cd"
 
+fecha@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/fecha/-/fecha-4.2.0.tgz#3ffb6395453e3f3efff850404f0a59b6747f5f41"
+  integrity sha512-aN3pcx/DSmtyoovUudctc8+6Hl4T+hI9GBBHLjA76jdZl7+b1sgh5g4k+u/GL3dTy1/pnYzKp69FpJ0OicE3Wg==
+
 figgy-pudding@^3.4.1, figgy-pudding@^3.5.1:
   version "3.5.1"
   resolved "https://registry.yarnpkg.com/figgy-pudding/-/figgy-pudding-3.5.1.tgz#862470112901c727a0e495a80744bd5baa1d6790"
@@ -8224,6 +8236,17 @@ logform@^2.1.1:
     ms "^2.1.1"
     triple-beam "^1.3.0"
 
+logform@^2.1.2:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/logform/-/logform-2.2.0.tgz#40f036d19161fc76b68ab50fdc7fe495544492f2"
+  integrity sha512-N0qPlqfypFx7UHNn4B3lzS/b0uLqt2hmuoa+PpuXNYgozdJYAyauF5Ky0BWVjrxDlMWiT3qN4zPq3vVAfZy7Yg==
+  dependencies:
+    colors "^1.2.1"
+    fast-safe-stringify "^2.0.4"
+    fecha "^4.2.0"
+    ms "^2.1.1"
+    triple-beam "^1.3.0"
+
 lolex@^5.0.0:
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/lolex/-/lolex-5.1.2.tgz#953694d098ce7c07bc5ed6d0e42bc6c0c6d5a367"
@@ -9459,6 +9482,11 @@ parse-asn1@^5.0.0:
     evp_bytestokey "^1.0.0"
     pbkdf2 "^3.0.3"
     safe-buffer "^5.1.1"
+
+parse-duration@^0.1.2:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/parse-duration/-/parse-duration-0.1.3.tgz#c2c4d45d49513d544e129b2a5a07b9473545d19a"
+  integrity sha512-hMOZHfUmjxO5hMKn7Eft+ckP2M4nV4yzauLXiw3PndpkASnx5r8pDAMcOAiqxoemqWjMWmz4fOHQM6n6WwETXw==
 
 parse-github-repo-url@^1.3.0:
   version "1.4.1"

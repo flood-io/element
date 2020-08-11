@@ -1,7 +1,7 @@
-import { Callsite, callsiteToString } from './test-script/SourceUnmapper'
+import { CallSite, callSiteToString } from './test-script/SourceUnmapped'
 
 export interface Detail {
-	callsite: string
+	callSite: string
 	callContext: string | null
 	asString: string
 	unmappedStack: string[]
@@ -30,7 +30,7 @@ export interface TestScriptErrorMapper {
 	isScriptError?(error: Error): boolean
 	liftError?(error: Error): TestScriptError
 	maybeLiftError?(error: Error): Error
-	filterAndUnmapStack?(stack: string | Error | undefined): string[]
+	filterAndUnMapStack?(stack: string | Error | undefined): string[]
 }
 
 export class TestScriptError extends Error {
@@ -38,7 +38,7 @@ export class TestScriptError extends Error {
 	constructor(
 		message: string,
 		originalStack: string,
-		public callsite: Callsite | undefined,
+		public callSite: CallSite | undefined,
 		public unmappedStack: string[],
 		public originalError: Error,
 	) {
@@ -69,7 +69,7 @@ export class TestScriptError extends Error {
 	}
 	toDetailObject(includeVerbose = false): Detail {
 		const output: Detail = {
-			callsite: this.callsiteString(),
+			callSite: this.callSiteString(),
 			callContext: this.callContext,
 			asString: this.toString(),
 			unmappedStack: this.unmappedStack,
@@ -84,7 +84,7 @@ export class TestScriptError extends Error {
 		return output
 	}
 	toStringNodeFormat(): string {
-		return this.callsiteString() + '\n\n' + this.toString() + '\n' + this.unmappedStack.join('\n')
+		return this.callSiteString() + '\n\n' + this.toString() + '\n' + this.unmappedStack.join('\n')
 	}
 	toVerboseString(): string {
 		const baseString = this.toStringNodeFormat()
@@ -97,8 +97,8 @@ export class TestScriptError extends Error {
 			this.cause.stack
 		)
 	}
-	callsiteString(): string {
-		return callsiteToString(this.callsite)
+	callSiteString(): string {
+		return callSiteToString(this.callSite)
 	}
 	toJSON() {
 		const { message, stackWhenThrown: stack } = this

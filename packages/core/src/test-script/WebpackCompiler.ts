@@ -5,7 +5,7 @@ import { VMScript } from 'vm2'
 import { TestScriptError } from '../TestScriptError'
 import { TestScriptOptions } from '../TestScriptOptions'
 import { readFileSync } from 'fs-extra'
-import { SourceUnmapper } from './SourceUnmapper'
+import { CallSite, SourceUnmapped } from './SourceUnmapped'
 import { dirname } from 'path'
 
 // FIXME: WebpackCompiler currently doesn't do anything with this, but it should
@@ -17,7 +17,7 @@ export const TestScriptDefaultOptions: TestScriptOptions = {
 export default class WebpackCompiler implements ITestScript {
 	private vmScriptCache: VMScript
 	private result?: CompilerOutput
-	private sourceUnmapper: SourceUnmapper
+	private sourceUnmapped: SourceUnmapped
 
 	constructor(public sourceFile: string, _options: TestScriptOptions = TestScriptDefaultOptions) {}
 
@@ -26,7 +26,7 @@ export default class WebpackCompiler implements ITestScript {
 		const output = await compiler.emit()
 		this.result = output
 
-		this.sourceUnmapper = await SourceUnmapper.init(
+		this.sourceUnmapped = await SourceUnmapped.init(
 			// this.originalSource,
 			output.content,
 			this.sourceFile,
@@ -52,7 +52,7 @@ export default class WebpackCompiler implements ITestScript {
 		return readFileSync(this.sourceFile, { encoding: 'utf8' })
 	}
 
-	get sandboxedFilename() {
+	get sandboxesFilename() {
 		return this.sourceFile
 	}
 
@@ -90,27 +90,27 @@ export default class WebpackCompiler implements ITestScript {
 		const stack = error.stack || ''
 
 		const filteredStack = stack.split('\n').filter(s => s.includes(this.sourceFile))
-		let callsite
+		let callSite: CallSite | undefined
 		let unmappedStack: string[] = []
 
 		if (filteredStack.length > 0) {
-			callsite = this.sourceUnmapper.unmapCallsite(filteredStack[0])
-			unmappedStack = this.sourceUnmapper.unmapStackNodeStrings(filteredStack)
+			callSite = this.sourceUnmapped.unMapCallSite(filteredStack[0])
+			unmappedStack = this.sourceUnmapped.unMapStackNodeStrings(filteredStack)
 		}
 
-		return new TestScriptError(error.message, stack, callsite, unmappedStack, error)
+		return new TestScriptError(error.message, stack, callSite, unmappedStack, error)
 	}
 
 	// maybeLiftError?(error: Error): Error {}
 
-	// filterAndUnmapStack?(stack: string | Error | undefined): string[] {}
+	// filterAndUnMapStack?(stack: string | Error | undefined): string[] {}
 
 	public get vmScript(): VMScript {
 		if (!this.vmScriptCache) {
 			this.vmScriptCache = new VMScript(
 				// wrapCodeInModuleWrapper(this.source),
 				this.source,
-				this.sandboxedFilename,
+				this.sandboxesFilename,
 			)
 		}
 

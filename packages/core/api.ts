@@ -14,11 +14,10 @@ export { runCommandLine, ElementOptions } from './src/Element'
 
 export { RuntimeEnvironment } from './src/runtime-environment/types'
 export { nullRuntimeEnvironment } from './src/runtime-environment/NullRuntimeEnvironment'
-import { launch, PlaywrightClient } from './src/driver/Playwright'
 
 export { TestCommander } from './src/Runner'
 
-export { PlaywrightClient, launch }
+export { PlaywrightClient, launch, connectWS, launchWithoutPage } from './src/driver/Playwright'
 
 export { TestScriptOptions } from './src/TestScriptOptions'
 export { TestScriptError } from './src/TestScriptError'
@@ -47,3 +46,4 @@ export { StructuredError } from './src/utils/StructuredError'
 export { default as NetworkRecorder } from './src/network/Recorder'
 export { Entry } from './src/network/Protocol'
 export { default as NetworkObserver } from './src/runtime/test-observers/NetworkObserver'
+export { mustCompileFile } from './src/TestScript'

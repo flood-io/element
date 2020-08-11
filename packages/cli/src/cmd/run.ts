@@ -5,10 +5,11 @@ import {
 	FloodProcessEnv,
 	TestCommander,
 	TestSettings,
-	runCommandLine,
+	// runCommandLine,
 	ElementOptions,
 	BROWSER_TYPE,
 } from '@flood/element-core'
+import { runCommandLine } from '@flood/element-schedular'
 import { watch } from 'chokidar'
 import { EventEmitter } from 'events'
 import { extname, basename, join, dirname, resolve } from 'path'

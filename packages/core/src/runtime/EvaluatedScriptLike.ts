@@ -14,7 +14,7 @@ export interface EvaluatedScriptLike {
 	isScriptError(error: Error): boolean
 	maybeLiftError(error: Error): Error
 	liftError(error: Error): TestScriptError
-	filterAndUnmapStack(stack: string | Error | undefined): string[]
+	filterAndUnMapStack(stack: string | Error | undefined): string[]
 	bindTest(test: ITest): void
 	beforeTestRun(): Promise<void>
 	evaluate(): EvaluatedScriptLike

@@ -104,8 +104,8 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		return this.script.liftError!(error)
 	}
-	public filterAndUnmapStack(stack: string | Error | undefined): string[] {
-		return this.script?.filterAndUnmapStack?.apply(this, stack)
+	public filterAndUnMapStack(stack: string | Error | undefined): string[] {
+		return this.script?.filterAndUnMapStack?.apply(this, stack)
 	}
 
 	public bindTest(test: Test): void {

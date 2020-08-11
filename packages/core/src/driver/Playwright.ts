@@ -1,4 +1,4 @@
-import playwright, { LaunchOptions, Browser, Page } from 'playwright'
+import playwright, { LaunchOptions, Browser, Page, BrowserServer } from 'playwright'
 import { ConcreteTestSettings } from '../runtime/Settings'
 import { BROWSER_TYPE } from '../page/types'
 
@@ -69,6 +69,40 @@ export class PlaywrightClient implements PlaywrightClientLike {
 			await page.close()
 		}
 	}
+}
+
+export async function launchWithoutPage(
+	passedOptions: Partial<ConcreteLaunchOptions> = {},
+): Promise<BrowserServer> {
+	const options: ConcreteLaunchOptions = {
+		...defaultLaunchOptions,
+		...passedOptions,
+	}
+
+	if (!options.sandbox) {
+		options.args.push('--no-sandbox')
+	}
+
+	if (options.debug) {
+		console.dir(options)
+	}
+
+	options.args.push('--auth-server-whitelist="hostname/domain"')
+
+	const browserType = options.browserType || BROWSER_TYPE.CHROME
+	return playwright[browserType].launchServer(options)
+}
+
+export async function connectWS(wsEndpoint: string) {
+	console.log(wsEndpoint)
+	const browser = await playwright.chromium.connect({
+		wsEndpoint,
+	})
+
+	const page = await browser.newPage()
+
+	console.log('return playwright client')
+	return new PlaywrightClient(browser, page)
 }
 
 export async function launch(

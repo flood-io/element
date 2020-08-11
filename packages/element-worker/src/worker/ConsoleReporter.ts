@@ -8,8 +8,6 @@ import {
 } from '@flood/element-core'
 import { Logger } from 'winston'
 import chalk from 'chalk'
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const debug = require('debug')('element-cli:console-reporter')
 
 export class ConsoleReporter implements IReporter {
 	public responseCode: string
@@ -37,7 +35,7 @@ export class ConsoleReporter implements IReporter {
 
 	async flushMeasurements(): Promise<void> {}
 
-	testLifecycle(stage: TestEvent, label: string, timing?: number): void {
+	testLifecycle(stage: TestEvent, label: string): void {
 		switch (stage) {
 			case TestEvent.AfterStepAction:
 				this.logger.info(`---> ${label}()`)
@@ -47,7 +45,7 @@ export class ConsoleReporter implements IReporter {
 				this.logger.info(`===> Step '${label}'`)
 				break
 			case TestEvent.AfterStep:
-				this.logger.info(`---> Step '${label}' finished in ${timing?.toLocaleString()}ms`)
+				this.logger.info(`---> Step '${label}' finished`)
 				break
 			case TestEvent.StepSkipped:
 				this.logger.info(`---- Step '${label}' skipped`)
@@ -89,9 +87,8 @@ cause.stack: ${detail.causeStack}`)
 	}
 
 	testScriptConsole(method: string, message?: any, ...optionalParams: any[]): void {
-		debug('testScriptConsole', method, message)
-		if (['log', 'timeStamp'].includes(method)) method = 'info'
+		if (method === 'log') method = 'info'
 		if (method === 'warning') method = 'warn'
-		this.logger[method](`page console.${method}: ${message} ${optionalParams.join(' ')}`)
+		;(this.logger as any)[method](`page console.${method}: ${message} ${optionalParams.join(' ')}`)
 	}
 }

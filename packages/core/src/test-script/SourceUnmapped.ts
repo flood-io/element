@@ -1,6 +1,6 @@
 import { SourceMapConsumer, NullableMappedPosition } from 'source-map'
 
-export interface Callsite {
+export interface CallSite {
 	file: string
 	code: string
 	line: number
@@ -14,16 +14,16 @@ interface StackLine {
 	column: number
 }
 
-export function callsiteToString(callsite: Callsite | undefined): string {
-	if (callsite) {
+export function callSiteToString(callSite: CallSite | undefined): string {
+	if (callSite) {
 		return (
-			callsite.file +
+			callSite.file +
 			':' +
-			callsite.line +
+			callSite.line +
 			'\n' +
-			callsite.code +
+			callSite.code +
 			'\n' +
-			new Array(callsite.column).join(' ') +
+			new Array(callSite.column).join(' ') +
 			'^'
 		)
 	}
@@ -33,12 +33,12 @@ export function callsiteToString(callsite: Callsite | undefined): string {
 
 // inspiration from:
 // https://github.com/evanw/node-source-map-support
-export class SourceUnmapper {
+export class SourceUnmapped {
 	// can't have async constructors, so:
 	public static async init(originalSource: string, originalFilename: string, sourceMap: string) {
 		const sourceMapConsumer = await new SourceMapConsumer(sourceMap)
 
-		return new SourceUnmapper(originalSource, originalFilename, sourceMapConsumer)
+		return new SourceUnmapped(originalSource, originalFilename, sourceMapConsumer)
 	}
 
 	constructor(
@@ -47,11 +47,11 @@ export class SourceUnmapper {
 		private sourceMapConsumer: SourceMapConsumer,
 	) {}
 
-	public unmapNodeStackLine(stackLine: string): string {
-		return callsiteToString(this.unmapCallsite(stackLine))
+	public unMapNodeStackLine(stackLine: string): string {
+		return callSiteToString(this.unMapCallSite(stackLine))
 	}
 
-	public unmapCallsite(stackLine: string): Callsite | undefined {
+	public unMapCallSite(stackLine: string): CallSite | undefined {
 		const match = /\s+at [^(]+ \((.*?):(\d+):(\d+)\)/.exec(stackLine)
 		if (match) {
 			const pos = { source: match[1], line: +match[2], column: +match[3] }
@@ -74,7 +74,7 @@ export class SourceUnmapper {
 		}
 	}
 
-	public unmapStack(stack: string[]): StackLine[] {
+	public unMapStack(stack: string[]): StackLine[] {
 		return this.parseStack(stack)
 			.map(s => this.originalPositionFor(s))
 			.filter((x): x is StackLine => x !== undefined)
@@ -109,8 +109,8 @@ export class SourceUnmapper {
 		}
 	}
 
-	public unmapStackNodeStrings(stack: string[]): string[] {
-		const unmapped = this.unmapStack(stack)
+	public unMapStackNodeStrings(stack: string[]): string[] {
+		const unmapped = this.unMapStack(stack)
 		return unmapped.map(this.stackLineToNodeString)
 	}
 

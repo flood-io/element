@@ -12,7 +12,7 @@ const debug = debugFactory('element:page:condition')
 export { NullableLocatable }
 
 interface ConditionSettings {
-	waitTimeout: string | number
+	waitTimeout: number | string
 }
 
 /**

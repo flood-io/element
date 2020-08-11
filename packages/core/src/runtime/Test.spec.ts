@@ -46,7 +46,7 @@ describe('Test', () => {
 	test('extracts settings during evaluation', async () => {
 		const test = await setupTest('test-with-export.ts')
 		let defaultSettings: Required<TestSettings> = {
-			actionDelay: '0.5s',
+			actionDelay: '500ms',
 			stepDelay: '5s',
 			clearCache: false,
 			device: 'Chrome Desktop Large',
@@ -55,7 +55,7 @@ describe('Test', () => {
 			userAgent:
 				'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36',
 			clearCookies: true,
-			duration: '-1',
+			duration: -1,
 			loopCount: Infinity,
 			name: 'Example Test',
 			description: 'This is an example test',

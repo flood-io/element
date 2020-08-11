@@ -5,7 +5,7 @@ import { Browser } from './Browser'
 import { Until } from '../page/Until'
 import { By } from '../page/By'
 import { Key } from '../page/Enums'
-import { DEFAULT_SETTINGS, normalizeSettings } from './Settings'
+import { DEFAULT_SETTINGS, normalizeSettings, TestSettings } from './Settings'
 
 let puppeteer: testPuppeteer
 const workRoot = testWorkRoot()
@@ -27,7 +27,7 @@ describe('Browser', () => {
 	test('fires callbacks on action command calls', async () => {
 		const beforeSpy = jest.fn()
 		const afterSpy = jest.fn()
-		const setting: any = normalizeSettings(DEFAULT_SETTINGS)
+		const setting: TestSettings = normalizeSettings(DEFAULT_SETTINGS)
 		const browser = new Browser(
 			workRoot,
 			puppeteer,

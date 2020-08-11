@@ -126,7 +126,7 @@ export interface TestSettings {
 	/**
 	 * Global wait timeout applied to all wait tasks.
 	 */
-	waitTimeout?: string | number
+	waitTimeout?: number | string
 
 	/**
 	 * Specifies whether cookies should be cleared after each test loop.

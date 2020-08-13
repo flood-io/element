@@ -9,7 +9,7 @@ export const settings: TestSettings = {
 	duration: 1,
 	actionDelay: 2,
 	stepDelay: 2,
-	waitTimeout: 600,
+	waitTimeout: 60,
 	screenshotOnFailure: true,
 }
 
@@ -20,6 +20,8 @@ export const settings: TestSettings = {
 
 const URL = 'https://the-internet.herokuapp.com'
 const floodIOURL = 'https://flood.io'
+const mozillaDblClickURL =
+	'https://mdn.mozillademos.org/en-US/docs/Web/API/Element/dblclick_event$samples/Examples'
 
 const goToFramesPage = async browser => {
 	await browser.visit(`${URL}/frames`)
@@ -89,5 +91,23 @@ export default () => {
 			headingText === 'Flood is an easy to use load testing platform',
 			'The heading should be correct',
 		)
+	})
+
+	step('Test: Double Click Event', async browser => {
+		await browser.switchTo().defaultContent()
+		await browser.visit(mozillaDblClickURL)
+
+		const pageTextVerify = By.visibleText('My Card')
+		await browser.wait(Until.elementIsVisible(pageTextVerify))
+
+		const asideEl = await browser.findElement(By.tagName('aside'))
+		await browser.doubleClick(asideEl)
+		const asideLargeClass = await asideEl.getAttribute('class')
+		assert(
+			asideLargeClass.toLowerCase() === 'large',
+			'The aside should have large class after be dblclicked',
+		)
+
+		await browser.wait(1)
 	})
 }

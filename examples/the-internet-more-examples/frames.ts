@@ -19,6 +19,7 @@ export const settings: TestSettings = {
  */
 
 const URL = 'https://the-internet.herokuapp.com'
+const floodIOURL = 'https://flood.io'
 
 const goToFramesPage = async browser => {
 	await browser.visit(`${URL}/frames`)
@@ -30,7 +31,7 @@ export default () => {
 	step('Test: Go to the homepage', async browser => {
 		await browser.visit(URL)
 		await browser.wait(Until.elementIsVisible(By.css('#content > h1')))
-		const pageTextVerify: Locator = By.visibleText('Welcome to the-internet')
+		const pageTextVerify = By.visibleText('Welcome to the-internet')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 	})
 
@@ -51,19 +52,26 @@ export default () => {
 		assert(bottomText === 'BOTTOM', 'The inner text of the bottom frame is BOTTOM')
 	})
 
-	step('Test: Go back to Frames page', async browser => {
+	step('Test: Go to flood.io and use Until.titleContains and Until.urlContains', async browser => {
 		await browser.switchTo().defaultContent()
-		await goToFramesPage(browser)
-	})
 
-	step('Test: Go to iFrame and use Until.titleContains and Until.urlContains', async browser => {
-		const iFrameEl = await browser.findElement(By.partialLinkText('iFrame'))
-		await iFrameEl.click()
+		await browser.visit(floodIOURL)
+		await browser.wait(Until.titleContains('Flood'))
+		const floodTitle = await browser.title()
+		assert(
+			floodTitle === 'Scalable software starts here - Flood',
+			'The title of Flood page should be correct',
+		)
 
-		await browser.wait(Until.titleContains('The Internet'))
-
-		const titleEl = await browser.findElement(By.css('h3'))
-		const titleText = await titleEl.text()
-		assert(titleText.includes('TinyMCE'), 'The title of the page should include text TinyMCE')
+		const whyFloodEl = await browser.findElement(By.visibleText('Why Flood?'))
+		await whyFloodEl.click()
+		await browser.wait(Until.urlContains('what-is-flood'))
+		await browser.wait(Until.elementIsVisible(By.css('h1.headline-2')))
+		const headingEl = await browser.findElement(By.tagName('h1'))
+		const headingText = await headingEl.text()
+		assert(
+			headingText === 'Flood is an easy to use load testing platform',
+			'The heading should be correct',
+		)
 	})
 }

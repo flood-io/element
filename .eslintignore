@@ -4,6 +4,3 @@ coverage
 tests
 examples
 smoke
-
-# The following package will has it own eslint
-/packages/docs/

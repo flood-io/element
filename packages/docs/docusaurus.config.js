@@ -31,13 +31,6 @@ module.exports = {
 				src: 'img/Element-Logo-Mark.svg',
 			},
 			items: [
-				// {
-				//   to: "docs/",
-				//   activeBasePath: "docs",
-				//   label: "Docs",
-				//   position: "left",
-				// },
-
 				{
 					label: 'Docs',
 					to: 'docs/introduction', // "fake" link
@@ -121,6 +114,11 @@ module.exports = {
 					],
 				},
 			],
+			logo: {
+				alt: 'Facebook Open Source Logo',
+				src: 'img/flood_logo.svg',
+				href: 'https://flood.io',
+			},
 			copyright: `Element is sponsored by Tricentis and maintained by the Flood load testing team. Copyright © ${new Date().getFullYear()} Tricentis Corp.`,
 		},
 	},

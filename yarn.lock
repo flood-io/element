@@ -1155,7 +1155,7 @@
     webpack "^4.41.5"
     webpackbar "^4.0.0"
 
-"@flood/element-core@^1.2.3-beta.2", "@flood/element-core@^1.2.3-beta.4":
+"@flood/element-core@^1.2.3-beta.4":
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/@flood/element-core/-/element-core-1.2.3.tgz#4b79b0dc029546302368eba381ebfe39bcd741ef"
   integrity sha512-yGoirsdZ/qyYPbPH5ol/N9nG5svjAaebLQ9z+WjKbYWsxNoRLGg6FIF6DkDi7PFb9vFjEaHGembVqtfLR3Zuaw==

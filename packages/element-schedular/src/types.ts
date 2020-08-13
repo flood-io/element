@@ -66,6 +66,7 @@ export interface WorkerInterface {
 	workerId: number
 	getStderr(): NodeJS.ReadableStream | null
 	getStdout(): NodeJS.ReadableStream | null
+	shutdown(): void
 }
 
 export type OnStart = (worker: WorkerInterface) => void

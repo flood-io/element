@@ -1,21 +1,20 @@
-import { TestSettings, EvaluatedScript, launchWithoutPage } from '@flood/element-core'
+import { TestSettings, launchBrowserServer, RuntimeEnvironment } from '@flood/element-core'
 import { WorkerPool } from './WorkerPool'
-import { ChildMessages } from './types'
+import { ChildMessages, WorkerInterface } from './types'
 import { assertIsValidateStages } from './assertIsValidateStages'
 import { Plan } from './Plan'
+import { BrowserServer } from 'playwright'
 
 export class Schedular {
-	constructor(public settings: TestSettings) {}
+	constructor(public env: RuntimeEnvironment, public settings: TestSettings) {}
 
-	public async run(_testScript: EvaluatedScript) {
+	private browserServer: BrowserServer
+
+	public async run(_testScript: string) {
 		const stages = this.settings.stages
 		assertIsValidateStages(stages)
 
-		// const testScript = await testScriptFactory()
-
-		// this.timer = setInterval(this.updateTarget.bind(this), 1000)
-
-		const browser = await this.launchBrowser()
+		this.browserServer = await launchBrowserServer()
 		const plan = new Plan(stages)
 
 		const pool = new WorkerPool({ maxRetries: 1, numWorkers: plan.maxUsers, setupArgs: [] })
@@ -25,67 +24,61 @@ export class Schedular {
 		await plan.ticker(async (timestamp, target, total) => {
 			console.log(`tick: ${timestamp}, delta: ${target} total: ${total}`)
 
-			if (target == 1) {
-				await pool.addWorker()
-			} else if (target == -1) {
-				await pool.removeLastWorker()
-			} else {
-				console.log('incorrect target', target)
-			}
-
-			const wsURL = browser.wsEndpoint()
+			const wsURL = this.browserServer.wsEndpoint()
+			const rootEnv = this.env.workRoot.getRoot()
+			const testData = this.env.workRoot.getSubRoot('test-data')
 
 			pool.sendEach(
-				[ChildMessages.CALL, 'connect', [wsURL, _testScript.script.source]],
+				[
+					ChildMessages.CALL,
+					'run',
+					[
+						wsURL,
+						_testScript,
+						{
+							rootEnv,
+							testData,
+							settings: JSON.stringify(this.settings),
+						},
+					],
+				],
 				worker => {
-					console.log('worker start', worker.workerId)
+					console.log(`Worker ${worker.workerId} starts`)
 				},
-				err => {
+				(err, result) => {
+					const worker = result as WorkerInterface
 					if (err) {
-						console.log('worker error', err)
+						console.log(`Worker '${worker.workerId}' has error: `, err)
 					} else {
-						browser.kill()
-						console.log('Success')
+						console.log(`Worker '${worker.workerId}' has completed the test`)
+						worker.shutdown()
 					}
 				},
 			)
+
+			pool.waitForExit().then(() => {
+				this.stop()
+			})
+
+			process.on('SIGQUIT', async () => {
+				this.stop()
+				process.kill(process.pid, 'SIGUSR2')
+			})
+
+			process.on('SIGINT', async () => {
+				this.stop()
+				process.kill(process.pid, 'SIGUSR2')
+			})
+
+			process.once('SIGUSR2', async () => {
+				this.stop()
+				process.kill(process.pid, 'SIGUSR2')
+			})
 		})
-
-		// const browser = await this.launchBrowser()
-		// for (let index = 0; index < threadCount; index++) {
-		// 	const page = await browser.newPage()
-		// 	await page.goto('https://challenge.flood.io')
-		// 	console.log('Sleep')
-		// 	await new Promise(yeah => setTimeout(yeah, 1e3))
-		// }
-
-		// await pool.waitForExit()
-		// await new Promise(yeah => setTimeout(yeah, 1e3))
-		// await browser.close()
-
-		// process.on('SIGQUIT', async () => {
-		// 	await browser.close()
-		// })
-
-		// process.on('SIGINT', async () => {
-		// 	await browser.close()
-		// })
-
-		// process.once('SIGUSR2', async () => {
-		// 	await browser.close()
-		// 	process.kill(process.pid, 'SIGUSR2')
-		// })
 	}
 
 	public async stop() {
-		return null
-	}
-
-	public async launchBrowser() {
-		const browser = await launchWithoutPage({ headless: false })
-		// for (const page of await browser.pages()) {
-		// 	await page.close()
-		// }
-		return browser
+		await this.browserServer.kill()
+		process.exit(0)
 	}
 }

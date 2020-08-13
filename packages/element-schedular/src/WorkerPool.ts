@@ -37,7 +37,6 @@ export class WorkerPool {
 		this.stdout = stdout
 		this.stderr = stderr
 
-		console.log(`number of worker ${options.numWorkers}`)
 		for (let i = 0; i < options.numWorkers; i++) {
 			this.addWorker()
 		}

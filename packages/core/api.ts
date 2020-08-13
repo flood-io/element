@@ -17,7 +17,7 @@ export { nullRuntimeEnvironment } from './src/runtime-environment/NullRuntimeEnv
 
 export { TestCommander } from './src/Runner'
 
-export { PlaywrightClient, launch, connectWS, launchWithoutPage } from './src/driver/Playwright'
+export { PlaywrightClient, launch, connectWS, launchBrowserServer } from './src/driver/Playwright'
 
 export { TestScriptOptions } from './src/TestScriptOptions'
 export { TestScriptError } from './src/TestScriptError'
@@ -47,3 +47,4 @@ export { default as NetworkRecorder } from './src/network/Recorder'
 export { Entry } from './src/network/Protocol'
 export { default as NetworkObserver } from './src/runtime/test-observers/NetworkObserver'
 export { mustCompileFile } from './src/TestScript'
+export { DEFAULT_SETTINGS } from './src/runtime/Settings'

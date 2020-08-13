@@ -1,39 +1,92 @@
 import { parentPort } from 'worker_threads'
+import { ChildMessages, ChildMessage, ChildMessageCall, ParentMessages } from '../types'
+
 import {
-	ChildMessages,
-	ChildMessage,
-	ChildMessageCall,
-	// ChildMessageInitialize,
-	// ChildMessageCall,
-	// ParentMessages,
-	// PARENT_MESSAGE_ERROR,
-} from '../types'
+	AsyncFactory,
+	EvaluatedScript,
+	PlaywrightClient,
+	connectWS,
+	Runner,
+	RuntimeEnvironment,
+	WorkRoot,
+	mustCompileFile,
+} from '@flood/element-core'
+import { ConsoleReporter } from './ConsoleReporter'
+import createLogger from './Logger'
+
+function environment(root: string, testData: string): RuntimeEnvironment {
+	const workRoot = new WorkRoot(root, {
+		'test-data': testData,
+	})
+
+	return {
+		workRoot,
+		stepEnv() {
+			return {
+				BROWSER_ID: this.workerId,
+				FLOOD_GRID_REGION: 'local',
+				FLOOD_GRID_SQEUENCE_ID: 0,
+				FLOOD_GRID_SEQUENCE_ID: 0,
+				FLOOD_GRID_INDEX: 0,
+				FLOOD_GRID_NODE_SEQUENCE_ID: 0,
+				FLOOD_NODE_INDEX: 0,
+				FLOOD_SEQUENCE_ID: 0,
+				FLOOD_PROJECT_ID: 0,
+				SEQUENCE: 0,
+				FLOOD_LOAD_TEST: false,
+			}
+		},
+	}
+}
 
 async function execMethod(method: string, args: Array<any>) {
 	switch (method) {
-		case 'connect': {
-			const { connectWS } = await import('@flood/element-core')
-			console.log(connectWS)
-			const [url, script] = args as [string, string]
+		case 'run': {
+			const [wsEndpoint, testScript, { rootEnv, testData, settings }] = args as [
+				string,
+				string,
+				any,
+			]
 
-			console.log(url, script.slice(0, 100))
+			const env = environment(rootEnv, testData)
+			const testScriptFactory = async (): Promise<EvaluatedScript> => {
+				return new EvaluatedScript(env, await mustCompileFile(testScript))
+			}
 
-			const client = await connectWS(url)
+			const clientFactory = (): AsyncFactory<PlaywrightClient> => {
+				return () => connectWS(wsEndpoint)
+			}
 
-			await client.page.goto('https://flood.io')
-			break
+			const verboseBool = true
+			const logLevel = 'debug'
+			const logger = createLogger(logLevel, true)
+			const reporter = new ConsoleReporter(logger, verboseBool)
+			const childSettings = JSON.parse(settings)
+
+			const runner: Runner = new Runner(
+				clientFactory(),
+				undefined,
+				reporter,
+				logger,
+				childSettings,
+				{},
+			)
+
+			await runner.run(testScriptFactory)
+
+			if (parentPort) {
+				parentPort.postMessage([ParentMessages.OK, 'Completed'])
+			}
 		}
 	}
 }
 
 const messageListener = async (request: ChildMessage) => {
-	// console.log(`[Worker]`, request)
-
 	const [type] = request
 
 	switch (type) {
 		case ChildMessages.INITIALIZE: {
-			console.log('Init done')
+			console.log('INITIALIZED')
 			break
 		}
 
@@ -44,8 +97,7 @@ const messageListener = async (request: ChildMessage) => {
 		}
 
 		case ChildMessages.END: {
-			// eslint-disable-next-line @typescript-eslint/no-use-before-define
-			end()
+			if (parentPort) parentPort.removeListener('message', messageListener)
 			break
 		}
 
@@ -54,80 +106,4 @@ const messageListener = async (request: ChildMessage) => {
 	}
 }
 
-function exitProcess(): void {
-	// Clean up open handles so the worker ideally exits gracefully
-	if (parentPort) parentPort.removeListener('message', messageListener)
-}
-
-function end(): void {
-	exitProcess()
-}
-
 if (parentPort) parentPort.on('message', messageListener)
-
-// const proxy: (...args: any[]) => void = new Proxy<() => void>(
-// 	function() {
-// 		return
-// 	},
-// 	{
-// 		apply: (target, that, args) => {
-// 			const [method, ...rest] = args
-// 			return callPageMethod(method, rest)
-// 		},
-// 	},
-// )
-
-// // class PageProxy {
-// // 	goto = proxy
-// // }
-
-// export function callPageMethod(method: keyof Page, ...args: any[]) {
-// 	if (parentPort) parentPort.postMessage([ParentMessages.PAGE_CALL, method, args])
-// }
-
-// function reportInitializeError(error: Error) {
-// 	return reportError(error, ParentMessages.SETUP_ERROR)
-// }
-
-// function reportError(error: Error, type: PARENT_MESSAGE_ERROR) {
-// 	if (isMainThread) {
-// 		throw new Error('Child can only be used on a forked process')
-// 	}
-
-// 	if (error == null) {
-// 		error = new Error('"null" or "undefined" thrown')
-// 	}
-
-// 	if (parentPort)
-// 		parentPort.postMessage([
-// 			type,
-// 			error.constructor && error.constructor.name,
-// 			error.message,
-// 			error.stack,
-// 			typeof error === 'object' ? { ...error } : error,
-// 		])
-// }
-
-// function execFunction(
-// 	fn: (...args: Array<unknown>) => any,
-// 	ctx: unknown,
-// 	args: Array<unknown>,
-// 	onResult: (result: unknown) => void,
-// 	onError: (error: Error) => void,
-// ): void {
-// 	let result
-
-// 	try {
-// 		result = fn.apply(ctx, args)
-// 	} catch (err) {
-// 		onError(err)
-
-// 		return
-// 	}
-
-// 	if (result && typeof result.then === 'function') {
-// 		result.then(onResult, onError)
-// 	} else {
-// 		onResult(result)
-// 	}
-// }

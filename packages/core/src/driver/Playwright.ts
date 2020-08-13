@@ -71,7 +71,7 @@ export class PlaywrightClient implements PlaywrightClientLike {
 	}
 }
 
-export async function launchWithoutPage(
+export async function launchBrowserServer(
 	passedOptions: Partial<ConcreteLaunchOptions> = {},
 ): Promise<BrowserServer> {
 	const options: ConcreteLaunchOptions = {
@@ -93,15 +93,13 @@ export async function launchWithoutPage(
 	return playwright[browserType].launchServer(options)
 }
 
-export async function connectWS(wsEndpoint: string) {
-	console.log(wsEndpoint)
+export async function connectWS(wsEndpoint: string, setting?: ConcreteTestSettings) {
 	const browser = await playwright.chromium.connect({
 		wsEndpoint,
 	})
 
-	const page = await browser.newPage()
+	const page = await browser.newPage(setting || { viewport: null })
 
-	console.log('return playwright client')
 	return new PlaywrightClient(browser, page)
 }
 

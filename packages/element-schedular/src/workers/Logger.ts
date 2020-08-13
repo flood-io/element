@@ -4,7 +4,6 @@ import { Format } from 'logform'
 export default function(level = 'debug', colourise = false): Logger {
 	const startTime = Date.now()
 	const formats: Format[] = [
-		// format.label({ label: prefix.padStart(2, '0') }),
 		format.timestamp({ format: `+${Math.floor((Date.now() - startTime) / 1000)}s` }),
 	]
 
@@ -18,6 +17,5 @@ export default function(level = 'debug', colourise = false): Logger {
 		level: level,
 		format: format.combine(...formats),
 		transports: [new transports.Console({ handleExceptions: true })],
-		// handleExceptions: true
 	})
 }

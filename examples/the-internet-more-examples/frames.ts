@@ -45,10 +45,20 @@ export default () => {
 			const nestedFrameEl = await browser.findElement(By.partialLinkText('Nested Frames'))
 			await nestedFrameEl.click()
 
+			// Until.ableToSwitchToFrame example
 			await browser.wait(Until.ableToSwitchToFrame('frame-bottom'))
 
 			// An example of using By.nameAttr
 			const bottomFrameEl = await browser.findElement(By.nameAttr('frame-bottom'))
+			// Example of TargetLocator.activeElement
+			const activeEl = await browser.switchTo().activeElement()
+			const activeElTagName = await activeEl.tagName()
+			assert(
+				activeElTagName.toLowerCase() === 'frameset',
+				'The active element tagname should be frameset',
+			)
+
+			// Example of TargetLocator.frame()
 			await browser.switchTo().frame(bottomFrameEl)
 			const bottomBody = await browser.findElement(By.tagName('body'))
 			const bottomText = await bottomBody.text()
@@ -60,6 +70,7 @@ export default () => {
 		await browser.switchTo().defaultContent()
 
 		await browser.visit(floodIOURL)
+		// Until.titleContains example
 		await browser.wait(Until.titleContains('Flood'))
 		const floodTitle = await browser.title()
 		assert(
@@ -69,6 +80,7 @@ export default () => {
 
 		const whyFloodEl = await browser.findElement(By.visibleText('Why Flood?'))
 		await whyFloodEl.click()
+		// Util.urlContains example
 		await browser.wait(Until.urlContains('what-is-flood'))
 		await browser.wait(Until.elementIsVisible(By.css('h1.headline-2')))
 		const headingEl = await browser.findElement(By.tagName('h1'))

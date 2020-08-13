@@ -60,11 +60,20 @@ export default () => {
 				'The active element tagname should be frameset',
 			)
 
-			// Example of TargetLocator.frame()
+			// Example of TargetLocator.frame(ElementHandle)
 			await browser.switchTo().frame(bottomFrameEl)
 			const bottomBody = await browser.findElement(By.tagName('body'))
 			const bottomText = await bottomBody.text()
-			assert(bottomText === 'BOTTOM', 'The inner text of the bottom frame is BOTTOM')
+			assert(bottomText === 'BOTTOM', 'The inner text of the bottom frame should be BOTTOM')
+
+			// TargetLocator.frame(id|name)
+			await browser.switchTo().frame('frame-top')
+			await browser.wait(Until.ableToSwitchToFrame('frame-right'))
+			await browser.switchTo().frame('frame-right')
+			const rightBody = await browser.findElement(By.tagName('body'))
+			const rightText = await rightBody.text()
+
+			assert(rightText === 'RIGHT', 'The inner text of the right frame should be RIGHT')
 		},
 	)
 
@@ -108,6 +117,6 @@ export default () => {
 			'The aside should have large class after be dblclicked',
 		)
 
-		await browser.wait(1)
+		await browser.wait(5)
 	})
 }

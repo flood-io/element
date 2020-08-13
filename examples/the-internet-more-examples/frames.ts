@@ -39,18 +39,22 @@ export default () => {
 		await goToFramesPage(browser)
 	})
 
-	step('Test: Go to Nested Frame using Until.ableToSwitchToFrame', async browser => {
-		const nestedFrameEl = await browser.findElement(By.partialLinkText('Nested Frames'))
-		await nestedFrameEl.click()
+	step(
+		'Test: Go to Nested Frame, use Until.ableToSwitchToFrame and find Element with By.nameAttr',
+		async browser => {
+			const nestedFrameEl = await browser.findElement(By.partialLinkText('Nested Frames'))
+			await nestedFrameEl.click()
 
-		await browser.wait(Until.ableToSwitchToFrame('frame-bottom'))
+			await browser.wait(Until.ableToSwitchToFrame('frame-bottom'))
 
-		const bottomFrameEl = await browser.findElement(By.nameAttr('frame-bottom'))
-		await browser.switchTo().frame(bottomFrameEl)
-		const bottomBody = await browser.findElement(By.tagName('body'))
-		const bottomText = await bottomBody.text()
-		assert(bottomText === 'BOTTOM', 'The inner text of the bottom frame is BOTTOM')
-	})
+			// An example of using By.nameAttr
+			const bottomFrameEl = await browser.findElement(By.nameAttr('frame-bottom'))
+			await browser.switchTo().frame(bottomFrameEl)
+			const bottomBody = await browser.findElement(By.tagName('body'))
+			const bottomText = await bottomBody.text()
+			assert(bottomText === 'BOTTOM', 'The inner text of the bottom frame is BOTTOM')
+		},
+	)
 
 	step('Test: Go to flood.io and use Until.titleContains and Until.urlContains', async browser => {
 		await browser.switchTo().defaultContent()

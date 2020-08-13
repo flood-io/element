@@ -1,12 +1,23 @@
-import { TestSettings, launchBrowserServer, RuntimeEnvironment } from '@flood/element-core'
+import {
+	TestSettings,
+	launchBrowserServer,
+	RuntimeEnvironment,
+	BROWSER_TYPE,
+} from '@flood/element-core'
 import { WorkerPool } from './WorkerPool'
 import { ChildMessages, WorkerInterface } from './types'
 import { assertIsValidateStages } from './assertIsValidateStages'
 import { Plan } from './Plan'
 import { BrowserServer } from 'playwright'
 
+type SchedularSetting = TestSettings & {
+	headless?: boolean | undefined
+	browserType?: BROWSER_TYPE
+	sandbox?: boolean | undefined
+}
+
 export class Schedular {
-	constructor(public env: RuntimeEnvironment, public settings: TestSettings) {}
+	constructor(public env: RuntimeEnvironment, public settings: SchedularSetting) {}
 
 	private browserServer: BrowserServer
 
@@ -14,7 +25,7 @@ export class Schedular {
 		const stages = this.settings.stages
 		assertIsValidateStages(stages)
 
-		this.browserServer = await launchBrowserServer()
+		this.browserServer = await launchBrowserServer(this.settings)
 		const plan = new Plan(stages)
 
 		const pool = new WorkerPool({ maxRetries: 1, numWorkers: plan.maxUsers, setupArgs: [] })
@@ -22,7 +33,7 @@ export class Schedular {
 		pool.stderr.pipe(process.stderr)
 
 		await plan.ticker(async (timestamp, target, total) => {
-			console.log(`tick: ${timestamp}, delta: ${target} total: ${total}`)
+			// console.log(`tick: ${timestamp}, delta: ${target} total: ${total}`)
 
 			const wsURL = this.browserServer.wsEndpoint()
 			const rootEnv = this.env.workRoot.getRoot()

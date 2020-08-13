@@ -23,7 +23,7 @@ export interface ElementOptions {
 	sandbox: boolean
 	process?: NodeJS.Process
 	verbose: boolean
-	browserType: BROWSER_TYPE
+	browserType: BROWSER_TYPE | undefined
 	testSettingOverrides: TestSettings
 	testObserverFactory?: (t: TestObserver) => TestObserver
 	persistentRunner: boolean

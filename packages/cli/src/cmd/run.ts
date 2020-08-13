@@ -148,7 +148,7 @@ async function runTestScript(args: RunCommonArguments): Promise<void> {
 		headless: args.headless ?? true,
 		devtools: args.devtools ?? false,
 		sandbox: args.sandbox ?? true,
-		browserType: args.browserType ?? BROWSER_TYPE.CHROME,
+		browserType: args.browserType,
 		runEnv: initRunEnv(workRootPath, testDataPath),
 		testSettingOverrides: {},
 		persistentRunner: false,
@@ -237,6 +237,10 @@ const cmd: CommandModule = {
 
 					return chromeVersion
 				},
+			})
+			.option('browser-type', {
+				group: 'Browser:',
+				describe: 'Run in a specific browser',
 			})
 			.option('no-headless', {
 				group: 'Browser:',

@@ -149,7 +149,7 @@ export class Worker implements WorkerInterface {
 		console.log(`Worker ${this.workerId} exit: ${exitCode}`)
 
 		if (exitCode !== 0 && !this.forceExited) {
-			console.log(`Worker exits ${exitCode}`)
+			console.log(`Worker exit: ${exitCode}`)
 		} else {
 			this.shutdown()
 		}

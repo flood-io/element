@@ -10,6 +10,7 @@ import {
 	RuntimeEnvironment,
 	WorkRoot,
 	mustCompileFile,
+	TestSettings,
 } from '@flood/element-core'
 import { ConsoleReporter } from './ConsoleReporter'
 import createLogger from './Logger'
@@ -48,20 +49,20 @@ async function execMethod(method: string, args: Array<any>) {
 				any,
 			]
 
+			const verboseBool = true
+			const logLevel = 'info'
+			const logger = createLogger(logLevel, true)
+			const reporter = new ConsoleReporter(logger, verboseBool)
+			const childSettings: TestSettings = JSON.parse(settings)
+
 			const env = environment(rootEnv, testData)
 			const testScriptFactory = async (): Promise<EvaluatedScript> => {
 				return new EvaluatedScript(env, await mustCompileFile(testScript))
 			}
 
 			const clientFactory = (): AsyncFactory<PlaywrightClient> => {
-				return () => connectWS(wsEndpoint)
+				return () => connectWS(wsEndpoint, childSettings.browserType)
 			}
-
-			const verboseBool = true
-			const logLevel = 'debug'
-			const logger = createLogger(logLevel, true)
-			const reporter = new ConsoleReporter(logger, verboseBool)
-			const childSettings = JSON.parse(settings)
 
 			const runner: Runner = new Runner(
 				clientFactory(),

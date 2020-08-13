@@ -93,12 +93,13 @@ export async function launchBrowserServer(
 	return playwright[browserType].launchServer(options)
 }
 
-export async function connectWS(wsEndpoint: string, setting?: ConcreteTestSettings) {
-	const browser = await playwright.chromium.connect({
+export async function connectWS(wsEndpoint: string, type?: BROWSER_TYPE) {
+	const browserType = type || BROWSER_TYPE.CHROME
+	const browser = await playwright[browserType].connect({
 		wsEndpoint,
 	})
 
-	const page = await browser.newPage(setting || { viewport: null })
+	const page = await browser.newPage()
 
 	return new PlaywrightClient(browser, page)
 }

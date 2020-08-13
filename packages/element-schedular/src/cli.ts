@@ -1,21 +1,17 @@
 import { Schedular } from './Schedular'
-import {
-	mustCompileFile,
-	ElementOptions,
-	DEFAULT_SETTINGS,
-	EvaluatedScript,
-} from '@flood/element-core'
+import { mustCompileFile, ElementOptions, EvaluatedScript } from '@flood/element-core'
 
 export async function runCommandLine(opts: ElementOptions): Promise<void> {
 	const { logger, testScript } = opts
 
-	const compiledScript = new EvaluatedScript(opts.runEnv, await mustCompileFile(testScript))
+	const evaluateScript = new EvaluatedScript(opts.runEnv, await mustCompileFile(testScript))
 
-	// const compiledTestScript = await mustCompileFile(testScript)
-	const settings = DEFAULT_SETTINGS
-	// settings.name = compiledTestScript.testName
-	// settings.description = compiledTestScript.testDescription
-	const runner = new Schedular(opts.runEnv, { ...settings, ...compiledScript.settings })
+	const runner = new Schedular(opts.runEnv, {
+		...evaluateScript.settings,
+		...opts.testSettingOverrides,
+		headless: opts.headless,
+		browserType: opts.browserType || evaluateScript.settings.browserType,
+	})
 
 	const installSignalHandlers = true
 

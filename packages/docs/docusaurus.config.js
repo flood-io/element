@@ -36,6 +36,11 @@ module.exports = {
 					activeBaseRegex: `docs`,
 					items: [
 						{
+							label: 'Next',
+							to: 'docs/next/',
+							activeBaseRegex: `docs/next/(?!support|team|resources)`,
+						},
+						{
 							label: versions[0],
 							to: 'docs/',
 							activeBaseRegex: `docs/(?!${versions.join('|')}|next)`,
@@ -44,11 +49,6 @@ module.exports = {
 							label: version,
 							to: `docs/${version}/`,
 						})),
-						{
-							label: 'Next',
-							to: 'docs/next/',
-							activeBaseRegex: `docs/next/(?!support|team|resources)`,
-						},
 					],
 				},
 				{ href: 'https://www.flood.io/blog', label: 'Blog', position: 'left' },

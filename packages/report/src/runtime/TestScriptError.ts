@@ -1,4 +1,4 @@
-import { Callsite, callsiteToString } from './test-script/SourceUnmapper'
+import { Callsite, callsiteToString } from '../utils/SourceUnmapper'
 
 export interface Detail {
 	callsite: string

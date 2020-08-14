@@ -2,8 +2,7 @@ import Interceptor from '../network/Interceptor'
 import { Browser } from './Browser'
 import { Browser as BrowserInterface } from './IBrowser'
 
-import { IReporter } from '../Reporter'
-import { NullReporter } from '../reporter/Null'
+import { EmptyReporter, IReporter } from '@flood/element-report'
 import { ObjectTrace } from '../utils/ObjectTrace'
 
 import {
@@ -62,7 +61,7 @@ export default class Test implements ITest {
 	constructor(
 		public client: PuppeteerClientLike,
 		public script: EvaluatedScriptLike,
-		public reporter: IReporter = new NullReporter(),
+		public reporter: IReporter = new EmptyReporter(),
 		settingsOverride: TestSettings,
 		public testObserverFactory: (t: TestObserver) => TestObserver = x => x,
 	) {

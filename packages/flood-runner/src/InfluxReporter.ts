@@ -15,7 +15,7 @@ import {
 	CompoundMeasurement,
 	TestScriptError,
 	expect,
-} from '@flood/element-api'
+} from '@flood/element-report'
 
 import debugFactory from 'debug'
 const debug = debugFactory('element:grid:influx')

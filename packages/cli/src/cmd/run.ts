@@ -12,10 +12,10 @@ import { watch } from 'chokidar'
 import { EventEmitter } from 'events'
 import { extname, basename, join, dirname, resolve } from 'path'
 import sanitize from 'sanitize-filename'
-import createLogger from '.././utils/Logger'
-import { ConsoleReporter } from '.././utils/ConsoleReporter'
+import { VerboseReporter } from '@flood/element-report'
 import glob from 'glob'
 import chalk from 'chalk'
+
 interface RunCommonArguments extends Arguments {
 	file: string
 	chrome?: string
@@ -128,10 +128,8 @@ async function runTestScript(args: RunCommonArguments): Promise<void> {
 
 	const verboseBool = !!verbose
 
-	const logLevel = verboseBool ? 'debug' : 'info'
-
-	const logger = createLogger(logLevel, true)
-	const reporter = new ConsoleReporter(logger, verboseBool)
+	const reporter = new VerboseReporter(verboseBool)
+	const logger = reporter.logger
 
 	logger.info(`workRootPath: ${workRootPath}`)
 	logger.info(`testDataPath: ${testDataPath}`)

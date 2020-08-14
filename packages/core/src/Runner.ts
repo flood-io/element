@@ -4,10 +4,9 @@ import Test from './runtime/Test'
 import { EvaluatedScript } from './runtime/EvaluatedScript'
 import { TestObserver } from './runtime/test-observers/Observer'
 import { TestSettings } from './runtime/Settings'
-import { IReporter } from './Reporter'
 import { AsyncFactory } from './utils/Factory'
 import { CancellationToken } from './utils/CancellationToken'
-import { TestScriptError } from './TestScriptError'
+import { TestScriptError, IReporter } from '@flood/element-report'
 import { Looper } from './Looper'
 
 export interface TestCommander {

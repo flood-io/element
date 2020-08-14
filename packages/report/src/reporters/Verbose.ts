@@ -1,20 +1,25 @@
+import { TestScriptError } from '../runtime/TestScriptError'
 import {
 	IReporter,
 	TraceData,
 	TestEvent,
 	CompoundMeasurement,
 	MeasurementKind,
-	TestScriptError,
-} from '@flood/element-core'
-import { Logger } from 'winston'
+} from '../runtime/Reporter'
 import chalk from 'chalk'
+import { Logger } from 'winston'
+import { createTestLog } from '../utils/TestLogger'
 const debug = require('debug')('element-cli:console-reporter')
 
-export class ConsoleReporter implements IReporter {
+export class VerboseReporter implements IReporter {
 	public responseCode: string
 	public stepName: string
+	public logger: Logger
 
-	constructor(private logger: Logger, private verbose: boolean) {}
+	constructor(private verbose: boolean) {
+		const logLevel = verbose ? 'debug' : 'info'
+		this.logger = createTestLog(logLevel, true)
+	}
 
 	reset(step: string): void {}
 

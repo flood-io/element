@@ -1,5 +1,5 @@
 import { Logger } from 'winston'
-import { IReporter } from './Reporter'
+import { IReporter } from '@flood/element-report'
 import { PuppeteerClient, launch } from './driver/Puppeteer'
 import { RuntimeEnvironment } from './runtime-environment/types'
 import { IRunner, Runner, PersistentRunner, TestCommander } from './Runner'

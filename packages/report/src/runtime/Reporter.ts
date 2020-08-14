@@ -1,5 +1,5 @@
-import { Assertion } from './runtime/Assertion'
-import { TestScriptError } from './TestScriptError'
+import { Assertion } from '../runtime/Assertion'
+import { TestScriptError } from '../runtime/TestScriptError'
 
 export type MeasurementKind =
 	| 'throughput'

@@ -1,5 +1,5 @@
 import { Page } from 'puppeteer'
-import { IReporter } from '../../Reporter'
+import { IReporter } from '@flood/element-report'
 import { Test } from './testTypes'
 import NetworkRecorder from '../../network/Recorder'
 import NetworkObserver from '../Observer'

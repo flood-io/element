@@ -1,5 +1,5 @@
 import { VMScript } from 'vm2'
-import { TestScriptErrorMapper } from './TestScriptError'
+import { TestScriptErrorMapper } from '@flood/element-report'
 
 export interface ITestScript extends TestScriptErrorMapper {
 	sandboxedFilename: string

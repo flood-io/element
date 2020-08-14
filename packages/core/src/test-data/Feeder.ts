@@ -1,4 +1,4 @@
-import { Option } from '../utils/Option'
+import { Option } from '@flood/element-report'
 import { knuthShuffle } from 'knuth-shuffle'
 
 export type FeedFilterFunction<Line> = (line: Line, index: number, instanceID: string) => boolean

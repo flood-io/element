@@ -6,7 +6,7 @@ import { Step } from '../Step'
 import { StructuredError } from '../../utils/StructuredError'
 import { ResponseTiming } from '../Settings'
 import NetworkRecorder from '../../network/Recorder'
-import { expect } from '../../utils/Expect'
+import { expect } from '@flood/element-report'
 const debug = debugFactory('element:grid:timing')
 
 // TODO re-enable when browser_performance decoupled

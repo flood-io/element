@@ -1,7 +1,7 @@
 import { Test } from './testTypes'
 import { TestObserver } from './Observer'
 import { Step } from '../Step'
-import { TestEvent } from '../../Reporter'
+import { TestEvent } from '@flood/element-report'
 import { StructuredError } from '../../utils/StructuredError'
 import { TimingObserver } from './TimingObserver'
 

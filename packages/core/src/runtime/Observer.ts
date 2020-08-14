@@ -1,7 +1,7 @@
 import NetworkRecorder from '../network/Recorder'
 import { RawResponse } from '../network/Protocol'
 import { ConsoleMethod } from './Settings'
-import { IReporter } from '../Reporter'
+import { IReporter } from '@flood/element-report'
 const debug = require('debug')('element:runtime:observer')
 
 interface Event {

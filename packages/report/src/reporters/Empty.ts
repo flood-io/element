@@ -1,7 +1,13 @@
-import { IReporter, TraceData, TestEvent, CompoundMeasurement, MeasurementKind } from '../Reporter'
-import { TestScriptError } from '../TestScriptError'
+import {
+	IReporter,
+	TraceData,
+	TestEvent,
+	CompoundMeasurement,
+	MeasurementKind,
+} from '../runtime/Reporter'
+import { TestScriptError } from '../runtime/TestScriptError'
 
-export class NullReporter implements IReporter {
+export class EmptyReporter implements IReporter {
 	public responseCode: string
 	public stepName: string
 

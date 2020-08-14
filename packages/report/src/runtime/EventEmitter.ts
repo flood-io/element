@@ -6,7 +6,7 @@ import {
 	TestLifecycle,
 	CompoundMeasurement,
 	MeasurementKind,
-} from './../Reporter'
+} from '.././Reporter'
 import { EventEmitter } from 'events'
 import { TestScriptError } from './../TestScriptError'
 import { expect } from '../utils/Expect'

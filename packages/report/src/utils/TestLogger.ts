@@ -1,7 +1,7 @@
 import { createLogger, transports, format, Logger } from 'winston'
 import { Format } from 'logform'
 
-export default function(level = 'debug', colourise = false): Logger {
+export const createTestLog = (level = 'debug', colourise = false): Logger => {
 	const startTime = Date.now()
 	const formats: Format[] = [
 		// format.label({ label: prefix.padStart(2, '0') }),

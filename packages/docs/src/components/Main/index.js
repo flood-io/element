@@ -5,7 +5,7 @@ import Section from './Section'
 const features = [
 	{
 		title: <>Realistic Load</>,
-		imageUrl: 'img/undraw_docusaurus_mountain.svg',
+		imageUrl: 'img/network_ic.png',
 		description: (
 			<>
 				Working at a higher level of abstraction greatly simplifies the requests you need to make to
@@ -15,7 +15,7 @@ const features = [
 	},
 	{
 		title: <>Test Data</>,
-		imageUrl: 'img/undraw_docusaurus_tree.svg',
+		imageUrl: 'img/json_ic.png',
 		description: (
 			<>
 				Load testing without test data is like using lorem ipsum in production. Element ships with
@@ -25,7 +25,7 @@ const features = [
 	},
 	{
 		title: <>Selenium Compatible</>,
-		imageUrl: 'img/undraw_docusaurus_react.svg',
+		imageUrl: 'img/se_ic.png',
 		description: (
 			<>
 				Element's DSL is heavily influenced by <code>WebDriver.js</code>, making it really easy to
@@ -35,7 +35,7 @@ const features = [
 	},
 	{
 		title: <>Built on Puppeteer</>,
-		imageUrl: 'img/undraw_docusaurus_react.svg',
+		imageUrl: 'img/puppeteer_ic.png',
 		description: (
 			<>
 				Thanks to the speed of the <code>Puppeteer</code> automation library, Element generates load
@@ -45,7 +45,7 @@ const features = [
 	},
 	{
 		title: <>TypeScript</>,
-		imageUrl: 'img/undraw_docusaurus_mountain.svg',
+		imageUrl: 'img/ts_ic.png',
 		description: (
 			<>
 				<code>TypeScript</code> gives you inline documentation and script validation before pressing
@@ -55,7 +55,7 @@ const features = [
 	},
 	{
 		title: <>Command Line Interface</>,
-		imageUrl: 'img/undraw_docusaurus_tree.svg',
+		imageUrl: 'img/terminal_ic.png',
 		description: (
 			<>
 				Generate new tests, validate, and run them locally, with our interactive <code>CLI</code>.
@@ -67,7 +67,7 @@ const features = [
 const pros = [
 	{
 		title: <>Reduce maintenance</>,
-		imageUrl: 'img/undraw_docusaurus_mountain.svg',
+		imageUrl: 'img/check_ic.png',
 		description: (
 			<>
 				Flood Element scripts are less prone to breakage compared with <code>JMeter</code> or{' '}
@@ -77,14 +77,14 @@ const pros = [
 	},
 	{
 		title: <>Save time</>,
-		imageUrl: 'img/undraw_docusaurus_tree.svg',
+		imageUrl: 'img/check_ic.png',
 		description: (
 			<>It takes just a few minutes to get functional load test running with Flood Element.</>
 		),
 	},
 	{
 		title: <>Generate Realistic Load</>,
-		imageUrl: 'img/undraw_docusaurus_react.svg',
+		imageUrl: 'img/check_ic.png',
 		description: (
 			<>
 				In today's modern applications, up to 80% of performance problems occur in the browser,

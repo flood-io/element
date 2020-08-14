@@ -1,4 +1,31 @@
+.wrapper {
+	margin: 1rem 0;
+}
+
+.content {
+	height: 100%;
+	border-radius: 10px;
+	padding: 1rem 1rem 0 1rem;
+}
+
+.light {
+	border: 1px solid var(--ifm-color-zumthor);
+	background-color: var(--ifm-color-zumthor);
+}
+
+.dark {
+	border: 1px solid var(--ifm-color-shark);
+	background-color: var(--ifm-color-shark);
+}
+
+.header {
+	display: flex;
+	margin-bottom: 1rem;
+}
+
 .img {
-	height: 200px;
-	width: 200px;
+	height: 50px;
+	width: 50px;
+	margin-right: 1rem;
+	object-fit: contain;
 }

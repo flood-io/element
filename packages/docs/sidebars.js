@@ -11,7 +11,8 @@ module.exports = {
 			{
 				'Browser Interaction': [
 					'guides/link-navigation',
-					'guides/page-verification'
+					'guides/page-verification',
+					'guides/form-interaction'
 				],
 			},
 			'guides/script',

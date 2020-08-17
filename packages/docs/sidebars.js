@@ -17,6 +17,7 @@ module.exports = {
 			},
 			'guides/script',
 			'guides/hook',
+			'guides/test-data',
 			'guides/editor',
 			'guides/cli',
 		],

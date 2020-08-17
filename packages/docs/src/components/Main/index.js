@@ -1,6 +1,7 @@
 import React from 'react'
 import FeatureBlock from './FeatureBlock'
 import Section from './Section'
+import ComparisonTable from './ComparisonTable'
 
 const features = [
 	{
@@ -105,6 +106,7 @@ const Main = () => {
 					<FeatureBlock key={idx} {...props} />
 				))}
 			</Section>
+
 			<Section
 				title="Test Smarter"
 				description="Load testing at the browser level opens up huge opportunities for testing modern web applications which would be extremely difficult to achieve reliably with existing network level load testing tools."
@@ -118,15 +120,7 @@ const Main = () => {
 				title="Browser vs. Protocol"
 				description="Load testing has barely kept pace with the rate of innovation on the web as a platform over the last 20 years. We set out to change this with Flood Element."
 			>
-				<p>
-					Traditionally, load testing meant simulating network calls as quickly as possible, either
-					using scripting, log replay, or a network recorder. But these approaches have always
-					suffered from a high cost of script maintenance due to the fickle nature of network
-					requests, lack of maintenance due to complexity, or simulating unrealistic load due to a
-					misunderstanding of the workload patterns of regular users of the product. These are just
-					some of the problems we're solving by load testing in a similar way to real users of your
-					application.
-				</p>
+				<ComparisonTable />
 			</Section>
 		</main>
 	)

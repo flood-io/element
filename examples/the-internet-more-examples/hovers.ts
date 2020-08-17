@@ -33,6 +33,11 @@ export default () => {
 		let Image = await browser.findElement(By.css('#content > div > div:nth-child(3) > img'))
 		await Image.getProperty('src')
 		let imageLocation = await Image.centerPoint()
+		await browser.mouse.click(Image, { delay: 150 })
+		await browser.mouse.click(Image)
+		await browser.mouse.click(imageLocation[0], imageLocation[1], { delay: 100 })
 		await browser.mouse.click(imageLocation[0], imageLocation[1])
+		await browser.mouse.click(imageLocation, { delay: 150 })
+		await browser.mouse.click(imageLocation)
 	})
 }

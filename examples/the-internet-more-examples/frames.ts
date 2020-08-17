@@ -19,9 +19,6 @@ export const settings: TestSettings = {
  */
 
 const URL = 'https://the-internet.herokuapp.com'
-const floodIOURL = 'https://flood.io'
-const mozillaDblClickURL =
-	'https://mdn.mozillademos.org/en-US/docs/Web/API/Element/dblclick_event$samples/Examples'
 
 const goToFramesPage = async browser => {
 	await browser.visit(`${URL}/frames`)
@@ -62,11 +59,13 @@ export default () => {
 
 			// Example of TargetLocator.frame(ElementHandle)
 			await browser.switchTo().frame(bottomFrameEl)
+			await browser.wait(1)
 			const bottomBody = await browser.findElement(By.tagName('body'))
 			const bottomText = await bottomBody.text()
 			assert(bottomText === 'BOTTOM', 'The inner text of the bottom frame should be BOTTOM')
 
 			// TargetLocator.frame(id|name)
+			await browser.wait(Until.ableToSwitchToFrame('frame-top'))
 			await browser.switchTo().frame('frame-top')
 			await browser.wait(Until.ableToSwitchToFrame('frame-right'))
 			await browser.switchTo().frame('frame-right')
@@ -77,46 +76,53 @@ export default () => {
 		},
 	)
 
-	step('Test: Go to flood.io and use Until.titleContains and Until.urlContains', async browser => {
+	step('Test: Element Handle API', async browser => {
 		await browser.switchTo().defaultContent()
+		await browser.visit(`${URL}/login`)
+		const pageTextVerify = By.css('#content h2')
 
-		await browser.visit(floodIOURL)
-		// Until.titleContains example
-		await browser.wait(Until.titleContains('Flood'))
-		const floodTitle = await browser.title()
-		assert(
-			floodTitle === 'Scalable software starts here - Flood',
-			'The title of Flood page should be correct',
-		)
-
-		const whyFloodEl = await browser.findElement(By.visibleText('Why Flood?'))
-		await whyFloodEl.click()
-		// Util.urlContains example
-		await browser.wait(Until.urlContains('what-is-flood'))
-		await browser.wait(Until.elementIsVisible(By.css('h1.headline-2')))
-		const headingEl = await browser.findElement(By.tagName('h1'))
-		const headingText = await headingEl.text()
-		assert(
-			headingText === 'Flood is an easy to use load testing platform',
-			'The heading should be correct',
-		)
-	})
-
-	step('Test: Double Click Event', async browser => {
-		await browser.switchTo().defaultContent()
-		await browser.visit(mozillaDblClickURL)
-
-		const pageTextVerify = By.visibleText('My Card')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
+		const step1UserNameInput = await browser.findElement(By.nameAttr('username'))
+		const step1PasswordInput = await browser.findElement(By.nameAttr('password'))
+		const step1SubmitBtn = await browser.findElement(By.css('button[type="submit"]'))
 
-		const asideEl = await browser.findElement(By.tagName('aside'))
-		await browser.doubleClick(asideEl)
-		const asideLargeClass = await asideEl.getAttribute('class')
-		assert(
-			asideLargeClass.toLowerCase() === 'large',
-			'The aside should have large class after be dblclicked',
-		)
+		// Element Hanlde Type
+		await step1UserNameInput.type('tomsmith')
+		await step1PasswordInput.type('SuperSecretPassword!')
+		await step1SubmitBtn.click()
 
-		await browser.wait(5)
+		await browser.wait(Until.elementIsVisible(By.visibleText('Logout')))
+		await browser.click(By.visibleText('Logout'))
+
+		await browser.wait(Until.elementIsVisible('#content h2'))
+
+		const step2UserNameInput = await browser.findElement(By.nameAttr('username'))
+		const step2PasswordInput = await browser.findElement(By.nameAttr('password'))
+		const step2SubmitBtn = await browser.findElement(By.css('button[type="submit"]'))
+
+		// Element Hanlde Focus
+		await step2UserNameInput.focus()
+		await browser.wait(3)
+		await browser.takeScreenshot()
+
+		// Element Handle Blur
+		await step2UserNameInput.blur()
+		await browser.wait(3)
+		await browser.takeScreenshot()
+		await step2UserNameInput.highlight()
+		await browser.takeScreenshot()
+
+		await step2PasswordInput.type('SuperSecretPassword!')
+		// Element Handle Clear
+		await step2PasswordInput.clear()
+		await step2SubmitBtn.click()
+
+		await browser.wait(Until.elementIsVisible(By.css('#flash')))
+
+		const messageEl = await browser.findElement(By.css('#flash'))
+		const messageClass = await messageEl.getAttribute('class')
+		assert(messageClass.includes('error'), 'The message element should have class error.')
+
+		await browser.wait(3)
 	})
 }

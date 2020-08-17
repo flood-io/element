@@ -21,19 +21,23 @@ export class Schedular {
 
 	private browserServer: BrowserServer
 
-	public async run(_testScript: string) {
+	public async run(testScript: string) {
 		const stages = this.settings.stages
 		assertIsValidateStages(stages)
 
 		this.browserServer = await launchBrowserServer(this.settings)
 		const plan = new Plan(stages)
 
-		const pool = new WorkerPool({ maxRetries: 1, numWorkers: plan.maxUsers, setupArgs: [] })
+		const pool = new WorkerPool({
+			maxRetries: 1,
+			numWorkers: plan.maxUsers,
+			setupArgs: [this.browserServer.wsEndpoint()],
+		})
 		pool.stdout.pipe(process.stdout)
 		pool.stderr.pipe(process.stderr)
 
 		await plan.ticker(async (timestamp, target, total) => {
-			// console.log(`tick: ${timestamp}, delta: ${target} total: ${total}`)
+			console.log(`tick: ${timestamp}, delta: ${target} total: ${total}`)
 
 			const wsURL = this.browserServer.wsEndpoint()
 			const rootEnv = this.env.workRoot.getRoot()
@@ -43,15 +47,7 @@ export class Schedular {
 				[
 					ChildMessages.CALL,
 					'run',
-					[
-						wsURL,
-						_testScript,
-						{
-							rootEnv,
-							testData,
-							settings: JSON.stringify(this.settings),
-						},
-					],
+					[wsURL, testScript, rootEnv, testData, JSON.stringify(this.settings)],
 				],
 				worker => {
 					console.log(`Worker ${worker.workerId} starts`)

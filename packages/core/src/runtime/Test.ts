@@ -287,7 +287,7 @@ export default class Test implements ITest {
 				if (predicate) {
 					const condition = await this.callPredicate(predicate, browser)
 					if (!condition) {
-						debug('condition failling')
+						debug('condition failing')
 						continue
 					}
 				}

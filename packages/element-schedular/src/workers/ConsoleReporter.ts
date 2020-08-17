@@ -13,7 +13,7 @@ export class ConsoleReporter implements IReporter {
 	public responseCode: string
 	public stepName: string
 
-	constructor(private logger: Logger, private verbose: boolean) {}
+	constructor(private logger: Logger, private verbose: boolean, private workerId: string) {}
 
 	reset(step: string): void {}
 
@@ -38,20 +38,20 @@ export class ConsoleReporter implements IReporter {
 	testLifecycle(stage: TestEvent, label: string): void {
 		switch (stage) {
 			case TestEvent.AfterStepAction:
-				this.logger.info(`---> ${label}()`)
+				this.logger.info(`[Worker ${this.workerId}]: ---> ${label}()`)
 				break
 			case TestEvent.BeforeStep:
 				this.logger.info('')
-				this.logger.info(`===> Step '${label}'`)
+				this.logger.info(`[Worker ${this.workerId}]: ===> Step '${label}'`)
 				break
 			case TestEvent.AfterStep:
-				this.logger.info(`---> Step '${label}' finished`)
+				this.logger.info(`[Worker ${this.workerId}]: ---> Step '${label}' finished`)
 				break
 			case TestEvent.StepSkipped:
-				this.logger.info(`---- Step '${label}' skipped`)
+				this.logger.info(`[Worker ${this.workerId}]: ---- Step '${label}' skipped`)
 				break
 			case TestEvent.StepFailed:
-				this.logger.error(`xxxx Step '${label}' failed`)
+				this.logger.error(`Worker [${this.workerId}]: xxxx Step '${label}' failed`)
 				break
 		}
 	}

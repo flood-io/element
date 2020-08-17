@@ -64,7 +64,7 @@ export class Worker implements WorkerInterface {
 				cwd: process.cwd(),
 				env: {
 					...process.env,
-					ELEMENT_WORKER_ID: String(this.options.workerId + 1),
+					ELEMENT_WORKER_ID: String(this.options.workerId),
 				} as NodeJS.ProcessEnv,
 				silent: false,
 			},

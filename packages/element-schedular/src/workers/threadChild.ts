@@ -1,4 +1,4 @@
-import { parentPort } from 'worker_threads'
+import { parentPort, workerData } from 'worker_threads'
 import { ChildMessages, ChildMessage, ChildMessageCall, ParentMessages } from '../types'
 
 import {
@@ -43,16 +43,13 @@ function environment(root: string, testData: string): RuntimeEnvironment {
 async function execMethod(method: string, args: Array<any>) {
 	switch (method) {
 		case 'run': {
-			const [wsEndpoint, testScript, { rootEnv, testData, settings }] = args as [
-				string,
-				string,
-				any,
-			]
+			const [wsURL, testScript, rootEnv, testData, settings] = args
+			const workerId = workerData.env['ELEMENT_WORKER_ID']
 
 			const verboseBool = true
 			const logLevel = 'info'
 			const logger = createLogger(logLevel, true)
-			const reporter = new ConsoleReporter(logger, verboseBool)
+			const reporter = new ConsoleReporter(logger, verboseBool, workerId)
 			const childSettings: TestSettings = JSON.parse(settings)
 
 			const env = environment(rootEnv, testData)
@@ -61,7 +58,7 @@ async function execMethod(method: string, args: Array<any>) {
 			}
 
 			const clientFactory = (): AsyncFactory<PlaywrightClient> => {
-				return () => connectWS(wsEndpoint, childSettings.browserType)
+				return () => connectWS(wsURL, childSettings.browserType)
 			}
 
 			const runner: Runner = new Runner(
@@ -84,10 +81,11 @@ async function execMethod(method: string, args: Array<any>) {
 
 const messageListener = async (request: ChildMessage) => {
 	const [type] = request
+	const workerId = workerData.env['ELEMENT_WORKER_ID']
 
 	switch (type) {
 		case ChildMessages.INITIALIZE: {
-			console.log('INITIALIZED')
+			console.log(`Worker '${workerId}' initialized`)
 			break
 		}
 

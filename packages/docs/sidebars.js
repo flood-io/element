@@ -9,7 +9,10 @@ module.exports = {
 		],
 		Guides: [
 			{
-				'Browser Interaction': ['guides/link-navigation'],
+				'Browser Interaction': [
+					'guides/link-navigation',
+					'guides/page-verification'
+				],
 			},
 			'guides/script',
 			'guides/hook',

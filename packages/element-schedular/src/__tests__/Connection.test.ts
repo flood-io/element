@@ -26,16 +26,11 @@ class FakeMessagePort extends EventEmitter implements Partial<MessagePort> {
 describe('Connection', () => {
 	test('it can send a message over a port', async () => {
 		const port1 = new FakeMessagePort()
-		let receivedMessage: string | null = null
 
-		new ThreadConnection<string, string>(port1, async message => {
-			receivedMessage = message
-			return 'Hi'
-		})
+		new ThreadConnection<string, string>(port1, async message => message)
 
 		const wc = new WorkerConnection(port1)
 		const response = await wc.send('Hello World')
-		expect(receivedMessage).toEqual('Hello World')
-		expect(response).toEqual(['Hi'])
+		expect(response).toEqual(['Hello World'])
 	})
 })

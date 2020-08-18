@@ -335,6 +335,21 @@ or a [Condition][], for more flexible conditions.
 
 - returns: [Promise<`any`>][promise]
 
+## `Locatable`
+Locatable represents anything able to be located, either a string selector or a <[Locator]>. <[Locator]>s are generally created using <[By]> methods.
+
+```typescript
+[Locator] | [ElementHandle] | string
+```
+## `NullableLocatable`
+NullableLocatable represents a <[Locatable]> which could also be null.
+
+Note that most Element location API methods accept a NullableLocatable but will throw an <[Error]> if its actually <[null]>.
+
+```typescript
+[Locatable] | null
+```
+
 [step]: ../guides/script
 [promise]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
 [nullablelocatable]: Locators

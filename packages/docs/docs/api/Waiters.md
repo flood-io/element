@@ -11,7 +11,7 @@ In most cases you don't want to wait for every element to appear before interact
 
 # `Condition`
 
-A Condition represents a predicate which can be used to wait for an [ElementHandle][]. They are generally created by using [Until][]'s helper methods.
+A Condition represents a predicate which can be used to wait for an [ElementHandle][elementhandle]. They are generally created by using [Until](#until)'s helper methods.
 
 # `Until`
 
@@ -29,9 +29,9 @@ Creates a condition that will wait until the input driver is able to switch to t
 
 The target frame may be specified as:
 
-- string name of the frame to wait for matching the frame's `name` or `id` attribute.
+- locator which may be used to first locate a FRAME or IFRAME on the current page before attempting to switch to it.
+- (Coming soon) string name of the frame to wait for matching the frame's `name` or `id` attribute.
 - (Coming soon) numeric index into window.frames for the currently selected frame.
-- (Coming soon) locator which may be used to first locate a FRAME or IFRAME on the current page before attempting to switch to it.
 
 Upon successful resolution of this condition, the driver will be left focused on the new frame.
 
@@ -105,6 +105,15 @@ Creates a condition that will wait for the given element to be in the DOM, yet n
 - selectorOrLocator [`NullableLocatable`][nullablelocatable] A [Locatable][] to use to find the element.
 - returns: [`Condition`][condition]
 
+### `Until.elementIsSelected(selectorOrLocator)`
+
+Creates a condition that will wait for the given element to be selected.
+
+**Parameters**
+
+- selectorOrLocator [`NullableLocatable`][nullablelocatable] A [Locatable][] to use to find the element.
+- returns: [`Condition`][condition]
+
 ### `Until.elementIsNotVisible(selectorOrLocator)`
 
 Creates a condition that will wait for the given element to become invisible.
@@ -123,14 +132,6 @@ step("Step 1", async (browser) => {
 - selectorOrLocator [`NullableLocatable`][nullablelocatable] A [Locatable][] to use to find the element.
 - returns: [`Condition`][condition]
 
-### `Until.elementIsSelected(selectorOrLocator)`
-
-Creates a condition that will wait for the given element to be selected.
-
-**Parameters**
-
-- selectorOrLocator [`NullableLocatable`][nullablelocatable] A [Locatable][] to use to find the element.
-- returns: [`Condition`][condition]
 
 ### `Until.elementIsVisible(selectorOrLocator)`
 
@@ -158,9 +159,29 @@ Creates a condition which will wait until the element is located on the page.
 - selectorOrLocator [`NullableLocatable`][nullablelocatable]
 - returns: [`Condition`][condition]
 
+### `Until.elementsLocated(selectorOrLocator, desiredCount)`
+
+Creates a condition that will wait until at least the desired number of elements are found.
+
+**Parameters**
+
+- selectorOrLocator [`NullableLocatable`][nullablelocatable]
+- desiredCount `number` (Optional, default: `1`)
+- returns: [`Condition`][condition]
+
 ### `Until.elementTextContains(selectorOrLocator, text)`
 
 Creates a condition which will wait until the element's text content contains the target text.
+
+**Parameters**
+
+- selectorOrLocator [`NullableLocatable`][nullablelocatable]
+- text `string`
+- returns: [`Condition`][condition]
+
+### `Until.elementTextDoesNotContain(selectorOrLocator, text)`
+
+Creates a condition which will wait until the element's text content no longer contains the target text.
 
 **Parameters**
 
@@ -178,6 +199,16 @@ Creates a condition which will wait until the element's text exactly matches the
 - text `string`
 - returns: [`Condition`][condition]
 
+### `Until.elementTextIsNot(selectorOrLocator, text)`
+
+Creates a condition which will wait until the element's text becomes different from the target text, excluding leading and trailing whitespace.
+
+**Parameters**
+
+- selectorOrLocator [`NullableLocatable`][nullablelocatable]
+- text `string`
+- returns: [`Condition`][condition]
+
 ### `Until.elementTextMatches(selectorOrLocator, regex)`
 
 Creates a condition which will wait until the element's text matches the target Regular Expression.
@@ -188,19 +219,29 @@ Creates a condition which will wait until the element's text matches the target 
 - regex [`RegExp`][regexp]
 - returns: [`Condition`][condition]
 
-### `Until.elementsLocated(selectorOrLocator, desiredCount)`
+### `Until.elementTextDoesNotMatch(selectorOrLocator, regex)`
 
-Creates a condition that will wait until at least the desired number of elements are found.
+Creates a condition which will wait until the element's text no longer matches the target Regular Expression.
 
 **Parameters**
 
 - selectorOrLocator [`NullableLocatable`][nullablelocatable]
-- desiredCount `number` (Optional, default: `1`)
+- regex [`RegExp`][regexp]
 - returns: [`Condition`][condition]
+
 
 ### `Until.titleContains(title)`
 
 Creates a condition which waits until the page title contains the expected text.
+
+**Parameters**
+
+- title `string`
+- returns: [`Condition`][condition]
+
+### `Until.titleDoesNotContain(title)`
+
+Creates a condition which waits until the page title no longer contains the expected text.
 
 **Parameters**
 
@@ -216,9 +257,27 @@ Creates a condition which waits until the page title exactly matches the expecte
 - title `string`
 - returns: [`Condition`][condition]
 
-### `Until.titleMatches(title)`
+### `Until.titleIsNot(title)`
+
+Creates a condition which waits until the page title does not match the expected text.
+
+**Parameters**
+
+- title `string`
+- returns: [`Condition`][condition]
+
+### `Until.titleMatches(regex)`
 
 Creates a condition which waits until the page title matches the title `RegExp`.
+
+**Parameters**
+
+- title [`RegExp`][regexp]
+- returns: [`Condition`][condition]
+
+### `Until.titleDoesNotMatch(regex)`
+
+Creates a condition which waits until the page title no longer matches the title `RegExp`.
 
 **Parameters**
 
@@ -234,6 +293,15 @@ Creates a condition which waits until the page URL contains the expected path.
 - url `string`
 - returns: [`Condition`][condition]
 
+### `Until.urlDoesNotContain(url)`
+
+Creates a condition which waits until the page URL does not contain the expected path.
+
+**Parameters**
+
+- url `string`
+- returns: [`Condition`][condition]
+
 ### `Until.urlIs(url)`
 
 Creates a condition which waits until the page URL exactly matches the expected URL.
@@ -243,7 +311,16 @@ Creates a condition which waits until the page URL exactly matches the expected 
 - url `string`
 - returns: [`Condition`][condition]
 
-### `Until.urlMatches(url)`
+### `Until.urlIsNot(url)`
+
+Creates a condition which waits until the page URL does not exactly matches the expected URL.
+
+**Parameters**
+
+- url `string`
+- returns: [`Condition`][condition]
+
+### `Until.urlMatches(regex)`
 
 Creates a condition which waits until the page URL matches the supplied `RegExp`.
 
@@ -252,11 +329,19 @@ Creates a condition which waits until the page URL matches the supplied `RegExp`
 - url [`RegExp`][regexp]
 - returns: [`Condition`][condition]
 
-[elementhandle]: ElementHandle
-[until]: Waiters
+### `Until.urlDoesNotMatch(regex)`
+
+Creates a condition which waits until the page URL does not match the supplied `RegExp`.
+
+**Parameters**
+
+- url [`RegExp`][regexp]
+- returns: [`Condition`][condition]
+
+[elementhandle]: element-handle
+[until]: Waiters#until
+[condition]: Waiters#condition
+[locatable]: Browser#locatable
 [condition]: Waiters
-[locatable]: api/Browser
-[condition]: Waiters
-[nullablelocatable]: api/Browser
-[locatable]: api/Browser
+[nullablelocatable]: Browser#nullableLocatable
 [regexp]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp

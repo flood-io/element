@@ -4,7 +4,7 @@ import { launchPuppeteer, testPuppeteer } from '../../tests/support/launch-brows
 import Test from './Test'
 import { EvaluatedScript } from './EvaluatedScript'
 import { join } from 'path'
-import { EventEmitterReporter } from '../reporter/EventEmitter'
+import { EventEmitterReporter } from '@flood/element-report'
 import { ConcreteTestSettings } from './Settings'
 import { readFileSync, writeFileSync } from 'fs-extra'
 import { tmpdir } from 'os'

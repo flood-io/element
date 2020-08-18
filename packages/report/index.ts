@@ -14,3 +14,4 @@ export {
 export { TestScriptError, TestScriptErrorMapper } from './src/runtime/TestScriptError'
 export { Assertion } from './src/types/Assertion'
 export { SourceUnmapper } from './src/utils/SourceUnmapper'
+export { EventEmitterReporter } from './src/runtime/EventEmitter'

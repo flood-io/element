@@ -1,34 +1,11 @@
 import { SourceMapConsumer, NullableMappedPosition } from 'source-map'
-
-export interface Callsite {
-	file: string
-	code: string
-	line: number
-	column: number
-}
+import { Callsite, callsiteToString } from '../types/Callsite'
 
 interface StackLine {
 	at: string
 	file: string
 	line: number
 	column: number
-}
-
-export function callsiteToString(callsite: Callsite | undefined): string {
-	if (callsite) {
-		return (
-			callsite.file +
-			':' +
-			callsite.line +
-			'\n' +
-			callsite.code +
-			'\n' +
-			new Array(callsite.column).join(' ') +
-			'^'
-		)
-	}
-
-	return ''
 }
 
 // inspiration from:
@@ -62,10 +39,9 @@ export class SourceUnmapper {
 			}
 
 			const code = this.extractSourceLine(originalPos.line)
-
 			return {
 				file: this.originalFilename,
-				code: code,
+				code,
 				line: originalPos.line,
 				column: originalPos.column,
 			}

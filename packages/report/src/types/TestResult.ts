@@ -1,11 +1,6 @@
+import { Callsite } from './Callsite'
+import { Status } from './Status'
 export type Milliseconds = number
-
-type Status = 'passed' | 'failed' | 'skipped' | 'unexecuted'
-
-type Callsite = {
-	column: number
-	line: number
-}
 
 export type TestResult = {
 	executionInfo: ExecutionInfo

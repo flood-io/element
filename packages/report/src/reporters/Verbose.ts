@@ -1,11 +1,6 @@
 import { TestScriptError } from '../runtime/TestScriptError'
-import {
-	IReporter,
-	TraceData,
-	TestEvent,
-	CompoundMeasurement,
-	MeasurementKind,
-} from '../runtime/Reporter'
+import { IReporter } from '../runtime/IReporter'
+import { TraceData, TestEvent, CompoundMeasurement, MeasurementKind } from '../types/Report'
 import chalk from 'chalk'
 import { Logger } from 'winston'
 import { createTestLog } from '../utils/TestLogger'

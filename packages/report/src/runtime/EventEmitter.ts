@@ -1,15 +1,15 @@
+import { IReporter } from '.././runtime/IReporter'
 import {
-	IReporter,
 	Measurement,
 	TraceData,
 	TestEvent,
 	TestLifecycle,
 	CompoundMeasurement,
 	MeasurementKind,
-} from '.././Reporter'
+} from '.././types/Report'
 import { EventEmitter } from 'events'
-import { TestScriptError } from './../TestScriptError'
-import { expect } from '../utils/Expect'
+import { TestScriptError } from '.././runtime/TestScriptError'
+import { expect } from '.././types/Expect'
 
 export interface TestStepError {
 	message: string

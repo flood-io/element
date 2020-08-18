@@ -1,10 +1,5 @@
-import {
-	IReporter,
-	TraceData,
-	TestEvent,
-	CompoundMeasurement,
-	MeasurementKind,
-} from '../runtime/Reporter'
+import { IReporter } from '../runtime/IReporter'
+import { TraceData, TestEvent, CompoundMeasurement, MeasurementKind } from '../types/Report'
 import { TestScriptError } from '../runtime/TestScriptError'
 
 export class EmptyReporter implements IReporter {

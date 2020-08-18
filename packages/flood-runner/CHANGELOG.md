@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0-beta.20](https://github.com/flood-io/element/compare/v1.3.0-beta.19...v1.3.0-beta.20) (2020-08-18)
+
+
+### Bug Fixes
+
+* change incorrect versions to the latest ([#229](https://github.com/flood-io/element/issues/229)) ([f6fc29a](https://github.com/flood-io/element/commit/f6fc29aeedc2f0955c13a48868b2f5065b537e87))
+
+
+
+
+
 # [1.3.0-beta.4](https://github.com/flood-io/element/compare/v1.3.0-beta.3...v1.3.0-beta.4) (2020-05-20)
 
 **Note:** Version bump only for package @flood/element-flood-runner

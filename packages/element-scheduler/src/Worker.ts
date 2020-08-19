@@ -19,6 +19,7 @@ export type WorkerOptions = {
 	page?: Promise<Page>
 	maxRetries: number
 	workerId: number
+	args: unknown[]
 }
 
 export class Worker implements WorkerInterface {
@@ -53,8 +54,7 @@ export class Worker implements WorkerInterface {
 		const workerFile = isTS
 			? join(__dirname, './workers/worker-import.js')
 			: join(__dirname, './workers/threadChild.js')
-
-		console.debug(`Loading worker: ${workerFile}`)
+		const [wsEndpoint, rootEnv, testData, settings] = this.options.args
 
 		this.worker = new WorkerThread(workerFile, {
 			eval: false,
@@ -64,11 +64,16 @@ export class Worker implements WorkerInterface {
 				cwd: process.cwd(),
 				env: {
 					...process.env,
-					ELEMENT_WORKER_ID: String(this.options.workerId),
+					workerId: String(this.options.workerId),
+					wsEndpoint,
+					rootEnv,
+					testData,
+					settings,
 				} as NodeJS.ProcessEnv,
 				silent: false,
 			},
 		})
+		console.debug(`Worker loaded: ${workerFile}`)
 
 		if (this.worker.stdout && this.fakeStream) {
 			if (!this.stdout) {

@@ -43,8 +43,8 @@ function environment(root: string, testData: string): RuntimeEnvironment {
 async function execMethod(method: string, args: Array<any>) {
 	switch (method) {
 		case 'run': {
-			const [wsURL, testScript, rootEnv, testData, settings] = args
-			const workerId = workerData.env['ELEMENT_WORKER_ID']
+			const [testScript] = args
+			const { wsEndpoint, workerId, rootEnv, testData, settings } = workerData.env
 
 			const verboseBool = true
 			const logLevel = 'info'
@@ -58,7 +58,7 @@ async function execMethod(method: string, args: Array<any>) {
 			}
 
 			const clientFactory = (): AsyncFactory<PlaywrightClient> => {
-				return () => connectWS(wsURL, childSettings.browserType)
+				return () => connectWS(wsEndpoint, childSettings.browserType)
 			}
 
 			const runner: Runner = new Runner(
@@ -81,7 +81,7 @@ async function execMethod(method: string, args: Array<any>) {
 
 const messageListener = async (request: ChildMessage) => {
 	const [type] = request
-	const workerId = workerData.env['ELEMENT_WORKER_ID']
+	const { workerId } = workerData.env
 
 	switch (type) {
 		case ChildMessages.INITIALIZE: {

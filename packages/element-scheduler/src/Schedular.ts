@@ -28,10 +28,14 @@ export class Schedular {
 		this.browserServer = await launchBrowserServer(this.settings)
 		const plan = new Plan(stages)
 
+		const wsURL = this.browserServer.wsEndpoint()
+		const rootEnv = this.env.workRoot.getRoot()
+		const testData = this.env.workRoot.getSubRoot('test-data')
+
 		const pool = new WorkerPool({
 			maxRetries: 1,
 			numWorkers: plan.maxUsers,
-			setupArgs: [this.browserServer.wsEndpoint()],
+			setupArgs: [wsURL, rootEnv, testData, JSON.stringify(this.settings)],
 		})
 		pool.stdout.pipe(process.stdout)
 		pool.stderr.pipe(process.stderr)
@@ -39,16 +43,8 @@ export class Schedular {
 		await plan.ticker(async (timestamp, target, total) => {
 			console.log(`tick: ${timestamp}, delta: ${target} total: ${total}`)
 
-			const wsURL = this.browserServer.wsEndpoint()
-			const rootEnv = this.env.workRoot.getRoot()
-			const testData = this.env.workRoot.getSubRoot('test-data')
-
 			pool.sendEach(
-				[
-					ChildMessages.CALL,
-					'run',
-					[wsURL, testScript, rootEnv, testData, JSON.stringify(this.settings)],
-				],
+				[ChildMessages.CALL, 'run', [testScript]],
 				worker => {
 					console.log(`Worker ${worker.workerId} starts`)
 				},

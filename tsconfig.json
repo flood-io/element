@@ -35,8 +35,8 @@
       "@flood/element-cli": [
         "packages/cli/src/index.ts"
       ],
-      "@flood/element-schedular": [
-        "packages/element-schedular/src/index.ts"
+      "@flood/element-scheduler": [
+        "packages/element-scheduler/src/index.ts"
       ],
       "@flood/element-*": [
         "packages/*/src/index.ts"

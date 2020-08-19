@@ -49,6 +49,7 @@ export class WorkerPool {
 		const workerOptions: WorkerOptions = {
 			maxRetries,
 			workerId: id,
+			args: this.options.setupArgs,
 		}
 
 		const worker = this.createWorker(workerOptions)

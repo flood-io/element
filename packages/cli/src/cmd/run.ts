@@ -9,7 +9,7 @@ import {
 	ElementOptions,
 	BROWSER_TYPE,
 } from '@flood/element-core'
-import { runCommandLine } from '@flood/element-schedular'
+import { runCommandLine } from '@flood/element-scheduler'
 import { watch } from 'chokidar'
 import { EventEmitter } from 'events'
 import { extname, basename, join, dirname, resolve } from 'path'

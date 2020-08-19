@@ -11,12 +11,6 @@ export const settings: TestSettings = {
 	waitTimeout: 60,
 }
 
-/**
- * Author: Antonio Jimenez : antonio@flood.io
- * The internet - heroku App
- * @version 1.1
- */
-
 const URL = 'https://the-internet.herokuapp.com/dynamic_loading'
 
 export default () => {
@@ -24,7 +18,7 @@ export default () => {
 		await browser.visit(URL)
 		let locator = By.partialVisibleText('Element')
 		await browser.wait(Until.elementLocated(locator))
-		await Until.elementIsNotVisible(locator)
-		await Until.elementTextDoesNotContain(locator, 'Elemental Selenium')
+		browser.wait(await Until.elementIsNotVisible(locator))
+		browser.wait(await Until.elementTextDoesNotContain(locator, 'Elemental Selenium'))
 	})
 }

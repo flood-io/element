@@ -11,12 +11,6 @@ export const settings: TestSettings = {
 	waitTimeout: 60,
 }
 
-/**
- * Author: Antonio Jimenez : antonio@flood.io
- * The internet - heroku App
- * @version 1.1
- */
-
 const URL = 'https://the-internet.herokuapp.com/hovers'
 
 export default () => {
@@ -30,11 +24,11 @@ export default () => {
 	})
 
 	step('Test: 02 - Image', async browser => {
-		let Image = await browser.findElement(By.css('#content > div > div:nth-child(3) > img'))
-		await Image.getProperty('src')
-		let imageLocation = await Image.centerPoint()
-		await browser.mouse.click(Image, { delay: 150 })
-		await browser.mouse.click(Image)
+		let image = await browser.findElement(By.css('#content > div > div:nth-child(3) > img'))
+		await image.getProperty('src')
+		let imageLocation = await image.centerPoint()
+		await browser.mouse.click(image, { delay: 150 })
+		await browser.mouse.click(image)
 		await browser.mouse.click(imageLocation[0], imageLocation[1], { delay: 100 })
 		await browser.mouse.click(imageLocation[0], imageLocation[1])
 		await browser.mouse.click(imageLocation, { delay: 150 })

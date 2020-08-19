@@ -1,36 +1,11 @@
-import { Logger } from 'winston'
-import { IReporter } from '@flood/element-report'
-import { PuppeteerClient, launch } from './driver/Puppeteer'
-import { RuntimeEnvironment } from './runtime-environment/types'
-import { IRunner, Runner, PersistentRunner, TestCommander } from './Runner'
+import { launch } from './driver/Puppeteer'
+import { IRunner, Runner, PersistentRunner } from './Runner'
 import { mustCompileFile } from './TestScript'
 import { TestScriptOptions } from './TestScriptOptions'
 import { EvaluatedScript } from './runtime/EvaluatedScript'
-import { TestSettings, ChromeVersion } from './runtime/Settings'
-import { TestObserver } from './runtime/test-observers/Observer'
-import { AsyncFactory } from './utils/Factory'
+import { ElementOptions, ElementRunArguments, normalizeElementOptions } from './ElementOption'
 
-export interface ElementOptions {
-	logger: Logger
-	runEnv: RuntimeEnvironment
-	reporter: IReporter
-	clientFactory?: AsyncFactory<PuppeteerClient>
-	testScript: string
-	strictCompilation: boolean
-	headless: boolean
-	devtools: boolean
-	chromeVersion: ChromeVersion | string | undefined
-	sandbox: boolean
-	process?: NodeJS.Process
-	verbose: boolean
-	testSettingOverrides: TestSettings
-	testObserverFactory?: (t: TestObserver) => TestObserver
-	persistentRunner: boolean
-	testCommander?: TestCommander
-	failStatusCode: number
-}
-
-export async function runCommandLine(opts: ElementOptions): Promise<void> {
+async function runSingleTestScript(opts: ElementOptions): Promise<void> {
 	const { logger, testScript, clientFactory } = opts
 
 	// TODO proper types for args
@@ -89,6 +64,29 @@ export async function runCommandLine(opts: ElementOptions): Promise<void> {
 	} catch (err) {
 		console.log('Element exited with error')
 		console.error(err)
-		process.exit(opts.failStatusCode)
 	}
+}
+
+export async function runCommandLine(args: ElementRunArguments): Promise<void> {
+	// if (args.verbose) {
+	// } else {
+	// }
+	if (args.testFiles) {
+		console.info(
+			'The following test scripts that matched the testPathMatch pattern are going to be executed:',
+		)
+		for (const file of args.testFiles) {
+			const arg: ElementRunArguments = {
+				...args,
+				file,
+			}
+			const opts = normalizeElementOptions(arg)
+			await runSingleTestScript(opts)
+		}
+		console.info('Test running with the config file has finished')
+	} else {
+		const opts = normalizeElementOptions(args)
+		await runSingleTestScript(opts)
+	}
+	process.exit(0)
 }

@@ -1,3 +1,4 @@
+export type DefaultLevel = '   '
 export interface Callsite {
 	file?: string
 	code?: string

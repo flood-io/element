@@ -1,4 +1,5 @@
-export { runCommandLine, ElementOptions } from './src/Element'
+export { runCommandLine } from './src/Element'
+export { ElementRunArguments } from './src/ElementOption'
 
 export { RuntimeEnvironment } from './src/runtime-environment/types'
 export { nullRuntimeEnvironment } from './src/runtime-environment/NullRuntimeEnvironment'

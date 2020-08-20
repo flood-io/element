@@ -2,7 +2,6 @@ import { Until, TestSettings, step, By } from '@flood/element'
 
 export const settings: TestSettings = {
 	loopCount: 1,
-	waitUntil: 'visible',
 }
 
 export default () => {

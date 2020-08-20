@@ -7,7 +7,7 @@ export const settings: TestSettings = {
 }
 
 export default () => {
-	step(async browser => {
+	step.once(async browser => {
 		await browser.emulateDevice(Device.iPhoneX)
 		await browser.setUserAgent('Fake user agent')
 		await browser.visit('http://whatsmyuseragent.org/')

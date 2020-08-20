@@ -98,4 +98,4 @@ element run my-test.perf.ts --no-headless
 
 ---
 
-Now you're all set up with a script that navigates to a webpage. What if you want to click on a link or a button on a page? There are several ways to do that, and we'll cover them in the next section.
+Now you're all set up with your first basic test. To learn how to make more advanced test scripts, navigate to our guides on the left column. 

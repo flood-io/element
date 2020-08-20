@@ -23,6 +23,6 @@ Are you trying to do something specific that we don't already have documentation
 
 ## Getting help
 
-If you're looking for Typescript-specific help, check out the the [TypeScript documentation](https://www.typescriptlang.org/docs/home.html)
+If you're looking for Typescript-specific help, check out the [TypeScript documentation](https://www.typescriptlang.org/docs/home.html)
 
-If there's something you'd like to do that isn't already covered in our documentation, contact us at [support@flood.io](mailto:support@flood.io) -- we can help you figure it out. We also welcome any feedback or comments!
+If there's something you'd like to do that isn't already covered in our documentation, contact us at [support@flood.io](mailto:support@flood.io) - we can help you figure it out. We also welcome any feedback or comments!

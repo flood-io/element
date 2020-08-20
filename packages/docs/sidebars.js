@@ -5,7 +5,6 @@ module.exports = {
 			'start/install',
 			'start/init',
 			'start/scripting',
-			'start/browser-load-testing',
 		],
 		Guides: [
 			{
@@ -21,6 +20,7 @@ module.exports = {
 			'guides/test-settings',
 			'guides/editor',
 			'guides/cli',
+			'guides/browser-load-testing',
 		],
 		'API reference': [
 			'api/browser',

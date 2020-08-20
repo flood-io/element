@@ -23,7 +23,7 @@ For more information on `element init`, run `element init --help`.
 
 ## Generate a new test file
 
-If you'd like another test file, use the `generate` command to generate a basic test script that includes the necessary imports, some basic configuration, and an example test step. This is a complete test that you can run straight away to see immediate results and is a great starting point for writing you own tests.
+If you'd like another test file, use the `generate` command to generate a basic test script that includes the necessary imports, some basic configuration, and an example test step. This is a complete test that you can run straight away to see immediate results and is a great starting point for writing your own tests.
 
 The `generate` command takes the file name of your new script as input:
 
@@ -47,4 +47,4 @@ For more information on `element run`, run `element run --help`.
 
 ---
 
-Next we'll talk about scripting basics of Element.
+Now you are familiar with some of the commands in [Element CLI](../guides/CLI.md). Next we'll talk about scripting basics of Element.

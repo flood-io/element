@@ -29,9 +29,8 @@ Creates a condition that will wait until the input driver is able to switch to t
 
 The target frame may be specified as:
 
+- string name of the frame to wait for matching the frame's `name` or `id` attribute.
 - locator which may be used to first locate a FRAME or IFRAME on the current page before attempting to switch to it.
-- (Coming soon) string name of the frame to wait for matching the frame's `name` or `id` attribute.
-- (Coming soon) numeric index into window.frames for the currently selected frame.
 
 Upon successful resolution of this condition, the driver will be left focused on the new frame.
 

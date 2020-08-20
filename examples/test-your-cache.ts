@@ -1,12 +1,11 @@
 import { TestSettings, step, By } from '@flood/element'
-import assert from 'assert'
 
 export const settings: TestSettings = {
 	loopCount: 1,
 }
 
 export default () => {
-	step(async browser => {
+	step.once({ waitTimeout: 10 }, async browser => {
 		await browser.visit('https://refreshyourcache.com/en/cache-test/')
 		await browser.takeScreenshot()
 		await browser.clearBrowserCache()

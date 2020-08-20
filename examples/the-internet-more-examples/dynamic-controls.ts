@@ -40,4 +40,17 @@ export default () => {
 		await browser.wait(Until.elementIsDisabled(input))
 		assert.strictEqual(await input.isEnabled(), false, 'input is disabled again')
 	})
+
+	// Bug: a loading indicator is created every time the Enable/Disable button is clicked
+	// Skipping the below step
+	step.skip({}, async browser => {
+		const btnEnable = await browser.findElement(By.xpath('//*[@id="input-example"]/button'))
+		await btnEnable.click()
+		await browser.wait(Until.elementIsEnabled(btnEnable))
+		await btnEnable.click()
+		await browser.wait(Until.elementIsEnabled(btnEnable))
+
+		const loadings = await browser.findElements(By.id('loading'))
+		assert.strictEqual(loadings.length, 1, 'There should only be 1 loading indicator')
+	})
 }

@@ -7,6 +7,8 @@ import {
 	OnStart,
 	OnEnd,
 	ParentMessageError,
+	ParentMessageOk,
+	MessageConst,
 } from './types'
 import { join } from 'path'
 import { Worker as WorkerThread } from 'worker_threads'
@@ -18,7 +20,8 @@ import { WorkerConnection } from './WorkerConnection'
 export type WorkerOptions = {
 	page?: Promise<Page>
 	maxRetries: number
-	workerId: number
+	workerId: string
+	workerName: string
 	args: unknown[]
 }
 
@@ -36,6 +39,9 @@ export class Worker implements WorkerInterface {
 	private resolveExitPromise!: () => void
 	private forceExited: boolean
 
+	private loadPromise: Promise<void>
+	private resolveLoadPromise: () => void
+
 	public connection: WorkerConnection
 
 	constructor(public options: WorkerOptions) {
@@ -43,6 +49,10 @@ export class Worker implements WorkerInterface {
 
 		this.exitPromise = new Promise(resolve => {
 			this.resolveExitPromise = resolve
+		})
+
+		this.loadPromise = new Promise(resolve => {
+			this.resolveLoadPromise = resolve
 		})
 
 		this.initializeWorkerThread()
@@ -64,7 +74,8 @@ export class Worker implements WorkerInterface {
 				cwd: process.cwd(),
 				env: {
 					...process.env,
-					workerId: String(this.options.workerId),
+					workerId: this.options.workerId,
+					workerName: this.options.workerName,
 					wsEndpoint,
 					rootEnv,
 					testData,
@@ -94,7 +105,7 @@ export class Worker implements WorkerInterface {
 		this.worker.on('message', this.onMessage)
 		this.worker.on('exit', this.onExit)
 		this.worker.on('error', err => console.error(err))
-		this.worker.on('online', () => console.log(`Worker '${this.workerId}' online`))
+		this.worker.on('online', () => {})
 
 		this.worker.postMessage([ChildMessages.INITIALIZE, false])
 
@@ -118,7 +129,12 @@ export class Worker implements WorkerInterface {
 
 		switch (type) {
 			case ParentMessages.OK: {
-				this.onProcessEnd(null, this)
+				const [, message] = response as ParentMessageOk
+				if (message === MessageConst.RUN_COMPLETED) {
+					this.onProcessEnd(null, this)
+				} else if (message === MessageConst.LOADED) {
+					this.resolveLoadPromise()
+				}
 				break
 			}
 
@@ -151,10 +167,10 @@ export class Worker implements WorkerInterface {
 	}
 
 	private onExit = (exitCode: number) => {
-		console.log(`Worker ${this.workerId} exit: ${exitCode}`)
+		console.log(`User ${this.workerName} exit: ${exitCode}`)
 
 		if (exitCode !== 0 && !this.forceExited) {
-			console.log(`Worker exit: ${exitCode}`)
+			console.log(``)
 		} else {
 			this.shutdown()
 		}
@@ -162,6 +178,10 @@ export class Worker implements WorkerInterface {
 
 	waitForExit(): Promise<void> {
 		return this.exitPromise
+	}
+
+	waitForLoaded(): Promise<void> {
+		return this.loadPromise
 	}
 
 	forceExit(): void {
@@ -180,8 +200,12 @@ export class Worker implements WorkerInterface {
 		this.worker.postMessage(request)
 	}
 
-	get workerId(): number {
+	get workerId(): string {
 		return this.options.workerId
+	}
+
+	get workerName(): string {
+		return this.options.workerName
 	}
 
 	getStdout(): NodeJS.ReadableStream | null {

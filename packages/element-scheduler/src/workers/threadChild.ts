@@ -1,5 +1,12 @@
 import { parentPort, workerData } from 'worker_threads'
-import { ChildMessages, ChildMessage, ChildMessageCall, ParentMessages } from '../types'
+import {
+	ChildMessages,
+	ChildMessage,
+	ChildMessageCall,
+	ParentMessages,
+	MessageConst,
+	ActionConst,
+} from '../types'
 
 import {
 	AsyncFactory,
@@ -40,16 +47,17 @@ function environment(root: string, testData: string): RuntimeEnvironment {
 	}
 }
 
+let runner: Runner
 async function execMethod(method: string, args: Array<any>) {
 	switch (method) {
-		case 'run': {
+		case ActionConst.RUN: {
 			const [testScript] = args
-			const { wsEndpoint, workerId, rootEnv, testData, settings } = workerData.env
+			const { wsEndpoint, workerName, rootEnv, testData, settings } = workerData.env
 
 			const verboseBool = true
 			const logLevel = 'info'
 			const logger = createLogger(logLevel, true)
-			const reporter = new ConsoleReporter(logger, verboseBool, workerId)
+			const reporter = new ConsoleReporter(logger, verboseBool, workerName)
 			const childSettings: TestSettings = JSON.parse(settings)
 
 			const env = environment(rootEnv, testData)
@@ -61,19 +69,13 @@ async function execMethod(method: string, args: Array<any>) {
 				return () => connectWS(wsEndpoint, childSettings.browserType)
 			}
 
-			const runner: Runner = new Runner(
-				clientFactory(),
-				undefined,
-				reporter,
-				logger,
-				childSettings,
-				{},
-			)
+			runner = new Runner(clientFactory(), undefined, reporter, logger, childSettings, {})
 
 			await runner.run(testScriptFactory)
+			await runner.stop()
 
 			if (parentPort) {
-				parentPort.postMessage([ParentMessages.OK, 'Completed'])
+				parentPort.postMessage([ParentMessages.OK, MessageConst.RUN_COMPLETED])
 			}
 		}
 	}
@@ -81,11 +83,14 @@ async function execMethod(method: string, args: Array<any>) {
 
 const messageListener = async (request: ChildMessage) => {
 	const [type] = request
-	const { workerId } = workerData.env
+	const { workerName } = workerData.env
 
 	switch (type) {
 		case ChildMessages.INITIALIZE: {
-			console.log(`Worker '${workerId}' initialized`)
+			if (parentPort) {
+				console.log(`User [${workerName}] Loaded`)
+				parentPort.postMessage([ParentMessages.OK, MessageConst.LOADED])
+			}
 			break
 		}
 

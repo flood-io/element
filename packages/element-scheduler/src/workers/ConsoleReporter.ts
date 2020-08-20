@@ -13,7 +13,7 @@ export class ConsoleReporter implements IReporter {
 	public responseCode: string
 	public stepName: string
 
-	constructor(private logger: Logger, private verbose: boolean, private workerId: string) {}
+	constructor(private logger: Logger, private verbose: boolean, private workerName: string) {}
 
 	reset(step: string): void {}
 
@@ -35,23 +35,25 @@ export class ConsoleReporter implements IReporter {
 
 	async flushMeasurements(): Promise<void> {}
 
-	testLifecycle(stage: TestEvent, label: string): void {
+	testLifecycle(stage: TestEvent, label: string, timing?: number): void {
 		switch (stage) {
 			case TestEvent.AfterStepAction:
-				this.logger.info(`[Worker ${this.workerId}]: ---> ${label}()`)
+				this.logger.info(`[${this.workerName}]: ---> ${label}()`)
 				break
 			case TestEvent.BeforeStep:
 				this.logger.info('')
-				this.logger.info(`[Worker ${this.workerId}]: ===> Step '${label}'`)
+				this.logger.info(`[${this.workerName}]: ===> Step '${label}'`)
 				break
 			case TestEvent.AfterStep:
-				this.logger.info(`[Worker ${this.workerId}]: ---> Step '${label}' finished`)
+				this.logger.info(
+					`[${this.workerName}]: ---> Step '${label}' finished in ${timing?.toLocaleString()}ms`,
+				)
 				break
 			case TestEvent.StepSkipped:
-				this.logger.info(`[Worker ${this.workerId}]: ---- Step '${label}' skipped`)
+				this.logger.info(`[${this.workerName}]: ---- Step '${label}' skipped`)
 				break
 			case TestEvent.StepFailed:
-				this.logger.error(`Worker [${this.workerId}]: xxxx Step '${label}' failed`)
+				this.logger.error(`[${this.workerName}]: xxxx Step '${label}' failed`)
 				break
 		}
 	}

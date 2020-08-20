@@ -16,14 +16,7 @@ function normalizeStages(stages: RampStage[]): NormalizedStage[] {
 	})
 }
 
-type Step = [
-	// time
-	number,
-	// delta
-	number,
-	// total
-	number,
-]
+type PlanStep = [number, number]
 
 export class Plan {
 	private stages: NormalizedStage[]
@@ -32,73 +25,36 @@ export class Plan {
 		this.stages = normalizeStages(stages)
 	}
 
-	public make() {
-		const forecast: Step[] = []
-		let time = 0
-		let current = 0
-		let previousTarget = 0
-		this.stages.forEach(stage => {
-			const { target, duration } = stage
-			let targetDelta = 0
-			if (target > previousTarget) {
-				targetDelta += target - previousTarget
-			} else if (target < previousTarget) {
-				targetDelta -= previousTarget + target
-			} else {
-				targetDelta = 0
-			}
-			previousTarget = target
-
-			let step = Math.ceil(duration / targetDelta)
-			if (!isFinite(step)) step = duration
-
-			if (targetDelta > 0) {
-				// if stage delta is positive, add users each step
-				for (let i = 0; i < targetDelta; i++) {
-					current++
-					time += step
-					forecast.push([time, 1, current])
-				}
-			} else if (targetDelta < 0) {
-				// if stage delta is negative, remove users each step
-				for (let i = targetDelta; i < 0; i++) {
-					time += step * -1
-					current--
-					forecast.push([time, -1, current])
-				}
-			} else {
-				// if stage delta is neutral, do nothing
-				time += duration
-				current = target
-
-				forecast.push([time, 0, current])
-			}
-		})
-		return forecast
-	}
-
 	/**
 	 * TODO: Implement cancellation token
 	 */
 	public ticker(
-		onTick: (timestamp: number, target: number, total?: number) => void | Promise<void>,
+		onTick: (timestamp: number, target: number) => void | Promise<void>,
+		oneEndState: () => Promise<void>,
+		oneNewState: () => Promise<void>,
 	) {
 		return new Promise(yeah => {
-			const plan = this.make()
-			let previousTimeout = 0
+			const planSteps: PlanStep[] = []
+			this.stages.forEach(stage => {
+				const { target, duration } = stage
+				planSteps.push([duration, target])
+			})
+
 			const internal = () => {
-				const step = plan.shift()
-				if (step) {
-					const [timeout] = step
-					Promise.resolve(onTick(...step)).then(() => {
-						setTimeout(internal, timeout - previousTimeout)
-						previousTimeout = timeout
+				const planStep = planSteps.shift()
+				if (planStep) {
+					oneNewState().then(() => {
+						const [timeout] = planStep
+						Promise.resolve(onTick(...planStep)).then(() => {
+							setTimeout(() => {
+								oneEndState().then(internal)
+							}, timeout)
+						})
 					})
 				} else {
 					yeah()
 				}
 			}
-
 			internal()
 		})
 	}

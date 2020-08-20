@@ -1,6 +1,7 @@
 import { ChildMessage, OnStart, OnEnd, WorkerInterface, ChildMessages } from './types'
 import { Worker, WorkerOptions } from './Worker'
 import mergeStream from 'merge-stream'
+import faker from 'faker'
 
 const FORCE_EXIT_DELAY = 500
 
@@ -29,7 +30,7 @@ export class WorkerPool {
 	public readonly stdout: MergedStream
 
 	constructor(public options: WorkerPoolOptions) {
-		this.workers = new Array(options.numWorkers)
+		this.workers = []
 
 		const stdout = mergeStream()
 		const stderr = mergeStream()
@@ -43,12 +44,14 @@ export class WorkerPool {
 	}
 
 	addWorker() {
-		const id = this.workers.length
+		const id = faker.random.uuid()
+		const name = faker.name.findName()
 		const { maxRetries } = this.options
 
 		const workerOptions: WorkerOptions = {
 			maxRetries,
 			workerId: id,
+			workerName: name,
 			args: this.options.setupArgs,
 		}
 
@@ -64,22 +67,15 @@ export class WorkerPool {
 			this.stderr.add(workerStderr)
 		}
 
-		this.workers[this.workers.length] = worker
+		this.workers.push(worker)
 	}
 
-	async removeLastWorker() {
-		const worker = this.workers[this.workers.length - 1]
-		if (!worker) return false
-		return this.removeWorker(worker.workerId)
-	}
-
-	async removeWorker(id: number): Promise<boolean> {
+	async removeWorker(id: string): Promise<boolean> {
 		const worker = this.getWorkerById(id)
 		if (worker == null) return false
 
 		worker.send([ChildMessages.END, false], identityFn, identityFn)
-		// Schedule a force exit in case worker fails to exit gracefully so
-		// await worker.waitForExit() never takes longer than FORCE_EXIT_DELAY
+
 		let forceExited = false
 		const forceExitTimeout = setTimeout(() => {
 			worker.forceExit()
@@ -87,14 +83,12 @@ export class WorkerPool {
 		}, FORCE_EXIT_DELAY)
 
 		await worker.waitForExit()
-		// Worker ideally exited gracefully, don't send force exit then
 		clearTimeout(forceExitTimeout)
-
-		this.workers.splice(id, 1)
+		this.workers.splice(this.workers.indexOf(worker), 1)
 		return forceExited
 	}
 
-	send(workerId: number, request: ChildMessage, onStart: OnStart, onEnd: OnEnd): void {
+	send(workerId: string, request: ChildMessage, onStart: OnStart, onEnd: OnEnd): void {
 		this.getWorkerById(workerId).send(request, onStart, onEnd)
 	}
 
@@ -104,12 +98,22 @@ export class WorkerPool {
 		})
 	}
 
+	sendEachTarget(target: number, request: ChildMessage, onStart: OnStart, onEnd: OnEnd): void {
+		for (let i = 0; i < target; i++) {
+			this.workers[i].send(request, onStart, onEnd)
+		}
+	}
+
 	createWorker(workerOptions: WorkerOptions): WorkerInterface {
 		return new Worker(workerOptions)
 	}
 
 	async waitForExit(): Promise<void> {
 		await Promise.all(this.workers.map(worker => worker.waitForExit()))
+	}
+
+	async waitForLoaded(): Promise<void> {
+		await Promise.all(this.workers.map(worker => worker.waitForLoaded()))
 	}
 
 	async end(): Promise<PoolExitResult> {
@@ -142,7 +146,7 @@ export class WorkerPool {
 		)
 	}
 
-	private getWorkerById(workerId: number): WorkerInterface {
-		return this.workers[workerId]
+	private getWorkerById(id: string): WorkerInterface {
+		return this.workers.filter(worker => worker.workerId === id)[0]
 	}
 }

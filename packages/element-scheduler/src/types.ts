@@ -1,3 +1,12 @@
+export enum MessageConst {
+	RUN_COMPLETED = 'completed',
+	LOADED = 'loaded',
+}
+
+export enum ActionConst {
+	RUN = 'run',
+}
+
 export enum ChildMessages {
 	INITIALIZE,
 	CALL,
@@ -61,9 +70,11 @@ export type ParentMessage = ParentMessageOk | ParentMessageError | ParentMessage
 export interface WorkerInterface {
 	send(request: ChildMessage, onProcessStart: OnStart, onProcessEnd: OnEnd): void
 	waitForExit(): Promise<void>
+	waitForLoaded(): Promise<void>
 	forceExit(): void
 
-	workerId: number
+	workerId: string
+	workerName: string
 	getStderr(): NodeJS.ReadableStream | null
 	getStdout(): NodeJS.ReadableStream | null
 	shutdown(): void

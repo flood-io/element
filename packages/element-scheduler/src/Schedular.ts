@@ -5,7 +5,7 @@ import {
 	BROWSER_TYPE,
 } from '@flood/element-core'
 import { WorkerPool } from './WorkerPool'
-import { ChildMessages, WorkerInterface } from './types'
+import { ActionConst, ChildMessages, WorkerInterface } from './types'
 import { assertIsValidateStages } from './assertIsValidateStages'
 import { Plan } from './Plan'
 import { BrowserServer } from 'playwright'
@@ -40,47 +40,68 @@ export class Schedular {
 		pool.stdout.pipe(process.stdout)
 		pool.stderr.pipe(process.stderr)
 
-		await plan.ticker(async (timestamp, target, total) => {
-			console.log(`tick: ${timestamp}, delta: ${target} total: ${total}`)
+		const waitForExit = () => pool.waitForExit().then(this.stop)
 
-			pool.sendEach(
-				[ChildMessages.CALL, 'run', [testScript]],
-				worker => {
-					console.log(`Worker ${worker.workerId} starts`)
+		let workingWorker: string[] = []
+		await plan
+			.ticker(
+				async (timestamp, target) => {
+					console.log(`Tick: ${timestamp}, target: ${target}`)
+
+					pool.sendEachTarget(
+						target,
+						[ChildMessages.CALL, ActionConst.RUN, [testScript]],
+						worker => {
+							console.log(`[${worker.workerName}] starts`)
+							workingWorker.push(worker.workerId)
+						},
+						(err, result) => {
+							const worker = result as WorkerInterface
+							if (err) {
+								console.log(`[${worker.workerName}] has error: `, err)
+							} else {
+								console.log(`[${worker.workerName}] has completed the test`)
+								worker.shutdown()
+							}
+						},
+					)
+
+					waitForExit()
+
+					process.on('SIGQUIT', async () => {
+						this.stop()
+						process.kill(process.pid, 'SIGUSR2')
+					})
+
+					process.on('SIGINT', async () => {
+						this.stop()
+						process.kill(process.pid, 'SIGUSR2')
+					})
+
+					process.once('SIGUSR2', async () => {
+						this.stop()
+						process.kill(process.pid, 'SIGUSR2')
+					})
 				},
-				(err, result) => {
-					const worker = result as WorkerInterface
-					if (err) {
-						console.log(`Worker '${worker.workerId}' has error: `, err)
-					} else {
-						console.log(`Worker '${worker.workerId}' has completed the test`)
-						worker.shutdown()
+				async () => {
+					for (const workerId of workingWorker) {
+						await pool.removeWorker(workerId)
 					}
 				},
+				async () => {
+					return new Promise(resolve => {
+						for (let i = 0; i < workingWorker.length; i++) {
+							pool.addWorker()
+						}
+						workingWorker = []
+						pool.waitForLoaded().then(resolve)
+					})
+				},
 			)
-
-			pool.waitForExit().then(() => {
-				this.stop()
-			})
-
-			process.on('SIGQUIT', async () => {
-				this.stop()
-				process.kill(process.pid, 'SIGUSR2')
-			})
-
-			process.on('SIGINT', async () => {
-				this.stop()
-				process.kill(process.pid, 'SIGUSR2')
-			})
-
-			process.once('SIGUSR2', async () => {
-				this.stop()
-				process.kill(process.pid, 'SIGUSR2')
-			})
-		})
+			.then(waitForExit)
 	}
 
-	public async stop() {
+	stop = async () => {
 		await this.browserServer.kill()
 		process.exit(0)
 	}

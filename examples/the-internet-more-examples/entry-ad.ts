@@ -7,29 +7,6 @@ export const settings: TestSettings = {
 }
 
 export default () => {
-	// step(async browser => {
-	// 	await browser.visit(url)
-	// 	const dialog = await browser.findElement(By.id('modal'))
-	// 	const btnClose = await dialog.findElement(By.css('#modal > div.modal > div.modal-footer > p'))
-	// 	const dialogSize = await dialog.size()
-	// 	await browser.wait(10)
-
-	// 	console.log(`Size of the dialog is ${dialogSize.width}x${dialogSize.height}`)
-	// 	assert.strictEqual(await dialog.isDisplayed(), true)
-
-	// 	await btnClose.click()
-	// 	await browser.visit(url)
-	// 	assert.strictEqual(await dialog.isDisplayed(), false)
-
-	// 	const reactivateLink = await browser.findElement(By.partialLinkText('click'))
-
-	// 	await reactivateLink.click()
-	// 	await browser.wait(5)
-	// 	await browser.visit(url)
-	// 	await browser.wait(5)
-	// 	assert.strictEqual(await dialog.isDisplayed(), true)
-	// })
-
 	beforeEach(async browser => {
 		await browser.visit('https://the-internet.herokuapp.com/entry_ad')
 	})

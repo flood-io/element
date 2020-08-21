@@ -1,6 +1,4 @@
-// const versions = require("./versions.json");
-
-const versions = ['1.0', '1.2']
+const versions = require('./versions.json')
 
 module.exports = {
 	title: 'Flood Element',
@@ -8,13 +6,15 @@ module.exports = {
 	url: 'https://element.flood.io',
 	baseUrl: '/',
 	favicon: 'img/favicon.ico',
-	organizationName: 'flood-io', // Usually your GitHub org/user name.
-	projectName: 'element', // Usually your repo name.
+	organizationName: 'flood-io',
+	projectName: 'element',
 	themeConfig: {
 		announcementBar: {
 			id: 'supportus',
 			content:
 				'⭐️ If you like Flood Element, give it a star on <a target="_blank" rel="noopener noreferrer" href="https://github.com/flood-io/element">GitHub</a>! ⭐️',
+			backgroundColor: '#23232C',
+			textColor: '#FFFFFF',
 		},
 		algolia: {
 			apiKey: 'api-key',
@@ -25,25 +25,21 @@ module.exports = {
 		navbar: {
 			title: 'Element',
 			hideOnScroll: true,
-
 			logo: {
 				alt: 'Element',
 				src: 'img/Element-Logo-Mark.svg',
 			},
 			items: [
-				// {
-				//   to: "docs/",
-				//   activeBasePath: "docs",
-				//   label: "Docs",
-				//   position: "left",
-				// },
-
 				{
 					label: 'Docs',
-					to: 'docs/introduction', // "fake" link
 					position: 'left',
 					activeBaseRegex: `docs`,
 					items: [
+						{
+							label: 'Next',
+							to: 'docs/next/',
+							activeBaseRegex: `docs/next/(?!support|team|resources)`,
+						},
 						{
 							label: versions[0],
 							to: 'docs/',
@@ -53,14 +49,9 @@ module.exports = {
 							label: version,
 							to: `docs/${version}/`,
 						})),
-						{
-							label: 'Master/Unreleased',
-							to: 'docs/next/',
-							activeBaseRegex: `docs/next/(?!support|team|resources)`,
-						},
 					],
 				},
-				{ to: 'blog', label: 'Blog', position: 'left' },
+				{ href: 'https://www.flood.io/blog', label: 'Blog', position: 'left' },
 				{
 					href: 'https://github.com/flood-io/element',
 					label: 'GitHub',
@@ -68,7 +59,7 @@ module.exports = {
 					'aria-label': 'GitHub repository',
 				},
 				{
-					to: 'versions',
+					to: 'docs/',
 					label: `v${versions[0]}`,
 					position: 'right',
 				},
@@ -78,15 +69,23 @@ module.exports = {
 			style: 'light',
 			links: [
 				{
-					title: 'Docs',
+					title: 'Our Products',
 					items: [
 						{
-							label: 'Style Guide',
-							to: 'docs/',
+							label: 'Flood Load Testing',
+							to: 'https://www.flood.io/',
 						},
 						{
-							label: 'Second Doc',
-							to: 'docs/doc2/',
+							label: 'Flood Agent',
+							to: 'https://www.flood.io/products/agent',
+						},
+						{
+							label: 'Flood Insights',
+							to: 'https://www.flood.io/products/insights',
+						},
+						{
+							label: 'Flood Grid',
+							to: 'https://www.flood.io/products/grid',
 						},
 					],
 				},
@@ -94,16 +93,20 @@ module.exports = {
 					title: 'Community',
 					items: [
 						{
-							label: 'Stack Overflow',
-							href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+							label: 'GitHub',
+							href: 'https://github.com/flood-io/element',
 						},
 						{
-							label: 'Discord',
-							href: 'https://discordapp.com/invite/docusaurus',
+							label: 'Spectrum',
+							href: 'https://spectrum.chat/flood/element',
 						},
 						{
 							label: 'Twitter',
-							href: 'https://twitter.com/docusaurus',
+							href: 'https://twitter.com/flood_io',
+						},
+						{
+							label: 'Facebook',
+							href: 'https://www.facebook.com/floodio',
 						},
 					],
 				},
@@ -112,16 +115,21 @@ module.exports = {
 					items: [
 						{
 							label: 'Blog',
-							to: 'blog',
+							href: 'https://www.flood.io/blog',
 						},
 						{
-							label: 'GitHub',
-							href: 'https://github.com/facebook/docusaurus',
+							label: 'Flood Challenge',
+							href: 'https://flood-element-challenge.vercel.app/',
 						},
 					],
 				},
 			],
-			copyright: `Element is sponsored by Tricentis and maintained by the Flood load testing team. Copyright © ${new Date().getFullYear()} Tricentis Corp.`,
+			logo: {
+				alt: 'FloodIO',
+				src: 'img/flood_logo.svg',
+				href: 'https://flood.io',
+			},
+			copyright: `Element is sponsored by Tricentis and maintained by the <a href="https://flood.io/" target="_blank">Flood</a> load testing team.<br />Copyright © ${new Date().getFullYear()} <a href="https://tricentis.com/" target="_blank">Tricentis Corp</a>. All Rights Reserved. Licensed under the Apache-2 licence.`,
 		},
 	},
 	presets: [

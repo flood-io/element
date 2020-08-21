@@ -5,6 +5,7 @@ module.exports = {
 			'start/install',
 			'start/init',
 			'start/scripting',
+			'start/changelog'
 		],
 		Guides: [
 			{

@@ -44,16 +44,11 @@ export default () => {
 
 		await firstActionEdit.click()
 		await browser.wait(Until.urlIs(`${URL}/tables#edit`))
-		await browser.wait(2)
-		await browser.takeScreenshot()
 
 		await firstActionDelete.click()
 		await browser.wait(Until.urlIs(`${URL}/tables#delete`))
-		await browser.wait(2)
-		await browser.takeScreenshot()
 
 		await headers[0].click()
-		await browser.wait(1)
 
 		// By.js() example
 		const newFirstCell = await browser.findElement(
@@ -70,6 +65,5 @@ export default () => {
 		const newLastName = await newFirstCell.text()
 
 		assert(newLastName !== lastName, 'The new last name must be different from the old one.')
-		await browser.wait(2)
 	})
 }

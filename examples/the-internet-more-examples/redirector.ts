@@ -34,7 +34,14 @@ export default () => {
 	step('Find redirect link and click into it', async browser => {
 		const redirectLink = await browser.findElement(By.linkText('here'))
 
-		// ElementHandle.takeScreenshot()
+		// ElementHandle.takeScreenshot(withOptions)
+		await redirectLink.takeScreenshot({
+			path: 'redirectLink.jp',
+			type: 'png',
+			encoding: 'base64',
+		})
+
+		// ElementHandle.takeScreenshot(withoutOptions)
 		await redirectLink.takeScreenshot()
 
 		// ElementHandle.getId()

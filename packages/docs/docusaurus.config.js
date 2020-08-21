@@ -69,15 +69,23 @@ module.exports = {
 			style: 'light',
 			links: [
 				{
-					title: 'Documentations',
+					title: 'Our Products',
 					items: [
 						{
-							label: 'Style Guide',
-							to: 'docs/',
+							label: 'Flood Load Testing',
+							to: 'https://www.flood.io/',
 						},
 						{
-							label: 'Second Doc',
-							to: 'docs/doc2/',
+							label: 'Flood Agent',
+							to: 'https://www.flood.io/products/agent',
+						},
+						{
+							label: 'Flood Insights',
+							to: 'https://www.flood.io/products/insights',
+						},
+						{
+							label: 'Flood Grid',
+							to: 'https://www.flood.io/products/grid',
 						},
 					],
 				},
@@ -85,16 +93,20 @@ module.exports = {
 					title: 'Community',
 					items: [
 						{
-							label: 'Stack Overflow',
-							href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+							label: 'GitHub',
+							href: 'https://github.com/flood-io/element',
 						},
 						{
-							label: 'Discord',
-							href: 'https://discordapp.com/invite/docusaurus',
+							label: 'Spectrum',
+							href: 'https://spectrum.chat/flood/element',
 						},
 						{
 							label: 'Twitter',
-							href: 'https://twitter.com/docusaurus',
+							href: 'https://twitter.com/flood_io',
+						},
+						{
+							label: 'Facebook',
+							href: 'https://www.facebook.com/floodio',
 						},
 					],
 				},
@@ -103,11 +115,11 @@ module.exports = {
 					items: [
 						{
 							label: 'Blog',
-							to: 'blog',
+							href: 'https://www.flood.io/blog',
 						},
 						{
-							label: 'GitHub',
-							href: 'https://github.com/facebook/docusaurus',
+							label: 'Flood Challenge',
+							href: 'https://flood-element-challenge.vercel.app/',
 						},
 					],
 				},

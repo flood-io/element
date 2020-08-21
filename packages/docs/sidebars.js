@@ -5,14 +5,14 @@ module.exports = {
 			'start/install',
 			'start/init',
 			'start/scripting',
-			'start/changelog'
+			'start/changelog',
 		],
 		Guides: [
 			{
 				'Browser Interaction': [
 					'guides/link-navigation',
 					'guides/page-verification',
-					'guides/form-interaction'
+					'guides/form-interaction',
 				],
 			},
 			'guides/script',

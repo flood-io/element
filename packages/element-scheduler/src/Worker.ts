@@ -84,7 +84,6 @@ export class Worker implements WorkerInterface {
 				silent: false,
 			},
 		})
-		console.debug(`Worker loaded: ${workerFile}`)
 
 		if (this.worker.stdout && this.fakeStream) {
 			if (!this.stdout) {
@@ -129,10 +128,10 @@ export class Worker implements WorkerInterface {
 
 		switch (type) {
 			case ParentMessages.OK: {
-				const [, message] = response as ParentMessageOk
-				if (message === MessageConst.RUN_COMPLETED) {
-					this.onProcessEnd(null, this)
-				} else if (message === MessageConst.LOADED) {
+				const [, result, data] = response as ParentMessageOk
+				if (result === MessageConst.RUN_COMPLETED) {
+					this.onProcessEnd(null, this, data[0] as number)
+				} else if (result === MessageConst.LOADED) {
 					this.resolveLoadPromise()
 				}
 				break
@@ -152,13 +151,13 @@ export class Worker implements WorkerInterface {
 				error.type = name
 				error.stack = stack
 
-				this.onProcessEnd(error, null)
+				this.onProcessEnd(error, null, 0)
 				break
 			}
 
 			case ParentMessages.SETUP_ERROR: {
 				const error = new Error('Setup Error')
-				this.onProcessEnd(error, null)
+				this.onProcessEnd(error, null, 0)
 				break
 			}
 			default:

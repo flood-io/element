@@ -16,7 +16,7 @@ function normalizeStages(stages: RampStage[]): NormalizedStage[] {
 	})
 }
 
-type PlanStep = [number, number]
+type PlanStep = [number, number, number]
 
 export class Plan {
 	private stages: NormalizedStage[]
@@ -29,15 +29,15 @@ export class Plan {
 	 * TODO: Implement cancellation token
 	 */
 	public ticker(
-		onTick: (timestamp: number, target: number) => void | Promise<void>,
+		onTick: (timestamp: number, target: number, stageIterator) => void | Promise<void>,
 		oneEndState: () => Promise<void>,
 		oneNewState: () => Promise<void>,
 	) {
 		return new Promise(yeah => {
 			const planSteps: PlanStep[] = []
-			this.stages.forEach(stage => {
+			this.stages.forEach((stage, index) => {
 				const { target, duration } = stage
-				planSteps.push([duration, target])
+				planSteps.push([duration, target, index])
 			})
 
 			const internal = () => {

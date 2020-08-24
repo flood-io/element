@@ -51,7 +51,7 @@ let runner: Runner
 async function execMethod(method: string, args: Array<any>) {
 	switch (method) {
 		case ActionConst.RUN: {
-			const [testScript] = args
+			const [testScript, stageIterator] = args
 			const { wsEndpoint, workerName, rootEnv, testData, settings } = workerData.env
 
 			const verboseBool = true
@@ -75,7 +75,7 @@ async function execMethod(method: string, args: Array<any>) {
 			await runner.stop()
 
 			if (parentPort) {
-				parentPort.postMessage([ParentMessages.OK, MessageConst.RUN_COMPLETED])
+				parentPort.postMessage([ParentMessages.OK, MessageConst.RUN_COMPLETED, [stageIterator]])
 			}
 		}
 	}
@@ -89,7 +89,7 @@ const messageListener = async (request: ChildMessage) => {
 		case ChildMessages.INITIALIZE: {
 			if (parentPort) {
 				console.log(`User [${workerName}] Loaded`)
-				parentPort.postMessage([ParentMessages.OK, MessageConst.LOADED])
+				parentPort.postMessage([ParentMessages.OK, MessageConst.LOADED, []])
 			}
 			break
 		}

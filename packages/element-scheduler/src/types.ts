@@ -48,7 +48,8 @@ export type ChildMessage = ChildMessageInitialize | ChildMessageCall | ChildMess
 
 export type ParentMessageOk = [
 	typeof ParentMessages.OK, // type
-	unknown, // result
+	string, // result
+	unknown[], // data
 ]
 
 export type ParentMessagePageCall = [
@@ -81,4 +82,4 @@ export interface WorkerInterface {
 }
 
 export type OnStart = (worker: WorkerInterface) => void
-export type OnEnd = (err: Error | null, result: unknown) => void
+export type OnEnd = (err: Error | null, result: unknown, iterator: number) => void

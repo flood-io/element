@@ -37,11 +37,11 @@ export class Worker implements WorkerInterface {
 
 	private exitPromise: Promise<void>
 	private resolveExitPromise!: () => void
-	private forceExited: boolean
 
 	private loadPromise: Promise<void>
 	private resolveLoadPromise: () => void
 
+	public forceExited: boolean
 	public connection: WorkerConnection
 
 	constructor(public options: WorkerOptions) {
@@ -137,11 +137,6 @@ export class Worker implements WorkerInterface {
 				break
 			}
 
-			case ParentMessages.PAGE_CALL: {
-				//do something
-				break
-			}
-
 			case ParentMessages.CLIENT_ERROR: {
 				const [, name, message, stack] = response as ParentMessageError
 				const NativeCtor = global[name]
@@ -159,6 +154,7 @@ export class Worker implements WorkerInterface {
 				this.onProcessEnd(error, this, 0)
 				break
 			}
+
 			default:
 				throw new TypeError(`Unexpected response from worker: ${type}`)
 		}
@@ -166,12 +162,7 @@ export class Worker implements WorkerInterface {
 
 	private onExit = (exitCode: number) => {
 		console.log(`User ${this.workerName} exit: ${exitCode}`)
-
-		if (exitCode !== 0 && !this.forceExited) {
-			console.log(``)
-		} else {
-			this.shutdown()
-		}
+		this.shutdown()
 	}
 
 	waitForExit(): Promise<void> {

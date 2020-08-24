@@ -5,7 +5,7 @@
 ## Usage
 
 ```
-const elementSchedular = require('@flood/element-scheduler');
+const elementScheduler = require('@flood/element-scheduler');
 
 // TODO: DEMONSTRATE API
 ```

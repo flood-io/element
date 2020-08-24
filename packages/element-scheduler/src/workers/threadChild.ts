@@ -53,35 +53,28 @@ async function execMethod(method: string, args: Array<any>) {
 			const [testScript, stageIterator] = args
 			const { wsEndpoint, workerName, rootEnv, testData, settings } = workerData.env
 
-			let runner: Runner
-			try {
-				const verboseBool = true
-				const logLevel = 'info'
-				const logger = createLogger(logLevel, true)
-				const reporter = new ConsoleReporter(logger, verboseBool, workerName)
-				const childSettings: TestSettings = JSON.parse(settings)
+			const verboseBool = true
+			const logLevel = 'info'
+			const logger = createLogger(logLevel, true)
+			const reporter = new ConsoleReporter(logger, verboseBool, workerName)
+			const childSettings: TestSettings = JSON.parse(settings)
 
-				const env = environment(rootEnv, testData)
-				const testScriptFactory = async (): Promise<EvaluatedScript> => {
-					return new EvaluatedScript(env, await mustCompileFile(testScript))
-				}
+			const env = environment(rootEnv, testData)
+			const testScriptFactory = async (): Promise<EvaluatedScript> => {
+				return new EvaluatedScript(env, await mustCompileFile(testScript))
+			}
 
-				const clientFactory = (): AsyncFactory<PlaywrightClient> => {
-					return () => connectWS(wsEndpoint, childSettings.browserType)
-				}
+			const clientFactory = (): AsyncFactory<PlaywrightClient> => {
+				return () => connectWS(wsEndpoint, childSettings.browserType)
+			}
 
-				runner = new Runner(clientFactory(), undefined, reporter, logger, childSettings, {})
+			const runner = new Runner(clientFactory(), undefined, reporter, logger, childSettings, {})
 
-				await runner.run(testScriptFactory)
-				await runner.stop()
+			await runner.run(testScriptFactory)
+			await runner.stop()
 
-				if (parentPort) {
-					parentPort.postMessage([ParentMessages.OK, MessageConst.RUN_COMPLETED, [stageIterator]])
-				}
-			} catch (err) {
-				if (parentPort) {
-					parentPort.postMessage([ParentMessages.CLIENT_ERROR, 'Worker Error', err.message, ''])
-				}
+			if (parentPort) {
+				parentPort.postMessage([ParentMessages.OK, MessageConst.RUN_COMPLETED, [stageIterator]])
 			}
 		}
 	}
@@ -102,7 +95,11 @@ const messageListener = async (request: ChildMessage) => {
 
 		case ChildMessages.CALL: {
 			const call = request as ChildMessageCall
-			await execMethod(call[1], call[2]).catch(err => console.log(err.message))
+			await execMethod(call[1], call[2]).catch(err => {
+				if (parentPort) {
+					parentPort.postMessage([ParentMessages.CLIENT_ERROR, 'Worker Error', err.message, ''])
+				}
+			})
 			break
 		}
 

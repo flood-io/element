@@ -47,35 +47,41 @@ function environment(root: string, testData: string): RuntimeEnvironment {
 	}
 }
 
-let runner: Runner
 async function execMethod(method: string, args: Array<any>) {
 	switch (method) {
 		case ActionConst.RUN: {
 			const [testScript, stageIterator] = args
 			const { wsEndpoint, workerName, rootEnv, testData, settings } = workerData.env
 
-			const verboseBool = true
-			const logLevel = 'info'
-			const logger = createLogger(logLevel, true)
-			const reporter = new ConsoleReporter(logger, verboseBool, workerName)
-			const childSettings: TestSettings = JSON.parse(settings)
+			let runner: Runner
+			try {
+				const verboseBool = true
+				const logLevel = 'info'
+				const logger = createLogger(logLevel, true)
+				const reporter = new ConsoleReporter(logger, verboseBool, workerName)
+				const childSettings: TestSettings = JSON.parse(settings)
 
-			const env = environment(rootEnv, testData)
-			const testScriptFactory = async (): Promise<EvaluatedScript> => {
-				return new EvaluatedScript(env, await mustCompileFile(testScript))
-			}
+				const env = environment(rootEnv, testData)
+				const testScriptFactory = async (): Promise<EvaluatedScript> => {
+					return new EvaluatedScript(env, await mustCompileFile(testScript))
+				}
 
-			const clientFactory = (): AsyncFactory<PlaywrightClient> => {
-				return () => connectWS(wsEndpoint, childSettings.browserType)
-			}
+				const clientFactory = (): AsyncFactory<PlaywrightClient> => {
+					return () => connectWS(wsEndpoint, childSettings.browserType)
+				}
 
-			runner = new Runner(clientFactory(), undefined, reporter, logger, childSettings, {})
+				runner = new Runner(clientFactory(), undefined, reporter, logger, childSettings, {})
 
-			await runner.run(testScriptFactory)
-			await runner.stop()
+				await runner.run(testScriptFactory)
+				await runner.stop()
 
-			if (parentPort) {
-				parentPort.postMessage([ParentMessages.OK, MessageConst.RUN_COMPLETED, [stageIterator]])
+				if (parentPort) {
+					parentPort.postMessage([ParentMessages.OK, MessageConst.RUN_COMPLETED, [stageIterator]])
+				}
+			} catch (err) {
+				if (parentPort) {
+					parentPort.postMessage([ParentMessages.CLIENT_ERROR, 'Worker Error', err.message, ''])
+				}
 			}
 		}
 	}

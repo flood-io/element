@@ -144,20 +144,19 @@ export class Worker implements WorkerInterface {
 
 			case ParentMessages.CLIENT_ERROR: {
 				const [, name, message, stack] = response as ParentMessageError
-
 				const NativeCtor = global[name]
 				const Ctor = typeof NativeCtor === 'function' ? NativeCtor : Error
 				const error = new Ctor(message)
 				error.type = name
 				error.stack = stack
 
-				this.onProcessEnd(error, null, 0)
+				this.onProcessEnd(error, this, 0)
 				break
 			}
 
 			case ParentMessages.SETUP_ERROR: {
 				const error = new Error('Setup Error')
-				this.onProcessEnd(error, null, 0)
+				this.onProcessEnd(error, this, 0)
 				break
 			}
 			default:

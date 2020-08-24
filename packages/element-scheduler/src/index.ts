@@ -1,2 +1,2 @@
 export { runCommandLine } from './cli'
-export { Schedular } from './Schedular'
+export { Scheduler } from '@flood/element-scheduler/src/Scheduler'

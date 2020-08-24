@@ -1,4 +1,4 @@
-import { Schedular } from './Schedular'
+import { Scheduler } from './Scheduler'
 import { mustCompileFile, ElementOptions, EvaluatedScript } from '@flood/element-core'
 
 export async function runCommandLine(opts: ElementOptions): Promise<void> {
@@ -6,7 +6,7 @@ export async function runCommandLine(opts: ElementOptions): Promise<void> {
 
 	const evaluateScript = new EvaluatedScript(opts.runEnv, await mustCompileFile(testScript))
 
-	const runner = new Schedular(opts.runEnv, {
+	const runner = new Scheduler(opts.runEnv, {
 		...evaluateScript.settings,
 		...opts.testSettingOverrides,
 		headless: opts.headless,

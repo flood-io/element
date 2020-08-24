@@ -1,6 +1,5 @@
 import { Argv, Arguments, CommandModule } from 'yargs'
-import { validateFile, webpackCompiler } from '../utils/compile'
-import { getFilesPattern, readConfigFile } from '../utils/run'
+import { validateFile, webpackCompiler, getFilesPattern, readConfigFile } from '../utils/compile'
 
 interface CommandArgs extends Arguments {
 	file: string

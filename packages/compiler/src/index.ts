@@ -1,6 +1,6 @@
 import webpack, { Configuration as WebpackConfig } from 'webpack'
 import { CompilerOptions, sys } from 'typescript'
-import { resolve, dirname, join } from 'path'
+import { resolve, dirname, join, basename } from 'path'
 import MemoryFileSystem from 'memory-fs'
 import WebpackBar from 'webpackbar'
 import findRoot from 'find-root'
@@ -14,9 +14,9 @@ export class Compiler {
 	private sourceFile: string
 	private externalDebs: boolean | undefined
 
-	constructor(sourceFile: string, externalDebs?: boolean) {
+	constructor(sourceFile: string, externalDeps?: boolean) {
 		this.sourceFile = resolve(sourceFile)
-		this.externalDebs = externalDebs
+		this.externalDebs = externalDeps
 	}
 
 	public async emit(): Promise<CompilerOutput> {
@@ -24,7 +24,7 @@ export class Compiler {
 	}
 
 	private getFileName(file: string): string {
-		return file.substring(file.lastIndexOf('/') + 1, file.length - 3)
+		return basename(file, '.ts')
 	}
 
 	get compilerOptions(): CompilerOptions {

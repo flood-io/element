@@ -15,7 +15,7 @@ import sanitize from 'sanitize-filename'
 import createLogger from '.././utils/Logger'
 import { ConsoleReporter } from '.././utils/ConsoleReporter'
 import chalk from 'chalk'
-import { getFilesPattern, readConfigFile } from '../utils/run'
+import { getFilesPattern, readConfigFile } from '../utils/compile'
 interface RunCommonArguments extends Arguments {
 	file: string
 	chrome?: string

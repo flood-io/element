@@ -4,7 +4,7 @@ import { Format } from 'logform'
 export default function(level = 'debug', colourise = false): Logger {
 	const startTime = Date.now()
 	const formats: Format[] = [
-		format.timestamp({ format: `+${Math.floor((Date.now() - startTime) / 1000)}s` }),
+		format.timestamp({ format: () => `+${Math.floor((Date.now() - startTime) / 1000)}s` }),
 	]
 
 	if (colourise) {

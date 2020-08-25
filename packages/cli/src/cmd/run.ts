@@ -5,11 +5,11 @@ import {
 	FloodProcessEnv,
 	TestCommander,
 	TestSettings,
-	// runCommandLine,
+	runCommandLine as runSingleUser,
 	ElementOptions,
 	BROWSER_TYPE,
 } from '@flood/element-core'
-import { runCommandLine } from '@flood/element-scheduler'
+import { runCommandLine as runMultipleUsers } from '@flood/element-scheduler'
 import { watch } from 'chokidar'
 import { EventEmitter } from 'events'
 import { extname, basename, join, dirname, resolve } from 'path'
@@ -125,7 +125,7 @@ async function readConfigFile(file: string): Promise<any> {
 }
 
 async function runTestScript(args: RunCommonArguments): Promise<void> {
-	const { file, verbose } = args
+	const { file, verbose, multipleUser } = args
 	const workRootPath = getWorkRootPath(file, args['work-root'])
 	const testDataPath = getTestDataPath(file, args['test-data-root'])
 
@@ -165,7 +165,7 @@ async function runTestScript(args: RunCommonArguments): Promise<void> {
 		opts.testCommander = makeTestCommander(file)
 	}
 
-	await runCommandLine(opts)
+	return multipleUser ? await runMultipleUsers(opts) : await runSingleUser(opts)
 }
 
 async function runTestScriptWithConfiguration(args: RunCommonArguments): Promise<void> {
@@ -306,6 +306,11 @@ const cmd: CommandModule = {
 			})
 			.option('verbose', {
 				describe: 'Verbose mode',
+			})
+			.option('multiple-user', {
+				describe: 'run test with multiple user mode',
+				type: 'boolean',
+				default: false,
 			})
 			.option('fail-status-code', {
 				describe: 'Exit code when the test fails',

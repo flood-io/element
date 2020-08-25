@@ -162,7 +162,7 @@ export class Worker implements WorkerInterface {
 
 	private onExit = (exitCode: number) => {
 		console.log(`User ${this.workerName} exit: ${exitCode}`)
-		this.shutdown()
+		this.resolveExitPromise()
 	}
 
 	waitForExit(): Promise<void> {

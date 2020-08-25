@@ -4,20 +4,20 @@ import {
 	RuntimeEnvironment,
 	BROWSER_TYPE,
 } from '@flood/element-core'
-import { WorkerPool } from './WorkerPool'
-import { ActionConst, ChildMessages, WorkerInterface } from './types'
-import { assertIsValidateStages } from './assertIsValidateStages'
-import { Plan } from './Plan'
+import { WorkerPool } from '@flood/element-scheduler/src/WorkerPool'
+import { ActionConst, ChildMessages, WorkerInterface } from '@flood/element-scheduler/src/types'
+import { assertIsValidateStages } from '@flood/element-scheduler/src/assertIsValidateStages'
+import { Plan } from '@flood/element-scheduler/src/Plan'
 import { BrowserServer } from 'playwright'
 
-type SchedularSetting = TestSettings & {
+type SchedulerSetting = TestSettings & {
 	headless?: boolean | undefined
 	browserType?: BROWSER_TYPE
 	sandbox?: boolean | undefined
 }
 
-export class Schedular {
-	constructor(public env: RuntimeEnvironment, public settings: SchedularSetting) {}
+export class Scheduler {
+	constructor(public env: RuntimeEnvironment, public settings: SchedulerSetting) {}
 
 	private browserServer: BrowserServer
 
@@ -57,12 +57,10 @@ export class Schedular {
 					},
 					(err, result, iterator) => {
 						const worker = result as WorkerInterface
-						if (err) {
-							console.log(`[${worker.workerName}] has error: `, err)
-						} else {
-							console.log(`[${worker.workerName}] has completed the test`)
-							worker.shutdown()
-						}
+						if (err) console.log(`[${worker.workerName}] has error: `, err)
+						else console.log(`[${worker.workerName}] has completed the test`)
+
+						worker.shutdown()
 						if (iterator === stages.length - 1) waitForExit()
 					},
 				)

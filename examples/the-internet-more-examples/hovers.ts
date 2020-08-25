@@ -25,8 +25,10 @@ export default () => {
 
 	step('Test: 02 - Image', async browser => {
 		let image = await browser.findElement(By.css('#content > div > div:nth-child(3) > img'))
-		await image.getProperty('src')
+		let src = await image.getProperty('src')
 		let imageLocation = await image.centerPoint()
+
+		console.log(src)
 		await browser.mouse.click(image, { delay: 150 })
 		await browser.mouse.click(image)
 		await browser.mouse.click(imageLocation[0], imageLocation[1], { delay: 100 })

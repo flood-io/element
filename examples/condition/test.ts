@@ -112,7 +112,7 @@ export default () => {
 	})
 	step.recovery({ tries: 2 }, async browser => {
 		console.log('Global recovery')
-		return RecoverWith.RETRY
+		return RecoverWith.CONTINUE
 	})
 	step.repeat(1, 'repeat 1', { waitTimeout: 150 }, async () => {
 		console.log('repeating step repeat 1')

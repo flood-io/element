@@ -1,6 +1,5 @@
 import { step, TestSettings, By, TestData, Browser, ElementHandle, Key } from '@flood/element'
 import assert from 'assert'
-import { clear } from 'console'
 
 export const settings: TestSettings = {
 	loopCount: 1,
@@ -57,7 +56,7 @@ export default () => {
 			await textBox.dispose()
 			await browser.focus(textBox)
 		} catch (e) {
-			console.log('Caught an error from focusing on disposed handle')
+			console.log('Caught an error from focusing on a disposed handle')
 		}
 	})
 }

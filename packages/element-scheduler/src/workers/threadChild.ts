@@ -82,12 +82,10 @@ async function execMethod(method: string, args: Array<any>) {
 
 const messageListener = async (request: ChildMessage) => {
 	const [type] = request
-	const { workerName } = workerData.env
 
 	switch (type) {
 		case ChildMessages.INITIALIZE: {
 			if (parentPort) {
-				console.log(`User [${workerName}] Loaded`)
 				parentPort.postMessage([ParentMessages.OK, MessageConst.LOADED, []])
 			}
 			break

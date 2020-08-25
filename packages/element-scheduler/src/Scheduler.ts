@@ -81,11 +81,13 @@ export class Scheduler {
 				})
 			},
 			async () => {
+				// onStageEnd: once duration has reached, we need to force user stop the test
 				for (const workerId of workingWorker) {
 					await pool.removeWorker(workerId)
 				}
 			},
 			async () => {
+				//onNewStage: reload all users which has stop from the previous stage
 				return new Promise(resolve => {
 					for (let i = 0; i < workingWorker.length; i++) {
 						pool.addWorker()

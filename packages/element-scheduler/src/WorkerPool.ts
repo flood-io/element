@@ -70,10 +70,7 @@ export class WorkerPool {
 		this.workers.push(worker)
 	}
 
-	async removeWorker(id: string): Promise<boolean> {
-		const worker = this.getWorkerById(id)
-		if (worker == null) return false
-
+	async endWorker(worker: WorkerInterface): Promise<boolean> {
 		worker.send([ChildMessages.END, false], identityFn, identityFn)
 
 		let forceExited = false
@@ -84,6 +81,14 @@ export class WorkerPool {
 
 		await worker.waitForExit()
 		clearTimeout(forceExitTimeout)
+		return forceExited
+	}
+
+	async removeWorker(id: string): Promise<boolean> {
+		const worker = this.getWorkerById(id)
+		if (worker == null) return false
+
+		const forceExited = await this.endWorker(worker)
 		this.workers.splice(this.workers.indexOf(worker), 1)
 		return forceExited
 	}
@@ -117,19 +122,7 @@ export class WorkerPool {
 	}
 
 	async end(): Promise<PoolExitResult> {
-		const workerExitPromises = this.workers.map(async worker => {
-			worker.send([ChildMessages.END, false], identityFn, identityFn)
-			let forceExited = false
-			const forceExitTimeout = setTimeout(() => {
-				worker.forceExit()
-				forceExited = true
-			}, FORCE_EXIT_DELAY)
-
-			await worker.waitForExit()
-			clearTimeout(forceExitTimeout)
-
-			return forceExited
-		})
+		const workerExitPromises = this.workers.map(async worker => this.endWorker(worker))
 
 		const workerExits = await Promise.all(workerExitPromises)
 		return workerExits.reduce<PoolExitResult>(

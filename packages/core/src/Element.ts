@@ -4,6 +4,7 @@ import { mustCompileFile } from './TestScript'
 import { TestScriptOptions } from './TestScriptOptions'
 import { EvaluatedScript } from './runtime/EvaluatedScript'
 import { ElementOptions, ElementRunArguments, normalizeElementOptions } from './ElementOption'
+import { CustomConsole } from '@flood/element-report'
 
 async function runSingleTestScript(opts: ElementOptions): Promise<void> {
 	const { logger, testScript, clientFactory } = opts
@@ -68,11 +69,9 @@ async function runSingleTestScript(opts: ElementOptions): Promise<void> {
 }
 
 export async function runCommandLine(args: ElementRunArguments): Promise<void> {
-	// if (args.verbose) {
-	// } else {
-	// }
+	global.console = new CustomConsole(process.stdout, process.stderr)
 	if (args.testFiles) {
-		console.info(
+		console.log(
 			'The following test scripts that matched the testPathMatch pattern are going to be executed:',
 		)
 		for (const file of args.testFiles) {
@@ -83,7 +82,7 @@ export async function runCommandLine(args: ElementRunArguments): Promise<void> {
 			const opts = normalizeElementOptions(arg)
 			await runSingleTestScript(opts)
 		}
-		console.info('Test running with the config file has finished')
+		console.log('Test running with the config file has finished')
 	} else {
 		const opts = normalizeElementOptions(args)
 		await runSingleTestScript(opts)

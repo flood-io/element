@@ -15,3 +15,4 @@ export { TestScriptError, TestScriptErrorMapper } from './src/runtime/TestScript
 export { Assertion } from './src/types/Assertion'
 export { SourceUnmapper } from './src/utils/SourceUnmapper'
 export { EventEmitterReporter } from './src/runtime/EventEmitter'
+export { CustomConsole } from './src/console/CustomConsole'

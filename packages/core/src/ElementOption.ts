@@ -1,5 +1,4 @@
 import { IReporter, VerboseReporter } from '@flood/element-report'
-import { Logger } from 'winston'
 import { PuppeteerClient } from './driver/Puppeteer'
 import { TestCommander } from './Runner'
 import { FloodProcessEnv, RuntimeEnvironment } from './runtime-environment/types'
@@ -11,6 +10,7 @@ import { watch } from 'chokidar'
 import { EventEmitter } from 'events'
 import { extname, basename, join, dirname, resolve } from 'path'
 import sanitize from 'sanitize-filename'
+import { Logger } from 'winston'
 
 export interface ElementRunArguments {
 	testFiles: string[]
@@ -134,17 +134,15 @@ export function normalizeElementOptions(args: ElementRunArguments): ElementOptio
 	const { file, verbose } = args
 	const workRootPath = getWorkRootPath(file, args['work-root'])
 	const testDataPath = getTestDataPath(file, args['test-data-root'])
-
 	const verboseBool = !!verbose
 
 	const reporter = new VerboseReporter(verboseBool)
-	const logger = reporter.logger
 
-	logger.info(`workRootPath: ${workRootPath}`)
-	logger.info(`testDataPath: ${testDataPath}`)
+	console.info(`workRootPath: ${workRootPath}\n`)
+	console.info(`testDataPath: ${testDataPath}\n`)
 
 	const opts: ElementOptions = {
-		logger: logger,
+		logger: reporter.logger,
 		testScript: file,
 		strictCompilation: args.strict ?? false,
 		reporter: reporter,

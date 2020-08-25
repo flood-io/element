@@ -5,6 +5,7 @@ import chalk from 'chalk'
 import { Logger } from 'winston'
 import { createTestLog } from '../utils/TestLogger'
 const debug = require('debug')('element-cli:console-reporter')
+//const ansiEscapes = require('ansi-escapes')
 
 export class VerboseReporter implements IReporter {
 	public responseCode: string
@@ -39,20 +40,19 @@ export class VerboseReporter implements IReporter {
 	testLifecycle(stage: TestEvent, label: string, timing?: number): void {
 		switch (stage) {
 			case TestEvent.AfterStepAction:
-				this.logger.info(`---> ${label}()`)
+				console.log(`---> ${label}()\n`)
 				break
 			case TestEvent.BeforeStep:
-				this.logger.info('')
-				this.logger.info(`===> Step '${label}'`)
+				console.log(`===> Step '${label}'\n`)
 				break
 			case TestEvent.AfterStep:
-				this.logger.info(`---> Step '${label}' finished in ${timing?.toLocaleString()}ms`)
+				console.log(`---> Step '${label}' finished in ${timing?.toLocaleString()}ms\n`)
 				break
 			case TestEvent.StepSkipped:
-				this.logger.info(`---- Step '${label}' skipped`)
+				console.log(`---- Step '${label}' skipped\n`)
 				break
 			case TestEvent.StepFailed:
-				this.logger.error(`xxxx Step '${label}' failed`)
+				console.log(`xxxx Step '${label}' failed\n`)
 				break
 		}
 	}

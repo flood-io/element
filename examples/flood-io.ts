@@ -23,6 +23,7 @@ const URL = 'https://flood.io'
 export default () => {
 	step('Test: Go to flood.io and use Until.titleContains and Until.urlContains', async browser => {
 		await browser.visit(URL)
+
 		// Until.titleContains example
 		await browser.wait(Until.titleContains('Flood'))
 		const floodTitle = await browser.title()
@@ -32,6 +33,7 @@ export default () => {
 		)
 		const whyFloodEl = await browser.findElement(By.visibleText('Why Flood?'))
 		await whyFloodEl.click()
+
 		// Util.urlContains example
 		await browser.wait(Until.urlContains('what-is'))
 		await browser.wait(Until.elementIsVisible(By.css('h1.headline-2')))
@@ -42,4 +44,27 @@ export default () => {
 			'The heading should be correct',
 		)
 	})
+
+	step(
+		'Test: Go to Pricing and check Title, URL by Until.titleDoesNotContain, Until.urlDoesNotContain',
+		async browser => {
+			await browser.visit(`${URL}/pricing`)
+
+			await browser.wait(Until.titleDoesNotContain('What is Flood'))
+			const title = await browser.title()
+			assert(!title.includes('What is Flood'), 'The new title should not include the old title')
+
+			const getStartedButton = await browser.findElement(By.partialLinkText('Get Started'))
+			await browser.click(getStartedButton)
+			await browser.wait(Until.urlDoesNotContain('pricing'))
+			const heading = By.css('h3')
+			await browser.wait(Until.elementsLocated(heading))
+			const headingText = await (await browser.findElement(heading)).text()
+			assert.strictEqual(
+				headingText,
+				'Ready to get started?',
+				'The heading of Flood sign up page should be correct',
+			)
+		},
+	)
 }

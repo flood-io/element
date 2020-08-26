@@ -3,6 +3,7 @@ import { IReporter } from '@flood/element-report'
 import { Test } from './testTypes'
 import NetworkRecorder from '../../network/Recorder'
 import NetworkObserver from '../Observer'
+import { ConsoleMethod } from '../Settings'
 
 export class Context {
 	public networkRecorder: NetworkRecorder
@@ -13,14 +14,18 @@ export class Context {
 	public attachTest(test: Test) {
 		if (this.attached) return
 		this.attached = true
-		this.attachToPage(test.reporter, test.client.page)
+		this.attachToPage(
+			test.reporter,
+			test.client.page,
+			test.settings.consoleFilter as ConsoleMethod[],
+		)
 	}
 
 	// TODO deliberately detach from network recorder & observer
 
-	public attachToPage(reporter: IReporter, page: Page) {
+	public attachToPage(reporter: IReporter, page: Page, consoleFilters: ConsoleMethod[]) {
 		this.networkRecorder = new NetworkRecorder(page)
-		this.observer = new NetworkObserver(reporter, this.networkRecorder)
+		this.observer = new NetworkObserver(reporter, this.networkRecorder, consoleFilters)
 		this.observer.attachToNetworkRecorder()
 	}
 

@@ -138,8 +138,8 @@ export function normalizeElementOptions(args: ElementRunArguments): ElementOptio
 
 	const reporter = new VerboseReporter(verboseBool)
 
-	console.info(`workRootPath: ${workRootPath}\n`)
-	console.info(`testDataPath: ${testDataPath}\n`)
+	console.info(`workRootPath: ${workRootPath}`)
+	console.info(`testDataPath: ${testDataPath}`)
 
 	const opts: ElementOptions = {
 		logger: reporter.logger,

@@ -45,21 +45,15 @@ export class CustomConsole extends Console {
 
 	private _log(type, message): void {
 		this.logDepth++
-		if (process.stdout.isTTY) {
-			this._stdout.write('\x1b[999D\x1b[K')
-		}
 		this._stdout.write(
-			` ${this.logDepth} ${this._formatBuffer(type, '  '.repeat(this._groupDepth) + message)}`,
+			` ${this.logDepth} ${this._formatBuffer(type, '  '.repeat(this._groupDepth) + message)}\n`,
 		)
 	}
 
 	private _logError(type, message): void {
 		this.logDepth++
-		if (process.stderr.isTTY) {
-			this._stderr.write('\x1b[999D\x1b[K')
-		}
 		this._stderr.write(
-			` ${this.logDepth} ${this._formatBuffer(type, '  '.repeat(this._groupDepth) + message)}`,
+			` ${this.logDepth} ${this._formatBuffer(type, '  '.repeat(this._groupDepth) + message)}\n`,
 		)
 	}
 

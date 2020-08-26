@@ -40,19 +40,19 @@ export class VerboseReporter implements IReporter {
 	testLifecycle(stage: TestEvent, label: string, timing?: number): void {
 		switch (stage) {
 			case TestEvent.AfterStepAction:
-				console.log(`---> ${label}()\n`)
+				console.log(`---> ${label}()`)
 				break
 			case TestEvent.BeforeStep:
-				console.log(`===> Step '${label}'\n`)
+				console.log(`===> Step '${label}'`)
 				break
 			case TestEvent.AfterStep:
-				console.log(`---> Step '${label}' finished in ${timing?.toLocaleString()}ms\n`)
+				console.log(`---> Step '${label}' finished in ${timing?.toLocaleString()}ms`)
 				break
 			case TestEvent.StepSkipped:
-				console.log(`---- Step '${label}' skipped\n`)
+				console.log(`---- Step '${label}' skipped`)
 				break
 			case TestEvent.StepFailed:
-				console.log(`xxxx Step '${label}' failed\n`)
+				console.log(`xxxx Step '${label}' failed`)
 				break
 		}
 	}
@@ -89,8 +89,24 @@ cause.stack: ${detail.causeStack}`)
 
 	testScriptConsole(method: string, message?: any, ...optionalParams: any[]): void {
 		debug('testScriptConsole', method, message)
-		if (method === 'log') method = 'info'
-		if (method === 'warning') method = 'warn'
-		;(this.logger as any)[method](`page console.${method}: ${message} ${optionalParams.join(' ')}`)
+		const logMessage = `${message} ${optionalParams.join(' ')}`
+		switch (method) {
+			case 'info':
+				console.log(chalk.green(logMessage))
+				break
+			case 'debug':
+				console.log(chalk.blue(logMessage))
+				break
+			case 'warn':
+				console.log(chalk.yellow(logMessage))
+				break
+			case 'error':
+				console.log(chalk.red(logMessage))
+				break
+			case 'log':
+			default:
+				console.log(logMessage)
+				break
+		}
 	}
 }

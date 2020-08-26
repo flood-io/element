@@ -1,7 +1,7 @@
 import NetworkRecorder from '../network/Recorder'
 import { RawResponse } from '../network/Protocol'
-import { ConsoleMethod } from './Settings'
 import { IReporter } from '@flood/element-report'
+import { ConsoleMethod } from './Settings'
 const debug = require('debug')('element:runtime:observer')
 
 interface Event {
@@ -14,13 +14,15 @@ interface RequestEvent extends Event {
 }
 
 export default class Observer {
-	public consoleFilters: ConsoleMethod[] = []
-
 	private failedRequests: string[]
 	private requests: Set<string> = new Set()
 	private attached = false
 
-	constructor(private reporter: IReporter, public networkRecorder: NetworkRecorder) {}
+	constructor(
+		private reporter: IReporter,
+		public networkRecorder: NetworkRecorder,
+		private consoleFilters: ConsoleMethod[],
+	) {}
 
 	public attachToNetworkRecorder() {
 		if (this.attached) return
@@ -61,7 +63,7 @@ export default class Observer {
 		)
 
 		this.networkRecorder.attachEvent('console', msg => {
-			if (this.consoleFilters.length == 0 || !this.consoleFilters.includes(msg.type())) {
+			if (this.consoleFilters.length === 0 || !this.consoleFilters.includes(msg.type())) {
 				this.reporter.testScriptConsole(msg.type(), msg.text())
 			}
 		})

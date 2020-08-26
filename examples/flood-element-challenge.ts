@@ -286,9 +286,7 @@ export default () => {
 		const productsLink = await browser.findElement(By.partialLinkText('Products'))
 		await productsLink.click()
 
-		await browser.evaluate(() => {
-			window.scrollTo({ top: 0 })
-		})
+		await scrollToTop(browser)
 
 		const category = await (await browser.findElement(By.id('challenge-7-category'))).text()
 		const size = await (await browser.findElement(By.id('challenge-7-size'))).text()

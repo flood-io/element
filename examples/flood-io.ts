@@ -50,14 +50,22 @@ export default () => {
 		async browser => {
 			await browser.visit(`${URL}/pricing`)
 
+			// Until.titleDoesNotContain(title: string)
 			await browser.wait(Until.titleDoesNotContain('What is Flood'))
 			const title = await browser.title()
 			assert(!title.includes('What is Flood'), 'The new title should not include the old title')
 
-			const getStartedButton = await browser.findElement(By.partialLinkText('Get Started'))
+			const getStartedButtonEl = By.partialLinkText('Get Started')
+			// Until.elementsLocated(selectorOrLocator: NullableLocatable, desiredCount = 2)
+			await browser.wait(Until.elementsLocated(getStartedButtonEl, 2))
+			const getStartedButton = await browser.findElement(getStartedButtonEl)
 			await browser.click(getStartedButton)
+
+			// Until.urlDoesNotContain(url: string)
 			await browser.wait(Until.urlDoesNotContain('pricing'))
 			const heading = By.css('h3')
+
+			// Until.elementsLocated(selectorOrLocator: NullableLocatable, desiredCount = 1)
 			await browser.wait(Until.elementsLocated(heading))
 			const headingText = await (await browser.findElement(heading)).text()
 			assert.strictEqual(

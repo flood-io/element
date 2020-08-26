@@ -138,14 +138,14 @@ export class Worker implements WorkerInterface {
 			}
 
 			case ParentMessages.CLIENT_ERROR: {
-				const [, name, message, stack] = response as ParentMessageError
+				const [, name, message, stack, stageIterator] = response as ParentMessageError
 				const NativeCtor = global[name]
 				const Ctor = typeof NativeCtor === 'function' ? NativeCtor : Error
 				const error = new Ctor(message)
 				error.type = name
 				error.stack = stack
 
-				this.onProcessEnd(error, this, 0)
+				this.onProcessEnd(error, this, stageIterator as number)
 				break
 			}
 
@@ -180,9 +180,7 @@ export class Worker implements WorkerInterface {
 
 	send(request: ChildMessage, onProcessStart: OnStart, onProcessEnd: OnEnd): void {
 		onProcessStart(this)
-		this.onProcessEnd = (...args) => {
-			return onProcessEnd(...args)
-		}
+		this.onProcessEnd = (...args) => onProcessEnd(...args)
 
 		this.retries = 0
 

@@ -29,11 +29,11 @@ export class Plan {
 	 * TODO: Implement cancellation token
 	 */
 	public ticker(
-		onTick: (timestamp: number, target: number, stageIterator) => void | Promise<void>,
+		onTick: (timestamp: number, target: number, stageIterator: number) => Promise<void>,
 		oneEndState: () => Promise<void>,
 		oneNewState: () => Promise<void>,
 	) {
-		return new Promise(yeah => {
+		return new Promise(() => {
 			const planSteps: PlanStep[] = []
 			this.stages.forEach((stage, index) => {
 				const { target, duration } = stage
@@ -44,15 +44,14 @@ export class Plan {
 				const planStep = planSteps.shift()
 				if (planStep) {
 					oneNewState().then(() => {
-						const [timeout] = planStep
-						Promise.resolve(onTick(...planStep)).then(() => {
-							setTimeout(() => {
-								oneEndState().then(internal)
-							}, timeout)
-						})
+						const [timeout, target] = planStep
+						const handleEndStage = setTimeout(() => oneEndState().then(internal), timeout)
+						onTick(...planStep).then(() => oneEndState().then(internal))
+						if (target < 1) {
+							clearTimeout(handleEndStage)
+							oneEndState().then(internal)
+						}
 					})
-				} else {
-					yeah()
 				}
 			}
 			internal()

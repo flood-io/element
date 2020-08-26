@@ -34,7 +34,7 @@ export class WorkerConnection {
 
 	constructor(private thread: Worker | MessagePort) {
 		this.callbacks = new Map()
-		thread.on('message', this.onMesssage.bind(this))
+		thread.on('message', this.onMessage.bind(this))
 		thread.once('exit', this.dispose.bind(this))
 	}
 
@@ -56,9 +56,9 @@ export class WorkerConnection {
 		return id
 	}
 
-	private onMesssage([id, message]: [number, WorkerMessage]) {
+	private onMessage([id, message]: [number, WorkerMessage]) {
 		const callback = this.callbacks.get(id)
-		// Callbacks could be all rejected if someone has called `.dispose()`.
+
 		if (callback) {
 			this.callbacks.delete(id)
 

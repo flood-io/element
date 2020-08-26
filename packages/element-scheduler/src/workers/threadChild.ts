@@ -95,7 +95,13 @@ const messageListener = async (request: ChildMessage) => {
 			const call = request as ChildMessageCall
 			await execMethod(call[1], call[2]).catch(err => {
 				if (parentPort) {
-					parentPort.postMessage([ParentMessages.CLIENT_ERROR, 'Worker Error', err.message, ''])
+					parentPort.postMessage([
+						ParentMessages.CLIENT_ERROR,
+						'Worker Error',
+						err.message,
+						'',
+						call[2][1],
+					])
 				}
 			})
 			break

@@ -33,7 +33,7 @@ export class Plan {
 		oneEndState: () => Promise<void>,
 		oneNewState: () => Promise<void>,
 	) {
-		return new Promise(() => {
+		return new Promise(done => {
 			const planSteps: PlanStep[] = []
 			this.stages.forEach((stage, index) => {
 				const { target, duration } = stage
@@ -42,17 +42,16 @@ export class Plan {
 
 			const internal = () => {
 				const planStep = planSteps.shift()
-				if (planStep) {
-					oneNewState().then(() => {
-						const [timeout, target] = planStep
-						const handleEndStage = setTimeout(() => oneEndState().then(internal), timeout)
-						onTick(...planStep).then(() => oneEndState().then(internal))
-						if (target < 1) {
-							clearTimeout(handleEndStage)
-							oneEndState().then(internal)
-						}
-					})
-				}
+				if (!planStep) return done()
+				oneNewState().then(() => {
+					const [timeout, target] = planStep
+					const handleEndStage = setTimeout(() => oneEndState().then(internal), timeout)
+					onTick(...planStep).then(() => oneEndState().then(internal))
+					if (target < 1) {
+						clearTimeout(handleEndStage)
+						oneEndState().then(internal)
+					}
+				})
 			}
 			internal()
 		})

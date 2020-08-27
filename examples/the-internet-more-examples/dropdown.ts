@@ -31,7 +31,7 @@ export default () => {
 		// Select the option 1 by text
 		await browser.selectByText(dropdown, 'Option 1')
 		const dropdownValue = await dropdown.getProperty('value')
-		assert.strictEqual(parseInt(dropdownValue), 1, 'The value of the dropdown should be correct')
+		assert.strictEqual(dropdownValue, '1', 'The value of the dropdown should be correct')
 
 		// Take the screenshot
 		await browser.takeScreenshot({ path: 'selectOption1.png', fullPage: true })

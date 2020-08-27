@@ -66,8 +66,6 @@ const adjustPriceRange = async (
 		}
 	}
 
-	// await browser.wait(0.5)
-
 	await browser.mouse.drag(
 		[sliderLocation.x, sliderLocation.y],
 		[minPriceLocation, sliderLocation.y],
@@ -105,7 +103,6 @@ const maximizePopup = async (browser: Browser) => {
 }
 
 export default () => {
-	// Before all step
 	beforeAll(async browser => {
 		await browser.visit(URL)
 
@@ -119,7 +116,6 @@ export default () => {
 		await browser.wait(Until.elementIsVisible(modal))
 	})
 
-	// After each step
 	afterEach(async browser => {
 		const modal = await browser.findElement(By.id('challenges-popup'))
 

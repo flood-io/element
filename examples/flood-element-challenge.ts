@@ -1,4 +1,15 @@
-import { step, TestSettings, By, Until, beforeAll, afterEach, Key, Browser } from '@flood/element'
+import {
+	step,
+	TestSettings,
+	By,
+	Until,
+	beforeAll,
+	afterEach,
+	afterAll,
+	Key,
+	Browser,
+} from '@flood/element'
+import assert from 'assert'
 
 export const settings: TestSettings = {
 	loopCount: 1,
@@ -14,7 +25,7 @@ export const settings: TestSettings = {
 
 const URL = 'https://flood-element-challenge.vercel.app/'
 
-const getNumOfPages = async (browser: Browser) => {
+const getNumOfPages = async (browser: Browser): Promise<number> => {
 	return await browser.evaluate(() => {
 		const nav = document.querySelector('nav[aria-label="pagination navigation"]')
 		const items = nav.getElementsByTagName('li')
@@ -22,7 +33,7 @@ const getNumOfPages = async (browser: Browser) => {
 	})
 }
 
-const scrollToTop = async (browser: Browser) => {
+const scrollToTop = async (browser: Browser): Promise<void> => {
 	await browser.evaluate(() => {
 		window.scrollTo({ top: 0 })
 	})
@@ -32,7 +43,7 @@ const adjustPriceRange = async (
 	browser: Browser,
 	targetMinPrice: number,
 	targetMaxPrice: number,
-) => {
+): Promise<void> => {
 	const priceRange = await browser.findElement(By.css('p[data-test-range]'))
 	const priceSlider = await browser.findElement(By.css('span[data-test-slider]'))
 
@@ -90,16 +101,23 @@ const adjustPriceRange = async (
 	}
 }
 
-const minimizePopup = async (browser: Browser) => {
+const minimizePopup = async (browser: Browser): Promise<void> => {
 	const minimizeBtn = await browser.findElement(By.css('button[data-test-minimize]'))
 	await browser.click(minimizeBtn)
 	await browser.wait(0.5)
 }
 
-const maximizePopup = async (browser: Browser) => {
+const maximizePopup = async (browser: Browser): Promise<void> => {
 	const maximizeBtn = await browser.findElement(By.css('button[data-test-maximize]'))
 	await browser.click(maximizeBtn)
 	await browser.wait(0.5)
+}
+
+const getChallangeText = async (browser: Browser): Promise<string> => {
+	const modal = await browser.findElement(By.id('challenges-popup'))
+	const challengeText = await (await modal.findElement(By.css('h6[data-test-title]'))).text()
+
+	return challengeText.split(' ')[1].split('/')[0]
 }
 
 export default () => {
@@ -121,15 +139,35 @@ export default () => {
 
 		const checkBtn = await modal.findElement(By.visibleText('CHECK'))
 		checkBtn?.click()
-		await browser.wait(0.5)
 
-		const nextBtn = await modal.findElement(By.visibleText('NEXT'))
-		nextBtn?.click()
-		await browser.wait(0.5)
+		const nextBtn = By.visibleText('NEXT')
+		await browser.wait(Until.elementLocated(nextBtn))
+		const nextBtnEl = await modal.findElement(By.visibleText('NEXT'))
+		nextBtnEl.click()
+
+		const challenge = await getChallangeText(browser)
+		if (challenge !== '8') {
+			const nextChallengeBtn = By.visibleText('CHECK')
+			await browser.wait(Until.elementLocated(nextChallengeBtn))
+		}
+	})
+
+	afterAll(async browser => {
+		const finalMessage = By.css('h5[data-test-message]')
+		await browser.wait(Until.elementLocated(finalMessage))
+		const finalMsgText = await (await browser.findElement(finalMessage)).text()
+		assert.strictEqual(
+			finalMsgText,
+			'🎉hooray!',
+			'The final message should be correct after you finished 8 steps',
+		)
 	})
 
 	// Challenge 1
 	step('Test: Challenge 1', async browser => {
+		const challenge = await getChallangeText(browser)
+		assert.strictEqual(challenge, '1', 'The challenge should be challenge number 1')
+
 		const h2El = await browser.findElement(By.css('h2'))
 		const discountText = await h2El.text()
 		const discountNumber = discountText.split(' ').filter(word => word.includes('%'))[0]
@@ -148,13 +186,18 @@ export default () => {
 
 	// Challenge 2
 	step('Test: Challenge 2', async browser => {
+		const challenge = await getChallangeText(browser)
+		assert.strictEqual(challenge, '2', 'The challenge should be challenge number 2')
+
 		const modalEl = await browser.findElement(By.id('challenges-popup'))
 		const keyword = await (await modalEl.findElement(By.id('challenge-2-category')))?.text()
 		if (keyword?.toLowerCase() !== 't-shirt') {
 			const targetButton = await browser.findElement(By.css(`button[value="${keyword}"]`))
 			await targetButton.click()
-			await browser.wait(0.5)
 		}
+
+		const productCard = By.css('div[data-test-card]')
+		await browser.wait(Until.elementsLocated(productCard))
 
 		const label = await modalEl.findElement(
 			By.js(() => {
@@ -173,6 +216,8 @@ export default () => {
 
 	// Challenge 3
 	step('Test: Challenge 3', async browser => {
+		const challenge = await getChallangeText(browser)
+		assert.strictEqual(challenge, '3', 'The challenge should be challenge number 3')
 		await browser.page.browserContext().overridePermissions(URL, ['clipboard-read'])
 
 		const revealButton = await browser.findElement(By.visibleText('Reveal the deal'))
@@ -194,12 +239,16 @@ export default () => {
 
 	// Challenge 4
 	step('Test: Challenge 4', async browser => {
+		const challenge = await getChallangeText(browser)
+		assert.strictEqual(challenge, '4', 'The challenge should be challenge number 4')
 		const productsLink = await browser.findElement(By.partialLinkText('Products'))
 		await productsLink.click()
 	})
 
 	// Challenge 5
 	step('Test: Challenge 5', async browser => {
+		const challenge = await getChallangeText(browser)
+		assert.strictEqual(challenge, '5', 'The challenge should be challenge number 5')
 		const challengeMinPrice = await browser.findElement(By.id('challenge-5-min-price'))
 		const challengeMaxPrice = await browser.findElement(By.id('challenge-5-max-price'))
 
@@ -238,6 +287,8 @@ export default () => {
 	})
 
 	step('Test: Challenge 6', async browser => {
+		const challenge = await getChallangeText(browser)
+		assert.strictEqual(challenge, '6', 'The challenge should be challenge number 6')
 		const numOfPage = await getNumOfPages(browser)
 
 		for (let x = 1; x <= numOfPage; x++) {
@@ -257,7 +308,7 @@ export default () => {
 				await browser.click(addToCartBtn)
 
 				const productName = By.css('h3[data-test-name]')
-				await browser.wait(Until.elementIsVisible(productName))
+				await browser.wait(Until.elementLocated(productName))
 
 				const anotherAddToCardBtn = await card.findElement(By.visibleText('Add to cart'))
 				await browser.click(anotherAddToCardBtn)
@@ -277,6 +328,9 @@ export default () => {
 	})
 
 	step('Test: Challenge 7', async browser => {
+		const challenge = await getChallangeText(browser)
+		assert.strictEqual(challenge, '7', 'The challenge should be challenge number 7')
+
 		const homeLink = await browser.findElement(By.partialLinkText('Home'))
 		await homeLink.click()
 		const productsLink = await browser.findElement(By.partialLinkText('Products'))
@@ -306,6 +360,9 @@ export default () => {
 	})
 
 	step('Test: Challenge 8', async browser => {
+		const challenge = await getChallangeText(browser)
+		assert.strictEqual(challenge, '8', 'The challenge should be challenge number 8')
+
 		const subTotalSelector = 'subtotal-price'
 		const cartButton = await browser.findElement(By.id('cart-button'))
 		await cartButton.click()

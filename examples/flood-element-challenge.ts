@@ -163,7 +163,6 @@ export default () => {
 		)
 	})
 
-	// Challenge 1
 	step('Test: Challenge 1', async browser => {
 		const challenge = await getChallangeText(browser)
 		assert.strictEqual(challenge, '1', 'The challenge should be challenge number 1')
@@ -184,7 +183,6 @@ export default () => {
 		)
 	})
 
-	// Challenge 2
 	step('Test: Challenge 2', async browser => {
 		const challenge = await getChallangeText(browser)
 		assert.strictEqual(challenge, '2', 'The challenge should be challenge number 2')
@@ -214,7 +212,6 @@ export default () => {
 		await label?.click()
 	})
 
-	// Challenge 3
 	step('Test: Challenge 3', async browser => {
 		const challenge = await getChallangeText(browser)
 		assert.strictEqual(challenge, '3', 'The challenge should be challenge number 3')
@@ -237,7 +234,6 @@ export default () => {
 		await browser.type(promotionInput, promotionCode)
 	})
 
-	// Challenge 4
 	step('Test: Challenge 4', async browser => {
 		const challenge = await getChallangeText(browser)
 		assert.strictEqual(challenge, '4', 'The challenge should be challenge number 4')
@@ -245,7 +241,6 @@ export default () => {
 		await productsLink.click()
 	})
 
-	// Challenge 5
 	step('Test: Challenge 5', async browser => {
 		const challenge = await getChallangeText(browser)
 		assert.strictEqual(challenge, '5', 'The challenge should be challenge number 5')
@@ -302,7 +297,7 @@ export default () => {
 				const location = await card.location()
 				await browser.mouse.move(location.x + 10, location.y + 10)
 
-				await browser.wait(0.5)
+				await browser.wait(0.4)
 
 				const addToCartBtn = await card.findElement(By.visibleText('add to cart'))
 				await browser.click(addToCartBtn)
@@ -310,13 +305,19 @@ export default () => {
 				const productName = By.css('h3[data-test-name]')
 				await browser.wait(Until.elementLocated(productName))
 
-				const anotherAddToCardBtn = await card.findElement(By.visibleText('Add to cart'))
+				const anotherAddToCardBtn = await browser.findElement(By.visibleText('Add to cart'))
 				await browser.click(anotherAddToCardBtn)
 
+				// Using Mouse.move(), mouse.down() and mouse.up() to close the modal
 				await browser.mouse.move(1, 1)
 				await browser.mouse.down()
 				await browser.mouse.up()
+
+				// Or you can click into the close button in the modal
+				// const closeModalBtnEl = await browser.findElement(By.css('button[data-test-product-detail-modal-close]'))
+				// await closeModalBtnEl.click()
 			}
+
 			if (numOfPage > 1 && x < numOfPage) {
 				const goToPageButton = await browser.findElement(
 					By.css(`button[aria-label="Go to page ${x + 1}"]`),
@@ -363,11 +364,13 @@ export default () => {
 		const challenge = await getChallangeText(browser)
 		assert.strictEqual(challenge, '8', 'The challenge should be challenge number 8')
 
-		const subTotalSelector = 'subtotal-price'
 		const cartButton = await browser.findElement(By.id('cart-button'))
 		await cartButton.click()
 
+		await browser.wait(Until.urlContains('cart'))
 		await scrollToTop(browser)
+
+		const subTotalSelector = await browser.findElement(By.id('subtotal-price'))
 
 		const challengeMinPriceText = (
 			await (await browser.findElement(By.id('challenge-9-min-price'))).text()
@@ -376,9 +379,7 @@ export default () => {
 			await (await browser.findElement(By.id('challenge-9-max-price'))).text()
 		).replace('$', '')
 
-		let cartSubtotalText = (
-			await (await browser.findElement(By.id(subTotalSelector))).text()
-		).replace('$', '')
+		let cartSubtotalText = (await subTotalSelector.text()).replace('$', '')
 
 		const challengeMinPrice = parseInt(challengeMinPriceText)
 		const challengeMaxPrice = parseInt(challengeMaxPriceText)
@@ -387,9 +388,7 @@ export default () => {
 		while (cartSubtotal < challengeMinPrice) {
 			const addMoreButton = await browser.findElement(By.css('button[data-test-add]'))
 			await addMoreButton.click()
-			cartSubtotal = parseInt(
-				(await (await browser.findElement(By.id(subTotalSelector))).text()).replace('$', ''),
-			)
+			cartSubtotal = parseInt((await subTotalSelector.text()).replace('$', ''))
 		}
 
 		while (cartSubtotal > challengeMaxPrice) {
@@ -405,9 +404,7 @@ export default () => {
 
 			const minusButton = await browser.findElement(By.css('button[data-test-minus]'))
 			await minusButton.click()
-			cartSubtotal = parseInt(
-				(await (await browser.findElement(By.id(subTotalSelector))).text()).replace('$', ''),
-			)
+			cartSubtotal = parseInt((await subTotalSelector.text()).replace('$', ''))
 		}
 	})
 }

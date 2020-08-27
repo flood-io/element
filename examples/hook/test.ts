@@ -1,4 +1,12 @@
-import { TestSettings, step, afterAll, afterEach, beforeAll, beforeEach, RecoverWith } from '@flood/element'
+import {
+	TestSettings,
+	step,
+	afterAll,
+	afterEach,
+	beforeAll,
+	beforeEach,
+	RecoverWith,
+} from '@flood/element'
 
 export const settings: TestSettings = {
 	loopCount: 1,
@@ -6,17 +14,10 @@ export const settings: TestSettings = {
 export default () => {
 	beforeAll(async browser => {
 		console.log('The first BeforeAll function is running ....')
-		//await browser.visit('https://challenge.flood.io')
 	})
 	beforeAll(async browser => {
 		console.log('The first BeforeAll function is running ....')
-		//await browser.visit('https://challenge.flood.io')
 	}, 150)
-
-	// beforeAll(async browser => {
-	// 	console.log('The second BeforeAll function is running ....')
-	// 	//await browser.visit('https://challenge.flood.io')
-	// })
 
 	beforeEach(async () => {
 		console.log('The first BeforeEach function is running ....')
@@ -24,10 +25,6 @@ export default () => {
 	beforeEach(async () => {
 		console.log('The first BeforeEach function is running ....')
 	}, 150)
-
-	// beforeEach(async () => {
-	// 	console.log('The second BeforeEach function is running ....')
-	// })
 
 	step('Step: first', async browser => {
 		console.log('The first step is running ...')

@@ -54,7 +54,7 @@ async function execMethod(method: string, args: Array<any>) {
 			const { wsEndpoint, workerName, rootEnv, testData, settings } = workerData.env
 
 			const verboseBool = true
-			const logLevel = 'info'
+			const logLevel = 'debug'
 			const logger = createLogger(logLevel, true)
 			const reporter = new ConsoleReporter(logger, verboseBool, workerName)
 			const childSettings: TestSettings = JSON.parse(settings)

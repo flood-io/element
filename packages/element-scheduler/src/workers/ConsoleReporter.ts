@@ -18,7 +18,7 @@ export class ConsoleReporter implements IReporter {
 	reset(step: string): void {}
 
 	addMeasurement(measurement: string, value: string | number, label?: string): void {
-		this.logger.debug(`> ${measurement} ${value}`)
+		this.logger.debug(`[${this.workerName}] > ${measurement} ${value}`)
 	}
 
 	addCompoundMeasurement(
@@ -26,11 +26,11 @@ export class ConsoleReporter implements IReporter {
 		value: CompoundMeasurement,
 		label: string,
 	): void {
-		this.logger.debug(`> ${measurement} ${JSON.stringify(value)}`)
+		this.logger.debug(`[${this.workerName}] > ${measurement} ${JSON.stringify(value)}`)
 	}
 
 	addTrace(traceData: TraceData, label: string): void {
-		this.logger.debug(`> trace:\n${JSON.stringify(traceData)}`)
+		this.logger.debug(`[${this.workerName}] > trace:\n${JSON.stringify(traceData)}`)
 	}
 
 	async flushMeasurements(): Promise<void> {}

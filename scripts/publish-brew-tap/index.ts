@@ -19,7 +19,7 @@ const patch = semver.patch(version)
 const prerelease = semver.prerelease(version)
 
 const eltURL = `https://registry.npmjs.org/@flood/element-cli/-/element-cli-${version}.tgz`
-const repo = 'git@github.com:flood-io/homebrew-taps.git'
+const repo = 'https://github.com/flood-io/homebrew-taps.git'
 
 const home = process.env.HOME
 if (home === undefined) throw new Error('no $HOME set')

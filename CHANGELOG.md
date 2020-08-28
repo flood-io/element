@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0-beta.24](https://github.com/flood-io/element/compare/v1.3.0-beta.23...v1.3.0-beta.24) (2020-08-28)
+
+
+### Bug Fixes
+
+* error publishing release to Homebrew ([#240](https://github.com/flood-io/element/issues/240)) ([41491e7](https://github.com/flood-io/element/commit/41491e7c644a691bc81c2a836881f9715f759e03))
+
+
+
+
+
 # [1.3.0-beta.23](https://github.com/flood-io/element/compare/v1.3.0-beta.22...v1.3.0-beta.23) (2020-08-27)
 
 

@@ -1,6 +1,6 @@
 {
 	"name": "@flood/element-compiler",
-	"version": "1.3.0-beta.25",
+	"version": "1.3.0-beta.26",
 	"description": "Element internal script compiler",
 	"author": "Ivan Vanderbyl <ivanvanderbyl@gmail.com>",
 	"homepage": "https://github.com/flood-io/element#readme",

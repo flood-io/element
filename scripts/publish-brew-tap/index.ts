@@ -19,7 +19,7 @@ const patch = semver.patch(version)
 const prerelease = semver.prerelease(version)
 
 const eltURL = `https://registry.npmjs.org/@flood/element-cli/-/element-cli-${version}.tgz`
-const repo = 'https://github.com/flood-io/homebrew-taps.git'
+const repo = 'git@github.com:flood-io/homebrew-taps.git'
 
 const home = process.env.HOME
 if (home === undefined) throw new Error('no $HOME set')
@@ -100,9 +100,10 @@ async function update() {
 
 	await sgit.add('Formula')
 	const status = await sgit.status()
+	console.log(sgit.env)
 	if (status.files.length > 0) {
-		await sgit.commit('published element brew tap')
-		await sgit.push()
+		// await sgit.commit('published element brew tap')
+		// await sgit.push()
 	}
 }
 

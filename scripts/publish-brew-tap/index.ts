@@ -100,10 +100,9 @@ async function update() {
 
 	await sgit.add('Formula')
 	const status = await sgit.status()
-	console.log(sgit.env)
 	if (status.files.length > 0) {
-		// await sgit.commit('published element brew tap')
-		// await sgit.push()
+		await sgit.commit('published element brew tap')
+		await sgit.push()
 	}
 }
 

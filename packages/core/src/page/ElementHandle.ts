@@ -18,7 +18,6 @@ import { Key } from './Enums'
 import debugFactory from 'debug'
 import { Point } from './Point'
 import { CSSLocator } from './locators/index'
-import { BaseLocator } from './Locator'
 // import { By } from './Locators'
 const debug = debugFactory('element:page:element-handle')
 
@@ -304,6 +303,7 @@ export class ElementHandle implements IElementHandle, Locator {
 	// TODO wrap
 	public async findElement(locator: string | Locator): Promise<IElementHandle | null> {
 		if (typeof locator === 'string') {
+			const { BaseLocator } = await import('./Locator')
 			locator = new BaseLocator(new CSSLocator(locator), 'handle.findElement')
 		}
 		return locator.find(this.element.executionContext(), this.element)
@@ -314,6 +314,7 @@ export class ElementHandle implements IElementHandle, Locator {
 	 */
 	public async findElements(locator: string | Locator): Promise<IElementHandle[]> {
 		if (typeof locator === 'string') {
+			const { BaseLocator } = await import('./Locator')
 			locator = new BaseLocator(new CSSLocator(locator), 'handle.findElements')
 		}
 		return locator.findMany(this.element.executionContext(), this.element)
@@ -361,14 +362,13 @@ export class ElementHandle implements IElementHandle, Locator {
 		}
 
 		let propertyName = 'selected'
-		const tagName = await this.tagName()
 
-		const type = tagName && tagName.toUpperCase()
-		if ('CHECKBOX' == type || 'RADIO' == type) {
+		const type = await this.getAttribute('type')
+		if ('checkbox' === type || 'radio' === type) {
 			propertyName = 'checked'
 		}
 
-		const value = getProperty<string>(this.element, propertyName)
+		const value = await getProperty<string>(this.element, propertyName)
 		return !!value
 	}
 
@@ -383,8 +383,8 @@ export class ElementHandle implements IElementHandle, Locator {
 		}
 
 		if (tagName === 'INPUT') {
-			const type = tagName.toLowerCase()
-			return type == 'checkbox' || type == 'radio'
+			const type = await this.getAttribute('type')
+			return type === 'checkbox' || type === 'radio'
 		}
 
 		return false

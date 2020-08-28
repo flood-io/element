@@ -1,4 +1,4 @@
-import { Browser } from './types'
+import { Browser } from './IBrowser'
 import { ElementPresence } from './Settings'
 
 /**
@@ -29,23 +29,34 @@ import { ElementPresence } from './Settings'
  * @param fn Actual implementation of step
  * @param options step options
  */
-export const step: StepExtended = (name: string, ...optionsOrFn: any[]) => {}
-step.once = (name: string, ...optionsOrFn: any[]) => {}
-step.if = (condition: ConditionFn, name: string, ...optionsOrFn: any[]) => {}
-step.unless = (condition: ConditionFn, name: string, ...optionsOrFn: any[]) => {}
-step.skip = (name: string, ...optionsOrFn: any[]) => {}
-step.recovery = (name: string, ...optionsOrFn: any[]) => {}
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-empty-function */
+export const step: StepExtended = (...nameOrOptionsOrFn: any[]) => {}
+step.once = (...nameOrOptionsOrFn: any[]) => {}
+step.if = (condition: ConditionFn, ...nameOrOptionsOrFn: any[]) => {}
+step.unless = (condition: ConditionFn, ...nameOrOptionsOrFn: any[]) => {}
+step.skip = (...nameOrOptionsOrFn: any[]) => {}
+step.recovery = (...nameOrOptionsOrFn: any[]) => {}
+step.repeat = (count: number, ...nameOrOptionsOrFn: any[]) => {}
+step.while = (condition: ConditionFn, ...nameOrOptionsOrFn: any[]) => {}
 
 export interface StepBase {
 	(stepName: string, options: StepOptions, testFn: TestFn): void
 	(stepName: string, testFn: TestFn): void
-	(stepName: string, ...optionsOrFn: any[]): void
+	(options: StepOptions, testFn: TestFn): void
+	(testFn: TestFn): void
 }
 
 export interface StepConditionBase {
 	(condition: ConditionFn, name: string, options: StepOptions, testFn: TestFn)
 	(condition: ConditionFn, name: string, testFn: TestFn)
 	(condition: ConditionFn, ...optionsOrFn: any[])
+}
+
+export interface StepRepeatableBase {
+	(count: number, name: string, options: StepOptions, testFn: TestFn)
+	(count: number, name: string, testFn: TestFn)
+	(count: number, ...optionsOrFn: any[])
 }
 
 export interface StepExtended extends StepBase {
@@ -73,28 +84,54 @@ export interface StepExtended extends StepBase {
 	 * Creates a recovery step
 	 */
 	recovery: StepBase
+
+	/**
+	 * Creates a repeatable step
+	 */
+	repeat: StepRepeatableBase
+
+	/**
+	 * Creates a while step
+	 */
+	while: StepConditionBase
 }
 
 export type StepDefinition = (name: string, fn: TestFn) => Promise<any>
-export type TestFn = (this: void, browser: Browser) => Promise<any>
+export type TestFn = (this: void, browser: Browser, data?: unknown) => Promise<any>
 export type ConditionFn = (this: void, browser: Browser) => boolean | Promise<boolean>
 export type StepOptions = {
 	pending?: boolean
 	once?: boolean
-	predicate?: (this: void, browser: Browser) => boolean | Promise<boolean>
+	predicate?: ConditionFn
 	skip?: boolean
 	waitTimeout?: number
 	waitUntil?: ElementPresence
-	maxRecovery?: number
+	tries?: number
+	repeat?: {
+		count: number
+		iteration: number
+	}
+	stepWhile?: {
+		predicate: ConditionFn
+	}
 }
 
-export function extractOptionsAndCallback(args: any[]): [Partial<StepOptions>, TestFn] {
-	if (args.length === 0) return [{ pending: true }, () => Promise.resolve()]
+export function extractStep(args: any[]): [string, Partial<StepOptions>, TestFn] {
+	if (args.length === 0) throw new Error('Step called with at least one argument') // [{ pending: true }, () => Promise.resolve()]
 	if (args.length === 1) {
-		return [{}, args[0] as TestFn]
+		return ['global', {}, args[0] as TestFn]
 	} else if (args.length === 2) {
+		const [name, fnc] = args as [string, TestFn]
+		if (typeof name === 'string') {
+			return [name, {}, fnc]
+		}
 		const [options, fn] = args as [StepOptions, TestFn]
-		return [options, fn]
+		const { waitTimeout, waitUntil, tries } = options
+		return ['global', { waitTimeout, waitUntil, tries }, fn]
+	} else if (args.length === 3) {
+		const [name, options, fn] = args as [string, StepOptions, TestFn]
+		const { waitTimeout, waitUntil, tries } = options
+		return [name, { waitTimeout, waitUntil, tries }, fn]
 	}
 	throw new Error(`Step called with too many arguments`)
 }
@@ -118,6 +155,7 @@ export type StepRecoveryObject = {
 	[name: string]: {
 		recoveryStep: Step
 		loopCount: number
+		iteration: number
 	}
 }
 
@@ -153,8 +191,6 @@ export function normalizeStepOptions(stepOpts: StepOptions): StepOptions {
 		stepOpts.waitTimeout = stepOpts.waitTimeout / 1e3
 	} else if (Number(stepOpts.waitTimeout) === 0) {
 		stepOpts.waitTimeout = 30
-	} else if (Number(stepOpts.maxRecovery) === 0) {
-		stepOpts.maxRecovery = 1
 	}
 
 	return stepOpts

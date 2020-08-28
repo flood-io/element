@@ -20,14 +20,7 @@ export default class TestScript extends Generator {
 	answers: { [key: string]: string }
 
 	async prompting() {
-		const title = path.basename(this.options.testScript, '.ts')
 		this.answers = await this.prompt([
-			{
-				type: 'input',
-				name: 'url',
-				message: 'The title of this test.',
-				default: title,
-			},
 			{
 				type: 'input',
 				name: 'url',
@@ -39,7 +32,6 @@ export default class TestScript extends Generator {
 
 	writing() {
 		this.fs.copyTpl(this.templatePath('test.ts'), this.destinationPath(this.options.testScript), {
-			title: this.appname,
 			url: this.answers.url,
 		})
 	}

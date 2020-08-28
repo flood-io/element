@@ -25,7 +25,6 @@ export default () => {
 	step.skip('Test skip', async browser => {
 		console.log('This step will not be run')
 	})
-	step('Step pending')
 
 	let retry = false
 	let restart = false
@@ -41,7 +40,7 @@ export default () => {
 	})
 
 	step.recovery('Step 3', async browser => {
-		console.log('Recovery step 3 done, throw an error')
+		console.log('Recovery step 3 done, continue the next step')
 		return RecoverWith.CONTINUE
 	})
 
@@ -72,5 +71,23 @@ export default () => {
 
 	step('Step 4', async browser => {
 		console.log('Done step 4')
+	})
+
+	let count = 0
+	step.while(
+		() => count < 3,
+		'Step 5',
+		async browser => {
+			count += 1
+			console.log('Step 5')
+		},
+	)
+
+	step('Step 6', async browser => {
+		throw Error('Throw error step 6')
+	})
+	step.recovery({ tries: 2 }, async browser => {
+		console.log('Global recovery')
+		return RecoverWith.RETRY
 	})
 }

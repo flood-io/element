@@ -3,7 +3,7 @@ import { Locator } from './types'
 import { DEFAULT_SETTINGS } from '../runtime/Settings'
 import recast from 'recast'
 import { locatableToLocator } from '../runtime/toLocatorError'
-import { NullableLocatable } from '../runtime/types'
+import { NullableLocatable } from '../runtime/Locatable'
 
 import debugFactory from 'debug'
 const debug = debugFactory('element:page:condition')

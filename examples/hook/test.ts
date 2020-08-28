@@ -46,10 +46,10 @@ export default () => {
 	})
 
 	afterAll(async () => {
-		console.log('The AfterAll fucntion is running ....')
+		console.log('The AfterAll function is running ....')
 	})
 	afterAll(async () => {
-		console.log('The AfterAll fucntion is running ....')
+		console.log('The AfterAll function is running ....')
 	}, 150)
 	step.recovery(async browser => {
 		console.log('Recovery step 1 done, retry step 1')

@@ -64,7 +64,7 @@ export default class Test implements ITest {
 		public script: EvaluatedScriptLike,
 		public reporter: IReporter = new NullReporter(),
 		settingsOverride: TestSettings,
-		public testObserverFactory: (t: TestObserver) => TestObserver = x => x,
+		public testObserverFactory: (t: TestObserver) => TestObserver = (x) => x,
 	) {
 		this.script = script
 
@@ -392,7 +392,7 @@ export default class Test implements ITest {
 	}
 
 	public get stepNames(): string[] {
-		return this.steps.map(s => s.name)
+		return this.steps.map((s) => s.name)
 	}
 
 	public async doStepDelay() {
@@ -400,7 +400,7 @@ export default class Test implements ITest {
 			return
 		}
 
-		await new Promise(resolve => {
+		await new Promise((resolve) => {
 			if (!this.settings.stepDelay) {
 				resolve()
 				return

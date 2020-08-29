@@ -12,21 +12,11 @@
 		},
 		"version": {
 			"message": "chore(release): publish %s\n[skip ci]",
-			"allowBranch": [
-				"master",
-				"beta",
-				"feature/*"
-			]
+			"allowBranch": ["master", "beta", "feature/*"]
 		},
 		"bootstrap": {
 			"npmClient": "yarn"
 		}
 	},
-	"ignoreChanges": [
-		"assets",
-		"coverage",
-		"examples",
-		"scripts",
-		"smoke"
-	]
+	"ignoreChanges": ["assets", "coverage", "examples", "scripts", "smoke"]
 }

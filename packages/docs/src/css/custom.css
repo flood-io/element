@@ -1,0 +1,60 @@
+/* stylelint-disable docusaurus/copyright-header */
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* You can override the default Infima variables here. */
+:root {
+	--ifm-color-zumthor: #eef5ff;
+	--ifm-color-shark: #23232c;
+	--ifm-color-primary: #5243aa;
+	--ifm-color-primary-dark: #5243aa;
+	--ifm-color-primary-darker: #403294;
+	--ifm-color-primary-darkest: #403294;
+	--ifm-color-primary-light: #998dd9;
+	--ifm-color-primary-lighter: #c0b6f2;
+	--ifm-color-primary-lightest: #eae6ff;
+	--ifm-code-font-size: 95%;
+}
+
+html[data-theme='dark'] {
+	--ifm-color-primary: #c0b6f2;
+}
+
+.docusaurus-highlight-code-line {
+	background-color: rgb(72, 77, 91);
+	display: block;
+	margin: 0 calc(-1 * var(--ifm-pre-padding));
+	padding: 0 var(--ifm-pre-padding);
+}
+
+:focus:not(.navbar__search-input) {
+	outline: var(--ifm-color-primary-lighter) auto 1px;
+	outline-color: var(--ifm-color-primary-lighter);
+	outline-style: auto;
+	outline-width: 1px;
+}
+
+.navbar__search-input {
+	width: 12rem;
+	transition: width 0.1s ease-out;
+}
+.navbar__search-input:focus {
+	width: 17.5rem;
+}
+
+[role='banner'] {
+	position: relative;
+	width: 100%;
+	height: var(--docusaurus-announcement-bar-height);
+	background-color: var(--ifm-color-primary);
+	color: var(--ifm-color-primary-lightest) !important;
+}
+
+.main-wrapper {
+	overflow-x: hidden;
+	background-image: url('/img/hero_background.svg');
+	background-repeat: round;
+}

@@ -17,7 +17,8 @@ export const settings: TestSettings = {
  */
 export default () => {
 	step('Visit S/4 Hana Trial Login', async browser => {
-		await browser.visit('https://my300084.s4hana.ondemand.com/ui?sap-language=EN#Shell-home')
+		await browser.visit('https://my300197.s4hana.ondemand.com/ui?sap-language=EN#Shell-home')
+		await browser.waitForNavigation()
 	})
 
 	step('S/4 Hana Login', async browser => {

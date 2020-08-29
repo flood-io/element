@@ -3,7 +3,7 @@ import { launchPuppeteer, testPuppeteer } from '../../tests/support/launch-brows
 import { serve } from '../../tests/support/fixture-server'
 import { Browser } from '../runtime/Browser'
 import { testWorkRoot } from '../../tests/support/test-run-env'
-import { DEFAULT_SETTINGS } from '../runtime/Settings'
+import { DEFAULT_SETTINGS, normalizeSettings } from '../runtime/Settings'
 
 let page: Page
 let puppeteer: testPuppeteer
@@ -35,8 +35,8 @@ describe('Mouse', () => {
 	beforeAll(async () => {
 		puppeteer = await launchPuppeteer()
 		page = puppeteer.page
-
-		browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
+		const settings: any = normalizeSettings(DEFAULT_SETTINGS)
+		browser = new Browser(workRoot, puppeteer, settings)
 
 		const url = await serve('drag_and_drop.html')
 		await browser.visit(url)

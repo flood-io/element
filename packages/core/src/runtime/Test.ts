@@ -27,7 +27,7 @@ import { CancellationToken } from '../utils/CancellationToken'
 
 import { PuppeteerClientLike } from '../driver/Puppeteer'
 import { ScreenshotOptions } from 'puppeteer'
-import { TestSettings, ConcreteTestSettings, DEFAULT_STEP_WAIT_SECONDS } from './Settings'
+import { TestSettings, ConcreteTestSettings, DEFAULT_STEP_WAIT_MILLISECONDS } from './Settings'
 import { ITest } from './ITest'
 import { EvaluatedScriptLike } from './EvaluatedScriptLike'
 import { Hook, HookBase } from './StepLifeCycle'
@@ -405,7 +405,7 @@ export default class Test implements ITest {
 				resolve()
 				return
 			}
-			setTimeout(resolve, this.settings.stepDelay * 1e3 || DEFAULT_STEP_WAIT_SECONDS * 1e3)
+			setTimeout(resolve, Number(this.settings.stepDelay) || DEFAULT_STEP_WAIT_MILLISECONDS)
 		})
 	}
 
@@ -445,9 +445,12 @@ export default class Test implements ITest {
 		try {
 			for (const hook of hooks) {
 				browser.settings = { ...this.settings }
-				browser.settings.waitTimeout = hook.waitTimeout
+				browser.settings.waitTimeout = Math.max(
+					Number(browser.settings.waitTimeout),
+					Number(hook.waitTimeout),
+				)
 				const hookFn = hook.fn.bind(null, browser, testDataRecord)
-				await this.doHookFnWithTimeout(hookFn, hook.waitTimeout)
+				await this.doHookFnWithTimeout(hookFn, Number(hook.waitTimeout))
 			}
 		} catch (error) {
 			throw new Error(error)
@@ -460,7 +463,7 @@ export default class Test implements ITest {
 			const id = setTimeout(() => {
 				clearTimeout(id)
 				reject()
-			}, timeout * 1e3)
+			}, timeout)
 		})
 		// Returns a race between our timeout and the passed in promise
 		return Promise.race([fn(), promiseTimeout])

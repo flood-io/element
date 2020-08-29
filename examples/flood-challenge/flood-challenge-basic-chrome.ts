@@ -7,8 +7,8 @@ export const settings: TestSettings = {
 	clearCookies: true,
 	responseTimeMeasurement: 'step',
 	userAgent: 'I AM ROBOT',
-	actionDelay: 5,
-	stepDelay: 2,
+	actionDelay: '5s',
+	stepDelay: '2s',
 }
 
 export default () => {
@@ -23,7 +23,7 @@ export default () => {
 		await el.click()
 	})
 
-	step('2. Age', { waitTimeout: 60 }, async browser => {
+	step('2. Age', { waitTimeout: '60s' }, async browser => {
 		// let button = By.css('input.btn')
 		// await browser.wait(Until.elementIsVisible(button))
 

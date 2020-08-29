@@ -3,21 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [1.3.0](https://github.com/flood-io/element/compare/v1.3.0-beta.20...v1.3.0) (2020-08-29)
-
-
-
-## [1.2.5](https://github.com/flood-io/element/compare/v1.2.4...v1.2.5) (2020-08-11)
-
-
-
-## [1.2.4](https://github.com/flood-io/element/compare/v1.3.0-beta.18...v1.2.4) (2020-07-17)
-
-
-
-## [1.2.3](https://github.com/flood-io/element/compare/v1.2.3-beta.2...v1.2.3) (2020-04-07)
+# [1.3.0-beta.28](https://github.com/flood-io/element/compare/v1.3.0-beta.27...v1.3.0-beta.28) (2020-08-29)
 
 **Note:** Version bump only for package @flood/element-cli
+
+
+
+
+
+# [1.3.0-beta.27](https://github.com/flood-io/element/compare/v1.3.0-beta.26...v1.3.0-beta.27) (2020-08-29)
+
+
+### Features
+
+* Enhance unit of waitTimeout from ms to second makes it more consistently in TestCase settings. [#183](https://github.com/flood-io/element/issues/183) ([#206](https://github.com/flood-io/element/issues/206)) ([ab829fd](https://github.com/flood-io/element/commit/ab829fd8ac5db8d8afe325b517af3d7c269030f3))
 
 
 

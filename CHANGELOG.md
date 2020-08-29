@@ -5,80 +5,43 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [1.3.0](https://github.com/flood-io/element/compare/v1.3.0-beta.20...v1.3.0) (2020-08-29)
 
-
-
 ## [1.2.5](https://github.com/flood-io/element/compare/v1.2.4...v1.2.5) (2020-08-11)
 
-
-
 ## [1.2.4](https://github.com/flood-io/element/compare/v1.3.0-beta.18...v1.2.4) (2020-07-17)
-
-
 
 ## [1.2.3](https://github.com/flood-io/element/compare/v1.2.3-beta.2...v1.2.3) (2020-04-07)
 
 **Note:** Version bump only for package flood-element
 
-
-
-
-
 # [1.3.0-beta.26](https://github.com/flood-io/element/compare/v1.3.0-beta.25...v1.3.0-beta.26) (2020-08-28)
 
 **Note:** Version bump only for package flood-element
 
-
-
-
-
 # [1.3.0-beta.25](https://github.com/flood-io/element/compare/v1.3.0-beta.24...v1.3.0-beta.25) (2020-08-28)
-
 
 ### Reverts
 
-* Revert "fix: error publishing release to Homebrew (#240)" (#241) ([6b5227c](https://github.com/flood-io/element/commit/6b5227cc633cf3e536d4a9c0e1442de09982e683)), closes [#240](https://github.com/flood-io/element/issues/240) [#241](https://github.com/flood-io/element/issues/241)
-
-
-
-
+- Revert "fix: error publishing release to Homebrew (#240)" (#241) ([6b5227c](https://github.com/flood-io/element/commit/6b5227cc633cf3e536d4a9c0e1442de09982e683)), closes [#240](https://github.com/flood-io/element/issues/240) [#241](https://github.com/flood-io/element/issues/241)
 
 # [1.3.0-beta.24](https://github.com/flood-io/element/compare/v1.3.0-beta.23...v1.3.0-beta.24) (2020-08-28)
 
-
 ### Bug Fixes
 
-* error publishing release to Homebrew ([#240](https://github.com/flood-io/element/issues/240)) ([41491e7](https://github.com/flood-io/element/commit/41491e7c644a691bc81c2a836881f9715f759e03))
-
-
-
-
+- error publishing release to Homebrew ([#240](https://github.com/flood-io/element/issues/240)) ([41491e7](https://github.com/flood-io/element/commit/41491e7c644a691bc81c2a836881f9715f759e03))
 
 # [1.3.0-beta.23](https://github.com/flood-io/element/compare/v1.3.0-beta.22...v1.3.0-beta.23) (2020-08-27)
 
-
 ### Bug Fixes
 
-* fix several bugs found on element api ([#238](https://github.com/flood-io/element/issues/238)) ([6aed2f0](https://github.com/flood-io/element/commit/6aed2f0126dc4ad2218739fae91605eb1ecc9a9e))
-
-
-
-
+- fix several bugs found on element api ([#238](https://github.com/flood-io/element/issues/238)) ([6aed2f0](https://github.com/flood-io/element/commit/6aed2f0126dc4ad2218739fae91605eb1ecc9a9e))
 
 # [1.3.0-beta.22](https://github.com/flood-io/element/compare/v1.3.0-beta.21...v1.3.0-beta.22) (2020-08-27)
 
 **Note:** Version bump only for package flood-element
 
-
-
-
-
 # [1.3.0-beta.21](https://github.com/flood-io/element/compare/v1.3.0-beta.20...v1.3.0-beta.21) (2020-08-21)
 
 **Note:** Version bump only for package flood-element
-
-
-
-
 
 # [1.3.0-beta.20](https://github.com/flood-io/element/compare/v1.3.0-beta.19...v1.3.0-beta.20) (2020-08-18)
 

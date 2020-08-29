@@ -3,19 +3,18 @@ import { step, TestSettings, By, Until } from '@flood/element'
 var i = 0
 
 export const settings: TestSettings = {
-    loopCount: -1,
-    clearCache: true,
-    disableCache: true,
-    actionDelay: 8,
-    stepDelay: 10,
-    screenshotOnFailure: true,
-    userAgent: 'flood-element-test',
+	clearCache: true,
+	disableCache: true,
+	waitTimeout: '30s',
+	screenshotOnFailure: true,
+	stepDelay: '7.5s',
+	actionDelay: '7.5s',
 }
 
 export default () => {
 	step('01_Home', async browser => {
 		await browser.visit('https://www.youtube.com/watch?v=oYTo0jwRfMo')
-		
+
 		await browser.takeScreenshot()
 	})
 
@@ -34,8 +33,5 @@ export default () => {
 			await browser.takeScreenshot()
 			await browser.wait(5)
 		}
-		
 	})
-
-
 }

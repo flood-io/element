@@ -28,6 +28,7 @@ describe('Condition', () => {
 		test('waits Until.elementIsSelected', async () => {
 			// Wait until Sweden is selected
 			const condition = Until.elementIsSelected(By.css('select#new_user_country option[value="3"]'))
+			condition.settings.waitTimeout = 31e3
 			page.select('select#new_user_country', '3')
 			const found = await condition.waitFor(page.mainFrame(), undefined)
 			expect(found).toBe(true)
@@ -37,6 +38,7 @@ describe('Condition', () => {
 			const condition = Until.elementIsNotSelected(
 				By.css('select#new_user_country option[value="2"]'),
 			)
+			condition.settings.waitTimeout = 31e3
 			page.select('select#new_user_country', '3')
 			const found = await condition.waitFor(page.mainFrame(), undefined)
 			expect(found).toBe(true)

@@ -24,7 +24,7 @@ describe('Condition', () => {
 	describe('ElementStateCondition', () => {
 		test('waits Until.elementIsEnabled', async () => {
 			let condition = Until.elementIsEnabled(By.css('#btn'))
-
+			condition.settings.waitTimeout = 31e3
 			// Triggers a timeout of 500ms
 			await page.click('a#enable_btn')
 
@@ -49,6 +49,7 @@ describe('Condition', () => {
 			)
 
 			let condition = Until.elementIsDisabled(By.css('#btn'))
+			condition.settings.waitTimeout = 31e3
 
 			await page.click('#btn')
 

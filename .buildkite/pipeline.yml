@@ -2,24 +2,18 @@ steps:
   - command: "scripts/ci/build.sh"
     label: ":hammer: Build"
     agents:
-      agent: "k8s"
-      queue: "continuous-integration"
+      agent: "ci"
 
   - wait
 
   - command: "scripts/ci/test.sh"
     label: ":llama: Test"
     agents:
-      agent: "k8s"
-      queue: "continuous-integration"
-
-  # - command: "scripts/ci/smoke.sh"
-  # label: ":fire: Smoke"
+      agent: "ci"
 
   - wait
 
   - command: "scripts/ci/publish.sh"
     label: ":ship: Publish"
     agents:
-      agent: "k8s"
-      queue: "continuous-integration"
+      agent: "ci"

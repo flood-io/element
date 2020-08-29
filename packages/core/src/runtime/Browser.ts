@@ -54,22 +54,22 @@ export class Browser<T> implements BrowserInterface {
 		this.beforeFunc && this.afterFunc
 		this.screenshots = []
 
-		this.newPageCallback = resolve => {
-			this.client.browser.once('targetcreated', async target => {
+		this.newPageCallback = (resolve) => {
+			this.client.browser.once('targetcreated', async (target) => {
 				if (target.type() === 'page') {
 					const newPage = await target.page()
 					this.client.page = newPage
 					await newPage.bringToFront()
 					resolve(newPage)
 				} else {
-					this.newPagePromise = new Promise(resolve => {
+					this.newPagePromise = new Promise((resolve) => {
 						this.newPageCallback(resolve)
 					})
 				}
 			})
 		}
 
-		this.newPagePromise = new Promise(resolve => {
+		this.newPagePromise = new Promise((resolve) => {
 			this.newPageCallback(resolve)
 		})
 	}
@@ -161,7 +161,7 @@ export class Browser<T> implements BrowserInterface {
 	@addCallbacks()
 	public async wait(timeoutOrCondition: Condition | number): Promise<any> {
 		if (typeof timeoutOrCondition === 'number') {
-			await new Promise(yeah => setTimeout(yeah, Number(timeoutOrCondition) * 1e3))
+			await new Promise((yeah) => setTimeout(yeah, Number(timeoutOrCondition) * 1e3))
 			return true
 		}
 
@@ -269,7 +269,7 @@ export class Browser<T> implements BrowserInterface {
 				for (const option of options) option.selected = values.includes(option.value)
 				element.dispatchEvent(new Event('input', { bubbles: true }))
 				element.dispatchEvent(new Event('change', { bubbles: true }))
-				return options.filter(option => option.selected).map(option => option.value)
+				return options.filter((option) => option.selected).map((option) => option.value)
 			},
 			element.element,
 			values,
@@ -294,7 +294,7 @@ export class Browser<T> implements BrowserInterface {
 
 				element.dispatchEvent(new Event('input', { bubbles: true }))
 				element.dispatchEvent(new Event('change', { bubbles: true }))
-				return options.filter(option => option.selected).map(option => option.value)
+				return options.filter((option) => option.selected).map((option) => option.value)
 			},
 			element.element,
 			index,
@@ -320,7 +320,7 @@ export class Browser<T> implements BrowserInterface {
 
 				element.dispatchEvent(new Event('input', { bubbles: true }))
 				element.dispatchEvent(new Event('change', { bubbles: true }))
-				return options.filter(option => option.selected).map(option => option.value)
+				return options.filter((option) => option.selected).map((option) => option.value)
 			},
 			element.element,
 			text,
@@ -436,7 +436,7 @@ export class Browser<T> implements BrowserInterface {
 	 */
 	@rewriteError()
 	public async takeScreenshot(options?: ScreenshotOptions): Promise<void> {
-		await this.saveScreenshot(async path => {
+		await this.saveScreenshot(async (path) => {
 			await this.page.screenshot({ path, ...options })
 			return true
 		})
@@ -489,7 +489,7 @@ export class Browser<T> implements BrowserInterface {
 	public async findElements(locatable: NullableLocatable): Promise<ElementHandle[]> {
 		const locator = locatableToLocator(locatable, 'browser.findElements(locatable)')
 		const elements = await locator.findMany(await this.context)
-		elements.forEach(element => element.bindBrowser(this))
+		elements.forEach((element) => element.bindBrowser(this))
 		return elements
 	}
 
@@ -499,10 +499,10 @@ export class Browser<T> implements BrowserInterface {
 	public switchTo(): TargetLocator {
 		return new TargetLocator(
 			this.page,
-			frame => {
+			(frame) => {
 				this.activeFrame = frame
 			},
-			page => this.switchPage(page),
+			(page) => this.switchPage(page),
 		)
 	}
 
@@ -588,7 +588,7 @@ export class Browser<T> implements BrowserInterface {
 		const newPage = await this.newPagePromise
 
 		// wait for another page to be opened
-		this.newPagePromise = new Promise(resolve => {
+		this.newPagePromise = new Promise((resolve) => {
 			this.newPageCallback(resolve)
 		})
 

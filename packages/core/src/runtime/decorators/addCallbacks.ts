@@ -12,6 +12,7 @@ export function addCallbacks() {
 		const originalFn = descriptor.value
 		descriptor.value = async function(...args: any[]) {
 			let ret
+			let errorMessage = ''
 
 			const browser = this as Browser
 
@@ -22,7 +23,6 @@ export function addCallbacks() {
 			try {
 				if (browser.beforeFunc instanceof Function) await browser.beforeFunc(browser, propertyKey)
 				ret = await originalFn.apply(browser, args)
-				if (browser.afterFunc instanceof Function) await browser.afterFunc(browser, propertyKey)
 			} catch (e) {
 				const newError = interpretError<Browser, AnyErrorData>(
 					errorInterpreters,
@@ -33,7 +33,12 @@ export function addCallbacks() {
 				)
 				const sErr = StructuredError.liftWithSource(newError, 'browser', `browser.${propertyKey}`)
 				sErr.stack = calltimeStack
+				errorMessage = sErr.message
 				throw sErr
+			} finally {
+				if (browser.afterFunc instanceof Function) {
+					await browser.afterFunc(browser, propertyKey, errorMessage)
+				}
 			}
 			return ret
 		}

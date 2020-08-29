@@ -4,8 +4,8 @@ import { TraceData, TestEvent, CompoundMeasurement, MeasurementKind } from '../t
 import chalk from 'chalk'
 import { Logger } from 'winston'
 import { createTestLog } from '../utils/TestLogger'
+import ansiEscapes from 'ansi-escapes'
 const debug = require('debug')('element-cli:console-reporter')
-//const ansiEscapes = require('ansi-escapes')
 
 export class VerboseReporter implements IReporter {
 	public responseCode: string
@@ -28,62 +28,61 @@ export class VerboseReporter implements IReporter {
 		value: CompoundMeasurement,
 		label: string,
 	): void {
-		this.logger.debug(`> ${measurement} ${JSON.stringify(value)}`)
+		console.debug(`> ${measurement} ${JSON.stringify(value)}`)
 	}
 
 	addTrace(traceData: TraceData, label: string): void {
-		this.logger.debug(`> trace:\n${JSON.stringify(traceData)}`)
+		console.debug(`> trace:\n${JSON.stringify(traceData)}`)
 	}
 
 	async flushMeasurements(): Promise<void> {}
 
-	testLifecycle(stage: TestEvent, label: string, timing?: number): void {
+	testLifecycle(
+		stage: TestEvent,
+		label: string,
+		subtitle?: string,
+		timing?: number,
+		errorMessage?: string,
+	): void {
+		const stepName = 'Step ' + (subtitle ? `'${label}' (${subtitle})` : `'${label}'`)
 		switch (stage) {
 			case TestEvent.AfterStepAction:
-				console.log(`---> ${label}()`)
+				console.log(chalk.grey(`${label}()`))
 				break
 			case TestEvent.BeforeStep:
-				console.log(`===> Step '${label}'`)
+				console.group(chalk.grey(`${stepName} is running ...`))
+				console.group()
 				break
-			case TestEvent.AfterStep:
-				console.log(`---> Step '${label}' finished in ${timing?.toLocaleString()}ms`)
-				break
-			case TestEvent.StepSkipped:
-				console.log(`---- Step '${label}' skipped`)
+			case TestEvent.StepSucceeded:
+				process.stdout.write(ansiEscapes.cursorUp(12) + ansiEscapes.eraseLine)
+				console.groupEnd()
+				console.log(
+					chalk.green.bold('✔'),
+					chalk.grey(`${stepName} passed (${timing?.toLocaleString()}ms)`),
+				)
+				process.stdout.write(ansiEscapes.cursorDown(12))
 				break
 			case TestEvent.StepFailed:
-				console.log(`xxxx Step '${label}' failed`)
+				console.error(chalk.red(errorMessage ?? 'step error -> failed'))
+				console.groupEnd()
+				console.log(chalk.redBright.bold('✘'), chalk.grey(`${stepName} failed`))
+				break
+			case TestEvent.AfterStep:
+				console.groupEnd()
 				break
 		}
 	}
 
 	testInternalError(message: string, err: Error): void {
-		this.logger.error('flood-element error:\n' + err)
+		console.error('flood-element error:\n' + err)
 	}
 	testAssertionError(err: TestScriptError): void {
-		this.logger.error('assertion failed \n' + err.toStringNodeFormat())
+		console.error('assertion failed \n' + err.toStringNodeFormat())
 	}
 	testStepError(err: TestScriptError): void {
 		const detail = err.toDetailObject(this.verbose)
-
-		let str = detail.callsite + '\n\n'
-
-		if (detail.callContext) {
-			str += 'in call ' + chalk.blue(detail.callContext) + '():\n'
-		}
-
-		str += detail.asString + '\n' + detail.unmappedStack.join('\n')
-
-		if (detail.doc) {
-			str += '\n\nDetail:\n' + detail.doc + '\n'
-		}
-
-		this.logger.error('\n' + str)
-
-		if (this.verbose) {
-			this.logger.error(`Verbose detail:
-cause.asString(): ${detail.causeAsString}
-cause.stack: ${detail.causeStack}`)
+		if (detail.callsite) {
+			console.error(detail.callsite)
 		}
 	}
 
@@ -98,6 +97,7 @@ cause.stack: ${detail.causeStack}`)
 				console.log(chalk.blue(logMessage))
 				break
 			case 'warn':
+			case 'warning':
 				console.log(chalk.yellow(logMessage))
 				break
 			case 'error':

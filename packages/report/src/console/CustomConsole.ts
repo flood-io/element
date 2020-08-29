@@ -2,7 +2,6 @@ import assert from 'assert'
 import { format } from 'util'
 import { Console } from 'console'
 import { LogCounters, LogMessage, LogTimers, LogType } from '../types/Console'
-import chalk from 'chalk'
 
 type Formatter = (type: LogType, message: LogMessage) => string
 
@@ -20,13 +19,15 @@ function simpleFormatter() {
 	}
 }
 export class CustomConsole extends Console {
-	private _stdout: NodeJS.WriteStream
-	private _stderr: NodeJS.WriteStream
 	private _formatBuffer: Formatter
 	private _counters: LogCounters
 	private _timers: LogTimers
 	private _groupDepth: number
-	public logDepth: number
+	private _stdout: NodeJS.WriteStream
+	private _stderr: NodeJS.WriteStream
+	private _width: number
+	private _depth: number
+	private _height: number
 
 	constructor(
 		stdout: NodeJS.WriteStream,
@@ -40,21 +41,27 @@ export class CustomConsole extends Console {
 		this._counters = {}
 		this._timers = {}
 		this._groupDepth = 0
-		this.logDepth = 0
+		if (stdout.isTTY) {
+			this._width = stdout.columns!
+		} else {
+			this._width = 1
+		}
+		this._depth = 0
+		this._height = 1
 	}
 
 	private _log(type, message): void {
-		this.logDepth++
-		this._stdout.write(
-			` ${this.logDepth} ${this._formatBuffer(type, '  '.repeat(this._groupDepth) + message)}\n`,
-		)
+		const logMessage = `${this._formatBuffer(type, '  '.repeat(this._groupDepth) + message)}`
+		this._depth += this._height
+		this._height = Math.ceil(logMessage.length / this._width)
+		this._stdout.write(`${this._depth} - ${logMessage}\n`)
 	}
 
 	private _logError(type, message): void {
-		this.logDepth++
-		this._stderr.write(
-			` ${this.logDepth} ${this._formatBuffer(type, '  '.repeat(this._groupDepth) + message)}\n`,
-		)
+		const logMessage = `${this._formatBuffer(type, '  '.repeat(this._groupDepth) + message)}`
+		this._depth += this._height
+		this._height = Math.ceil(logMessage.length / this._width)
+		this._stderr.write(`${this._depth} - ${logMessage}\n`)
 	}
 
 	assert(value: unknown, message?: string | Error): void {
@@ -95,15 +102,15 @@ export class CustomConsole extends Console {
 	group(title?: string, ...args: Array<unknown>): void {
 		this._groupDepth++
 
-		if (args.length > 0) {
-			this._log('group', chalk.bold(format(title, ...args)))
+		if (title || args.length) {
+			this._log('group', format(title, ...args))
 		}
 	}
 	groupCollapsed(title?: string, ...args: Array<unknown>): void {
 		this._groupDepth++
 
-		if (args.length > 0) {
-			this._log('groupCollapsed', chalk.bold(format(title, ...args)))
+		if (title || args.length) {
+			this._log('groupCollapsed', format(title, ...args))
 		}
 	}
 

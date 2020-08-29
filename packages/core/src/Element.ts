@@ -5,6 +5,7 @@ import { TestScriptOptions } from './TestScriptOptions'
 import { EvaluatedScript } from './runtime/EvaluatedScript'
 import { ElementOptions, ElementRunArguments, normalizeElementOptions } from './ElementOption'
 import { CustomConsole } from '@flood/element-report'
+import chalk from 'chalk'
 
 async function runSingleTestScript(opts: ElementOptions): Promise<void> {
 	const { logger, testScript, clientFactory } = opts
@@ -59,12 +60,10 @@ async function runSingleTestScript(opts: ElementOptions): Promise<void> {
 	const testScriptFactory = async (): Promise<EvaluatedScript> => {
 		return new EvaluatedScript(opts.runEnv, await mustCompileFile(testScript, testScriptOptions))
 	}
-
 	try {
 		await runner.run(testScriptFactory)
 	} catch (err) {
-		console.log('Element exited with error')
-		console.error(err)
+		throw Error(err)
 	}
 }
 
@@ -72,20 +71,36 @@ export async function runCommandLine(args: ElementRunArguments): Promise<void> {
 	global.console = new CustomConsole(process.stdout, process.stderr)
 	if (args.testFiles) {
 		console.log(
-			'The following test scripts that matched the testPathMatch pattern are going to be executed:',
+			chalk.grey(
+				'The following test scripts that matched the testPathMatch pattern are going to be executed:',
+			),
 		)
+		let order = 0
+		const numberOfFile = args.testFiles.length
 		for (const file of args.testFiles) {
 			const arg: ElementRunArguments = {
 				...args,
 				file,
 			}
+			if (order >= 1) {
+				console.log(
+					chalk.grey('------------------------------------------------------------------'),
+				)
+			}
+			order++
+			const fileTitle = chalk.grey(`${file} (${order} of ${numberOfFile})`)
+			console.group(chalk('Running', fileTitle))
 			const opts = normalizeElementOptions(arg)
 			await runSingleTestScript(opts)
+			console.groupEnd()
 		}
-		console.log('Test running with the config file has finished')
+		console.log(chalk.grey('Test running with the config file has finished'))
 	} else {
+		const fileTitle = chalk.grey(`${args.file} (1 of 1)`)
+		console.group(chalk('Running', fileTitle))
 		const opts = normalizeElementOptions(args)
 		await runSingleTestScript(opts)
+		console.groupEnd()
 	}
 	process.exit(0)
 }

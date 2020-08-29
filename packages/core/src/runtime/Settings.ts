@@ -250,7 +250,7 @@ export const DEFAULT_SETTINGS: ConcreteTestSettings = {
 	loopCount: Infinity,
 	actionDelay: 2,
 	stepDelay: 6,
-	screenshotOnFailure: true,
+	screenshotOnFailure: false,
 	clearCookies: true,
 	clearCache: false,
 	waitTimeout: 30,

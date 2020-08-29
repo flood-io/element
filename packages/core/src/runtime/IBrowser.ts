@@ -41,7 +41,7 @@ export interface Browser {
 	 * @internal
 	 * @private
 	 */
-	afterFunc: (b: Browser, name: string) => Promise<void>
+	afterFunc: (b: Browser, name: string, errorMessage?: string) => Promise<void>
 
 	title(): Promise<string>
 

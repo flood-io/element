@@ -97,9 +97,9 @@ export async function launch(
 		// launchArgs.args.push("--disable-setuid-sandbox");
 	}
 
-	if (options.debug) {
-		console.dir(options)
-	}
+	// if (options.debug) {
+	// 	console.dir(options)
+	// }
 
 	options = setupChrome(options)
 

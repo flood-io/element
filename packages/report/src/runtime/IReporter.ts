@@ -17,7 +17,12 @@ export interface IReporter {
 	 * @returns {Promise<void>}
 	 * @memberof IReporter
 	 */
-	addMeasurement(measurement: MeasurementKind, value: string | number, label?: string): void
+	addMeasurement(
+		measurement: MeasurementKind,
+		value: string | number,
+		label?: string,
+		errorMessage?: string,
+	): void
 
 	addCompoundMeasurement(
 		measurement: MeasurementKind,
@@ -41,7 +46,13 @@ export interface IReporter {
 	 */
 	addTrace(traceData: TraceData, label: string): void
 
-	testLifecycle(event: TestEvent, label: string, timeMeasurement?: number): void
+	testLifecycle(
+		stage: TestEvent,
+		label: string,
+		subtitle?: string,
+		timing?: number,
+		errorMessage?: string,
+	): void
 
 	testAssertionError(err: TestScriptError): void
 	testStepError(err: TestScriptError): void

@@ -1,6 +1,6 @@
 import chalk from 'chalk'
 import argv from 'yargs'
-import { error } from './utils/error'
+//import { error } from './utils/error'
 import { updateCheck } from './utils/updateCheck'
 import { join } from 'path'
 import initCmd from './cmd/init'
@@ -9,38 +9,37 @@ import planCmd from './cmd/plan'
 import generateCmd from './cmd/generate'
 import agentCmd from './cmd/agent'
 import floodCmd from './cmd/flood'
-
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:cli')
 
 export const handleUnexpected = (err: Error) => {
 	debug('handling unexpected error')
 
-	console.error(error(`An unexpected error occurred!\n  ${err.stack} ${err.stack}`))
-	console.error(
-		'this is a bug, please report it here https://github.com/flood-io/element/issues/new?template=bug_report.md',
-	)
+	// console.debug(error(`An unexpected error occurred!\n  ${err.stack} ${err.stack}`))
+	// console.debug(
+	// 	'this is a bug, please report it here https://github.com/flood-io/element/issues/new?template=bug_report.md',
+	// )
 
-	process.exit(1)
+	//process.exit(1)
 }
 
 const handleRejection = (err: Error) => {
 	debug('handling rejection', err)
 
-	if (err) {
-		if (err instanceof Error) {
-			handleUnexpected(err)
-		} else {
-			console.error(error(`An unexpected rejection occurred\n  ${err}`))
-		}
-	} else {
-		console.error(error(`An unexpected empty rejection occurred\n rejection: ${err}`))
-	}
-	console.error(
-		'this is a bug, please report it here https://github.com/flood-io/element/issues/new?template=bug_report.md',
-	)
+	// if (err) {
+	// 	if (err instanceof Error) {
+	// 		handleUnexpected(err)
+	// 	} else {
+	// 		console.debug(error(`An unexpected rejection occurred\n  ${err}`))
+	// 	}
+	// } else {
+	// 	console.debug(error(`An unexpected empty rejection occurred\n rejection: ${err}`))
+	// }
+	// console.debug(
+	// 	'this is a bug, please report it here https://github.com/flood-io/element/issues/new?template=bug_report.md',
+	// )
 
-	process.exit(1)
+	//process.exit(1)
 }
 
 process.on('unhandledRejection', handleRejection)

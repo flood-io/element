@@ -86,12 +86,17 @@ export class TimingObserver extends NetworkRecordingTestObserver {
 		})
 	}
 
-	async afterStepAction(test: Test, step: Step, action: string): Promise<void> {
+	async afterStepAction(
+		test: Test,
+		step: Step,
+		action: string,
+		errorMessage?: string,
+	): Promise<void> {
 		await this.timing.measureThinkTime('step', async () => {
 			debug(`After action: ${action}`)
 			// Force reporting concurrency to ensure steps which take >15s don't skew metrics
 			// this.reporter.addMeasurement('concurrency', this.numberOfBrowsers, name)
-			await this.next.afterStepAction(test, step, action)
+			await this.next.afterStepAction(test, step, action, errorMessage)
 		})
 	}
 

@@ -23,6 +23,7 @@ describe('Condition', () => {
 
 		test('waits Until.alertIsPresent alert', async () => {
 			const condition = Until.alertIsPresent()
+			condition.settings.waitTimeout = 31e3
 
 			page.click('#alert')
 
@@ -34,7 +35,7 @@ describe('Condition', () => {
 
 		test('waits Until.alertIsPresent confirm', async () => {
 			const condition = Until.alertIsPresent()
-
+			condition.settings.waitTimeout = 31e3
 			page.click('#confirm')
 
 			const alert: Dialog | null = await condition.waitForEvent(page)
@@ -45,6 +46,7 @@ describe('Condition', () => {
 
 		test('waits Until.alertIsPresent prompt', async () => {
 			const condition = Until.alertIsPresent()
+			condition.settings.waitTimeout = 31e3
 			await page.waitForSelector('#prompt', { visible: true })
 
 			page.click('#prompt', { delay: 100 })

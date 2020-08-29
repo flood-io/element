@@ -4,8 +4,8 @@ import * as assert from 'assert'
 export const settings: TestSettings = {
 	clearCache: true,
 	disableCache: true,
-	stepDelay: 10,
-	actionDelay: 10,
+	stepDelay: '10s',
+	actionDelay: '10s',
 	screenshotOnFailure: true,
 	clearCookies: true,
 	chromeVersion: 'stable',

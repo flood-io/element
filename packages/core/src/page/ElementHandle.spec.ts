@@ -3,7 +3,7 @@ import { serve } from '../../tests/support/fixture-server'
 import { ElementHandle as PElementHandle } from 'puppeteer'
 import { launchPuppeteer, testPuppeteer } from '../../tests/support/launch-browser'
 import { Browser } from '../runtime/Browser'
-import { DEFAULT_SETTINGS } from '../runtime/Settings'
+import { DEFAULT_SETTINGS, normalizeSettings } from '../runtime/Settings'
 import { testWorkRoot } from '../../tests/support/test-run-env'
 
 let puppeteer: testPuppeteer
@@ -230,7 +230,8 @@ describe('ElementHandle', () => {
 	describe('uploadFile', () => {
 		let browser: Browser<any>
 		beforeEach(async () => {
-			browser = new Browser(testWorkRoot(), puppeteer, DEFAULT_SETTINGS)
+			const setting: any = normalizeSettings(DEFAULT_SETTINGS)
+			browser = new Browser(testWorkRoot(), puppeteer, setting)
 			const url = await serve('forms_with_input_elements.html')
 			await browser.visit(url)
 		})

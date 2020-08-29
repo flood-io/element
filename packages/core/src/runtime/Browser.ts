@@ -31,6 +31,7 @@ import { addCallbacks } from './decorators/addCallbacks'
 import { autoWaitUntil } from './decorators/autoWait'
 import { locatableToLocator, toLocatorError } from './toLocatorError'
 import { Keyboard } from '../page/Keyboard'
+import ms from 'ms'
 import { getFrames } from '../utils/frames'
 
 export const debug = debugFactory('element:runtime:browser')
@@ -159,9 +160,12 @@ export class Browser<T> implements BrowserInterface {
 	}
 
 	@addCallbacks()
-	public async wait(timeoutOrCondition: Condition | number): Promise<any> {
-		if (typeof timeoutOrCondition === 'number') {
-			await new Promise(yeah => setTimeout(yeah, Number(timeoutOrCondition) * 1e3))
+	public async wait(timeoutOrCondition: Condition | number | string): Promise<any> {
+		if (typeof timeoutOrCondition === 'string') {
+			await new Promise(yeah => setTimeout(yeah, ms(timeoutOrCondition)))
+			return true
+		} else if (typeof timeoutOrCondition === 'number') {
+			await new Promise(yeah => setTimeout(yeah, timeoutOrCondition))
 			return true
 		}
 
@@ -190,11 +194,9 @@ export class Browser<T> implements BrowserInterface {
 
 	@addCallbacks()
 	public async visit(url: string, options: NavigationOptions = {}): Promise<any> {
-		const timeout = this.settings.waitTimeout * 1e3
-
 		try {
 			return this.page.goto(url, {
-				timeout,
+				timeout: Number(this.settings.waitTimeout),
 				waitUntil: ['load', 'domcontentloaded', 'networkidle0', 'networkidle2'],
 				...options,
 			})

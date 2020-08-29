@@ -53,7 +53,7 @@ export interface StepConditionBase {
 	(condition: ConditionFn, ...optionsOrFn: any[])
 }
 
-export interface StepRepeatablebase {
+export interface StepRepeatableBase {
 	(count: number, name: string, options: StepOptions, testFn: TestFn)
 	(count: number, name: string, testFn: TestFn)
 	(count: number, ...optionsOrFn: any[])
@@ -88,7 +88,7 @@ export interface StepExtended extends StepBase {
 	/**
 	 * Creates a repeatable step
 	 */
-	repeat: StepRepeatablebase
+	repeat: StepRepeatableBase
 
 	/**
 	 * Creates a while step
@@ -97,7 +97,7 @@ export interface StepExtended extends StepBase {
 }
 
 export type StepDefinition = (name: string, fn: TestFn) => Promise<any>
-export type TestFn = (this: void, browser: Browser) => Promise<any>
+export type TestFn = (this: void, browser: Browser, data?: unknown) => Promise<any>
 export type ConditionFn = (this: void, browser: Browser) => boolean | Promise<boolean>
 export type StepOptions = {
 	pending?: boolean

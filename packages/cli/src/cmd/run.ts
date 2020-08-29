@@ -14,8 +14,8 @@ import { extname, basename, join, dirname, resolve } from 'path'
 import sanitize from 'sanitize-filename'
 import createLogger from '.././utils/Logger'
 import { ConsoleReporter } from '.././utils/ConsoleReporter'
-import glob from 'glob'
 import chalk from 'chalk'
+import { getFilesPattern, readConfigFile } from '../utils/compile'
 interface RunCommonArguments extends Arguments {
 	file: string
 	chrome?: string
@@ -112,15 +112,6 @@ function makeTestCommander(file: string): TestCommander {
 	return commander
 }
 
-async function readConfigFile(file: string): Promise<any> {
-	const rootPath = process.cwd()
-	try {
-		return await import(join(rootPath, file))
-	} catch {
-		throw Error('The config file was not structured correctly. Please check and try again')
-	}
-}
-
 async function runTestScript(args: RunCommonArguments): Promise<void> {
 	const { file, verbose } = args
 	const workRootPath = getWorkRootPath(file, args['work-root'])
@@ -174,20 +165,7 @@ async function runTestScriptWithConfiguration(args: RunCommonArguments): Promise
 	if (!paths.testPathMatch || !paths.testPathMatch.length) {
 		throw Error('Found no test scripts matching testPathMatch pattern')
 	}
-	const files: string[] = []
-	try {
-		files.push(
-			...(paths.testPathMatch.reduce(
-				(arr: string[], item: string) => arr.concat(glob.sync(item)),
-				[],
-			) as []),
-		)
-		if (!files.length) {
-			throw Error('Found no test scripts matching testPathMatch pattern')
-		}
-	} catch {
-		throw Error('Found no test scripts matching testPathMatch pattern')
-	}
+	const files: string[] = getFilesPattern(paths.testPathMatch)
 	console.info(
 		'The following test scripts that matched the testPathMatch pattern are going to be executed:',
 	)

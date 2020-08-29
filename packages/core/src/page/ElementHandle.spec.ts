@@ -148,7 +148,7 @@ describe('ElementHandle', () => {
 		let value = await handle
 			.executionContext()
 			.evaluate((element: HTMLInputElement) => element.value, handle)
-		expect(value).toBe('3')
+		expect(value).toBe('1')
 
 		await element.clear()
 

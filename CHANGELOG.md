@@ -3,6 +3,74 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0-beta.26](https://github.com/flood-io/element/compare/v1.3.0-beta.25...v1.3.0-beta.26) (2020-08-28)
+
+**Note:** Version bump only for package flood-element
+
+
+
+
+
+# [1.3.0-beta.25](https://github.com/flood-io/element/compare/v1.3.0-beta.24...v1.3.0-beta.25) (2020-08-28)
+
+
+### Reverts
+
+* Revert "fix: error publishing release to Homebrew (#240)" (#241) ([6b5227c](https://github.com/flood-io/element/commit/6b5227cc633cf3e536d4a9c0e1442de09982e683)), closes [#240](https://github.com/flood-io/element/issues/240) [#241](https://github.com/flood-io/element/issues/241)
+
+
+
+
+
+# [1.3.0-beta.24](https://github.com/flood-io/element/compare/v1.3.0-beta.23...v1.3.0-beta.24) (2020-08-28)
+
+
+### Bug Fixes
+
+* error publishing release to Homebrew ([#240](https://github.com/flood-io/element/issues/240)) ([41491e7](https://github.com/flood-io/element/commit/41491e7c644a691bc81c2a836881f9715f759e03))
+
+
+
+
+
+# [1.3.0-beta.23](https://github.com/flood-io/element/compare/v1.3.0-beta.22...v1.3.0-beta.23) (2020-08-27)
+
+
+### Bug Fixes
+
+* fix several bugs found on element api ([#238](https://github.com/flood-io/element/issues/238)) ([6aed2f0](https://github.com/flood-io/element/commit/6aed2f0126dc4ad2218739fae91605eb1ecc9a9e))
+
+
+
+
+
+# [1.3.0-beta.22](https://github.com/flood-io/element/compare/v1.3.0-beta.21...v1.3.0-beta.22) (2020-08-27)
+
+**Note:** Version bump only for package flood-element
+
+
+
+
+
+# [1.3.0-beta.21](https://github.com/flood-io/element/compare/v1.3.0-beta.20...v1.3.0-beta.21) (2020-08-21)
+
+**Note:** Version bump only for package flood-element
+
+
+
+
+
+# [1.3.0-beta.20](https://github.com/flood-io/element/compare/v1.3.0-beta.19...v1.3.0-beta.20) (2020-08-18)
+
+
+### Bug Fixes
+
+* change incorrect versions to the latest ([#229](https://github.com/flood-io/element/issues/229)) ([f6fc29a](https://github.com/flood-io/element/commit/f6fc29aeedc2f0955c13a48868b2f5065b537e87))
+
+
+
+
+
 # [1.3.0-beta.19](https://github.com/flood-io/element/compare/v1.3.0-beta.18...v1.3.0-beta.19) (2020-08-11)
 
 

@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0-beta.28](https://github.com/flood-io/element/compare/v1.3.0-beta.27...v1.3.0-beta.28) (2020-08-29)
+
+**Note:** Version bump only for package @flood/element-api
+
+
+
+
+
 # [1.3.0-beta.27](https://github.com/flood-io/element/compare/v1.3.0-beta.26...v1.3.0-beta.27) (2020-08-29)
 
 **Note:** Version bump only for package @flood/element-api

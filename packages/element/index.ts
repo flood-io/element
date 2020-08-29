@@ -104,9 +104,24 @@ export {
 /**
  * @docPage DSL
  */
-export { step, StepFunction, StepOptions } from '@flood/element-core'
+export {
+	step,
+	TestFn,
+	StepFunction,
+	StepOptions,
+	beforeAll,
+	beforeEach,
+	afterAll,
+	afterEach,
+	HookFn,
+} from '@flood/element-core'
 
 /**
  * @docPage DSL
  */
 export { suite } from '@flood/element-core'
+
+/**
+ * @docPage helpers
+ */
+export { RecoverWith } from '@flood/element-core'

@@ -1,4 +1,4 @@
-import { ITest } from '../ITest'
+import { ITest } from './testTypes'
 import { Step } from '../Step'
 import { StructuredError } from '../../utils/StructuredError'
 export type NextFunction = () => Promise<void>
@@ -18,7 +18,7 @@ export interface TestObserver {
 }
 
 export class NoOpTestObserver implements TestObserver {
-	constructor(protected next: TestObserver) {}
+	constructor(public next: TestObserver) {}
 
 	async before(test: ITest): Promise<void> {
 		return this.next.before(test)

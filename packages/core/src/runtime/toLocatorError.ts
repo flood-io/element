@@ -1,4 +1,4 @@
-import { NullableLocatable } from './types'
+import { NullableLocatable } from './Locatable'
 import { Locator } from '../page/types'
 import { By } from '../page/By'
 import { LocatorErrorData } from './errors/Types'

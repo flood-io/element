@@ -1,8 +1,9 @@
 import { Context } from './Context'
-import { Test, NoOpTestObserver, TestObserver } from '@flood/element-api'
+import { NoOpTestObserver, TestObserver } from './Observer'
+import { Test } from './testTypes'
 
 export class NetworkRecordingTestObserver extends NoOpTestObserver {
-	constructor(protected ctx: Context, protected next: TestObserver) {
+	constructor(protected ctx: Context, public next: TestObserver) {
 		super(next)
 	}
 

@@ -1,6 +1,5 @@
 import { runCommandLine, ElementOptions, TestObserver } from '@flood/element-api'
-import { Context } from './test-observers/Context'
-import { TimingObserver } from './test-observers/Timing'
+import { Context, TimingObserver } from '@flood/element-core'
 import { TracingObserver } from './test-observers/Tracing'
 import { initConfig } from './initConfig'
 import { startConcurrencyTicker } from './tickerInterval'
@@ -32,6 +31,7 @@ export async function run(file: string): Promise<void> {
 		testSettingOverrides: {},
 		testObserverFactory,
 		persistentRunner: false,
+		failStatusCode: 1,
 	}
 
 	if (gridConfig.testDuration !== undefined) {

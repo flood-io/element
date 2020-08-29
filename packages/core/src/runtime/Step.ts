@@ -1,4 +1,4 @@
-import { Browser } from './types'
+import { Browser } from './IBrowser'
 import { ElementPresence } from './Settings'
 
 /**
@@ -8,8 +8,15 @@ import { ElementPresence } from './Settings'
  *
  * ```typescript
  * export default () => {
- *   step("Step 1", async (browser: Browser) => {
+ *   step.once("Step 1", async (browser: Browser) => {
  *     await browser.visit("https://example.com")
+ *   })
+ *
+ *   step.recovery("Step 2", async (browser: Browser) => {
+ *     // do stuff
+ *     return RecoverWith.RETRY //retry step 2 (default)
+ *     return RecoverWith.RESTART //restart step 1
+ *     return RecoverWith.CONTINUE //continue next step
  *   })
  *
  *   step("Step 2", async (browser: Browser) => {})
@@ -20,46 +27,113 @@ import { ElementPresence } from './Settings'
  *
  * @param name Step Name
  * @param fn Actual implementation of step
+ * @param options step options
  */
-export declare function step<T>(name: string, fn: StepFunction<T>): void
-/**
- * `step` can also be called with an overridden subset of Test settings (`options`) valid for just this step.
- *
- * ```typescript
- *   // Step 1 takes longer than the default `waitTimeout` of 30s.
- *   step("Step 1", { waitTimeout: 90 }, async browser => {
- *     ...
- *   }
- * ```
- */
-export declare function step<T>(name: string, options: StepOptions, fn: StepFunction<T>): void
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-empty-function */
+export const step: StepExtended = (...nameOrOptionsOrFn: any[]) => {}
+step.once = (...nameOrOptionsOrFn: any[]) => {}
+step.if = (condition: ConditionFn, ...nameOrOptionsOrFn: any[]) => {}
+step.unless = (condition: ConditionFn, ...nameOrOptionsOrFn: any[]) => {}
+step.skip = (...nameOrOptionsOrFn: any[]) => {}
+step.recovery = (...nameOrOptionsOrFn: any[]) => {}
+step.repeat = (count: number, ...nameOrOptionsOrFn: any[]) => {}
+step.while = (condition: ConditionFn, ...nameOrOptionsOrFn: any[]) => {}
 
-export type StepDefinition<T> = (name: string, fn: StepFunction<T>) => Promise<any>
+export interface StepBase {
+	(stepName: string, options: StepOptions, testFn: TestFn): void
+	(stepName: string, testFn: TestFn): void
+	(options: StepOptions, testFn: TestFn): void
+	(testFn: TestFn): void
+}
 
-/**
- * Specifies the available options which can be supplied to a step to override global settings.
- *
- * **Example:**
- *
- * ```typescript
- * step("Step 1", { waitTimeout: 300 }, async (browser: Browser) => {
- * 	await browser.click(...)
- * })
- * ```
- */
-export interface StepOptions {
+export interface StepConditionBase {
+	(condition: ConditionFn, name: string, options: StepOptions, testFn: TestFn)
+	(condition: ConditionFn, name: string, testFn: TestFn)
+	(condition: ConditionFn, ...optionsOrFn: any[])
+}
+
+export interface StepRepeatablebase {
+	(count: number, name: string, options: StepOptions, testFn: TestFn)
+	(count: number, name: string, testFn: TestFn)
+	(count: number, ...optionsOrFn: any[])
+}
+
+export interface StepExtended extends StepBase {
 	/**
-	 * Timeout in seconds for all wait and navigation operations within this <[step]>.
-	 * @default `30` seconds
+	 * Defines a test step which will run in all iterations assuming the previous step succeeded
 	 */
+	once: StepBase
+
+	/**
+	 * Creates a conditional step, which will only run if the preceeding predicate returns true
+	 */
+	if: StepConditionBase
+
+	/**
+	 * Creates a conditional step, which will only run if the preceeding predicate returns false
+	 */
+	unless: StepConditionBase
+
+	/**
+	 * Creates a conditional step, which will skip this test
+	 */
+	skip: StepBase
+
+	/**
+	 * Creates a recovery step
+	 */
+	recovery: StepBase
+
+	/**
+	 * Creates a repeatable step
+	 */
+	repeat: StepRepeatablebase
+
+	/**
+	 * Creates a while step
+	 */
+	while: StepConditionBase
+}
+
+export type StepDefinition = (name: string, fn: TestFn) => Promise<any>
+export type TestFn = (this: void, browser: Browser) => Promise<any>
+export type ConditionFn = (this: void, browser: Browser) => boolean | Promise<boolean>
+export type StepOptions = {
+	pending?: boolean
+	once?: boolean
+	predicate?: ConditionFn
+	skip?: boolean
 	waitTimeout?: number
-
-	/**
-	 * Override global auto wait setting. Uses `waitTimeout` from step if defined.
-	 *
-	 * @default `inherit`
-	 */
 	waitUntil?: ElementPresence
+	tries?: number
+	repeat?: {
+		count: number
+		iteration: number
+	}
+	stepWhile?: {
+		predicate: ConditionFn
+	}
+}
+
+export function extractStep(args: any[]): [string, Partial<StepOptions>, TestFn] {
+	if (args.length === 0) throw new Error('Step called with at least one argument') // [{ pending: true }, () => Promise.resolve()]
+	if (args.length === 1) {
+		return ['global', {}, args[0] as TestFn]
+	} else if (args.length === 2) {
+		const [name, fnc] = args as [string, TestFn]
+		if (typeof name === 'string') {
+			return [name, {}, fnc]
+		}
+		const [options, fn] = args as [StepOptions, TestFn]
+		const { waitTimeout, waitUntil, tries } = options
+		return ['global', { waitTimeout, waitUntil, tries }, fn]
+	} else if (args.length === 3) {
+		const [name, options, fn] = args as [string, StepOptions, TestFn]
+		const { waitTimeout, waitUntil, tries } = options
+		return [name, { waitTimeout, waitUntil, tries }, fn]
+	}
+	throw new Error(`Step called with too many arguments`)
 }
 
 /**
@@ -70,21 +144,42 @@ export interface StepOptions {
  *
  * **Example:**
  *
- * ```typescript
+ * ```
  * const step1: StepFunction = async (browser: Browser) => {
  * 	await browser.click(...)
  * }
  * ```
  */
 export type StepFunction<T> = (driver: Browser, data?: T) => Promise<void>
+export type StepRecoveryObject = {
+	[name: string]: {
+		recoveryStep: Step
+		loopCount: number
+		iteration: number
+	}
+}
+
+/**
+ * The `RecoverWith` represents an action which we will do after the recovery step has finished
+ * ```
+ * RETRY: retry the failed step
+ * RESTART: re-run the first step
+ * CONTINUE: continue next step
+ * ```
+ */
+export enum RecoverWith {
+	RETRY = 'retry',
+	RESTART = 'restart',
+	CONTINUE = 'continue',
+}
 
 /**
  * @internal
  */
-export interface Step {
-	fn: StepFunction<any>
+export type Step = {
 	name: string
-	stepOptions: StepOptions
+	options: Partial<StepOptions>
+	fn: TestFn
 }
 
 /**

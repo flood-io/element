@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [1.2.4](https://github.com/flood-io/element/compare/v1.2.3...v1.2.4) (2020-07-17)
+# [1.3.0-beta.20](https://github.com/flood-io/element/compare/v1.3.0-beta.19...v1.3.0-beta.20) (2020-08-18)
 
 **Note:** Version bump only for package element-cli
 
@@ -11,7 +11,175 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [1.2.3](https://github.com/flood-io/element/compare/v1.2.2...v1.2.3) (2020-04-07)
+# [1.3.0-beta.19](https://github.com/flood-io/element/compare/v1.3.0-beta.18...v1.3.0-beta.19) (2020-08-11)
+
+**Note:** Version bump only for package element-cli
+
+
+
+
+
+# [1.3.0-beta.18](https://github.com/flood-io/element/compare/v1.3.0-beta.17...v1.3.0-beta.18) (2020-07-08)
+
+**Note:** Version bump only for package element-cli
+
+
+
+
+
+# [1.3.0-beta.17](https://github.com/flood-io/element/compare/v1.3.0-beta.16...v1.3.0-beta.17) (2020-07-07)
+
+**Note:** Version bump only for package element-cli
+
+
+
+
+
+# [1.3.0-beta.16](https://github.com/flood-io/element/compare/v1.3.0-beta.15...v1.3.0-beta.16) (2020-07-03)
+
+**Note:** Version bump only for package element-cli
+
+
+
+
+
+# [1.3.0-beta.15](https://github.com/flood-io/element/compare/v1.3.0-beta.14...v1.3.0-beta.15) (2020-07-03)
+
+**Note:** Version bump only for package element-cli
+
+
+
+
+
+# [1.3.0-beta.14](https://github.com/flood-io/element/compare/v1.3.0-beta.13...v1.3.0-beta.14) (2020-07-01)
+
+**Note:** Version bump only for package element-cli
+
+
+
+
+
+# [1.3.0-beta.13](https://github.com/flood-io/element/compare/v1.3.0-beta.12...v1.3.0-beta.13) (2020-06-24)
+
+**Note:** Version bump only for package element-cli
+
+
+
+
+
+# [1.3.0-beta.12](https://github.com/flood-io/element/compare/v1.3.0-beta.11...v1.3.0-beta.12) (2020-06-23)
+
+**Note:** Version bump only for package element-cli
+
+
+
+
+
+# [1.3.0-beta.11](https://github.com/flood-io/element/compare/v1.3.0-beta.10...v1.3.0-beta.11) (2020-06-10)
+
+**Note:** Version bump only for package element-cli
+
+
+
+
+
+# [1.3.0-beta.10](https://github.com/flood-io/element/compare/v1.3.0-beta.9...v1.3.0-beta.10) (2020-06-09)
+
+**Note:** Version bump only for package element-cli
+
+
+
+
+
+# [1.3.0-beta.9](https://github.com/flood-io/element/compare/v1.3.0-beta.8...v1.3.0-beta.9) (2020-06-03)
+
+**Note:** Version bump only for package element-cli
+
+
+
+
+
+# [1.3.0-beta.8](https://github.com/flood-io/element/compare/v1.3.0-beta.7...v1.3.0-beta.8) (2020-06-03)
+
+**Note:** Version bump only for package element-cli
+
+
+
+
+
+# [1.3.0-beta.7](https://github.com/flood-io/element/compare/v1.3.0-beta.6...v1.3.0-beta.7) (2020-06-03)
+
+**Note:** Version bump only for package element-cli
+
+
+
+
+
+# [1.3.0-beta.6](https://github.com/flood-io/element/compare/v1.3.0-beta.5...v1.3.0-beta.6) (2020-05-27)
+
+**Note:** Version bump only for package element-cli
+
+
+
+
+
+# [1.3.0-beta.5](https://github.com/flood-io/element/compare/v1.3.0-beta.4...v1.3.0-beta.5) (2020-05-20)
+
+**Note:** Version bump only for package element-cli
+
+
+
+
+
+# [1.3.0-beta.4](https://github.com/flood-io/element/compare/v1.3.0-beta.3...v1.3.0-beta.4) (2020-05-20)
+
+**Note:** Version bump only for package element-cli
+
+
+
+
+
+# [1.3.0-beta.3](https://github.com/flood-io/element/compare/v1.3.0-beta.2...v1.3.0-beta.3) (2020-05-06)
+
+**Note:** Version bump only for package element-cli
+
+
+
+
+
+# [1.3.0-beta.2](https://github.com/flood-io/element/compare/v1.3.0-beta.1...v1.3.0-beta.2) (2020-05-06)
+
+**Note:** Version bump only for package element-cli
+
+
+
+
+
+# [1.3.0-beta.1](https://github.com/flood-io/element/compare/v1.3.0-beta.0...v1.3.0-beta.1) (2020-04-28)
+
+**Note:** Version bump only for package element-cli
+
+
+
+
+
+# [1.3.0-beta.0](https://github.com/flood-io/element/compare/v1.2.3-beta.4...v1.3.0-beta.0) (2020-04-21)
+
+**Note:** Version bump only for package element-cli
+
+
+
+
+
+## [1.2.3-beta.4](https://github.com/flood-io/element/compare/v1.2.3-beta.3...v1.2.3-beta.4) (2020-04-14)
+
+**Note:** Version bump only for package element-cli
+
+
+
+
+
+## [1.2.3-beta.3](https://github.com/flood-io/element/compare/v1.2.3-beta.2...v1.2.3-beta.3) (2020-04-10)
 
 **Note:** Version bump only for package element-cli
 

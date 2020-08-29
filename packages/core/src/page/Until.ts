@@ -1,4 +1,5 @@
 import { TitleCondition } from './conditions/TitleCondition'
+import { TitleNotMatchCondition } from './conditions/TitleNotMatchCondition'
 import {
 	ElementVisibilityCondition,
 	ElementLocatedCondition,
@@ -6,12 +7,14 @@ import {
 } from './conditions/ElementVisibilityCondition'
 import { ElementStateCondition } from './conditions/ElementStateCondition'
 import { ElementSelectedCondition } from './conditions/ElementSelectedCondition'
+import { ElementTextNotMatchCondition } from './conditions/ElementTextNotMatchCondition'
 import { ElementTextCondition } from './conditions/ElementTextCondition'
 import { URLCondition } from './conditions/URLCondition'
 import { DialogCondition } from './conditions/DialogCondition'
 import { FrameCondition } from './conditions/FrameCondition'
 import { Condition } from './Condition'
-import { NullableLocatable, Locatable } from '../runtime/types'
+import { NullableLocatable, Locatable } from '../runtime/Locatable'
+import { URLNotMatchCondition } from './conditions/URLNotMatchCondition'
 
 /**
  * Until contains a wealth of useful <Condition>s.
@@ -126,10 +129,23 @@ export class Until {
 	}
 
 	/**
+	 * Creates a condition which will wait until the element's text not matches the target text, excluding leading and trailing whitespace.
+	 */
+	static elementTextIsNot(selectorOrLocator: NullableLocatable, text: string): Condition {
+		return new ElementTextNotMatchCondition('elementTextIsNot', selectorOrLocator, text)
+	}
+
+	/**
 	 * Creates a condition which will wait until the element's text content contains the target text.
 	 */
 	static elementTextContains(selectorOrLocator: NullableLocatable, text: string): Condition {
 		return new ElementTextCondition('elementTextContains', selectorOrLocator, text, true)
+	}
+	/**
+	 * Creates a condition which will wait until the element's text content does not contain the target text.
+	 */
+	static elementTextDoesNotContain(selectorOrLocator: NullableLocatable, text: string): Condition {
+		return new ElementTextNotMatchCondition('elementTextContains', selectorOrLocator, text, true)
 	}
 
 	/**
@@ -137,6 +153,17 @@ export class Until {
 	 */
 	static elementTextMatches(selectorOrLocator: NullableLocatable, regex: RegExp): Condition {
 		return new ElementTextCondition('elementTextMatches', selectorOrLocator, regex.toString())
+	}
+
+	/**
+	 * Creates a condition which will wait until the element's text does not match the target Regular Expression.
+	 */
+	static elementTextDoesNotMatch(selectorOrLocator: NullableLocatable, regex: RegExp): Condition {
+		return new ElementTextNotMatchCondition(
+			'elementTextDoesNotMatch',
+			selectorOrLocator,
+			regex.toString(),
+		)
 	}
 
 	/**
@@ -162,10 +189,24 @@ export class Until {
 	}
 
 	/**
+	 * Creates a condition which waits until the page title does not contain the expected text.
+	 */
+	static titleDoesNotContain(title: string): Condition {
+		return new TitleNotMatchCondition('titleContains', title, true)
+	}
+
+	/**
 	 * Creates a condition which waits until the page title exactly matches the expected text.
 	 */
 	static titleIs(title: string): Condition {
 		return new TitleCondition('titleIs', title, false)
+	}
+
+	/**
+	 * Creates a condition which waits until the page title does not match the expected text.
+	 */
+	static titleIsNot(title: string): Condition {
+		return new TitleNotMatchCondition('titleIs', title, false)
 	}
 
 	/**
@@ -176,10 +217,24 @@ export class Until {
 	}
 
 	/**
+	 * Creates a condition which waits until the page title doesn not match the title `RegExp`.
+	 */
+	static titleDoesNotMatch(title: RegExp): Condition {
+		return new TitleNotMatchCondition('titleMatches', `${title}`, false)
+	}
+
+	/**
 	 * Creates a condition which waits until the page URL contains the expected path.
 	 */
 	static urlContains(url: string): Condition {
 		return new URLCondition('urlContains', url, true)
+	}
+
+	/**
+	 * Creates a condition which waits until the page URL does not contain the expected path.
+	 */
+	static urlDoesNotContain(url: string): Condition {
+		return new URLNotMatchCondition('urlContains', url, true)
 	}
 
 	/**
@@ -190,9 +245,23 @@ export class Until {
 	}
 
 	/**
+	 * Creates a condition which waits until the page URL does not match the expected URL.
+	 */
+	static urlIsNot(url: string): Condition {
+		return new URLNotMatchCondition('urlIsNot', url, false)
+	}
+
+	/**
 	 * Creates a condition which waits until the page URL matches the supplied `RegExp`.
 	 */
 	static urlMatches(url: RegExp): Condition {
 		return new URLCondition('urlMatches', url.toString(), true)
+	}
+
+	/**
+	 * Creates a condition which waits until the page URL does not match the supplied `RegExp`.
+	 */
+	static urlDoesNotMatch(url: string): Condition {
+		return new URLNotMatchCondition('urlDoesNotMatch', url.toString(), false)
 	}
 }

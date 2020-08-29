@@ -8,16 +8,18 @@ import {
 	ScreenshotOptions,
 	AuthOptions,
 	Viewport,
+	EvaluateFn,
 } from 'puppeteer'
 import DeviceDescriptors from 'puppeteer/DeviceDescriptors'
-import { Browser as BrowserInterface, NullableLocatable, EvaluateFn } from './types'
+import { Browser as BrowserInterface } from './IBrowser'
+import { NullableLocatable } from './Locatable'
 import CustomDeviceDescriptors from '../utils/CustomDeviceDescriptors'
 import { ElementHandle } from '../page/types'
 import { TargetLocator } from '../page/TargetLocator'
 import { PuppeteerClientLike } from '../driver/Puppeteer'
 import { WorkRoot } from '../runtime-environment/types'
 import KSUID from 'ksuid'
-import { Key } from '../page/Enums'
+import { Key, KeyDefinitions } from '../page/Enums'
 // import termImg from 'term-img'
 import { ConcreteTestSettings } from './Settings'
 import { NetworkErrorData, ActionErrorData } from './errors/Types'
@@ -29,26 +31,17 @@ import { addCallbacks } from './decorators/addCallbacks'
 import { autoWaitUntil } from './decorators/autoWait'
 import { locatableToLocator, toLocatorError } from './toLocatorError'
 import { Keyboard } from '../page/Keyboard'
+import { getFrames } from '../utils/frames'
 
 export const debug = debugFactory('element:runtime:browser')
 const debugScreenshot = debugFactory('element:runtime:browser:screenshot')
 
-export const getFrames = (childFrames: Frame[], collection?: Set<Frame>): Frame[] => {
-	if (typeof collection === 'undefined') collection = new Set<Frame>()
-
-	childFrames.forEach(frame => {
-		if (!collection?.has(frame)) {
-			collection?.add(frame)
-			getFrames(frame.childFrames(), collection)
-		}
-	})
-
-	return Array.from(collection.values())
-}
-
 export class Browser<T> implements BrowserInterface {
 	public screenshots: string[]
 	customContext: T
+
+	private newPageCallback: (resolve: (page: Page) => void) => void
+	private newPagePromise: Promise<Page>
 
 	constructor(
 		public workRoot: WorkRoot,
@@ -60,6 +53,25 @@ export class Browser<T> implements BrowserInterface {
 	) {
 		this.beforeFunc && this.afterFunc
 		this.screenshots = []
+
+		this.newPageCallback = (resolve) => {
+			this.client.browser.once('targetcreated', async (target) => {
+				if (target.type() === 'page') {
+					const newPage = await target.page()
+					this.client.page = newPage
+					await newPage.bringToFront()
+					resolve(newPage)
+				} else {
+					this.newPagePromise = new Promise((resolve) => {
+						this.newPageCallback(resolve)
+					})
+				}
+			})
+		}
+
+		this.newPagePromise = new Promise((resolve) => {
+			this.newPageCallback(resolve)
+		})
 	}
 
 	private get context(): Promise<ExecutionContext> {
@@ -88,6 +100,10 @@ export class Browser<T> implements BrowserInterface {
 		return this.client.page
 	}
 
+	public get pages(): Promise<Page[]> {
+		return this.client.browser.pages()
+	}
+
 	public get frames(): Frame[] {
 		return getFrames(this.page.frames())
 	}
@@ -105,6 +121,22 @@ export class Browser<T> implements BrowserInterface {
 	 */
 	public get url(): string {
 		return this.page.url()
+	}
+
+	private getKeyCode(key: string): string {
+		const lowerKey = key.toLowerCase()
+		//if key = `KeyA` or function key likes `CONTROL`, just return this key
+		if (lowerKey.includes('key') || Object.values(Key).includes(key)) {
+			return key
+		}
+		//now to process to get the key code
+		for (const key in KeyDefinitions) {
+			const keyObj = KeyDefinitions[key]
+			if (lowerKey === keyObj.key) {
+				return keyObj.code
+			}
+		}
+		return ''
 	}
 
 	@rewriteError()
@@ -129,7 +161,7 @@ export class Browser<T> implements BrowserInterface {
 	@addCallbacks()
 	public async wait(timeoutOrCondition: Condition | number): Promise<any> {
 		if (typeof timeoutOrCondition === 'number') {
-			await new Promise(yeah => setTimeout(yeah, Number(timeoutOrCondition) * 1e3))
+			await new Promise((yeah) => setTimeout(yeah, Number(timeoutOrCondition) * 1e3))
 			return true
 		}
 
@@ -157,11 +189,11 @@ export class Browser<T> implements BrowserInterface {
 	}
 
 	@addCallbacks()
-	public async visit(url: string, options: NavigationOptions = {}): Promise<void> {
+	public async visit(url: string, options: NavigationOptions = {}): Promise<any> {
 		const timeout = this.settings.waitTimeout * 1e3
-		let response
+
 		try {
-			response = await this.page.goto(url, {
+			return this.page.goto(url, {
 				timeout,
 				waitUntil: ['load', 'domcontentloaded', 'networkidle0', 'networkidle2'],
 				...options,
@@ -194,30 +226,6 @@ export class Browser<T> implements BrowserInterface {
 			}
 			throw finalErr
 		}
-
-		if (response == null) {
-			throw new StructuredError<NetworkErrorData>('no response', {
-				url,
-				_kind: 'net',
-				kind: 'http',
-				subKind: 'no-response',
-			})
-		}
-
-		// response needs to be 2xx or 3xx
-		// TODO make configurable
-		const status = response.status()
-		if (!response.ok() && !(status >= 300 && status <= 399)) {
-			throw new StructuredError<NetworkErrorData>('http response code not OK', {
-				url,
-				_kind: 'net',
-				kind: 'http',
-				subKind: 'not-ok',
-				code: response.status().toString(),
-			})
-		}
-
-		return
 	}
 
 	/**
@@ -261,7 +269,7 @@ export class Browser<T> implements BrowserInterface {
 				for (const option of options) option.selected = values.includes(option.value)
 				element.dispatchEvent(new Event('input', { bubbles: true }))
 				element.dispatchEvent(new Event('change', { bubbles: true }))
-				return options.filter(option => option.selected).map(option => option.value)
+				return options.filter((option) => option.selected).map((option) => option.value)
 			},
 			element.element,
 			values,
@@ -286,7 +294,7 @@ export class Browser<T> implements BrowserInterface {
 
 				element.dispatchEvent(new Event('input', { bubbles: true }))
 				element.dispatchEvent(new Event('change', { bubbles: true }))
-				return options.filter(option => option.selected).map(option => option.value)
+				return options.filter((option) => option.selected).map((option) => option.value)
 			},
 			element.element,
 			index,
@@ -312,7 +320,7 @@ export class Browser<T> implements BrowserInterface {
 
 				element.dispatchEvent(new Event('input', { bubbles: true }))
 				element.dispatchEvent(new Event('change', { bubbles: true }))
-				return options.filter(option => option.selected).map(option => option.value)
+				return options.filter((option) => option.selected).map((option) => option.value)
 			},
 			element.element,
 			text,
@@ -358,6 +366,20 @@ export class Browser<T> implements BrowserInterface {
 			} else {
 				await handle.type(key)
 			}
+		}
+	}
+
+	@autoWaitUntil()
+	@addCallbacks()
+	public async sendKeyCombinations(...keys: string[]): Promise<void> {
+		const handle = this.page.keyboard
+		for (const key of keys) {
+			const keyCode = this.getKeyCode(key)
+			await handle.down(keyCode)
+		}
+		for (const key of keys.reverse()) {
+			const keyCode = this.getKeyCode(key)
+			await handle.up(keyCode)
 		}
 	}
 
@@ -414,7 +436,7 @@ export class Browser<T> implements BrowserInterface {
 	 */
 	@rewriteError()
 	public async takeScreenshot(options?: ScreenshotOptions): Promise<void> {
-		await this.saveScreenshot(async path => {
+		await this.saveScreenshot(async (path) => {
 			await this.page.screenshot({ path, ...options })
 			return true
 		})
@@ -467,7 +489,7 @@ export class Browser<T> implements BrowserInterface {
 	public async findElements(locatable: NullableLocatable): Promise<ElementHandle[]> {
 		const locator = locatableToLocator(locatable, 'browser.findElements(locatable)')
 		const elements = await locator.findMany(await this.context)
-		elements.forEach(element => element.bindBrowser(this))
+		elements.forEach((element) => element.bindBrowser(this))
 		return elements
 	}
 
@@ -475,9 +497,13 @@ export class Browser<T> implements BrowserInterface {
 	 * Switch the focus of the browser to another frame or window
 	 */
 	public switchTo(): TargetLocator {
-		return new TargetLocator(this.page, frame => {
-			this.activeFrame = frame
-		})
+		return new TargetLocator(
+			this.page,
+			(frame) => {
+				this.activeFrame = frame
+			},
+			(page) => this.switchPage(page),
+		)
 	}
 
 	public async performanceTiming(): Promise<PerformanceTiming> {
@@ -547,5 +573,29 @@ export class Browser<T> implements BrowserInterface {
 			// 	},
 			// })
 		}
+	}
+
+	private async switchPage(page: Page | number): Promise<void> {
+		if (typeof page === 'number') {
+			this.client.page = (await this.pages)[page]
+		} else {
+			this.client.page = page
+		}
+		await this.client.page.bringToFront()
+	}
+
+	public async waitForNewPage(): Promise<Page> {
+		const newPage = await this.newPagePromise
+
+		// wait for another page to be opened
+		this.newPagePromise = new Promise((resolve) => {
+			this.newPageCallback(resolve)
+		})
+
+		return newPage
+	}
+
+	public async close(): Promise<void> {
+		await this.client.browser.close()
 	}
 }

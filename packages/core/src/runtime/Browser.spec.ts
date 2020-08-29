@@ -4,6 +4,7 @@ import { launchPuppeteer, testPuppeteer } from '../../tests/support/launch-brows
 import { Browser } from './Browser'
 import { Until } from '../page/Until'
 import { By } from '../page/By'
+import { Key } from '../page/Enums'
 import { DEFAULT_SETTINGS } from './Settings'
 
 let puppeteer: testPuppeteer
@@ -164,5 +165,57 @@ describe('Browser', () => {
 			const selectTagIsVisible = await selectTag.isDisplayed()
 			expect(selectTagIsVisible).toBe(false)
 		})
+	})
+
+	describe('send key combination', () => {
+		test('can send combination keys', async () => {
+			const browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
+			const url = await serve('combination_keys.html')
+			await browser.visit(url)
+			const input = await browser.findElement(By.id('text'))
+			await input.focus()
+			// use combination key as document
+			await browser.sendKeys('a')
+			await browser.sendKeyCombinations(Key.SHIFT, 'KeyA')
+			let text = await input.getProperty('value')
+			expect(text).toBe('aA')
+
+			await input.clear()
+			// use combination key by normal way with lower case
+			await browser.sendKeys('a')
+			await browser.sendKeyCombinations(Key.SHIFT, 'a')
+			text = await input.getProperty('value')
+			expect(text).toBe('aA')
+
+			await input.clear()
+			// use combination key by normal way with upper case
+			await browser.sendKeys('a')
+			await browser.sendKeyCombinations(Key.SHIFT, 'A')
+			text = await input.getProperty('value')
+			expect(text).toBe('aA')
+		})
+	})
+
+	test('multiple pages handling', async () => {
+		const browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
+		const url = await serve('page_1.html')
+
+		await browser.visit(url)
+		await browser.click(By.tagName('a'))
+		const newPage = await browser.waitForNewPage()
+		expect(newPage.url()).toContain('/page_2.html')
+
+		const pages = await browser.pages
+
+		// 3 tabs - about:blank, page_1.html & page_2.html
+		expect(pages.length).toEqual(3)
+
+		// switch page using page index in browser.pages
+		await browser.switchTo().page(1)
+		expect(browser.url).toContain('/page_1.html')
+
+		// switch page using the page itself
+		await browser.switchTo().page(newPage)
+		expect(browser.url).toContain('/page_2.html')
 	})
 })

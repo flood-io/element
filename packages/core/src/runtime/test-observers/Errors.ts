@@ -1,4 +1,4 @@
-import Test from '../Test'
+import { Test } from './testTypes'
 import { Step } from '../Step'
 import { StructuredError } from '../../utils/StructuredError'
 import { NoOpTestObserver } from './Observer'
@@ -10,6 +10,10 @@ export default class ErrorObserver extends NoOpTestObserver {
 		// TODO handle errors sourced from without the script
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		test.reporter.testStepError(structuredErrorToDocumentedError(err, test.script)!)
+
+		if (test.settings.screenshotOnFailure) {
+			await test.runningBrowser?.takeScreenshot()
+		}
 
 		return this.next.onStepError(test, step, err)
 	}

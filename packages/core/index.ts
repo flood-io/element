@@ -92,7 +92,12 @@ export const ENV: FloodProcessEnv = nullFloodProcessEnv
 /**
  * @docPage Browser
  */
-export { Browser, Browser as Driver, Locatable, NullableLocatable } from './src/runtime/types'
+export { Browser, Browser as Driver } from './src/runtime/IBrowser'
+
+/**
+ * @docPage Browser
+ */
+export { Locatable, NullableLocatable } from './src/runtime/Locatable'
 
 /**
  * @docPage Browser
@@ -108,8 +113,9 @@ export {
 /**
  * @docPage DSL
  */
-export { step, StepFunction, StepOptions } from './src/runtime/Step'
+export { step, TestFn, StepFunction, StepOptions, RecoverWith } from './src/runtime/Step'
 
+export { beforeAll, afterAll, beforeEach, afterEach, HookFn } from './src/runtime/StepLifeCycle'
 /**
  * @docPage DSL
  */

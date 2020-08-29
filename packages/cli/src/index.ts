@@ -8,6 +8,7 @@ import runCmd from './cmd/run'
 import planCmd from './cmd/plan'
 import generateCmd from './cmd/generate'
 import agentCmd from './cmd/agent'
+import floodCmd from './cmd/flood'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:cli')
@@ -57,6 +58,7 @@ export async function main(rootPath: string) {
 		.command(planCmd)
 		.command(runCmd)
 		.command(agentCmd)
+		.command(floodCmd)
 		.scriptName('element')
 		.updateStrings({
 			'Commands:': chalk.grey('Commands:\n'),
@@ -68,9 +70,9 @@ export async function main(rootPath: string) {
 		.help('help')
 		.recommendCommands()
 		.showHelpOnFail(false, chalk('Specify {blue --help} for available options'))
-		.fail(msg => {
-			// if (err) throw err // preserve stack
-			console.error(chalk.redBright(msg))
+		.fail((msg, err) => {
+			if (err) throw err // preserve stack
+			if (msg) console.error(chalk.redBright(msg))
 			process.exit(1)
 		})
 		.example(

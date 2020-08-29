@@ -3,11 +3,12 @@ import { Logger } from 'winston'
 import Test from './runtime/Test'
 import { EvaluatedScript } from './runtime/EvaluatedScript'
 import { TestObserver } from './runtime/test-observers/Observer'
-import { TestSettings, ConcreteTestSettings } from './runtime/Settings'
+import { TestSettings } from './runtime/Settings'
 import { IReporter } from './Reporter'
 import { AsyncFactory } from './utils/Factory'
 import { CancellationToken } from './utils/CancellationToken'
 import { TestScriptError } from './TestScriptError'
+import { Looper } from './Looper'
 
 export interface TestCommander {
 	on(event: 'rerun-test', listener: () => void): this
@@ -22,69 +23,6 @@ function delay(t: number, v?: any) {
 	return new Promise(function(resolve) {
 		setTimeout(resolve.bind(null, v), t)
 	})
-}
-
-class Looper {
-	public iterations = 0
-	private timeout: any
-	private cancelled = false
-	private loopCount: number
-
-	public done: Promise<void>
-	private doneResolve: () => void
-
-	constructor(settings: ConcreteTestSettings, running = true) {
-		if (settings.duration > 0) {
-			this.timeout = setTimeout(() => {
-				this.cancelled = true
-			}, settings.duration * 1e3)
-		}
-
-		this.loopCount = settings.loopCount
-		this.cancelled = !running
-		this.done = new Promise(resolve => (this.doneResolve = resolve))
-	}
-
-	stop() {
-		this.cancelled = true
-	}
-
-	async kill(): Promise<void> {
-		if (this._killer !== undefined) {
-			this._killer()
-		}
-		this.cancelled = true
-
-		await this.done
-	}
-
-	_killer: () => void
-	set killer(killCb: () => void) {
-		this._killer = killCb
-	}
-
-	finish() {
-		clearTimeout(this.timeout)
-	}
-
-	get continueLoop(): boolean {
-		const hasInfiniteLoops = this.loopCount <= 0
-		const hasLoopsLeft = this.iterations < this.loopCount
-
-		return !this.cancelled && (hasLoopsLeft || hasInfiniteLoops)
-	}
-
-	async run(iterator: (iteration: number) => Promise<void>): Promise<number> {
-		while (this.continueLoop) {
-			await iterator(++this.iterations)
-		}
-		this.finish()
-
-		// XXX perhaps call this in a finally to ensure it gets called
-		this.doneResolve()
-
-		return this.iterations
-	}
 }
 
 export class Runner {
@@ -181,7 +119,7 @@ export class Runner {
 
 				const startTime = new Date()
 				try {
-					await test.runWithCancellation(iteration, cancelToken)
+					await test.runWithCancellation(iteration, cancelToken, this.looper)
 				} catch (err) {
 					this.logger.error(
 						`[Iteration: ${iteration}] Error in Runner Loop: ${err.name}: ${err.message}\n${err.stack}`,
@@ -193,7 +131,7 @@ export class Runner {
 			})
 
 			this.logger.info(`Test completed after ${this.looper.iterations} iterations`)
-			return
+			await test.runningBrowser?.close()
 		} catch (err) {
 			if (err instanceof TestScriptError) {
 				this.logger.error('\n' + err.toStringNodeFormat())
@@ -205,6 +143,7 @@ export class Runner {
 			// if (process.env.NODE_ENV !== 'production') {
 			this.logger.debug(err.stack)
 			// }
+			throw err
 		}
 
 		if (testToCancel !== undefined) {

@@ -7,8 +7,20 @@ import fs from 'fs'
 import { promisify } from 'util'
 const exists = promisify(fs.exists)
 
-import { Step, StepFunction, StepOptions, normalizeStepOptions, StepDefinition } from './Step'
+import {
+	Step,
+	StepDefinition,
+	TestFn,
+	StepOptions,
+	normalizeStepOptions,
+	ConditionFn,
+	StepExtended,
+	StepRecoveryObject,
+	RecoverWith,
+	extractStep,
+} from './Step'
 import { SuiteDefinition } from './types'
+import { Browser } from './IBrowser'
 import Test from './Test'
 import { mustCompileFile } from '../TestScript'
 import { TestScriptError, TestScriptErrorMapper } from '../TestScriptError'
@@ -24,13 +36,14 @@ import { MouseButtons, Device, Key, userAgents } from '../page/Enums'
 import { TestDataSource, TestDataFactory } from '../test-data/TestData'
 import { BoundTestDataLoaders } from '../test-data/TestDataLoaders'
 import { EvaluatedScriptLike } from './EvaluatedScriptLike'
+import { Hook, normalizeHookBase } from './StepLifeCycle'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:eval-script')
 
 // TODO work out the right type for floodElementActual
 function createVirtualMachine(floodElementActual: any, root?: string): NodeVM {
-	return new NodeVM({
+	const vm = new NodeVM({
 		// console: 'redirect',
 		console: 'inherit',
 		sandbox: {},
@@ -50,10 +63,14 @@ function createVirtualMachine(floodElementActual: any, root?: string): NodeVM {
 			},
 		},
 	})
+	vm.sandbox.process.env = process.env
+	return vm
 }
 
 export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLike {
 	public steps: Step[]
+	public hook: Hook
+	public recoverySteps: StepRecoveryObject
 	public settings: ConcreteTestSettings
 
 	private vm: NodeVM
@@ -98,7 +115,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 
 		// hack because the vm2 typings don't include their EventEmitteryness
 		const eevm = (this.vm as any) as EventEmitter
-		;['log', 'info', 'error', 'dir', 'trace'].forEach(key =>
+		;['log', 'info', 'error', 'dir', 'trace'].forEach((key) =>
 			eevm.on(`console.${key}`, (message, ...args) =>
 				reporter.testScriptConsole(key, message, ...args),
 			),
@@ -138,6 +155,13 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 
 		// Clear existing steps
 		const steps: Step[] = []
+		const recoverySteps: StepRecoveryObject = {}
+		const hook: Hook = {
+			afterAll: [],
+			afterEach: [],
+			beforeAll: [],
+			beforeEach: [],
+		}
 
 		// establish base settings
 		let rawSettings = DEFAULT_SETTINGS
@@ -145,15 +169,15 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 		const ENV = this.runEnv.stepEnv()
 
 		// closes over steps: Step[]
-		function captureStep(...args: any[]) {
+		function captureStep(args: any[]) {
 			// name: string, fn: (driver: Browser) => Promise<void>
 			let name: string
-			let fn: StepFunction<any>
-			let stepOptions: StepOptions = {}
+			let fn: TestFn
+			let options: StepOptions = {}
 
 			if (args.length === 3) {
-				;[name, stepOptions, fn] = args
-				stepOptions = normalizeStepOptions(stepOptions)
+				;[name, options, fn] = args
+				options = normalizeStepOptions(options)
 			} else {
 				;[name, fn] = args
 			}
@@ -163,28 +187,127 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 				console.warn(`Duplicate step name: ${name}, skipping step`)
 				return
 			}
-			steps.push({ fn, name, stepOptions })
+
+			steps.push({ fn, name, options })
+		}
+
+		const afterAll = (...args: any[]) => {
+			const [fn, waitTimeout] = args
+			const hookBase = normalizeHookBase({ fn, waitTimeout })
+			hook.afterAll.push(hookBase)
+		}
+
+		const afterEach = (...args: any[]) => {
+			const [fn, waitTimeout] = args
+			const hookBase = normalizeHookBase({ fn, waitTimeout })
+			hook.afterEach.push(hookBase)
+		}
+
+		const beforeAll = (...args: any[]) => {
+			const [fn, waitTimeout] = args
+			const hookBase = normalizeHookBase({ fn, waitTimeout })
+			hook.beforeAll.push(hookBase)
+		}
+
+		const beforeEach = (...args: any[]) => {
+			const [fn, waitTimeout] = args
+			const hookBase = normalizeHookBase({ fn, waitTimeout })
+			hook.beforeEach.push(hookBase)
 		}
 
 		// re-scope this for captureSuite to close over:
 		const evalScope = this as EvaluatedScript
 
-		type WithDataCallback<T> = (this: null, s: StepDefinition<T>) => void
+		type WithDataCallback = (this: null, s: StepDefinition) => void
 
 		// closes over evalScope (this) and ENV
 		const captureSuite: SuiteDefinition = Object.assign(
 			(
-				callback: (this: null, s: StepDefinition<null>) => void,
-			): ((this: null, s: StepDefinition<null>) => void) => {
+				callback: (this: null, s: StepDefinition) => void,
+			): ((this: null, s: StepDefinition) => void) => {
 				return callback
 			},
 			{
-				withData: <T>(data: TestDataSource<T>, callback: WithDataCallback<T>) => {
+				withData: <T>(data: TestDataSource<T>, callback: WithDataCallback) => {
 					evalScope.testData = expect(data, 'TestData is not present')
 					return callback
 				},
 			},
 		)
+
+		const step: StepExtended = (...nameOrOptionsOrFn: any[]) => {
+			const [name, option, fn] = extractStep(nameOrOptionsOrFn)
+			captureStep([name, option, fn])
+		}
+
+		step.once = (...nameOrOptionsOrFn: any[]) => {
+			const [name, option, fn] = extractStep(nameOrOptionsOrFn)
+			captureStep([name, { ...option, once: true }, fn])
+		}
+
+		step.if = async (conditionFn: ConditionFn, ...nameOrOptionsOrFn: any[]) => {
+			const [name, option, fn] = extractStep(nameOrOptionsOrFn)
+			captureStep([name, { ...option, predicate: conditionFn }, fn])
+		}
+
+		step.unless = async (conditionFn: ConditionFn, ...nameOrOptionsOrFn: any[]) => {
+			const [name, option, fn] = extractStep(nameOrOptionsOrFn)
+			captureStep([
+				name,
+				{
+					...option,
+					predicate: (browser: Browser) =>
+						Promise.resolve(conditionFn(browser)).then((result) => !result),
+				},
+				fn,
+			])
+		}
+
+		step.skip = async (...nameOrOptionsOrFn: any[]) => {
+			const [name, option, fn] = extractStep(nameOrOptionsOrFn)
+			captureStep([name, { ...option, skip: true }, fn])
+		}
+
+		step.repeat = async (repeatVal: number, ...nameOrOptionsOrFn: any[]) => {
+			const [name, option, fn] = extractStep(nameOrOptionsOrFn)
+			const repeat = repeatVal < 0 ? 0 : repeatVal
+			captureStep([
+				name,
+				{
+					...option,
+					repeat: {
+						count: repeat,
+						iteration: 0,
+					},
+				},
+				fn,
+			])
+		}
+
+		step.while = async (condition: ConditionFn, ...nameOrOptionsOrFn: any[]) => {
+			const [name, option, fn] = extractStep(nameOrOptionsOrFn)
+			captureStep([
+				name,
+				{
+					...option,
+					stepWhile: {
+						predicate: condition,
+					},
+				},
+				fn,
+			])
+		}
+
+		step.recovery = async (...nameOrOptionsOrFn: any[]) => {
+			const [name, options, fn] = extractStep(nameOrOptionsOrFn)
+			if (name === 'global' && recoverySteps[name])
+				throw Error('Global recovery step called with too many times')
+			recoverySteps[name] = {
+				recoveryStep: { name, options, fn },
+				loopCount: options.tries || 0,
+				iteration: 0,
+			}
+		}
 
 		const context = {
 			setup: (setupSettings: TestSettings) => {
@@ -194,7 +317,13 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			ENV,
 
 			// Supports either 2 or 3 args
-			step: captureStep,
+			step,
+
+			//Hook
+			afterAll,
+			afterEach,
+			beforeAll,
+			beforeEach,
 
 			// Actual implementation of @flood/chrome
 			By,
@@ -203,6 +332,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			MouseButtons,
 			TestData: this.testDataLoaders,
 			Key,
+			RecoverWith,
 			userAgents,
 			suite: captureSuite,
 		}
@@ -213,7 +343,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 		rawSettings.name = this.script.testName
 		rawSettings.description = this.script.testDescription
 
-		const result = this.vm.run(this.script.vmScript, this.script.sandboxedFilename)
+		const result = this.vm.run(this.script.vmScript)
 		debug('eval %O', result)
 
 		// get settings exported from the script
@@ -227,7 +357,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 		/**
 		 * Evaluate default function
 		 */
-		testFn.apply(null, [captureStep])
+		testFn.apply(null, [])
 
 		// layer up the final settings
 		this.settings = {
@@ -236,6 +366,8 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 		}
 
 		this.steps = steps
+		this.recoverySteps = recoverySteps
+		this.hook = hook
 
 		debug('settings', this.settings)
 		debug('steps', this.steps)

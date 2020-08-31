@@ -7,7 +7,7 @@ on:
 
 jobs:
   publish_release:
-    name: Publish NPM release
+    name: Publish release
     if: "!contains(github.event.head_commit.message, 'skip ci')"
     runs-on: ubuntu-latest
     steps:
@@ -35,6 +35,8 @@ jobs:
       - name: 'Build all'
         run: yarn build
       - name: 'Publish stable to NPM'
-        run: yarn lerna publish --conventional-graduate --dist-tag latest --yes
+        run: yarn lerna publish --conventional-graduate --dist-tag latest --yes --force-publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: 'Publish stable to Homebrew'
+        run: yarn publish:brew

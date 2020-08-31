@@ -1,28 +1,26 @@
 import { Condition } from '../page/Condition'
 import {
+	NavigationOptions,
+	ClickOptions,
+	ExecutionContext,
 	Frame,
 	Page,
-	ViewportSize,
-	devices,
-	ChromiumBrowserContext,
-	BrowserContext,
-	HTTPCredentials,
-} from 'playwright'
-import { Browser as BrowserInterface } from '../interface/IBrowser'
-import { NullableLocatable } from './Locatable'
-import {
-	ElementHandle,
-	NavigationOptions,
 	ScreenshotOptions,
+	AuthOptions,
+	Viewport,
 	EvaluateFn,
-	ClickOptions,
-	BROWSER_TYPE,
-} from '../page/types'
+} from 'puppeteer'
+import DeviceDescriptors from 'puppeteer/DeviceDescriptors'
+import { Browser as BrowserInterface } from './IBrowser'
+import { NullableLocatable } from './Locatable'
+import CustomDeviceDescriptors from '../utils/CustomDeviceDescriptors'
+import { ElementHandle } from '../page/types'
 import { TargetLocator } from '../page/TargetLocator'
-import { PlaywrightClientLike } from '../driver/Playwright'
+import { PuppeteerClientLike } from '../driver/Puppeteer'
 import { WorkRoot } from '../runtime-environment/types'
 import KSUID from 'ksuid'
 import { Key, KeyDefinitions } from '../page/Enums'
+// import termImg from 'term-img'
 import { ConcreteTestSettings } from './Settings'
 import { NetworkErrorData, ActionErrorData } from './errors/Types'
 import { StructuredError } from '../utils/StructuredError'
@@ -33,6 +31,7 @@ import { addCallbacks } from './decorators/addCallbacks'
 import { autoWaitUntil } from './decorators/autoWait'
 import { locatableToLocator, toLocatorError } from './toLocatorError'
 import { Keyboard } from '../page/Keyboard'
+import ms from 'ms'
 import { getFrames } from '../utils/frames'
 
 export const debug = debugFactory('element:runtime:browser')
@@ -47,7 +46,7 @@ export class Browser<T> implements BrowserInterface {
 
 	constructor(
 		public workRoot: WorkRoot,
-		private client: PlaywrightClientLike,
+		private client: PuppeteerClientLike,
 		public settings: ConcreteTestSettings,
 		public beforeFunc: (b: Browser<T>, name: string) => Promise<void> = async () => undefined,
 		public afterFunc: (b: Browser<T>, name: string) => Promise<void> = async () => undefined,
@@ -57,9 +56,17 @@ export class Browser<T> implements BrowserInterface {
 		this.screenshots = []
 
 		this.newPageCallback = resolve => {
-			this.client.page.context().on('page', async newPage => {
-				this.client.page = newPage
-				resolve(newPage)
+			this.client.browser.once('targetcreated', async target => {
+				if (target.type() === 'page') {
+					const newPage = await target.page()
+					this.client.page = newPage
+					await newPage.bringToFront()
+					resolve(newPage)
+				} else {
+					this.newPagePromise = new Promise(resolve => {
+						this.newPageCallback(resolve)
+					})
+				}
 			})
 		}
 
@@ -68,8 +75,9 @@ export class Browser<T> implements BrowserInterface {
 		})
 	}
 
-	public context(): BrowserContext {
-		return this.page.context()
+	private get context(): Promise<ExecutionContext> {
+		// Promise.resolve is a quick fix for TS until the types are updated
+		return Promise.resolve(this.target.executionContext())
 	}
 
 	public testData(name: string): string {
@@ -89,16 +97,12 @@ export class Browser<T> implements BrowserInterface {
 		}
 	}
 
-	public get browserType(): BROWSER_TYPE {
-		return this.settings.browserType
-	}
-
 	public get page(): Page {
 		return this.client.page
 	}
 
-	public get pages(): Page[] {
-		return this.client.page.context().pages()
+	public get pages(): Promise<Page[]> {
+		return this.client.browser.pages()
 	}
 
 	public get frames(): Frame[] {
@@ -148,17 +152,20 @@ export class Browser<T> implements BrowserInterface {
 
 	@rewriteError()
 	public async authenticate(username?: string, password?: string): Promise<void> {
-		let authOptions: HTTPCredentials | null = null
+		let authOptions: AuthOptions | null = null
 		if (username !== undefined && password !== undefined) {
 			authOptions = { username, password }
 		}
-		await this.page.context().setHTTPCredentials(authOptions)
+		await this.page.authenticate(authOptions)
 	}
 
 	@addCallbacks()
-	public async wait(timeoutOrCondition: Condition | number): Promise<any> {
-		if (typeof timeoutOrCondition === 'number') {
-			await new Promise(yeah => setTimeout(yeah, Number(timeoutOrCondition) * 1e3))
+	public async wait(timeoutOrCondition: Condition | number | string): Promise<any> {
+		if (typeof timeoutOrCondition === 'string') {
+			await new Promise(yeah => setTimeout(yeah, ms(timeoutOrCondition)))
+			return true
+		} else if (typeof timeoutOrCondition === 'number') {
+			await new Promise(yeah => setTimeout(yeah, timeoutOrCondition))
 			return true
 		}
 
@@ -186,13 +193,11 @@ export class Browser<T> implements BrowserInterface {
 	}
 
 	@addCallbacks()
-	public async visit(url: string, options?: NavigationOptions): Promise<any> {
-		const timeout = this.settings.waitTimeout * 1e3
-
+	public async visit(url: string, options: NavigationOptions = {}): Promise<any> {
 		try {
 			return this.page.goto(url, {
-				timeout,
-				waitUntil: 'networkidle',
+				timeout: Number(this.settings.waitTimeout),
+				waitUntil: ['load', 'domcontentloaded', 'networkidle0', 'networkidle2'],
 				...options,
 			})
 		} catch (e) {
@@ -254,11 +259,10 @@ export class Browser<T> implements BrowserInterface {
 	@addCallbacks()
 	public async selectByValue(locatable: NullableLocatable, ...values: string[]): Promise<string[]> {
 		const element = await this.findElement(locatable)
+		const context = await this.context
 
-		return this.evaluate(
-			(args: any[]) => {
-				const [element, values] = args as [HTMLSelectElement, any]
-
+		return context.evaluate(
+			(element: HTMLSelectElement, values) => {
 				if (element.nodeName.toLowerCase() !== 'select')
 					throw new Error('Element is not a <select> element.')
 
@@ -269,7 +273,8 @@ export class Browser<T> implements BrowserInterface {
 				element.dispatchEvent(new Event('change', { bubbles: true }))
 				return options.filter(option => option.selected).map(option => option.value)
 			},
-			[element.element, values],
+			element.element,
+			values,
 		)
 	}
 
@@ -278,10 +283,10 @@ export class Browser<T> implements BrowserInterface {
 	public async selectByIndex(locatable: NullableLocatable, index: string): Promise<string[]> {
 		// TODO: Write tests for this
 		const element = await this.findElement(locatable)
+		const context = await this.context
 
-		return this.evaluate(
-			(args: any[]) => {
-				const [element, index] = args as [HTMLSelectElement, number]
+		return context.evaluate(
+			(element: HTMLSelectElement, index: number) => {
 				if (element.nodeName.toLowerCase() !== 'select')
 					throw new Error('Element is not a <select> element.')
 
@@ -293,7 +298,8 @@ export class Browser<T> implements BrowserInterface {
 				element.dispatchEvent(new Event('change', { bubbles: true }))
 				return options.filter(option => option.selected).map(option => option.value)
 			},
-			[element.element, index],
+			element.element,
+			index,
 		)
 	}
 
@@ -301,10 +307,10 @@ export class Browser<T> implements BrowserInterface {
 	@addCallbacks()
 	public async selectByText(locatable: NullableLocatable, text: string): Promise<string[]> {
 		const element = await this.findElement(locatable)
+		const context = await this.context
 
-		return this.evaluate(
-			(args: any[]) => {
-				const [element, text] = args as [HTMLSelectElement, string]
+		return context.evaluate(
+			(element: HTMLSelectElement, text) => {
 				if (element.nodeName.toLowerCase() !== 'select')
 					throw new Error('Element is not a <select> element.')
 
@@ -318,7 +324,8 @@ export class Browser<T> implements BrowserInterface {
 				element.dispatchEvent(new Event('change', { bubbles: true }))
 				return options.filter(option => option.selected).map(option => option.value)
 			},
-			[element.element, text],
+			element.element,
+			text,
 		)
 	}
 
@@ -326,7 +333,7 @@ export class Browser<T> implements BrowserInterface {
 	@addCallbacks()
 	public async clear(locatable: NullableLocatable | string): Promise<void> {
 		const locator = locatableToLocator(locatable, 'browser.clear()')
-		const elements = await locator.findMany(this.page)
+		const elements = await locator.findMany(await this.context)
 		for (const element of elements) {
 			await element.clear()
 		}
@@ -394,45 +401,31 @@ export class Browser<T> implements BrowserInterface {
 
 	@rewriteError()
 	public async clearBrowserCookies(): Promise<any> {
-		await this.page.context().clearCookies()
+		const client = await this.page['target']().createCDPSession()
+		await client.send('Network.clearBrowserCookies')
 	}
 
 	@rewriteError()
 	public async clearBrowserCache(): Promise<any> {
-		if (this.browserType === BROWSER_TYPE.CHROME) {
-			const context = (await this.page.context()) as ChromiumBrowserContext
-			const client = await context.newCDPSession(this.page)
-			await client.send('Network.clearBrowserCache')
-		} else {
-			/**
-			 * NOTES
-			 * need to implement clear cache for firefox and safari
-			 */
-			console.log('Not Implemented')
-		}
+		const client = await this.page['target']().createCDPSession()
+		await client.send('Network.clearBrowserCache')
 	}
 
 	@rewriteError()
 	public async emulateDevice(deviceName: string): Promise<void> {
-		const device = devices[deviceName]
+		const device = DeviceDescriptors[deviceName] || CustomDeviceDescriptors[deviceName]
 		if (!device) throw new Error(`Unknown device descriptor: ${deviceName}`)
-		const context = await this.client.browser.newContext({
-			...device,
-		})
-		this.client.page = await context.newPage()
+		return this.page.emulate(device)
 	}
 
 	@rewriteError()
 	public async setUserAgent(userAgent: string): Promise<void> {
-		if (!this.client.isFirstRun()) {
-			await this.client.closePages()
-			this.client.page = await this.client.browser.newPage({ userAgent })
-		}
+		return this.page.setUserAgent(userAgent)
 	}
 
 	@rewriteError()
-	public async setViewport(viewport: ViewportSize): Promise<void> {
-		return this.page.setViewportSize(viewport)
+	public async setViewport(viewport: Viewport): Promise<void> {
+		return this.page.setViewport(viewport)
 	}
 
 	@rewriteError()
@@ -454,6 +447,8 @@ export class Browser<T> implements BrowserInterface {
 	@autoWaitUntil()
 	@rewriteError()
 	public async highlightElement(element: ElementHandle): Promise<void> {
+		// let session = await this.page.target().createCDPSession()
+		// session.send('DOM.highlightNode', { nodeId: element })
 		return element.highlight()
 	}
 
@@ -464,7 +459,7 @@ export class Browser<T> implements BrowserInterface {
 
 		debug('locator %o', locator)
 
-		const maybeElement = await locator.find(this.page)
+		const maybeElement = await locator.find(await this.context)
 		if (!maybeElement) {
 			throw toLocatorError(locatable, 'browser.findElement()')
 		}
@@ -481,7 +476,8 @@ export class Browser<T> implements BrowserInterface {
 		}
 
 		const locator = locatableToLocator(locatable, 'browser.maybeFindElement(locatable)')
-		const maybeElement = await locator.find(this.page)
+		const context = await this.context
+		const maybeElement = await locator.find(context)
 		if (!maybeElement) return null
 
 		const element = maybeElement as ElementHandle
@@ -494,7 +490,7 @@ export class Browser<T> implements BrowserInterface {
 	@rewriteError()
 	public async findElements(locatable: NullableLocatable): Promise<ElementHandle[]> {
 		const locator = locatableToLocator(locatable, 'browser.findElements(locatable)')
-		const elements = await locator.findMany(this.page)
+		const elements = await locator.findMany(await this.context)
 		elements.forEach(element => element.bindBrowser(this))
 		return elements
 	}
@@ -552,16 +548,8 @@ export class Browser<T> implements BrowserInterface {
 	}
 
 	public async setCacheDisabled(cacheDisabled = true): Promise<void> {
-		/**
-		 * NOTES
-		 * handle CDPSession
-		 */
-		if (this.browserType === BROWSER_TYPE.CHROME) {
-			const client = await (this.page.context() as ChromiumBrowserContext).newCDPSession(this.page)
-			await client.send('Network.setCacheDisabled', { cacheDisabled })
-		} else {
-			console.warn('This kind of browser does not support CDPSession')
-		}
+		const client = await this.page['target']().createCDPSession()
+		await client.send('Network.setCacheDisabled', { cacheDisabled })
 	}
 
 	public fetchScreenshots() {
@@ -579,20 +567,23 @@ export class Browser<T> implements BrowserInterface {
 		if (await fn(path)) {
 			this.screenshots.push(path)
 			debugScreenshot(`Saved screenshot to: ${path}`)
+
+			// termImg(path, {
+			// 	width: '40%',
+			// 	fallback: () => {
+			// 		return `Screenshot path: ${path}`
+			// 	},
+			// })
 		}
 	}
 
 	private async switchPage(page: Page | number): Promise<void> {
 		if (typeof page === 'number') {
-			this.client.page = this.pages[page]
+			this.client.page = (await this.pages)[page]
 		} else {
 			this.client.page = page
 		}
-		/**
-		 * NOTES
-		 * playwright does not have method bringtoFront()
-		 */
-		// await this.client.page.bringToFront()
+		await this.client.page.bringToFront()
 	}
 
 	public async waitForNewPage(): Promise<Page> {

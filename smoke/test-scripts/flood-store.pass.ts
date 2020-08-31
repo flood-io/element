@@ -5,8 +5,8 @@ export const settings: TestSettings = {
 	loopCount: -1,
 	screenshotOnFailure: true,
 	description: 'The Flood Store - Detailed Tutorial',
-	actionDelay: 10,
-	stepDelay: 7,
+	actionDelay: '10s',
+	stepDelay: '7s',
 	disableCache: true,
 	clearCookies: true,
 }

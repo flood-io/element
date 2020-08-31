@@ -1,5 +1,5 @@
 import { ElementHandle } from './ElementHandle'
-import { Page, Frame } from 'puppeteer'
+import { Page, Frame } from 'playwright'
 import { TargetLocator as ITargetLocator, ElementHandle as IElementHandle } from './types'
 import { getFrames } from '../utils/frames'
 
@@ -22,20 +22,7 @@ export class TargetLocator implements ITargetLocator {
 		const element = jsHandle.asElement()
 		if (!element) return null
 
-		return new ElementHandle(element).initErrorString()
-	}
-
-	private async findFrameFromWindow(id: string | null): Promise<Frame | undefined> {
-		const frames = getFrames(this.currentPage.frames())
-		const frameElementName = await this.currentPage.evaluate((id: string) => {
-			// NOTE typescript lib.dom lacks proper index signature for frames: Window to work
-			const frame = Array.from(window.frames).find(frame => frame.frameElement.id === id)
-
-			if (!frame) throw Error(`No frame found with id=${id}`)
-			return frame.name
-		}, id)
-
-		return frames.find(frame => frame.name() === frameElementName)
+		return new ElementHandle(element, this.currentPage).initErrorString()
 	}
 
 	/**
@@ -62,7 +49,7 @@ export class TargetLocator implements ITargetLocator {
 			return
 		}
 
-		let nextFrame: Frame | undefined
+		let nextFrame: Frame | null
 
 		const frames = getFrames(this.currentPage.frames())
 
@@ -76,15 +63,24 @@ export class TargetLocator implements ITargetLocator {
 				return frame.name || frame.id
 			}, id)
 
-			nextFrame = frames.find(frame => frame.name() === frameElementName)
+			nextFrame = frames.find(frame => frame.name() === frameElementName) || null
 			if (!nextFrame) throw new Error(`Could not match frame by name or id: '${frameElementName}'`)
 
 			this.applyFrame(nextFrame)
 		} else if (typeof id === 'string') {
 			// Assume id or name attr
-			nextFrame = frames.find(frame => frame.name() === id)
-			if (!nextFrame) {
-				nextFrame = await this.findFrameFromWindow(id)
+			nextFrame = frames.find(frame => frame.name() === id) || null
+
+			if (nextFrame == null) {
+				const frameElementName = await this.currentPage.evaluate((id: string) => {
+					// NOTE typescript lib.dom lacks proper index signature for frames: Window to work
+					const frame = Array.from(window.frames).find(frame => frame.frameElement.id === id)
+
+					if (!frame) throw Error(`No frame found with id=${id}`)
+					return frame.name
+				}, id)
+
+				nextFrame = frames.find(frame => frame.name() === frameElementName) || null
 			}
 
 			if (!nextFrame) throw new Error(`Could not match frame by name or id: '${id}'`)
@@ -100,10 +96,7 @@ export class TargetLocator implements ITargetLocator {
 			let name = await id.getProperty('name')
 			if (!name) name = await id.getProperty('id')
 
-			nextFrame = frames.find(frame => frame.name() === name)
-			if (!nextFrame) {
-				nextFrame = await this.findFrameFromWindow(name)
-			}
+			nextFrame = frames.find(frame => frame.name() === name) || null
 			if (!nextFrame) throw new Error(`Could not match frame by name or id: '${name}'`)
 
 			this.applyFrame(nextFrame)

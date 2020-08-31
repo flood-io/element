@@ -1,0 +1,51 @@
+.heroHeader {
+	height: 70vh;
+}
+
+.heroBanner {
+	display: grid;
+	grid-template-columns: minmax(520px, 800px) minmax(400px, 600px);
+}
+
+.heroBanner > div {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.heroBanner > img {
+	max-width: 1124px;
+	margin-left: -120px;
+}
+
+@media screen and (max-width: 966px) {
+	.heroBanner {
+		grid-template-columns: 1fr;
+		padding-top: 2rem;
+	}
+
+	.heroBanner > img {
+		margin-left: -120px;
+	}
+
+	.heroHeader {
+		height: 100vh;
+	}
+}
+
+.heroBanner > div > h1 {
+	font-size: 3.75rem;
+	line-height: 3.75rem;
+	letter-spacing: -0.00833em;
+	font-weight: 500;
+}
+
+.heroBanner > div > p {
+	font-size: 1.2rem;
+	margin: 1rem 0;
+}
+
+.heroButton {
+	display: flex;
+	margin: 1rem 0;
+}

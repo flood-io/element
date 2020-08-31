@@ -70,6 +70,7 @@ export {
 	TestSettings,
 	setup,
 	DEFAULT_SETTINGS,
+	BROWSER_TYPE,
 	ConsoleMethod,
 	ResponseTiming,
 } from '@flood/element-core'
@@ -91,17 +92,6 @@ export { ENV } from '@flood/element-core'
 export { Browser, Browser as Driver, Locatable, NullableLocatable } from '@flood/element-core'
 
 /**
- * @docPage Browser
- */
-export {
-	ClickOptions,
-	ScreenshotOptions,
-	NavigationOptions,
-	BoundingBox,
-	LoadEvent,
-} from 'puppeteer'
-
-/**
  * @docPage DSL
  */
 export {
@@ -115,11 +105,6 @@ export {
 	afterEach,
 	HookFn,
 } from '@flood/element-core'
-
-/**
- * @docPage DSL
- */
-export { suite } from '@flood/element-core'
 
 /**
  * @docPage helpers

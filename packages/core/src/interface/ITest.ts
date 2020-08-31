@@ -1,13 +1,14 @@
 import Interceptor from '../network/Interceptor'
-import { Browser } from './Browser'
-import { TestObserver } from './test-observers'
-import { Step } from './Step'
+import { Browser } from '../runtime/Browser'
+import { TestObserver } from '../runtime/test-observers'
+import { Step } from '../runtime/Step'
 import { CancellationToken } from '../utils/CancellationToken'
-import { ScreenshotOptions } from 'puppeteer'
-import { TestSettings } from './Settings'
+import { TestSettings } from '../runtime/Settings'
 import { Looper } from '../Looper'
-import { Hook } from './StepLifeCycle'
+import { ScreenshotOptions } from '../page/types'
+import { Hook } from '../runtime/StepLifeCycle'
 
+// eslint-disable-next-line @typescript-eslint/interface-name-prefix
 export interface ITest {
 	settings: TestSettings
 	steps: Step[]

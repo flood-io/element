@@ -1,14 +1,5 @@
-import { NavigationOptions } from 'puppeteer'
 import { StepDefinition } from './Step'
 import { TestDataSource } from '../test-data/TestData'
-
-export { NavigationOptions }
-
-/**
- * EvaluateFn represents a function which can be evaluated on the browser.
- * It can either be a [string] or a function.
- */
-export type EvaluateFn = string | ((...args: any[]) => any)
 
 /**
  * Defines a test suite of steps to run.

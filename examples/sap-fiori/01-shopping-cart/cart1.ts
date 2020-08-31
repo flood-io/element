@@ -15,13 +15,13 @@ import { random, name, internet, address } from 'faker'
 export const settings: TestSettings = {
 	loopCount: -1,
 	description: 'Quickstart Demo App - SAPUI5',
-	actionDelay: 7.5,
-	stepDelay: 7.5,
+	actionDelay: '7.5s',
+	stepDelay: '7.5s',
 	clearCache: true,
 	disableCache: true,
 	clearCookies: true,
 	chromeVersion: 'stable',
-	waitTimeout: 60,
+	waitTimeout: '60s',
 }
 
 /**

@@ -1,4 +1,4 @@
-import { step, By, Until, TestSettings } from '@flood/element'
+import { step, By, Until, TestSettings } from '@flood/chrome'
 import * as assert from 'assert'
 
 export const settings: TestSettings = {
@@ -7,13 +7,13 @@ export const settings: TestSettings = {
 	clearCookies: true,
 	responseTimeMeasurement: 'step',
 	userAgent: 'I AM ROBOT',
-	actionDelay: 5,
-	stepDelay: 2,
+	actionDelay: '5s',
+	stepDelay: '2s',
 }
 
 export default () => {
 	step('1. Start', async browser => {
-		await browser.visit('https://challenge.flood.io', { waitUntil: 'networkidle' })
+		await browser.visit('https://challenge.flood.io', { waitUntil: 'networkidle2' })
 
 		let startButton = By.css('#new_challenger > input.btn')
 		await browser.wait(Until.elementIsVisible(startButton))
@@ -23,7 +23,7 @@ export default () => {
 		await el.click()
 	})
 
-	step('2. Age', { waitTimeout: 60 }, async browser => {
+	step('2. Age', { waitTimeout: '60s' }, async browser => {
 		// let button = By.css('input.btn')
 		// await browser.wait(Until.elementIsVisible(button))
 

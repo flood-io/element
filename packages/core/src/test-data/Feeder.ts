@@ -4,8 +4,8 @@ import { knuthShuffle } from 'knuth-shuffle'
 export type FeedFilterFunction<Line> = (line: Line, index: number, instanceID: string) => boolean
 
 export class Feeder<T> {
-	private resetOnEnd = true
-	private shuffleAfterLoad = false
+	private resetOnEnd: boolean = true
+	private shuffleAfterLoad: boolean = false
 
 	constructor(
 		public instanceID: string = '',
@@ -17,11 +17,11 @@ export class Feeder<T> {
 	}
 
 	public append(lines: T[]): Feeder<T> {
-		const { instanceID } = this
+		let { instanceID } = this
 
 		if (!lines || lines.length === 0) return this
 
-		const newLines = lines.filter((line, index) =>
+		let newLines = lines.filter((line, index) =>
 			this.filters.every(func => func(line, index, instanceID)),
 		)
 		if (this.shuffleAfterLoad) {
@@ -91,7 +91,7 @@ export class Feeder<T> {
 	}
 
 	public toString(): string {
-		const s: string[] = []
+		let s: string[] = []
 
 		if (this.shuffleAfterLoad) {
 			s.push('shuffled')

@@ -1,5 +1,5 @@
 import { Condition } from '../Condition'
-import { Frame } from 'playwright'
+import { Frame } from 'puppeteer'
 
 export class TitleNotMatchCondition extends Condition {
 	constructor(desc: string, public expectedTitle: string, public partial: boolean = false) {
@@ -12,8 +12,7 @@ export class TitleNotMatchCondition extends Condition {
 
 	public async waitFor(frame: Frame): Promise<boolean> {
 		await frame.waitForFunction(
-			(args: string) => {
-				const [title, partial] = JSON.parse(args)
+			(title: string, partial: boolean) => {
 				if (typeof title === 'string') {
 					if (title.startsWith('/') && title.endsWith('/')) {
 						// RegExp
@@ -26,8 +25,9 @@ export class TitleNotMatchCondition extends Condition {
 					}
 				}
 			},
-			JSON.stringify([this.expectedTitle, this.partial]),
-			{ timeout: 30e3 },
+			{ polling: 'mutation', timeout: 30e3 },
+			this.expectedTitle,
+			this.partial === true,
 		)
 		return true
 	}

@@ -1,4 +1,4 @@
-import { Page } from 'playwright'
+import { Page } from 'puppeteer'
 
 export class Keyboard {
 	constructor(private page: Page) {}
@@ -8,8 +8,8 @@ export class Keyboard {
 	 * @param key Name of key to press, such as ArrowLeft.
 	 * @param options Specifies a input text event.
 	 */
-	async down(key: string): Promise<void> {
-		return this.page.keyboard.down(key)
+	async down(key: string, options?: { text?: string }): Promise<void> {
+		return this.page.keyboard.down(key, options)
 	}
 
 	/** Shortcut for `keyboard.down` and `keyboard.up`. */
@@ -19,7 +19,7 @@ export class Keyboard {
 
 	/** Dispatches a `keypress` and `input` event. This does not send a `keydown` or keyup `event`. */
 	async sendCharacter(char: string): Promise<void> {
-		return this.page.keyboard.insertText(char)
+		return this.page.keyboard.sendCharacter(char)
 	}
 
 	/**

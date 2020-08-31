@@ -1,14 +1,16 @@
-import { Browser } from '../interface/IBrowser'
+import ms from 'ms'
+import { Browser } from './IBrowser'
+import { DEFAULT_WAIT_TIMEOUT_MILLISECONDS } from './Settings'
 
-export declare function afterAll(fn: HookFn, waitTimeout?: number): void
-export declare function afterEach(fn: HookFn, waitTimeout?: number): void
-export declare function beforeAll(fn: HookFn, waitTimeout?: number): void
-export declare function beforeEach(fn: HookFn, waitTimeout?: number): void
+export declare function afterAll(fn: HookFn, waitTimeout?: string | number): void
+export declare function afterEach(fn: HookFn, waitTimeout?: string | number): void
+export declare function beforeAll(fn: HookFn, waitTimeout?: string | number): void
+export declare function beforeEach(fn: HookFn, waitTimeout?: string | number): void
 
 export type HookFn = (this: void, browser: Browser) => Promise<any>
 export type HookBase = {
 	fn: HookFn
-	waitTimeout: number
+	waitTimeout: string | number
 }
 
 export type Hook = {
@@ -23,6 +25,13 @@ export type Hook = {
  */
 export function normalizeHookBase(hookBase: HookBase): HookBase {
 	const { waitTimeout } = hookBase
-	hookBase.waitTimeout = waitTimeout && waitTimeout > 0 ? waitTimeout : 30 * 1e3
+	let convertedWaitTimeout = 0
+	if (typeof waitTimeout === 'string' && waitTimeout) {
+		convertedWaitTimeout = ms(waitTimeout)
+	} else if (typeof waitTimeout === 'number') {
+		convertedWaitTimeout = waitTimeout
+	}
+	hookBase.waitTimeout =
+		convertedWaitTimeout > 0 ? convertedWaitTimeout : DEFAULT_WAIT_TIMEOUT_MILLISECONDS
 	return hookBase
 }

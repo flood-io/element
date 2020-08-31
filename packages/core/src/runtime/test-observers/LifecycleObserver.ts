@@ -1,5 +1,5 @@
 import { Test } from './testTypes'
-import { TestObserver } from './TestObserver'
+import { TestObserver } from './Observer'
 import { Step } from '../Step'
 import { TestEvent } from '../../Reporter'
 import { StructuredError } from '../../utils/StructuredError'

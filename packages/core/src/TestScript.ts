@@ -1,5 +1,5 @@
 import WebpackCompiler from './test-script/WebpackCompiler'
-import { ITestScript } from './interface/ITestScript'
+import { ITestScript } from './ITestScript'
 import { join } from 'path'
 import { tmpdir } from 'os'
 import { writeFileSync } from 'fs-extra'

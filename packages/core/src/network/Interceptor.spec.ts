@@ -1,7 +1,7 @@
 import Interceptor from './Interceptor'
 import { serve } from '../../tests/support/fixture-server'
-import { launchPlaywright, testPlaywright } from '../../tests/support/launch-browser'
-import { Response, Page } from 'playwright'
+import { launchPuppeteer, testPuppeteer } from '../../tests/support/launch-browser'
+import { Response, Page } from 'puppeteer'
 import { URL } from 'url'
 
 type InterceptedResponse = [Error[], Response | null]
@@ -27,27 +27,29 @@ const testIntercept = async (page: Page, domains: string[]): Promise<Intercepted
 }
 
 describe('Network/Interceptor', () => {
-	let playwright: testPlaywright
+	let puppeteer: testPuppeteer
 
 	jest.setTimeout(30e3)
 	beforeAll(async () => {
 		url = await serve('wait.html')
-		playwright = await launchPlaywright()
+		puppeteer = await launchPuppeteer()
 	})
 
 	afterAll(async () => {
-		await playwright.close()
+		await puppeteer.close()
 	})
 
 	test('accepts requests without any blocking', async () => {
-		const { page } = playwright
+		const { page } = puppeteer
+
 		const [errors, response] = await testIntercept(page, ['*.google.com'])
 		expect(response.ok()).toBeTruthy()
 		expect(errors).toHaveLength(0)
 	})
 
 	test('blocks star matches against domains', async () => {
-		const { page } = playwright
+		const { page } = puppeteer
+
 		const [errors, response] = await testIntercept(page, ['*host'])
 		expect(response).toBeNull()
 		expect(errors).toHaveLength(1)
@@ -55,8 +57,10 @@ describe('Network/Interceptor', () => {
 	})
 
 	test('blocks requests on specific ports', async () => {
-		const { page } = playwright
+		const { page } = puppeteer
+
 		const uri = new URL(url)
+
 		const [errors, response] = await testIntercept(page, [`*:${uri.port}`])
 		expect(response).toBeNull()
 		expect(errors).toHaveLength(1)

@@ -7,7 +7,6 @@ import {
 	TestSettings,
 	runCommandLine,
 	ElementOptions,
-	BROWSER_TYPE,
 } from '@flood/element-core'
 import { watch } from 'chokidar'
 import { EventEmitter } from 'events'
@@ -15,8 +14,10 @@ import { extname, basename, join, dirname, resolve } from 'path'
 import sanitize from 'sanitize-filename'
 import createLogger from '.././utils/Logger'
 import { ConsoleReporter } from '.././utils/ConsoleReporter'
-import glob from 'glob'
 import chalk from 'chalk'
+import ms from 'ms'
+
+import { getFilesPattern, readConfigFile } from '../utils/compile'
 interface RunCommonArguments extends Arguments {
 	file: string
 	chrome?: string
@@ -25,12 +26,11 @@ interface RunCommonArguments extends Arguments {
 	devtools?: boolean
 	sandbox?: boolean
 	loopCount?: number
-	stepDelay?: number
-	actionDelay?: number
+	stepDelay?: string | number
+	actionDelay?: string | number
 	fastForward?: boolean
 	slowMo?: boolean
 	watch?: boolean
-	browserType?: BROWSER_TYPE
 	'work-root'?: string
 	'test-data-root'?: string
 	'fail-status-code': number
@@ -43,16 +43,29 @@ function setupDelayOverrides(
 ): TestSettings {
 	if (testSettingOverrides == null) testSettingOverrides = {}
 	const { actionDelay, stepDelay } = args
+	let convertedActionDelay = 0
+	let convertedStepDelay = 0
 
-	testSettingOverrides.actionDelay = actionDelay && actionDelay > 0 ? actionDelay : 0
-	testSettingOverrides.stepDelay = stepDelay && stepDelay > 0 ? stepDelay : 0
+	if (typeof actionDelay === 'string' && actionDelay) {
+		convertedActionDelay = ms(actionDelay)
+	} else if (typeof actionDelay === 'number') {
+		convertedActionDelay = actionDelay
+	}
+	testSettingOverrides.actionDelay = convertedActionDelay > 0 ? convertedActionDelay : 0
+
+	if (typeof stepDelay === 'string' && stepDelay) {
+		convertedStepDelay = ms(stepDelay)
+	} else if (typeof stepDelay === 'number') {
+		convertedStepDelay = stepDelay
+	}
+	testSettingOverrides.stepDelay = convertedStepDelay > 0 ? convertedStepDelay : 0
 
 	if (args.fastForward) {
-		testSettingOverrides.stepDelay = 1
-		testSettingOverrides.actionDelay = 1
+		testSettingOverrides.stepDelay = 1000
+		testSettingOverrides.actionDelay = 1000
 	} else if (args.slowMo) {
-		testSettingOverrides.stepDelay = 10
-		testSettingOverrides.actionDelay = 10
+		testSettingOverrides.stepDelay = 10000
+		testSettingOverrides.actionDelay = 10000
 	}
 	return testSettingOverrides
 }
@@ -114,15 +127,6 @@ function makeTestCommander(file: string): TestCommander {
 	return commander
 }
 
-async function readConfigFile(file: string): Promise<any> {
-	const rootPath = process.cwd()
-	try {
-		return await import(join(rootPath, file))
-	} catch {
-		throw Error('The config file was not structured correctly. Please check and try again')
-	}
-}
-
 async function runTestScript(args: RunCommonArguments): Promise<void> {
 	const { file, verbose } = args
 	const workRootPath = getWorkRootPath(file, args['work-root'])
@@ -146,8 +150,9 @@ async function runTestScript(args: RunCommonArguments): Promise<void> {
 		verbose: verboseBool,
 		headless: args.headless ?? true,
 		devtools: args.devtools ?? false,
+		chromeVersion: args.chrome,
 		sandbox: args.sandbox ?? true,
-		browserType: args.browserType ?? BROWSER_TYPE.CHROME,
+
 		runEnv: initRunEnv(workRootPath, testDataPath),
 		testSettingOverrides: {},
 		persistentRunner: false,
@@ -175,20 +180,7 @@ async function runTestScriptWithConfiguration(args: RunCommonArguments): Promise
 	if (!paths.testPathMatch || !paths.testPathMatch.length) {
 		throw Error('Found no test scripts matching testPathMatch pattern')
 	}
-	const files: string[] = []
-	try {
-		files.push(
-			...(paths.testPathMatch.reduce(
-				(arr: string[], item: string) => arr.concat(glob.sync(item)),
-				[],
-			) as []),
-		)
-		if (!files.length) {
-			throw Error('Found no test scripts matching testPathMatch pattern')
-		}
-	} catch {
-		throw Error('Found no test scripts matching testPathMatch pattern')
-	}
+	const files: string[] = getFilesPattern(paths.testPathMatch)
 	console.info(
 		'The following test scripts that matched the testPathMatch pattern are going to be executed:',
 	)
@@ -272,12 +264,12 @@ const cmd: CommandModule = {
 			.options('step-delay', {
 				group: 'Running the test script:',
 				describe: 'Override stepDelay test script setting',
-				type: 'number',
+				type: 'string',
 			})
 			.options('action-delay', {
 				group: 'Running the test script:',
 				describe: 'Override actionDelay test script setting',
-				type: 'number',
+				type: 'string',
 			})
 			.option('loop-count', {
 				group: 'Running the test script:',

@@ -9,8 +9,8 @@ export const settings: TestSettings = {
 	extraHTTPHeaders: {
 		'x-hooray': 'hdrcustom',
 	},
-	actionDelay: 1,
-	stepDelay: 1,
+	actionDelay: '1s',
+	stepDelay: '1s',
 	name: 'Flood challenge',
 	description: 'Flood challenge yeahh',
 }

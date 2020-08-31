@@ -6,11 +6,10 @@ var setUp = 1
 export const settings: TestSettings = {
 	clearCache: true,
 	disableCache: true,
-	waitTimeout: 30,
+	waitTimeout: '30s',
 	screenshotOnFailure: true,
-	stepDelay: 7.5,
-	actionDelay: 7.5,
-	loopCount: 1,
+	stepDelay: '7.5s',
+	actionDelay: '7.5s',
 }
 
 /**

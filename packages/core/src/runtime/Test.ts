@@ -1,6 +1,6 @@
 import Interceptor from '../network/Interceptor'
 import { Browser } from './Browser'
-import { Browser as BrowserInterface } from '../interface/IBrowser'
+import { Browser as BrowserInterface } from './IBrowser'
 
 import { IReporter } from '../Reporter'
 import { NullReporter } from '../reporter/Null'
@@ -25,11 +25,11 @@ import { Looper } from '../Looper'
 
 import { CancellationToken } from '../utils/CancellationToken'
 
-import { TestSettings, ConcreteTestSettings, DEFAULT_STEP_WAIT_SECONDS } from './Settings'
-import { ITest } from '../interface/ITest'
+import { PuppeteerClientLike } from '../driver/Puppeteer'
+import { ScreenshotOptions } from 'puppeteer'
+import { TestSettings, ConcreteTestSettings, DEFAULT_STEP_WAIT_MILLISECONDS } from './Settings'
+import { ITest } from './ITest'
 import { EvaluatedScriptLike } from './EvaluatedScriptLike'
-import { PlaywrightClientLike } from '../driver/Playwright'
-import { ScreenshotOptions } from '../page/types'
 import { Hook, HookBase } from './StepLifeCycle'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -60,7 +60,7 @@ export default class Test implements ITest {
 	}
 
 	constructor(
-		public client: PlaywrightClientLike,
+		public client: PuppeteerClientLike,
 		public script: EvaluatedScriptLike,
 		public reporter: IReporter = new NullReporter(),
 		settingsOverride: TestSettings,
@@ -210,7 +210,9 @@ export default class Test implements ITest {
 		looper: Looper,
 	): Promise<void> {
 		console.assert(this.client, `client is not configured in Test`)
+
 		const ctx = new Context()
+
 		const testObserver = new ErrorObserver(
 			new LifecycleObserver(
 				this.testObserverFactory(
@@ -222,6 +224,7 @@ export default class Test implements ITest {
 			),
 		)
 
+		await (await this.client).reopenPage(this.settings.incognito)
 		await this.requestInterceptor.attach(this.client.page)
 
 		this.testCancel = async () => {
@@ -231,6 +234,8 @@ export default class Test implements ITest {
 		this.failed = false
 		this.runningBrowser = null
 		this.stepCount = 0
+
+		// await this.observer.attachToNetworkRecorder()
 
 		debug('run() start')
 
@@ -250,12 +255,7 @@ export default class Test implements ITest {
 			if (this.settings.clearCache) await browser.clearBrowserCache()
 			if (this.settings.clearCookies) await browser.clearBrowserCookies()
 			if (this.settings.device) await browser.emulateDevice(this.settings.device)
-			if (this.settings.userAgent) {
-				await browser.setUserAgent(this.settings.userAgent)
-			} else {
-				await this.client.reopenPage(this.settings.incognito)
-			}
-
+			if (this.settings.userAgent) await browser.setUserAgent(this.settings.userAgent)
 			if (this.settings.disableCache) await browser.setCacheDisabled(true)
 			if (this.settings.extraHTTPHeaders)
 				await browser.setExtraHTTPHeaders(this.settings.extraHTTPHeaders)
@@ -370,6 +370,9 @@ export default class Test implements ITest {
 		if (error === null) {
 			await this.doStepDelay()
 		}
+
+		// await this.syncNetworkRecorder()
+		// this.networkRecorder.reset()
 		debug('step done')
 	}
 
@@ -402,7 +405,7 @@ export default class Test implements ITest {
 				resolve()
 				return
 			}
-			setTimeout(resolve, this.settings.stepDelay * 1e3 || DEFAULT_STEP_WAIT_SECONDS * 1e3)
+			setTimeout(resolve, Number(this.settings.stepDelay) || DEFAULT_STEP_WAIT_MILLISECONDS)
 		})
 	}
 
@@ -442,9 +445,12 @@ export default class Test implements ITest {
 		try {
 			for (const hook of hooks) {
 				browser.settings = { ...this.settings }
-				browser.settings.waitTimeout = hook.waitTimeout
+				browser.settings.waitTimeout = Math.max(
+					Number(browser.settings.waitTimeout),
+					Number(hook.waitTimeout),
+				)
 				const hookFn = hook.fn.bind(null, browser, testDataRecord)
-				await this.doHookFnWithTimeout(hookFn, hook.waitTimeout)
+				await this.doHookFnWithTimeout(hookFn, Number(hook.waitTimeout))
 			}
 		} catch (error) {
 			throw new Error(error)
@@ -457,7 +463,7 @@ export default class Test implements ITest {
 			const id = setTimeout(() => {
 				clearTimeout(id)
 				reject()
-			}, timeout * 1e3)
+			}, timeout)
 		})
 		// Returns a race between our timeout and the passed in promise
 		return Promise.race([fn(), promiseTimeout])

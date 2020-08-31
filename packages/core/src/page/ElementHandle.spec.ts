@@ -65,7 +65,7 @@ describe('ElementHandle', () => {
 	})
 
 	test('isSelected()', async () => {
-		const handle = await locateEl('#languages > option:nth-child(2)')
+		const handle = await locateEl('#languages > option:nth-child(1)')
 		const element = new ElementHandle(handle, playwright.page)
 		expect(await element.isSelected()).toBe(true)
 		await handle.dispose()
@@ -138,7 +138,7 @@ describe('ElementHandle', () => {
 		const handle: PElementHandle = await locateEl('select')
 		const element = new ElementHandle(handle, playwright.page)
 		let value = await handle.evaluate((element: HTMLInputElement) => element.value, handle)
-		expect(value).toBe('3')
+		expect(value).toBe('1')
 
 		await element.clear()
 

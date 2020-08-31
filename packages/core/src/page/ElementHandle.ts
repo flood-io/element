@@ -362,14 +362,13 @@ export class ElementHandle implements IElementHandle, Locator {
 		}
 
 		let propertyName = 'selected'
-		const tagName = await this.tagName()
-		const type = (tagName && tagName.toUpperCase()) || ''
 
-		if (['CHECKBOX', 'RADIO'].includes(type)) {
+		const type = await this.getAttribute('type')
+		if ('checkbox' === type || 'radio' === type) {
 			propertyName = 'checked'
 		}
 
-		const value = await this.element.getAttribute(propertyName)
+		const value = await getProperty<string>(this.element, propertyName)
 		return !!value
 	}
 
@@ -384,8 +383,8 @@ export class ElementHandle implements IElementHandle, Locator {
 		}
 
 		if (tagName === 'INPUT') {
-			const type = tagName.toLowerCase()
-			return type == 'checkbox' || type == 'radio'
+			const type = await this.getAttribute('type')
+			return type === 'checkbox' || type === 'radio'
 		}
 
 		return false

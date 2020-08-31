@@ -1,5 +1,4 @@
-import { EvaluateFn } from 'puppeteer'
-import { LocatorBuilder } from '../types'
+import { LocatorBuilder, EvaluateFn } from '../types'
 
 export class XPathLocator implements LocatorBuilder {
 	constructor(public selector: string) {}

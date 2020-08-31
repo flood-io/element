@@ -1,29 +1,29 @@
 import { serve } from '../../../tests/support/fixture-server'
-import { launchPuppeteer, testPuppeteer } from '../../../tests/support/launch-browser'
-import { Page } from 'puppeteer'
+import { launchPlaywright, testPlaywright } from '../../../tests/support/launch-browser'
+import { Page } from 'playwright'
 import { Until } from '../Until'
 
-let page: Page, puppeteer: testPuppeteer
+let page: Page, playwright: testPlaywright
 
 describe('Condition', () => {
 	jest.setTimeout(30e3)
 	describe('TitleCondition', () => {
 		beforeAll(async () => {
-			puppeteer = await launchPuppeteer()
-			page = puppeteer.page
+			playwright = await launchPlaywright()
+			page = playwright.page
 		})
 
 		afterAll(async () => {
-			await puppeteer.close()
+			await playwright.close()
 		})
 
 		beforeEach(async () => {
-			let url = await serve('wait.html')
+			const url = await serve('wait.html')
 			await page.goto(url)
 		})
 
 		test('waits Until.titleIs', async () => {
-			let condition = Until.titleIs('another title')
+			const condition = Until.titleIs('another title')
 
 			await page.evaluate(() => {
 				return new Promise(yeah => {
@@ -34,12 +34,12 @@ describe('Condition', () => {
 				})
 			})
 
-			let result = await condition.waitFor(page.mainFrame())
+			const result = await condition.waitFor(page.mainFrame())
 			expect(result).toBe(true)
 		})
 
 		test('waits Until.titleContains', async () => {
-			let condition = Until.titleContains('another title')
+			const condition = Until.titleContains('another title')
 
 			await page.evaluate(() => {
 				return new Promise(yeah => {
@@ -50,12 +50,12 @@ describe('Condition', () => {
 				})
 			})
 
-			let result = await condition.waitFor(page.mainFrame())
+			const result = await condition.waitFor(page.mainFrame())
 			expect(result).toBe(true)
 		})
 
 		test('waits Until.titleMatches', async () => {
-			let condition = Until.titleMatches(/^another/)
+			const condition = Until.titleMatches(/^another/)
 
 			await page.evaluate(() => {
 				return new Promise(yeah => {
@@ -66,7 +66,7 @@ describe('Condition', () => {
 				})
 			})
 
-			let result = await condition.waitFor(page.mainFrame())
+			const result = await condition.waitFor(page.mainFrame())
 			expect(result).toBe(true)
 		})
 	})

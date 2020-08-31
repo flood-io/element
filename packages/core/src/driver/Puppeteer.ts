@@ -1,10 +1,8 @@
 import puppeteer, { LaunchOptions, Browser, Page } from 'puppeteer'
 
-import { ChromeVersion } from '../runtime/Settings'
-
 export type ConcreteLaunchOptions = LaunchOptions & {
 	args: string[]
-	chromeVersion: ChromeVersion | string
+	chromeVersion: string
 	sandbox: boolean
 	debug: boolean
 }

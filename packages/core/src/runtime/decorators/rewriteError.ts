@@ -1,7 +1,7 @@
 import { AnyErrorData, interpretError } from '../errors/Types'
 import interpretPuppeteerError from '../errors/interpretPuppeteerError'
 import { StructuredError } from '../../utils/StructuredError'
-import { Browser } from '../IBrowser'
+import { Browser } from '../../interface/IBrowser'
 
 export function rewriteError() {
 	const errorInterpreters = [interpretPuppeteerError]

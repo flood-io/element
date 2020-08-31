@@ -14,12 +14,12 @@ export { runCommandLine, ElementOptions } from '@flood/element-core'
 
 export { TestSettings, ResponseTiming } from '@flood/element-core'
 export { RuntimeEnvironment, FloodProcessEnv } from '@flood/element-core'
-import { WorkRoot, launch, PuppeteerClient } from '@flood/element-core'
+import { WorkRoot, launch, PlaywrightClient } from '@flood/element-core'
 export { nullRuntimeEnvironment } from '@flood/element-core'
 
 export { TestCommander } from '@flood/element-core'
 
-export { WorkRoot, PuppeteerClient, launch }
+export { WorkRoot, PlaywrightClient, launch }
 
 export { TestScriptError, TestScriptOptions } from '@flood/element-core'
 export { ITestScript } from '@flood/element-core'

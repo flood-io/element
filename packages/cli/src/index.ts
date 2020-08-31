@@ -9,7 +9,6 @@ import planCmd from './cmd/plan'
 import generateCmd from './cmd/generate'
 import agentCmd from './cmd/agent'
 import floodCmd from './cmd/flood'
-import compileCmd from './cmd/compile'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:cli')
@@ -60,7 +59,6 @@ export async function main(rootPath: string) {
 		.command(runCmd)
 		.command(agentCmd)
 		.command(floodCmd)
-		.command(compileCmd)
 		.scriptName('element')
 		.updateStrings({
 			'Commands:': chalk.grey('Commands:\n'),

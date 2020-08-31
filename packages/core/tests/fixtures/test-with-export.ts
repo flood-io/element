@@ -8,8 +8,8 @@ import { step, setup, By, Until } from '@flood/element'
 export default function() {
 	setup({
 		loopCount: Infinity,
-		actionDelay: '0.5s',
-		stepDelay: '5s',
+		actionDelay: 0,
+		stepDelay: 0,
 	})
 
 	step('Invalid Step', async () => {

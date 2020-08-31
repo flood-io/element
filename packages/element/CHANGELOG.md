@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-beta.0](https://github.com/flood-io/element/compare/v1.3.0-beta.28...v2.0.0-beta.0) (2020-08-31)
+
+
+* Remove suite (#198) ([583bc1f](https://github.com/flood-io/element/commit/583bc1fe4ba3a913a91c44b20d5063fb4709cc32)), closes [#198](https://github.com/flood-io/element/issues/198)
+
+
+### BREAKING CHANGES
+
+* suite is deprecated
+
+
+
+
+
 # [1.3.0-beta.28](https://github.com/flood-io/element/compare/v1.3.0-beta.27...v1.3.0-beta.28) (2020-08-29)
 
 **Note:** Version bump only for package @flood/element

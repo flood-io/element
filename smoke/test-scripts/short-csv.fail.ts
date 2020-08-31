@@ -16,8 +16,8 @@ export const settings: TestSettings = {
 	device: Device.iPadLandscape,
 	clearCache: true,
 	disableCache: true,
-	actionDelay: 0.5,
-	stepDelay: 2.5,
+	actionDelay: '0.5s',
+	stepDelay: '2.5s',
 	screenshotOnFailure: true,
 	userAgent: 'flood-element-test',
 }

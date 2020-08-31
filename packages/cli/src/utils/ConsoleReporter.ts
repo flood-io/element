@@ -8,7 +8,6 @@ import {
 } from '@flood/element-core'
 import { Logger } from 'winston'
 import chalk from 'chalk'
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element-cli:console-reporter')
 
 export class ConsoleReporter implements IReporter {
@@ -90,8 +89,8 @@ cause.stack: ${detail.causeStack}`)
 
 	testScriptConsole(method: string, message?: any, ...optionalParams: any[]): void {
 		debug('testScriptConsole', method, message)
-		if (['log', 'timeStamp'].includes(method)) method = 'info'
+		if (method === 'log') method = 'info'
 		if (method === 'warning') method = 'warn'
-		this.logger[method](`page console.${method}: ${message} ${optionalParams.join(' ')}`)
+		;(this.logger as any)[method](`page console.${method}: ${message} ${optionalParams.join(' ')}`)
 	}
 }

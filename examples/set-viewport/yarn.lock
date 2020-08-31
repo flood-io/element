@@ -2,28 +2,30 @@
 # yarn lockfile v1
 
 
-"@flood/element-api@^1.2.3":
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/@flood/element-api/-/element-api-1.2.3.tgz#0e89c8951bf69778bff9846afd9fa53892e6755a"
-  integrity sha512-zZiaoSxCZ7qdBi7d73FIPOBb26uivH60gUPzMU+2TdUOw1z18UO8+xdkgjBjBgAjoiISbbzrdZUKhis5d0gZuQ==
+"@flood/element-api@^1.3.0-beta.28":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@flood/element-api/-/element-api-1.3.0.tgz#e337593e639f34a24b7c581318d5fafc8752e8a7"
+  integrity sha512-kIZgGGF94UnQAj84f+i2RXGjCAJEgq/7ojH457IOb5Rvxz0r2LuUK5YZfgBSTozflH62ymxV1yWrAx9pol/fyg==
   dependencies:
-    "@flood/element-core" "^1.2.3"
+    "@flood/element-core" "^1.3.0"
 
 "@flood/element-cli@../../packages/cli":
-  version "1.2.3"
+  version "1.3.0-beta.28"
   dependencies:
-    "@flood/element" "^1.2.3"
-    "@flood/element-api" "^1.2.3"
-    "@flood/element-core" "^1.2.3"
-    "@flood/element-flood-runner" "^1.2.3"
+    "@flood/element" "^1.3.0-beta.28"
+    "@flood/element-api" "^1.3.0-beta.28"
+    "@flood/element-core" "^1.3.0-beta.28"
+    "@flood/element-flood-runner" "^1.3.0-beta.28"
     boxen "^3.0"
     chalk "^2.4.1"
     chokidar "^2.0.4"
     command-exists "^1.2.7"
     debug "^3.1.0"
     find-root "^1.1.0"
+    form-data "^3.0.0"
     import-local "^3.0.2"
     ms "^2.1.1"
+    node-fetch "^2.6.0"
     ora "^2.1.0"
     slug "^2.1.0"
     update-check "^1.5.2"
@@ -32,10 +34,10 @@
     yeoman-environment "2.3.0"
     yeoman-generator "3.1.0"
 
-"@flood/element-compiler@^1.2.3":
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/@flood/element-compiler/-/element-compiler-1.2.3.tgz#4623de3a109626080df30e98874edf7d2482ab00"
-  integrity sha512-ONoM3vh2APUNbuwrbeq6nTyOCjaPjurJakCmYLXlt6QnqqtsK/L8nQGyBtzqea+eSYgHPhsIVGCppgG+puHEyw==
+"@flood/element-compiler@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@flood/element-compiler/-/element-compiler-1.3.0.tgz#92feef7a8de159be9af74133fc412e16011c999a"
+  integrity sha512-tRiTdEKFGFO370+v7PHJgWU18+mHq1LnMWYi5sx0gN3DQzObEjb4HQBu/szal7byfLTjdxOQVJjy16EPu8DQmg==
   dependencies:
     find-root "^1.1.0"
     memory-fs "^0.5.0"
@@ -46,12 +48,12 @@
     webpack "^4.41.5"
     webpackbar "^4.0.0"
 
-"@flood/element-core@^1.2.3":
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/@flood/element-core/-/element-core-1.2.3.tgz#4b79b0dc029546302368eba381ebfe39bcd741ef"
-  integrity sha512-yGoirsdZ/qyYPbPH5ol/N9nG5svjAaebLQ9z+WjKbYWsxNoRLGg6FIF6DkDi7PFb9vFjEaHGembVqtfLR3Zuaw==
+"@flood/element-core@^1.3.0", "@flood/element-core@^1.3.0-beta.28":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@flood/element-core/-/element-core-1.3.0.tgz#2dceaad234ff346247c0f312b391c1fdccfae2a6"
+  integrity sha512-OiiF2AttFHiD+LQr0p4bohxEmfWBchZOhbvkMxo/ufr6Zu34UH+WDpaR5bUb14Roi+Royynh2ubyYKuETmg55g==
   dependencies:
-    "@flood/element-compiler" "^1.2.3"
+    "@flood/element-compiler" "^1.3.0"
     "@types/faker" "^4.1.9"
     "@types/node" "12.7.4"
     "@types/puppeteer" "^2.0.1"
@@ -73,22 +75,30 @@
     strftime "^0.10.0"
     term-img "^2.1.0"
     typedoc "^0.15.0"
-    vm2 "^3.5.2"
+    vm2 "^3.9.1"
     winston "^3.0.0"
 
-"@flood/element-flood-runner@^1.2.3":
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/@flood/element-flood-runner/-/element-flood-runner-1.2.3.tgz#c6f9d8cdec64c0818962aae2526867bc0f69d005"
-  integrity sha512-CXJ0XKSXaoS1gDpD4M8RpQmtUL3HX5r13pJOpjoOhY7A/29Z4l5P4iSMeaA/pzGs/ka3dZ/Lo/oIE+KyyTmYVg==
+"@flood/element-flood-runner@^1.3.0-beta.28":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@flood/element-flood-runner/-/element-flood-runner-1.3.0.tgz#9dc117719f51512a526e985d2ca22735e7f95bed"
+  integrity sha512-4a+997SdrDlRMVictNQtS2X/A+Urvc/Z4FvYLz6mbsLYf6gcEhbpvKUQScPblxzjpAR1mJlFt9C6q/zVF+zBOw==
   dependencies:
+    "@flood/element-core" "^1.3.0"
     "@flood/node-influx" "^5.0.9"
     find-root "^1.1.0"
     winston "^3.2.1"
 
-"@flood/element@../../packages/element", "@flood/element@^1.2.3":
-  version "1.2.3"
+"@flood/element@../../packages/element":
+  version "1.3.0-beta.28"
   dependencies:
-    "@flood/element-core" "^1.2.3"
+    "@flood/element-core" "^1.3.0-beta.28"
+
+"@flood/element@^1.3.0-beta.28":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@flood/element/-/element-1.3.0.tgz#af20552be94b979b8cefab302912239d3686a59b"
+  integrity sha512-YG6EJVUkO6FgimvuwYHLFji31SOaXh5lFfMUUiK8GDF2pc+75rIvliV4iXfFwrwCAnTcZiam8ELJalMFPPVgWg==
+  dependencies:
+    "@flood/element-core" "^1.3.0"
 
 "@flood/node-influx@^5.0.9":
   version "5.0.9"
@@ -511,6 +521,11 @@ async@^2.6.0, async@^2.6.1:
   dependencies:
     lodash "^4.17.14"
 
+asynckit@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
+  integrity sha1-x57Zf380y48robyXkLzDZkdLS3k=
+
 atob@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
@@ -584,9 +599,9 @@ bluebird@^3.5.5:
   integrity sha512-XpNj6GDQzdfW+r2Wnn7xiSAd7TM3jzkxGXBGTtWKuSXv1xUV+azxAm8jdWZN06QTQk+2N2XB9jRDkvbmQmcRtg==
 
 bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.4.0:
-  version "4.11.8"
-  resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.11.8.tgz#2cde09eb5ee341f484746bb0309b3253b1b1442f"
-  integrity sha512-ItfYfPLkWHUjckQCk8xC+LwxgK8NYcXywGigJgSwOP8Y2iyWT4f2vsZnoOXTTbo+o5yXmIUJ4gn5538SO5S3gA==
+  version "4.11.9"
+  resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.11.9.tgz#26d556829458f9d1e81fc48952493d0ba3507828"
+  integrity sha512-E6QoYqCKZfgatHTdHzs1RRKP7ip4vvm+EyRUeE2RF0NblwVvb0p6jSVeNTOFxPn26QXN2o6SMfNxKp6kU8zQaw==
 
 boxen@^3.0:
   version "3.2.0"
@@ -1001,6 +1016,13 @@ colorspace@1.1.x:
     color "3.0.x"
     text-hex "1.0.x"
 
+combined-stream@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/combined-stream/-/combined-stream-1.0.8.tgz#c3d45a8b34fd730631a110a8a2520682b31d5a7f"
+  integrity sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==
+  dependencies:
+    delayed-stream "~1.0.0"
+
 command-exists@^1.2.7:
   version "1.2.8"
   resolved "https://registry.yarnpkg.com/command-exists/-/command-exists-1.2.8.tgz#715acefdd1223b9c9b37110a149c6392c2852291"
@@ -1280,6 +1302,11 @@ define-property@^2.0.2:
     is-descriptor "^1.0.2"
     isobject "^3.0.1"
 
+delayed-stream@~1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/delayed-stream/-/delayed-stream-1.0.0.tgz#df3ae199acadfb7d440aaae0b29e2272b24ec619"
+  integrity sha1-3zrhmayt+31ECqrgsp4icrJOxhk=
+
 des.js@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/des.js/-/des.js-1.0.1.tgz#5382142e1bdc53f85d86d53e5f4aa7deb91e0843"
@@ -1358,9 +1385,9 @@ ejs@^2.5.9:
   integrity sha512-7vmuyh5+kuUyJKePhQfRQBhXV5Ce+RnaeeQArKu1EAMpL3WbgMt5WG6uQZpEVvYSSsxMXRKOewtDk9RaTKXRlA==
 
 elliptic@^6.0.0:
-  version "6.5.2"
-  resolved "https://registry.yarnpkg.com/elliptic/-/elliptic-6.5.2.tgz#05c5678d7173c049d8ca433552224a495d0e3762"
-  integrity sha512-f4x70okzZbIQl/NSRLkI/+tteV/9WqL98zx+SQ69KbXxmVrmjwsNUPn/gYJJ0sHvEak24cZgHIPegRePAtA/xw==
+  version "6.5.3"
+  resolved "https://registry.yarnpkg.com/elliptic/-/elliptic-6.5.3.tgz#cb59eb2efdaf73a0bd78ccd7015a62ad6e0f93d6"
+  integrity sha512-IMqzv5wNQf+E6aHeIqATs0tOLeOTwj1QKbRcS3jBbYkl5oLAserA8yJTT7/VyHUYG91PRmPyeQDObKLPpeS4dw==
   dependencies:
     bn.js "^4.4.0"
     brorand "^1.0.1"
@@ -1741,6 +1768,15 @@ for-in@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/for-in/-/for-in-1.0.2.tgz#81068d295a8142ec0ac726c6e2200c30fb6d5e80"
   integrity sha1-gQaNKVqBQuwKxybG4iAMMPttXoA=
+
+form-data@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/form-data/-/form-data-3.0.0.tgz#31b7e39c85f1355b7139ee0c647cf0de7f83c682"
+  integrity sha512-CKMFDglpbMi6PyN+brwB9Q/GOw0eAnsrEZDgcsH5Krhz5Od/haKHAX0NmQfha2zPPz0JpWzA7GJHGSnvCRLWsg==
+  dependencies:
+    asynckit "^0.4.0"
+    combined-stream "^1.0.8"
+    mime-types "^2.1.12"
 
 fragment-cache@^0.2.1:
   version "0.2.1"
@@ -2708,6 +2744,18 @@ mime-db@1.43.0:
   resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.43.0.tgz#0a12e0502650e473d735535050e7c8f4eb4fae58"
   integrity sha512-+5dsGEEovYbT8UY9yD7eE4XTc4UwJ1jBYlgaQQF38ENsKR3wj/8q8RFZrF9WIZpB2V1ArTVFUva8sAul1NzRzQ==
 
+mime-db@1.44.0:
+  version "1.44.0"
+  resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.44.0.tgz#fa11c5eb0aca1334b4233cb4d52f10c5a6272f92"
+  integrity sha512-/NOTfLrsPBVeH7YtFPgsVWveuL+4SjjYxaQ1xtM1KMFj7HdxlBlxeyNLzhyJVx7r4rZGJAZ/6lkKCitSc/Nmpg==
+
+mime-types@^2.1.12:
+  version "2.1.27"
+  resolved "https://registry.yarnpkg.com/mime-types/-/mime-types-2.1.27.tgz#47949f98e279ea53119f5722e0f34e529bec009f"
+  integrity sha512-JIhqnCasI9yD+SsmkquHBxTSEuZdQX5BuQnS2Vc7puQQQ+8yiP5AY5uWhpdv4YL4VM5c6iliiYWPgJ/nJQLp7w==
+  dependencies:
+    mime-db "1.44.0"
+
 mime-types@^2.1.25:
   version "2.1.26"
   resolved "https://registry.yarnpkg.com/mime-types/-/mime-types-2.1.26.tgz#9c921fc09b7e149a65dfdc0da4d20997200b0a06"
@@ -2866,6 +2914,11 @@ nice-try@^1.0.4:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"
   integrity sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ==
+
+node-fetch@^2.6.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.0.tgz#e633456386d4aa55863f676a7ab0daa8fdecb0fd"
+  integrity sha512-8dG4H5ujfvFiqDmVu9fQ5bOHUC15JMjMY/Zumv26oOvvVJjM67KF8koCWIabKQ1GJIa9r2mMZscBq/TbdOcmNA==
 
 node-libs-browser@^2.2.1:
   version "2.2.1"
@@ -4474,10 +4527,10 @@ vm-browserify@^1.0.1:
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-1.1.2.tgz#78641c488b8e6ca91a75f511e7a3b32a86e5dda0"
   integrity sha512-2ham8XPWTONajOR0ohOKOHXkm3+gaBmGut3SRuu75xLd/RRaY6vqgh8NBYYk7+RW3u5AtzPQZG8F10LHkl0lAQ==
 
-vm2@^3.5.2:
-  version "3.8.4"
-  resolved "https://registry.yarnpkg.com/vm2/-/vm2-3.8.4.tgz#882be9135467942d84d1af80b6e6549b57c69041"
-  integrity sha512-5HThl+RBO/pwE9SF0kM4nLrpq5vXHBNk4BMX27xztvl0j1RsZ4/PMVJAu9rM9yfOtTo5KroL7XNX3031ExleSw==
+vm2@^3.9.1:
+  version "3.9.2"
+  resolved "https://registry.yarnpkg.com/vm2/-/vm2-3.9.2.tgz#a4085d2d88a808a1b3c06d5478c2db3222a9cc30"
+  integrity sha512-nzyFmHdy2FMg7mYraRytc2jr4QBaUY3TEGe3q3bK8EgS9WC98wxn2jrPxS/ruWm+JGzrEIIeufKweQzVoQEd+Q==
 
 watchpack@^1.6.0:
   version "1.6.0"

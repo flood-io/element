@@ -18,7 +18,7 @@ import {
 	RecoverWith,
 	extractStep,
 } from './Step'
-import { Browser } from './types'
+import { Browser } from './IBrowser'
 import Test from './Test'
 import { mustCompileFile } from '../TestScript'
 import { TestScriptError, TestScriptErrorMapper } from '../TestScriptError'

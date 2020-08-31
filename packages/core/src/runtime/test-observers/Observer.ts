@@ -1,4 +1,4 @@
-import { ITest } from '../ITest'
+import { ITest } from './testTypes'
 import { Step } from '../Step'
 import { StructuredError } from '../../utils/StructuredError'
 export type NextFunction = () => Promise<void>

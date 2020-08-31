@@ -7,9 +7,8 @@ export const settings: TestSettings = {
 	clearCookies: true,
 	responseTimeMeasurement: 'step',
 	userAgent: 'I AM ROBOT',
-	actionDelay: 1,
-	stepDelay: 1,
-	waitUntil: 'visible',
+	actionDelay: '1s',
+	stepDelay: '1s',
 }
 
 export default () => {

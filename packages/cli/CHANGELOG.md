@@ -3,6 +3,105 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0-beta.28](https://github.com/flood-io/element/compare/v1.3.0-beta.27...v1.3.0-beta.28) (2020-08-29)
+
+**Note:** Version bump only for package @flood/element-cli
+
+
+
+
+
+# [1.3.0-beta.27](https://github.com/flood-io/element/compare/v1.3.0-beta.26...v1.3.0-beta.27) (2020-08-29)
+
+
+### Features
+
+* Enhance unit of waitTimeout from ms to second makes it more consistently in TestCase settings. [#183](https://github.com/flood-io/element/issues/183) ([#206](https://github.com/flood-io/element/issues/206)) ([ab829fd](https://github.com/flood-io/element/commit/ab829fd8ac5db8d8afe325b517af3d7c269030f3))
+
+
+
+
+
+# [1.3.0-beta.26](https://github.com/flood-io/element/compare/v1.3.0-beta.25...v1.3.0-beta.26) (2020-08-28)
+
+**Note:** Version bump only for package @flood/element-cli
+
+
+
+
+
+# [1.3.0-beta.25](https://github.com/flood-io/element/compare/v1.3.0-beta.24...v1.3.0-beta.25) (2020-08-28)
+
+**Note:** Version bump only for package @flood/element-cli
+
+
+
+
+
+# [1.3.0-beta.24](https://github.com/flood-io/element/compare/v1.3.0-beta.23...v1.3.0-beta.24) (2020-08-28)
+
+**Note:** Version bump only for package @flood/element-cli
+
+
+
+
+
+# [1.3.0-beta.23](https://github.com/flood-io/element/compare/v1.3.0-beta.22...v1.3.0-beta.23) (2020-08-27)
+
+**Note:** Version bump only for package @flood/element-cli
+
+
+
+
+
+# [1.3.0-beta.22](https://github.com/flood-io/element/compare/v1.3.0-beta.21...v1.3.0-beta.22) (2020-08-27)
+
+**Note:** Version bump only for package @flood/element-cli
+
+
+
+
+
+# [1.3.0-beta.21](https://github.com/flood-io/element/compare/v1.3.0-beta.20...v1.3.0-beta.21) (2020-08-21)
+
+**Note:** Version bump only for package @flood/element-cli
+
+
+
+
+
+# [1.3.0-beta.20](https://github.com/flood-io/element/compare/v1.3.0-beta.19...v1.3.0-beta.20) (2020-08-18)
+
+**Note:** Version bump only for package @flood/element-cli
+
+
+
+
+
+# [1.3.0-beta.19](https://github.com/flood-io/element/compare/v1.3.0-beta.18...v1.3.0-beta.19) (2020-08-11)
+
+**Note:** Version bump only for package @flood/element-cli
+
+
+
+
+
+# [1.3.0-beta.18](https://github.com/flood-io/element/compare/v1.3.0-beta.17...v1.3.0-beta.18) (2020-07-08)
+
+**Note:** Version bump only for package @flood/element-cli
+
+
+
+
+
+# [1.3.0-beta.17](https://github.com/flood-io/element/compare/v1.3.0-beta.16...v1.3.0-beta.17) (2020-07-07)
+
+**Note:** Version bump only for package @flood/element-cli
+
+
+
+
+
 # [1.3.0-beta.16](https://github.com/flood-io/element/compare/v1.3.0-beta.15...v1.3.0-beta.16) (2020-07-03)
 
 

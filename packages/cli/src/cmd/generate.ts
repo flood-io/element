@@ -1,30 +1,30 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { Argv, Arguments, CommandModule } from 'yargs'
-
-interface CommandArgs extends Arguments {
-	file: string
-}
+import chalk from 'chalk'
+import generateScriptCmd from '../cmd/generate_cmds/generateTestScript'
+import generateConfigurationCmd from '../cmd/generate_cmds/generateTestConfiguration'
 
 const cmd: CommandModule = {
-	command: 'generate <file> [options]',
-	describe: 'Generate a basic test script from a template',
+	command: 'generate <command>',
+	describe: 'Generate a basic [test script|test configuration]',
 
-	async handler(args: CommandArgs) {
-		const { default: yeomanEnv } = await import('yeoman-environment')
-		const env = yeomanEnv.createEnv()
-		const { default: TestScriptGenerator } = await import('../generator/test-script')
-		env.registerStub(TestScriptGenerator as any, 'element/test-script')
-		env.run(['element/test-script', args.file], () => 'Generate success')
-	},
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	async handler(args: Arguments): Promise<void> {},
 
-	builder(yargs: Argv) {
+	builder(yargs: Argv): Argv {
 		return yargs
-			.option('verbose', {
-				describe: 'Verbose mode',
+			.usage('usage: generate <command>')
+			.command(generateScriptCmd)
+			.command(generateConfigurationCmd)
+			.updateStrings({
+				'Commands:': chalk.grey('Commands:\n'),
 			})
-			.check(({ file }) => {
-				if (!(file as string).length)
-					return new Error('Please provide the path to the test script to write')
-				return true
+			.demandCommand()
+			.help('help')
+			.fail((msg, err) => {
+				if (err) console.error(chalk.redBright(err.message))
+				if (msg) console.error(chalk.redBright(msg))
+				process.exit(1)
 			})
 	},
 }

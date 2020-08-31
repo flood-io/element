@@ -1,15 +1,21 @@
 import Interceptor from '../network/Interceptor'
 import { Browser } from './Browser'
-import { Browser as BrowserInterface } from './types'
+import { Browser as BrowserInterface } from './IBrowser'
 
 import { IReporter } from '../Reporter'
 import { NullReporter } from '../reporter/Null'
 import { ObjectTrace } from '../utils/ObjectTrace'
 
-import { TestObserver, NullTestObserver } from './test-observers/Observer'
-import LifecycleObserver from './test-observers/LifecycleObserver'
-import ErrorObserver from './test-observers/Errors'
-import InnerObserver from './test-observers/Inner'
+import {
+	TestObserver,
+	NullTestObserver,
+	LifecycleObserver,
+	ErrorObserver,
+	InnerObserver,
+	TimingObserver,
+	Context,
+	NetworkRecordingTestObserver,
+} from './test-observers'
 
 import { AnyErrorData, EmptyErrorData, AssertionErrorData } from './errors/Types'
 import { StructuredError } from '../utils/StructuredError'
@@ -21,12 +27,9 @@ import { CancellationToken } from '../utils/CancellationToken'
 
 import { PuppeteerClientLike } from '../driver/Puppeteer'
 import { ScreenshotOptions } from 'puppeteer'
-import { TestSettings, ConcreteTestSettings, DEFAULT_STEP_WAIT_SECONDS } from './Settings'
+import { TestSettings, ConcreteTestSettings, DEFAULT_STEP_WAIT_MILLISECONDS } from './Settings'
 import { ITest } from './ITest'
 import { EvaluatedScriptLike } from './EvaluatedScriptLike'
-import { TimingObserver } from './test-observers/TimingObserver'
-import { Context } from './test-observers/Context'
-import { NetworkRecordingTestObserver } from './test-observers/NetworkRecordingTestObserver'
 import { Hook, HookBase } from './StepLifeCycle'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -402,7 +405,7 @@ export default class Test implements ITest {
 				resolve()
 				return
 			}
-			setTimeout(resolve, this.settings.stepDelay * 1e3 || DEFAULT_STEP_WAIT_SECONDS * 1e3)
+			setTimeout(resolve, Number(this.settings.stepDelay) || DEFAULT_STEP_WAIT_MILLISECONDS)
 		})
 	}
 
@@ -442,9 +445,12 @@ export default class Test implements ITest {
 		try {
 			for (const hook of hooks) {
 				browser.settings = { ...this.settings }
-				browser.settings.waitTimeout = hook.waitTimeout
+				browser.settings.waitTimeout = Math.max(
+					Number(browser.settings.waitTimeout),
+					Number(hook.waitTimeout),
+				)
 				const hookFn = hook.fn.bind(null, browser, testDataRecord)
-				await this.doHookFnWithTimeout(hookFn, hook.waitTimeout)
+				await this.doHookFnWithTimeout(hookFn, Number(hook.waitTimeout))
 			}
 		} catch (error) {
 			throw new Error(error)
@@ -457,7 +463,7 @@ export default class Test implements ITest {
 			const id = setTimeout(() => {
 				clearTimeout(id)
 				reject()
-			}, timeout * 1e3)
+			}, timeout)
 		})
 		// Returns a race between our timeout and the passed in promise
 		return Promise.race([fn(), promiseTimeout])

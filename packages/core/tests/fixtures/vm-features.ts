@@ -1,8 +1,8 @@
 import { step, TestSettings, setup } from '@flood/element'
 
 export const settings: TestSettings = {
-	duration: 30e3,
-	stepDelay: 1,
+	duration: '30s',
+	stepDelay: '1s',
 	userAgent: 'I AM ROBOT',
 }
 
@@ -13,11 +13,11 @@ export const settings: TestSettings = {
  */
 export default () => {
 	setup({
-		waitTimeout: 5,
+		waitTimeout: '5s',
 	})
 
 	// First step
-	step('Step 1', { waitTimeout: 60 }, async driver => {
+	step('Step 1', { waitTimeout: '60s' }, async driver => {
 		await driver.click('#element1')
 		await driver.click('#element2')
 		await driver.click('#element3')

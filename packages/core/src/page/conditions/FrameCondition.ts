@@ -1,6 +1,6 @@
 import { Condition, NullableLocatable } from '../Condition'
 import { Frame, Page } from 'puppeteer'
-import { getFrames } from '../../runtime/Browser'
+import { getFrames } from '../../utils/frames'
 import { setTimeout } from 'timers'
 
 export class FrameCondition extends Condition {
@@ -100,8 +100,8 @@ export class FrameCondition extends Condition {
 
 	private async createTimeoutPromise() {
 		const errorMessage = `Frame Wait Timeout Exceeded: ${this.timeout}ms exceeded`
-		return new Promise<Error>(yeah => (this.maximumTimer = setTimeout(yeah, this.timeout))).then(
-			() => new Error(errorMessage),
-		)
+		return new Promise<Error>(
+			yeah => (this.maximumTimer = setTimeout(yeah, Number(this.timeout))),
+		).then(() => new Error(errorMessage))
 	}
 }

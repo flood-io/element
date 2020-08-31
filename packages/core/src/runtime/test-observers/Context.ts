@@ -1,8 +1,8 @@
-import { Page } from 'puppeteer'
 import { IReporter } from '../../Reporter'
 import { Test } from './testTypes'
 import NetworkRecorder from '../../network/Recorder'
-import NetworkObserver from '../Observer'
+import NetworkObserver from './NetworkObserver'
+import { Page } from 'playwright'
 
 export class Context {
 	public networkRecorder: NetworkRecorder
@@ -10,18 +10,19 @@ export class Context {
 
 	private attached = false
 
-	public attachTest(test: Test) {
+	public async attachTest(test: Test) {
 		if (this.attached) return
 		this.attached = true
-		this.attachToPage(test.reporter, test.client.page)
+		await this.attachToPage(test.reporter, test.client.page)
 	}
 
 	// TODO deliberately detach from network recorder & observer
 
-	public attachToPage(reporter: IReporter, page: Page) {
+	public async attachToPage(reporter: IReporter, page: Page) {
 		this.networkRecorder = new NetworkRecorder(page)
+		await this.networkRecorder.attachEvents()
 		this.observer = new NetworkObserver(reporter, this.networkRecorder)
-		this.observer.attachToNetworkRecorder()
+		await this.observer.attachToNetworkRecorder()
 	}
 
 	public async syncNetworkRecorder() {

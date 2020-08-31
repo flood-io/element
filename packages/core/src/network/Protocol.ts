@@ -1,4 +1,4 @@
-import { ResourceType } from 'puppeteer'
+import { ResourceType } from './Recorder'
 
 export interface RawResponse {
 	timestamp: number
@@ -48,59 +48,6 @@ export interface RawResponse {
 		}
 		url: string
 		timestamp: number
-	}
-}
-
-export class Entry {
-	requestId: string
-	frameId: string
-	loaderId: string
-	startedDateTime: Date
-	time: number
-	type: string
-	request: EntryRequest
-	response: EntryResponse
-	cache: {}
-	timings: {
-		blocked: number
-		dns: number
-		ssl: number
-		connect: number
-		send: number
-		wait: number
-		receive: number
-		_blocked_queueing: number
-	}
-	serverIPAddress: string
-	connection: string
-	pageref: string
-
-	constructor(attrs = {}) {
-		this.request = new EntryRequest()
-		this.response = new EntryResponse()
-		Object.assign(this, attrs)
-		// let k: keyof this
-		// let v: any
-		// for (let [k, v] of Object.entries(attrs)) {
-		// this.set(k, v)
-		// // this[k: keyof this] = v
-		// }
-	}
-
-	public toJSON() {
-		return {
-			requestId: this.requestId,
-			startedDateTime: this.startedDateTime,
-			time: this.time,
-			type: this.type,
-			request: this.request.toJSON(),
-			response: this.response.toJSON(),
-			cache: this.cache,
-			timings: this.timings,
-			serverIPAddress: this.serverIPAddress,
-			connection: this.connection,
-			pageref: this.pageref,
-		}
 	}
 }
 
@@ -263,6 +210,59 @@ export class EntryResponse {
 			_transferSize: this._transferSize,
 			cookies: this.cookies,
 			content: this.content,
+		}
+	}
+}
+
+export class Entry {
+	requestId: string
+	frameId: string
+	loaderId: string
+	startedDateTime: Date
+	time: number
+	type: string
+	request: EntryRequest
+	response: EntryResponse
+	cache: {}
+	timings: {
+		blocked: number
+		dns: number
+		ssl: number
+		connect: number
+		send: number
+		wait: number
+		receive: number
+		_blocked_queueing: number
+	}
+	serverIPAddress: string
+	connection: string
+	pageref: string
+
+	constructor(attrs = {}) {
+		this.request = new EntryRequest()
+		this.response = new EntryResponse()
+		Object.assign(this, attrs)
+		// let k: keyof this
+		// let v: any
+		// for (let [k, v] of Object.entries(attrs)) {
+		// this.set(k, v)
+		// // this[k: keyof this] = v
+		// }
+	}
+
+	public toJSON() {
+		return {
+			requestId: this.requestId,
+			startedDateTime: this.startedDateTime,
+			time: this.time,
+			type: this.type,
+			request: this.request.toJSON(),
+			response: this.response.toJSON(),
+			cache: this.cache,
+			timings: this.timings,
+			serverIPAddress: this.serverIPAddress,
+			connection: this.connection,
+			pageref: this.pageref,
 		}
 	}
 }

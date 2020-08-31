@@ -7,6 +7,7 @@ import {
 	TestSettings,
 	runCommandLine,
 	ElementOptions,
+	BROWSER_TYPE,
 } from '@flood/element-core'
 import { watch } from 'chokidar'
 import { EventEmitter } from 'events'
@@ -35,6 +36,7 @@ interface RunCommonArguments extends Arguments {
 	'test-data-root'?: string
 	'fail-status-code': number
 	configFile: string
+	browserType?: BROWSER_TYPE
 }
 
 function setupDelayOverrides(
@@ -150,9 +152,8 @@ async function runTestScript(args: RunCommonArguments): Promise<void> {
 		verbose: verboseBool,
 		headless: args.headless ?? true,
 		devtools: args.devtools ?? false,
-		chromeVersion: args.chrome,
 		sandbox: args.sandbox ?? true,
-
+		browserType: args.browserType ?? BROWSER_TYPE.CHROME,
 		runEnv: initRunEnv(workRootPath, testDataPath),
 		testSettingOverrides: {},
 		persistentRunner: false,

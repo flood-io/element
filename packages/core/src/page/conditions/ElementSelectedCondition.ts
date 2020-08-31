@@ -1,5 +1,5 @@
 import { ElementCondition, NullableLocatable } from '../Condition'
-import { EvaluateFn } from 'puppeteer'
+import { EvaluateFn } from '../types'
 
 export class ElementSelectedCondition extends ElementCondition {
 	constructor(desc: string, locator: NullableLocatable, ...args: any[]) {
@@ -21,8 +21,8 @@ export class ElementSelectedCondition extends ElementCondition {
 			}
 
 			if (tagName === 'INPUT') {
-				const type = node.getAttribute('type')
-				return type === 'checkbox' || type === 'radio'
+				const type = tagName.toLowerCase()
+				return type == 'checkbox' || type == 'radio'
 			}
 
 			return false
@@ -30,9 +30,10 @@ export class ElementSelectedCondition extends ElementCondition {
 
 		if (!isSelectable(node)) return false
 
+		const tagName = node.tagName
 		let propertyName = 'selected'
-		const type = node.getAttribute('type')
-		if ('checkbox' === type || 'radio' === type) {
+		const type = tagName.toUpperCase()
+		if ('CHECKBOX' == type || 'RADIO' == type) {
 			propertyName = 'checked'
 		}
 

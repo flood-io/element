@@ -4,7 +4,7 @@
 
 .content {
 	height: 100%;
-	border-radius: 10px;
+	border-radius: 5px;
 	padding: 1rem 1rem 0 1rem;
 }
 
@@ -20,7 +20,12 @@
 
 .header {
 	display: flex;
+	align-items: center;
 	margin-bottom: 1rem;
+}
+
+.header h3 {
+	margin: 0;
 }
 
 .img {

@@ -17,10 +17,10 @@ module.exports = {
 			textColor: '#FFFFFF',
 		},
 		algolia: {
-			apiKey: 'api-key',
-			indexName: 'index-name',
-			appId: 'app-id', // Optional, if you run the DocSearch crawler on your own
-			algoliaOptions: {}, // Optional, if provided by Algolia
+			apiKey: '470d702a4a0bc2621a57b4cb58af7cc9',
+			indexName: 'flood_element',
+			// appId: 'app-id', // Optional, if you run the DocSearch crawler on your own
+			// algoliaOptions: {}, // Optional, if provided by Algolia
 		},
 		navbar: {
 			title: 'Element',

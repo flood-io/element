@@ -1,5 +1,5 @@
-import CustomDeviceDescriptors from '../utils/CustomDeviceDescriptors'
-import { Viewport } from 'puppeteer'
+import { ViewportSize } from 'playwright'
+import { BROWSER_TYPE } from '../page/types'
 
 /**
  * Declares the settings for the test, overriding the settings constant exported in the test script.
@@ -41,14 +41,13 @@ export type ResponseTiming = 'page' | 'network' | 'step' | 'stepWithThinkTime'
 export type ConsoleMethod = 'log' | 'info' | 'debug' | 'warn' | 'error'
 
 /**
- * Represents the versions of chrome that the test script will run against.
+ * Represents the browser that the test script will run against.
  *
  * literal | description
  * --------|-----------
- * puppeteer | (Default) The browser bundled with [puppeteer]. It is a curated version of [chromium](https://www.chromium.org) (the open source version of Google Chrome). Using the puppeteer-bundled Chromium ensures the best compatibility with puppeteer, but lacks some features such as video support.
- * stable | The latest version of [Google Chrome](https://www.chromium.org/). Google Chrome has more features than chromium, but isn't tested as thoroughly against puppeteer, which can result in intermittent errors. If you don't need the extra features, please use `bundled`.
+ * The browser bundled with playwright: 'chromium' | 'firefox' | 'webkit'
  */
-export type ChromeVersion = 'puppeteer' | 'stable'
+export type BrowserType = BROWSER_TYPE
 
 /**
  * Element presence lists the accepted values for automatically waiting on elements before running actions.
@@ -119,7 +118,7 @@ export interface TestSettings {
 	 * Sets the viewport of the page.
 	 * @param viewport The viewport parameters.
 	 */
-	viewport?: Viewport | null
+	viewport?: ViewportSize | null
 
 	/**
 	 * Global wait timeout applied to all wait tasks.
@@ -195,7 +194,7 @@ export interface TestSettings {
 	/**
 	 * Whether to ignore HTTPS errors during navigation. Defaults to `false`
 	 */
-	ignoreHTTPSErrors?: boolean
+	ignoreHTTPSError?: boolean
 
 	/**
 	 * Controls whether each iteration should run within an Incognito window instead of a normal
@@ -206,7 +205,7 @@ export interface TestSettings {
 	/**
 	 * Specifies a version of Google Chrome
 	 */
-	chromeVersion?: ChromeVersion
+	browserType?: BROWSER_TYPE
 
 	/**
 
@@ -260,10 +259,10 @@ export const DEFAULT_SETTINGS: ConcreteTestSettings = {
 	 * by default, don't filter any console messages from the browser
 	 */
 	consoleFilter: [],
-	userAgent: CustomDeviceDescriptors['Chrome Desktop Large'].userAgent,
-	device: 'Chrome Desktop Large',
-	ignoreHTTPSErrors: false,
-	chromeVersion: 'puppeteer',
+	userAgent: '',
+	device: null,
+	ignoreHTTPSError: false,
+	browserType: BROWSER_TYPE.CHROME,
 	blockedDomains: [],
 	incognito: false,
 	name: 'Element Test',

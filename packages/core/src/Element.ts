@@ -1,28 +1,29 @@
 import { Logger } from 'winston'
 import { IReporter } from './Reporter'
-import { PuppeteerClient, launch } from './driver/Puppeteer'
+import { PlaywrightClient, launch } from './driver/Playwright'
 import { RuntimeEnvironment } from './runtime-environment/types'
 import { IRunner, Runner, PersistentRunner, TestCommander } from './Runner'
 import { mustCompileFile } from './TestScript'
 import { TestScriptOptions } from './TestScriptOptions'
 import { EvaluatedScript } from './runtime/EvaluatedScript'
-import { TestSettings, ChromeVersion } from './runtime/Settings'
-import { TestObserver } from './runtime/test-observers/Observer'
+import { TestSettings } from './runtime/Settings'
+import { TestObserver } from './runtime/test-observers/TestObserver'
 import { AsyncFactory } from './utils/Factory'
+import { BROWSER_TYPE } from './page/types'
 
 export interface ElementOptions {
 	logger: Logger
 	runEnv: RuntimeEnvironment
 	reporter: IReporter
-	clientFactory?: AsyncFactory<PuppeteerClient>
+	clientFactory?: AsyncFactory<PlaywrightClient>
 	testScript: string
 	strictCompilation: boolean
 	headless: boolean
 	devtools: boolean
-	chromeVersion: ChromeVersion | string | undefined
 	sandbox: boolean
 	process?: NodeJS.Process
 	verbose: boolean
+	browserType: BROWSER_TYPE
 	testSettingOverrides: TestSettings
 	testObserverFactory?: (t: TestObserver) => TestObserver
 	persistentRunner: boolean
@@ -51,7 +52,7 @@ export async function runCommandLine(opts: ElementOptions): Promise<void> {
 			headless: opts.headless,
 			devtools: opts.devtools,
 			sandbox: opts.sandbox,
-			chromeVersion: opts.chromeVersion,
+			browserType: opts.browserType,
 			debug: opts.verbose,
 		},
 		opts.testObserverFactory,

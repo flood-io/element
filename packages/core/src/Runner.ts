@@ -1,8 +1,8 @@
-import { ConcreteLaunchOptions, PuppeteerClient } from './driver/Puppeteer'
+import { ConcreteLaunchOptions, PlaywrightClient } from './driver/Playwright'
 import { Logger } from 'winston'
 import Test from './runtime/Test'
 import { EvaluatedScript } from './runtime/EvaluatedScript'
-import { TestObserver } from './runtime/test-observers/Observer'
+import { TestObserver } from './runtime/test-observers/TestObserver'
 import { TestSettings } from './runtime/Settings'
 import { IReporter } from './Reporter'
 import { AsyncFactory } from './utils/Factory'
@@ -14,6 +14,7 @@ export interface TestCommander {
 	on(event: 'rerun-test', listener: () => void): this
 }
 
+// eslint-disable-next-line @typescript-eslint/interface-name-prefix
 export interface IRunner {
 	run(testScriptFactory: AsyncFactory<EvaluatedScript>): Promise<void>
 	stop(): Promise<void>
@@ -28,10 +29,10 @@ function delay(t: number, v?: any) {
 export class Runner {
 	protected looper: Looper
 	running = true
-	public clientPromise: Promise<PuppeteerClient> | undefined
+	public client: PlaywrightClient | undefined
 
 	constructor(
-		private clientFactory: AsyncFactory<PuppeteerClient>,
+		private clientFactory: AsyncFactory<PlaywrightClient>,
 		protected testCommander: TestCommander | undefined,
 		private reporter: IReporter,
 		protected logger: Logger,
@@ -43,46 +44,44 @@ export class Runner {
 	async stop(): Promise<void> {
 		this.running = false
 		if (this.looper) await this.looper.kill()
-		if (this.clientPromise) (await this.clientPromise).close()
+		if (this.client) (await this.client).close()
 		return
 	}
 
 	async run(testScriptFactory: AsyncFactory<EvaluatedScript>): Promise<void> {
 		const testScript = await testScriptFactory()
 
-		this.clientPromise = this.launchClient(testScript)
+		this.client = await this.launchClient(testScript)
 
-		await this.runTestScript(testScript, this.clientPromise)
+		await this.runTestScript(testScript, this.client)
 	}
 
-	async launchClient(testScript: EvaluatedScript): Promise<PuppeteerClient> {
+	async launchClient(testScript: EvaluatedScript): Promise<PlaywrightClient> {
 		const { settings } = testScript
 
 		const options: Partial<ConcreteLaunchOptions> = this.launchOptionOverrides
-		options.ignoreHTTPSErrors = settings.ignoreHTTPSErrors
+		options.ignoreHTTPSError = settings.ignoreHTTPSError
 		if (settings.viewport) {
-			options.defaultViewport = settings.viewport
+			options.viewport = settings.viewport
 			settings.device = null
 		}
-		if (options.chromeVersion == null) options.chromeVersion = settings.chromeVersion
-
+		if (settings.browserType) {
+			options.browserType = settings.browserType
+		}
 		if (options.args == null) options.args = []
 		if (Array.isArray(settings.launchArgs)) options.args.push(...settings.launchArgs)
 
-		return this.clientFactory(options)
+		return this.clientFactory(options, settings)
 	}
 
-	async runTestScript(
-		testScript: EvaluatedScript,
-		clientPromise: Promise<PuppeteerClient>,
-	): Promise<void> {
+	async runTestScript(testScript: EvaluatedScript, client: PlaywrightClient): Promise<void> {
 		if (!this.running) return
 
 		let testToCancel: Test | undefined
 
 		try {
 			const test = new Test(
-				await clientPromise,
+				client,
 				testScript,
 				this.reporter,
 				this.testSettingOverrides,
@@ -116,7 +115,6 @@ export class Runner {
 			this.looper.killer = () => cancelToken.cancel()
 			await this.looper.run(async iteration => {
 				this.logger.info(`Starting iteration ${iteration}`)
-
 				const startTime = new Date()
 				try {
 					await test.runWithCancellation(iteration, cancelToken, this.looper)
@@ -154,11 +152,11 @@ export class Runner {
 
 export class PersistentRunner extends Runner {
 	public testScriptFactory: AsyncFactory<EvaluatedScript> | undefined
-	public clientPromise: Promise<PuppeteerClient> | undefined
+	public client: PlaywrightClient | undefined
 	private stopped = false
 
 	constructor(
-		clientFactory: AsyncFactory<PuppeteerClient>,
+		clientFactory: AsyncFactory<PlaywrightClient>,
 		testCommander: TestCommander | undefined,
 		reporter: IReporter,
 		logger: Logger,
@@ -188,8 +186,8 @@ export class PersistentRunner extends Runner {
 
 	async runNextTest() {
 		// destructure for type checking (narrowing past undefined)
-		const { clientPromise, testScriptFactory } = this
-		if (clientPromise === undefined) {
+		const { client, testScriptFactory } = this
+		if (client === undefined) {
 			return
 		}
 		if (testScriptFactory === undefined) {
@@ -201,7 +199,7 @@ export class PersistentRunner extends Runner {
 		}
 
 		try {
-			await this.runTestScript(await testScriptFactory(), clientPromise)
+			await this.runTestScript(await testScriptFactory(), client)
 		} catch (err) {
 			this.logger.error('an error occurred in the script')
 			this.logger.error(err)
@@ -227,10 +225,9 @@ export class PersistentRunner extends Runner {
 		this.testScriptFactory = testScriptFactory
 
 		// TODO detect changes in testScript settings affecting the client
-		this.clientPromise = this.launchClient(await testScriptFactory())
+		this.client = await this.launchClient(await testScriptFactory())
 
 		this.rerunTest()
 		await this.waitUntilStopped()
-		// return new Promise<void>((resolve, reject) => {})
 	}
 }

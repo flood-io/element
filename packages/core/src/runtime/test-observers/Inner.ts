@@ -1,4 +1,4 @@
-import { NoOpTestObserver, TestObserver } from './Observer'
+import { NoOpTestObserver, TestObserver } from './TestObserver'
 import { ITest } from './testTypes'
 import { Step } from '../Step'
 import { DEFAULT_ACTION_WAIT_SECONDS } from '../Settings'

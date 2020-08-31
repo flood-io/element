@@ -1,5 +1,5 @@
 import ms from 'ms'
-import { Browser } from './IBrowser'
+import { Browser } from '../interface/IBrowser'
 import { DEFAULT_WAIT_TIMEOUT_MILLISECONDS } from './Settings'
 
 export declare function afterAll(fn: HookFn, waitTimeout?: string | number): void

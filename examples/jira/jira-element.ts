@@ -5,8 +5,8 @@ export const settings: TestSettings = {
 	loopCount: -1,
 	screenshotOnFailure: true,
 	description: 'JIRA - Create Issue',
-	actionDelay: '8s',
-	stepDelay: '8s',
+	actionDelay: 8,
+	stepDelay: 8,
 	disableCache: true,
 	clearCookies: true,
 }

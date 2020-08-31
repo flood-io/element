@@ -7,8 +7,8 @@ export const settings: TestSettings = {
 	clearCookies: true,
 	responseTimeMeasurement: 'step',
 	userAgent: 'I AM ROBOT',
-	actionDelay: '1s',
-	stepDelay: '1s',
+	actionDelay: 1,
+	stepDelay: 1,
 	name: 'Flood challenge',
 	description: 'Flood challenge yeahh',
 }

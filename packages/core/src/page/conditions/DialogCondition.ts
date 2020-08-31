@@ -23,7 +23,7 @@ export class DialogCondition extends Condition {
 
 	public async waitForEvent(page: Page): Promise<Dialog | null> {
 		return new Promise<Dialog>((yeah, nah) => {
-			const timeout = setTimeout(nah, Number(this.timeout))
+			const timeout = setTimeout(nah, this.timeout)
 
 			page.once('dialog', (dialog: Dialog) => {
 				if (isDialog(dialog)) {

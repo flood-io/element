@@ -6,8 +6,8 @@ export const settings: TestSettings = {
 	clearCache: false,
 	clearCookies: false,
 	screenshotOnFailure: true,
-	actionDelay: '3s',
-	stepDelay: '3s',
+	actionDelay: 3,
+	stepDelay: 3,
 }
 
 interface Row {

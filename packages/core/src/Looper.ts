@@ -13,7 +13,7 @@ export class Looper {
 		if (settings.duration > 0) {
 			this.timeout = setTimeout(() => {
 				this.cancelled = true
-			}, Number(settings.duration))
+			}, settings.duration * 1e3)
 		}
 
 		this.loopCount = settings.loopCount

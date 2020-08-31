@@ -2,9 +2,9 @@ import { step, setup, By, Until, TestSettings } from '@flood/element'
 import assert from 'assert'
 
 export const settings: TestSettings = {
-	actionDelay: '0.1s',
-	stepDelay: '0.1s',
-	waitTimeout: '10s',
+	actionDelay: 0.1,
+	stepDelay: 0.1,
+	waitTimeout: 10,
 }
 
 /**

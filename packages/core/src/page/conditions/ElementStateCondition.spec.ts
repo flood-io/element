@@ -1,34 +1,34 @@
 import { serve } from '../../../tests/support/fixture-server'
-import { launchPuppeteer, testPuppeteer } from '../../../tests/support/launch-browser'
-import { Page } from 'puppeteer'
+import { launchPlaywright, testPlaywright } from '../../../tests/support/launch-browser'
+import { Page } from 'playwright'
 import { Until } from '../Until'
 import { By } from '../By'
 
-let page: Page, puppeteer: testPuppeteer
+let page: Page, playwright: testPlaywright
 
 describe('Condition', () => {
 	jest.setTimeout(30e3)
 
 	beforeEach(async () => {
-		puppeteer = await launchPuppeteer()
-		page = puppeteer.page
+		playwright = await launchPlaywright()
+		page = playwright.page
 		page.on('console', msg => console.log(`>> console.${msg.type()}: ${msg.text()}`))
 
-		await page.goto(await serve('wait.html'), { waitUntil: 'networkidle2' })
+		await page.goto(await serve('wait.html'), { waitUntil: 'networkidle' })
 	})
 
 	afterEach(async () => {
-		await puppeteer.close()
+		await playwright.close()
 	})
 
 	describe('ElementStateCondition', () => {
 		test('waits Until.elementIsEnabled', async () => {
-			let condition = Until.elementIsEnabled(By.css('#btn'))
-			condition.settings.waitTimeout = 31e3
+			const condition = Until.elementIsEnabled(By.css('#btn'))
+
 			// Triggers a timeout of 500ms
 			await page.click('a#enable_btn')
 
-			let found = await condition.waitFor(page.mainFrame())
+			const found = await condition.waitFor(page.mainFrame())
 			expect(found).toBe(true)
 		}, 31e3)
 
@@ -39,21 +39,18 @@ describe('Condition', () => {
 					btn.removeAttribute('disabled')
 				}
 			})
-			let btn = await page.$('#btn')
+			const btn = await page.$('#btn')
 
 			expect(btn).not.toBeNull()
 			if (!btn) throw new Error('#btn was null')
 
-			expect(await btn.executionContext().evaluate(el => el.hasAttribute('disabled'), btn)).toBe(
-				false,
-			)
+			expect(await btn.evaluate(el => el.hasAttribute('disabled'), btn)).toBe(false)
 
-			let condition = Until.elementIsDisabled(By.css('#btn'))
-			condition.settings.waitTimeout = 31e3
+			const condition = Until.elementIsDisabled(By.css('#btn'))
 
 			await page.click('#btn')
 
-			let found = await condition.waitFor(page.mainFrame())
+			const found = await condition.waitFor(page.mainFrame())
 			expect(found).toBe(true)
 		}, 31e3)
 	})

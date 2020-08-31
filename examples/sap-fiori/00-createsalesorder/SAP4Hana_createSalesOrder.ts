@@ -4,8 +4,8 @@ import * as assert from 'assert'
 export const settings: TestSettings = {
 	clearCache: true,
 	disableCache: true,
-	stepDelay: '10s',
-	actionDelay: '10s',
+	stepDelay: 10,
+	actionDelay: 10,
 	screenshotOnFailure: true,
 	clearCookies: true,
 	chromeVersion: 'stable',
@@ -17,8 +17,7 @@ export const settings: TestSettings = {
  */
 export default () => {
 	step('Visit S/4 Hana Trial Login', async browser => {
-		await browser.visit('https://my300197.s4hana.ondemand.com/ui?sap-language=EN#Shell-home')
-		await browser.waitForNavigation()
+		await browser.visit('https://my300084.s4hana.ondemand.com/ui?sap-language=EN#Shell-home')
 	})
 
 	step('S/4 Hana Login', async browser => {

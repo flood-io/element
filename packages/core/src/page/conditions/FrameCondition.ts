@@ -58,8 +58,8 @@ export class FrameCondition extends Condition {
 
 	private async createTimeoutPromise() {
 		const errorMessage = `Frame Wait Timeout Exceeded: ${this.timeout}ms exceeded`
-		return new Promise<Error>(
-			yeah => (this.maximumTimer = setTimeout(yeah, Number(this.timeout))),
-		).then(() => new Error(errorMessage))
+		return new Promise<Error>(yeah => (this.maximumTimer = setTimeout(yeah, this.timeout))).then(
+			() => new Error(errorMessage),
+		)
 	}
 }

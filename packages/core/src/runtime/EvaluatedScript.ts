@@ -9,6 +9,7 @@ const exists = promisify(fs.exists)
 
 import {
 	Step,
+	StepDefinition,
 	TestFn,
 	StepOptions,
 	normalizeStepOptions,
@@ -18,11 +19,12 @@ import {
 	RecoverWith,
 	extractStep,
 } from './Step'
-import { Browser } from './IBrowser'
+import { SuiteDefinition } from './types'
+import { Browser } from '../interface/IBrowser'
 import Test from './Test'
 import { mustCompileFile } from '../TestScript'
 import { TestScriptError, TestScriptErrorMapper } from '../TestScriptError'
-import { ITestScript } from '../ITestScript'
+import { ITestScript } from '../interface/ITestScript'
 import { DEFAULT_SETTINGS, ConcreteTestSettings, normalizeSettings, TestSettings } from './Settings'
 import { RuntimeEnvironment } from '../runtime-environment/types'
 import { expect } from '../utils/Expect'
@@ -35,6 +37,7 @@ import { TestDataSource, TestDataFactory } from '../test-data/TestData'
 import { BoundTestDataLoaders } from '../test-data/TestDataLoaders'
 import { EvaluatedScriptLike } from './EvaluatedScriptLike'
 import { Hook, normalizeHookBase } from './StepLifeCycle'
+import { BROWSER_TYPE } from '../page/types'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:eval-script')
@@ -213,6 +216,26 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			hook.beforeEach.push(hookBase)
 		}
 
+		// re-scope this for captureSuite to close over:
+		const evalScope = this as EvaluatedScript
+
+		type WithDataCallback = (this: null, s: StepDefinition) => void
+
+		// closes over evalScope (this) and ENV
+		const captureSuite: SuiteDefinition = Object.assign(
+			(
+				callback: (this: null, s: StepDefinition) => void,
+			): ((this: null, s: StepDefinition) => void) => {
+				return callback
+			},
+			{
+				withData: <T>(data: TestDataSource<T>, callback: WithDataCallback) => {
+					evalScope.testData = expect(data, 'TestData is not present')
+					return callback
+				},
+			},
+		)
+
 		const step: StepExtended = (...nameOrOptionsOrFn: any[]) => {
 			const [name, option, fn] = extractStep(nameOrOptionsOrFn)
 			captureStep([name, option, fn])
@@ -312,6 +335,8 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			Key,
 			RecoverWith,
 			userAgents,
+			suite: captureSuite,
+			BROWSER_TYPE,
 		}
 
 		this.vm = createVirtualMachine(context, this.script.scriptRoot)

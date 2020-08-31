@@ -1,6 +1,5 @@
-import { ElementPresence, DEFAULT_WAIT_TIMEOUT_MILLISECONDS } from './Settings'
-import ms from 'ms'
-import { Browser } from './IBrowser'
+import { Browser } from '../interface/IBrowser'
+import { ElementPresence } from './Settings'
 
 /**
  * Declares each step in your test. This must go within your main test expression.
@@ -54,7 +53,7 @@ export interface StepConditionBase {
 	(condition: ConditionFn, ...optionsOrFn: any[])
 }
 
-export interface StepRepeatableBase {
+export interface StepRepeatablebase {
 	(count: number, name: string, options: StepOptions, testFn: TestFn)
 	(count: number, name: string, testFn: TestFn)
 	(count: number, ...optionsOrFn: any[])
@@ -89,7 +88,7 @@ export interface StepExtended extends StepBase {
 	/**
 	 * Creates a repeatable step
 	 */
-	repeat: StepRepeatableBase
+	repeat: StepRepeatablebase
 
 	/**
 	 * Creates a while step
@@ -98,14 +97,14 @@ export interface StepExtended extends StepBase {
 }
 
 export type StepDefinition = (name: string, fn: TestFn) => Promise<any>
-export type TestFn = (this: void, browser: Browser, data?: unknown) => Promise<any>
+export type TestFn = (this: void, browser: Browser) => Promise<any>
 export type ConditionFn = (this: void, browser: Browser) => boolean | Promise<boolean>
 export type StepOptions = {
 	pending?: boolean
 	once?: boolean
 	predicate?: ConditionFn
 	skip?: boolean
-	waitTimeout?: string | number
+	waitTimeout?: number
 	waitUntil?: ElementPresence
 	tries?: number
 	repeat?: {
@@ -188,14 +187,11 @@ export type Step = {
  */
 export function normalizeStepOptions(stepOpts: StepOptions): StepOptions {
 	// Convert user inputted seconds to milliseconds
-	let convertedWaitTimeout = 0
-	if (typeof stepOpts.waitTimeout === 'string' && stepOpts.waitTimeout) {
-		convertedWaitTimeout = ms(stepOpts.waitTimeout)
-	} else if (typeof stepOpts.waitTimeout === 'number') {
-		convertedWaitTimeout = stepOpts.waitTimeout
+	if (typeof stepOpts.waitTimeout === 'number' && stepOpts.waitTimeout > 1e3) {
+		stepOpts.waitTimeout = stepOpts.waitTimeout / 1e3
+	} else if (Number(stepOpts.waitTimeout) === 0) {
+		stepOpts.waitTimeout = 30
 	}
-	stepOpts.waitTimeout =
-		convertedWaitTimeout > 0 ? convertedWaitTimeout : DEFAULT_WAIT_TIMEOUT_MILLISECONDS
 
 	return stepOpts
 }

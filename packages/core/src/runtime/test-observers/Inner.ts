@@ -1,7 +1,7 @@
 import { NoOpTestObserver, TestObserver } from './TestObserver'
 import { ITest } from './testTypes'
 import { Step } from '../Step'
-import { DEFAULT_ACTION_WAIT_MILLISECONDS } from '../Settings'
+import { DEFAULT_ACTION_WAIT_SECONDS } from '../Settings'
 
 export default class InnerObserver extends NoOpTestObserver {
 	constructor(next: TestObserver) {
@@ -14,7 +14,7 @@ export default class InnerObserver extends NoOpTestObserver {
 		if (actionDelay > 0 && command !== 'wait') {
 			await new Promise(resolve => {
 				// TODO: fix default
-				setTimeout(resolve, Number(actionDelay) || DEFAULT_ACTION_WAIT_MILLISECONDS)
+				setTimeout(resolve, actionDelay * 1e3 || DEFAULT_ACTION_WAIT_SECONDS * 1e3)
 			})
 		}
 

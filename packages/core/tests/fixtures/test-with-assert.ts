@@ -3,9 +3,9 @@ import * as assert from 'assert'
 
 export const settings: TestSettings = {
 	screenshotOnFailure: false,
-	actionDelay: '0s',
-	stepDelay: '0s',
-	waitTimeout: '10s',
+	actionDelay: 0,
+	stepDelay: 0,
+	waitTimeout: 10,
 }
 
 /**

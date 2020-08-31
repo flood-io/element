@@ -5,8 +5,8 @@ export const settings: TestSettings = {
 	device: Device.iPadLandscape,
 	userAgent: 'I AM ROBOT',
 	disableCache: true,
-	actionDelay: '1s',
-	stepDelay: '2s',
+	actionDelay: 1,
+	stepDelay: 2,
 	responseTimeMeasurement: 'step',
 	incognito: true,
 }

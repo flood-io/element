@@ -57,11 +57,11 @@ export default class Mouse {
 		y?: number | ClickOptions,
 		options?: ClickOptions,
 	): Promise<void> {
-		if (isElementHandle(x) && typeof options !== 'number') {
+		if (isElementHandle(x) && typeof y !== 'number') {
 			const coords = await x.centerPoint()
-			return this.page.mouse.click(coords[0], coords[1], options)
-		} else if (isPoint(x) && typeof options !== 'number') {
-			return this.page.mouse.click(x[0], x[1], options)
+			return this.page.mouse.click(coords[0], coords[1], y)
+		} else if (isPoint(x) && typeof y !== 'number') {
+			return this.page.mouse.click(x[0], x[1], y)
 		} else if (typeof x === 'number' && typeof y === 'number') {
 			return this.page.mouse.click(x, y, options)
 		}

@@ -9,6 +9,7 @@ import { AsyncFactory } from './utils/Factory'
 import { CancellationToken } from './utils/CancellationToken'
 import { TestScriptError } from './TestScriptError'
 import { Looper } from './Looper'
+import ms from 'ms'
 
 export interface TestCommander {
 	on(event: 'rerun-test', listener: () => void): this
@@ -125,7 +126,7 @@ export class Runner {
 					throw err
 				}
 				const duration = new Date().valueOf() - startTime.valueOf()
-				this.logger.info(`Iteration completed in ${duration}ms (walltime)`)
+				this.logger.info(`Iteration completed in ${ms(duration)} (walltime)`)
 			})
 
 			this.logger.info(`Test completed after ${this.looper.iterations} iterations`)

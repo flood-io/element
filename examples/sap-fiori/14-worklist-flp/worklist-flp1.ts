@@ -1,17 +1,27 @@
-import { step, TestSettings, Until, By, MouseButtons, Device, Driver, ENV, Key } from '@flood/element'
+import {
+	step,
+	TestSettings,
+	Until,
+	By,
+	MouseButtons,
+	Device,
+	Driver,
+	ENV,
+	Key,
+} from '@flood/element'
 import * as assert from 'assert'
 
 export const settings: TestSettings = {
-  loopCount: -1,
-  screenshotOnFailure: true,
-  description: 'Worklist FLP Demo App - SAP',
-  actionDelay: 3.5,
-  stepDelay: 3.5,
-  clearCache: true,	
-  disableCache: true,
-  clearCookies: true,
-  chromeVersion: 'stable',
-  waitTimeout: 60,
+	loopCount: -1,
+	screenshotOnFailure: true,
+	description: 'Worklist FLP Demo App - SAP',
+	actionDelay: '3.5s',
+	stepDelay: '3.5s',
+	clearCache: true,
+	disableCache: true,
+	clearCookies: true,
+	chromeVersion: 'stable',
+	waitTimeout: '60s',
 }
 
 /**
@@ -21,50 +31,42 @@ export const settings: TestSettings = {
  * Version: 1.0
  */
 export default () => {
+	step('Worklist FLP Demo App: Home', async browser => {
+		await browser.visit(
+			'https://sapui5.hana.ondemand.com/test-resources/sap/ui/demoapps/demokit/worklist/webapp/test/flpSandboxMockServer.html#Worklist-display',
+		)
 
-  step('Worklist FLP Demo App: Home', async browser => {
-    await browser.visit('https://sapui5.hana.ondemand.com/test-resources/sap/ui/demoapps/demokit/worklist/webapp/test/flpSandboxMockServer.html#Worklist-display')
+		const pageTextVerify = By.visibleText('<Objects>')
+		await browser.wait(Until.elementIsVisible(pageTextVerify))
 
-    const pageTextVerify = By.visibleText('<Objects>')
-    await browser.wait(Until.elementIsVisible(pageTextVerify))
+		await browser.takeScreenshot()
+	})
 
-    await browser.takeScreenshot()
-  })
+	step('Worklist FLP Demo App: Search Worklist', async browser => {
+		const page = browser.page
 
-  step('Worklist FLP Demo App: Search Worklist', async browser => {
+		//Search worklist
+		let obj_txt_SearchAnalysisType = By.xpath("//input[contains(@placeholder, 'Search')]")
+		await browser.wait(Until.elementIsVisible(obj_txt_SearchAnalysisType))
+		await browser.type(obj_txt_SearchAnalysisType, 'Object 19')
+		await page.keyboard.press('Enter')
 
-    const page = browser.page
-    
-    //Search worklist
-    let obj_txt_SearchAnalysisType = By.xpath("//input[contains(@placeholder, 'Search')]")
-    await browser.wait(Until.elementIsVisible(obj_txt_SearchAnalysisType))
-    await browser.type(obj_txt_SearchAnalysisType, "Object 19")
-    await page.keyboard.press('Enter')
+		const pageTextVerify = By.visibleText('Object 19')
+		await browser.wait(Until.elementIsVisible(pageTextVerify))
 
-    const pageTextVerify = By.visibleText('Object 19')
-    await browser.wait(Until.elementIsVisible(pageTextVerify))
+		await browser.takeScreenshot()
+	})
 
-    await browser.takeScreenshot()
-  })
-  
-  step('Worklist FLP Demo App: Select Worklist', async browser => {
+	step('Worklist FLP Demo App: Select Worklist', async browser => {
+		//Select worklist
+		let obj_span_WorklistItem = By.xpath("//span[contains(text(),'Object 19')]")
+		await browser.wait(Until.elementIsVisible(obj_span_WorklistItem))
+		let element1 = await browser.findElement(obj_span_WorklistItem)
+		await element1.click()
 
-    
-    //Select worklist
-    let obj_span_WorklistItem = By.xpath("//span[contains(text(),'Object 19')]")
-    await browser.wait(Until.elementIsVisible(obj_span_WorklistItem))
-    let element1 = await browser.findElement(obj_span_WorklistItem)
-    await element1.click() 
+		const pageTextVerify = By.visibleText('560.00')
+		await browser.wait(Until.elementIsVisible(pageTextVerify))
 
-    const pageTextVerify = By.visibleText('560.00')
-    await browser.wait(Until.elementIsVisible(pageTextVerify))
-
-    await browser.takeScreenshot()
-  })
-
-  
-
-
-
-  
+		await browser.takeScreenshot()
+	})
 }

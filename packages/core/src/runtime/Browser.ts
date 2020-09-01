@@ -186,12 +186,10 @@ export class Browser<T> implements BrowserInterface {
 	}
 
 	@addCallbacks()
-	public async visit(url: string, options?: NavigationOptions): Promise<any> {
-		const timeout = this.settings.waitTimeout * 1e3
-
+	public async visit(url: string, options: NavigationOptions = {}): Promise<any> {
 		try {
 			return this.page.goto(url, {
-				timeout,
+				timeout: Number(this.settings.waitTimeout),
 				waitUntil: 'networkidle',
 				...options,
 			})

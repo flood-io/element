@@ -2,7 +2,7 @@
 	"name": "@flood/element-scheduler",
 	"version": "1.2.2",
 	"description": "Handles scheduling ramp and users during a test",
-	"author": "Ivan Vanderbyl <ivanvanderbyl@gmail.com>",
+	"author": "Ivan Vanderbyl <ivanvanderbyl@gmail.com>, Phi Le <phi.le.ba.1989@gmail.com>",
 	"homepage": "https://github.com/flood-io/element#readme",
 	"license": "Apache-2.0",
 	"main": "dist/src/index.js",
@@ -23,7 +23,7 @@
 		"url": "https://github.com/flood-io/element/issues"
 	},
 	"dependencies": {
-		"@flood/element-core": "^1.3.0-beta.18",
+		"@flood/element-core": "^2.0.0-beta.4",
 		"merge-stream": "^2.0.0",
 		"parse-duration": "^0.1.2",
 		"logform": "^2.1.2",

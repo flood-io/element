@@ -5,7 +5,7 @@ import Test from './Test'
 import { EvaluatedScript } from './EvaluatedScript'
 import { join } from 'path'
 import { EventEmitterReporter } from '../reporter/EventEmitter'
-import { ConcreteTestSettings } from './Settings'
+import { ConcreteTestSettings, normalizeSettings, TestSettings } from './Settings'
 import { readFileSync, writeFileSync } from 'fs-extra'
 import { tmpdir } from 'os'
 import { BROWSER_TYPE } from '../page/types'
@@ -46,8 +46,8 @@ describe('Test', () => {
 	test('extracts settings during evaluation', async () => {
 		const test = await setupTest('test-with-export.ts')
 		const defaultSettings: ConcreteTestSettings = {
-			actionDelay: 5,
-			stepDelay: 0,
+			actionDelay: '500ms',
+			stepDelay: '5s',
 			clearCache: false,
 			device: null,
 			browserType: BROWSER_TYPE.CHROME,
@@ -59,7 +59,7 @@ describe('Test', () => {
 			name: 'Example Test',
 			description: 'This is an example test',
 			screenshotOnFailure: true,
-			waitTimeout: 30,
+			waitTimeout: '30s',
 			responseTimeMeasurement: 'step',
 			consoleFilter: [],
 			blockedDomains: [],
@@ -72,7 +72,7 @@ describe('Test', () => {
 			tries: 0,
 			stages: [],
 		}
-		expect(test.settings).toEqual(defaultSettings)
+		expect(test.settings).toEqual(normalizeSettings(defaultSettings))
 	})
 
 	test('parses steps', async () => {

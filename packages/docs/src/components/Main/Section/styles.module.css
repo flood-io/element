@@ -1,0 +1,23 @@
+section {
+	margin: 5rem 0;
+}
+
+.title {
+	text-align: center;
+}
+
+.title > h2 {
+	font-size: 3rem;
+	line-height: 3.125rem;
+	letter-spacing: normal;
+	font-weight: 400;
+}
+
+.title > p {
+	font-size: 1.2rem;
+	margin: 1rem 0;
+}
+
+.content {
+	padding: 2rem 0;
+}

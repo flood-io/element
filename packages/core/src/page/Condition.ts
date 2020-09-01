@@ -1,9 +1,10 @@
 import { Page, Frame } from 'playwright'
 import { Locator, EvaluateFn } from './types'
-import { DEFAULT_SETTINGS } from '../runtime/Settings'
+import { DEFAULT_SETTINGS, DEFAULT_WAIT_TIMEOUT_MILLISECONDS } from '../runtime/Settings'
 import recast from 'recast'
 import { locatableToLocator } from '../runtime/toLocatorError'
 import { NullableLocatable } from '../runtime/Locatable'
+import ms from 'ms'
 
 import debugFactory from 'debug'
 const debug = debugFactory('element:page:condition')
@@ -11,7 +12,7 @@ const debug = debugFactory('element:page:condition')
 export { NullableLocatable }
 
 interface ConditionSettings {
-	waitTimeout: number
+	waitTimeout: number | string
 }
 
 /**
@@ -29,8 +30,14 @@ export abstract class Condition {
 
 	public abstract async waitForEvent(page: Page): Promise<unknown>
 
-	protected get timeout(): number {
-		return this.settings.waitTimeout * 1e3
+	protected get timeout(): string | number {
+		if (typeof this.settings.waitTimeout === 'string' && this.settings.waitTimeout) {
+			return ms(this.settings.waitTimeout)
+		}
+		if (typeof this.settings.waitTimeout === 'number' && this.settings.waitTimeout <= 0) {
+			return DEFAULT_WAIT_TIMEOUT_MILLISECONDS
+		}
+		return this.settings.waitTimeout
 	}
 }
 

@@ -38,56 +38,56 @@ describe('ElementHandle', () => {
 
 	test('getAttribute(id)', async () => {
 		const handle = await locateEl('a#show_bar')
-		const element = await new ElementHandle(handle, playwright.page)
+		const element = new ElementHandle(handle, playwright.page)
 		expect(await element.getAttribute('id')).toEqual('show_bar')
 		await handle.dispose()
 	})
 
 	test('getAttribute(href)', async () => {
 		const handle = await locateEl('a#show_bar')
-		const element = await new ElementHandle(handle, playwright.page)
+		const element = new ElementHandle(handle, playwright.page)
 		expect(await element.getAttribute('href')).toEqual('#')
 		await handle.dispose()
 	})
 
 	test('tagName()', async () => {
 		const handle = await locateEl('a#show_bar')
-		const element = await new ElementHandle(handle, playwright.page)
+		const element = new ElementHandle(handle, playwright.page)
 		expect(await element.tagName()).toBe('A')
 		await handle.dispose()
 	})
 
 	test('getId()', async () => {
 		const handle = await locateEl('a#show_bar')
-		const element = await new ElementHandle(handle, playwright.page)
+		const element = new ElementHandle(handle, playwright.page)
 		expect(await element.getId()).toBe('show_bar')
 		await handle.dispose()
 	})
 
 	test('isSelected()', async () => {
-		const handle = await locateEl('#languages > option:nth-child(2)')
-		const element = await new ElementHandle(handle, playwright.page)
+		const handle = await locateEl('#languages > option:nth-child(1)')
+		const element = new ElementHandle(handle, playwright.page)
 		expect(await element.isSelected()).toBe(true)
 		await handle.dispose()
 	})
 
 	test('isSelectable()', async () => {
 		const handle = await locateEl('#languages option')
-		const element = await new ElementHandle(handle, playwright.page)
+		const element = new ElementHandle(handle, playwright.page)
 		expect(await element.isSelectable()).toBe(true)
 		await handle.dispose()
 	})
 
 	test('text()', async () => {
 		const handle = await locateEl('a#show_bar')
-		const element = await new ElementHandle(handle, playwright.page)
+		const element = new ElementHandle(handle, playwright.page)
 		expect(await element.text()).toBe('show bar')
 		await handle.dispose()
 	})
 
 	test('size()', async () => {
 		const handle = await locateEl('a#show_bar')
-		const element = await new ElementHandle(handle, playwright.page)
+		const element = new ElementHandle(handle, playwright.page)
 		expect((await element.size()).width).toBeGreaterThanOrEqual(57)
 		expect((await element.size()).width).toBeLessThanOrEqual(60)
 		expect((await element.size()).height).toBeGreaterThanOrEqual(15)
@@ -97,21 +97,21 @@ describe('ElementHandle', () => {
 
 	test('location()', async () => {
 		const handle = await locateEl('a#show_bar')
-		const element = await new ElementHandle(handle, playwright.page)
+		const element = new ElementHandle(handle, playwright.page)
 		expect(await element.location()).toEqual({ x: 8, y: 26 })
 		await handle.dispose()
 	})
 
 	test('centerPoint()', async () => {
 		const handle = await locateEl('a#show_bar')
-		const element = await new ElementHandle(handle, playwright.page)
+		const element = new ElementHandle(handle, playwright.page)
 		expect(await element.centerPoint()).toEqual([37, 35])
 		await handle.dispose()
 	})
 
 	test('click()', async () => {
 		const handle = await locateEl('a#show_bar')
-		const element = await new ElementHandle(handle, playwright.page)
+		const element = new ElementHandle(handle, playwright.page)
 		await element.click()
 		await handle.dispose()
 	})
@@ -120,7 +120,7 @@ describe('ElementHandle', () => {
 		const url = await serve('forms_with_input_elements.html')
 		await playwright.page.goto(url)
 		const handle: PElementHandle = await locateEl('input[name="new_user_first_name"]')
-		const element = await new ElementHandle(handle, playwright.page)
+		const element = new ElementHandle(handle, playwright.page)
 
 		await element.type('user@example.com')
 
@@ -136,9 +136,9 @@ describe('ElementHandle', () => {
 
 	test('clear() select', async () => {
 		const handle: PElementHandle = await locateEl('select')
-		const element = await new ElementHandle(handle, playwright.page)
+		const element = new ElementHandle(handle, playwright.page)
 		let value = await handle.evaluate((element: HTMLInputElement) => element.value, handle)
-		expect(value).toBe('3')
+		expect(value).toBe('1')
 
 		await element.clear()
 
@@ -149,7 +149,7 @@ describe('ElementHandle', () => {
 
 	test('isDisplayed()', async () => {
 		const handle: PElementHandle = await locateEl('#bar')
-		const element = await new ElementHandle(handle, playwright.page)
+		const element = new ElementHandle(handle, playwright.page)
 
 		expect(await element.isDisplayed()).toBe(false)
 
@@ -163,7 +163,7 @@ describe('ElementHandle', () => {
 
 	test('isEnabled()', async () => {
 		const handle: PElementHandle = await locateEl('#btn')
-		const element = await new ElementHandle(handle, playwright.page)
+		const element = new ElementHandle(handle, playwright.page)
 
 		expect(await element.isEnabled()).toBe(false)
 
@@ -202,7 +202,7 @@ describe('ElementHandle', () => {
 		const url = await serve('forms_with_input_elements.html')
 		await playwright.page.goto(url)
 		const handle: PElementHandle = await locateEl('form')
-		const element = await new ElementHandle(handle, playwright.page)
+		const element = new ElementHandle(handle, playwright.page)
 		const elementsList1 = await element.findElements('input')
 		const elementsList2 = await element.findElements('h2')
 		expect(elementsList1.length).toBe(45)
@@ -229,7 +229,7 @@ describe('ElementHandle', () => {
 
 		test('uploads a file to a file input', async () => {
 			const handle: PElementHandle = await locateEl('#new_user_portrait')
-			const element = await new ElementHandle(handle, playwright.page)
+			const element = new ElementHandle(handle, playwright.page)
 			element.bindBrowser(browser)
 
 			expect(await element.getProperty('value')).toHaveLength(0)

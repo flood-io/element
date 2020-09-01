@@ -18,7 +18,6 @@ import {
 	EmptyErrorData,
 	interpretError,
 } from '../runtime/errors/Types'
-// import interpretPuppeteerError from '../runtime/errors/interpretPuppeteerError'
 import { StructuredError } from '../utils/StructuredError'
 import { Key } from './Enums'
 import debugFactory from 'debug'
@@ -358,19 +357,18 @@ export class ElementHandle implements IElementHandle, Locator {
 	 * If the remote element is selectable (such as an `<option>` or `input[type="checkbox"]`) this methos will indicate whether it is selected.
 	 */
 	public async isSelected(): Promise<boolean> {
-		if (await !this.isSelectable()) {
+		if (!this.isSelectable()) {
 			throw new Error('Element is not selectable')
 		}
 
 		let propertyName = 'selected'
-		const tagName = await this.tagName()
-		const type = (tagName && tagName.toUpperCase()) || ''
 
-		if (['CHECKBOX', 'RADIO'].includes(type)) {
+		const type = await this.getAttribute('type')
+		if ('checkbox' === type || 'radio' === type) {
 			propertyName = 'checked'
 		}
 
-		const value = await this.element.getAttribute(propertyName)
+		const value = await getProperty<string>(this.element, propertyName)
 		return !!value
 	}
 
@@ -385,8 +383,8 @@ export class ElementHandle implements IElementHandle, Locator {
 		}
 
 		if (tagName === 'INPUT') {
-			const type = tagName.toLowerCase()
-			return type == 'checkbox' || type == 'radio'
+			const type = await this.getAttribute('type')
+			return type === 'checkbox' || type === 'radio'
 		}
 
 		return false
@@ -462,7 +460,7 @@ export class ElementHandle implements IElementHandle, Locator {
 
 	private async elementClient(): Promise<CDPSession | null> {
 		try {
-			const context = (await this.page.context()) as ChromiumBrowserContext
+			const context = this.page.context() as ChromiumBrowserContext
 			return context.newCDPSession(this.page)
 		} catch (err) {
 			return null

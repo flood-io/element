@@ -1,6 +1,6 @@
 import chalk from 'chalk'
 import argv from 'yargs'
-//import { error } from './utils/error'
+import { error } from './utils/error'
 import { updateCheck } from './utils/updateCheck'
 import { join } from 'path'
 import initCmd from './cmd/init'
@@ -14,7 +14,7 @@ const debug = require('debug')('element:cli')
 
 export const handleUnexpected = (err: Error) => {
 	debug('handling unexpected error')
-	console.error(`An unexpected error occurred!\n  ${err.stack} ${err.stack}`)
+	console.error(error(`An unexpected error occurred!\n  ${err.stack} ${err.stack}`))
 	console.error(
 		'this is a bug, please report it here https://github.com/flood-io/element/issues/new?template=bug_report.md',
 	)
@@ -28,10 +28,10 @@ const handleRejection = (err: Error) => {
 		if (err instanceof Error) {
 			handleUnexpected(err)
 		} else {
-			console.error(`An unexpected rejection occurred\n  ${err}`)
+			console.error(error(`An unexpected rejection occurred\n  ${err}`))
 		}
 	} else {
-		console.error(`An unexpected empty rejection occurred\n rejection: ${err}`)
+		console.error(error(`An unexpected empty rejection occurred\n rejection: ${err}`))
 	}
 	process.exit(1)
 }

@@ -62,7 +62,7 @@ export class CustomConsole extends Console {
 		this._line += this._height
 		this._height = this.getHeightOfMessage(logMessage)
 		this._myEmitter.emit('add', this._line, this._height, message)
-		this._stdout.write(`${this._line} - ${this._height} - ${logMessage}\n`)
+		this._stdout.write(`${logMessage}\n`)
 	}
 
 	private _logError(type: LogType, message: string): void {

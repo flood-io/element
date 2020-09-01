@@ -37,7 +37,7 @@ interface RunCommonArguments extends Arguments {
 	'test-data-root'?: string
 	'fail-status-code': number
 	configFile: string
-	browserType?: BROWSER_TYPE
+	browserType: BROWSER_TYPE
 }
 
 function setupDelayOverrides(
@@ -154,7 +154,7 @@ async function runTestScript(args: RunCommonArguments): Promise<void> {
 		headless: args.headless ?? true,
 		devtools: args.devtools ?? false,
 		sandbox: args.sandbox ?? true,
-		browserType: args.browserType ?? BROWSER_TYPE.CHROME,
+		browserType: args.browserType,
 		runEnv: initRunEnv(workRootPath, testDataPath),
 		testSettingOverrides: {},
 		persistentRunner: false,

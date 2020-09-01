@@ -16,7 +16,6 @@ A subset of `process.env` available to this test. It is of type [FloodProcessEnv
 - `FLOOD_GRID_NODE_SEQUENCE_ID` `number`
 - `FLOOD_GRID_REGION` `string`
 - `FLOOD_GRID_SEQUENCE_ID` `number`
-- `FLOOD_GRID_SQEUENCE_ID` `number`
 - `FLOOD_LOAD_TEST` `boolean` `true` when running as a load test on <https://flood.io>
   `false` otherwiseThis can be useful for changing settings based on whether you're
   testing your script locally or running it as a fully fledged load test.

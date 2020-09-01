@@ -18,7 +18,6 @@ export async function run(file: string): Promise<void> {
 	}
 
 	const opts: ElementOptions = {
-		logger: gridConfig.logger,
 		testScript: file,
 		strictCompilation: false, // TODO make this configurable
 		reporter: influxReporter,
@@ -42,7 +41,7 @@ export async function run(file: string): Promise<void> {
 		opts.testSettingOverrides.loopCount = gridConfig.testIterations
 	}
 
-	startConcurrencyTicker(influxReporter, gridConfig.logger)
+	startConcurrencyTicker(influxReporter)
 
 	return runCommandLine(opts)
 }

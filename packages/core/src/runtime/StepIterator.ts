@@ -133,6 +133,7 @@ export default class StepIterator {
 			const result = await recoveryStep.fn.call(null, browser)
 			const { repeat } = step.options
 			if (result === RecoverWith.CONTINUE) {
+				stepRecover.iteration = 0
 				step.prop.recoveryTries = 0
 			} else if (result === RecoverWith.RESTART) {
 				if (repeat) repeat.iteration = 0

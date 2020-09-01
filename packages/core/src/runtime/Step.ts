@@ -173,22 +173,6 @@ export enum RecoverWith {
 	CONTINUE = 'continue',
 }
 
-export enum StepResult {
-	PASSED = 'passed',
-	FAILED = 'failed',
-	SKIPPED = 'skipped',
-	UNEXECUTED = 'unexecuted',
-}
-
-export type SummaryIteration = {
-	[iteration: string]: SummaryStep
-}
-
-export type SummaryStep = {
-	stepName: string
-	result: StepResult
-}
-
 /**
  * @internal
  */
@@ -196,6 +180,8 @@ export type Step = {
 	name: string
 	options: Partial<StepOptions>
 	fn: TestFn
+	subTitle?: string
+	duration?: number
 	prop?: {
 		recoveryTries?: number
 		skipped?: boolean

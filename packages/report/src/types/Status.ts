@@ -1,1 +1,6 @@
-export type Status = 'passed' | 'failed' | 'skipped' | 'unexecuted'
+export enum Status {
+	PASSED = 'passed',
+	FAILED = 'failed',
+	SKIPPED = 'skipped',
+	UNEXECUTED = 'unexecuted',
+}

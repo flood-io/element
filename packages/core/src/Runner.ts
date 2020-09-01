@@ -1,26 +1,22 @@
 import { ConcreteLaunchOptions, PuppeteerClient } from './driver/Puppeteer'
-import { Logger } from 'winston'
 import Test from './runtime/Test'
 import { EvaluatedScript } from './runtime/EvaluatedScript'
 import { TestObserver } from './runtime/test-observers/Observer'
 import { TestSettings } from './runtime/Settings'
 import { AsyncFactory } from './utils/Factory'
 import { CancellationToken } from './utils/CancellationToken'
-import { TestScriptError, IReporter, reportRunTest } from '@flood/element-report'
+import {
+	IReporter,
+	IterationResult,
+	reportRunTest,
+	Status,
+	StepResult,
+} from '@flood/element-report'
 import { Looper } from './Looper'
-import { StepResult, SummaryIteration, SummaryStep } from './runtime/Step'
 import chalk from 'chalk'
 
 export interface TestCommander {
 	on(event: 'rerun-test', listener: () => void): this
-}
-
-export type Iteration = {
-	Iteration: number
-	Passed: number
-	Failed: number
-	Skipped: number
-	Unexecuted: number
 }
 
 export interface IRunner {
@@ -38,13 +34,12 @@ export class Runner {
 	protected looper: Looper
 	running = true
 	public clientPromise: Promise<PuppeteerClient> | undefined
-	public summaryIteration: SummaryIteration[] = []
+	public summaryIteration: IterationResult[] = []
 
 	constructor(
 		private clientFactory: AsyncFactory<PuppeteerClient>,
 		protected testCommander: TestCommander | undefined,
 		private reporter: IReporter,
-		protected logger: Logger,
 		private testSettingOverrides: TestSettings,
 		private launchOptionOverrides: Partial<ConcreteLaunchOptions>,
 		private testObserverFactory: (t: TestObserver) => TestObserver = x => x,
@@ -104,19 +99,13 @@ export class Runner {
 			const { settings } = test
 
 			if (settings.name) {
-				this.logger.info(`
+				console.info(`
 *************************************************************
 * Loaded test plan: ${settings.name}
 * ${settings.description}
 *************************************************************
 				`)
 			}
-
-			if (settings.duration > 0) {
-				this.logger.debug(`Test timeout set to ${settings.duration}s`)
-			}
-			this.logger.debug(`Test loop count set to ${settings.loopCount} iterations`)
-			this.logger.debug(`Settings: ${JSON.stringify(settings, null, 2)}`)
 
 			await test.beforeRun()
 
@@ -138,8 +127,6 @@ export class Runner {
 				}
 				try {
 					await test.runWithCancellation(iteration, cancelToken, this.looper)
-				} catch (err) {
-					this.logger.debug(`[Iteration: ${iteration}] Error in Runner Loop: ${err.stack}`)
 				} finally {
 					this.summaryIteration[`Iteration ${iteration}`] = test.summarizeStep()
 					if (!this.looper.isRestart) {
@@ -153,16 +140,7 @@ export class Runner {
 			console.log(`Test completed after ${this.looper.iterations} iterations`)
 			await test.runningBrowser?.close()
 		} catch (err) {
-			if (err instanceof TestScriptError) {
-				this.logger.debug(err.toStringNodeFormat())
-			} else {
-				this.logger.debug(`flood element error: ${err.message} \n ${err.stack}`)
-			}
-
-			// if (process.env.NODE_ENV !== 'production') {
-			this.logger.debug(err.stack)
-			// }
-			throw err
+			throw Error(err)
 		} finally {
 			const table = reportRunTest(reportTableData)
 			console.groupEnd()
@@ -182,24 +160,24 @@ export class Runner {
 			failedNo = 0,
 			skippedNo = 0,
 			unexecutedNo = 0
-		const steps: SummaryStep[] = this.summaryIteration[`Iteration ${iteration}`]
+		const steps: StepResult[] = this.summaryIteration[`Iteration ${iteration}`]
 		steps.forEach(step => {
-			switch (step.result) {
-				case StepResult.PASSED:
+			switch (step.status) {
+				case Status.PASSED:
 					passedNo += 1
-					passedMessage = chalk.green(`${passedNo}`, `${StepResult.PASSED}`)
+					passedMessage = chalk.green(`${passedNo}`, `${Status.PASSED}`)
 					break
-				case StepResult.FAILED:
+				case Status.FAILED:
 					failedNo += 1
-					failedMessage = chalk.red(`${failedNo}`, `${StepResult.FAILED}`)
+					failedMessage = chalk.red(`${failedNo}`, `${Status.FAILED}`)
 					break
-				case StepResult.SKIPPED:
+				case Status.SKIPPED:
 					skippedNo += 1
-					skippedMessage = chalk.yellow(`${skippedNo}`, `${StepResult.SKIPPED}`)
+					skippedMessage = chalk.yellow(`${skippedNo}`, `${Status.SKIPPED}`)
 					break
-				case StepResult.UNEXECUTED:
+				case Status.UNEXECUTED:
 					unexecutedNo += 1
-					unexecutedMessage = chalk(`${unexecutedNo}`, `${StepResult.UNEXECUTED}`)
+					unexecutedMessage = chalk(`${unexecutedNo}`, `${Status.UNEXECUTED}`)
 					break
 			}
 		})
@@ -220,7 +198,6 @@ export class PersistentRunner extends Runner {
 		clientFactory: AsyncFactory<PuppeteerClient>,
 		testCommander: TestCommander | undefined,
 		reporter: IReporter,
-		logger: Logger,
 		testSettingOverrides: TestSettings,
 		launchOptionOverrides: Partial<ConcreteLaunchOptions>,
 		testObserverFactory: (t: TestObserver) => TestObserver = x => x,
@@ -229,7 +206,6 @@ export class PersistentRunner extends Runner {
 			clientFactory,
 			testCommander,
 			reporter,
-			logger,
 			testSettingOverrides,
 			launchOptionOverrides,
 			testObserverFactory,
@@ -241,7 +217,6 @@ export class PersistentRunner extends Runner {
 	}
 
 	rerunTest() {
-		this.logger.info('rerun requested')
 		setImmediate(() => this.runNextTest())
 	}
 

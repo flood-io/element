@@ -1,4 +1,4 @@
-import { IReporter, VerboseReporter } from '@flood/element-report'
+import { IReporter, VerboseReporter, BaseReporter, ReportCache } from '@flood/element-report'
 import { PuppeteerClient } from './driver/Puppeteer'
 import { TestCommander } from './Runner'
 import { FloodProcessEnv, RuntimeEnvironment } from './runtime-environment/types'
@@ -10,7 +10,6 @@ import { watch } from 'chokidar'
 import { EventEmitter } from 'events'
 import { extname, basename, join, dirname, resolve } from 'path'
 import sanitize from 'sanitize-filename'
-import { Logger } from 'winston'
 
 export interface ElementRunArguments {
 	testFiles: string[]
@@ -34,7 +33,6 @@ export interface ElementRunArguments {
 }
 
 export interface ElementOptions {
-	logger: Logger
 	runEnv: RuntimeEnvironment
 	reporter: IReporter
 	clientFactory?: AsyncFactory<PuppeteerClient>
@@ -130,16 +128,18 @@ function makeTestCommander(file: string): TestCommander {
 	return commander
 }
 
-export function normalizeElementOptions(args: ElementRunArguments): ElementOptions {
+export function normalizeElementOptions(
+	args: ElementRunArguments,
+	cache: ReportCache,
+): ElementOptions {
 	const { file, verbose } = args
 	const workRootPath = getWorkRootPath(file, args['work-root'])
 	const testDataPath = getTestDataPath(file, args['test-data-root'])
 	const verboseBool = !!verbose
 
-	const reporter = new VerboseReporter(verboseBool)
+	const reporter = verboseBool ? new VerboseReporter(cache) : new BaseReporter(cache)
 
 	const opts: ElementOptions = {
-		logger: reporter.logger,
 		testScript: file,
 		strictCompilation: args.strict ?? false,
 		reporter: reporter,

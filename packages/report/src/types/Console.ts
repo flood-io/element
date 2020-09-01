@@ -1,11 +1,5 @@
 export type LogMessage = string
 
-export type LogEntry = {
-	message: LogMessage
-	origin: string
-	type: LogType
-}
-
 export type LogCounters = {
 	[label: string]: number
 }

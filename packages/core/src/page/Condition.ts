@@ -53,7 +53,7 @@ export abstract class LocatorCondition extends Condition {
 	 * @internal
 	 */
 	protected locatableToLocator(el: NullableLocatable): Locator {
-		const e = new Error()
+		const e = new Error('unable to use locator')
 		Error.captureStackTrace(e)
 		debug('e', e.stack)
 

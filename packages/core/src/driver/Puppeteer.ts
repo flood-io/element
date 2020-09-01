@@ -97,10 +97,6 @@ export async function launch(
 		// launchArgs.args.push("--disable-setuid-sandbox");
 	}
 
-	// if (options.debug) {
-	// 	console.dir(options)
-	// }
-
 	options = setupChrome(options)
 
 	// options.args.push('--single-process', '--no-zygote')

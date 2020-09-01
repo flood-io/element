@@ -2,38 +2,25 @@ import { TestScriptError } from '../runtime/TestScriptError'
 import { IReporter } from '../runtime/IReporter'
 import { TraceData, TestEvent, CompoundMeasurement, MeasurementKind } from '../types/Report'
 import chalk from 'chalk'
-import { Logger } from 'winston'
-import { createTestLog } from '../utils/TestLogger'
 import ansiEscapes from 'ansi-escapes'
+import { ReportCache } from './Cache'
 const debug = require('debug')('element-cli:console-reporter')
 
 export class VerboseReporter implements IReporter {
 	public responseCode: string
 	public stepName: string
-	public logger: Logger
-
-	constructor(private verbose: boolean) {
-		const logLevel = verbose ? 'debug' : 'info'
-		this.logger = createTestLog(logLevel, true)
-	}
-
+	constructor(private cache: ReportCache) {}
 	reset(step: string): void {}
 
-	addMeasurement(measurement: string, value: string | number, label?: string): void {
-		this.logger.debug(`> ${measurement} ${value}`)
-	}
+	addMeasurement(measurement: string, value: string | number, label?: string): void {}
 
 	addCompoundMeasurement(
 		measurement: MeasurementKind,
 		value: CompoundMeasurement,
 		label: string,
-	): void {
-		console.debug(`> ${measurement} ${JSON.stringify(value)}`)
-	}
+	): void {}
 
-	addTrace(traceData: TraceData, label: string): void {
-		console.debug(`> trace:\n${JSON.stringify(traceData)}`)
-	}
+	addTrace(traceData: TraceData, label: string): void {}
 
 	async flushMeasurements(): Promise<void> {}
 
@@ -45,27 +32,26 @@ export class VerboseReporter implements IReporter {
 		errorMessage?: string,
 	): void {
 		const stepName = 'Step ' + (subtitle ? `'${label}' (${subtitle})` : `'${label}'`)
+		const beforeRunStepMessage = `${stepName} is running ...`
+		let message = ''
 		switch (stage) {
 			case TestEvent.AfterStepAction:
 				console.log(chalk.grey(`${label}()`))
 				break
 			case TestEvent.BeforeStep:
-				console.group(chalk.grey(`${stepName} is running ...`))
+				console.group(chalk.grey(beforeRunStepMessage))
 				console.group()
 				break
 			case TestEvent.StepSucceeded:
-				process.stdout.write(ansiEscapes.cursorUp(12) + ansiEscapes.eraseLine)
-				console.groupEnd()
-				console.log(
-					chalk.green.bold('✔'),
-					chalk.grey(`${stepName} passed (${timing?.toLocaleString()}ms)`),
-				)
-				process.stdout.write(ansiEscapes.cursorDown(12))
+				message = `${chalk.green.bold('✔')} ${chalk.grey(
+					`${stepName} passed (${timing?.toLocaleString()}ms)`,
+				)}`
+				this.updateMessage(beforeRunStepMessage, message)
 				break
 			case TestEvent.StepFailed:
-				console.error(chalk.red(errorMessage ?? 'step error -> failed'))
-				console.groupEnd()
-				console.log(chalk.redBright.bold('✘'), chalk.grey(`${stepName} failed`))
+				message = `${chalk.redBright.bold('✘')} ${chalk.grey(`${stepName} failed`)}`
+				console.error(chalk.red(errorMessage ? errorMessage : 'step error -> failed'))
+				this.updateMessage(beforeRunStepMessage, message)
 				break
 			case TestEvent.AfterStep:
 				console.groupEnd()
@@ -80,7 +66,7 @@ export class VerboseReporter implements IReporter {
 		console.error('assertion failed \n' + err.toStringNodeFormat())
 	}
 	testStepError(err: TestScriptError): void {
-		const detail = err.toDetailObject(this.verbose)
+		const detail = err.toDetailObject(true)
 		if (detail.callsite) {
 			console.error(detail.callsite)
 		}
@@ -108,5 +94,14 @@ export class VerboseReporter implements IReporter {
 				console.log(logMessage)
 				break
 		}
+	}
+
+	private updateMessage(previousMessage: string, newMessage: string): void {
+		const lines = this.cache.getLinesBetweenCurrentAndPreviousMessage(previousMessage)
+		process.stdout.write(ansiEscapes.cursorUp(lines) + ansiEscapes.eraseLine)
+		console.groupEnd()
+		console.log(newMessage)
+		this.cache.updateMessageInCache(previousMessage, newMessage)
+		process.stdout.write(ansiEscapes.cursorDown(lines) + ansiEscapes.eraseLine)
 	}
 }

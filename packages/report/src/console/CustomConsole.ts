@@ -2,6 +2,7 @@ import assert from 'assert'
 import { format } from 'util'
 import { Console } from 'console'
 import { LogCounters, LogMessage, LogTimers, LogType } from '../types/Console'
+import { EventEmitter } from 'events'
 
 type Formatter = (type: LogType, message: LogMessage) => string
 
@@ -26,12 +27,14 @@ export class CustomConsole extends Console {
 	private _stdout: NodeJS.WriteStream
 	private _stderr: NodeJS.WriteStream
 	private _width: number
-	private _depth: number
+	private _line: number
 	private _height: number
+	private _myEmitter: EventEmitter
 
 	constructor(
 		stdout: NodeJS.WriteStream,
 		stderr: NodeJS.WriteStream,
+		myEmitter: EventEmitter,
 		formatBuffer: Formatter = (_type: LogType, message: string): string => message,
 	) {
 		super(stdout, stderr)
@@ -46,22 +49,28 @@ export class CustomConsole extends Console {
 		} else {
 			this._width = 1
 		}
-		this._depth = 0
+		this._line = 0
 		this._height = 1
+		this._myEmitter = myEmitter
+		this._myEmitter.on('update', (line: number) => {
+			this._line = line
+		})
 	}
 
-	private _log(type, message): void {
+	private _log(type: LogType, message: string): void {
 		const logMessage = `${this._formatBuffer(type, '  '.repeat(this._groupDepth) + message)}`
-		this._depth += this._height
-		this._height = Math.ceil(logMessage.length / this._width)
-		this._stdout.write(`${this._depth} - ${logMessage}\n`)
+		this._line += this._height
+		this._height = this.getHeightOfMessage(logMessage)
+		this._myEmitter.emit('add', this._line, this._height, message)
+		this._stdout.write(`${this._line} - ${this._height} - ${logMessage}\n`)
 	}
 
-	private _logError(type, message): void {
+	private _logError(type: LogType, message: string): void {
 		const logMessage = `${this._formatBuffer(type, '  '.repeat(this._groupDepth) + message)}`
-		this._depth += this._height
-		this._height = Math.ceil(logMessage.length / this._width)
-		this._stderr.write(`${this._depth} - ${logMessage}\n`)
+		this._line += this._height
+		this._height = this.getHeightOfMessage(logMessage)
+		this._myEmitter.emit('add', this._line, this._height, message)
+		this._stderr.write(`${logMessage}\n`)
 	}
 
 	assert(value: unknown, message?: string | Error): void {
@@ -153,5 +162,19 @@ export class CustomConsole extends Console {
 
 	getBuffer() {
 		return null
+	}
+
+	private getHeightOfMessage(message: string): number {
+		const content = message.split('\n')
+		let height = 0
+		for (let i = 0; i < content.length; i++) {
+			const numberLine = Math.ceil(content[i].length / this._width)
+			if (numberLine <= 1) {
+				height += 1
+				continue
+			}
+			height += numberLine
+		}
+		return height
 	}
 }

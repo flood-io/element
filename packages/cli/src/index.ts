@@ -14,32 +14,26 @@ const debug = require('debug')('element:cli')
 
 export const handleUnexpected = (err: Error) => {
 	debug('handling unexpected error')
-
-	// console.debug(error(`An unexpected error occurred!\n  ${err.stack} ${err.stack}`))
-	// console.debug(
-	// 	'this is a bug, please report it here https://github.com/flood-io/element/issues/new?template=bug_report.md',
-	// )
-
-	//process.exit(1)
+	console.error(`An unexpected error occurred!\n  ${err.stack} ${err.stack}`)
+	console.error(
+		'this is a bug, please report it here https://github.com/flood-io/element/issues/new?template=bug_report.md',
+	)
+	process.exit(1)
 }
 
 const handleRejection = (err: Error) => {
 	debug('handling rejection', err)
 
-	// if (err) {
-	// 	if (err instanceof Error) {
-	// 		handleUnexpected(err)
-	// 	} else {
-	// 		console.debug(error(`An unexpected rejection occurred\n  ${err}`))
-	// 	}
-	// } else {
-	// 	console.debug(error(`An unexpected empty rejection occurred\n rejection: ${err}`))
-	// }
-	// console.debug(
-	// 	'this is a bug, please report it here https://github.com/flood-io/element/issues/new?template=bug_report.md',
-	// )
-
-	//process.exit(1)
+	if (err) {
+		if (err instanceof Error) {
+			handleUnexpected(err)
+		} else {
+			console.error(`An unexpected rejection occurred\n  ${err}`)
+		}
+	} else {
+		console.error(`An unexpected empty rejection occurred\n rejection: ${err}`)
+	}
+	process.exit(1)
 }
 
 process.on('unhandledRejection', handleRejection)

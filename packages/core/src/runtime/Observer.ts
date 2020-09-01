@@ -128,21 +128,10 @@ export default class Observer {
 		this.networkRecorder.recordDOMContentLoadedEvent()
 	}
 
-	private onNavigate(event: any): void {
-		// this.logger.debug(`Frame scheduled navigation ${event}`)
-	}
+	private onNavigate(event: any): void {}
 
-	private onFrameStartedLoading(event: any): void {
-		// this.pendingFrameTransition = this.env.waitForNavigation({
-		// 	waitUntil: 'load',
-		// })
-		// this.logger.debug(`Page: Frame started loading id:${event.frameId}`)
-	}
+	private onFrameStartedLoading(event: any): void {}
 
-	private onFrameClearedScheduledNavigation(event: any) {
-		// this.logger.debug(`Cancel frame navigation: id:${event.frameId}`)
-	}
-	private onFrameStoppedLoading(event: any) {
-		// this.logger.debug(`Page: Frame stoppped loading id:${event.frameId}`)
-	}
+	private onFrameClearedScheduledNavigation(event: any) {}
+	private onFrameStoppedLoading(event: any) {}
 }

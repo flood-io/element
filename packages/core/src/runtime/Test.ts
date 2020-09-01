@@ -1,7 +1,7 @@
 import Interceptor from '../network/Interceptor'
 import { Browser } from './Browser'
 
-import { EmptyReporter, IReporter } from '@flood/element-report'
+import { EmptyReporter, IReporter, Status, StepResult } from '@flood/element-report'
 import { ObjectTrace } from '../utils/ObjectTrace'
 
 import {
@@ -17,7 +17,7 @@ import {
 
 import { AnyErrorData, EmptyErrorData, AssertionErrorData } from './errors/Types'
 
-import { Step, StepRecoveryObject, SummaryStep, StepResult } from './Step'
+import { Step, StepRecoveryObject } from './Step'
 import { Looper } from '../Looper'
 
 import { CancellationToken } from '../utils/CancellationToken'
@@ -54,8 +54,7 @@ export default class Test implements ITest {
 	public failed: boolean
 
 	public stepCount: number
-	public summaryStep: SummaryStep[] = []
-	public subTitle = ''
+	public summaryStep: StepResult[] = []
 
 	get skipping(): boolean {
 		return this.failed
@@ -98,7 +97,7 @@ export default class Test implements ITest {
 		await this.script.beforeTestRun()
 	}
 
-	public summarizeStep(): SummaryStep[] {
+	public summarizeStep(): StepResult[] {
 		return this.summaryStep
 	}
 
@@ -221,7 +220,7 @@ export default class Test implements ITest {
 					if (result) {
 						this.failed = false
 					} else {
-						throw Error()
+						throw Error('recovery step -> failed')
 					}
 				}
 
@@ -242,21 +241,20 @@ export default class Test implements ITest {
 
 	async afterRunSteps(stepIterator: StepIterator): Promise<void> {
 		await this.requestInterceptor.detach(this.client.page)
-		this.subTitle = ''
 		this.summarizeStepAfterStopRunning(stepIterator)
 	}
 
 	summarizeStepBeforeRunStep(step: Step): void {
 		if (step.prop?.unexecuted) {
 			this.summaryStep.push({
-				stepName: step.name,
-				result: StepResult.UNEXECUTED,
+				name: step.name,
+				status: Status.UNEXECUTED,
 			})
 			return
 		}
 
 		if (step.prop?.skipped) {
-			this.summaryStep.push({ stepName: step.name, result: StepResult.SKIPPED })
+			this.summaryStep.push({ name: step.name, status: Status.SKIPPED })
 			return
 		}
 	}
@@ -264,14 +262,16 @@ export default class Test implements ITest {
 	summarizeStepAfterRunStep(step: Step): void {
 		if (step.prop?.passed) {
 			this.summaryStep.push({
-				stepName: step.name,
-				result: StepResult.PASSED,
+				name: step.name,
+				status: Status.PASSED,
+				subTitle: step.subTitle,
 			})
 			return
 		} else if (!step.prop?.passed) {
 			this.summaryStep.push({
-				stepName: step.name,
-				result: StepResult.FAILED,
+				name: step.name,
+				status: Status.FAILED,
+				subTitle: step.subTitle,
 			})
 			return
 		}
@@ -285,8 +285,9 @@ export default class Test implements ITest {
 					do {
 						repeat.iteration += 1
 						this.summaryStep.push({
-							stepName: step.name,
-							result: StepResult.UNEXECUTED,
+							name: step.name,
+							status: Status.UNEXECUTED,
+							subTitle: `${getNumberWithOrdinal(repeat.iteration)} loop`,
 						})
 					} while (repeat.iteration < repeat.count)
 				}
@@ -300,8 +301,8 @@ export default class Test implements ITest {
 			const countRepeatStepDone = countRepeatStep(step)
 			if (countRepeatStepDone) return
 			this.summaryStep.push({
-				stepName: step.name,
-				result: StepResult.UNEXECUTED,
+				name: step.name,
+				status: Status.UNEXECUTED,
 			})
 		}
 		stepIterator.loopUnexecutedSteps(summarizedUnexecutedStep)
@@ -339,8 +340,8 @@ export default class Test implements ITest {
 		testDataRecord: any,
 	) {
 		let error: Error | null = null
+		step.subTitle = this.getStepSubtitle(step)
 		await testObserver.beforeStep(this, step)
-		this.subTitle = this.getStepSubtitle(step)
 
 		const originalBrowserSettings = { ...browser.settings }
 
@@ -369,9 +370,6 @@ export default class Test implements ITest {
 		if (error === null) {
 			await this.doStepDelay()
 		}
-
-		// await this.syncNetworkRecorder()
-		// this.networkRecorder.reset()
 		debug('step done')
 	}
 

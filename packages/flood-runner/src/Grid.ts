@@ -1,5 +1,5 @@
 import { runCommandLine, ElementOptions, TestObserver } from '@flood/element-api'
-import { Context, TimingObserver } from '@flood/element-core'
+import { Context, TimingObserver, BROWSER_TYPE } from '@flood/element-core'
 import { TracingObserver } from './test-observers/Tracing'
 import { initConfig } from './initConfig'
 import { startConcurrencyTicker } from './tickerInterval'
@@ -25,7 +25,7 @@ export async function run(file: string): Promise<void> {
 		verbose: false,
 		headless: true,
 		devtools: false,
-		chromeVersion: undefined, // allow user to specify in the script, default to puppeteer bundled
+		browserType: BROWSER_TYPE.CHROME,
 		sandbox: false,
 		testSettingOverrides: {},
 		testObserverFactory,

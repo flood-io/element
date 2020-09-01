@@ -92,23 +92,12 @@ export const ENV: FloodProcessEnv = nullFloodProcessEnv
 /**
  * @docPage Browser
  */
-export { Browser, Browser as Driver } from './src/runtime/IBrowser'
+export { Browser, Browser as Driver } from './src/interface/IBrowser'
 
 /**
  * @docPage Browser
  */
 export { Locatable, NullableLocatable } from './src/runtime/Locatable'
-
-/**
- * @docPage Browser
- */
-export {
-	ClickOptions,
-	ScreenshotOptions,
-	NavigationOptions,
-	BoundingBox,
-	LoadEvent,
-} from 'puppeteer'
 
 /**
  * @docPage DSL
@@ -126,3 +115,4 @@ export * from './api'
 export { EvaluatedScript } from './src/runtime/EvaluatedScript'
 export { EvaluatedScriptLike } from './src/runtime/EvaluatedScriptLike'
 export { default as WorkRoot } from './src/runtime-environment/WorkRoot'
+export { BROWSER_TYPE } from './src/page/types'

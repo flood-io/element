@@ -113,12 +113,12 @@ const cmd: CommandModule = {
 			.options('step-delay', {
 				group: 'Running the test script:',
 				describe: 'Override stepDelay test script setting',
-				type: 'number',
+				type: 'string',
 			})
 			.options('action-delay', {
 				group: 'Running the test script:',
 				describe: 'Override actionDelay test script setting',
-				type: 'number',
+				type: 'string',
 			})
 			.option('loop-count', {
 				group: 'Running the test script:',

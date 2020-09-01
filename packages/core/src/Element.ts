@@ -1,4 +1,4 @@
-import { launch } from './driver/Puppeteer'
+import { PlaywrightClient, launch } from './driver/Playwright'
 import { IRunner, Runner, PersistentRunner } from './Runner'
 import { mustCompileFile } from './TestScript'
 import { TestScriptOptions } from './TestScriptOptions'
@@ -7,6 +7,10 @@ import { ElementOptions, ElementRunArguments, normalizeElementOptions } from './
 import { CustomConsole, ReportCache } from '@flood/element-report'
 import chalk from 'chalk'
 import { EventEmitter } from 'events'
+import { TestSettings } from './runtime/Settings'
+import { TestObserver } from './runtime/test-observers/TestObserver'
+import { AsyncFactory } from './utils/Factory'
+import { BROWSER_TYPE } from './page/types'
 
 async function runSingleTestScript(opts: ElementOptions): Promise<void> {
 	const { testScript, clientFactory } = opts
@@ -28,7 +32,7 @@ async function runSingleTestScript(opts: ElementOptions): Promise<void> {
 			headless: opts.headless,
 			devtools: opts.devtools,
 			sandbox: opts.sandbox,
-			chromeVersion: opts.chromeVersion,
+			browserType: opts.browserType,
 			debug: opts.verbose,
 		},
 		opts.testObserverFactory,

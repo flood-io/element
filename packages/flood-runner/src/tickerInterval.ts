@@ -1,5 +1,6 @@
 import InfluxReporter from './InfluxReporter'
-const tickerInterval = 15 * 1e3
+const tickerInterval = 15000
+
 
 export async function startConcurrencyTicker(influxReporter: InfluxReporter) {
 	await influxReporter.sendConcurrencyPoint()

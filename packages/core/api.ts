@@ -3,20 +3,23 @@ export { ElementRunArguments } from './src/ElementOption'
 
 export { RuntimeEnvironment } from './src/runtime-environment/types'
 export { nullRuntimeEnvironment } from './src/runtime-environment/NullRuntimeEnvironment'
-import { launch, PuppeteerClient } from './src/driver/Puppeteer'
+import { launch, PlaywrightClient } from './src/driver/Playwright'
 
 export { TestCommander } from './src/Runner'
 
-export { PuppeteerClient, launch }
+export { PlaywrightClient, launch }
 
 export { TestScriptOptions } from './src/TestScriptOptions'
-export { ITestScript } from './src/ITestScript'
+export { TestScriptError } from './src/TestScriptError'
+export { ITestScript } from './src/interface/ITestScript'
+
+export { expect } from './src/utils/Expect'
 
 // Test observer integration
 export { default as Test } from './src/runtime/Test'
 export { Step } from './src/runtime/Step'
 
-export { NoOpTestObserver, TestObserver } from './src/runtime/test-observers/Observer'
+export { NoOpTestObserver, TestObserver } from './src/runtime/test-observers/TestObserver'
 
 export { Timing } from './src/runtime/test-observers/Timing'
 export { NetworkRecordingTestObserver } from './src/runtime/test-observers/NetworkRecordingTestObserver'
@@ -31,4 +34,4 @@ export { StructuredError } from './src/utils/StructuredError'
 
 export { default as NetworkRecorder } from './src/network/Recorder'
 export { Entry } from './src/network/Protocol'
-export { default as NetworkObserver } from './src/runtime/Observer'
+export { default as NetworkObserver } from './src/runtime/test-observers/NetworkObserver'

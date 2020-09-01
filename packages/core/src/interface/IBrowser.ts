@@ -1,19 +1,17 @@
 import { Device } from '../page/Enums'
 import { Condition } from '../page/Condition'
+import { Page, Frame, ViewportSize } from 'playwright'
 import {
-	NavigationOptions,
-	ClickOptions,
+	ElementHandle,
 	ScreenshotOptions,
-	Page,
-	Frame,
-	Viewport,
+	NavigationOptions,
 	EvaluateFn,
-} from 'puppeteer'
-import { ElementHandle } from '../page/types'
-import { NullableLocatable } from './Locatable'
+	ClickOptions,
+} from '../page/types'
+import { NullableLocatable } from '../runtime/Locatable'
 import { TargetLocator } from '../page/TargetLocator'
 import Mouse from '../page/Mouse'
-import { TestSettings } from './Settings'
+import { TestSettings } from '../runtime/Settings'
 
 /**
  * Browser is the main entry point in each <[step]>, it's your direct connection to the browser running the test.
@@ -51,9 +49,9 @@ export interface Browser {
 	page: Page
 
 	/**
-	 * The list of current puppeteer Pages in the browser
+	 * The list of current playwright Pages in the browser
 	 */
-	pages: Promise<Page[]>
+	pages: Page[]
 
 	/**
 	 * The list of puppeteer Frames
@@ -285,7 +283,7 @@ export interface Browser {
 	 */
 	switchTo(): TargetLocator
 
-	setViewport(viewport: Viewport): Promise<void>
+	setViewport(viewport: ViewportSize): Promise<void>
 
 	/**
 	 * Wait for a new page to be opened in the browser then return that page.

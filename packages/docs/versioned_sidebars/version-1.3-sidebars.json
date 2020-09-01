@@ -1,0 +1,147 @@
+{
+  "version-1.3/main": [
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "Getting Started",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-1.3/start/overview"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.3/start/install"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.3/start/init"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.3/start/scripting"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.3/start/changelog"
+        }
+      ]
+    },
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "Guides",
+      "items": [
+        {
+          "collapsed": true,
+          "type": "category",
+          "label": "Browser Interaction",
+          "items": [
+            {
+              "type": "doc",
+              "id": "version-1.3/guides/link-navigation"
+            },
+            {
+              "type": "doc",
+              "id": "version-1.3/guides/page-verification"
+            },
+            {
+              "type": "doc",
+              "id": "version-1.3/guides/form-interaction"
+            }
+          ]
+        },
+        {
+          "type": "doc",
+          "id": "version-1.3/guides/script"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.3/guides/hook"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.3/guides/test-data"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.3/guides/test-settings"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.3/guides/editor"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.3/guides/cli"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.3/guides/browser-load-testing"
+        }
+      ]
+    },
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "API reference",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-1.3/api/browser"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.3/api/locators"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.3/api/waiters"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.3/api/element-handle"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.3/api/target-locator"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.3/api/test-data"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.3/api/settings"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.3/api/env"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.3/api/constants"
+        }
+      ]
+    },
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "Tutorials",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-1.3/tutorials/youtube"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.3/tutorials/woocommerce"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.3/tutorials/magento"
+        }
+      ]
+    }
+  ]
+}

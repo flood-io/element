@@ -1,12 +1,12 @@
-import { Page, ElementHandle } from 'puppeteer'
-import { launchPuppeteer, testPuppeteer } from '../../tests/support/launch-browser'
+import { Page, ElementHandle } from 'playwright'
+import { launchPlaywright, testPlaywright } from '../../tests/support/launch-browser'
 import { serve } from '../../tests/support/fixture-server'
 import { Browser } from '../runtime/Browser'
 import { testWorkRoot } from '../../tests/support/test-run-env'
 import { DEFAULT_SETTINGS } from '../runtime/Settings'
 
 let page: Page
-let puppeteer: testPuppeteer
+let playwright: testPlaywright
 const workRoot = testWorkRoot()
 let browser: Browser<any>
 
@@ -33,17 +33,17 @@ describe('Mouse', () => {
 	jest.setTimeout(30e3)
 
 	beforeAll(async () => {
-		puppeteer = await launchPuppeteer()
-		page = puppeteer.page
+		playwright = await launchPlaywright()
+		page = playwright.page
 
-		browser = new Browser(workRoot, puppeteer, DEFAULT_SETTINGS)
+		browser = new Browser(workRoot, playwright, DEFAULT_SETTINGS)
 
 		const url = await serve('drag_and_drop.html')
 		await browser.visit(url)
 	})
 
 	afterAll(async () => {
-		await puppeteer.close()
+		await playwright.close()
 	})
 
 	test('can move mouse', async () => {

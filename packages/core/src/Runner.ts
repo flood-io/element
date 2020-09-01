@@ -8,6 +8,7 @@ import { CancellationToken } from './utils/CancellationToken'
 import {
 	IReporter,
 	IterationResult,
+	ReportCache,
 	reportRunTest,
 	Status,
 	StepResult,
@@ -43,6 +44,7 @@ export class Runner {
 		private testSettingOverrides: TestSettings,
 		private launchOptionOverrides: Partial<ConcreteLaunchOptions>,
 		private testObserverFactory: (t: TestObserver) => TestObserver = x => x,
+		private cache: ReportCache,
 	) {}
 
 	async stop(): Promise<void> {
@@ -127,6 +129,9 @@ export class Runner {
 				}
 				try {
 					await test.runWithCancellation(iteration, cancelToken, this.looper)
+				} catch (err) {
+					// eslint-disable-next-line no-ex-assign
+					err = null
 				} finally {
 					this.summaryIteration[`Iteration ${iteration}`] = test.summarizeStep()
 					if (!this.looper.isRestart) {
@@ -134,6 +139,7 @@ export class Runner {
 						reportTableData.push(summarizedData)
 					}
 					test.resetSummarizeStep()
+					this.cache.resetCache()
 				}
 			})
 
@@ -201,6 +207,7 @@ export class PersistentRunner extends Runner {
 		testSettingOverrides: TestSettings,
 		launchOptionOverrides: Partial<ConcreteLaunchOptions>,
 		testObserverFactory: (t: TestObserver) => TestObserver = x => x,
+		cache: ReportCache,
 	) {
 		super(
 			clientFactory,
@@ -209,6 +216,7 @@ export class PersistentRunner extends Runner {
 			testSettingOverrides,
 			launchOptionOverrides,
 			testObserverFactory,
+			cache,
 		)
 
 		if (this.testCommander !== undefined) {

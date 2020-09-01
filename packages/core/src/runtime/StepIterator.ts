@@ -119,7 +119,7 @@ export default class StepIterator {
 		}
 		const { recoveryStep, loopCount, iteration } = stepRecover
 		const settingRecoveryCount = loopCount || tries || 1
-		if (!recoveryStep || iteration > settingRecoveryCount) {
+		if (!recoveryStep || iteration >= settingRecoveryCount) {
 			stepRecover.iteration = 0
 			return false
 		}

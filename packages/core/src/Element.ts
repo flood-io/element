@@ -32,6 +32,7 @@ async function runSingleTestScript(opts: ElementOptions): Promise<void> {
 			debug: opts.verbose,
 		},
 		opts.testObserverFactory,
+		opts.cache,
 	)
 
 	const installSignalHandlers = true
@@ -59,7 +60,8 @@ async function runSingleTestScript(opts: ElementOptions): Promise<void> {
 	try {
 		await runner.run(testScriptFactory)
 	} catch (err) {
-		throw Error(err)
+		// eslint-disable-next-line no-ex-assign
+		err = null
 	}
 }
 
@@ -67,48 +69,41 @@ export async function runCommandLine(args: ElementRunArguments): Promise<void> {
 	const myEmitter = new EventEmitter()
 	const cache = new ReportCache(myEmitter)
 	global.console = new CustomConsole(process.stdout, process.stderr, myEmitter)
-	let isSuccess = true
-	try {
-		if (args.testFiles) {
-			console.log(
-				chalk.grey(
-					'The following test scripts that matched the testPathMatch pattern are going to be executed:',
-				),
-			)
-			let order = 0
-			const numberOfFile = args.testFiles.length
-			for (const file of args.testFiles) {
-				const arg: ElementRunArguments = {
-					...args,
-					file,
-				}
-				if (order >= 1) {
-					console.log(
-						chalk.grey('------------------------------------------------------------------'),
-					)
-				}
-				order++
-				const fileTitle = chalk.grey(`${file} (${order} of ${numberOfFile})`)
-				console.group(chalk('Running', fileTitle))
-				const opts = normalizeElementOptions(arg, cache)
-				await runSingleTestScript(opts)
-				console.groupEnd()
+	if (args.testFiles) {
+		console.log(
+			chalk.grey(
+				'The following test scripts that matched the testPathMatch pattern are going to be executed:',
+			),
+		)
+		let order = 0
+		const numberOfFile = args.testFiles.length
+		for (const file of args.testFiles) {
+			const arg: ElementRunArguments = {
+				...args,
+				file,
 			}
-			console.log(chalk.grey('Test running with the config file has finished'))
-		} else {
-			const fileTitle = chalk.grey(`${args.file} (1 of 1)`)
+			if (order >= 1) {
+				console.log(
+					chalk.grey('------------------------------------------------------------------'),
+				)
+			}
+			order++
+			const fileTitle = chalk.grey(`${file} (${order} of ${numberOfFile})`)
 			console.group(chalk('Running', fileTitle))
-			const opts = normalizeElementOptions(args, cache)
+			const opts = normalizeElementOptions(arg, cache)
 			await runSingleTestScript(opts)
 			console.groupEnd()
 		}
-	} catch (err) {
-		console.error(err)
-		isSuccess = false
-	} finally {
-		myEmitter.removeAllListeners('add')
-		myEmitter.removeAllListeners('update')
-		cache.resetCache()
-		process.exit(isSuccess ? 0 : 1)
+		console.log(chalk.grey('Test running with the config file has finished'))
+	} else {
+		const fileTitle = chalk.grey(`${args.file} (1 of 1)`)
+		console.group(chalk('Running', fileTitle))
+		const opts = normalizeElementOptions(args, cache)
+		await runSingleTestScript(opts)
+		console.groupEnd()
 	}
+	myEmitter.removeAllListeners('add')
+	myEmitter.removeAllListeners('update')
+	cache.resetCache()
+	process.exit(0)
 }

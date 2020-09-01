@@ -49,6 +49,7 @@ export interface ElementOptions {
 	persistentRunner: boolean
 	testCommander?: TestCommander
 	failStatusCode: number
+	cache: ReportCache
 }
 
 function getWorkRootPath(file: string, root?: string): string {
@@ -153,6 +154,7 @@ export function normalizeElementOptions(
 		testSettingOverrides: {},
 		persistentRunner: false,
 		failStatusCode: args['fail-status-code'],
+		cache,
 	}
 
 	if (args.loopCount) {

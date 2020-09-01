@@ -15,12 +15,12 @@ If you're coming from Puppeteer, think of the Browser as a wrapper around the Pu
 You don't need to create a browser instance because it is passed into each step for your, and reset after each test loop.
 
 ```ts title="my-test.perf.ts"
-import { step } from "@flood/element";
+import { step } from '@flood/element'
 export default () => {
-  step("Start", async (browser) => {
-    await browser.visit("https://challenge.flood.io");
-  });
-};
+	step('Start', async (browser) => {
+		await browser.visit('https://challenge.flood.io')
+	})
+}
 ```
 
 ## Methods
@@ -79,9 +79,9 @@ currently outside the viewport it will first scroll to that element.
 **Example:**
 
 ```ts title="my-test.perf.ts"
-step("Start", async (browser) => {
-  await browser.click(By.partialLinkText("Start"));
-});
+step('Start', async (browser) => {
+	await browser.click(By.partialLinkText('Start'))
+})
 ```
 
 In this example we're constructing a [Locatable][] using the `By.partialLinkText()` Locator, which will match the first `<a>` tag which contains the text "Start".
@@ -216,8 +216,8 @@ This allows sendKeys to simulate a user typing control keys such as `Key.ENTER`.
 **Example:**
 
 ```ts title="my-test.perf.ts"
-await browser.click("#input_address");
-await browser.sendKeys("Hello, World!", Key.ENTER);
+await browser.click('#input_address')
+await browser.sendKeys('Hello, World!', Key.ENTER)
 ```
 
 **Parameters**
@@ -226,17 +226,18 @@ await browser.sendKeys("Hello, World!", Key.ENTER);
 - returns: [Promise<`void`>][promise]
 
 ### `sendKeyCombinations(...keys)`
-This will simulate the act of pressing a combination of [keys][] on the keyboard at the same time. Use commas to separate individual keys.
+
+Simulates pressing a combination of [keys][] on the keyboard at the same time. Use commas to separate individual keys.
 
 **Example:**
 
 ```ts title="my-test.perf.ts"
-await browser.sendKeyCombinations(Key.SHIFT, 'KeyA');
+await browser.sendKeyCombinations(Key.SHIFT, 'KeyA')
 ```
 
 ### `setUserAgent(userAgent)`
 
-Set Browser to send a custom User Agent (UA) string
+Set Browser to send a custom User Agent (UA) string.
 
 **Parameters**
 
@@ -275,9 +276,9 @@ Types a string into an `<input>` control, key press by key press. Use this to fi
 **Example:**
 
 ```ts title="my-test.perf.ts"
-step("Step 1", async (browser) => {
-  await browser.type(By.css("#email"), "user@example.com");
-});
+step('Step 1', async (browser) => {
+	await browser.type(By.css('#email'), 'user@example.com')
+})
 ```
 
 **Parameters**
@@ -296,9 +297,9 @@ a new Browser tab for this page to load into.
 **Example:**
 
 ```ts title="my-test.perf.ts"
-step("Start", async (browser) => {
-  await browser.visit("https://example.com");
-});
+step('Start', async (browser) => {
+	await browser.visit('https://example.com')
+})
 ```
 
 **Parameters**
@@ -316,9 +317,9 @@ Check out [Until][] for a rich set of wait [Conditions][condition].
 **Example:**
 
 ```ts title="my-test.perf.ts"
-step("Start", async (browser) => {
-  await browser.wait(Until.elementIsVisible(By.css("h1.title")));
-});
+step('Start', async (browser) => {
+	await browser.wait(Until.elementIsVisible(By.css('h1.title')))
+})
 ```
 
 You can use either a numeric value in seconds to wait for a specific time,
@@ -336,18 +337,21 @@ or a [Condition][], for more flexible conditions.
 - returns: [Promise<`any`>][promise]
 
 ## `Locatable`
+
 Locatable represents anything able to be located, either a string selector or a <[Locator]>. <[Locator]>s are generally created using <[By]> methods.
 
 ```typescript
-[Locator] | [ElementHandle] | string
+;[Locator] | [ElementHandle] | string
 ```
+
 ## `NullableLocatable`
+
 NullableLocatable represents a <[Locatable]> which could also be null.
 
 Note that most Element location API methods accept a NullableLocatable but will throw an <[Error]> if its actually <[null]>.
 
 ```typescript
-[Locatable] | null
+;[Locatable] | null
 ```
 
 [step]: ../guides/script

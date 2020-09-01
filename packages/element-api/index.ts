@@ -6,11 +6,12 @@ export {
 	TestEvent,
 	CompoundMeasurement,
 	NetworkTraceData,
-} from '@flood/element-core'
+	Assertion,
+} from '@flood/element-report'
 
 // XYZ
 
-export { runCommandLine, ElementOptions } from '@flood/element-core'
+export { runCommandLine, runCommandLineOrigin, ElementOptions } from '@flood/element-core'
 
 export { TestSettings, ResponseTiming } from '@flood/element-core'
 export { RuntimeEnvironment, FloodProcessEnv } from '@flood/element-core'
@@ -33,7 +34,6 @@ export { Step } from '@flood/element-core'
 
 export { NoOpTestObserver, TestObserver } from '@flood/element-core'
 
-export { Assertion } from '@flood/element-core'
 export { AssertionErrorData, castStructuredError } from '@flood/element-core'
 
 export { IObjectTrace, NullObjectTrace } from '@flood/element-core'

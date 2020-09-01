@@ -1,4 +1,4 @@
-import { TestScriptError } from '../TestScriptError'
+import { TestScriptError } from '@flood/element-report'
 import { TestSettings } from './Settings'
 import { TestDataSource } from '../test-data/TestData'
 import { ITest } from '../interface/ITest'

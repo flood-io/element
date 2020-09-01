@@ -1,11 +1,14 @@
 {
-	"extends": "../../tsconfig.json",
-	"compilerOptions": {
-		"outDir": "dist",
-		"rootDir": ".",
-		"declaration": true
-	},
-	"references": [{ "path": "../report" }],
-	"include": ["**/*.ts"],
-	"files": ["./index.ts"]
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": ".",
+    "declaration": true
+  },
+  "include": [
+    "**/*.ts"
+  ],
+  "files": [
+    "./index.ts"
+  ]
 }

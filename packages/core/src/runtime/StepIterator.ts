@@ -1,5 +1,5 @@
 import { ConditionFn, RecoverWith, Step, StepRecoveryObject } from './Step'
-import { Browser as BrowserInterface } from './IBrowser'
+import { Browser as BrowserInterface } from '../interface/IBrowser'
 import { Looper } from '../Looper'
 
 export default class StepIterator {

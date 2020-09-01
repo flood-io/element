@@ -1,15 +1,16 @@
 import { IReporter, VerboseReporter, BaseReporter, ReportCache } from '@flood/element-report'
-import { PuppeteerClient } from './driver/Puppeteer'
 import { TestCommander } from './Runner'
 import { FloodProcessEnv, RuntimeEnvironment } from './runtime-environment/types'
 import WorkRoot from './runtime-environment/WorkRoot'
-import { ChromeVersion, TestSettings } from './runtime/Settings'
-import { TestObserver } from './runtime/test-observers/Observer'
+import { TestSettings } from './runtime/Settings'
+import { TestObserver } from './runtime/test-observers/TestObserver'
 import { AsyncFactory } from './utils/Factory'
 import { watch } from 'chokidar'
 import { EventEmitter } from 'events'
 import { extname, basename, join, dirname, resolve } from 'path'
 import sanitize from 'sanitize-filename'
+import { PlaywrightClient } from './driver/Playwright'
+import { BROWSER_TYPE } from './page/types'
 
 export interface ElementRunArguments {
 	testFiles: string[]
@@ -30,17 +31,17 @@ export interface ElementRunArguments {
 	'fail-status-code': number
 	configFile: string
 	verbose?: boolean
+	browserType: BROWSER_TYPE
 }
 
 export interface ElementOptions {
 	runEnv: RuntimeEnvironment
 	reporter: IReporter
-	clientFactory?: AsyncFactory<PuppeteerClient>
+	clientFactory?: AsyncFactory<PlaywrightClient>
 	testScript: string
 	strictCompilation: boolean
 	headless: boolean
 	devtools: boolean
-	chromeVersion: ChromeVersion | string | undefined
 	sandbox: boolean
 	process?: NodeJS.Process
 	verbose: boolean
@@ -49,7 +50,8 @@ export interface ElementOptions {
 	persistentRunner: boolean
 	testCommander?: TestCommander
 	failStatusCode: number
-	cache: ReportCache
+	cache?: ReportCache
+	browserType: BROWSER_TYPE
 }
 
 function getWorkRootPath(file: string, root?: string): string {
@@ -147,7 +149,6 @@ export function normalizeElementOptions(
 		verbose: verboseBool,
 		headless: args.headless ?? true,
 		devtools: args.devtools ?? false,
-		chromeVersion: args.chrome,
 		sandbox: args.sandbox ?? true,
 
 		runEnv: initRunEnv(workRootPath, testDataPath),
@@ -155,6 +156,7 @@ export function normalizeElementOptions(
 		persistentRunner: false,
 		failStatusCode: args['fail-status-code'],
 		cache,
+		browserType: args.browserType,
 	}
 
 	if (args.loopCount) {

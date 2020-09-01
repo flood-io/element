@@ -1,5 +1,4 @@
 import { ConcreteLaunchOptions, PlaywrightClient } from './driver/Playwright'
-import { Logger } from 'winston'
 import Test from './runtime/Test'
 import { EvaluatedScript } from './runtime/EvaluatedScript'
 import { TestObserver } from './runtime/test-observers/TestObserver'
@@ -16,7 +15,6 @@ import {
 } from '@flood/element-report'
 import { Looper } from './Looper'
 import chalk from 'chalk'
-import ms from 'ms'
 
 export interface TestCommander {
 	on(event: 'rerun-test', listener: () => void): this

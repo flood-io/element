@@ -22,7 +22,7 @@ import { Browser } from '../interface/IBrowser'
 import Test from './Test'
 import { mustCompileFile } from '../TestScript'
 import { TestScriptError, TestScriptErrorMapper, expect } from '@flood/element-report'
-import { ITestScript } from '../ITestScript'
+import { ITestScript } from '../interface/ITestScript'
 import { DEFAULT_SETTINGS, ConcreteTestSettings, normalizeSettings, TestSettings } from './Settings'
 import { RuntimeEnvironment } from '../runtime-environment/types'
 

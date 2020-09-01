@@ -1,7 +1,5 @@
 import Interceptor from '../network/Interceptor'
 import { Browser } from './Browser'
-import { Browser as BrowserInterface } from '../interface/IBrowser'
-
 
 import { EmptyReporter, IReporter, Status, StepResult } from '@flood/element-report'
 import { ObjectTrace } from '../utils/ObjectTrace'

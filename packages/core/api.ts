@@ -1,5 +1,5 @@
-export { runCommandLine } from './src/Element'
-export { ElementRunArguments } from './src/ElementOption'
+export { runCommandLine, runCommandLineOrigin } from './src/Element'
+export { ElementRunArguments, ElementOptions } from './src/ElementOption'
 
 export { RuntimeEnvironment } from './src/runtime-environment/types'
 export { nullRuntimeEnvironment } from './src/runtime-environment/NullRuntimeEnvironment'
@@ -10,10 +10,8 @@ export { TestCommander } from './src/Runner'
 export { PlaywrightClient, launch }
 
 export { TestScriptOptions } from './src/TestScriptOptions'
-export { TestScriptError } from './src/TestScriptError'
+export { TestScriptError, expect } from '@flood/element-report'
 export { ITestScript } from './src/interface/ITestScript'
-
-export { expect } from './src/utils/Expect'
 
 // Test observer integration
 export { default as Test } from './src/runtime/Test'

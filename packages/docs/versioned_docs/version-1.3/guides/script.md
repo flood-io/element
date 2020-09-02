@@ -46,11 +46,11 @@ export default () => {
 };
 ```
 
-What we did here was defined 3 steps, giving each a descriptive title, and a callback function which will contain the actual business logic of our test, in the form of test actions.
+Here we've defined 3 steps, giving each a descriptive title and a callback function which will contain the actual business logic of our test in the form of test actions.
 
 ## Defining test actions
 
-A test without actions is pretty bare, so lets instruct the browser to navigate to a page:
+A test without actions is pretty bare, so let's instruct the browser to navigate to a page:
 
 ```diff title="my-test.perf.ts"
 import { step } from "@flood/element";
@@ -68,9 +68,9 @@ The browser exposes every action avaialable to you at a top level for interactin
 
 ## Handling failure
 
-A test step can fail for a number of reasons, most commonly though it will be because the state of the page wasn't as you expected it to be, which might in turn be because the application is overloaded, an error message is shown, or the inventory of stock you're testing against is exhausted.
+A test step can fail for a number of reasons, most commonly because the state of the page was not as expected. These unexpected states may result from your application being overloaded and not displaying the expected page elements, an error message being shown, or test data issues. For example, your script may be attempting to add an out of stock item to a cart.
 
-Handling failures is part of building a robust performance test suite. Element provides a number of methods for this:
+Handling failures is part of building a robust load test suite. Element provides a number of methods for this:
 
 ### Recovery steps
 
@@ -79,6 +79,7 @@ Recovery steps define an optional step which is called if a previous step fails,
 There are two types of recovery steps: global and local.
 
 **Global recovery**
+A global recovery step is executed in response to failures from any step in the script. This type of recovery step can be useful for application-wide error messages or alerts. Global recovery steps are executed only for steps without a local recovery step.
 
 ```diff title="my-test.perf.ts"
 import { step } from "@flood/element";
@@ -96,6 +97,7 @@ export default () => {
 ```
 
 **Local recovery**
+A local recovery step is executed in response to a failure in a particular step only, and it does not apply to failures in other steps. A local recovery step takes precedence over a global recovery step.
 
 ```diff title="my-test.perf.ts"
 import { step } from "@flood/element";
@@ -115,11 +117,9 @@ export default () => {
 
 **Recovery instructions**
 
-Element offers the ability to control what happens after a step has been recovered:
+Element offers the ability to control what happens after a step has been recovered. By returning one of these instructions, the test will change its course.
 
-By returning one of these instructions, the test will change its course:
-
-- `RecoverWith.RETRY`: Retry the previous step again. Element will only do this to `recoveryTries` count, which takes `1` as the default value. You can apply a general value for the whole test by putting this option within the `TestSettings`, or even override this value for a specific step by putting it into the recovery step as in the code snippet below.
+- `RecoverWith.RETRY`: Run the previous step again. Element will only do this up to the `recoveryTries` count, which is `1` by default. You can apply a general value for the whole test by putting this option within the `TestSettings`, or override this value for a specific step by putting it into the recovery step as in the code snippet below.
 - `RecoverWith.CONTINUE`: Continue to the next step. This is the default behaviour.
 - `RecoverWith.RESTART`: Exit this loop and restart the test at the beginning, resetting the browser in the process.
 
@@ -142,7 +142,7 @@ export default () => {
 
 ### Try/Catch
 
-Because Element scripts are JavaScript, you can use any error handling you typically would in JS, including `try/catch` or `.catch(...)`.
+Because Element scripts are in JavaScript, you can use any error handling you typically would in JS, including `try/catch` or `.catch(...)`.
 
 ```diff title="my-test.perf.ts"
 import { step } from "@flood/element";
@@ -160,13 +160,12 @@ export default () => {
 };
 ```
 
-### Which recovery method to use?
+### Which recovery method should you use
 
-Deciding on which recovery method to use depends on whether you want the recovery time measured separately from the step you were testing.
+The best recovery method to use depends on whether you want the recovery time measured separately from the step you were testing.
 
-Using `try/catch` will include the catch time in the total time because Element isn't aware of the time you're spending on this step.
-
-Using a recovery step will measure the time separately as "Step 1 (Recovery)"
+Using `try/catch` will include the catch time in the total step time.
+Using a recovery step will measure the time separately as "Step 1 (Recovery)".
 
 ## Conditional steps
 
@@ -236,6 +235,8 @@ export default () => {
 
 Run a step only once in the whole test regardless of the number of iterations. This can be used to create setup and teardown steps. For example, you can run an authentication step at the start of the test and a logout step at the end.
 
+Unlike the setup and
+
 ### step.once()
 
 ```ts title="my-test.perf.ts"
@@ -250,7 +251,7 @@ export default () => {
 
 ## Mark a step as `skipped`
 
-Skip the execution of a step in your test.
+Skip the execution of a step in your test. Skipping a step is a little like commenting it out, but the step will be shown in the execution as skipped.
 
 ### step.skip()
 

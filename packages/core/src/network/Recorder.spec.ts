@@ -22,7 +22,7 @@ describe('Recorder', () => {
 			const reporter = new Reporter()
 			recorder = new NetworkRecorder(playwright.page)
 			await recorder.attachEvents()
-			const observer = new Observer(reporter, recorder)
+			const observer = new Observer(reporter, recorder, [])
 			await observer.attachToNetworkRecorder()
 			const url = await serve('wait.html')
 			await playwright.page.goto(url)

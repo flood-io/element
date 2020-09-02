@@ -58,7 +58,7 @@ describe('Test', () => {
 			loopCount: Infinity,
 			name: 'Example Test',
 			description: 'This is an example test',
-			screenshotOnFailure: true,
+			screenshotOnFailure: false,
 			waitTimeout: '30s',
 			responseTimeMeasurement: 'step',
 			consoleFilter: [],

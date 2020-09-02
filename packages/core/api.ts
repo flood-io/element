@@ -1,4 +1,4 @@
-export { runCommandLine, runCommandLineOrigin } from './src/Element'
+export { runCommandLine, runSingleTestScript } from './src/Element'
 export { ElementRunArguments, ElementOptions } from './src/ElementOption'
 
 export { RuntimeEnvironment } from './src/runtime-environment/types'

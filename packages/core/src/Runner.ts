@@ -188,8 +188,8 @@ export class Runner {
 		})
 		const finallyMessage = chalk(passedMessage, failedMessage, skippedMessage, unexecutedMessage)
 		const duration = new Date().valueOf() - startTime.valueOf()
+		this.summaryIteration[`Iteration ${iteration}`].duration = duration
 		console.log(`Iteration ${iteration} completed in ${duration}ms (walltime) ${finallyMessage}`)
-
 		return [iteration, passedNo, failedNo, skippedNo, unexecutedNo]
 	}
 }

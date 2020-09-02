@@ -35,6 +35,7 @@ export default class LifecycleObserver implements TestObserver {
 			test.settings.responseTimeMeasurement,
 		)
 		test.reporter.testLifecycle(TestEvent.StepSucceeded, step.name, step.subTitle, timing)
+		step.duration = timing
 	}
 	async onStepError(test: Test, step: Step, error: StructuredError<any>) {
 		await this.next.onStepError(test, step, error)

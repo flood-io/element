@@ -1,4 +1,4 @@
-import { runCommandLineOrigin, ElementOptions, TestObserver } from '@flood/element-api'
+import { runSingleTestScript, ElementOptions, TestObserver } from '@flood/element-api'
 import { Context, TimingObserver, BROWSER_TYPE } from '@flood/element-core'
 import { TracingObserver } from './test-observers/Tracing'
 import { initConfig } from './initConfig'
@@ -43,5 +43,5 @@ export async function run(file: string): Promise<void> {
 
 	startConcurrencyTicker(influxReporter)
 
-	return runCommandLineOrigin(opts)
+	return runSingleTestScript(opts)
 }

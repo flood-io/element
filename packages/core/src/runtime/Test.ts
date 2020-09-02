@@ -265,7 +265,9 @@ export default class Test implements ITest {
 				name: step.name,
 				status: Status.PASSED,
 				subTitle: step.subTitle,
+				duration: step.duration,
 			})
+			step.duration = 0
 			return
 		} else if (!step.prop?.passed) {
 			this.summaryStep.push({

@@ -48,7 +48,9 @@ export class BaseReporter implements IReporter {
 				this.updateMessage(beforeRunStepMessage, message)
 				break
 			case TestEvent.StepFailed:
-				message = `${chalk.redBright.bold('✘')} ${chalk.grey(`${stepName} failed`)}`
+				message = `${chalk.redBright.bold('✘')} ${chalk.grey(
+					`${stepName} failed (${timing?.toLocaleString()}ms)`,
+				)}`
 				console.error(chalk.red(errorMessage?.length ? errorMessage : 'step error -> failed'))
 				this.updateMessage(beforeRunStepMessage, message)
 				break

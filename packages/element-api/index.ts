@@ -11,7 +11,7 @@ export {
 
 // XYZ
 
-export { runCommandLine, runCommandLineOrigin, ElementOptions } from '@flood/element-core'
+export { runCommandLine, runSingleTestScript, ElementOptions } from '@flood/element-core'
 
 export { TestSettings, ResponseTiming } from '@flood/element-core'
 export { RuntimeEnvironment, FloodProcessEnv } from '@flood/element-core'

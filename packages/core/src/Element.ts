@@ -7,12 +7,8 @@ import { ElementOptions, ElementRunArguments, normalizeElementOptions } from './
 import { CustomConsole, ReportCache } from '@flood/element-report'
 import chalk from 'chalk'
 import { EventEmitter } from 'events'
-// import { TestSettings } from './runtime/Settings'
-// import { TestObserver } from './runtime/test-observers/TestObserver'
-// import { AsyncFactory } from './utils/Factory'
-// import { BROWSER_TYPE } from './page/types'
 
-async function runSingleTestScript(opts: ElementOptions): Promise<void> {
+export async function runSingleTestScript(opts: ElementOptions): Promise<void> {
 	const { testScript, clientFactory } = opts
 
 	// TODO proper types for args
@@ -67,10 +63,6 @@ async function runSingleTestScript(opts: ElementOptions): Promise<void> {
 		// eslint-disable-next-line no-ex-assign
 		err = null
 	}
-}
-
-export async function runCommandLineOrigin(args: ElementOptions) {
-	//do sth
 }
 
 export async function runCommandLine(args: ElementRunArguments): Promise<void> {

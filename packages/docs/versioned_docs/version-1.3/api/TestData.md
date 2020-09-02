@@ -145,7 +145,7 @@ Instructs the data feeder to repeat the data set when it reaches the end. TestDa
 
 Adds a filter to apply against each line in the data set.
 
-Filters can be chained, and will be run in order only if the previous ffilter passed.
+Filters can be chained, and will be run in order only if the previous filter passed.
 
 Example:
 

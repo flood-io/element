@@ -211,7 +211,7 @@ export default class Test implements ITest {
 	): Promise<void> {
 		console.assert(this.client, `client is not configured in Test`)
 
-		const ctx = new Context()
+		const ctx = new Context(this.settings)
 
 		const testObserver = new ErrorObserver(
 			new LifecycleObserver(

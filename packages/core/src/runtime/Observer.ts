@@ -14,13 +14,11 @@ interface RequestEvent extends Event {
 }
 
 export default class Observer {
-	public consoleFilters: ConsoleMethod[] = []
-
 	private failedRequests: string[]
 	private requests: Set<string> = new Set()
 	private attached = false
 
-	constructor(private reporter: IReporter, public networkRecorder: NetworkRecorder) {}
+	constructor(private reporter: IReporter, public networkRecorder: NetworkRecorder, public consoleFilters: ConsoleMethod[] = []) {}
 
 	public attachToNetworkRecorder() {
 		if (this.attached) return

@@ -59,10 +59,8 @@ export async function runSingleTestScript(opts: ElementOptions): Promise<void> {
 	}
 	try {
 		await runner.run(testScriptFactory)
-	} catch (err) {
-		// eslint-disable-next-line no-ex-assign
-		err = null
-	}
+		// eslint-disable-next-line no-empty
+	} catch {}
 }
 
 export async function runCommandLine(args: ElementRunArguments): Promise<void> {

@@ -42,8 +42,6 @@ const debug = require('debug')('element:runtime:eval-script')
 // TODO work out the right type for floodElementActual
 function createVirtualMachine(floodElementActual: any, root?: string): NodeVM {
 	const vm = new NodeVM({
-		//console: 'inherit',
-		//console: 'off',
 		console: 'redirect',
 		sandbox: {},
 		wrapper: 'commonjs',

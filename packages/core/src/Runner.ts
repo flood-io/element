@@ -116,23 +116,23 @@ export class Runner {
 			this.looper.killer = () => cancelToken.cancel()
 			let startTime = new Date()
 			await this.looper.run(async (iteration: number, isRestart: boolean) => {
+				const iterationName = this.getIterationName(iteration)
 				if (isRestart) {
-					console.log(`Restarting iteration ${iteration}`)
+					console.log(`Restarting ${iterationName}`)
 					this.looper.restartLoopDone()
 				} else {
 					if (iteration > 1) {
 						console.log(chalk.grey('--------------------------------------------'))
 					}
 					startTime = new Date()
-					console.log(`${chalk.bold('\u25CC')} Iteration ${iteration} of ${this.looper.iterations}`)
+					console.log(`${chalk.bold('\u25CC')} ${iterationName} of ${this.looper.iterations}`)
 				}
 				try {
 					await test.runWithCancellation(iteration, cancelToken, this.looper)
-				} catch (err) {
-					// eslint-disable-next-line no-ex-assign
-					err = null
+					// eslint-disable-next-line no-empty
+				} catch {
 				} finally {
-					this.summaryIteration[`Iteration ${iteration}`] = test.summarizeStep()
+					this.summaryIteration[iterationName] = test.summarizeStep()
 					if (!this.looper.isRestart) {
 						const summarizedData = this.summarizeIteration(iteration, startTime)
 						reportTableData.push(summarizedData)
@@ -156,6 +156,11 @@ export class Runner {
 			await testToCancel.cancel()
 		}
 	}
+
+	getIterationName(iteration: number): string {
+		return `Iteration ${iteration}`
+	}
+
 	summarizeIteration(iteration: number, startTime: Date): number[] {
 		let passedMessage = '',
 			failedMessage = '',
@@ -165,7 +170,7 @@ export class Runner {
 			failedNo = 0,
 			skippedNo = 0,
 			unexecutedNo = 0
-		const steps: StepResult[] = this.summaryIteration[`Iteration ${iteration}`]
+		const steps: StepResult[] = this.summaryIteration[this.getIterationName(iteration)]
 		steps.forEach(step => {
 			switch (step.status) {
 				case Status.PASSED:
@@ -189,7 +194,9 @@ export class Runner {
 		const finallyMessage = chalk(passedMessage, failedMessage, skippedMessage, unexecutedMessage)
 		const duration = new Date().valueOf() - startTime.valueOf()
 		this.summaryIteration[`Iteration ${iteration}`].duration = duration
-		console.log(`Iteration ${iteration} completed in ${duration}ms (walltime) ${finallyMessage}`)
+		console.log(
+			`${this.getIterationName(iteration)} completed in ${duration}ms (walltime) ${finallyMessage}`,
+		)
 		return [iteration, passedNo, failedNo, skippedNo, unexecutedNo]
 	}
 }

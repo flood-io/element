@@ -99,7 +99,7 @@ export class VerboseReporter implements IReporter {
 	}
 
 	private updateMessage(previousMessage: string, newMessage: string): void {
-		const lines = this.cache.getLinesBetweenCurrentAndPreviousMessage(previousMessage)
+		const lines: number = this.cache.getLinesBetweenCurrentAndPreviousMessage(previousMessage)
 		process.stdout.write(ansiEscapes.cursorUp(lines) + ansiEscapes.eraseLine)
 		console.groupEnd()
 		console.log(newMessage)

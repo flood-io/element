@@ -69,8 +69,6 @@ function getWorkRootPath(file: string, root?: string): string {
 
 function getTestDataPath(file: string, root?: string): string {
 	root = root || dirname(file)
-
-	// return root
 	return resolve(root)
 }
 

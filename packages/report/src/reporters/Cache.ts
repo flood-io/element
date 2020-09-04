@@ -21,7 +21,7 @@ export class ReportCache {
 	}
 
 	getLinesBetweenCurrentAndPreviousMessage(previousMessage: string): number {
-		const latestOutput = this.getLatestMessageInCache()
+		const latestOutput: OutputCache = this.getLatestMessageInCache()
 		const previousOutput = this.findMessageInCache(previousMessage)
 		if (previousOutput) {
 			const latestLine = latestOutput.line + (latestOutput.heigth - 1)

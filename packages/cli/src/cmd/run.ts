@@ -42,21 +42,23 @@ function setupDelayOverrides(
 	testSettingOverrides: TestSettings,
 ): TestSettings {
 	if (testSettingOverrides == null) testSettingOverrides = {}
-	let { actionDelay, stepDelay } = args
+	const { actionDelay, stepDelay } = args
+	let convertedActionDelay = 0
+	let convertedStepDelay = 0
 
-	if (actionDelay) {
-		if (typeof actionDelay === 'string') {
-			actionDelay = ms(actionDelay)
-		}
-		testSettingOverrides.actionDelay = actionDelay
+	if (typeof actionDelay === 'string' && actionDelay) {
+		convertedActionDelay = ms(actionDelay)
+	} else if (typeof actionDelay === 'number') {
+		convertedActionDelay = actionDelay
 	}
+	testSettingOverrides.actionDelay = convertedActionDelay > 0 ? convertedActionDelay : 0
 
-	if (stepDelay) {
-		if (typeof stepDelay === 'string') {
-			stepDelay = ms(stepDelay)
-		}
-		testSettingOverrides.stepDelay = stepDelay
+	if (typeof stepDelay === 'string' && stepDelay) {
+		convertedStepDelay = ms(stepDelay)
+	} else if (typeof stepDelay === 'number') {
+		convertedStepDelay = stepDelay
 	}
+	testSettingOverrides.stepDelay = convertedStepDelay > 0 ? convertedStepDelay : 0
 
 	if (args.fastForward) {
 		testSettingOverrides.stepDelay = 1000

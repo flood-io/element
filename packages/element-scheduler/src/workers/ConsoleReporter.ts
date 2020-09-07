@@ -5,7 +5,7 @@ import {
 	CompoundMeasurement,
 	MeasurementKind,
 	TestScriptError,
-} from '@flood/element-core'
+} from '@flood/element-report'
 import { Logger } from 'winston'
 import chalk from 'chalk'
 
@@ -35,7 +35,13 @@ export class ConsoleReporter implements IReporter {
 
 	async flushMeasurements(): Promise<void> {}
 
-	testLifecycle(stage: TestEvent, label: string, timing?: number): void {
+	testLifecycle(
+		stage: TestEvent,
+		label: string,
+		subTitle?: string,
+		timing?: number,
+		errMsg?: string,
+	): void {
 		switch (stage) {
 			case TestEvent.AfterStepAction:
 				this.logger.info(`[${this.workerName}]: ---> ${label}()`)

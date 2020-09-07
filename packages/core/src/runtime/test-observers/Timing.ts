@@ -1,4 +1,4 @@
-import { expect } from '../../utils/Expect'
+import { expect } from '@flood/element-report'
 
 type TimingRec = { start: number; end: number; thinkTime: number }
 type TimingSegmentName = 'beforeStep' | 'step' | 'afterStep'

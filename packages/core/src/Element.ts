@@ -1,38 +1,15 @@
-import { Logger } from 'winston'
-import { IReporter } from './Reporter'
-import { PlaywrightClient, launch } from './driver/Playwright'
-import { RuntimeEnvironment } from './runtime-environment/types'
-import { IRunner, Runner, PersistentRunner, TestCommander } from './Runner'
+import { launch } from './driver/Playwright'
+import { IRunner, Runner, PersistentRunner } from './Runner'
 import { mustCompileFile } from './TestScript'
 import { TestScriptOptions } from './TestScriptOptions'
 import { EvaluatedScript } from './runtime/EvaluatedScript'
-import { TestSettings } from './runtime/Settings'
-import { TestObserver } from './runtime/test-observers/TestObserver'
-import { AsyncFactory } from './utils/Factory'
-import { BROWSER_TYPE } from './page/types'
+import { ElementOptions, ElementRunArguments, normalizeElementOptions } from './ElementOption'
+import { CustomConsole, ReportCache } from '@flood/element-report'
+import chalk from 'chalk'
+import { EventEmitter } from 'events'
 
-export interface ElementOptions {
-	logger: Logger
-	runEnv: RuntimeEnvironment
-	reporter: IReporter
-	clientFactory?: AsyncFactory<PlaywrightClient>
-	testScript: string
-	strictCompilation: boolean
-	headless: boolean
-	devtools: boolean
-	sandbox: boolean
-	process?: NodeJS.Process
-	verbose: boolean
-	browserType: BROWSER_TYPE
-	testSettingOverrides: TestSettings
-	testObserverFactory?: (t: TestObserver) => TestObserver
-	persistentRunner: boolean
-	testCommander?: TestCommander
-	failStatusCode: number
-}
-
-export async function runCommandLine(opts: ElementOptions): Promise<void> {
-	const { logger, testScript, clientFactory } = opts
+export async function runSingleTestScript(opts: ElementOptions): Promise<void> {
+	const { testScript, clientFactory } = opts
 
 	// TODO proper types for args
 	let runnerClass: { new (...args: any[]): IRunner }
@@ -46,7 +23,6 @@ export async function runCommandLine(opts: ElementOptions): Promise<void> {
 		clientFactory || launch,
 		opts.testCommander,
 		opts.reporter,
-		logger,
 		opts.testSettingOverrides,
 		{
 			headless: opts.headless,
@@ -56,25 +32,21 @@ export async function runCommandLine(opts: ElementOptions): Promise<void> {
 			debug: opts.verbose,
 		},
 		opts.testObserverFactory,
+		opts.cache,
 	)
 
 	const installSignalHandlers = true
 
 	if (installSignalHandlers) {
 		process.on('SIGINT', async () => {
-			logger.debug('Received SIGINT')
 			await runner.stop()
 		})
 
 		process.once('SIGUSR2', async () => {
-			// Usually received by nodemon on file change
-			logger.debug('Received SIGUSR2')
 			await runner.stop()
 			process.kill(process.pid, 'SIGUSR2')
 		})
 	}
-
-	logger.debug(`Loading test script: ${testScript}`)
 
 	const testScriptOptions: TestScriptOptions = {
 		stricterTypeChecking: opts.strictCompilation,
@@ -84,12 +56,51 @@ export async function runCommandLine(opts: ElementOptions): Promise<void> {
 	const testScriptFactory = async (): Promise<EvaluatedScript> => {
 		return new EvaluatedScript(opts.runEnv, await mustCompileFile(testScript, testScriptOptions))
 	}
-
 	try {
 		await runner.run(testScriptFactory)
-	} catch (err) {
-		console.log('Element exited with error')
-		console.error(err)
-		process.exit(opts.failStatusCode)
+	} catch {}
+}
+
+export async function runCommandLine(args: ElementRunArguments): Promise<void> {
+	const myEmitter = new EventEmitter()
+	const cache = new ReportCache(myEmitter)
+	global.console = new CustomConsole(process.stdout, process.stderr, myEmitter)
+	if (args.testFiles) {
+		console.log(
+			chalk.grey(
+				'The following test scripts that matched the testPathMatch pattern are going to be executed:',
+			),
+		)
+		let order = 0
+		const numberOfFile = args.testFiles.length
+		for (const file of args.testFiles) {
+			const arg: ElementRunArguments = {
+				...args,
+				file,
+			}
+			if (order >= 1) {
+				console.log(
+					chalk.grey('------------------------------------------------------------------'),
+				)
+			}
+			order++
+			const fileTitle = chalk.grey(`${file} (${order} of ${numberOfFile})`)
+			console.group(chalk('Running', fileTitle))
+			const opts: ElementOptions = normalizeElementOptions(arg, cache)
+			await runSingleTestScript(opts)
+			console.groupEnd()
+		}
+		console.log(chalk.grey('Test running with the config file has finished'))
+	} else {
+		const { file } = args
+		const fileTitle = chalk.grey(`${file} (1 of 1)`)
+		console.group(chalk('Running', fileTitle))
+		const opts: ElementOptions = normalizeElementOptions(args, cache)
+		await runSingleTestScript(opts)
+		console.groupEnd()
 	}
+	myEmitter.removeAllListeners('add')
+	myEmitter.removeAllListeners('update')
+	cache.resetCache()
+	process.exit(0)
 }

@@ -1,8 +1,7 @@
 import NetworkRecorder from '../../network/Recorder'
 import { RawResponse } from '../../network/Protocol'
+import { IReporter } from '@flood/element-report'
 import { ConsoleMethod } from '../Settings'
-import { IReporter } from '../../Reporter'
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:observer')
 
 interface Event {
@@ -15,13 +14,15 @@ interface RequestEvent extends Event {
 }
 
 export default class Observer {
-	public consoleFilters: ConsoleMethod[] = []
-
 	private failedRequests: string[]
 	private requests: Set<string> = new Set()
 	private attached = false
 
-	constructor(private reporter: IReporter, public networkRecorder: NetworkRecorder) {}
+	constructor(
+		private reporter: IReporter,
+		public networkRecorder: NetworkRecorder,
+		private consoleFilters: ConsoleMethod[],
+	) {}
 
 	public async attachToNetworkRecorder() {
 		if (this.attached) return
@@ -84,7 +85,6 @@ export default class Observer {
 	private onRawNetworkLoadingFinished({ requestId, encodedDataLength, timestamp }: RequestEvent) {
 		debug('onRawNetworkLoadingFinished', requestId)
 		if (!this.requests.has(requestId)) {
-			debug(`Unknown request: ${requestId}`)
 			return
 		}
 

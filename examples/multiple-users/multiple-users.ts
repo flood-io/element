@@ -7,16 +7,8 @@ export const settings: TestSettings = {
 			duration: '15s',
 			target: 2,
 		},
-		{
-			duration: '15s',
-			target: 0,
-		},
-		{
-			duration: '15s',
-			target: 4,
-		},
 	],
-	browserType: BROWSER_TYPE.WEBKIT,
+	browserType: BROWSER_TYPE.CHROME,
 }
 
 export default () => {

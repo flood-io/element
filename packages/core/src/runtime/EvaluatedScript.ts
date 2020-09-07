@@ -21,11 +21,10 @@ import {
 import { Browser } from '../interface/IBrowser'
 import Test from './Test'
 import { mustCompileFile } from '../TestScript'
-import { TestScriptError, TestScriptErrorMapper } from '../TestScriptError'
+import { TestScriptError, TestScriptErrorMapper, expect } from '@flood/element-report'
 import { ITestScript } from '../interface/ITestScript'
 import { DEFAULT_SETTINGS, ConcreteTestSettings, normalizeSettings, TestSettings } from './Settings'
 import { RuntimeEnvironment } from '../runtime-environment/types'
-import { expect } from '../utils/Expect'
 
 import { Until } from '../page/Until'
 import { By } from '../page/By'
@@ -43,8 +42,7 @@ const debug = require('debug')('element:runtime:eval-script')
 // TODO work out the right type for floodElementActual
 function createVirtualMachine(floodElementActual: any, root?: string): NodeVM {
 	const vm = new NodeVM({
-		// console: 'redirect',
-		console: 'inherit',
+		console: 'redirect',
 		sandbox: {},
 		wrapper: 'commonjs',
 		sourceExtensions: ['js', 'ts'],
@@ -110,15 +108,19 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 		if (this.vm === undefined)
 			throw new Error('bindTest: no vm created - script must be evaluated first')
 
-		const { reporter } = test
+		const { reporter, settings } = test
 
 		// hack because the vm2 typings don't include their EventEmitteryness
+		const logKey = ['log', 'info', 'error', 'warn', 'debug']
+		const consoleFilters = settings.consoleFilter as string[]
 		const eevm = (this.vm as any) as EventEmitter
-		;['log', 'info', 'error', 'dir', 'trace'].forEach(key =>
-			eevm.on(`console.${key}`, (message, ...args) =>
-				reporter.testScriptConsole(key, message, ...args),
-			),
-		)
+		logKey
+			.filter(item => !consoleFilters.includes(item))
+			.forEach(key =>
+				eevm.on(`console.${key}`, (message, ...args) =>
+					reporter.testScriptConsole(key, message, ...args),
+				),
+			)
 	}
 
 	public async beforeTestRun(): Promise<void> {

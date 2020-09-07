@@ -2,10 +2,9 @@ import { Compiler, CompilerOutput } from '@flood/element-compiler'
 import parseComments from 'comment-parser'
 import { ITestScript } from '../interface/ITestScript'
 import { VMScript } from 'vm2'
-import { TestScriptError } from '../TestScriptError'
 import { TestScriptOptions } from '../TestScriptOptions'
 import { readFileSync } from 'fs-extra'
-import { CallSite, SourceUnmapped } from './SourceUnmapped'
+import { SourceUnmapper, TestScriptError, CallSite } from '@flood/element-report'
 import { dirname } from 'path'
 
 // FIXME: WebpackCompiler currently doesn't do anything with this, but it should
@@ -17,7 +16,7 @@ export const TestScriptDefaultOptions: TestScriptOptions = {
 export default class WebpackCompiler implements ITestScript {
 	private vmScriptCache: VMScript
 	private result?: CompilerOutput
-	private sourceUnmapped: SourceUnmapped
+	private sourceUnmapper: SourceUnmapper
 
 	constructor(public sourceFile: string, _options: TestScriptOptions = TestScriptDefaultOptions) {}
 
@@ -26,7 +25,7 @@ export default class WebpackCompiler implements ITestScript {
 		const output = await compiler.emit()
 		this.result = output
 
-		this.sourceUnmapped = await SourceUnmapped.init(
+		this.sourceUnmapper = await SourceUnmapper.init(
 			// this.originalSource,
 			output.content,
 			this.sourceFile,
@@ -94,8 +93,8 @@ export default class WebpackCompiler implements ITestScript {
 		let unmappedStack: string[] = []
 
 		if (filteredStack.length > 0) {
-			callSite = this.sourceUnmapped.unMapCallSite(filteredStack[0])
-			unmappedStack = this.sourceUnmapped.unMapStackNodeStrings(filteredStack)
+			callSite = this.sourceUnmapper.unMapCallSite(filteredStack[0])
+			unmappedStack = this.sourceUnmapper.unMapStackNodeStrings(filteredStack)
 		}
 
 		return new TestScriptError(error.message, stack, callSite, unmappedStack, error)

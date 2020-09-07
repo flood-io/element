@@ -1,7 +1,7 @@
 import { Test } from './testTypes'
 import { TestObserver } from './TestObserver'
 import { Step } from '../Step'
-import { TestEvent } from '../../Reporter'
+import { TestEvent } from '@flood/element-report'
 import { StructuredError } from '../../utils/StructuredError'
 import { TimingObserver } from './TimingObserver'
 
@@ -25,36 +25,39 @@ export default class LifecycleObserver implements TestObserver {
 	}
 
 	async beforeStep(test: Test, step: Step) {
-		test.reporter.testLifecycle(TestEvent.BeforeStep, step.name)
+		test.reporter.testLifecycle(TestEvent.BeforeStep, step.name, step.subTitle)
 		return this.next.beforeStep(test, step)
 	}
 	async onStepPassed(test: Test, step: Step) {
+		const testObserver: TestObserver = this.next
+		//await testObserver.afterStep(test, step)
+		const timing = await (testObserver as TimingObserver).getMeasurementTime(
+			test.settings.responseTimeMeasurement,
+		)
+		step.duration = timing
+		test.reporter.testLifecycle(TestEvent.StepSucceeded, step.name, step.subTitle, timing)
 		await this.next.onStepPassed(test, step)
-		test.reporter.testLifecycle(TestEvent.StepSucceeded, step.name)
 	}
+
 	async onStepError(test: Test, step: Step, error: StructuredError<any>) {
 		await this.next.onStepError(test, step, error)
-		test.reporter.testLifecycle(TestEvent.StepFailed, step.name)
+		test.reporter.testLifecycle(TestEvent.StepFailed, step.name, step.subTitle, 0, error?.message)
 	}
 	async onStepSkipped(test: Test, step: Step) {
 		await this.next.onStepSkipped(test, step)
 		test.reporter.testLifecycle(TestEvent.StepSkipped, step.name)
 	}
 	async afterStep(test: Test, step: Step) {
-		const testObserver: TestObserver = this.next
-		await testObserver.afterStep(test, step)
-		const timing = await (testObserver as TimingObserver).getMeasurementTime(
-			test.settings.responseTimeMeasurement,
-		)
-		test.reporter.testLifecycle(TestEvent.AfterStep, step.name, timing)
+		await this.next.afterStep(test, step)
+		test.reporter.testLifecycle(TestEvent.AfterStep, step.name)
 	}
 
 	async beforeStepAction(test: Test, step: Step, command: string) {
 		test.reporter.testLifecycle(TestEvent.BeforeStepAction, command)
 		return this.next.beforeStepAction(test, step, command)
 	}
-	async afterStepAction(test: Test, step: Step, command: string) {
-		await this.next.afterStepAction(test, step, command)
-		test.reporter.testLifecycle(TestEvent.AfterStepAction, command)
+	async afterStepAction(test: Test, step: Step, command: string, errorMessage?: string) {
+		await this.next.afterStepAction(test, step, command, errorMessage)
+		test.reporter.testLifecycle(TestEvent.AfterStepAction, command, '', 0, errorMessage)
 	}
 }

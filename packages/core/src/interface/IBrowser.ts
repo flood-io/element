@@ -39,7 +39,7 @@ export interface Browser {
 	 * @internal
 	 * @private
 	 */
-	afterFunc: (b: Browser, name: string) => Promise<void>
+	afterFunc: (b: Browser, name: string, errorMessage?: string) => Promise<void>
 
 	title(): Promise<string>
 
@@ -121,7 +121,7 @@ export interface Browser {
 	 * You can use either a numeric value in seconds to wait for a specific time,
 	 * or a <[Condition]>, for more flexible conditions.
 	 */
-	wait(timeoutOrCondition: Condition | number): Promise<boolean>
+	wait(timeoutOrCondition: Condition | number | string): Promise<boolean>
 
 	waitForNavigation(): Promise<any>
 

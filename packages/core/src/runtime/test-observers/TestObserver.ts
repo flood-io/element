@@ -14,7 +14,7 @@ export interface TestObserver {
 	afterStep(test: ITest, step: Step): Promise<void>
 
 	beforeStepAction(test: ITest, step: Step, command: string): Promise<void>
-	afterStepAction(test: ITest, step: Step, command: string): Promise<void>
+	afterStepAction(test: ITest, step: Step, command: string, errorMessage?: string): Promise<void>
 }
 
 export class NoOpTestObserver implements TestObserver {
@@ -46,8 +46,13 @@ export class NoOpTestObserver implements TestObserver {
 	async beforeStepAction(test: ITest, step: Step, command: string): Promise<void> {
 		return this.next.beforeStepAction(test, step, command)
 	}
-	async afterStepAction(test: ITest, step: Step, command: string): Promise<void> {
-		return this.next.afterStepAction(test, step, command)
+	async afterStepAction(
+		test: ITest,
+		step: Step,
+		command: string,
+		errorMessage?: string,
+	): Promise<void> {
+		return this.next.afterStepAction(test, step, command, errorMessage)
 	}
 }
 
@@ -78,7 +83,12 @@ export class NullTestObserver implements TestObserver {
 	async beforeStepAction(test: ITest, step: Step, command: string): Promise<void> {
 		return
 	}
-	async afterStepAction(test: ITest, step: Step, command: string): Promise<void> {
+	async afterStepAction(
+		test: ITest,
+		step: Step,
+		command: string,
+		errorMessage?: string,
+	): Promise<void> {
 		return
 	}
 }

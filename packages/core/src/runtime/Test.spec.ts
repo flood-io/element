@@ -4,7 +4,7 @@ import { launchPlaywright, testPlaywright } from '../../tests/support/launch-bro
 import Test from './Test'
 import { EvaluatedScript } from './EvaluatedScript'
 import { join } from 'path'
-import { EventEmitterReporter } from '../reporter/EventEmitter'
+import { EventEmitterReporter } from '@flood/element-report'
 import { ConcreteTestSettings, normalizeSettings, TestSettings } from './Settings'
 import { readFileSync, writeFileSync } from 'fs-extra'
 import { tmpdir } from 'os'
@@ -58,7 +58,7 @@ describe('Test', () => {
 			loopCount: Infinity,
 			name: 'Example Test',
 			description: 'This is an example test',
-			screenshotOnFailure: true,
+			screenshotOnFailure: false,
 			waitTimeout: '30s',
 			responseTimeMeasurement: 'step',
 			consoleFilter: [],

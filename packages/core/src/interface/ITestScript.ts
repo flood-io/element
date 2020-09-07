@@ -1,5 +1,5 @@
 import { VMScript } from 'vm2'
-import { TestScriptErrorMapper } from '../TestScriptError'
+import { TestScriptErrorMapper } from '@flood/element-report'
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 export interface ITestScript extends TestScriptErrorMapper {

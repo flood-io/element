@@ -68,7 +68,7 @@ async function execMethod(method: string, args: Array<any>) {
 				return () => connectWS(wsEndpoint, childSettings.browserType)
 			}
 
-			const runner = new Runner(clientFactory(), undefined, reporter, logger, childSettings, {})
+			const runner = new Runner(clientFactory(), undefined, reporter, {}, childSettings)
 
 			await runner.run(testScriptFactory)
 			await runner.stop()

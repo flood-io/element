@@ -1,6 +1,5 @@
 import { FloodProcessEnv, WorkRoot } from '@flood/element-api'
 import MetricIdentifier from './MetricIdentifier'
-import { Logger } from 'winston'
 export interface GridConfig {
 	metricIdentifier: MetricIdentifier
 	sumpHost: string
@@ -12,7 +11,6 @@ export interface GridConfig {
 	nodeIndex: number
 	testDuration?: number
 	testIterations?: number
-	logger: Logger
 	workRoot: WorkRoot
 	stepEnv(): FloodProcessEnv
 }

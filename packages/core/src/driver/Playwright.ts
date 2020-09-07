@@ -120,10 +120,6 @@ export async function launch(
 		options.args.push('--no-sandbox')
 	}
 
-	if (options.debug) {
-		console.dir(options)
-	}
-
 	options.args.push('--auth-server-whitelist="hostname/domain"')
 
 	const browserType = options.browserType || BROWSER_TYPE.CHROME

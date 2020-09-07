@@ -1,3 +1,3 @@
 # `flood-runner`
 
-Internall runner used by Flood Agent
+Internal runner used by Flood Agent

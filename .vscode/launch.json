@@ -24,8 +24,7 @@
       "args": [
         "${workspaceFolder}/packages/cli/bin/element.ts",
         "run",
-        "./examples/condition/ab.ts",
-        "--devtools",
+        "./examples/condition/codition.ts",
         "--debug"
       ],
       "skipFiles": [

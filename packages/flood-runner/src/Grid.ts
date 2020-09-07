@@ -1,4 +1,4 @@
-import { runCommandLine, ElementOptions, TestObserver } from '@flood/element-api'
+import { runSingleTestScript, ElementOptions, TestObserver } from '@flood/element-api'
 import { Context, TimingObserver, BROWSER_TYPE } from '@flood/element-core'
 import { TracingObserver } from './test-observers/Tracing'
 import { initConfig } from './initConfig'
@@ -18,7 +18,6 @@ export async function run(file: string): Promise<void> {
 	}
 
 	const opts: ElementOptions = {
-		logger: gridConfig.logger,
 		testScript: file,
 		strictCompilation: false, // TODO make this configurable
 		reporter: influxReporter,
@@ -42,7 +41,7 @@ export async function run(file: string): Promise<void> {
 		opts.testSettingOverrides.loopCount = gridConfig.testIterations
 	}
 
-	startConcurrencyTicker(influxReporter, gridConfig.logger)
+	startConcurrencyTicker(influxReporter)
 
-	return runCommandLine(opts)
+	return runSingleTestScript(opts)
 }

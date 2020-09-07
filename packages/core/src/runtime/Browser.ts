@@ -33,6 +33,7 @@ import { autoWaitUntil } from './decorators/autoWait'
 import { locatableToLocator, toLocatorError } from './toLocatorError'
 import { Keyboard } from '../page/Keyboard'
 import { getFrames } from '../utils/frames'
+import ms from 'ms'
 
 export const debug = debugFactory('element:runtime:browser')
 const debugScreenshot = debugFactory('element:runtime:browser:screenshot')
@@ -159,9 +160,12 @@ export class Browser<T> implements BrowserInterface {
 	}
 
 	@addCallbacks()
-	public async wait(timeoutOrCondition: Condition | number): Promise<any> {
-		if (typeof timeoutOrCondition === 'number') {
-			await new Promise(yeah => setTimeout(yeah, Number(timeoutOrCondition) * 1e3))
+	public async wait(timeoutOrCondition: Condition | number | string): Promise<any> {
+		if (typeof timeoutOrCondition === 'string') {
+			await new Promise(yeah => setTimeout(yeah, ms(timeoutOrCondition)))
+			return true
+		} else if (typeof timeoutOrCondition === 'number') {
+			await new Promise(yeah => setTimeout(yeah, timeoutOrCondition))
 			return true
 		}
 

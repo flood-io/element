@@ -85,7 +85,7 @@ export interface TestSettings {
 	 *
 	 * Defaults to `-1` for no timeout.
 	 */
-	duration?: number
+	duration?: string | number
 
 	/**
 	 * Number of times to run this test.
@@ -99,12 +99,12 @@ export interface TestSettings {
 	 *
 	 * Waiting between actions simulates the behaviour of a real user as they read, think and act on the page's content.
 	 */
-	actionDelay?: number
+	actionDelay?: string | number
 
 	/**
 	 * Specifies the time (in seconds) to wait after each step.
 	 */
-	stepDelay?: number
+	stepDelay?: string | number
 
 	/**
 	 * Specifies a custom User Agent (UA) string to send.

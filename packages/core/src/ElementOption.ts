@@ -11,6 +11,7 @@ import { extname, basename, join, dirname, resolve } from 'path'
 import sanitize from 'sanitize-filename'
 import { PlaywrightClient } from './driver/Playwright'
 import { BROWSER_TYPE } from './page/types'
+import ms from 'ms'
 
 export interface ElementRunArguments {
 	testFiles: string[]
@@ -21,8 +22,8 @@ export interface ElementRunArguments {
 	devtools?: boolean
 	sandbox?: boolean
 	loopCount?: number
-	stepDelay?: number
-	actionDelay?: number
+	stepDelay?: string | number
+	actionDelay?: string | number
 	fastForward?: boolean
 	slowMo?: boolean
 	watch?: boolean
@@ -79,15 +80,24 @@ function setupDelayOverrides(
 	if (testSettingOverrides == null) testSettingOverrides = {}
 	const { actionDelay, stepDelay } = args
 
-	testSettingOverrides.actionDelay = actionDelay && actionDelay > 0 ? actionDelay : 0
-	testSettingOverrides.stepDelay = stepDelay && stepDelay > 0 ? stepDelay : 0
+	if (typeof actionDelay === 'string' && actionDelay) {
+		testSettingOverrides.actionDelay = ms(actionDelay)
+	} else if (typeof actionDelay === 'number') {
+		testSettingOverrides.actionDelay = actionDelay
+	}
+
+	if (typeof stepDelay === 'string' && stepDelay) {
+		testSettingOverrides.stepDelay = ms(stepDelay)
+	} else if (typeof stepDelay === 'number') {
+		testSettingOverrides.stepDelay = stepDelay
+	}
 
 	if (args.fastForward) {
-		testSettingOverrides.stepDelay = 1
-		testSettingOverrides.actionDelay = 1
+		testSettingOverrides.stepDelay = 1000
+		testSettingOverrides.actionDelay = 1000
 	} else if (args.slowMo) {
-		testSettingOverrides.stepDelay = 10
-		testSettingOverrides.actionDelay = 10
+		testSettingOverrides.stepDelay = 10000
+		testSettingOverrides.actionDelay = 10000
 	}
 	return testSettingOverrides
 }

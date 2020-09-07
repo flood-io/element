@@ -15,6 +15,7 @@ import {
 } from '@flood/element-report'
 import { Looper } from './Looper'
 import chalk from 'chalk'
+import ms from 'ms'
 
 export interface TestCommander {
 	on(event: 'rerun-test', listener: () => void): this
@@ -195,7 +196,9 @@ export class Runner {
 		const duration = new Date().valueOf() - startTime.valueOf()
 		this.summaryIteration[`Iteration ${iteration}`].duration = duration
 		console.log(
-			`${this.getIterationName(iteration)} completed in ${duration}ms (walltime) ${finallyMessage}`,
+			`${this.getIterationName(iteration)} completed in ${ms(
+				duration,
+			)} (walltime) ${finallyMessage}`,
 		)
 		return [iteration, passedNo, failedNo, skippedNo, unexecutedNo]
 	}

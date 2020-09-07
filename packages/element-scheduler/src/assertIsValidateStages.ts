@@ -9,19 +9,19 @@ export function assertIsValidateStages(stages: any): asserts stages is RampStage
 	if (stages == null || stages.length == 0)
 		throw new AssertionError({ message: `At least 1 stage must be specified to use scheduler` })
 	stages.forEach((stage: RampStage, i: number) => {
-		const { duration, user } = stage
+		const { duration, target } = stage
 		if (duration == null)
 			throw new AssertionError({ message: `the duration for stage ${i + 1} must be set` })
 		const durationMs = parseDuration(duration)
 		if (durationMs < 0)
 			throw new AssertionError({ message: `the duration for stage ${i + 1} shouldn't be negative` })
-		if (user == null)
+		if (target == null)
 			throw new AssertionError({ message: `the target for stage ${i + 1} must be set` })
-		if (typeof user != 'number' || user < 0)
+		if (typeof target != 'number' || target < 0)
 			throw new AssertionError({
 				message: `the target for stage ${i + 1} must be a non-negative number`,
 			})
-		if (user > cpus().length * MAX_THREAD_PER_CPU) {
+		if (target > cpus().length * MAX_THREAD_PER_CPU) {
 			throw new AssertionError({
 				message: `the target for stage ${i + 1} too high for available CPUs, please decrease`,
 			})

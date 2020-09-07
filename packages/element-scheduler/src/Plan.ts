@@ -3,7 +3,7 @@ import parseDuration from 'parse-duration'
 
 type NormalizedStage = {
 	duration: number
-	user: number
+	target: number
 	actual?: number
 	startedAt?: Date
 }
@@ -11,8 +11,8 @@ type NormalizedStage = {
 function normalizeStages(stages: RampStage[]): NormalizedStage[] {
 	return stages.map(stage => {
 		const duration = parseDuration(stage.duration)
-		const { user } = stage
-		return { duration, user }
+		const { target } = stage
+		return { duration, target }
 	})
 }
 
@@ -36,8 +36,8 @@ export class Plan {
 		return new Promise(done => {
 			const planSteps: PlanStep[] = []
 			this.stages.forEach((stage, index) => {
-				const { user, duration } = stage
-				planSteps.push([duration, user, index])
+				const { target, duration } = stage
+				planSteps.push([duration, target, index])
 			})
 
 			const internal = () => {
@@ -68,7 +68,7 @@ export class Plan {
 	public get maxUsers(): number {
 		let total = 0
 		this.stages.forEach(stage => {
-			if (stage.user > total) total = stage.user
+			if (stage.target > total) total = stage.target
 		})
 		return total
 	}

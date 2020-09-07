@@ -71,7 +71,6 @@ export const TestData = new NullTestDataLoaders()
 export {
 	TestSettings,
 	setup,
-	DEFAULT_SETTINGS,
 	ConsoleMethod,
 	ResponseTiming,
 	RampStage,

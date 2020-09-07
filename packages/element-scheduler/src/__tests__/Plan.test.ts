@@ -5,9 +5,9 @@ describe('Plan', () => {
 	let plan: Plan
 	beforeAll(() => {
 		plan = new Plan([
-			{ duration: '5s', user: 5 },
-			{ duration: '1m', user: 5 },
-			{ duration: '5s', user: 1 },
+			{ duration: '5s', target: 5 },
+			{ duration: '1m', target: 5 },
+			{ duration: '5s', target: 1 },
 		])
 	})
 
@@ -21,8 +21,8 @@ describe('Plan', () => {
 
 	test('it run ticker for each step', async () => {
 		plan = new Plan([
-			{ duration: '500ms', user: 2 },
-			{ duration: '600ms', user: 3 },
+			{ duration: '500ms', target: 2 },
+			{ duration: '600ms', target: 3 },
 		])
 
 		const handler = jest.fn()

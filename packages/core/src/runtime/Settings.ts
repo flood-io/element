@@ -249,7 +249,7 @@ export interface TestSettings {
 
 export type RampStage = {
 	duration: string
-	user: number
+	target: number
 }
 
 /**

@@ -29,4 +29,5 @@ export async function runCommandLine(opts: ElementOptions): Promise<void> {
 	console.debug(`Loading test script: ${testScript}`)
 
 	await runner.run(testScript)
+	await runner.stop()
 }

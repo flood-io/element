@@ -91,7 +91,6 @@ export class Scheduler {
 					console.log(`[${worker.workerName}] has completed the test`)
 				}
 
-				console.log(`iterator ${iterator}, stage length ${stages.length}`)
 				if (iterator === stages.length - 1) waitForExit()
 				if (workingWorkers.length === errorWorkers.length) {
 					Promise.all(errorWorkers).then(next)

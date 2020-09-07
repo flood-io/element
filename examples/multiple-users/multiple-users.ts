@@ -5,15 +5,15 @@ export const settings: TestSettings = {
 	stages: [
 		{
 			duration: '15s',
-			target: 2,
+			user: 2,
 		},
 		{
 			duration: '15s',
-			target: 0,
+			user: 0,
 		},
 		{
 			duration: '15s',
-			target: 4,
+			user: 4,
 		},
 	],
 	browserType: BROWSER_TYPE.WEBKIT,

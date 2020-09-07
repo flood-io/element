@@ -131,7 +131,7 @@ function makeTestCommander(file: string): TestCommander {
 }
 
 async function runTestScript(args: RunCommonArguments): Promise<void> {
-	const { file, verbose, multipleUser } = args
+	const { file, verbose, mu } = args
 	const workRootPath = getWorkRootPath(file, args['work-root'])
 	const testDataPath = getTestDataPath(file, args['test-data-root'])
 
@@ -171,7 +171,7 @@ async function runTestScript(args: RunCommonArguments): Promise<void> {
 		opts.testCommander = makeTestCommander(file)
 	}
 
-	return multipleUser ? await runMultipleUsers(opts) : await runSingleUser(opts)
+	return mu ? await runMultipleUsers(opts) : await runSingleUser(opts)
 }
 
 async function runTestScriptWithConfiguration(args: RunCommonArguments): Promise<void> {
@@ -202,11 +202,15 @@ const cmd: CommandModule = {
 	describe: 'Run [a test script| test scripts with configuration] locally',
 
 	async handler(args: RunCommonArguments): Promise<void> {
-		if (args.file) {
-			await runTestScript(args)
-		} else {
-			await runTestScriptWithConfiguration(args)
-		}
+		if (args.file) await runTestScript(args)
+		else if (!args.mu) await runTestScriptWithConfiguration(args)
+		else
+			console.warn(
+				chalk.redBright(
+					`The mode 'running the test with a config file' does not support running with multiple users`,
+				),
+			)
+
 		process.exit(0)
 	},
 	builder(yargs: Argv): Argv {
@@ -322,6 +326,11 @@ const cmd: CommandModule = {
 				describe: 'Run test scripts with configuration',
 				type: 'string',
 				default: 'element.config.js',
+			})
+			.option('mu', {
+				describe: 'Run test scripts with multiple user configuration does not support',
+				type: 'boolean',
+				default: false,
 			})
 			.fail((msg, err) => {
 				if (err) console.error(chalk.redBright(err.message))

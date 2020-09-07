@@ -1,179 +1,25 @@
 import { Argv, Arguments, CommandModule } from 'yargs'
 import { checkFile } from './common'
-import {
-	WorkRoot,
-	FloodProcessEnv,
-	TestCommander,
-	TestSettings,
-	runCommandLine,
-	ElementOptions,
-	BROWSER_TYPE,
-} from '@flood/element-core'
-import { watch } from 'chokidar'
-import { EventEmitter } from 'events'
-import { extname, basename, join, dirname, resolve } from 'path'
-import sanitize from 'sanitize-filename'
-import createLogger from '.././utils/Logger'
-import { ConsoleReporter } from '.././utils/ConsoleReporter'
+import { ElementRunArguments, runCommandLine } from '@flood/element-core'
+
+import { join } from 'path'
+import glob from 'glob'
 import chalk from 'chalk'
-import ms from 'ms'
 
-import { getFilesPattern, readConfigFile } from '../utils/compile'
-interface RunCommonArguments extends Arguments {
-	file: string
-	chrome?: string
-	strict?: boolean
-	headless?: boolean
-	devtools?: boolean
-	sandbox?: boolean
-	loopCount?: number
-	stepDelay?: string | number
-	actionDelay?: string | number
-	fastForward?: boolean
-	slowMo?: boolean
-	watch?: boolean
-	'work-root'?: string
-	'test-data-root'?: string
-	'fail-status-code': number
-	configFile: string
-	browserType?: BROWSER_TYPE
+interface RunCommonArguments extends Arguments, ElementRunArguments {}
+
+async function readConfigFile(file: string): Promise<any> {
+	const rootPath = process.cwd()
+	try {
+		return await import(join(rootPath, file))
+	} catch {
+		throw Error('The config file was not structured correctly. Please check and try again')
+	}
 }
 
-function setupDelayOverrides(
+async function getAllTestScriptsFromConfiguration(
 	args: RunCommonArguments,
-	testSettingOverrides: TestSettings,
-): TestSettings {
-	if (testSettingOverrides == null) testSettingOverrides = {}
-	const { actionDelay, stepDelay } = args
-	let convertedActionDelay = 0
-	let convertedStepDelay = 0
-
-	if (typeof actionDelay === 'string' && actionDelay) {
-		convertedActionDelay = ms(actionDelay)
-	} else if (typeof actionDelay === 'number') {
-		convertedActionDelay = actionDelay
-	}
-	testSettingOverrides.actionDelay = convertedActionDelay > 0 ? convertedActionDelay : 0
-
-	if (typeof stepDelay === 'string' && stepDelay) {
-		convertedStepDelay = ms(stepDelay)
-	} else if (typeof stepDelay === 'number') {
-		convertedStepDelay = stepDelay
-	}
-	testSettingOverrides.stepDelay = convertedStepDelay > 0 ? convertedStepDelay : 0
-
-	if (args.fastForward) {
-		testSettingOverrides.stepDelay = 1000
-		testSettingOverrides.actionDelay = 1000
-	} else if (args.slowMo) {
-		testSettingOverrides.stepDelay = 10000
-		testSettingOverrides.actionDelay = 10000
-	}
-	return testSettingOverrides
-}
-
-function getWorkRootPath(file: string, root?: string): string {
-	const ext = extname(file)
-	const bare = basename(file, ext)
-
-	if (root == null) {
-		root = join(dirname(file), 'tmp', 'element-results', bare)
-	}
-
-	const dateString = sanitize(new Date().toISOString())
-
-	return resolve(root, dateString)
-}
-
-function getTestDataPath(file: string, root?: string): string {
-	root = root || dirname(file)
-
-	// return root
-	return resolve(root)
-}
-
-function initRunEnv(root: string, testDataRoot: string) {
-	const workRoot = new WorkRoot(root, {
-		'test-data': testDataRoot,
-	})
-
-	return {
-		workRoot,
-		stepEnv(): FloodProcessEnv {
-			return {
-				BROWSER_ID: 0,
-				FLOOD_GRID_REGION: 'local',
-				FLOOD_GRID_SQEUENCE_ID: 0,
-				FLOOD_GRID_SEQUENCE_ID: 0,
-				FLOOD_GRID_INDEX: 0,
-				FLOOD_GRID_NODE_SEQUENCE_ID: 0,
-				FLOOD_NODE_INDEX: 0,
-				FLOOD_SEQUENCE_ID: 0,
-				FLOOD_PROJECT_ID: 0,
-				SEQUENCE: 0,
-				FLOOD_LOAD_TEST: false,
-			}
-		},
-	}
-}
-
-function makeTestCommander(file: string): TestCommander {
-	const commander = new EventEmitter()
-	// TODO make this more reliable on linux
-	const watcher = watch(file, { persistent: true })
-	watcher.on('change', path => {
-		if (path === file) {
-			commander.emit('rerun-test')
-		}
-	})
-	return commander
-}
-
-async function runTestScript(args: RunCommonArguments): Promise<void> {
-	const { file, verbose } = args
-	const workRootPath = getWorkRootPath(file, args['work-root'])
-	const testDataPath = getTestDataPath(file, args['test-data-root'])
-
-	const verboseBool = !!verbose
-
-	const logLevel = verboseBool ? 'debug' : 'info'
-
-	const logger = createLogger(logLevel, true)
-	const reporter = new ConsoleReporter(logger, verboseBool)
-
-	logger.info(`workRootPath: ${workRootPath}`)
-	logger.info(`testDataPath: ${testDataPath}`)
-
-	const opts: ElementOptions = {
-		logger: logger,
-		testScript: file,
-		strictCompilation: args.strict ?? false,
-		reporter: reporter,
-		verbose: verboseBool,
-		headless: args.headless ?? true,
-		devtools: args.devtools ?? false,
-		sandbox: args.sandbox ?? true,
-		browserType: args.browserType ?? BROWSER_TYPE.CHROME,
-		runEnv: initRunEnv(workRootPath, testDataPath),
-		testSettingOverrides: {},
-		persistentRunner: false,
-		failStatusCode: args['fail-status-code'],
-	}
-
-	if (args.loopCount) {
-		opts.testSettingOverrides.loopCount = args.loopCount
-	}
-	opts.testSettingOverrides = setupDelayOverrides(args, opts.testSettingOverrides)
-
-	if (args.watch) {
-		opts.persistentRunner = true
-		opts.testCommander = makeTestCommander(file)
-	}
-
-	await runCommandLine(opts)
-}
-
-async function runTestScriptWithConfiguration(args: RunCommonArguments): Promise<void> {
+): Promise<RunCommonArguments> {
 	const fileErr = checkFile(args.configFile, 'Configuration file')
 	if (fileErr) throw fileErr
 	const { options, paths } = await readConfigFile(args.configFile)
@@ -181,19 +27,21 @@ async function runTestScriptWithConfiguration(args: RunCommonArguments): Promise
 	if (!paths.testPathMatch || !paths.testPathMatch.length) {
 		throw Error('Found no test scripts matching testPathMatch pattern')
 	}
-	const files: string[] = getFilesPattern(paths.testPathMatch)
-	console.info(
-		'The following test scripts that matched the testPathMatch pattern are going to be executed:',
-	)
-	for (const file of files.sort()) {
-		const arg: RunCommonArguments = {
-			...options,
-			...paths,
-			file,
+	const files: string[] = []
+	try {
+		files.push(
+			...(paths.testPathMatch.reduce(
+				(arr: string[], item: string) => arr.concat(glob.sync(item)),
+				[],
+			) as []),
+		)
+		if (!files.length) {
+			throw Error('Found no test scripts matching testPathMatch pattern')
 		}
-		await runTestScript(arg)
+	} catch {
+		throw Error('Found no test scripts matching testPathMatch pattern')
 	}
-	console.info('Test running with the config file has finished')
+	return { ...options, paths, testFiles: files.sort() }
 }
 
 const cmd: CommandModule = {
@@ -201,12 +49,12 @@ const cmd: CommandModule = {
 	describe: 'Run [a test script| test scripts with configuration] locally',
 
 	async handler(args: RunCommonArguments): Promise<void> {
-		if (args.file) {
-			await runTestScript(args)
+		if (!args.file) {
+			const configArgs = await getAllTestScriptsFromConfiguration(args)
+			await runCommandLine(configArgs)
 		} else {
-			await runTestScriptWithConfiguration(args)
+			await runCommandLine(args)
 		}
-		process.exit(0)
 	},
 	builder(yargs: Argv): Argv {
 		return yargs

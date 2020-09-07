@@ -1,16 +1,5 @@
-// CLI / runtime
-export {
-	IReporter,
-	MeasurementKind,
-	TraceData,
-	TestEvent,
-	CompoundMeasurement,
-	NetworkTraceData,
-} from './src/Reporter'
-
-// XYZ
-
-export { runCommandLine, ElementOptions } from './src/Element'
+export { runCommandLine, runSingleTestScript } from './src/Element'
+export { ElementRunArguments, ElementOptions } from './src/ElementOption'
 
 export { RuntimeEnvironment } from './src/runtime-environment/types'
 export { nullRuntimeEnvironment } from './src/runtime-environment/NullRuntimeEnvironment'
@@ -21,10 +10,8 @@ export { TestCommander } from './src/Runner'
 export { PlaywrightClient, launch }
 
 export { TestScriptOptions } from './src/TestScriptOptions'
-export { TestScriptError } from './src/TestScriptError'
+export { TestScriptError, expect } from '@flood/element-report'
 export { ITestScript } from './src/interface/ITestScript'
-
-export { expect } from './src/utils/Expect'
 
 // Test observer integration
 export { default as Test } from './src/runtime/Test'
@@ -37,7 +24,6 @@ export { NetworkRecordingTestObserver } from './src/runtime/test-observers/Netwo
 export { Context } from './src/runtime/test-observers/Context'
 export { TimingObserver } from './src/runtime/test-observers/TimingObserver'
 
-export { Assertion } from './src/runtime/Assertion'
 export { AssertionErrorData, castStructuredError } from './src/runtime/errors/Types'
 
 export { IObjectTrace, NullObjectTrace } from './src/utils/ObjectTrace'

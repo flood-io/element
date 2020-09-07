@@ -26,10 +26,13 @@
 			"@flood/element-compiler": ["packages/compiler/src/index.ts"],
 			"@flood/element-core": ["packages/core/index.ts"],
 			"@flood/element-cli": ["packages/cli/src/index.ts"],
+			"@flood/element-report": ["packages/report/index.ts"],
 			"@flood/element-*": ["packages/*/src/index.ts"]
 		}
 	},
-	"typeAcquisition": { "enable": true },
+	"typeAcquisition": {
+		"enable": true
+	},
 	"include": ["packages/*/**/*.ts", "packages/core/api.ts", "packages/core/index.ts"],
 	"exclude": [
 		"packages/core/lib",

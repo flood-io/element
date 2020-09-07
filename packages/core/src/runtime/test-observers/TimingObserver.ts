@@ -6,7 +6,7 @@ import { Step } from '../Step'
 import { StructuredError } from '../../utils/StructuredError'
 import { ResponseTiming } from '../Settings'
 import NetworkRecorder from '../../network/Recorder'
-import { expect } from '../../utils/Expect'
+import { expect } from '@flood/element-report'
 const debug = debugFactory('element:grid:timing')
 
 export class TimingObserver extends NetworkRecordingTestObserver {
@@ -79,12 +79,17 @@ export class TimingObserver extends NetworkRecordingTestObserver {
 		})
 	}
 
-	async afterStepAction(test: Test, step: Step, action: string): Promise<void> {
+	async afterStepAction(
+		test: Test,
+		step: Step,
+		action: string,
+		errorMessage?: string,
+	): Promise<void> {
 		await this.timing.measureThinkTime('step', async () => {
 			debug(`After action: ${action}`)
 			// Force reporting concurrency to ensure steps which take >15s don't skew metrics
 			// this.reporter.addMeasurement('concurrency', this.numberOfBrowsers, name)
-			await this.next.afterStepAction(test, step, action)
+			await this.next.afterStepAction(test, step, action, errorMessage)
 		})
 	}
 

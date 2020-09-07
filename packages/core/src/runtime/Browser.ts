@@ -28,12 +28,12 @@ import { NetworkErrorData, ActionErrorData } from './errors/Types'
 import { StructuredError } from '../utils/StructuredError'
 import debugFactory from 'debug'
 import Mouse from '../page/Mouse'
-import { rewriteError } from './decorators/rewriteError'
 import { addCallbacks } from './decorators/addCallbacks'
 import { autoWaitUntil } from './decorators/autoWait'
 import { locatableToLocator, toLocatorError } from './toLocatorError'
 import { Keyboard } from '../page/Keyboard'
 import { getFrames } from '../utils/frames'
+import ms from 'ms'
 
 export const debug = debugFactory('element:runtime:browser')
 const debugScreenshot = debugFactory('element:runtime:browser:screenshot')
@@ -50,7 +50,11 @@ export class Browser<T> implements BrowserInterface {
 		private client: PlaywrightClientLike,
 		public settings: ConcreteTestSettings,
 		public beforeFunc: (b: Browser<T>, name: string) => Promise<void> = async () => undefined,
-		public afterFunc: (b: Browser<T>, name: string) => Promise<void> = async () => undefined,
+		public afterFunc: (
+			b: Browser<T>,
+			name: string,
+			errorMessage?: string,
+		) => Promise<void> = async () => undefined,
 		private activeFrame?: Frame | null,
 	) {
 		this.beforeFunc && this.afterFunc
@@ -136,17 +140,17 @@ export class Browser<T> implements BrowserInterface {
 		return ''
 	}
 
-	@rewriteError()
+	@addCallbacks()
 	public title(): Promise<string> {
 		return this.page.title()
 	}
 
-	@rewriteError()
+	@addCallbacks()
 	public async evaluate(fn: EvaluateFn, ...args: any[]): Promise<any> {
 		return this.target.evaluate(fn, ...args)
 	}
 
-	@rewriteError()
+	@addCallbacks()
 	public async authenticate(username?: string, password?: string): Promise<void> {
 		let authOptions: HTTPCredentials | null = null
 		if (username !== undefined && password !== undefined) {
@@ -156,9 +160,12 @@ export class Browser<T> implements BrowserInterface {
 	}
 
 	@addCallbacks()
-	public async wait(timeoutOrCondition: Condition | number): Promise<any> {
-		if (typeof timeoutOrCondition === 'number') {
-			await new Promise(yeah => setTimeout(yeah, Number(timeoutOrCondition) * 1e3))
+	public async wait(timeoutOrCondition: Condition | number | string): Promise<any> {
+		if (typeof timeoutOrCondition === 'string') {
+			await new Promise(yeah => setTimeout(yeah, ms(timeoutOrCondition)))
+			return true
+		} else if (typeof timeoutOrCondition === 'number') {
+			await new Promise(yeah => setTimeout(yeah, timeoutOrCondition))
 			return true
 		}
 
@@ -390,12 +397,12 @@ export class Browser<T> implements BrowserInterface {
 		return element.focus()
 	}
 
-	@rewriteError()
+	@addCallbacks()
 	public async clearBrowserCookies(): Promise<any> {
 		await this.page.context().clearCookies()
 	}
 
-	@rewriteError()
+	@addCallbacks()
 	public async clearBrowserCache(): Promise<any> {
 		if (this.browserType === BROWSER_TYPE.CHROME) {
 			const context = (await this.page.context()) as ChromiumBrowserContext
@@ -410,7 +417,7 @@ export class Browser<T> implements BrowserInterface {
 		}
 	}
 
-	@rewriteError()
+	@addCallbacks()
 	public async emulateDevice(deviceName: string): Promise<void> {
 		const device = devices[deviceName]
 		if (!device) throw new Error(`Unknown device descriptor: ${deviceName}`)
@@ -420,7 +427,7 @@ export class Browser<T> implements BrowserInterface {
 		this.client.page = await context.newPage()
 	}
 
-	@rewriteError()
+	@addCallbacks()
 	public async setUserAgent(userAgent: string): Promise<void> {
 		if (!this.client.isFirstRun()) {
 			await this.client.closePages()
@@ -428,12 +435,12 @@ export class Browser<T> implements BrowserInterface {
 		}
 	}
 
-	@rewriteError()
+	@addCallbacks()
 	public async setViewport(viewport: ViewportSize): Promise<void> {
 		return this.page.setViewportSize(viewport)
 	}
 
-	@rewriteError()
+	@addCallbacks()
 	public async setExtraHTTPHeaders(headers: { [key: string]: string }): Promise<void> {
 		if (Object.keys(headers).length) return this.page.setExtraHTTPHeaders(headers)
 	}
@@ -441,7 +448,7 @@ export class Browser<T> implements BrowserInterface {
 	/**
 	 * Takes a screenshot of this element and saves it to the results folder with a random name.
 	 */
-	@rewriteError()
+	@addCallbacks()
 	public async takeScreenshot(options?: ScreenshotOptions): Promise<void> {
 		await this.saveScreenshot(async path => {
 			await this.page.screenshot({ path, ...options })
@@ -450,13 +457,13 @@ export class Browser<T> implements BrowserInterface {
 	}
 
 	@autoWaitUntil()
-	@rewriteError()
+	@addCallbacks()
 	public async highlightElement(element: ElementHandle): Promise<void> {
 		return element.highlight()
 	}
 
 	@autoWaitUntil()
-	@rewriteError()
+	@addCallbacks()
 	public async findElement(locatable: NullableLocatable): Promise<ElementHandle> {
 		const locator = locatableToLocator(locatable, 'browser.findElement(locatable)')
 
@@ -489,7 +496,7 @@ export class Browser<T> implements BrowserInterface {
 	}
 
 	@autoWaitUntil()
-	@rewriteError()
+	@addCallbacks()
 	public async findElements(locatable: NullableLocatable): Promise<ElementHandle[]> {
 		const locator = locatableToLocator(locatable, 'browser.findElements(locatable)')
 		const elements = await locator.findMany(this.page)

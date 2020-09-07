@@ -181,6 +181,14 @@ export type Step = {
 	name: string
 	options: Partial<StepOptions>
 	fn: TestFn
+	subTitle?: string
+	duration?: number
+	prop?: {
+		recoveryTries?: number
+		skipped?: boolean
+		unexecuted?: boolean
+		passed?: boolean
+	}
 }
 
 /**

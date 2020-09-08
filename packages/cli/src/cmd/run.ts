@@ -8,22 +8,12 @@ import {
 } from '@flood/element-core'
 import { runCommandLine as runMultipleUser } from '@flood/element-scheduler'
 
-import { join } from 'path'
-import glob from 'glob'
 import chalk from 'chalk'
 import { EventEmitter } from 'events'
 import { ReportCache } from '@flood/element-report'
+import { getFilesPattern, readConfigFile } from '../utils/run'
 
 interface RunCommonArguments extends Arguments, ElementRunArguments {}
-
-async function readConfigFile(file: string): Promise<any> {
-	const rootPath = process.cwd()
-	try {
-		return await import(join(rootPath, file))
-	} catch {
-		throw Error('The config file was not structured correctly. Please check and try again')
-	}
-}
 
 async function getAllTestScriptsFromConfiguration(
 	args: RunCommonArguments,
@@ -35,17 +25,7 @@ async function getAllTestScriptsFromConfiguration(
 	if (!paths.testPathMatch || !paths.testPathMatch.length) {
 		throw Error('Found no test scripts matching testPathMatch pattern')
 	}
-	const files: string[] = []
-
-	files.push(
-		...(paths.testPathMatch.reduce(
-			(arr: string[], item: string) => arr.concat(glob.sync(item)),
-			[],
-		) as []),
-	)
-	if (!files.length) {
-		throw Error('Found no test scripts matching testPathMatch pattern')
-	}
+	const files = getFilesPattern(paths.testPathMatch)
 
 	return { ...options, paths, testFiles: files.sort() }
 }

@@ -36,19 +36,17 @@ async function getAllTestScriptsFromConfiguration(
 		throw Error('Found no test scripts matching testPathMatch pattern')
 	}
 	const files: string[] = []
-	try {
-		files.push(
-			...(paths.testPathMatch.reduce(
-				(arr: string[], item: string) => arr.concat(glob.sync(item)),
-				[],
-			) as []),
-		)
-		if (!files.length) {
-			throw Error('Found no test scripts matching testPathMatch pattern')
-		}
-	} catch {
+
+	files.push(
+		...(paths.testPathMatch.reduce(
+			(arr: string[], item: string) => arr.concat(glob.sync(item)),
+			[],
+		) as []),
+	)
+	if (!files.length) {
 		throw Error('Found no test scripts matching testPathMatch pattern')
 	}
+
 	return { ...options, paths, testFiles: files.sort() }
 }
 

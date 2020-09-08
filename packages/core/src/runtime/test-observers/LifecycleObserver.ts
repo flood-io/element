@@ -30,7 +30,6 @@ export default class LifecycleObserver implements TestObserver {
 	}
 	async onStepPassed(test: Test, step: Step) {
 		const testObserver: TestObserver = this.next
-		//await testObserver.afterStep(test, step)
 		const timing = await (testObserver as TimingObserver).getMeasurementTime(
 			test.settings.responseTimeMeasurement,
 		)

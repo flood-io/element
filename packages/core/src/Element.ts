@@ -86,7 +86,7 @@ export async function runCommandLine(args: ElementRunArguments): Promise<void> {
 			order++
 			const fileTitle = chalk.grey(`${file} (${order} of ${numberOfFile})`)
 			console.group(chalk('Running', fileTitle))
-			const opts: ElementOptions = normalizeElementOptions(arg, cache)
+			const opts = normalizeElementOptions(arg, cache)
 			await runSingleTestScript(opts)
 			console.groupEnd()
 		}
@@ -95,7 +95,7 @@ export async function runCommandLine(args: ElementRunArguments): Promise<void> {
 		const { file } = args
 		const fileTitle = chalk.grey(`${file} (1 of 1)`)
 		console.group(chalk('Running', fileTitle))
-		const opts: ElementOptions = normalizeElementOptions(args, cache)
+		const opts = normalizeElementOptions(args, cache)
 		await runSingleTestScript(opts)
 		console.groupEnd()
 	}

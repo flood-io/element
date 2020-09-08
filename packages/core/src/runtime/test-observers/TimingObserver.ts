@@ -135,15 +135,16 @@ export class TimingObserver extends NetworkRecordingTestObserver {
 		await reporter.flushMeasurements()
 	}
 
-	async getMeasurementTime(responseTiming: ResponseTiming): Promise<number> {
+	async getMeasurementTime(responseTiming: ResponseTiming, fromNow?: boolean): Promise<number> {
 		await this.syncNetworkRecorder()
 		const { networkRecorder } = this.ctx
-		return this.getResponseTimeMeasurement(responseTiming, networkRecorder)
+		return this.getResponseTimeMeasurement(responseTiming, networkRecorder, fromNow)
 	}
 
 	getResponseTimeMeasurement(
 		responseTimeMeasurement: ResponseTiming,
 		networkRecorder: NetworkRecorder,
+		fromNow?: boolean,
 	): number {
 		switch (responseTimeMeasurement) {
 			case 'page':
@@ -151,7 +152,7 @@ export class TimingObserver extends NetworkRecordingTestObserver {
 			case 'network':
 				return networkRecorder.meanResponseTime()
 			case 'step': {
-				const value = this.timing.getDurationWithoutThinkTimeForSegment('step')
+				const value = this.timing.getDurationWithoutThinkTimeForSegment('step', fromNow)
 				const thinkTime = this.timing.getThinkTimeForSegment('step')
 				debug(`Step Timing: thinking=${thinkTime} ms, interaction: ${value} ms`)
 				return value

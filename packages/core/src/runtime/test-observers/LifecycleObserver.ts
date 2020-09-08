@@ -54,8 +54,41 @@ export default class LifecycleObserver implements TestObserver {
 		test.reporter.testLifecycle(TestEvent.BeforeStepAction, command)
 		return this.next.beforeStepAction(test, step, command)
 	}
-	async afterStepAction(test: Test, step: Step, command: string, errorMessage?: string) {
-		await this.next.afterStepAction(test, step, command, errorMessage)
-		test.reporter.testLifecycle(TestEvent.AfterStepAction, command, '', 0, errorMessage)
+	async afterStepAction(test: Test, step: Step, command: string, content: any[]) {
+		await this.next.afterStepAction(test, step, command, content)
+		test.reporter.testLifecycle(TestEvent.AfterStepAction, command, '', 0, '', content)
+	}
+
+	async beforeAllStep(test: Test): Promise<void> {
+		await this.next.beforeAllStep(test)
+		test.reporter.testLifecycle(TestEvent.BeforeAllStep, 'beforeAll')
+	}
+	async afterAllStep(test: Test): Promise<void> {
+		await this.next.afterAllStep(test)
+		test.reporter.testLifecycle(TestEvent.AfterAllStep, 'afterAll')
+	}
+	async beforeEachStep(test: Test): Promise<void> {
+		await this.next.beforeEachStep(test)
+		test.reporter.testLifecycle(TestEvent.BeforeEachStep, 'beforeEach')
+	}
+	async afterEachStep(test: Test): Promise<void> {
+		await this.next.afterEachStep(test)
+		test.reporter.testLifecycle(TestEvent.AfterEachStep, 'afterEach')
+	}
+	async onBeforeAllStepFinished(test: Test): Promise<void> {
+		await this.next.onBeforeAllStepFinished(test)
+		test.reporter.testLifecycle(TestEvent.BeforeAllStepFinished, 'beforeAll')
+	}
+	async onAfterAllStepFinished(test: Test): Promise<void> {
+		await this.next.onAfterAllStepFinished(test)
+		test.reporter.testLifecycle(TestEvent.AfterAllStepFinished, 'afterAll')
+	}
+	async onBeforeEachStepFinished(test: Test): Promise<void> {
+		await this.next.onBeforeEachStepFinished(test)
+		test.reporter.testLifecycle(TestEvent.BeforeEachStepFinished, 'beforeEach')
+	}
+	async onAfterEachStepFinished(test: Test): Promise<void> {
+		await this.next.onAfterEachStepFinished(test)
+		test.reporter.testLifecycle(TestEvent.AfterEachStepFinished, 'afterEach')
 	}
 }

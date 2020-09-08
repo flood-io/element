@@ -20,6 +20,13 @@ export type Hook = {
 	beforeEach: HookBase[]
 }
 
+export enum HookType {
+	afterAll = 0,
+	afterEach,
+	beforeAll,
+	beforeEach,
+}
+
 /**
  * @internal
  */

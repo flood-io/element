@@ -24,11 +24,11 @@ export class ReportCache {
 		const latestOutput: OutputCache = this.getLatestMessageInCache()
 		const previousOutput = this.findMessageInCache(previousMessage)
 		if (previousOutput) {
-			const latestLine = latestOutput.line + (latestOutput.heigth - 1)
+			const latestLine = latestOutput.line + latestOutput.heigth - 1
 			const height = latestLine - previousOutput.line + 1
 			return height
 		}
-		return 0
+		return 1
 	}
 
 	updateMessageInCache(previousMessage: string, newMessage: string): void {

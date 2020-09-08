@@ -53,9 +53,15 @@ export default class StepIterator {
 	async callCondition(step: Step, iteration: number, browser: BrowserInterface): Promise<boolean> {
 		const { once, skip, pending, repeat, stepWhile, predicate } = step.options
 
-		if (pending || (once && iteration > 1)) return false
+		if (pending || (once && iteration > 1)) {
+			console.log(`(Pending) ${step.name}`)
+			return false
+		}
 
-		if (skip) return false
+		if (skip) {
+			console.log(`Skip test ${step.name}`)
+			return false
+		}
 
 		if (repeat) {
 			const { iteration, count } = repeat

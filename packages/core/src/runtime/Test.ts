@@ -31,6 +31,7 @@ import { TestSettings, ConcreteTestSettings, DEFAULT_STEP_WAIT_MILLISECONDS } fr
 import { ITest } from './ITest'
 import { EvaluatedScriptLike } from './EvaluatedScriptLike'
 import { Hook, HookBase } from './StepLifeCycle'
+import StepIterator from './StepIterator'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:test')
@@ -64,7 +65,7 @@ export default class Test implements ITest {
 		public script: EvaluatedScriptLike,
 		public reporter: IReporter = new NullReporter(),
 		settingsOverride: TestSettings,
-		public testObserverFactory: (t: TestObserver) => TestObserver = (x) => x,
+		public testObserverFactory: (t: TestObserver) => TestObserver = x => x,
 	) {
 		this.script = script
 
@@ -243,6 +244,7 @@ export default class Test implements ITest {
 		let browser: Browser<Step>
 		let testDataRecord: any
 		try {
+			const stepIterator = new StepIterator(this.steps)
 			browser = new Browser<Step>(
 				this.script.runEnv.workRoot,
 				this.client,
@@ -275,22 +277,13 @@ export default class Test implements ITest {
 			await this.runHookFn(this.hook.beforeAll, browser, testDataRecord)
 
 			debug('running steps')
-			while (this.stepCount < this.steps.length) {
+
+			await stepIterator.run(async (step: Step) => {
 				debug('running hook function: beforeEach')
 				await this.runHookFn(this.hook.beforeEach, browser, testDataRecord)
 
-				const step = this.steps[this.stepCount]
-				const condition = await this.callCondition(step, iteration, browser)
-				if (!condition) continue
-
-				const { predicate } = step.options
-				if (predicate) {
-					const condition = await this.callPredicate(predicate, browser)
-					if (!condition) {
-						debug('condition failling')
-						continue
-					}
-				}
+				const condition = await stepIterator.callCondition(step, iteration, browser)
+				if (!condition) return
 
 				browser.customContext = step
 
@@ -302,16 +295,24 @@ export default class Test implements ITest {
 				if (cancelToken.isCancellationRequested) return
 
 				if (this.failed) {
-					const result = await this.callRecovery(step, looper, browser)
-					if (result) continue
-					console.log('failed, bailing out of steps')
-					throw Error('test failed')
+					const result = await stepIterator.callRecovery(
+						step,
+						looper,
+						browser,
+						this.recoverySteps,
+						(this.settings.tries = 0),
+					)
+
+					if (result) {
+						this.failed = false
+					} else {
+						throw Error('recovery step -> failed')
+					}
 				}
-				this.stepCount += 1
 
 				debug('running hook function: afterEach')
 				await this.runHookFn(this.hook.afterEach, browser, testDataRecord)
-			}
+			})
 		} catch (err) {
 			console.log('error -> failed', err)
 			this.failed = true
@@ -319,7 +320,6 @@ export default class Test implements ITest {
 		} finally {
 			await this.requestInterceptor.detach(this.client.page)
 		}
-		// TODO report skipped steps
 		await testObserver.after(this)
 
 		debug('running hook function: afterAll')
@@ -392,7 +392,7 @@ export default class Test implements ITest {
 	}
 
 	public get stepNames(): string[] {
-		return this.steps.map((s) => s.name)
+		return this.steps.map(s => s.name)
 	}
 
 	public async doStepDelay() {
@@ -400,9 +400,9 @@ export default class Test implements ITest {
 			return
 		}
 
-		await new Promise((resolve) => {
+		await new Promise(resolve => {
 			if (!this.settings.stepDelay) {
-				resolve()
+				resolve('')
 				return
 			}
 			setTimeout(resolve, Number(this.settings.stepDelay) || DEFAULT_STEP_WAIT_MILLISECONDS)

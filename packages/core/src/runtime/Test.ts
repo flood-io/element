@@ -252,6 +252,7 @@ export default class Test implements ITest {
 
 	async summarizeStepBeforeRunStep(step: Step, testObserver: TestObserver): Promise<void> {
 		if (step.prop?.unexecuted) {
+			await testObserver.onStepUnexecuted(this, step)
 			this.summaryStep.push({
 				name: step.name,
 				status: Status.UNEXECUTED,
@@ -437,14 +438,9 @@ export default class Test implements ITest {
 		}
 	}
 
-	async didRunCommand(
-		testObserver: TestObserver,
-		browser: Browser<Step>,
-		command: string,
-		content: any[],
-	) {
+	async didRunCommand(testObserver: TestObserver, browser: Browser<Step>, command: string) {
 		if (browser.customContext) {
-			await testObserver.afterStepAction(this, browser.customContext, command, content)
+			await testObserver.afterStepAction(this, browser.customContext, command)
 		}
 	}
 

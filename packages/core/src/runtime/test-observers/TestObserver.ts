@@ -21,10 +21,11 @@ export interface TestObserver extends HookObserver {
 	onStepPassed(test: ITest, step: Step): Promise<void>
 	onStepError(test: ITest, step: Step, error: StructuredError<any>): Promise<void>
 	onStepSkipped(test: ITest, step: Step): Promise<void>
+	onStepUnexecuted(test: ITest, step: Step): Promise<void>
 	afterStep(test: ITest, step: Step): Promise<void>
 
 	beforeStepAction(test: ITest, step: Step, command: string): Promise<void>
-	afterStepAction(test: ITest, step: Step, command: string, content: any[]): Promise<void>
+	afterStepAction(test: ITest, step: Step, command: string): Promise<void>
 }
 
 export class NoOpTestObserver implements TestObserver {
@@ -49,6 +50,10 @@ export class NoOpTestObserver implements TestObserver {
 	async onStepSkipped(test: ITest, step: Step): Promise<void> {
 		return this.next.onStepSkipped(test, step)
 	}
+
+	async onStepUnexecuted(test: ITest, step: Step): Promise<void> {
+		return this.next.onStepUnexecuted(test, step)
+	}
 	async afterStep(test: ITest, step: Step): Promise<void> {
 		return this.next.afterStep(test, step)
 	}
@@ -56,8 +61,8 @@ export class NoOpTestObserver implements TestObserver {
 	async beforeStepAction(test: ITest, step: Step, command: string): Promise<void> {
 		return this.next.beforeStepAction(test, step, command)
 	}
-	async afterStepAction(test: ITest, step: Step, command: string, content: any[]): Promise<void> {
-		return this.next.afterStepAction(test, step, command, content)
+	async afterStepAction(test: ITest, step: Step, command: string): Promise<void> {
+		return this.next.afterStepAction(test, step, command)
 	}
 
 	async beforeAllStep(test: ITest): Promise<void> {
@@ -106,6 +111,9 @@ export class NullTestObserver implements TestObserver {
 	async onStepSkipped(test: ITest, step: Step): Promise<void> {
 		return
 	}
+	async onStepUnexecuted(test: ITest, step: Step): Promise<void> {
+		return
+	}
 	async afterStep(test: ITest, step: Step): Promise<void> {
 		return
 	}
@@ -113,7 +121,7 @@ export class NullTestObserver implements TestObserver {
 	async beforeStepAction(test: ITest, step: Step, command: string): Promise<void> {
 		return
 	}
-	async afterStepAction(test: ITest, step: Step, command: string, content: any[]): Promise<void> {
+	async afterStepAction(test: ITest, step: Step, command: string): Promise<void> {
 		return
 	}
 

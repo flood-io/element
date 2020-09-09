@@ -35,7 +35,7 @@ export class VerboseReporter implements IReporter {
 		const stepName = 'Step ' + (subtitle ? `'${label}' (${subtitle})` : `'${label}'`)
 		const beforeRunStepMessage = `${stepName} is running ...`
 		const beforeRunHookMessage = chalk.grey(`${label} is running ...`)
-		const afterRunHookMessage = `${chalk.bold('✔')} ${chalk.grey(`${label} finished`)}`
+		const afterRunHookMessage = `${chalk.green.bold('✔')} ${chalk.grey(`${label} finished`)}`
 		let message = ''
 		switch (stage) {
 			case TestEvent.BeforeAllStep:
@@ -57,11 +57,6 @@ export class VerboseReporter implements IReporter {
 				console.group()
 				break
 			case TestEvent.AfterStepAction:
-				if (content?.length) {
-					const stepActionContent = this.getContentOfStepAction(content)
-					console.log(chalk.grey(`${label}(${stepActionContent})`))
-					break
-				}
 				console.log(chalk.grey(`${label}()`))
 				break
 			case TestEvent.StepSucceeded:
@@ -80,6 +75,10 @@ export class VerboseReporter implements IReporter {
 				break
 			case TestEvent.StepSkipped:
 				console.group(`${chalk.grey.bold('\u2296')} ${chalk.grey(`${stepName} skipped`)}`)
+				console.groupEnd()
+				break
+			case TestEvent.StepUnexecuted:
+				console.group(`${chalk.grey.bold('\u2296')} ${chalk.grey(`${stepName} is unexecuted`)}`)
 				console.groupEnd()
 				break
 		}
@@ -120,20 +119,6 @@ export class VerboseReporter implements IReporter {
 				console.log(logMessage)
 				break
 		}
-	}
-
-	private getContentOfStepAction(content: any[]): string {
-		const message: string[] = []
-		content.forEach(item => {
-			if (typeof item === 'string') {
-				message.push(item)
-			} else if (typeof item === 'number') {
-				message.push(item.toString())
-			} else {
-				message.push(item.errorString)
-			}
-		})
-		return message.join(',')
 	}
 
 	private updateMessage(previousMessage: string, newMessage: string): void {

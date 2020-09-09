@@ -43,5 +43,6 @@ export async function run(file: string): Promise<void> {
 
 	startConcurrencyTicker(influxReporter)
 
-	return runSingleTestScript(opts)
+	await runSingleTestScript(opts)
+	return
 }

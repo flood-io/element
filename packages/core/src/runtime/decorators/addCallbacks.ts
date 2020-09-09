@@ -35,7 +35,7 @@ export function addCallbacks() {
 				throw sErr
 			} finally {
 				if (browser.afterFunc instanceof Function) {
-					await browser.afterFunc(browser, propertyKey, args)
+					await browser.afterFunc(browser, propertyKey)
 				}
 			}
 			return ret

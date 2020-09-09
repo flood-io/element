@@ -1,6 +1,5 @@
 import Interceptor from '../network/Interceptor'
 import { Browser } from './Browser'
-import { Browser as BrowserInterface } from './IBrowser'
 
 import { IReporter } from '../Reporter'
 import { NullReporter } from '../reporter/Null'
@@ -20,7 +19,7 @@ import {
 import { AnyErrorData, EmptyErrorData, AssertionErrorData } from './errors/Types'
 import { StructuredError } from '../utils/StructuredError'
 
-import { Step, ConditionFn, StepRecoveryObject, RecoverWith } from './Step'
+import { Step, StepRecoveryObject } from './Step'
 import { Looper } from '../Looper'
 
 import { CancellationToken } from '../utils/CancellationToken'
@@ -95,102 +94,6 @@ export default class Test implements ITest {
 	public async beforeRun(): Promise<void> {
 		debug('beforeRun()')
 		await this.script.beforeTestRun()
-	}
-
-	public async callPredicate(predicate: ConditionFn, browser: BrowserInterface): Promise<boolean> {
-		let condition = false
-		try {
-			condition = await predicate.call(null, browser)
-		} catch (err) {
-			console.log(err.message)
-		}
-		if (!condition) this.stepCount += 1
-		return condition
-	}
-
-	public async callCondition(
-		step: Step,
-		iteration: number,
-		browser: BrowserInterface,
-	): Promise<boolean> {
-		const { once, skip, pending, repeat, stepWhile } = step.options
-
-		if (pending) {
-			console.log(`(Pending) ${step.name}`)
-			this.stepCount += 1
-			return false
-		}
-
-		if (once && iteration > 1) {
-			this.stepCount += 1
-			return false
-		}
-
-		if (skip) {
-			console.log(`Skip test ${step.name}`)
-			this.stepCount += 1
-			return false
-		}
-
-		if (repeat) {
-			if (repeat.iteration < repeat.count - 1) {
-				this.stepCount -= 1
-				repeat.iteration += 1
-			} else {
-				repeat.iteration = 0
-			}
-		}
-
-		if (stepWhile) {
-			const { predicate } = stepWhile
-			const result = await this.callPredicate(predicate, browser)
-			if (result) this.stepCount -= 1
-			return result
-		}
-
-		return true
-	}
-
-	public async callRecovery(
-		step: Step,
-		looper: Looper,
-		browser: BrowserInterface,
-	): Promise<boolean> {
-		let stepRecover = this.recoverySteps[step.name]
-		if (!stepRecover) {
-			stepRecover = this.recoverySteps['global']
-			if (!stepRecover) return false
-		}
-		const { recoveryStep, loopCount, iteration } = stepRecover
-		const { tries } = this.settings
-		const settingRecoveryCount = loopCount || tries || 1
-		if (!recoveryStep || iteration >= settingRecoveryCount) {
-			stepRecover.iteration = 0
-			return false
-		}
-		console.log(`Recovery for ${recoveryStep.name} step`)
-		stepRecover.iteration += 1
-		try {
-			const result = await recoveryStep.fn.call(null, browser)
-			const { repeat } = step.options
-			if (result === RecoverWith.CONTINUE) {
-				this.stepCount += 1
-			} else if (result === RecoverWith.RESTART) {
-				looper.restartLoop()
-				this.stepCount = this.steps.length
-				if (repeat) repeat.iteration = 0
-			} else if (result === RecoverWith.RETRY) {
-				if (repeat) {
-					repeat.iteration -= 1
-					this.stepCount += 1
-				}
-			}
-		} catch (err) {
-			return false
-		}
-
-		this.failed = false
-		return true
 	}
 
 	/**

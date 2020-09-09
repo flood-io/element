@@ -7,6 +7,12 @@ import {
 	TestSettings,
 	runCommandLine,
 	ElementOptions,
+	DEFAULT_ACTION_DELAY,
+	DEFAULT_STEP_DELAY,
+	DEFAULT_STEP_DELAY_FAST_FORWARD,
+	DEFAULT_ACTION_DELAY_FAST_FORWARD,
+	DEFAULT_STEP_DELAY_SLOW_MO,
+	DEFAULT_ACTION_DELAY_SLOW_MO,
 } from '@flood/element-core'
 import { watch } from 'chokidar'
 import { EventEmitter } from 'events'
@@ -45,25 +51,25 @@ function setupDelayOverrides(
 	let { actionDelay, stepDelay } = args
 
 	if (actionDelay) {
-		if (typeof actionDelay === 'string') {
-			actionDelay = ms(actionDelay)
-		}
+		if (typeof actionDelay === 'string') actionDelay = ms(actionDelay)
+		if (actionDelay <= 0) actionDelay = DEFAULT_ACTION_DELAY
+		else if (actionDelay < 1e3) actionDelay *= 1e3
 		testSettingOverrides.actionDelay = actionDelay
 	}
 
 	if (stepDelay) {
-		if (typeof stepDelay === 'string') {
-			stepDelay = ms(stepDelay)
-		}
+		if (typeof stepDelay === 'string') stepDelay = ms(stepDelay)
+		if (stepDelay <= 0) stepDelay = DEFAULT_STEP_DELAY
+		else if (stepDelay < 1e3) stepDelay *= 1e3
 		testSettingOverrides.stepDelay = stepDelay
 	}
 
 	if (args.fastForward) {
-		testSettingOverrides.stepDelay = 1000
-		testSettingOverrides.actionDelay = 1000
+		testSettingOverrides.stepDelay = DEFAULT_STEP_DELAY_FAST_FORWARD
+		testSettingOverrides.actionDelay = DEFAULT_ACTION_DELAY_FAST_FORWARD
 	} else if (args.slowMo) {
-		testSettingOverrides.stepDelay = 10000
-		testSettingOverrides.actionDelay = 10000
+		testSettingOverrides.stepDelay = DEFAULT_STEP_DELAY_SLOW_MO
+		testSettingOverrides.actionDelay = DEFAULT_ACTION_DELAY_SLOW_MO
 	}
 	return testSettingOverrides
 }

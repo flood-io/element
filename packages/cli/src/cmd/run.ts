@@ -52,14 +52,14 @@ function setupDelayOverrides(
 
 	if (actionDelay) {
 		if (typeof actionDelay === 'string') actionDelay = ms(actionDelay)
-		if (actionDelay <= 0) actionDelay = DEFAULT_ACTION_DELAY
+		if (actionDelay < 0) actionDelay = DEFAULT_ACTION_DELAY
 		else if (actionDelay < 1e3) actionDelay *= 1e3
 		testSettingOverrides.actionDelay = actionDelay
 	}
 
 	if (stepDelay) {
 		if (typeof stepDelay === 'string') stepDelay = ms(stepDelay)
-		if (stepDelay <= 0) stepDelay = DEFAULT_STEP_DELAY
+		if (stepDelay < 0) stepDelay = DEFAULT_STEP_DELAY
 		else if (stepDelay < 1e3) stepDelay *= 1e3
 		testSettingOverrides.stepDelay = stepDelay
 	}

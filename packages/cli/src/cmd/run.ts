@@ -57,7 +57,7 @@ function setupDelayOverrides(
 	let { actionDelay, stepDelay } = args
 
 	if (actionDelay) {
-		//received from the terminal so the value is always string, it is necessary to check the user wants to enter the string number
+		//received from the terminal so the value is always string, it is necessary to check the user wants to enter the string or number
 		if (!isNumber(actionDelay as string)) actionDelay = ms(actionDelay as string)
 		else {
 			if (actionDelay < 0) actionDelay = DEFAULT_ACTION_DELAY
@@ -67,7 +67,7 @@ function setupDelayOverrides(
 	}
 
 	if (stepDelay) {
-		//received from the terminal so the value is always string, it is necessary to check the user wants to enter the string number
+		//received from the terminal so the value is always string, it is necessary to check the user wants to enter the string or number
 		if (!isNumber(stepDelay as string)) stepDelay = ms(stepDelay as string)
 		else {
 			if (stepDelay < 0) stepDelay = DEFAULT_STEP_DELAY

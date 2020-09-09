@@ -307,7 +307,7 @@ export function normalizeSettings(settings: TestSettings): TestSettings {
 		if (typeof settings.waitTimeout === 'string') {
 			// support new string value for `waitTimeout`, still keep the raw value
 			convertedWaitTimeout = ms(settings.waitTimeout)
-		} else if (typeof settings.waitTimeout === 'number') {
+		} else {
 			// legacy code
 			convertedWaitTimeout = settings.waitTimeout
 			if (convertedWaitTimeout < 0) convertedWaitTimeout = DEFAULT_WAIT_TIMEOUT_MILLISECONDS
@@ -319,7 +319,7 @@ export function normalizeSettings(settings: TestSettings): TestSettings {
 	if (settings.actionDelay) {
 		if (typeof settings.actionDelay === 'string') {
 			convertedActionDelay = ms(settings.actionDelay)
-		} else if (typeof settings.actionDelay === 'number') {
+		} else {
 			convertedActionDelay = settings.actionDelay
 			if (convertedActionDelay < 0) convertedActionDelay = DEFAULT_ACTION_DELAY
 			if (convertedActionDelay < 1e3) convertedActionDelay *= 1e3
@@ -330,7 +330,7 @@ export function normalizeSettings(settings: TestSettings): TestSettings {
 	if (settings.stepDelay) {
 		if (typeof settings.stepDelay === 'string') {
 			convertedStepDelay = ms(settings.stepDelay)
-		} else if (typeof settings.stepDelay === 'number') {
+		} else {
 			convertedStepDelay = settings.stepDelay
 			if (convertedStepDelay < 0) convertedStepDelay = DEFAULT_STEP_DELAY
 			if (convertedStepDelay < 1e3) convertedStepDelay *= 1e3
@@ -341,7 +341,7 @@ export function normalizeSettings(settings: TestSettings): TestSettings {
 	if (settings.duration) {
 		if (typeof settings.duration === 'string') {
 			convertedDuration = ms(settings.duration)
-		} else if (typeof settings.duration === 'number') {
+		} else {
 			convertedDuration = settings.duration
 		}
 		settings.duration = convertedDuration

@@ -37,6 +37,14 @@ const cmd: CommandModule = {
 	async handler(args: RunCommonArguments): Promise<void> {
 		const { file, mu } = args
 		if (mu) {
+			if (!file) {
+				console.log(
+					chalk.redBright(
+						`The mode 'running the test with a config file' does not support running with multiple users`,
+					),
+				)
+				return
+			}
 			const myEmitter = new EventEmitter()
 			const cache = new ReportCache(myEmitter)
 			const opts: ElementOptions = normalizeElementOptions(args, cache)
@@ -141,11 +149,6 @@ const cmd: CommandModule = {
 			.option('verbose', {
 				describe: 'Verbose mode',
 			})
-			.option('multiple-user', {
-				describe: 'run test with multiple user mode',
-				type: 'boolean',
-				default: false,
-			})
 			.option('fail-status-code', {
 				describe: 'Exit code when the test fails',
 				type: 'number',
@@ -165,7 +168,7 @@ const cmd: CommandModule = {
 				default: 'element.config.js',
 			})
 			.option('mu', {
-				describe: 'Run test scripts with multiple user configuration does not support',
+				describe: 'Run test scripts with multiple users',
 				type: 'boolean',
 				default: false,
 			})

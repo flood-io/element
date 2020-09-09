@@ -1,11 +1,3 @@
 # `@flood/element-scheduler`
 
-> TODO: description
-
-## Usage
-
-```
-const elementScheduler = require('@flood/element-scheduler');
-
-// TODO: DEMONSTRATE API
-```
+This package is intended for scheduling multi-user test runs, and creating and managing users.

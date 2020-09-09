@@ -12,7 +12,7 @@ function isInlineMap(url: string): boolean {
 	return INLINE_SOURCE_MAP_REGEX.test(url)
 }
 
-function resolveSourceMapUrl(sourceFile: string) {
+function resolveSourceMapUrl(sourceFile: string): string | null {
 	const lines = sourceFile.split(/\r?\n/)
 	let sourceMapUrl: RegExpMatchArray | null = null
 	for (let i = lines.length - 1; i >= 0 && !sourceMapUrl; i--) {

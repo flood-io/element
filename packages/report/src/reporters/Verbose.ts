@@ -30,7 +30,6 @@ export class VerboseReporter implements IReporter {
 		subtitle?: string,
 		timing?: number,
 		errorMessage?: string,
-		content?: any[],
 	): void {
 		const stepName = 'Step ' + (subtitle ? `'${label}' (${subtitle})` : `'${label}'`)
 		const beforeRunStepMessage = `${stepName} is running ...`
@@ -56,6 +55,7 @@ export class VerboseReporter implements IReporter {
 				console.group(chalk.grey(beforeRunStepMessage))
 				console.group()
 				break
+			case TestEvent.AfterHookAction:
 			case TestEvent.AfterStepAction:
 				console.log(chalk.grey(`${label}()`))
 				break

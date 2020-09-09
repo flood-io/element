@@ -148,13 +148,7 @@ export default class Test implements ITest {
 
 		const { testData } = this.script
 		const stepIterator = new StepIterator(this.steps)
-		const browser = new Browser<Step>(
-			this.script.runEnv.workRoot,
-			this.client,
-			this.settings,
-			this.willRunCommand.bind(this, testObserver),
-			this.didRunCommand.bind(this, testObserver),
-		)
+		const browser = new Browser<Step>(this.script.runEnv.workRoot, this.client, this.settings)
 		let testDataRecord: any
 		try {
 			this.runningBrowser = browser
@@ -171,6 +165,9 @@ export default class Test implements ITest {
 			if (this.settings.disableCache) await browser.setCacheDisabled(true)
 			if (this.settings.extraHTTPHeaders)
 				await browser.setExtraHTTPHeaders(this.settings.extraHTTPHeaders)
+
+			browser.beforeFunc = this.willRunCommand.bind(this, testObserver)
+			browser.afterFunc = this.didRunCommand.bind(this, testObserver)
 
 			debug('running this.before(browser)')
 			await testObserver.before(this)
@@ -435,12 +432,16 @@ export default class Test implements ITest {
 		if (browser.customContext) {
 			await testObserver.beforeStepAction(this, browser.customContext, command)
 			debug(`Before action: '${command}()' waiting on actionDelay: ${this.settings.actionDelay}`)
+		} else {
+			await testObserver.beforeHookAction(this, command)
 		}
 	}
 
 	async didRunCommand(testObserver: TestObserver, browser: Browser<Step>, command: string) {
 		if (browser.customContext) {
 			await testObserver.afterStepAction(this, browser.customContext, command)
+		} else {
+			await testObserver.afterHookAction(this, command)
 		}
 	}
 

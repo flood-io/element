@@ -102,6 +102,8 @@ export enum TestEvent {
 	BeforeEachStepFinished,
 	AfterEachStepFinished,
 	StepUnexecuted,
+	BeforeHookAction,
+	AfterHookAction,
 }
 
 export interface TestLifecycle {

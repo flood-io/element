@@ -12,6 +12,8 @@ export interface HookObserver {
 	onAfterAllStepFinished(test: ITest): Promise<void>
 	onBeforeEachStepFinished(test: ITest): Promise<void>
 	onAfterEachStepFinished(test: ITest): Promise<void>
+	beforeHookAction(test: ITest, command: string): Promise<void>
+	afterHookAction(test: ITest, command: string): Promise<void>
 }
 export interface TestObserver extends HookObserver {
 	before(test: ITest): Promise<void>
@@ -89,6 +91,13 @@ export class NoOpTestObserver implements TestObserver {
 	async onAfterEachStepFinished(test: ITest): Promise<void> {
 		return this.next.onAfterEachStepFinished(test)
 	}
+
+	async beforeHookAction(test: ITest, command: string): Promise<void> {
+		return this.next.beforeHookAction(test, command)
+	}
+	async afterHookAction(test: ITest, command: string): Promise<void> {
+		return this.next.afterHookAction(test, command)
+	}
 }
 
 export class NullTestObserver implements TestObserver {
@@ -147,6 +156,12 @@ export class NullTestObserver implements TestObserver {
 		return
 	}
 	async onAfterEachStepFinished(test: ITest): Promise<void> {
+		return
+	}
+	async beforeHookAction(test: ITest, command: string): Promise<void> {
+		return
+	}
+	async afterHookAction(test: ITest, command: string): Promise<void> {
 		return
 	}
 }

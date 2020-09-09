@@ -24,6 +24,13 @@ export declare function setup(settings: TestSettings): void
 export const DEFAULT_STEP_WAIT_MILLISECONDS = 5000
 export const DEFAULT_ACTION_WAIT_MILLISECONDS = 500
 export const DEFAULT_WAIT_TIMEOUT_MILLISECONDS = 30000
+export const DEFAULT_ACTION_DELAY = 2000
+export const DEFAULT_STEP_DELAY = 6000
+export const DEFAULT_DURATION = 0
+export const DEFAULT_STEP_DELAY_FAST_FORWARD = 1000
+export const DEFAULT_ACTION_DELAY_FAST_FORWARD = 1000
+export const DEFAULT_STEP_DELAY_SLOW_MO = 10000
+export const DEFAULT_ACTION_DELAY_SLOW_MO = 10000
 
 /**
  * Specifies a method for recording response times.
@@ -250,12 +257,12 @@ export const DEFAULT_SETTINGS: ConcreteTestSettings = {
 	waitUntil: false,
 	duration: -1,
 	loopCount: Infinity,
-	actionDelay: 2000,
-	stepDelay: 6000,
+	actionDelay: DEFAULT_ACTION_DELAY,
+	stepDelay: DEFAULT_STEP_DELAY,
 	screenshotOnFailure: true,
 	clearCookies: true,
 	clearCache: false,
-	waitTimeout: 30000,
+	waitTimeout: DEFAULT_WAIT_TIMEOUT_MILLISECONDS,
 	responseTimeMeasurement: 'step',
 	tries: 0,
 	/**
@@ -291,46 +298,54 @@ export type ConcreteTestSettings = Required<TestSettings>
  * @internal
  */
 export function normalizeSettings(settings: TestSettings): TestSettings {
-	let convertedWaitTimeout = 0
-	let convertedActionDelay = 0
-	let convertedStepDelay = 0
-	let convertedDuration = 0
-	// Convert user inputted seconds to milliseconds
-	if (typeof settings.waitTimeout === 'string' && settings.waitTimeout) {
-		convertedWaitTimeout = ms(settings.waitTimeout)
-	} else if (typeof settings.waitTimeout === 'number') {
-		convertedWaitTimeout = settings.waitTimeout
+	let convertedWaitTimeout = DEFAULT_WAIT_TIMEOUT_MILLISECONDS
+	let convertedActionDelay = DEFAULT_ACTION_DELAY
+	let convertedStepDelay = DEFAULT_STEP_DELAY
+	let convertedDuration = DEFAULT_DURATION
+
+	if (settings.waitTimeout) {
+		if (typeof settings.waitTimeout === 'string') {
+			// support new string value for `waitTimeout`, still keep the raw value
+			convertedWaitTimeout = ms(settings.waitTimeout)
+		} else {
+			// legacy code
+			convertedWaitTimeout = settings.waitTimeout
+			if (convertedWaitTimeout < 0) convertedWaitTimeout = DEFAULT_WAIT_TIMEOUT_MILLISECONDS
+			if (convertedWaitTimeout < 1e3) convertedWaitTimeout *= 1e3
+		}
 	}
+	settings.waitTimeout = convertedWaitTimeout
 
-	settings.waitTimeout =
-		convertedWaitTimeout > 0 ? convertedWaitTimeout : DEFAULT_WAIT_TIMEOUT_MILLISECONDS
-
-	// Ensure action delay is stored in milliseconds
-	if (typeof settings.actionDelay === 'string' && settings.actionDelay) {
-		convertedActionDelay = ms(settings.actionDelay)
-	} else if (typeof settings.actionDelay === 'number') {
-		convertedActionDelay = settings.actionDelay
+	if (settings.actionDelay) {
+		if (typeof settings.actionDelay === 'string') {
+			convertedActionDelay = ms(settings.actionDelay)
+		} else {
+			convertedActionDelay = settings.actionDelay
+			if (convertedActionDelay < 0) convertedActionDelay = DEFAULT_ACTION_DELAY
+			if (convertedActionDelay < 1e3) convertedActionDelay *= 1e3
+		}
 	}
+	settings.actionDelay = convertedActionDelay
 
-	settings.actionDelay =
-		convertedActionDelay > 0 ? convertedActionDelay : DEFAULT_ACTION_WAIT_MILLISECONDS
-
-	// Ensure step delay is stored in seconds
-	if (typeof settings.stepDelay === 'string' && settings.stepDelay) {
-		convertedStepDelay = ms(settings.stepDelay)
-	} else if (typeof settings.stepDelay === 'number') {
-		convertedStepDelay = settings.stepDelay
+	if (settings.stepDelay) {
+		if (typeof settings.stepDelay === 'string') {
+			convertedStepDelay = ms(settings.stepDelay)
+		} else {
+			convertedStepDelay = settings.stepDelay
+			if (convertedStepDelay < 0) convertedStepDelay = DEFAULT_STEP_DELAY
+			if (convertedStepDelay < 1e3) convertedStepDelay *= 1e3
+		}
 	}
+	settings.stepDelay = convertedStepDelay
 
-	settings.stepDelay = convertedStepDelay > 0 ? convertedStepDelay : DEFAULT_STEP_WAIT_MILLISECONDS
-
-	// Convert user inputted seconds to milliseconds
-	if (typeof settings.duration === 'string' && settings.duration) {
-		convertedDuration = ms(settings.duration)
-	} else if (typeof settings.duration === 'number') {
-		convertedDuration = settings.duration
+	if (settings.duration) {
+		if (typeof settings.duration === 'string') {
+			convertedDuration = ms(settings.duration)
+		} else {
+			convertedDuration = settings.duration
+		}
+		settings.duration = convertedDuration
 	}
-	settings.duration = convertedDuration > 0 ? convertedDuration : -1
 
 	return settings
 }

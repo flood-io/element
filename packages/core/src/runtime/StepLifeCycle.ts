@@ -25,13 +25,16 @@ export type Hook = {
  */
 export function normalizeHookBase(hookBase: HookBase): HookBase {
 	const { waitTimeout } = hookBase
-	let convertedWaitTimeout = 0
-	if (typeof waitTimeout === 'string' && waitTimeout) {
-		convertedWaitTimeout = ms(waitTimeout)
-	} else if (typeof waitTimeout === 'number') {
-		convertedWaitTimeout = waitTimeout
+	let convertedWaitTimeout = DEFAULT_WAIT_TIMEOUT_MILLISECONDS
+	if (waitTimeout) {
+		if (typeof waitTimeout === 'string') {
+			convertedWaitTimeout = ms(waitTimeout)
+		} else {
+			convertedWaitTimeout = waitTimeout
+			if (convertedWaitTimeout < 0) convertedWaitTimeout = DEFAULT_WAIT_TIMEOUT_MILLISECONDS
+			if (convertedWaitTimeout < 1e3) convertedWaitTimeout *= 1e3
+		}
 	}
-	hookBase.waitTimeout =
-		convertedWaitTimeout > 0 ? convertedWaitTimeout : DEFAULT_WAIT_TIMEOUT_MILLISECONDS
+	hookBase.waitTimeout = convertedWaitTimeout
 	return hookBase
 }

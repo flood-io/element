@@ -24,6 +24,7 @@ import chalk from 'chalk'
 import ms from 'ms'
 
 import { getFilesPattern, readConfigFile } from '../utils/compile'
+
 interface RunCommonArguments extends Arguments {
 	file: string
 	chrome?: string
@@ -43,6 +44,11 @@ interface RunCommonArguments extends Arguments {
 	configFile: string
 }
 
+function isNumber(value: string): boolean {
+	const numberPattern = /^[0-9]+$/
+	return numberPattern.test(value)
+}
+
 function setupDelayOverrides(
 	args: RunCommonArguments,
 	testSettingOverrides: TestSettings,
@@ -51,19 +57,21 @@ function setupDelayOverrides(
 	let { actionDelay, stepDelay } = args
 
 	if (actionDelay) {
-		if (typeof actionDelay === 'string') actionDelay = ms(actionDelay)
+		//receive from terminal so it value always is string, need to check user want to input number of string
+		if (!isNumber(actionDelay as string)) actionDelay = ms(actionDelay as string)
 		else {
 			if (actionDelay < 0) actionDelay = DEFAULT_ACTION_DELAY
-			else if (actionDelay < 1e3) actionDelay *= 1e3
+			else if (actionDelay < 1e3) actionDelay = (actionDelay as number) * 1e3
 		}
 		testSettingOverrides.actionDelay = actionDelay
 	}
 
 	if (stepDelay) {
-		if (typeof stepDelay === 'string') stepDelay = ms(stepDelay)
+		//receive from terminal so it value always is string, need to check user want to input number of string
+		if (!isNumber(stepDelay as string)) stepDelay = ms(stepDelay as string)
 		else {
 			if (stepDelay < 0) stepDelay = DEFAULT_STEP_DELAY
-			else if (stepDelay < 1e3) stepDelay *= 1e3
+			else if (stepDelay < 1e3) stepDelay = (stepDelay as number) * 1e3
 		}
 		testSettingOverrides.stepDelay = stepDelay
 	}

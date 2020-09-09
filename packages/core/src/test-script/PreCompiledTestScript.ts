@@ -1,7 +1,7 @@
 import { ITestScript } from '../interface/ITestScript'
 import { readFileSync } from 'fs-extra'
-import { TestScriptError } from '@flood/element-report'
-import { CallSite, SourceUnmapped } from './SourceUnmapped'
+import { TestScriptError, CallSite } from '@flood/element-report'
+import { SourceUnmapped } from './SourceUnmapped'
 import { VMScript } from 'vm2'
 import parseComments from 'comment-parser'
 

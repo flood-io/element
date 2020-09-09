@@ -1,34 +1,11 @@
 import { SourceMapConsumer, NullableMappedPosition } from 'source-map'
-
-export interface CallSite {
-	file: string
-	code: string
-	line: number
-	column: number
-}
+import { CallSite, callSiteToString } from '@flood/element-report'
 
 interface StackLine {
 	at: string
 	file: string
 	line: number
 	column: number
-}
-
-export function callSiteToString(callSite: CallSite | undefined): string {
-	if (callSite) {
-		return (
-			callSite.file +
-			':' +
-			callSite.line +
-			'\n' +
-			callSite.code +
-			'\n' +
-			new Array(callSite.column).join(' ') +
-			'^'
-		)
-	}
-
-	return ''
 }
 
 // inspiration from:

@@ -209,7 +209,8 @@ export default class Test implements ITest {
 					if (result) {
 						this.failed = false
 					} else {
-						throw Error('recovery step -> failed')
+						console.log('failed, bailing out of steps')
+						throw Error('test failed')
 					}
 				}
 

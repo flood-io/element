@@ -220,7 +220,7 @@ export default class Test implements ITest {
 					if (result) {
 						this.failed = false
 					} else {
-						throw Error('recovery step -> failed')
+						throw Error('step -> failed')
 					}
 				}
 			})

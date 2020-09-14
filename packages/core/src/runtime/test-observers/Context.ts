@@ -3,6 +3,7 @@ import { Test } from './testTypes'
 import NetworkRecorder from '../../network/Recorder'
 import NetworkObserver from './NetworkObserver'
 import { Page } from 'playwright'
+import { ConsoleMethod } from '../Settings'
 
 export class Context {
 	public networkRecorder: NetworkRecorder
@@ -13,15 +14,19 @@ export class Context {
 	public async attachTest(test: Test) {
 		if (this.attached) return
 		this.attached = true
-		await this.attachToPage(test.reporter, test.client.page)
+		await this.attachToPage(
+			test.reporter,
+			test.client.page,
+			test.settings.consoleFilter as ConsoleMethod[],
+		)
 	}
 
 	// TODO deliberately detach from network recorder & observer
 
-	public async attachToPage(reporter: IReporter, page: Page) {
+	public async attachToPage(reporter: IReporter, page: Page, consoleFilters: ConsoleMethod[]) {
 		this.networkRecorder = new NetworkRecorder(page)
 		await this.networkRecorder.attachEvents()
-		this.observer = new NetworkObserver(reporter, this.networkRecorder, [])
+		this.observer = new NetworkObserver(reporter, this.networkRecorder, consoleFilters)
 		await this.observer.attachToNetworkRecorder()
 	}
 

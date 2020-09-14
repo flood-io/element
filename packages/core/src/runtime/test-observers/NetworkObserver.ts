@@ -64,7 +64,7 @@ export default class Observer {
 		)
 
 		await this.networkRecorder.attachEvent('console', msg => {
-			if (this.consoleFilters.length == 0 || !this.consoleFilters.includes(msg.type())) {
+			if (this.consoleFilters.length === 0 || !this.consoleFilters.includes(msg.type())) {
 				this.reporter.testScriptConsole(msg.type(), msg.text())
 			}
 		})

@@ -36,7 +36,7 @@ brew install floodio/taps/element
 Or if you prefer using Yarn or NPM:
 
 ```bash title="yarn"
-yarn global install element-cli
+yarn global add element-cli
 ```
 
 ```bash title="NPM"
@@ -49,7 +49,7 @@ npm -g install element-cli
 Install using Yarn or NPM:
 
 ```bash title="yarn"
-yarn global install element-cli
+yarn global add element-cli
 ```
 
 ```bash title="NPM"
@@ -61,7 +61,7 @@ npm -g install element-cli
     Install using Yarn or NPM:
 
 ```bash title="yarn"
-yarn global install element-cli
+yarn global add element-cli
 ```
 
 ```bash title="NPM"

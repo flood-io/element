@@ -8,23 +8,23 @@ Released: Aug 2020
 
 ## New features
 - Extended Step Types:
-  - [`step.if()`](../guides/script.md###step.if)
-  - [`step.unless()`](../guides/script.md###step.unless)
-  - [`step.while()`](../guides/script.md###step.while)
-  - [`step.repeat()`](../guides/script.md###step.repeat)
-  - [`step.once()`](../guides/script.md###step.once)
-  - [`step.skip()`](../guides/script.md###step.skip)
-  - [`step.recovery()`](../guides/script.md###step.recovery)
+  - [`step.if()`](../guides/script.md#stepif)
+  - [`step.unless()`](../guides/script.md#stepunless)
+  - [`step.while()`](../guides/script.md#stepwhile)
+  - [`step.repeat()`](../guides/script.md#steprepeat)
+  - [`step.once()`](../guides/script.md#steponce)
+  - [`step.skip()`](../guides/script.md#stepskip)
+  - [`step.recovery()`](../guides/script.md#steprecovery)
 
 - Hooks for setup and teardown
-  - [`beforeAll()`](../guides/hook.md###beforeAll)
-  - [`beforeEach()`](../guides/hook.md###beforeEach)
-  - [`afterEach()`](../guides/hook.md###afterEach)
-  - [`afterAll()`](../guides/hook.md###afterAll)
+  - [`beforeAll()`](../guides/hook.md#beforeAll)
+  - [`beforeEach()`](../guides/hook.md#beforeEach)
+  - [`afterEach()`](../guides/hook.md#afterEach)
+  - [`afterAll()`](../guides/hook.md#afterAll)
 
-- Support sending key combinations [(`browser.sendKeyCombinations()`)](../api/Browser.md###sendKeyCombinations(...keys))
-- Support authentication with Flood and [lauching a flood directly from Element CLI](../guides/CLI.md##Run-an-Element-script-on-Flood)
-- New command to [generate a config file](../guides/CLI.md###Generate-a-config-file-from-a-template) and [run a test from a config file](../guides/CLI.md###Run-a-test-locally-with-the-default-config-file)
+- Support sending key combinations [(`browser.sendKeyCombinations()`)](../api/Browser.md#sendkeycombinationskeys)
+- Support authentication with Flood and [lauching a flood directly from Element CLI](../guides/CLI.md#run-an-element-script-on-flood)
+- New command to [generate a config file](../guides/CLI.md#generate-a-config-file-from-a-template) and [run a test from a config file](../guides/CLI.md#run-a-test-locally-with-the-default-config-file)
 
 ## Enhancements
 - Handle multiple tabs/windows (GitHub issue [#47](https://github.com/flood-io/element/issues/47))

@@ -153,13 +153,13 @@ element flood project ls
 ### Select a Flood project to use
 
 ```shell
-element flood project use <project-name>
+element flood use 'project-name (within quotation mark)'
 ```
 
 or
 
 ```shell
-element flood project use <project-id>
+element flood use <project-id>
 ```
 
 Every flood needs to belong to a project. Therefore, you need to select a project to use before you can launch a flood.
@@ -189,4 +189,8 @@ element flood run <path-to-script> --hosted --vu <number> --duration <minutes> -
 element flood run <path-to-script> --vu <number> --duration <minutes> --rampup <minutes>
 ```
 
-The meaning and default values for `--vu`, `--duration` and `--rampup` are the same as launching a flood on hosted grid
+The meaning and default values for `--vu`, `--duration` and `--rampup` are the same as launching a flood on hosted grid, which are 500 (users), 15 (minutes) and 0 (minutes) respectively, if they are not specified in the command line.
+
+:::info HOW TO NAVIGATE AND SELECT
+After running the command `element run flood`, you will be asked to select regions (to run on-demand test), or grids (to run a test on a hosted grid). To navigate among the options, use the Up/Down arrow key. To select an option, press the Space bar. You can select multiple options if you want.
+:::

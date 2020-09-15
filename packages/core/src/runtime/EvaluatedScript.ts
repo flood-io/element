@@ -111,7 +111,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 		const { reporter, settings } = test
 
 		// hack because the vm2 typings don't include their EventEmitteryness
-		const logKey = ['log', 'info', 'error', 'warn', 'debug']
+		const logKey = ['log', 'info', 'error', 'warn', 'warning', 'debug']
 		const consoleFilters = settings.consoleFilter as string[]
 		const eevm = (this.vm as any) as EventEmitter
 		logKey

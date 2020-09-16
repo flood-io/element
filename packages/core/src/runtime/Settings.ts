@@ -20,7 +20,7 @@ import ms from 'ms'
  */
 export declare function setup(settings: TestSettings): void
 
-// Waits is seconds
+// Waits is milliseconds
 export const DEFAULT_STEP_WAIT_MILLISECONDS = 5000
 export const DEFAULT_ACTION_WAIT_MILLISECONDS = 500
 export const DEFAULT_WAIT_TIMEOUT_MILLISECONDS = 30000

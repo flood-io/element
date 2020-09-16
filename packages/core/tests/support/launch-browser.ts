@@ -1,3 +1,4 @@
+import { DEFAULT_SETTINGS } from '@flood/element'
 import { PuppeteerClientLike, launch } from '../../src/driver/Puppeteer'
 export { PuppeteerClientLike as testPuppeteer }
 
@@ -10,5 +11,5 @@ export async function launchPuppeteer(): Promise<PuppeteerClientLike> {
 		opts.sandbox = false
 	}
 
-	return launch(opts)
+	return launch(opts, DEFAULT_SETTINGS)
 }

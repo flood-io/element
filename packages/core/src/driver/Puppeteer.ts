@@ -1,6 +1,6 @@
 import puppeteer, { LaunchOptions, Browser, Page } from 'puppeteer'
 
-import { ChromeVersion } from '../runtime/Settings'
+import { ChromeVersion, ConcreteTestSettings } from '../runtime/Settings'
 
 export type ConcreteLaunchOptions = LaunchOptions & {
 	args: string[]
@@ -86,6 +86,7 @@ export class PuppeteerClient implements PuppeteerClientLike {
 
 export async function launch(
 	passedOptions: Partial<ConcreteLaunchOptions> = {},
+	pageSettings: ConcreteTestSettings,
 ): Promise<PuppeteerClient> {
 	let options: ConcreteLaunchOptions = {
 		...defaultLaunchOptions,
@@ -109,7 +110,8 @@ export async function launch(
 
 	const browser = await puppeteer.launch(options)
 	const page = await browser.newPage()
-
+	const { viewport } = pageSettings
+	if (viewport) page.setViewport(viewport)
 	return new PuppeteerClient(browser, page)
 }
 

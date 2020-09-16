@@ -1,7 +1,6 @@
 ---
 id: mouse
 title: 'Mouse interaction'
-hide_title: true
 ---
 # `Mouse`
 

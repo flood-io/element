@@ -28,6 +28,7 @@ module.exports = {
 			'api/locators',
 			'api/waiters',
 			'api/element-handle',
+			'api/mouse',
 			'api/target-locator',
 			'api/test-data',
 			'api/settings',

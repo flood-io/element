@@ -108,19 +108,15 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 		if (this.vm === undefined)
 			throw new Error('bindTest: no vm created - script must be evaluated first')
 
-		const { reporter, settings } = test
+		const { reporter } = test
 
 		// hack because the vm2 typings don't include their EventEmitteryness
-		const logKey = ['log', 'info', 'error', 'warn', 'warning', 'debug']
-		const consoleFilters = settings.consoleFilter as string[]
 		const eevm = (this.vm as any) as EventEmitter
-		logKey
-			.filter(item => !consoleFilters.includes(item))
-			.forEach(key =>
-				eevm.on(`console.${key}`, (message, ...args) =>
-					reporter.testScriptConsole(key, message, ...args),
-				),
-			)
+		;['log', 'info', 'error', 'dir', 'trace'].forEach(key =>
+			eevm.on(`console.${key}`, (message, ...args) =>
+				reporter.testScriptConsole(key, message, ...args),
+			),
+		)
 	}
 
 	public async beforeTestRun(): Promise<void> {

@@ -38,6 +38,7 @@ export abstract class Condition {
 			} else {
 				if (waitTimeout < 0) return DEFAULT_WAIT_TIMEOUT_MILLISECONDS
 				else if (waitTimeout < 1e3) return waitTimeout * 1e3
+				return waitTimeout
 			}
 		}
 		return DEFAULT_WAIT_TIMEOUT_MILLISECONDS
@@ -89,7 +90,10 @@ export abstract class ElementCondition extends LocatorCondition {
 
 	public async waitFor(frame: Frame): Promise<boolean> {
 		const argSeparator = '-SEP-'
-		const options: PageFnOptions = { polling: 'raf', timeout: Number(this.timeout) }
+		const options: PageFnOptions = {
+			polling: 'raf',
+			timeout: Number(this.timeout),
+		}
 		const locatorFunc = this.locatorPageFunc
 		const conditionFunc = this.pageFunc
 

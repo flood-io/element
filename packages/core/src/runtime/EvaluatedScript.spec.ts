@@ -71,18 +71,6 @@ describe('EvaluatedScript', () => {
 
 			expect(settings.waitTimeout).toBe(5000)
 			expect(steps[0].options).toEqual({ waitTimeout: 60000 })
-
-			// TODO move to Test.spec ?
-			// let actionSpy = Sinon.spy()
-			// vm.on(CallbackQueue.BeforeStep, (name, settings) => {
-			// if (name === 'Step 1') {
-			// actionSpy(settings['waitTimeout'])
-			// }
-			// })
-
-			// await vm.execute(puppeteer)
-			// expect(actionSpy).to.have.been.calledOnce
-			// expect(actionSpy).to.have.been.calledWith(60)
 		}, 30e3)
 
 		test('returns steps', async () => {
@@ -94,23 +82,4 @@ describe('EvaluatedScript', () => {
 
 		// TODO test bindTest
 	})
-
-	// TODO move to Test.spec ?
-	// describe('execute', () => {
-	// it('runs all steps', async () => {
-	// let vm = new VM(runEnv, dogfoodWaitTest)
-	// vm.evaluate()
-	// expect(vm.steps.map(step => step.name)).to.deep.equal(['Dogfood Test Step'])
-
-	// let actionSpy = Sinon.spy()
-	// vm.on(CallbackQueue.AfterAction, name => {
-	// actionSpy(name)
-	// })
-
-	// await vm.execute(puppeteer)
-
-	// expect(actionSpy).to.have.been.calledWith('visit')
-	// expect(actionSpy).to.have.been.calledWith('wait')
-	// })
-	// })
 })

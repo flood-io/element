@@ -187,21 +187,20 @@ export type Step = {
  * @internal
  */
 export function normalizeStepOptions(stepOpts: StepOptions): StepOptions {
+	if (!stepOpts.waitTimeout) return stepOpts
+
 	let convertedWaitTimeout = DEFAULT_WAIT_TIMEOUT_MILLISECONDS
-	if (stepOpts.waitTimeout) {
-		if (typeof stepOpts.waitTimeout === 'string') {
-			convertedWaitTimeout = ms(stepOpts.waitTimeout)
-		} else {
-			// for legacy code
-			convertedWaitTimeout = stepOpts.waitTimeout
-			if (convertedWaitTimeout <= 0) {
-				convertedWaitTimeout = DEFAULT_WAIT_TIMEOUT_MILLISECONDS
-			} else if (convertedWaitTimeout < 1e3) {
-				convertedWaitTimeout *= 1e3
-			}
+	if (typeof stepOpts.waitTimeout === 'string') {
+		convertedWaitTimeout = ms(stepOpts.waitTimeout)
+	} else {
+		// for legacy code
+		convertedWaitTimeout = stepOpts.waitTimeout
+		if (convertedWaitTimeout <= 0) {
+			convertedWaitTimeout = DEFAULT_WAIT_TIMEOUT_MILLISECONDS
+		} else if (convertedWaitTimeout < 1e3) {
+			convertedWaitTimeout *= 1e3
 		}
 	}
-
 	stepOpts.waitTimeout = convertedWaitTimeout
 	return stepOpts
 }

@@ -44,7 +44,6 @@ const debug = require('debug')('element:runtime:eval-script')
 // TODO work out the right type for floodElementActual
 function createVirtualMachine(floodElementActual: any, root?: string): NodeVM {
 	const vm = new NodeVM({
-		// console: 'redirect',
 		console: 'inherit',
 		sandbox: {},
 		wrapper: 'commonjs',
@@ -115,7 +114,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 
 		// hack because the vm2 typings don't include their EventEmitteryness
 		const eevm = (this.vm as any) as EventEmitter
-		;['log', 'info', 'error', 'dir', 'trace'].forEach((key) =>
+		;['log', 'info', 'error', 'dir', 'trace'].forEach(key =>
 			eevm.on(`console.${key}`, (message, ...args) =>
 				reporter.testScriptConsole(key, message, ...args),
 			),
@@ -257,7 +256,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 				{
 					...option,
 					predicate: (browser: Browser) =>
-						Promise.resolve(conditionFn(browser)).then((result) => !result),
+						Promise.resolve(conditionFn(browser)).then(result => !result),
 				},
 				fn,
 			])

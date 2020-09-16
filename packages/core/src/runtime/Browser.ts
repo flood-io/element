@@ -355,13 +355,11 @@ export class Browser<T> implements BrowserInterface {
 		return this.page.keyboard.type(text, options)
 	}
 
-	@autoWaitUntil()
 	@addCallbacks()
 	public async press(keyCode: string, options?: { text?: string; delay?: number }): Promise<void> {
 		return this.page.keyboard.press(keyCode, options)
 	}
 
-	@autoWaitUntil()
 	@addCallbacks()
 	public async sendKeys(...keys: string[]): Promise<void> {
 		const handle = this.page.keyboard
@@ -374,7 +372,6 @@ export class Browser<T> implements BrowserInterface {
 		}
 	}
 
-	@autoWaitUntil()
 	@addCallbacks()
 	public async sendKeyCombinations(...keys: string[]): Promise<void> {
 		const handle = this.page.keyboard

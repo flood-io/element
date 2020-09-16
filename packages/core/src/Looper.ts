@@ -55,13 +55,14 @@ export class Looper {
 	}
 
 	async run(iterator: (iteration: number) => Promise<void>): Promise<number> {
-		while (this.continueLoop) {
-			await iterator(++this.iterations)
+		try {
+			while (this.continueLoop) {
+				await iterator(++this.iterations)
+			}
+			this.finish()
+		} finally {
+			this.doneResolve()
 		}
-		this.finish()
-
-		// XXX perhaps call this in a finally to ensure it gets called
-		this.doneResolve()
 
 		return this.iterations
 	}

@@ -70,7 +70,7 @@ export class Runner {
 		if (options.args == null) options.args = []
 		if (Array.isArray(settings.launchArgs)) options.args.push(...settings.launchArgs)
 
-		return this.clientFactory(options, settings)
+		return this.clientFactory(options)
 	}
 
 	async runTestScript(

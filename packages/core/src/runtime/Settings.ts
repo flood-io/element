@@ -47,7 +47,7 @@ export type ResponseTiming = 'page' | 'network' | 'step' | 'stepWithThinkTime'
 /**
  * Specifies a `console` method
  */
-export type ConsoleMethod = 'log' | 'info' | 'debug' | 'warn' | 'error' | 'warning'
+export type ConsoleMethod = 'log' | 'info' | 'debug' | 'warn' | 'error'
 
 /**
  * Represents the versions of chrome that the test script will run against.
@@ -346,17 +346,6 @@ export function normalizeSettings(settings: TestSettings): TestSettings {
 		}
 		settings.duration = convertedDuration
 	}
-
-	const consoleFilters = settings.consoleFilter
-	if (
-		consoleFilters?.length &&
-		consoleFilters.includes('warn') &&
-		!consoleFilters.includes('warning')
-	) {
-		consoleFilters.push('warning')
-	}
-
-	settings.consoleFilter = consoleFilters
 
 	return settings
 }

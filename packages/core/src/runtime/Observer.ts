@@ -63,7 +63,8 @@ export default class Observer {
 		)
 
 		this.networkRecorder.attachEvent('console', msg => {
-			if (this.consoleFilters.length === 0 || !this.consoleFilters.includes(msg.type())) {
+			const msgType = msg.type() === 'warning' ? 'warn' : msg.type()
+			if (this.consoleFilters.length === 0 || !this.consoleFilters.includes(msgType)) {
 				this.reporter.testScriptConsole(msg.type(), msg.text())
 			}
 		})

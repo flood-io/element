@@ -200,8 +200,7 @@ export function normalizeStepOptions(stepOpts: StepOptions): StepOptions {
 		} else if (convertedWaitTimeout < 1e3) {
 			convertedWaitTimeout *= 1e3
 		}
-		stepOpts.waitTimeout = convertedWaitTimeout
 	}
-
+	stepOpts.waitTimeout = convertedWaitTimeout
 	return stepOpts
 }

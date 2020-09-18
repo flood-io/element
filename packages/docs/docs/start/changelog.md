@@ -2,11 +2,21 @@
 id: changelog
 title: Changelog
 ---
+## 1.3.3
+Released: Sep 2020
 
-# 1.3.0
+### Bugfixes
+- Backward compatible with legacy test scripts (actionDelay & stepDelay time measurement unit)
+- `--watch` option not working
+- `consoleFilter` settings not working
+- `browser.sendKeys()` does not work if `TestSettings.waitUntil` is enabled
+- Error on authenticating with Flood from Element CLI
+
+
+## 1.3.0
 Released: Aug 2020
 
-## New features
+### New features
 - Extended Step Types:
   - [`step.if()`](../guides/script.md#stepif)
   - [`step.unless()`](../guides/script.md#stepunless)
@@ -25,15 +35,16 @@ Released: Aug 2020
 - Support sending key combinations [(`browser.sendKeyCombinations()`)](../api/Browser.md#sendkeycombinationskeys)
 - Support authentication with Flood and [lauching a flood directly from Element CLI](../guides/CLI.md#run-an-element-script-on-flood)
 - New command to [generate a config file](../guides/CLI.md#generate-a-config-file-from-a-template) and [run a test from a config file](../guides/CLI.md#run-a-test-locally-with-the-default-config-file)
+- Ability to set a Fail Status Code (ExitCode) if a test fails [when running locally](../guides/CLI.md#run-a-test-script-locally) 
 
-## Enhancements
+### Enhancements
 - Handle multiple tabs/windows (GitHub issue [#47](https://github.com/flood-io/element/issues/47))
 - Refactor code and fix dependencies life cycle issue (GitHub issue [#176](https://github.com/flood-io/element/issues/176))
 - Add [`Until.elementTextDoesNotMatch()`](../api/Waiters.md)
 - Support importing script helper from other node modules (GitHub issue [#71](https://github.com/flood-io/element/issues/71))
 - Make process.env reflect environment variables present when running `element run` (GitHub issue [#104](https://github.com/flood-io/element/issues/104))
 
-## Bugfixes
+### Bugfixes
 - Fix homebrew publish of Element (GitHub issue [#135](https://github.com/flood-io/element/issues/135))
 - Unable to use the command `element generate <file.ts>` (GitHub issue [#165](https://github.com/flood-io/element/issues/165))
 - Setting `recoveryTries` does not work (GitHub issue [#195](https://github.com/flood-io/element/issues/195))

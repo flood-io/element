@@ -15,12 +15,12 @@ If you're coming from Puppeteer, think of the Browser as a wrapper around the Pu
 You don't need to create a browser instance because it is passed into each step for your, and reset after each test loop.
 
 ```ts title="my-test.perf.ts"
-import { step } from '@flood/element'
+import { step } from "@flood/element";
 export default () => {
-	step('Start', async (browser) => {
-		await browser.visit('https://challenge.flood.io')
-	})
-}
+  step("Start", async (browser) => {
+    await browser.visit("https://challenge.flood.io");
+  });
+};
 ```
 
 ## Methods
@@ -79,9 +79,9 @@ currently outside the viewport it will first scroll to that element.
 **Example:**
 
 ```ts title="my-test.perf.ts"
-step('Start', async (browser) => {
-	await browser.click(By.partialLinkText('Start'))
-})
+step("Start", async (browser) => {
+  await browser.click(By.partialLinkText("Start"));
+});
 ```
 
 In this example we're constructing a [Locatable][] using the `By.partialLinkText()` Locator, which will match the first `<a>` tag which contains the text "Start".
@@ -116,7 +116,7 @@ Configure Browser to emulate a given device
 
 **Parameters**
 
-- fn [`EvaluateFn`][evaluatefn]
+- fn <function|string> Function to be evaluated in the page context
 - args `any`\[]
 - returns: [Promise<`any`>][promise]
 
@@ -128,7 +128,7 @@ If no element is found throws an error.
 **Parameters**
 
 - locator [`NullableLocatable`][nullablelocatable]
-- returns: [Promise&lt;[`ElementHan<][ElementHandle]>][promise]
+- returns: [Promise&lt;ElementHandle&gt;][promise]
 
 ### `findElements(locator)`
 
@@ -137,7 +137,7 @@ Uses the provided locator to find all elements matching the locator condition, r
 **Parameters**
 
 - locator [`NullableLocatable`][nullablelocatable]
-- returns: [Promise&lt;[`ElementHan<][ElementHandle]\[\]>][promise]
+- returns: [Promise&lt;ElementHandle&gt;][promise]
 
 ### `focus(locator)`
 
@@ -164,7 +164,7 @@ Uses the provided locator to find the first element it matches, returning an Ele
 **Parameters**
 
 - locator [`NullableLocatable`][nullablelocatable]
-- returns: [Promise&lt;[`ElementHandle`][ElementHandle] <null`>][promise]
+- returns: [Promise&lt;Element | null&gt;][promise]
 
 ### `press(keyCode[, options])`
 
@@ -216,8 +216,8 @@ This allows sendKeys to simulate a user typing control keys such as `Key.ENTER`.
 **Example:**
 
 ```ts title="my-test.perf.ts"
-await browser.click('#input_address')
-await browser.sendKeys('Hello, World!', Key.ENTER)
+await browser.click("#input_address");
+await browser.sendKeys("Hello, World!", Key.ENTER);
 ```
 
 **Parameters**
@@ -226,18 +226,21 @@ await browser.sendKeys('Hello, World!', Key.ENTER)
 - returns: [Promise<`void`>][promise]
 
 ### `sendKeyCombinations(...keys)`
+This will simulate the act of pressing a combination of [keys][] on the keyboard at the same time. Use commas to separate individual keys.
 
-Simulates pressing a combination of [keys][] on the keyboard at the same time. Use commas to separate individual keys.
+:::info SOME COMBINATIONS MAY NOT WORK ON MACOS
+On MacOS, some combinations are emulated by the Operating System, instead of the browser. Therefore, you may find some combinations not working as expected, like Command + A (select all), Command + C (copy), Command + V (paste), etc. More information can be found [here](https://github.com/puppeteer/puppeteer/issues/1313)
+:::
 
 **Example:**
 
 ```ts title="my-test.perf.ts"
-await browser.sendKeyCombinations(Key.SHIFT, 'KeyA')
+await browser.sendKeyCombinations(Key.SHIFT, 'KeyA');
 ```
 
 ### `setUserAgent(userAgent)`
 
-Set Browser to send a custom User Agent (UA) string.
+Set Browser to send a custom User Agent (UA) string
 
 **Parameters**
 
@@ -276,9 +279,9 @@ Types a string into an `<input>` control, key press by key press. Use this to fi
 **Example:**
 
 ```ts title="my-test.perf.ts"
-step('Step 1', async (browser) => {
-	await browser.type(By.css('#email'), 'user@example.com')
-})
+step("Step 1", async (browser) => {
+  await browser.type(By.css("#email"), "user@example.com");
+});
 ```
 
 **Parameters**
@@ -297,9 +300,9 @@ a new Browser tab for this page to load into.
 **Example:**
 
 ```ts title="my-test.perf.ts"
-step('Start', async (browser) => {
-	await browser.visit('https://example.com')
-})
+step("Start", async (browser) => {
+  await browser.visit("https://example.com");
+});
 ```
 
 **Parameters**
@@ -317,9 +320,9 @@ Check out [Until][] for a rich set of wait [Conditions][condition].
 **Example:**
 
 ```ts title="my-test.perf.ts"
-step('Start', async (browser) => {
-	await browser.wait(Until.elementIsVisible(By.css('h1.title')))
-})
+step("Start", async (browser) => {
+  await browser.wait(Until.elementIsVisible(By.css("h1.title")));
+});
 ```
 
 You can use either a numeric value in seconds to wait for a specific time,
@@ -336,40 +339,66 @@ or a [Condition][], for more flexible conditions.
 
 - returns: [Promise<`any`>][promise]
 
-## `Locatable`
-
+# `Locatable`
 Locatable represents anything able to be located, either a string selector or a <[Locator]>. <[Locator]>s are generally created using <[By]> methods.
 
 ```typescript
-;[Locator] | [ElementHandle] | string
+[Locator] | [ElementHandle] | string
 ```
-
-## `NullableLocatable`
-
+# `NullableLocatable`
 NullableLocatable represents a <[Locatable]> which could also be null.
 
 Note that most Element location API methods accept a NullableLocatable but will throw an <[Error]> if its actually <[null]>.
 
 ```typescript
-;[Locatable] | null
+[Locatable] | null
 ```
+
+# `NavigationOptions`
+An object which might have the following properties
+
+**Properties**
+* `timeout` &lt;number&gt; (Optional) Maximum navigation time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout. 
+* `waitUntil` &lt;string | array&gt; (Optional) When to consider navigation succeeded, defaults to load. Given an array of event strings, navigation is considered to be successful after all events have been fired. Events can be either:
+  * `"load"` - consider navigation to be finished when the load event is fired.
+  * `"domcontentloaded"` - consider navigation to be finished when the DOMContentLoaded event is fired.
+  * `"networkidle0"` - consider navigation to be finished when there are no more than 0 network connections for at least 500 ms.
+  * `"networkidle2"` - consider navigation to be finished when there are no more than 2 network connections for at least 500 ms.
+
+
+# `ScreenshotOptions`
+Defines the screenshot options.
+
+**Properties**
+* `clip` &lt;Object&gt; (Optional) An object which specifies clipping region of the page. Should have the following fields:
+  * `x` &lt;number&gt; The x-coordinate of top-left corner of clipping area.
+  * `y` &lt;number&gt; The y-coordinate of top-left corner of clipping area.
+  * `height` &lt;number&gt; The height of clipping area.
+  * `width` &lt;number&gt; The width of clipping area.  
+* `encoding` &lt;string&gt; (Optional) The encoding of the image, can be either `"base64"` or `"binary"`. Defaults to `binary`.
+* `fullPage` &lt;boolean&gt; (Optional) When true, takes a screenshot of the full scrollable page. Defaults to false. 
+* `omitBackground` &lt;boolean&gt; (Optional) Hides default white background and allows capturing screenshots with transparency. Defaults to `false`. 
+* `path` &lt;string&gt; (Optional) The file path to save the image to. The screenshot type will be inferred from file extension.  
+  If `path` is a relative path, then it is resolved relative to current working directory.  
+  If no path is provided, the image won't be saved to the disk.  
+* `quality` &lt;number&gt; (Optional) The quality of the image, between 0-100. Not applicable to `png` images.
+* `type` &lt;string&gt;  (Optional) Specify screenshot type, can be either `"jpeg"` or `"png"`. Defaults to `png`.
 
 [step]: ../guides/script
 [promise]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
-[nullablelocatable]: Locators
-[locatable]: Locators
-[clickoptions]: Puppeteer
+[nullablelocatable]: #nullablelocatable
+[locatable]: #locatable
+[clickoptions]: mouse.md#clickoptions
 [device]: Constants
 [elementhandle]: ElementHandle
 [locator]: Locators
 [key]: Constants#key
 [keys]: Constants#key
 [targetlocator]: TargetLocator
-[screenshotoptions]: Puppeteer
-[navigationoptions]: Puppeteer
+[screenshotoptions]: #screenshotoptions
+[navigationoptions]: #navigationoptions
 [until]: Waiters
-[condition]: Waiters
-[condition]: Waiters
+[condition]: Waiters#condition
 [by]: Locators
 [error]: https://nodejs.org/api/errors.html#errors_class_error
 [null]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/null

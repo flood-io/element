@@ -65,10 +65,14 @@ export default class LifecycleObserver implements TestObserver {
 		await this.next.onStepUnexecuted(test, step)
 		test.reporter.testLifecycle(TestEvent.StepUnexecuted, step.name)
 	}
-	
+
 	async afterStep(test: Test, step: Step) {
-		await this.next.afterStep(test, step)
-		test.reporter.testLifecycle(TestEvent.AfterStep, step.name)
+		const testObserver: TestObserver = this.next
+		await testObserver.afterStep(test, step)
+		const timing = await (testObserver as TimingObserver).getMeasurementTime(
+			test.settings.responseTimeMeasurement,
+		)
+		test.reporter.testLifecycle(TestEvent.AfterStep, step.name, step.subTitle, timing)
 	}
 
 	async beforeStepAction(test: Test, step: Step, command: string) {

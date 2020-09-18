@@ -35,13 +35,7 @@ export class ConsoleReporter implements IReporter {
 
 	async flushMeasurements(): Promise<void> {}
 
-	testLifecycle(
-		stage: TestEvent,
-		label: string,
-		subTitle?: string,
-		timing?: number,
-		errMsg?: string,
-	): void {
+	testLifecycle(stage: TestEvent, label: string, subTitle?: string, timing?: number): void {
 		switch (stage) {
 			case TestEvent.AfterStepAction:
 				this.logger.info(`[${this.workerName}]: ---> ${label}()`)

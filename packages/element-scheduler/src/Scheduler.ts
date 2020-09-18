@@ -41,7 +41,7 @@ export class Scheduler {
 		pool.stderr.pipe(process.stderr)
 
 		const waitForExit = () => pool.waitForExit().then(this.stop)
-		let workingWorkers: string[] = []
+		let workingWorkers: WorkerInterface[] = []
 
 		const onTicker = async (
 			timestamp: number,
@@ -73,7 +73,7 @@ export class Scheduler {
 
 			const onWorkerStart = (worker: WorkerInterface) => {
 				console.log(`[${worker.workerName}] starts`)
-				workingWorkers.push(worker.workerId)
+				workingWorkers.push(worker)
 			}
 
 			const onWorkerEnd = (
@@ -109,15 +109,15 @@ export class Scheduler {
 		}
 
 		const onEndStage = async (): Promise<void> => {
-			for (const workerId of workingWorkers) {
-				await pool.removeWorker(workerId)
+			for (const worker of workingWorkers) {
+				await pool.removeWorker(worker.workerId)
 			}
 		}
 
 		const onNewStage = async (): Promise<void> => {
 			return new Promise(resolve => {
 				for (let i = 0; i < workingWorkers.length; i++) {
-					pool.addWorker()
+					pool.addWorker(workingWorkers[i].workerName)
 				}
 				workingWorkers = []
 				pool.waitForLoaded().then(resolve)

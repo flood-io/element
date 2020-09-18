@@ -43,9 +43,9 @@ export class WorkerPool {
 		}
 	}
 
-	addWorker() {
+	addWorker(workerName?: string) {
 		const id = faker.random.uuid()
-		const name = `User ${this.workers.length}`
+		const name = workerName || `User ${this.workers.length}`
 		const { maxRetries } = this.options
 
 		const workerOptions: WorkerOptions = {

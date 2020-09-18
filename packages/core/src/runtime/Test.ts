@@ -27,7 +27,7 @@ import { ITest } from '../interface/ITest'
 import { EvaluatedScriptLike } from './EvaluatedScriptLike'
 import { PlaywrightClientLike } from '../driver/Playwright'
 import { ScreenshotOptions } from '../page/types'
-import { Hook, HookBase } from './StepLifeCycle'
+import { Hook, HookBase, HookType } from './StepLifeCycle'
 import StepIterator from './StepIterator'
 import { getNumberWithOrdinal } from '../utils/numerical'
 import { StructuredError } from '../utils/StructuredError'
@@ -148,13 +148,7 @@ export default class Test implements ITest {
 
 		const { testData } = this.script
 		const stepIterator = new StepIterator(this.steps)
-		const browser = new Browser<Step>(
-			this.script.runEnv.workRoot,
-			this.client,
-			this.settings,
-			this.willRunCommand.bind(this, testObserver),
-			this.didRunCommand.bind(this, testObserver),
-		)
+		const browser = new Browser<Step>(this.script.runEnv.workRoot, this.client, this.settings)
 		let testDataRecord: any
 		try {
 			this.runningBrowser = browser
@@ -172,6 +166,9 @@ export default class Test implements ITest {
 			if (this.settings.extraHTTPHeaders)
 				await browser.setExtraHTTPHeaders(this.settings.extraHTTPHeaders)
 
+			browser.beforeFunc = this.willRunCommand.bind(this, testObserver)
+			browser.afterFunc = this.didRunCommand.bind(this, testObserver)
+
 			debug('running this.before(browser)')
 			await testObserver.before(this)
 
@@ -184,16 +181,13 @@ export default class Test implements ITest {
 			}
 
 			debug('running hook function: beforeAll')
-			await this.runHookFn(this.hook.beforeAll, browser, testDataRecord)
+			await this.runHookFn(this.hook.beforeAll, browser, testDataRecord, testObserver)
 
 			debug('running steps')
 			await stepIterator.run(async (step: Step) => {
-				debug('running hook function: beforeEach')
-				await this.runHookFn(this.hook.beforeEach, browser, testDataRecord)
-
 				const condition = await stepIterator.callCondition(step, iteration, browser)
 				if (!condition) {
-					this.summarizeStepBeforeRunStep(step)
+					await this.summarizeStepBeforeRunStep(step, testObserver)
 					return
 				}
 
@@ -220,22 +214,19 @@ export default class Test implements ITest {
 					if (result) {
 						this.failed = false
 					} else {
-						throw Error('recovery step -> failed')
+						throw Error('step -> failed')
 					}
 				}
-
-				debug('running hook function: afterEach')
-				await this.runHookFn(this.hook.afterEach, browser, testDataRecord)
 			})
 		} catch (err) {
 			this.failed = true
 			throw err
 		} finally {
 			await this.afterRunSteps(stepIterator)
+			debug('running hook function: afterAll')
+			await this.runHookFn(this.hook.afterAll, browser, testDataRecord, testObserver)
 			// TODO report skipped steps
 			await testObserver.after(this)
-			debug('running hook function: afterAll')
-			await this.runHookFn(this.hook.afterAll, browser, testDataRecord)
 		}
 	}
 
@@ -244,8 +235,9 @@ export default class Test implements ITest {
 		this.summarizeStepAfterStopRunning(stepIterator)
 	}
 
-	summarizeStepBeforeRunStep(step: Step): void {
+	async summarizeStepBeforeRunStep(step: Step, testObserver: TestObserver): Promise<void> {
 		if (step.prop?.unexecuted) {
+			await testObserver.onStepUnexecuted(this, step)
 			this.summaryStep.push({
 				name: step.name,
 				status: Status.UNEXECUTED,
@@ -254,6 +246,7 @@ export default class Test implements ITest {
 		}
 
 		if (step.prop?.skipped) {
+			await testObserver.onStepSkipped(this, step)
 			this.summaryStep.push({ name: step.name, status: Status.SKIPPED })
 			return
 		}
@@ -341,6 +334,8 @@ export default class Test implements ITest {
 		step: Step,
 		testDataRecord: any,
 	) {
+		debug('running hook function: beforeEach')
+		await this.runHookFn(this.hook.beforeEach, browser, testDataRecord, testObserver)
 		let error: Error | null = null
 		step.subTitle = this.getStepSubtitle(step)
 		await testObserver.beforeStep(this, step)
@@ -366,9 +361,10 @@ export default class Test implements ITest {
 			await testObserver.onStepPassed(this, step)
 			step.prop = { passed: true }
 		}
-
 		await testObserver.afterStep(this, step)
 
+		debug('running hook function: afterEach')
+		await this.runHookFn(this.hook.afterEach, browser, testDataRecord, testObserver)
 		if (error === null) {
 			await this.doStepDelay()
 		}
@@ -412,17 +408,16 @@ export default class Test implements ITest {
 		if (browser.customContext) {
 			await testObserver.beforeStepAction(this, browser.customContext, command)
 			debug(`Before action: '${command}()' waiting on actionDelay: ${this.settings.actionDelay}`)
+		} else {
+			await testObserver.beforeHookAction(this, command)
 		}
 	}
 
-	async didRunCommand(
-		testObserver: TestObserver,
-		browser: Browser<Step>,
-		command: string,
-		errorMessage?: string,
-	) {
+	async didRunCommand(testObserver: TestObserver, browser: Browser<Step>, command: string) {
 		if (browser.customContext) {
-			await testObserver.afterStepAction(this, browser.customContext, command, errorMessage)
+			await testObserver.afterStepAction(this, browser.customContext, command)
+		} else {
+			await testObserver.afterHookAction(this, command)
 		}
 	}
 
@@ -445,9 +440,11 @@ export default class Test implements ITest {
 		hooks: HookBase[],
 		browser: Browser<Step>,
 		testDataRecord: any,
+		testObserver: TestObserver,
 	): Promise<void> {
 		try {
 			for (const hook of hooks) {
+				await this.prepareHookFuncObserver(hook.type, testObserver)
 				browser.settings = { ...this.settings }
 				browser.settings.waitTimeout = Math.max(
 					Number(browser.settings.waitTimeout),
@@ -455,6 +452,7 @@ export default class Test implements ITest {
 				)
 				const hookFn = hook.fn.bind(null, browser, testDataRecord)
 				await this.doHookFnWithTimeout(hookFn, Number(hook.waitTimeout))
+				await this.finishedHookFuncObserver(hook.type, testObserver)
 			}
 		} catch (error) {
 			throw new Error(error)
@@ -471,5 +469,41 @@ export default class Test implements ITest {
 		})
 		// Returns a race between our timeout and the passed in promise
 		return Promise.race([fn(), promiseTimeout])
+	}
+
+	private async prepareHookFuncObserver(type: HookType, testObserver: TestObserver): Promise<void> {
+		switch (type) {
+			case HookType.beforeAll:
+				await testObserver.beforeAllStep(this)
+				break
+			case HookType.beforeEach:
+				await testObserver.beforeEachStep(this)
+				break
+			case HookType.afterEach:
+				await testObserver.afterEachStep(this)
+				break
+			case HookType.afterAll:
+				await testObserver.afterAllStep(this)
+				break
+		}
+	}
+	private async finishedHookFuncObserver(
+		type: HookType,
+		testObserver: TestObserver,
+	): Promise<void> {
+		switch (type) {
+			case HookType.beforeAll:
+				await testObserver.onBeforeAllStepFinished(this)
+				break
+			case HookType.beforeEach:
+				await testObserver.onBeforeEachStepFinished(this)
+				break
+			case HookType.afterEach:
+				await testObserver.onAfterEachStepFinished(this)
+				break
+			case HookType.afterAll:
+				await testObserver.onAfterAllStepFinished(this)
+				break
+		}
 	}
 }

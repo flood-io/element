@@ -27,7 +27,6 @@ export class CustomConsole extends Console {
 	private _stdout: NodeJS.WriteStream
 	private _stderr: NodeJS.WriteStream
 	private _width: number
-	private _line: number
 	private _height: number
 	private _myEmitter: EventEmitter
 
@@ -49,27 +48,21 @@ export class CustomConsole extends Console {
 		} else {
 			this._width = 1
 		}
-		this._line = 0
 		this._height = 1
 		this._myEmitter = myEmitter
-		this._myEmitter.on('update', (line: number) => {
-			this._line = line
-		})
 	}
 
 	private _log(type: LogType, message: string): void {
 		const logMessage = `${this._formatBuffer(type, '  '.repeat(this._groupDepth) + message)}`
-		this._line += this._height
 		this._height = this.getHeightOfMessage(logMessage)
-		this._myEmitter.emit('add', this._line, this._height, message)
+		this._myEmitter.emit('add', message, this._height)
 		this._stdout.write(`${logMessage}\n`)
 	}
 
 	private _logError(type: LogType, message: string): void {
 		const logMessage = `${this._formatBuffer(type, '  '.repeat(this._groupDepth) + message)}`
-		this._line += this._height
 		this._height = this.getHeightOfMessage(logMessage)
-		this._myEmitter.emit('add', this._line, this._height, message)
+		this._myEmitter.emit('add', message, this._height)
 		this._stderr.write(`${logMessage}\n`)
 	}
 

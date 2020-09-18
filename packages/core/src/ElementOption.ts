@@ -51,7 +51,6 @@ export interface ElementOptions {
 	persistentRunner: boolean
 	testCommander?: TestCommander
 	failStatusCode: number
-	cache?: ReportCache
 	browserType: BROWSER_TYPE
 }
 
@@ -163,7 +162,6 @@ export function normalizeElementOptions(
 		testSettingOverrides: {},
 		persistentRunner: false,
 		failStatusCode: args['fail-status-code'],
-		cache,
 		browserType: args.browserType,
 	}
 

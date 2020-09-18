@@ -50,11 +50,7 @@ export class Browser<T> implements BrowserInterface {
 		private client: PlaywrightClientLike,
 		public settings: ConcreteTestSettings,
 		public beforeFunc: (b: Browser<T>, name: string) => Promise<void> = async () => undefined,
-		public afterFunc: (
-			b: Browser<T>,
-			name: string,
-			errorMessage?: string,
-		) => Promise<void> = async () => undefined,
+		public afterFunc: (b: Browser<T>, name: string) => Promise<void> = async () => undefined,
 		private activeFrame?: Frame | null,
 	) {
 		this.beforeFunc && this.afterFunc

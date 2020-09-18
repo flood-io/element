@@ -93,6 +93,17 @@ export enum TestEvent {
 	TestFailed,
 	AfterTest,
 	Exit,
+	BeforeAllStep,
+	AfterAllStep,
+	BeforeEachStep,
+	AfterEachStep,
+	BeforeAllStepFinished,
+	AfterAllStepFinished,
+	BeforeEachStepFinished,
+	AfterEachStepFinished,
+	StepUnexecuted,
+	BeforeHookAction,
+	AfterHookAction,
 }
 
 export interface TestLifecycle {

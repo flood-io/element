@@ -79,21 +79,23 @@ export class TimingObserver extends NetworkRecordingTestObserver {
 		})
 	}
 
-	async afterStepAction(
-		test: Test,
-		step: Step,
-		action: string,
-		errorMessage?: string,
-	): Promise<void> {
+	async afterStepAction(test: Test, step: Step, action: string): Promise<void> {
 		await this.timing.measureThinkTime('step', async () => {
 			debug(`After action: ${action}`)
-			await this.next.afterStepAction(test, step, action, errorMessage)
+			// Force reporting concurrency to ensure steps which take >15s don't skew metrics
+			// this.reporter.addMeasurement('concurrency', this.numberOfBrowsers, name)
+			await this.next.afterStepAction(test, step, action)
 		})
 	}
 
 	async onStepSkipped(test: Test, step: Step) {
 		debug(`Skipped step: ${step.name}`)
 		return this.next.onStepSkipped(test, step)
+	}
+
+	async onStepUnexecuted(test: Test, step: Step) {
+		debug(`Skipped step: ${step.name}`)
+		return this.next.onStepUnexecuted(test, step)
 	}
 
 	private async reportResult(test: Test, step: Step): Promise<void> {

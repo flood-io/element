@@ -11,6 +11,7 @@ export type HookFn = (this: void, browser: Browser) => Promise<any>
 export type HookBase = {
 	fn: HookFn
 	waitTimeout: string | number
+	type: HookType
 }
 
 export type Hook = {
@@ -18,6 +19,13 @@ export type Hook = {
 	afterEach: HookBase[]
 	beforeAll: HookBase[]
 	beforeEach: HookBase[]
+}
+
+export enum HookType {
+	afterAll,
+	afterEach,
+	beforeAll,
+	beforeEach,
 }
 
 /**

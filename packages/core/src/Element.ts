@@ -4,11 +4,12 @@ import { mustCompileFile } from './TestScript'
 import { TestScriptOptions } from './TestScriptOptions'
 import { EvaluatedScript } from './runtime/EvaluatedScript'
 import { ElementOptions, ElementRunArguments, normalizeElementOptions } from './ElementOption'
-import { CustomConsole, ReportCache } from '@flood/element-report'
+import { CustomConsole, IterationResult, ReportCache } from '@flood/element-report'
 import chalk from 'chalk'
 import { EventEmitter } from 'events'
+import { ElementResult } from './ElementResult'
 
-export async function runSingleTestScript(opts: ElementOptions): Promise<void> {
+export async function runSingleTestScript(opts: ElementOptions): Promise<IterationResult[]> {
 	const { testScript, clientFactory } = opts
 
 	// TODO proper types for args
@@ -32,7 +33,6 @@ export async function runSingleTestScript(opts: ElementOptions): Promise<void> {
 			debug: opts.verbose,
 		},
 		opts.testObserverFactory,
-		opts.cache,
 	)
 
 	const installSignalHandlers = true
@@ -58,13 +58,36 @@ export async function runSingleTestScript(opts: ElementOptions): Promise<void> {
 	}
 	try {
 		await runner.run(testScriptFactory)
-	} catch {}
+		// eslint-disable-next-line no-empty
+	} catch {
+	} finally {
+		// eslint-disable-next-line no-unsafe-finally
+		return runner.getSummaryIterations()
+	}
 }
 
 export async function runCommandLine(args: ElementRunArguments): Promise<void> {
 	const myEmitter = new EventEmitter()
+	const elementResult = new ElementResult()
 	const cache = new ReportCache(myEmitter)
 	global.console = new CustomConsole(process.stdout, process.stderr, myEmitter)
+
+	const prepareAndRunTestScript = async (
+		fileTitle: string,
+		args: ElementRunArguments,
+		cache: ReportCache,
+		elementResult: ElementResult,
+		isConfig: boolean,
+	) => {
+		console.group(chalk('Running', fileTitle))
+		const opts = normalizeElementOptions(args, cache)
+		elementResult.addExecutionInfo(opts, isConfig)
+		const iterationResult = await runSingleTestScript(opts)
+		elementResult.addTestScript(args.file, iterationResult)
+		console.groupEnd()
+		cache.resetCache()
+	}
+
 	if (args.testFiles) {
 		console.log(
 			chalk.grey(
@@ -85,22 +108,14 @@ export async function runCommandLine(args: ElementRunArguments): Promise<void> {
 			}
 			order++
 			const fileTitle = chalk.grey(`${file} (${order} of ${numberOfFile})`)
-			console.group(chalk('Running', fileTitle))
-			const opts = normalizeElementOptions(arg, cache)
-			await runSingleTestScript(opts)
-			console.groupEnd()
+			await prepareAndRunTestScript(fileTitle, arg, cache, elementResult, true)
 		}
 		console.log(chalk.grey('Test running with the config file has finished'))
 	} else {
-		const { file } = args
-		const fileTitle = chalk.grey(`${file} (1 of 1)`)
-		console.group(chalk('Running', fileTitle))
-		const opts = normalizeElementOptions(args, cache)
-		await runSingleTestScript(opts)
-		console.groupEnd()
+		const fileTitle = chalk.grey(`${args.file} (1 of 1)`)
+		await prepareAndRunTestScript(fileTitle, args, cache, elementResult, false)
 	}
 	myEmitter.removeAllListeners('add')
 	myEmitter.removeAllListeners('update')
-	cache.resetCache()
 	process.exit(0)
 }

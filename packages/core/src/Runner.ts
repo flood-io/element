@@ -8,7 +8,6 @@ import { CancellationToken } from './utils/CancellationToken'
 import {
 	IReporter,
 	IterationResult,
-	ReportCache,
 	reportRunTest,
 	Status,
 	StepResult,
@@ -25,6 +24,7 @@ export interface TestCommander {
 export interface IRunner {
 	run(testScriptFactory: AsyncFactory<EvaluatedScript>): Promise<void>
 	stop(): Promise<void>
+	getSummaryIterations(): IterationResult[]
 }
 
 function delay(t: number, v?: any) {
@@ -46,7 +46,6 @@ export class Runner {
 		private testSettingOverrides: TestSettings,
 		private launchOptionOverrides: Partial<ConcreteLaunchOptions>,
 		private testObserverFactory: (t: TestObserver) => TestObserver = x => x,
-		private cache?: ReportCache,
 	) {}
 
 	async stop(): Promise<void> {
@@ -133,13 +132,11 @@ export class Runner {
 					// eslint-disable-next-line no-empty
 				} catch {
 				} finally {
-					this.summaryIteration[iterationName] = test.summarizeStep()
 					if (!this.looper.isRestart) {
-						const summarizedData = this.summarizeIteration(iteration, startTime)
+						const summarizedData = this.summarizeIteration(test, iteration, startTime)
 						reportTableData.push(summarizedData)
 					}
 					test.resetSummarizeStep()
-					this.cache?.resetCache()
 				}
 			})
 
@@ -162,7 +159,7 @@ export class Runner {
 		return `Iteration ${iteration}`
 	}
 
-	summarizeIteration(iteration: number, startTime: Date): number[] {
+	summarizeIteration(test: Test, iteration: number, startTime: Date): number[] {
 		let passedMessage = '',
 			failedMessage = '',
 			skippedMessage = '',
@@ -171,8 +168,18 @@ export class Runner {
 			failedNo = 0,
 			skippedNo = 0,
 			unexecutedNo = 0
-		const steps: StepResult[] = this.summaryIteration[this.getIterationName(iteration)]
-		steps.forEach(step => {
+
+		const iterationName: string = this.getIterationName(iteration)
+		const duration: number = new Date().valueOf() - startTime.valueOf()
+		const stepResult: StepResult[] = test.summarizeStep()
+		const iterationResult = {
+			name: iterationName,
+			duration: duration,
+			stepResults: stepResult,
+		}
+		this.summaryIteration.push(iterationResult)
+
+		stepResult.forEach(step => {
 			switch (step.status) {
 				case Status.PASSED:
 					passedNo += 1
@@ -193,14 +200,12 @@ export class Runner {
 			}
 		})
 		const finallyMessage = chalk(passedMessage, failedMessage, skippedMessage, unexecutedMessage)
-		const duration = new Date().valueOf() - startTime.valueOf()
-		this.summaryIteration[`Iteration ${iteration}`].duration = duration
-		console.log(
-			`${this.getIterationName(iteration)} completed in ${ms(
-				duration,
-			)} (walltime) ${finallyMessage}`,
-		)
+		console.log(`${iterationName} completed in ${ms(duration)} (walltime) ${finallyMessage}`)
 		return [iteration, passedNo, failedNo, skippedNo, unexecutedNo]
+	}
+
+	getSummaryIterations(): IterationResult[] {
+		return this.summaryIteration
 	}
 }
 
@@ -216,7 +221,6 @@ export class PersistentRunner extends Runner {
 		testSettingOverrides: TestSettings,
 		launchOptionOverrides: Partial<ConcreteLaunchOptions>,
 		testObserverFactory: (t: TestObserver) => TestObserver = x => x,
-		cache: ReportCache,
 	) {
 		super(
 			clientFactory,
@@ -225,7 +229,6 @@ export class PersistentRunner extends Runner {
 			testSettingOverrides,
 			launchOptionOverrides,
 			testObserverFactory,
-			cache,
 		)
 
 		if (this.testCommander !== undefined) {

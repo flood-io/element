@@ -3,32 +3,32 @@ import { EventEmitter } from 'events'
 interface OutputCache {
 	message: string
 	heigth: number
-	line: number
 }
 export class ReportCache {
 	private _cache: OutputCache[]
 
 	constructor(private myEmitter: EventEmitter) {
 		this._cache = []
-		const addCache = (line: number, heigth: number, message: string) => {
+		const addCache = (message: string, heigth: number) => {
 			Array.prototype.push.call(this._cache as [], {
 				message,
 				heigth,
-				line,
 			})
 		}
 		this.myEmitter.on('add', addCache)
 	}
 
 	getLinesBetweenCurrentAndPreviousMessage(previousMessage: string): number {
-		const latestOutput: OutputCache = this.getLatestMessageInCache()
 		const previousOutput = this.findMessageInCache(previousMessage)
 		if (previousOutput) {
-			const latestLine = latestOutput.line + (latestOutput.heigth - 1)
-			const height = latestLine - previousOutput.line + 1
-			return height
+			const previousIndex = this._cache.indexOf(previousOutput)
+			let line = 0
+			for (let i = previousIndex; i < this._cache.length; i++) {
+				line += this._cache[i].heigth
+			}
+			return line
 		}
-		return 0
+		return 1
 	}
 
 	updateMessageInCache(previousMessage: string, newMessage: string): void {
@@ -36,12 +36,7 @@ export class ReportCache {
 		const previousOutput = this.findMessageInCache(previousMessage)
 		if (latestOutput && previousOutput) {
 			const previousIndex = this._cache.indexOf(previousOutput)
-			this._cache[previousIndex] = {
-				message: latestOutput.message,
-				heigth: latestOutput.heigth,
-				line: previousOutput.line,
-			}
-			this.myEmitter.emit('update', latestOutput.line - 1)
+			this._cache[previousIndex] = latestOutput
 			this._cache.pop()
 		}
 	}

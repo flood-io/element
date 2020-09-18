@@ -35,8 +35,24 @@ export class BaseReporter implements IReporter {
 	): void {
 		const stepName = 'Step ' + (subtitle ? `'${label}' (${subtitle})` : `'${label}'`)
 		const beforeRunStepMessage = `${stepName} is running ...`
+		const beforeRunHookMessage = chalk.grey(`${label} is running ...`)
+		const afterRunHookMessage = `${chalk.green.bold('✔')} ${chalk.grey(`${label} finished`)}`
 		let message = ''
 		switch (stage) {
+			case TestEvent.BeforeAllStep:
+			case TestEvent.AfterAllStep:
+			case TestEvent.BeforeEachStep:
+			case TestEvent.AfterEachStep:
+				console.group(beforeRunHookMessage)
+				console.group()
+				break
+			case TestEvent.BeforeAllStepFinished:
+			case TestEvent.AfterAllStepFinished:
+			case TestEvent.BeforeEachStepFinished:
+			case TestEvent.AfterEachStepFinished:
+				this.updateMessage(beforeRunHookMessage, afterRunHookMessage)
+				console.groupEnd()
+				break
 			case TestEvent.BeforeStep:
 				console.group(chalk.grey(beforeRunStepMessage))
 				console.group()

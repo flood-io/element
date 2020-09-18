@@ -39,7 +39,7 @@ step("Step 1", { waitTimeout: 300 }, async (browser: Browser) => {
 
 **Properties**
 
-- waitTimeout? `number` (Optional) Timeout in seconds for all wait and navigation operations within this [step][].
+- waitTimeout? `number` (Optional) Timeout in seconds for all wait and navigation operations within this step.
 
 ## `StepFunction`
 
@@ -119,9 +119,8 @@ export default suite.withData((testData, step) => {
 })
 ```
 
-[floodprocessenv]: DSL
-[step]: api/DSL
+[floodprocessenv]: #floodprocessenv
 [browser]: Browser
-[suite]: DSL
-[stepfunction]: api/DSL
-[stepoptions]: DSL
+[suite]: #suite
+[stepfunction]: #stepfunction
+[stepoptions]: #stepoptions

@@ -145,4 +145,4 @@ An [ElementHandle][] can also be used as a Locator which finds itself.
 [EvaluateFn]: [evaluate]
 
 [by]: Locators
-[elementhandle]: api/element-handle
+[elementhandle]: element-handle

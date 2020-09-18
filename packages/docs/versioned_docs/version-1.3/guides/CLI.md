@@ -71,6 +71,8 @@ Positionals:
     `[number][default: 1]`
   - ~~`--strict` Compile the script in strict mode. This can be helpful
     in diagnosing problems.~~ `DEPRECATED`
+	- `--fail-status-code` Specify an exit code when the test fails. Defaults to 1.
+	- `--config-file` Specify the path to a config file to run the test with. If a path is not passed, defaults to `element.config.js`. This flag only works when [running a test with a config file](cli.md#run-a-test-locally-with-the-default-config-file)
 
 - Paths:
 
@@ -134,7 +136,7 @@ This would be useful in case you want to reuse a config file across different pr
 
 ## Run an Element script on Flood
 
-Since Element 1.3.0, you can launch a flood directly from Element CLI. To do so, you'll need [a Flood account](https://app.flood.io/sign-up) and your [API token](https://app.flood.io/account/api).
+Since Element 1.3.0, you can launch a flood directly from Element CLI. To do so, you need to be authenticated with Flood first.
 
 ### Authenticate with Flood from Element CLI
 
@@ -142,7 +144,7 @@ Since Element 1.3.0, you can launch a flood directly from Element CLI. To do so,
 element flood authenticate <flood-api-token>
 ```
 
-Visit https://app.flood.io/account/api to get your API Token, then paste it into the above command to get authenticated. This only needs to be done once unless you want to change your API token.
+Visit https://app.flood.io/account/api to get your API Token, then paste it into the above command to get authenticated. Unless you want to change the API Token, this step should be done only once.
 
 ### List all Flood projects
 
@@ -152,33 +154,25 @@ element flood project ls
 
 ### Select a Flood project to use
 
-Every flood needs to belong to a project. Therefore, you need to select a project to use before you can launch a flood.
-
 ```shell
-element flood project use <project-name>
+element flood use 'project-name (within quotation mark)'
 ```
 
 or
 
 ```shell
-element flood project use <project-id>
+element flood use <project-id>
 ```
 
-### Print the current project being used
+Every flood needs to belong to a project. Therefore, you need to select a project to use before you can launch a flood.
 
-Use this command to display the Flood project currently in use.
+### Print the current project being used
 
 ```shell
 element flood project
 ```
 
-### Launch a flood using on demand grid
-
-```shell
-element flood run <path-to-script> --vu <number> --duration <minutes> --rampup <minutes>
-```
-
-The meaning and default values for `--vu`, `--duration` and `--rampup` are the same as launching a flood on hosted grid.
+This command would be useful in case you forgot the Flood project that is being used.
 
 ### Launch a flood on hosted grid
 
@@ -190,3 +184,15 @@ element flood run <path-to-script> --hosted --vu <number> --duration <minutes> -
 - `--vu`: number of virtual users to simulate. Default to `500` if not specified
 - `--duration`: length of the test, measured in minutes. Default to `15` minutes if not specified.
 - `--rampup`: the amount of time it will take to reach the defined number of `vu`, measured in minutes. Default to `0` if not specified.
+
+### Launch a flood using on-demand grid
+
+```shell
+element flood run <path-to-script> --vu <number> --duration <minutes> --rampup <minutes>
+```
+
+The meaning and default values for `--vu`, `--duration` and `--rampup` are the same as launching a flood on hosted grid, which are 500 (users), 15 (minutes) and 0 (minutes) respectively, if they are not specified in the command line.
+
+:::info HOW TO NAVIGATE AND SELECT
+After running the command `element run flood`, you will be asked to select regions (to run on-demand test), or grids (to run a test on a hosted grid). To navigate among the options, use the Up/Down arrow key. To select an option, press the Space bar. You can select multiple options if you want.
+:::

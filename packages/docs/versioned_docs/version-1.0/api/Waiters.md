@@ -32,7 +32,6 @@ The target frame may be specified as:
 - string name of the frame to wait for matching the frame's `name` or `id` attribute.
 - locator which may be used to first locate a FRAME or IFRAME on the current page before attempting to switch to it.
 
-Upon successful resolution of this condition, the driver will be left focused on the new frame.
 
 **Example:**
 
@@ -211,6 +210,16 @@ Creates a condition which will wait until the element's text becomes different f
 ### `Until.elementTextMatches(selectorOrLocator, regex)`
 
 Creates a condition which will wait until the element's text matches the target Regular Expression.
+
+**Parameters**
+
+- selectorOrLocator [`NullableLocatable`][nullablelocatable]
+- regex [`RegExp`][regexp]
+- returns: [`Condition`][condition]
+
+### `Until.elementTextDoesNotMatch(selectorOrLocator, regex)`
+
+Creates a condition which will wait until the element's text no longer matches the target Regular Expression.
 
 **Parameters**
 

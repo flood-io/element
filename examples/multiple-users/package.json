@@ -1,0 +1,9 @@
+{
+	"name": "multiple-users",
+	"version": "2.0.0-beta.4",
+	"main": "multiple-users.ts",
+	"license": "Phile",
+	"dependencies": {
+		"@flood/element": "*"
+	}
+}

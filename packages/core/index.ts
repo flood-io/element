@@ -71,9 +71,9 @@ export const TestData = new NullTestDataLoaders()
 export {
 	TestSettings,
 	setup,
-	DEFAULT_SETTINGS,
 	ConsoleMethod,
 	ResponseTiming,
+	RampStage,
 } from './src/runtime/Settings'
 
 /**
@@ -116,3 +116,6 @@ export { EvaluatedScript } from './src/runtime/EvaluatedScript'
 export { EvaluatedScriptLike } from './src/runtime/EvaluatedScriptLike'
 export { default as WorkRoot } from './src/runtime-environment/WorkRoot'
 export { BROWSER_TYPE } from './src/page/types'
+export { AsyncFactory } from './src/utils/Factory'
+export { default as PreCompiledTestScript } from './src/test-script/PreCompiledTestScript'
+export { Runner } from './src/Runner'

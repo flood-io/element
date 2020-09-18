@@ -70,6 +70,7 @@ describe('Test', () => {
 			launchArgs: [],
 			viewport: null,
 			tries: 0,
+			stages: [],
 		}
 		expect(test.settings).toEqual(normalizeSettings(defaultSettings))
 	})

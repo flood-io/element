@@ -3,7 +3,7 @@ import { TestScriptErrorMapper } from '@flood/element-report'
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 export interface ITestScript extends TestScriptErrorMapper {
-	sandboxedFilename: string
+	sandboxesFilename: string
 	vmScript: VMScript
 	source: string
 	sourceMap: string

@@ -27,6 +27,14 @@ export class NullWorkRoot {
 	testData(filename: string): string {
 		return path.join('/tmp', 'test-data', filename)
 	}
+
+	getRoot(): string {
+		return ''
+	}
+
+	getSubRoot(key: string): string {
+		return ''
+	}
 }
 
 export const nullRuntimeEnvironment = {

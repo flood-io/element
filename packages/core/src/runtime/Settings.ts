@@ -240,6 +240,16 @@ export interface TestSettings {
 	 * Define the loop count of the recovery step
 	 */
 	tries?: number
+
+	/**
+	 * Specifies the steps for ramping up and down load
+	 */
+	stages?: RampStage[]
+}
+
+export type RampStage = {
+	duration: string
+	target: number
 }
 
 /**
@@ -273,6 +283,7 @@ export const DEFAULT_SETTINGS: ConcreteTestSettings = {
 	extraHTTPHeaders: {},
 	launchArgs: [],
 	viewport: null,
+	stages: [],
 }
 
 /**

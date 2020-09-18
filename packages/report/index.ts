@@ -27,3 +27,4 @@ export {
 	TestResult,
 } from './src/types/TestResult'
 export { Status } from './src/types/Status'
+export { CallSite, callSiteToString } from './src/types/CallSite'

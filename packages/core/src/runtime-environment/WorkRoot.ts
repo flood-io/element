@@ -18,6 +18,14 @@ export default class WorkRoot implements IWorkRoot {
 		this.ensureExistsSync()
 	}
 
+	getRoot(): string {
+		return this.root
+	}
+
+	getSubRoot(key: string): string {
+		return this.specialSubRoots[key]
+	}
+
 	ensureExistsSync(): void {
 		this.subRoots.forEach(r => mkdirpSync(join(this.root, r)))
 	}

@@ -30,17 +30,32 @@ export default class LifecycleObserver implements TestObserver {
 	}
 	async onStepPassed(test: Test, step: Step) {
 		const testObserver: TestObserver = this.next
-		await testObserver.afterStep(test, step)
 		const timing = await (testObserver as TimingObserver).getMeasurementTime(
 			test.settings.responseTimeMeasurement,
+			true,
 		)
-		test.reporter.testLifecycle(TestEvent.StepSucceeded, step.name, step.subTitle, timing)
 		step.duration = timing
+		await testObserver.onStepPassed(test, step)
+		test.reporter.testLifecycle(TestEvent.StepSucceeded, step.name, step.subTitle, timing)
 	}
+
 	async onStepError(test: Test, step: Step, error: StructuredError<any>) {
-		await this.next.onStepError(test, step, error)
-		test.reporter.testLifecycle(TestEvent.StepFailed, step.name, step.subTitle, 0, error?.message)
+		const testObserver: TestObserver = this.next
+		const timing = await (testObserver as TimingObserver).getMeasurementTime(
+			test.settings.responseTimeMeasurement,
+			true,
+		)
+		step.duration = timing
+		await testObserver.onStepError(test, step, error)
+		test.reporter.testLifecycle(
+			TestEvent.StepFailed,
+			step.name,
+			step.subTitle,
+			timing,
+			error?.message,
+		)
 	}
+
 	async onStepSkipped(test: Test, step: Step) {
 		await this.next.onStepSkipped(test, step)
 		test.reporter.testLifecycle(TestEvent.StepSkipped, step.name)
@@ -50,9 +65,14 @@ export default class LifecycleObserver implements TestObserver {
 		await this.next.onStepUnexecuted(test, step)
 		test.reporter.testLifecycle(TestEvent.StepUnexecuted, step.name)
 	}
+
 	async afterStep(test: Test, step: Step) {
-		await this.next.afterStep(test, step)
-		test.reporter.testLifecycle(TestEvent.AfterStep, step.name)
+		const testObserver: TestObserver = this.next
+		await testObserver.afterStep(test, step)
+		const timing = await (testObserver as TimingObserver).getMeasurementTime(
+			test.settings.responseTimeMeasurement,
+		)
+		test.reporter.testLifecycle(TestEvent.AfterStep, step.name, step.subTitle, timing)
 	}
 
 	async beforeStepAction(test: Test, step: Step, command: string) {

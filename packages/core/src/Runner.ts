@@ -51,7 +51,7 @@ export class Runner {
 	async stop(): Promise<void> {
 		this.running = false
 		if (this.looper) await this.looper.kill()
-		if (this.client) (await this.client).close()
+		if (this.client) await this.client.close()
 		return
 	}
 

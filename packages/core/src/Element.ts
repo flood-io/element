@@ -43,7 +43,6 @@ export async function runSingleTestScript(opts: ElementOptions): Promise<Iterati
 		})
 
 		process.once('SIGUSR2', async () => {
-			// Usually received by nodemon on file change
 			await runner.stop()
 			process.kill(process.pid, 'SIGUSR2')
 		})

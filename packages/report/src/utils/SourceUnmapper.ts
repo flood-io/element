@@ -1,5 +1,5 @@
 import { SourceMapConsumer, NullableMappedPosition } from 'source-map'
-import { Callsite, callsiteToString } from '../types/Callsite'
+import { CallSite, callSiteToString } from '../types/CallSite'
 
 interface StackLine {
 	at: string
@@ -24,11 +24,11 @@ export class SourceUnmapper {
 		private sourceMapConsumer: SourceMapConsumer,
 	) {}
 
-	public unmapNodeStackLine(stackLine: string): string {
-		return callsiteToString(this.unmapCallsite(stackLine))
+	public unMapNodeStackLine(stackLine: string): string {
+		return callSiteToString(this.unMapCallSite(stackLine))
 	}
 
-	public unmapCallsite(stackLine: string): Callsite | undefined {
+	public unMapCallSite(stackLine: string): CallSite | undefined {
 		const match = /\s+at [^(]+ \((.*?):(\d+):(\d+)\)/.exec(stackLine)
 		if (match) {
 			const pos = { source: match[1], line: +match[2], column: +match[3] }
@@ -50,7 +50,7 @@ export class SourceUnmapper {
 		}
 	}
 
-	public unmapStack(stack: string[]): StackLine[] {
+	public unMapStack(stack: string[]): StackLine[] {
 		return this.parseStack(stack)
 			.map(s => this.originalPositionFor(s))
 			.filter((x): x is StackLine => x !== undefined)
@@ -85,8 +85,8 @@ export class SourceUnmapper {
 		}
 	}
 
-	public unmapStackNodeStrings(stack: string[]): string[] {
-		const unmapped = this.unmapStack(stack)
+	public unMapStackNodeStrings(stack: string[]): string[] {
+		const unmapped = this.unMapStack(stack)
 		return unmapped.map(this.stackLineToNodeString)
 	}
 

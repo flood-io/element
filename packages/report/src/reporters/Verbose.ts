@@ -92,8 +92,8 @@ export class VerboseReporter implements IReporter {
 	}
 	testStepError(err: TestScriptError): void {
 		const detail = err.toDetailObject(true)
-		if (detail.callsite) {
-			console.error(detail.callsite)
+		if (detail.callSite) {
+			console.error(detail.callSite)
 		}
 	}
 

@@ -84,8 +84,8 @@ export class BaseReporter implements IReporter {
 	}
 	testStepError(err: TestScriptError): void {
 		const detail = err.toDetailObject(false)
-		if (detail.callsite) {
-			console.error(detail.callsite)
+		if (detail.callSite) {
+			console.error(detail.callSite)
 		}
 	}
 

@@ -1,21 +1,19 @@
 import { Argv, Arguments, CommandModule } from 'yargs'
 import { checkFile } from './common'
-import { ElementRunArguments, runCommandLine } from '@flood/element-core'
+import {
+	ElementRunArguments,
+	runCommandLine as runSingleUser,
+	normalizeElementOptions,
+	ElementOptions,
+} from '@flood/element-core'
+import { runCommandLine as runMultipleUser } from '@flood/element-scheduler'
 
-import { join } from 'path'
-import glob from 'glob'
 import chalk from 'chalk'
+import { EventEmitter } from 'events'
+import { ReportCache } from '@flood/element-report'
+import { getFilesPattern, readConfigFile } from '../utils/run'
 
 interface RunCommonArguments extends Arguments, ElementRunArguments {}
-
-async function readConfigFile(file: string): Promise<any> {
-	const rootPath = process.cwd()
-	try {
-		return await import(join(rootPath, file))
-	} catch {
-		throw Error('The config file was not structured correctly. Please check and try again')
-	}
-}
 
 async function getAllTestScriptsFromConfiguration(
 	args: RunCommonArguments,
@@ -27,20 +25,8 @@ async function getAllTestScriptsFromConfiguration(
 	if (!paths.testPathMatch || !paths.testPathMatch.length) {
 		throw Error('Found no test scripts matching testPathMatch pattern')
 	}
-	const files: string[] = []
-	try {
-		files.push(
-			...(paths.testPathMatch.reduce(
-				(arr: string[], item: string) => arr.concat(glob.sync(item)),
-				[],
-			) as []),
-		)
-		if (!files.length) {
-			throw Error('Found no test scripts matching testPathMatch pattern')
-		}
-	} catch {
-		throw Error('Found no test scripts matching testPathMatch pattern')
-	}
+	const files = getFilesPattern(paths.testPathMatch)
+
 	return { ...options, paths, testFiles: files.sort() }
 }
 
@@ -49,12 +35,28 @@ const cmd: CommandModule = {
 	describe: 'Run [a test script| test scripts with configuration] locally',
 
 	async handler(args: RunCommonArguments): Promise<void> {
-		if (!args.file) {
-			const configArgs = await getAllTestScriptsFromConfiguration(args)
-			await runCommandLine(configArgs)
-		} else {
-			await runCommandLine(args)
+		const { file, mu } = args
+		if (mu) {
+			if (!file) {
+				console.log(
+					chalk.redBright(
+						`The mode 'running the test with a config file' does not support running with multiple users`,
+					),
+				)
+				return
+			}
+			const myEmitter = new EventEmitter()
+			const cache = new ReportCache(myEmitter)
+			const opts: ElementOptions = normalizeElementOptions(args, cache)
+			await runMultipleUser(opts)
+			return
 		}
+		if (file) {
+			await runSingleUser(args)
+			return
+		}
+		const configArgs = await getAllTestScriptsFromConfiguration(args)
+		await runSingleUser(configArgs)
 	},
 	builder(yargs: Argv): Argv {
 		return yargs
@@ -77,6 +79,10 @@ const cmd: CommandModule = {
 
 					return chromeVersion
 				},
+			})
+			.option('browser-type', {
+				group: 'Browser:',
+				describe: 'Run in a specific browser',
 			})
 			.option('no-headless', {
 				group: 'Browser:',
@@ -160,6 +166,11 @@ const cmd: CommandModule = {
 				describe: 'Run test scripts with configuration',
 				type: 'string',
 				default: 'element.config.js',
+			})
+			.option('mu', {
+				describe: 'Run test scripts with multiple users',
+				type: 'boolean',
+				default: false,
 			})
 			.fail((msg, err) => {
 				if (err) console.error(chalk.redBright(err.message))

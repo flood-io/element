@@ -213,7 +213,7 @@ async function runTestScriptWithConfiguration(args: RunCommonArguments): Promise
 
 const cmd: CommandModule = {
 	command: 'run [file] [options]',
-	describe: 'Run [a test script| test scripts with configuration] locally',
+	describe: 'Run a test script (or multiple test scripts with configuration) locally',
 
 	async handler(args: RunCommonArguments): Promise<void> {
 		if (args.file) {
@@ -295,7 +295,7 @@ const cmd: CommandModule = {
 			})
 			.option('strict', {
 				group: 'Running the test script:',
-				describe: 'Compile the script in strict mode. This can be helpful in diagnosing problems.',
+				describe: '[DEPRECATED] Compile the script in strict mode. This can be helpful in diagnosing problems.',
 			})
 			.option('work-root', {
 				group: 'Paths:',
@@ -316,7 +316,7 @@ const cmd: CommandModule = {
 				default: 1,
 			})
 			.positional('file', {
-				describe: 'the test script to run',
+				describe: 'The test script to run',
 				coerce: file => {
 					const fileErr = checkFile(file as string)
 					if (fileErr) throw fileErr
@@ -324,7 +324,7 @@ const cmd: CommandModule = {
 				},
 			})
 			.option('config-file', {
-				describe: 'Run test scripts with configuration',
+				describe: 'Run multiple test scripts sequentially with a configuration file',
 				type: 'string',
 				default: 'element.config.js',
 			})

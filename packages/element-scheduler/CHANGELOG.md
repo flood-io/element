@@ -96,19 +96,3 @@ add a new line for `tsconfig.json`
 * chore: clean code after merge from beta
 
 Co-authored-by: phile <phi@flood.io>
-
-
-
-
-
-# [2.0.0-beta.6](https://github.com/flood-io/element/compare/v2.0.0-beta.5...v2.0.0-beta.6) (2020-09-18)
-
-**Note:** Version bump only for package @flood/element-report
-
-
-
-
-
-# [2.0.0-beta.5](https://github.com/flood-io/element/compare/v2.0.0-beta.4...v2.0.0-beta.5) (2020-09-07)
-
-**Note:** Version bump only for package @flood/element-report

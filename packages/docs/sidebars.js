@@ -31,7 +31,6 @@ module.exports = {
 			'api/mouse',
 			'api/target-locator',
 			'api/test-data',
-			'api/settings',
 			'api/env',
 			'api/constants',
 		],

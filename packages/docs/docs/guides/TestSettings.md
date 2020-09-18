@@ -63,6 +63,11 @@ This setting can be useful for very noisy tests. When a method is filtered, it s
 ### incognito 
 `false` | `true`  (Optional)   Controls whether each iteration should run within an Incognito window instead of a normal  
   window. The Incognito session will be destroyed between each loop.  
+
+### launchArgs
+`string[]` Additional arguments to pass to the browser instance.
+The list of Chromium flags can be found [here](https://peter.sh/experiments/chromium-command-line-switches/)
+
 ### loopCount 
 `number`  (Optional)   Number of times to run this test.  
     

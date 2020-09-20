@@ -41,4 +41,8 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: 'Publish beta to Homebrew'
-        run: yarn publish:brew
+        uses: izumin5210/action-homebrew-tap@v1
+        with:
+          tap: izumin5210/homebrew-tools
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tap-token: ${{ secrets.TAP_GITHUB_TOKEN }}

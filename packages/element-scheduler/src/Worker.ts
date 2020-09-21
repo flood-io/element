@@ -14,7 +14,7 @@ import { join } from 'path'
 import { Worker as WorkerThread } from 'worker_threads'
 import { PassThrough } from 'stream'
 import mergeStream from 'merge-stream'
-import { Page } from 'puppeteer'
+import { Page } from 'playwright'
 import { WorkerConnection } from './WorkerConnection'
 
 export type WorkerOptions = {

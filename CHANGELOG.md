@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-beta.8](https://github.com/flood-io/element/compare/v2.0.0-beta.7...v2.0.0-beta.8) (2020-09-21)
+
+
+### Bug Fixes
+
+* brew release workflows ([#278](https://github.com/flood-io/element/issues/278)) ([fdcdaf6](https://github.com/flood-io/element/commit/fdcdaf6767026655e208a2eb6ef953761f5cea5a))
+* update release workflows ([#263](https://github.com/flood-io/element/issues/263)) ([5eab840](https://github.com/flood-io/element/commit/5eab840283d4d81c5689992d7874776eff23fe96))
+
+
+### Reverts
+
+* Revert "fix: update release workflows (#263)" (#280) ([c8fc1d5](https://github.com/flood-io/element/commit/c8fc1d5cae2b39e47f50dcfced0d392458033918)), closes [#263](https://github.com/flood-io/element/issues/263) [#280](https://github.com/flood-io/element/issues/280)
+* Revert "fix: brew release workflows (#278)" (#279) ([3dcc97c](https://github.com/flood-io/element/commit/3dcc97c2cace7ebfe3317d2354fbe9008e7d6dde)), closes [#278](https://github.com/flood-io/element/issues/278) [#279](https://github.com/flood-io/element/issues/279)
+
+
+
+
+
 # [2.0.0-beta.7](https://github.com/flood-io/element/compare/v2.0.0-beta.6...v2.0.0-beta.7) (2020-09-18)
 
 

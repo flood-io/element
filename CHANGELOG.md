@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-beta.9](https://github.com/flood-io/element/compare/v2.0.0-beta.8...v2.0.0-beta.9) (2020-09-21)
+
+
+### Reverts
+
+* Revert "chore: fix error when running `element --version` (#277)" (#281) ([6f7a7f1](https://github.com/flood-io/element/commit/6f7a7f19c43f793154ac08ede4487f83bd65f85d)), closes [#277](https://github.com/flood-io/element/issues/277) [#281](https://github.com/flood-io/element/issues/281)
+
+
+
+
+
 # [2.0.0-beta.8](https://github.com/flood-io/element/compare/v2.0.0-beta.7...v2.0.0-beta.8) (2020-09-21)
 
 

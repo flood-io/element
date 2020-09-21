@@ -1,6 +1,6 @@
 {
 	"name": "@flood/element-cli",
-	"version": "2.0.0-beta.8",
+	"version": "2.0.0-beta.9",
 	"license": "Apache-2.0",
 	"description": "The command line interface for Flood Element",
 	"repository": "flood-io/element",
@@ -15,11 +15,11 @@
 		"dev": "ts-node ./bin/element.ts"
 	},
 	"dependencies": {
-		"@flood/element": "^2.0.0-beta.8",
-		"@flood/element-api": "^2.0.0-beta.8",
-		"@flood/element-core": "^2.0.0-beta.8",
-		"@flood/element-flood-runner": "^2.0.0-beta.8",
-		"@flood/element-scheduler": "^2.0.0-beta.8",
+		"@flood/element": "^2.0.0-beta.9",
+		"@flood/element-api": "^2.0.0-beta.9",
+		"@flood/element-core": "^2.0.0-beta.9",
+		"@flood/element-flood-runner": "^2.0.0-beta.9",
+		"@flood/element-scheduler": "^2.0.0-beta.9",
 		"boxen": "^3.0",
 		"chalk": "^2.4.1",
 		"chokidar": "^2.0.4",

@@ -4,10 +4,10 @@ import {
 	RuntimeEnvironment,
 	BROWSER_TYPE,
 } from '@flood/element-core'
-import { WorkerPool } from './WorkerPool'
-import { ActionConst, ChildMessages, WorkerInterface } from './types'
-import { assertIsValidateStages } from './assertIsValidateStages'
-import { Plan } from './Plan'
+import { WorkerPool } from '@flood/element-scheduler/src/WorkerPool'
+import { ActionConst, ChildMessages, WorkerInterface } from '@flood/element-scheduler/src/types'
+import { assertIsValidateStages } from '@flood/element-scheduler/src/assertIsValidateStages'
+import { Plan } from '@flood/element-scheduler/src/Plan'
 import { BrowserServer } from 'playwright'
 
 type SchedulerSetting = TestSettings & {

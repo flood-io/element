@@ -1,3 +1,5 @@
+import { join } from 'path'
+import findRoot from 'find-root'
 import { Logger } from 'winston'
 import { IReporter } from './Reporter'
 import { PuppeteerClient, launch } from './driver/Puppeteer'
@@ -85,6 +87,10 @@ export async function runCommandLine(opts: ElementOptions): Promise<void> {
 	}
 
 	try {
+		// eslint-disable-next-line @typescript-eslint/no-var-requires
+		const pkg = require(join(findRoot(__dirname), 'package.json'))
+
+		console.log(`Running the test with Element version ${pkg.version}`)
 		await runner.run(testScriptFactory)
 	} catch (err) {
 		console.log('Element exited with error')

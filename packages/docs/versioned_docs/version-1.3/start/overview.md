@@ -3,7 +3,7 @@ title: Overview
 id: overview
 ---
 
-Element is a browser-based load test tool that allows you to create scripts quickly in Typescript. Element can use your web app in the same way that your customers do, opening a browser and interacting with page elements. It's written like a functional test script, but with the help of [Flood](https://flood.io), you can easily run a load test on as many nodes you want in the cloud.
+Element is a browser based load test tool that allows you to create scripts quickly in Typescript. Element can use your web app in the same way that your customers do, opening a browser and interacting with page elements. It's written like a functional test script, but with the help of [Flood](https://flood.io), you can easily run a load test on as many nodes you want in the cloud.
 
 ## Learn by example
 

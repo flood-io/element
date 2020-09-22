@@ -96,15 +96,15 @@
         },
         {
           "type": "doc",
+          "id": "version-1.0/api/mouse"
+        },
+        {
+          "type": "doc",
           "id": "version-1.0/api/target-locator"
         },
         {
           "type": "doc",
           "id": "version-1.0/api/test-data"
-        },
-        {
-          "type": "doc",
-          "id": "version-1.0/api/settings"
         },
         {
           "type": "doc",

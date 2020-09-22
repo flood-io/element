@@ -4,7 +4,7 @@ title: TestData
 hide_title: true
 ---
 
-### `TestData`
+# `TestData`
 
 `TestData` is a pre-configured instance of [TestDataFactory][] that can be used to prepare test data for your script.
 
@@ -63,7 +63,7 @@ Advances the feed by one iteration
 
 **Parameters**
 
-- func [`FeedFilterFunction`][feedfilterfunction]
+- func &lt;FeedFilterFunction&gt;
 - returns: [`Feeder`][feeder]
 
 ### `Feeder.peek()`
@@ -95,7 +95,7 @@ Reads the data at the current cursor without advancing
 
 **Properties**
 
-- filters [`FeedFilterFunction`][feedfilterfunction]\[]
+- filters &lt;FeedFilterFunction&gt;\[]
 - instanceID `string`
 - lines `void`\[]
 - pointer `number`
@@ -158,7 +158,7 @@ TestData.fromCSV("users.csv").filter(
 
 **Parameters**
 
-- func [`FeedFilterFunction`][feedfilterfunction] filter function to compare each line
+- func &lt;FeedFilterFunction&gt; filter function to compare each line
 - returns: [`TestDataSource`][testdatasource]
 
 ### `TestDataSource.shuffle(shuffle)`
@@ -175,9 +175,6 @@ Shuffles the data set using the Fisher-Yates method. Use this to randomise the o
 # `TestDataFactory`
 
 A `TestDataFactory` is available to be imported into your test script as `TestData`. Use this to load a [TestDataSource][] which provides new test data to each iteration of your test.
-
-TODO
-Files should be uploaded to ...
 
 ## Methods
 
@@ -209,7 +206,6 @@ Loads data from a JSON ffile
 - filename `string` the JSON to load.
 - returns: [`TestDataSource`][testdatasource]
 
-[testdatafactory]: TestData
-[feeder]: TestData
-[testdatasource]: TestData
-[testdatasource]: TestData
+[testdatafactory]: TestData.md#testdatafactory
+[feeder]: TestData.md#feeder
+[testdatasource]: TestData.md#testdatasource

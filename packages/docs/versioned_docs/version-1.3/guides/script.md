@@ -235,7 +235,6 @@ export default () => {
 
 Run a step only once in the whole test regardless of the number of iterations. This can be used to create setup and teardown steps. For example, you can run an authentication step at the start of the test and a logout step at the end.
 
-Unlike the setup and
 
 ### step.once()
 

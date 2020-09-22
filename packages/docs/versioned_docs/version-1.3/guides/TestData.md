@@ -119,7 +119,7 @@ When loading in data from a file, we can still validate it by using `assert`. (N
 
 ```typescript
 import { step, TestData, Browser } from '@flood/element'
-import * as 'assert'
+import assert from 'assert'
 
 interface UserData {
   username: string

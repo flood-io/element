@@ -3,7 +3,9 @@ id: test-settings
 title: 'Test Settings'
 ---
 
-The TestSettings interface specifies the available settings you have to configure how your test runs. These properties should be exported using the property `settings`.
+The `TestSettings` is used to configure how you want Element to behave during a test run, including wait timing, timeouts, browser agent, window size, and much more.
+
+Settings are specified by exporting a `const settings` from your test script, and loaded when your test script is first evaluated by the test runner.
 
 **Example:**
 
@@ -61,10 +63,15 @@ This setting can be useful for very noisy tests. When a method is filtered, it s
 ### incognito 
 `false` | `true`  (Optional)   Controls whether each iteration should run within an Incognito window instead of a normal  
   window. The Incognito session will be destroyed between each loop.  
+
+### launchArgs
+`string[]` Additional arguments to pass to the browser instance.
+The list of Chromium flags can be found [here](https://peter.sh/experiments/chromium-command-line-switches/)
+
 ### loopCount 
 `number`  (Optional)   Number of times to run this test.  
     
-  Defaults to `-1` for an unlimited number of loops.  
+  Defaults to `-1` (or `Infinity`) for an unlimited number of loops.  
     
 ### name 
 `string`  (Optional)   Speicifies the name of the test specified in the comments section  

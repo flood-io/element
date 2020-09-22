@@ -88,6 +88,12 @@ export interface ElementHandle {
 	highlight(): Promise<void>
 
 	/**
+	 * Sets the value of the file input
+	 * @param names Names of the files you want to upload. Relative to the script.
+	 */
+	uploadFile(...names: string[]): Promise<void>
+
+	/**
 	 * Takes a screenshot of this element and saves it to the results folder with a random name.
 	 */
 	takeScreenshot(options?: ScreenshotOptions): Promise<void>

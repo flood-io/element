@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.5](https://github.com/flood-io/element/compare/v1.3.4...v1.3.5) (2020-09-22)
+
+**Note:** Version bump only for package @flood/element-cli
+
+
+
+
+
 ## [1.3.4](https://github.com/flood-io/element/compare/v1.3.3...v1.3.4) (2020-09-18)
 
 **Note:** Version bump only for package @flood/element-cli

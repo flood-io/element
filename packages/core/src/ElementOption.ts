@@ -33,6 +33,7 @@ export interface ElementRunArguments {
 	configFile: string
 	verbose?: boolean
 	browserType: BROWSER_TYPE
+	export?: boolean
 }
 
 export interface ElementOptions {
@@ -52,6 +53,7 @@ export interface ElementOptions {
 	testCommander?: TestCommander
 	failStatusCode: number
 	browserType: BROWSER_TYPE
+	export?: boolean
 }
 
 function getWorkRootPath(file: string, root?: string): string {
@@ -163,6 +165,7 @@ export function normalizeElementOptions(
 		persistentRunner: false,
 		failStatusCode: args['fail-status-code'],
 		browserType: args.browserType,
+		export: args.export,
 	}
 
 	if (args.loopCount) {

@@ -1,6 +1,7 @@
 import { ViewportSize } from 'playwright'
 import { BROWSER_TYPE } from '../page/types'
 import ms from 'ms'
+import { DeviceDescriptor } from '../page/Device'
 
 /**
  * Declares the settings for the test, overriding the settings constant exported in the test script.
@@ -114,7 +115,7 @@ export interface TestSettings {
 	/**
 	 * Specifies a device to emulate with browser device emulation.
 	 */
-	device?: string | null
+	device?: DeviceDescriptor | null
 
 	/**
 	 * Sets the viewport of the page.

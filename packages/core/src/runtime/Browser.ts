@@ -3,7 +3,6 @@ import {
 	Frame,
 	Page,
 	ViewportSize,
-	devices,
 	ChromiumBrowserContext,
 	BrowserContext,
 	HTTPCredentials,
@@ -34,6 +33,7 @@ import { locatableToLocator, toLocatorError } from './toLocatorError'
 import { Keyboard } from '../page/Keyboard'
 import { getFrames } from '../utils/frames'
 import ms from 'ms'
+import { DeviceDescriptor } from '../page/Device'
 
 export const debug = debugFactory('element:runtime:browser')
 const debugScreenshot = debugFactory('element:runtime:browser:screenshot')
@@ -414,9 +414,8 @@ export class Browser<T> implements BrowserInterface {
 	}
 
 	@addCallbacks()
-	public async emulateDevice(deviceName: string): Promise<void> {
-		const device = devices[deviceName]
-		if (!device) throw new Error(`Unknown device descriptor: ${deviceName}`)
+	public async emulateDevice(device: DeviceDescriptor): Promise<void> {
+		await this.client.closePages()
 		const context = await this.client.browser.newContext({
 			...device,
 		})

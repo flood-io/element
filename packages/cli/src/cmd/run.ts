@@ -172,6 +172,10 @@ const cmd: CommandModule = {
 				type: 'boolean',
 				default: false,
 			})
+			.option('export', {
+				describe: 'Export a HTML report after the test finished running',
+				type: 'boolean',
+			})
 			.fail((msg, err) => {
 				if (err) console.error(chalk.redBright(err.message))
 				if (msg) console.error(chalk.redBright(msg))

@@ -31,6 +31,7 @@ import { Hook, HookBase, HookType } from './StepLifeCycle'
 import StepIterator from './StepIterator'
 import { getNumberWithOrdinal } from '../utils/numerical'
 import { StructuredError } from '../utils/StructuredError'
+import chalk from 'chalk'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:test')
@@ -220,7 +221,7 @@ export default class Test implements ITest {
 			})
 		} catch (err) {
 			this.failed = true
-			throw err
+			console.error(chalk.red(err.message))
 		} finally {
 			await this.afterRunSteps(stepIterator)
 			debug('running hook function: afterAll')
@@ -262,14 +263,13 @@ export default class Test implements ITest {
 			})
 			step.duration = 0
 			return
-		} else if (!step.prop?.passed) {
-			this.summaryStep.push({
-				name: step.name,
-				status: Status.FAILED,
-				subTitle: step.subTitle,
-			})
-			return
 		}
+		this.summaryStep.push({
+			name: step.name,
+			status: Status.FAILED,
+			subTitle: step.subTitle,
+		})
+		return
 	}
 
 	summarizeStepAfterStopRunning(stepIterator: StepIterator): void {

@@ -11,7 +11,8 @@ export { Condition } from './src/page/Condition'
 /**
  * @docPage Constants
  */
-export { Device, Key, MouseButtons } from './src/page/Enums'
+export { Key, MouseButtons } from './src/page/Enums'
+export { Device } from './src/page/Device'
 
 /**
  * @docPage By

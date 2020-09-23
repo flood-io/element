@@ -28,7 +28,8 @@ import { RuntimeEnvironment } from '../runtime-environment/types'
 
 import { Until } from '../page/Until'
 import { By } from '../page/By'
-import { MouseButtons, Device, Key, userAgents } from '../page/Enums'
+import { MouseButtons, Key, userAgents } from '../page/Enums'
+import { Device } from '../page/Device'
 
 import { TestDataSource, TestDataFactory } from '../test-data/TestData'
 import { BoundTestDataLoaders } from '../test-data/TestDataLoaders'

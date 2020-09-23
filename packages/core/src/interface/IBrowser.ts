@@ -1,4 +1,3 @@
-import { Device } from '../page/Enums'
 import { Condition } from '../page/Condition'
 import { Page, Frame, ViewportSize } from 'playwright'
 import {
@@ -12,6 +11,7 @@ import { NullableLocatable } from '../runtime/Locatable'
 import { TargetLocator } from '../page/TargetLocator'
 import Mouse from '../page/Mouse'
 import { TestSettings } from '../runtime/Settings'
+import { DeviceDescriptor } from '../page/Device'
 
 /**
  * Browser is the main entry point in each <[step]>, it's your direct connection to the browser running the test.
@@ -78,7 +78,7 @@ export interface Browser {
 	/**
 	 * Configure Browser to emulate a given device
 	 */
-	emulateDevice(deviceName: Device): Promise<void>
+	emulateDevice(device: DeviceDescriptor): Promise<void>
 
 	/**
 	 * Set Browser to send a custom User Agent (UA) string

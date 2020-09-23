@@ -131,7 +131,7 @@ function makeTestCommander(file: string): TestCommander {
 	// TODO make this more reliable on linux
 	const watcher = watch(file, { persistent: true })
 	watcher.on('change', path => {
-		if (path === file) {
+		if (resolve(path) === resolve(file)) {
 			commander.emit('rerun-test')
 		}
 	})

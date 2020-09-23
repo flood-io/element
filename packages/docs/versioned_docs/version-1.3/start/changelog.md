@@ -2,8 +2,18 @@
 id: changelog
 title: Changelog
 ---
+## 1.3.6
+Released: 23 Sep 2020
+
+### Enhancements
+- Show Element version and Node version in terminal while running tests
+
+### Bugfixes
+- `ElementHandle.uploadFile()` has been implemented but is not exposed in the API
+- `Browser.wait()` returns value of type boolean only
+
 ## 1.3.3
-Released: Sep 2020
+Released: 18 Sep 2020
 
 ### Bugfixes
 - Backward compatible with legacy test scripts (actionDelay & stepDelay time measurement unit)

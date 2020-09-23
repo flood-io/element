@@ -90,7 +90,7 @@ export async function runCommandLine(opts: ElementOptions): Promise<void> {
 		// eslint-disable-next-line @typescript-eslint/no-var-requires
 		const pkg = require(join(findRoot(__dirname), 'package.json'))
 
-		console.log(`Running the test with Element version ${pkg.version}`)
+		console.log(`Running the test with:\n- Element v${pkg.version}\n- Node ${process.version}`)
 		await runner.run(testScriptFactory)
 	} catch (err) {
 		console.log('Element exited with error')

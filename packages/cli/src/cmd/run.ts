@@ -184,14 +184,7 @@ async function runTestScript(args: RunCommonArguments): Promise<void> {
 		opts.testCommander = makeTestCommander(file)
 	}
 
-	try {
-		await runCommandLine(opts)
-	} catch (err) {
-		console.log('Element exited with error')
-		console.error(err)
-		const exitCode = args['fail-status-code']
-		process.exit(exitCode)
-	}
+	await runCommandLine(opts)
 }
 
 async function runTestScriptWithConfiguration(args: RunCommonArguments): Promise<void> {
@@ -223,7 +216,13 @@ const cmd: CommandModule = {
 
 	async handler(args: RunCommonArguments): Promise<void> {
 		if (args.file) {
-			await runTestScript(args)
+			try {
+				await runTestScript(args)
+			} catch (err) {
+				console.log('Element exited with error')
+				console.error(err)
+				process.exit(args['fail-status-code'])
+			}
 		} else {
 			await runTestScriptWithConfiguration(args)
 		}

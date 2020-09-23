@@ -172,7 +172,6 @@ async function runTestScript(args: RunCommonArguments): Promise<void> {
 		runEnv: initRunEnv(workRootPath, testDataPath),
 		testSettingOverrides: {},
 		persistentRunner: false,
-		failStatusCode: args['fail-status-code'],
 	}
 
 	if (args.loopCount) {
@@ -185,7 +184,14 @@ async function runTestScript(args: RunCommonArguments): Promise<void> {
 		opts.testCommander = makeTestCommander(file)
 	}
 
-	await runCommandLine(opts)
+	try {
+		await runCommandLine(opts)
+	} catch (err) {
+		console.log('Element exited with error')
+		console.error(err)
+		const exitCode = args['fail-status-code']
+		process.exit(exitCode)
+	}
 }
 
 async function runTestScriptWithConfiguration(args: RunCommonArguments): Promise<void> {
@@ -295,7 +301,8 @@ const cmd: CommandModule = {
 			})
 			.option('strict', {
 				group: 'Running the test script:',
-				describe: '[DEPRECATED] Compile the script in strict mode. This can be helpful in diagnosing problems.',
+				describe:
+					'[DEPRECATED] Compile the script in strict mode. This can be helpful in diagnosing problems.',
 			})
 			.option('work-root', {
 				group: 'Paths:',

@@ -31,7 +31,6 @@ export async function run(file: string): Promise<void> {
 		testSettingOverrides: {},
 		testObserverFactory,
 		persistentRunner: false,
-		failStatusCode: 0,
 	}
 
 	if (gridConfig.testDuration !== undefined) {

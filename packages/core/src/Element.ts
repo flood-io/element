@@ -29,7 +29,6 @@ export interface ElementOptions {
 	testObserverFactory?: (t: TestObserver) => TestObserver
 	persistentRunner: boolean
 	testCommander?: TestCommander
-	failStatusCode: number
 }
 
 export async function runCommandLine(opts: ElementOptions): Promise<void> {
@@ -86,15 +85,9 @@ export async function runCommandLine(opts: ElementOptions): Promise<void> {
 		return new EvaluatedScript(opts.runEnv, await mustCompileFile(testScript, testScriptOptions))
 	}
 
-	try {
-		// eslint-disable-next-line @typescript-eslint/no-var-requires
-		const pkg = require(join(findRoot(__dirname), 'package.json'))
+	// eslint-disable-next-line @typescript-eslint/no-var-requires
+	const pkg = require(join(findRoot(__dirname), 'package.json'))
 
-		console.log(`Running the test with Element version ${pkg.version}`)
-		await runner.run(testScriptFactory)
-	} catch (err) {
-		console.log('Element exited with error')
-		console.error(err)
-		process.exit(opts.failStatusCode)
-	}
+	console.log(`Running the test with Element version ${pkg.version}`)
+	await runner.run(testScriptFactory)
 }

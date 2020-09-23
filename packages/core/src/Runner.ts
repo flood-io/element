@@ -232,7 +232,11 @@ export class PersistentRunner extends Runner {
 		)
 
 		if (this.testCommander !== undefined) {
-			this.testCommander.on('rerun-test', () => this.rerunTest())
+			this.testCommander.on('rerun-test', async () => {
+				if (!this.testScriptFactory) return
+				// this.client = await this.launchClient(await this.testScriptFactory())
+				this.rerunTest()
+			})
 		}
 	}
 
@@ -241,11 +245,7 @@ export class PersistentRunner extends Runner {
 	}
 
 	async runNextTest() {
-		// destructure for type checking (narrowing past undefined)
-		const { client, testScriptFactory } = this
-		if (client === undefined) {
-			return
-		}
+		const { testScriptFactory } = this
 		if (testScriptFactory === undefined) {
 			return
 		}
@@ -255,7 +255,9 @@ export class PersistentRunner extends Runner {
 		}
 
 		try {
-			await this.runTestScript(await testScriptFactory(), client)
+			const evaluateScript = await testScriptFactory()
+			this.client = await this.launchClient(evaluateScript)
+			await this.runTestScript(evaluateScript, this.client)
 		} catch (err) {
 			console.error(err.message)
 		}

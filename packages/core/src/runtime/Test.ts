@@ -192,13 +192,12 @@ export default class Test implements ITest {
 					return
 				}
 
-				browser.customContext = step
-
 				await Promise.race([
 					this.runStep(testObserver, browser, step, testDataRecord),
 					cancelToken.promise,
 				])
 
+				browser.customContext = step
 				this.summarizeStepAfterRunStep(step)
 
 				if (cancelToken.isCancellationRequested) return
@@ -461,14 +460,13 @@ export default class Test implements ITest {
 
 	private async doHookFnWithTimeout(fn: any, timeout: number): Promise<any> {
 		// Create a promise that rejects in <ms> milliseconds
-		const promiseTimeout = new Promise((_, reject) => {
-			const id = setTimeout(() => {
-				clearTimeout(id)
+		const timeoutPromise = new Promise((_, reject) => {
+			setTimeout(() => {
 				reject()
 			}, timeout)
 		})
 		// Returns a race between our timeout and the passed in promise
-		return Promise.race([fn(), promiseTimeout])
+		return Promise.race([fn(), timeoutPromise])
 	}
 
 	private async prepareHookFuncObserver(type: HookType, testObserver: TestObserver): Promise<void> {

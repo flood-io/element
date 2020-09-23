@@ -205,7 +205,10 @@ async function runTestScriptWithConfiguration(args: RunCommonArguments): Promise
 			...paths,
 			file,
 		}
-		await runTestScript(arg)
+		try {
+			await runTestScript(arg)
+			// eslint-disable-next-line no-empty
+		} catch {}
 	}
 	console.info('Test running with the config file has finished')
 }

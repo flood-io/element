@@ -215,10 +215,10 @@ Sends a series of key presses to the element to simulate a user typing on the ke
 - returns: [`Promise<void>`][promise]
 
 ### `uploadFile(filepath)`
-Sets the value of the file input. The name of a file you uploaded with this script. Relative to the script.
+Sets the value of the file input. Names of the file(s) you uploaded with this script. Relative to the script.
 
 **Parameters**
-- filepath `string` relative path to the file to be uploaded, separated by comma in case there're more than 1 file
+- filepath `string[]` relative path to the file to be uploaded, separated by comma in case there're more than 1 file
 - returns: [`Promise<void>`][promise]
 
 [promise]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise

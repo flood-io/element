@@ -3,7 +3,7 @@ id: changelog
 title: Changelog
 ---
 ## 1.3.6
-Released: 23 Sep 2020
+Released: 24 Sep 2020
 
 ### Enhancements
 - Show Element version and Node version in terminal while running tests

@@ -176,15 +176,20 @@ export default class Test implements ITest {
 				debug(JSON.stringify(testDataRecord))
 			}
 
+			let hookResult = true
 			debug('running hook function: beforeAll')
-			await this.runHookFn(this.hook.beforeAll, browser, testDataRecord)
+			hookResult = await this.runHookFn(this.hook.beforeAll, browser, testDataRecord)
+			if (!hookResult) return
 
 			debug('running steps')
 
 			await stepIterator.run(async (step: Step) => {
 				debug('running hook function: beforeEach')
-				await this.runHookFn(this.hook.beforeEach, browser, testDataRecord)
-
+				hookResult = await this.runHookFn(this.hook.beforeEach, browser, testDataRecord)
+				if (!hookResult) {
+					stepIterator.stop()
+					return
+				}
 				const condition = await stepIterator.callCondition(step, iteration, browser)
 				if (!condition) return
 
@@ -215,7 +220,11 @@ export default class Test implements ITest {
 				}
 
 				debug('running hook function: afterEach')
-				await this.runHookFn(this.hook.afterEach, browser, testDataRecord)
+				hookResult = await this.runHookFn(this.hook.afterEach, browser, testDataRecord)
+				if (!hookResult) {
+					stepIterator.stop()
+					return
+				}
 			})
 		} catch (err) {
 			console.log('error -> failed', err)
@@ -345,7 +354,7 @@ export default class Test implements ITest {
 		hooks: HookBase[],
 		browser: Browser<Step>,
 		testDataRecord: any,
-	): Promise<void> {
+	): Promise<boolean> {
 		try {
 			for (const hook of hooks) {
 				browser.settings = { ...this.settings }
@@ -356,8 +365,10 @@ export default class Test implements ITest {
 				const hookFn = hook.fn.bind(null, browser, testDataRecord)
 				await this.doHookFnWithTimeout(hookFn, Number(hook.waitTimeout))
 			}
+			return true
 		} catch (error) {
 			console.error(error.message)
+			return false
 		}
 	}
 

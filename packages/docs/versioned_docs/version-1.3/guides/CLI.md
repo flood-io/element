@@ -24,11 +24,16 @@ element init [dir] [options]
 ```
 
 Init a test script, a default configuration file and a minimal environment to get you started with Flood Element.
+**Positionals**
+- `[dir]` (string) the directory to initialize with an Element test script. Defaults to the current directory.
+
+**Options**
+- `--skip-install` (boolean) Skip yarn/npm install. Defaults to `false`.
 
 ### Generate a basic test script from a template
 
 ```shell
-element generate <file> [options]
+element generate <file>
 ```
 
 ### Output the test script plan without executing it
@@ -36,6 +41,8 @@ element generate <file> [options]
 ```shell
 element plan <file> [options]
 ```
+**Options**
+- `--json` (boolean) Output the test plan as JSON format. Defaults to `false`.
 
 ### Run a test script locally
 
@@ -52,7 +59,7 @@ Positionals:
 - Browser:
 
   - `--chrome` Specify which version of Google Chrome to use. Default: use
-    the puppeteer bundled version.
+    the puppeteer bundled version. Change it to `'stable'` to use the Chrome version installed on your system, or provide a path to use Chrome at the given path.
   - `--no-headless` Run in non-headless mode so that you can see what the browser is doing as it runs the test.
   - `--devtools` Run in non-headless mode and also open devtools
   - `--no-sandbox` Disable the chrome sandbox - advanced option, mostly necessary on linux.

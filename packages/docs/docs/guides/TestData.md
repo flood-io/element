@@ -158,6 +158,6 @@ Find more information in the API reference for [TestData], [TestDataFactory] and
 <!-- suffix -->
 
 [TypeScript]: https://www.typescriptlang.org/
-[TestData]: ../../api/TestData.md#testdata
-[TestDataFactory]: ../../api/TestData.md#testdatafactory
-[TestDataSource]: ../../api/TestData.md#testdatasource
+[TestData]: ../api/TestData.md#testdata
+[TestDataFactory]: ../api/TestData.md#testdatafactory
+[TestDataSource]: ../api/TestData.md#testdatasource

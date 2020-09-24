@@ -38,7 +38,7 @@ Scaling up Element tests is easy on [Flood](https://flood.io), by launching hund
 - [4. Run a real Load Test on Flood](#4-run-a-real-load-test-on-flood)
 - [About](#about)
   - [What can I do with it?](#what-can-i-do-with-it)
-- [Getting Started](#getting-started)
+- [Do more with Element](#do-more-with-element)
 - [Contributing](#contributing)
 - [Reporting Issues](#reporting-issues)
 - [Authors](#authors)
@@ -131,11 +131,9 @@ For details of the available options see the [`element run`](./packages/cli/READ
 
 ## 4. Run a real Load Test on [Flood](https://flood.io)
 
-Now that you have a test script, upload it to [Flood](https://app.flood.io) as a new Stream and launch a Flood (a test).
+Now that you have a test script, upload it to [Flood](https://app.flood.io) as a [new Stream](https://guides.flood.io/scripting-and-tools/flood-element/getting-started-with-element#create-a-stream) and launch a Flood (a test).
 
-![Upload your script to Tricentis Flood](./packages/element/docs/examples/images/upload-script.png)
-
-Continue learning more Flood Element techniques by starting with our [API documentation](./packages/element/docs/SUMMARY.md). The main entry point to all tests is the [Browser](./packages/element/docs/api/Browser.md) class and a great place to get a feel for the capabilities of each test.
+Since Element version 1.3, you can [launch a flood directly from Element CLI](https://element.flood.io/docs/next/guides/cli#run-an-element-script-on-flood)
 
 ## About
 
@@ -148,7 +146,8 @@ Over the years, countless customers have mentioned that getting started with Loa
 - Measure your application's response time from different regions as experienced by your customers.
 - Create **realistic load scenarios** which stress test your network infrastructure without developing complex protocol level load test scripts.
 
-## Getting Started
+## Do more with Element
+Continue learning more Flood Element techniques by starting with our [API documentation](https://element.flood.io/docs/). The main entry point to all tests is the [Browser](https://element.flood.io/docs/1.0/api/browser) class and a great place to get a feel for the capabilities of each test.
 
 Visit <a aria-label="Element documentation" href="https://element.flood.io">https://element.flood.io</a> to view the documentation.
 
@@ -160,7 +159,7 @@ Please see our [CONTRIBUTING.md](/CONTRIBUTING.md).
 
 If you encounter any issues with the `@flood/element` project or Flood Element product, please [open an issue](https://github.com/flood-io/element/issues) on the GitHub project.
 
-If you're encountering issues with Flood itself, please contact Flood Support from within the Flood Dashboard.
+If you're encountering issues with Flood itself, please contact Flood Support from within the Flood Dashboard, [send us an email](mailto:support@flood.io) or [ask our community](https://spectrum.chat/flood).
 
 ## Authors
 

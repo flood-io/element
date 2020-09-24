@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.6](https://github.com/flood-io/element/compare/v1.3.5...v1.3.6) (2020-09-24)
+
+
+### Bug Fixes
+
+* change API to work compatible with Node version 8.9 and upper ([f097995](https://github.com/flood-io/element/commit/f097995f8df2c0d35a2e2b9e5bf63f387b2efc39))
+* handle fail exit code when running on local only ([6915605](https://github.com/flood-io/element/commit/69156058db7b28b2c18fb7928ddeeb8ed0366c7f))
+* next test won't be run if the current test fail ([d3f25ea](https://github.com/flood-io/element/commit/d3f25ea79b64b6743c56cb23767af2ea4f8efaf0))
+
+
+
+
+
 ## [1.3.5](https://github.com/flood-io/element/compare/v1.3.4...v1.3.5) (2020-09-22)
 
 

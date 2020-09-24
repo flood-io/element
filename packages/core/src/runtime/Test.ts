@@ -366,8 +366,8 @@ export default class Test implements ITest {
 				await this.doHookFnWithTimeout(hookFn, Number(hook.waitTimeout))
 			}
 			return true
-		} catch (error) {
-			console.error(error.message)
+		} catch {
+			console.log('error -> failed')
 			return false
 		}
 	}

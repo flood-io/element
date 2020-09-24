@@ -366,8 +366,8 @@ export default class Test implements ITest {
 				await this.doHookFnWithTimeout(hookFn, Number(hook.waitTimeout))
 			}
 			return true
-		} catch {
-			console.log('error -> failed')
+		} catch (err) {
+			console.log(err.message)
 			return false
 		}
 	}
@@ -377,7 +377,7 @@ export default class Test implements ITest {
 		const promiseTimeout = new Promise((_, reject) => {
 			const id = setTimeout(() => {
 				clearTimeout(id)
-				reject()
+				reject(new Error(`Timeout of ${timeout}ms exceeded`))
 			}, timeout)
 		})
 		// Returns a race between our timeout and the passed in promise

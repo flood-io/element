@@ -210,7 +210,7 @@ export default class Test implements ITest {
 						this.failed = false
 					} else {
 						console.log('failed, bailing out of steps')
-						throw Error('test failed')
+						stepIterator.stop()
 					}
 				}
 

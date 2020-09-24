@@ -35,6 +35,10 @@ export default class StepIterator {
 		}
 	}
 
+	stop(): void {
+		this.stepCount = this.steps.length
+	}
+
 	loopUnexecutedSteps(callBackFn: (step: Step) => void): void {
 		const { repeat } = this.currentStep.options
 		if (repeat) {

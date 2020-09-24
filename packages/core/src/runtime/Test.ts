@@ -357,7 +357,7 @@ export default class Test implements ITest {
 				await this.doHookFnWithTimeout(hookFn, Number(hook.waitTimeout))
 			}
 		} catch (error) {
-			throw new Error(error)
+			console.error(error.message)
 		}
 	}
 

@@ -302,7 +302,7 @@ export interface Browser {
 	 */
 	scrollTo(
 		target: Locator | ElementHandle | Point | ScrollDirection,
-		behavior?: ScrollBehavior,
+		scrollOptions?: ScrollIntoViewOptions,
 	): Promise<void>
 }
 

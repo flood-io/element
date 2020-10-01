@@ -617,11 +617,12 @@ export class Browser<T> implements BrowserInterface {
 	@addCallbacks()
 	public async scrollTo(
 		target: Locator | ElementHandle | Point | ScrollDirection,
-		behavior?: ScrollBehavior,
+		scrollOptions?: ScrollIntoViewOptions,
 	): Promise<void> {
-		if (!behavior) {
-			behavior = 'auto'
-		}
+		const behavior = scrollOptions?.behavior ?? 'auto'
+		const block = scrollOptions?.block ?? 'start'
+		const inline = scrollOptions?.inline ?? 'nearest'
+
 		let top = 0
 		let left = 0
 		const [_scrollHeight, _currentTop, _scrollWidth] = await this.page.evaluate(() => [
@@ -637,9 +638,12 @@ export class Browser<T> implements BrowserInterface {
 		} else if (this.isLocator(target) || this.isElementHandle(target)) {
 			// target is Locator or ElementHandle
 			const targetEl = await this.findElement(target)
-			await targetEl.element.evaluate((el, behavior) => {
-				el.scrollIntoView({ behavior })
-			}, behavior)
+			await targetEl.element.evaluate(
+				(el, scrollOptions: ScrollIntoViewOptions) => {
+					el.scrollIntoView(scrollOptions)
+				},
+				{ behavior, block, inline },
+			)
 			return
 		} else if (typeof target === 'string') {
 			// target is ScrollDirection

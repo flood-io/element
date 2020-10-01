@@ -20,26 +20,26 @@ export default () => {
 	step('[01] -  Test Scroll with Target is Point and ScrollDirection', async browser => {
 		await browser.visit(URL)
 		await browser.wait(2)
-		await browser.scrollTo('bottom', 'smooth')
+		await browser.scrollTo('bottom', { behavior: 'smooth' })
 		await browser.wait(2)
-		await browser.scrollTo('top', 'smooth')
+		await browser.scrollTo('top', { behavior: 'smooth' })
 
 		await browser.wait(2)
-		await browser.scrollTo([400, 1000], 'smooth')
+		await browser.scrollTo([400, 1000], { behavior: 'smooth' })
 
 		await browser.wait(2)
 
-		await browser.scrollTo('right', 'smooth')
+		await browser.scrollTo('right', { behavior: 'smooth' })
 		await browser.wait(2)
-		await browser.scrollTo('left', 'smooth')
+		await browser.scrollTo('left', { behavior: 'smooth' })
 		await browser.wait(2)
 
 		const button = By.css('.btn')
-		await browser.scrollTo(button, 'smooth')
+		await browser.scrollTo(button, { behavior: 'smooth', block: 'start', inline: 'start' })
 
 		await browser.wait(2)
 		const paragraph = await browser.findElement(By.css('p'))
-		await browser.scrollTo(paragraph, 'smooth')
+		await browser.scrollTo(paragraph, { behavior: 'smooth', block: 'nearest' })
 		await browser.wait(10)
 	})
 }

@@ -602,6 +602,19 @@ export class Browser<T> implements BrowserInterface {
 		await this.client.browser.close()
 	}
 
+	// Check the target has type Locator or not
+	private isLocator(target: Locator | ElementHandle | Point | ScrollDirection): target is Locator {
+		return (target as Locator).find !== undefined
+	}
+
+	// Check the target has type ElementHandle or not
+	private isElementHandle(
+		target: Locator | ElementHandle | Point | ScrollDirection,
+	): target is ElementHandle {
+		return (target as ElementHandle).element !== undefined
+	}
+
+	@addCallbacks()
 	public async scrollTo(
 		target: Locator | ElementHandle | Point | ScrollDirection,
 		behavior?: ScrollBehavior,
@@ -617,14 +630,19 @@ export class Browser<T> implements BrowserInterface {
 			document.body.scrollWidth,
 		])
 
-		// target is Point
-		if (Array.isArray(target)) {
+		if (Array.isArray(target) && typeof target[0] === 'number' && typeof target[1] === 'number') {
+			// target is Point
 			top = target[1]
 			left = target[0]
-		}
-
-		// target is ScrollDirection
-		if (typeof target === 'string') {
+		} else if (this.isLocator(target) || this.isElementHandle(target)) {
+			// target is Locator or ElementHandle
+			const targetEl = await this.findElement(target)
+			await targetEl.element.evaluate((el, behavior) => {
+				el.scrollIntoView({ behavior })
+			}, behavior)
+			return
+		} else if (typeof target === 'string') {
+			// target is ScrollDirection
 			switch (target) {
 				case 'top':
 					top = 0
@@ -642,7 +660,15 @@ export class Browser<T> implements BrowserInterface {
 					top = _currentTop
 					left = _scrollWidth
 					break
+				default:
+					throw new Error(
+						'The input target is not Locator or ElementHandle or Point or Scroll Direction.',
+					)
 			}
+		} else {
+			throw new Error(
+				'The input target is not Locator or ElementHandle or Point or Scroll Direction.',
+			)
 		}
 
 		await this.page.evaluate(

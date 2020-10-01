@@ -1,3 +1,4 @@
+import { Point } from './../page/Point'
 import { Condition } from '../page/Condition'
 import {
 	NavigationOptions,
@@ -14,7 +15,7 @@ import DeviceDescriptors from 'puppeteer/DeviceDescriptors'
 import { Browser as BrowserInterface } from './IBrowser'
 import { NullableLocatable } from './Locatable'
 import CustomDeviceDescriptors from '../utils/CustomDeviceDescriptors'
-import { ElementHandle } from '../page/types'
+import { ElementHandle, Locator, ScrollDirection } from '../page/types'
 import { TargetLocator } from '../page/TargetLocator'
 import { PuppeteerClientLike } from '../driver/Puppeteer'
 import { WorkRoot } from '../runtime-environment/types'
@@ -599,5 +600,58 @@ export class Browser<T> implements BrowserInterface {
 
 	public async close(): Promise<void> {
 		await this.client.browser.close()
+	}
+
+	public async scrollTo(
+		target: Locator | ElementHandle | Point | ScrollDirection,
+		behavior?: ScrollBehavior,
+	): Promise<void> {
+		if (!behavior) {
+			behavior = 'auto'
+		}
+		let top = 0
+		let left = 0
+		const [_scrollHeight, _currentTop, _scrollWidth] = await this.page.evaluate(() => [
+			document.body.scrollHeight,
+			window.pageYOffset || document.documentElement.scrollTop,
+			document.body.scrollWidth,
+		])
+
+		// target is Point
+		if (Array.isArray(target)) {
+			top = target[1]
+			left = target[0]
+		}
+
+		// target is ScrollDirection
+		if (typeof target === 'string') {
+			switch (target) {
+				case 'top':
+					top = 0
+					left = 0
+					break
+				case 'bottom':
+					top = _scrollHeight
+					left = 0
+					break
+				case 'left':
+					top = _currentTop
+					left = 0
+					break
+				case 'right':
+					top = _currentTop
+					left = _scrollWidth
+					break
+			}
+		}
+
+		await this.page.evaluate(
+			(top, left, behavior) => {
+				window.scrollTo({ top, left, behavior })
+			},
+			top,
+			left,
+			behavior,
+		)
 	}
 }

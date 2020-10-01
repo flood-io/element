@@ -202,3 +202,6 @@ export interface TargetLocator {
 	 */
 	frame(id: number | string | ElementHandle): Promise<void>
 }
+
+// Using these type below for API scrollTo()
+export type ScrollDirection = 'top' | 'left' | 'bottom' | 'right'

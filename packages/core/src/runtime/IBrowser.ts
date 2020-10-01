@@ -9,11 +9,12 @@ import {
 	Viewport,
 	EvaluateFn,
 } from 'puppeteer'
-import { ElementHandle } from '../page/types'
+import { ElementHandle, Locator, ScrollDirection } from '../page/types'
 import { NullableLocatable } from './Locatable'
 import { TargetLocator } from '../page/TargetLocator'
 import Mouse from '../page/Mouse'
 import { TestSettings } from './Settings'
+import { Point } from '../page/Point'
 
 /**
  * Browser is the main entry point in each <[step]>, it's your direct connection to the browser running the test.
@@ -293,6 +294,16 @@ export interface Browser {
 	waitForNewPage(): Promise<Page>
 
 	close(): Promise<void>
+
+	/**
+	 *
+	 * @param target target to scroll
+	 * @param behavior behavior of scroll (auto or smooth)
+	 */
+	scrollTo(
+		target: Locator | ElementHandle | Point | ScrollDirection,
+		behavior?: ScrollBehavior,
+	): Promise<void>
 }
 
 /**

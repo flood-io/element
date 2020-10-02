@@ -604,7 +604,7 @@ export class Browser<T> implements BrowserInterface {
 
 	// Check the target has type Locator or not
 	private isLocator(target: Locator | ElementHandle | Point | ScrollDirection): target is Locator {
-		return (target as Locator).find !== undefined
+		return !Array.isArray(target) && (target as Locator).find !== undefined
 	}
 
 	// Check the target has type ElementHandle or not
@@ -612,6 +612,15 @@ export class Browser<T> implements BrowserInterface {
 		target: Locator | ElementHandle | Point | ScrollDirection,
 	): target is ElementHandle {
 		return (target as ElementHandle).element !== undefined
+	}
+
+	private isPoint(target: Locator | ElementHandle | Point | ScrollDirection): target is Point {
+		return (
+			Array.isArray(target) &&
+			target.length === 2 &&
+			typeof target[0] === 'number' &&
+			typeof target[1] === 'number'
+		)
 	}
 
 	@addCallbacks()
@@ -631,20 +640,10 @@ export class Browser<T> implements BrowserInterface {
 			document.body.scrollWidth,
 		])
 
-		if (Array.isArray(target) && typeof target[0] === 'number' && typeof target[1] === 'number') {
+		if (this.isPoint(target)) {
 			// target is Point
 			top = target[1]
 			left = target[0]
-		} else if (this.isLocator(target) || this.isElementHandle(target)) {
-			// target is Locator or ElementHandle
-			const targetEl = await this.findElement(target)
-			await targetEl.element.evaluate(
-				(el, scrollOptions: ScrollIntoViewOptions) => {
-					el.scrollIntoView(scrollOptions)
-				},
-				{ behavior, block, inline },
-			)
-			return
 		} else if (typeof target === 'string') {
 			// target is ScrollDirection
 			switch (target) {
@@ -669,6 +668,16 @@ export class Browser<T> implements BrowserInterface {
 						'The input target is not Locator or ElementHandle or Point or Scroll Direction.',
 					)
 			}
+		} else if (this.isLocator(target) || this.isElementHandle(target)) {
+			// target is Locator or ElementHandle
+			const targetEl = await this.findElement(target)
+			await targetEl.element.evaluate(
+				(el, scrollOptions: ScrollIntoViewOptions) => {
+					el.scrollIntoView(scrollOptions)
+				},
+				{ behavior, block, inline },
+			)
+			return
 		} else {
 			throw new Error(
 				'The input target is not Locator or ElementHandle or Point or Scroll Direction.',

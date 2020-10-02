@@ -711,11 +711,15 @@ export class Browser<T> implements BrowserInterface {
 			throw new Error('The input behavior is not correct (Must be "auto" or "smooth").')
 		}
 
+		if (typeof x !== 'number' || typeof y !== 'number') {
+			throw new Error('The input value that you want to scroll by must be a number.')
+		}
+
 		await this.page.evaluate(
 			(x, y, behavior) => {
 				window.scrollBy({
-					top: x,
-					left: y,
+					top: y,
+					left: x,
 					behavior,
 				})
 			},

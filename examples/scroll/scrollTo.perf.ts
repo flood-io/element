@@ -10,8 +10,8 @@ export const settings: TestSettings = {
 	screenshotOnFailure: true,
 	viewport: { width: 1600, height: 900 },
 	launchArgs: ['--window-size=1600,900'],
-	stepDelay: '500ms',
-	actionDelay: '1s',
+	stepDelay: '1s',
+	actionDelay: '500ms',
 }
 
 const URL = 'http://127.0.0.1:5500/index.html'
@@ -25,7 +25,7 @@ export default () => {
 		await browser.scrollTo('top', { behavior: 'smooth' })
 
 		await browser.wait(2)
-		await browser.scrollTo([400, 1000], { behavior: 'smooth' })
+		await browser.scrollTo([500, 1000], { behavior: 'smooth' })
 
 		await browser.wait(2)
 
@@ -35,11 +35,32 @@ export default () => {
 		await browser.wait(2)
 
 		const button = By.css('.btn')
-		await browser.scrollTo(button, { behavior: 'smooth', block: 'start', inline: 'start' })
+		await browser.scrollTo(button, { behavior: 'smooth', block: 'center', inline: 'center' })
 
 		await browser.wait(2)
 		const paragraph = await browser.findElement(By.css('p'))
 		await browser.scrollTo(paragraph, { behavior: 'smooth', block: 'nearest' })
+		await browser.wait(2)
+		const beforeScrollTop = await browser.evaluate(() => ({
+			pageYOffset: window.pageYOffset,
+			pageXOffset: window.pageXOffset,
+		}))
+		console.log(beforeScrollTop)
+		await browser.wait(2)
+		await browser.scrollBy(700, 400)
+		await browser.wait(2)
+		const afterScrollTop = await browser.evaluate(() => ({
+			pageYOffset: window.pageYOffset,
+			pageXOffset: window.pageXOffset,
+		}))
+		console.log(afterScrollTop)
+		await browser.scrollBy(700, 400, { behavior: 'smooth' })
+		await browser.wait(2)
+		const afterScrollTop1 = await browser.evaluate(() => ({
+			pageYOffset: window.pageYOffset,
+			pageXOffset: window.pageXOffset,
+		}))
+		console.log(afterScrollTop1)
 		await browser.wait(10)
 	})
 }

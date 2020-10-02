@@ -304,6 +304,14 @@ export interface Browser {
 		target: Locator | ElementHandle | Point | ScrollDirection,
 		scrollOptions?: ScrollIntoViewOptions,
 	): Promise<void>
+
+	/**
+	 *
+	 * @param x the horizontal pixel value that you want to scroll by
+	 * @param y the vertical pixel value that you want to scroll by
+	 * @param scrollOptions behavior of scroll (auto or smooth)
+	 */
+	scrollBy(x: number, y: number, scrollOptions?: ScrollOptions): Promise<void>
 }
 
 /**

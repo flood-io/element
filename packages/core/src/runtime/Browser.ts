@@ -623,12 +623,21 @@ export class Browser<T> implements BrowserInterface {
 		)
 	}
 
+	private isCorrectScrollBehavior(behavior: string): behavior is ScrollBehavior {
+		return behavior === 'auto' || behavior === 'smooth'
+	}
+
 	@addCallbacks()
 	public async scrollTo(
 		target: Locator | ElementHandle | Point | ScrollDirection,
 		scrollOptions?: ScrollIntoViewOptions,
 	): Promise<void> {
 		const behavior = scrollOptions?.behavior ?? 'auto'
+
+		if (!this.isCorrectScrollBehavior(behavior)) {
+			throw new Error('The input behavior is not correct (Must be "auto" or "smooth").')
+		}
+
 		const block = scrollOptions?.block ?? 'start'
 		const inline = scrollOptions?.inline ?? 'nearest'
 
@@ -690,6 +699,28 @@ export class Browser<T> implements BrowserInterface {
 			},
 			top,
 			left,
+			behavior,
+		)
+	}
+
+	@addCallbacks()
+	public async scrollBy(x: number, y: number, scrollOptions?: ScrollOptions): Promise<void> {
+		const behavior = scrollOptions?.behavior ?? 'auto'
+
+		if (!this.isCorrectScrollBehavior(behavior)) {
+			throw new Error('The input behavior is not correct (Must be "auto" or "smooth").')
+		}
+
+		await this.page.evaluate(
+			(x, y, behavior) => {
+				window.scrollBy({
+					top: x,
+					left: y,
+					behavior,
+				})
+			},
+			x,
+			y,
 			behavior,
 		)
 	}

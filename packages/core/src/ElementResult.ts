@@ -1,4 +1,11 @@
-import { IterationResult, TestResult, TestScriptResult } from '@flood/element-report'
+// eslint-disable-next-line import/default
+import osName from 'os-name'
+import {
+	IterationResult,
+	TestResult,
+	TestScriptResult,
+	ScriptWithError,
+} from '@flood/element-report'
 import { ElementOptions } from './ElementOption'
 
 export class ElementResult {
@@ -8,33 +15,37 @@ export class ElementResult {
 		this._result = {
 			testScripts: [],
 			executionInfo: {
-				dateTime: new Date(),
+				date: new Date().toLocaleDateString(),
+				time: new Date().toLocaleTimeString(),
 				mode: '',
 				browser: [],
-				os: '',
+				os: osName(),
 			},
+			scriptsWithError: [],
 		}
 	}
 
 	addExecutionInfo(opt: ElementOptions, isConfig: boolean): void {
 		let modeName: string = opt.headless ? 'headless' : 'no-headless'
-		modeName = isConfig ? `${modeName} with config` : modeName
+		modeName = isConfig ? `${modeName} with config file` : modeName
 		this._result.executionInfo.mode = modeName
-		if (opt.browserType) {
-			this._result.executionInfo.browser = [opt.browserType]
-		}
+		this._result.executionInfo.browser = [opt.browserType]
 	}
 
-	addTestScript(file: string, iterationResult: IterationResult[]): void {
+	addTestScript(file: string, iterationResults: IterationResult[]): void {
 		let duration = 0
-		iterationResult.forEach(item => (duration += item.duration ?? 0))
+		iterationResults.forEach(item => (duration += item.duration ?? 0))
 		const testScript: TestScriptResult = {
 			name: file,
-			iterationResults: iterationResult,
-			duration: duration,
+			iterationResults,
+			duration,
 		}
 		this._result.testScripts.push(testScript)
 		this.summarizeResult()
+	}
+
+	addScriptWithError(script: ScriptWithError) {
+		this._result.scriptsWithError.push(script)
 	}
 
 	summarizeResult(): void {

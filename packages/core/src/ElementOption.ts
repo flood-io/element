@@ -34,6 +34,7 @@ export interface ElementRunArguments {
 	verbose?: boolean
 	browserType: BROWSER_TYPE
 	export?: boolean
+	notExistingFiles: string[]
 }
 
 export interface ElementOptions {
@@ -164,7 +165,7 @@ export function normalizeElementOptions(
 		testSettingOverrides: {},
 		persistentRunner: false,
 		failStatusCode: args['fail-status-code'],
-		browserType: args.browserType,
+		browserType: args.browserType || BROWSER_TYPE.CHROME,
 		export: args.export,
 	}
 

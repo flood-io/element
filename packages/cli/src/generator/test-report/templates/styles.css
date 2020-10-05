@@ -1,0 +1,168 @@
+html {
+	font-family: Arial, Helvetica, sans-serif;
+	margin: 5rem 20rem;
+}
+
+.logo {
+	display: flex;
+	align-items: center;
+	margin-bottom: 5rem;
+}
+
+.logo img {
+	width: 3rem;
+	height: 3rem;
+}
+
+.logo span {
+	margin-left: 0.5rem;
+	font-size: 1.5rem;
+	font-weight: bold;
+}
+
+.title {
+	font-size: 2.5rem;
+	color: #5e90ee;
+	text-align: center;
+	margin-bottom: 5rem;
+}
+
+.execution-info {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 5rem;
+}
+
+.execution-info div {
+	display: flex;
+	flex-direction: column;
+}
+
+.info-property {
+	font-weight: bold;
+}
+
+.summary-header {
+	display: flex;
+	justify-content: space-between;
+}
+
+.header-title {
+	flex: 1;
+	font-size: 2rem;
+	font-weight: bold;
+}
+
+.passed-color {
+	color: #2fc459;
+}
+
+.failed-color {
+	color: #d93f34;
+}
+
+.skipped-color {
+	color: #f0de1d;
+}
+
+.unexecuted-color {
+	color: #b0b0ae;
+}
+
+.passed-bg-color {
+	background-color: #2fc459;
+}
+
+.failed-bg-color {
+	background-color: #d93f34;
+}
+
+.skipped-bg-color {
+	background-color: #f0de1d;
+}
+
+.unexecuted-bg-color {
+	background-color: #b0b0ae;
+}
+
+.chart-legend {
+	flex: 1;
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+}
+
+.chart-legend-item {
+	display: flex;
+}
+
+.chart-legend-item div {
+	width: 1rem;
+	height: 1rem;
+}
+
+.chart-legend-item span {
+	margin-left: 0.25rem;
+}
+
+.table {
+	width: 100%;
+	border: 1px solid #929296;
+	border-collapse: collapse;
+	margin-top: 1rem;
+	margin-bottom: 5rem;
+}
+
+.table th {
+	border: 1px solid #929296;
+	background-color: #b0b0ae;
+	padding: 0.75rem;
+}
+
+.table td {
+	text-align: center;
+	border: 1px solid #929296;
+}
+
+.table a {
+	text-decoration: none;
+}
+
+.summary-result {
+	display: flex;
+	justify-content: stretch;
+	margin: 0.25rem;
+	border-radius: 0.25rem;
+}
+
+.summary-result div {
+	padding: 0.25rem 0;
+}
+
+.unexecuted-script td {
+	padding: 0.5rem;
+}
+
+.script-with-error {
+	color: #b0b0ae;
+}
+
+.script-detail {
+	margin-top: 1rem;
+}
+
+.script-detail table {
+	margin-bottom: 3rem;
+}
+
+.script-detail table td {
+	padding: 0.5rem;
+}
+
+.step-name {
+	text-align: left !important;
+}
+
+.step-result {
+	text-transform: capitalize;
+}

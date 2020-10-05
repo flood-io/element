@@ -47,6 +47,7 @@
 		"ksuid": "^1.2.0",
 		"micromatch": "^4.0.2",
 		"ms": "^2.1.2",
+		"os-name": "^4.0.0",
 		"playwright": "^1.1.1",
 		"recast": "^0.13.0",
 		"sanitize-filename": "^1.6.1",

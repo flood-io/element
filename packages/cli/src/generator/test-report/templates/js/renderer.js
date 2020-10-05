@@ -96,7 +96,7 @@ function renderScriptWithError(scripts) {
         </tr>
       `
 		})
-		.join()
+		.join('')
 }
 
 function renderExecutedScripts(scripts) {

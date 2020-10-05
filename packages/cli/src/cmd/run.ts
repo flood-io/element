@@ -14,6 +14,8 @@ import { ReportCache } from '@flood/element-report'
 import { getFilesPattern, readConfigFile } from '../utils/run'
 import YoEnv from 'yeoman-environment'
 import ReportGenerator from '../generator/test-report'
+import sanitize from 'sanitize-filename'
+import { resolve, dirname } from 'path'
 
 interface RunCommonArguments extends Arguments, ElementRunArguments {}
 
@@ -37,7 +39,7 @@ const cmd: CommandModule = {
 	describe: 'Run [a test script| test scripts with configuration] locally',
 
 	async handler(args: RunCommonArguments): Promise<void> {
-		const { file, mu } = args
+		const { file, mu, configFile } = args
 		if (mu) {
 			if (!file) {
 				console.log(
@@ -57,18 +59,20 @@ const cmd: CommandModule = {
 		const result = await runSingleUser(runArgs)
 
 		if (args.export) {
+			const root = dirname(file || configFile)
+			const dateString = sanitize(new Date().toISOString())
+			const reportPath = resolve(root, 'reports', dateString)
 			const env = YoEnv.createEnv()
 
 			env.registerStub(ReportGenerator as any, 'report-generator')
 			env.run(
 				['report-generator'],
 				{
-					force: true,
 					data: JSON.stringify(result, null, '\t'),
-					dir: process.cwd(),
+					dir: reportPath,
 				},
 				() => {
-					console.log('Generated test report')
+					console.log(`Your report has been saved in ${resolve(reportPath, 'index.html')}`)
 				},
 			)
 		}

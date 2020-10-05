@@ -1,15 +1,12 @@
 import Generator from 'yeoman-generator'
 import { join } from 'path'
-import sanitize from 'sanitize-filename'
 
 export default class Report extends Generator {
 	options: { data: string; dir: string }
 
 	initializing() {
-		const dateString = sanitize(new Date().toISOString())
-
 		this.sourceRoot(join(__dirname, 'templates'))
-		this.destinationRoot(`${this.options.dir}/reports/${dateString}`)
+		this.destinationRoot(this.options.dir)
 	}
 
 	writing() {

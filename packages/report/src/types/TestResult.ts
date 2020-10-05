@@ -4,11 +4,18 @@ export type Milliseconds = number
 export type TestResult = {
 	executionInfo: ExecutionInfo
 	testScripts: Array<TestScriptResult>
+	scriptsWithError: ScriptWithError[]
+}
+
+export type ScriptWithError = {
+	name: string
+	error: string
 }
 
 export type ExecutionInfo = {
-	dateTime: Date
-	duration?: Milliseconds | null
+	date: string
+	time: string
+	duration?: Milliseconds
 	mode: string
 	browser: Array<string>
 	os: string
@@ -16,13 +23,13 @@ export type ExecutionInfo = {
 
 export type TestScriptResult = {
 	name: string
-	duration?: Milliseconds | null
+	duration?: Milliseconds
 	iterationResults: Array<IterationResult>
 }
 
 export type IterationResult = {
 	name: string
-	duration?: Milliseconds | null
+	duration?: Milliseconds
 	stepResults: Array<StepResult>
 }
 
@@ -30,5 +37,5 @@ export type StepResult = {
 	name: string
 	status: Status
 	subTitle?: string
-	duration?: Milliseconds | null
+	duration?: Milliseconds
 }

@@ -12,6 +12,8 @@ import chalk from 'chalk'
 import { EventEmitter } from 'events'
 import { ReportCache } from '@flood/element-report'
 import { getFilesPattern, readConfigFile } from '../utils/run'
+import YoEnv from 'yeoman-environment'
+import ReportGenerator from '../generator/test-report'
 
 interface RunCommonArguments extends Arguments, ElementRunArguments {}
 
@@ -25,9 +27,9 @@ async function getAllTestScriptsFromConfiguration(
 	if (!paths.testPathMatch || !paths.testPathMatch.length) {
 		throw Error('Found no test scripts matching testPathMatch pattern')
 	}
-	const files = getFilesPattern(paths.testPathMatch)
+	const { files, notExistingFiles } = getFilesPattern(paths.testPathMatch)
 
-	return { ...options, paths, testFiles: files.sort() }
+	return { ...options, paths, testFiles: files.sort(), notExistingFiles: notExistingFiles.sort() }
 }
 
 const cmd: CommandModule = {
@@ -51,12 +53,25 @@ const cmd: CommandModule = {
 			await runMultipleUser(opts)
 			return
 		}
-		if (file) {
-			await runSingleUser(args)
-			return
+		const runArgs = file ? args : await getAllTestScriptsFromConfiguration(args)
+		const result = await runSingleUser(runArgs)
+
+		if (args.export) {
+			const env = YoEnv.createEnv()
+
+			env.registerStub(ReportGenerator as any, 'report-generator')
+			env.run(
+				['report-generator'],
+				{
+					force: true,
+					data: JSON.stringify(result, null, '\t'),
+					dir: process.cwd(),
+				},
+				() => {
+					console.log('Generated test report')
+				},
+			)
 		}
-		const configArgs = await getAllTestScriptsFromConfiguration(args)
-		await runSingleUser(configArgs)
 	},
 	builder(yargs: Argv): Argv {
 		return yargs

@@ -15,14 +15,22 @@ export function getFilesPattern(testPathMatch?: string[]) {
 		throw Error('Found no test scripts matching testPathMatch pattern')
 	}
 	const files: string[] = []
-	const fileMatched = testPathMatch.reduce(
-		(arr: string[], item: string) => arr.concat(glob.sync(item)),
-		[],
-	)
+	const notExistingFiles: string[] = []
+	const fileMatched = testPathMatch.reduce((arr: string[], item: string) => {
+		const result = glob.sync(item)
+		if (result.length === 0) {
+			notExistingFiles.push(item)
+		}
+
+		return arr.concat(result)
+	}, [])
 	files.push(...fileMatched)
 	if (!files.length) {
 		throw Error('Found no test scripts matching testPathMatch pattern')
 	}
 
-	return files
+	return {
+		files,
+		notExistingFiles,
+	}
 }

@@ -25,6 +25,7 @@ export {
 	TestScriptResult,
 	ExecutionInfo,
 	TestResult,
+	ScriptWithError,
 } from './src/types/TestResult'
 export { Status } from './src/types/Status'
 export { CallSite, callSiteToString } from './src/types/CallSite'

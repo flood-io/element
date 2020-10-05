@@ -8470,6 +8470,21 @@ execa@^3.2.0, execa@^3.4.0:
     signal-exit "^3.0.2"
     strip-final-newline "^2.0.0"
 
+execa@^4.0.2:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/execa/-/execa-4.0.3.tgz#0a34dabbad6d66100bd6f2c576c8669403f317f2"
+  integrity sha512-WFDXGHckXPWZX19t1kCsXzOpqX9LWYNqn4C+HqZlk/V0imTkzJZqf87ZBhvpHaftERYknpk0fjSylnXVlVgI0A==
+  dependencies:
+    cross-spawn "^7.0.0"
+    get-stream "^5.0.0"
+    human-signals "^1.1.1"
+    is-stream "^2.0.0"
+    merge-stream "^2.0.0"
+    npm-run-path "^4.0.0"
+    onetime "^5.1.0"
+    signal-exit "^3.0.2"
+    strip-final-newline "^2.0.0"
+
 exit@^0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/exit/-/exit-0.1.2.tgz#0632638f8d877cc82107d30a0fff1a17cba1cd0c"
@@ -13606,6 +13621,14 @@ os-name@^3.1.0:
   dependencies:
     macos-release "^2.2.0"
     windows-release "^3.1.0"
+
+os-name@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/os-name/-/os-name-4.0.0.tgz#6c05c09c41c15848ea74658d12c9606f0f286599"
+  integrity sha512-caABzDdJMbtykt7GmSogEat3faTKQhmZf0BS5l/pZGmP0vPWQjXWqOhbLyK+b6j2/DQPmEvYdzLXJXXLJNVDNg==
+  dependencies:
+    macos-release "^2.2.0"
+    windows-release "^4.0.0"
 
 os-tmpdir@^1.0.0, os-tmpdir@~1.0.2:
   version "1.0.2"
@@ -18774,6 +18797,13 @@ windows-release@^3.1.0:
   integrity sha512-QTlz2hKLrdqukrsapKsINzqMgOUpQW268eJ0OaOpJN32h272waxR9fkB9VoWRtK7uKHG5EHJcTXQBD8XZVJkFA==
   dependencies:
     execa "^1.0.0"
+
+windows-release@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/windows-release/-/windows-release-4.0.0.tgz#4725ec70217d1bf6e02c7772413b29cdde9ec377"
+  integrity sha512-OxmV4wzDKB1x7AZaZgXMVsdJ1qER1ed83ZrTYd5Bwq2HfJVg3DJS8nqlAG4sMoJ7mu8cuRmLEYyU13BKwctRAg==
+  dependencies:
+    execa "^4.0.2"
 
 winston-transport@^4.2.0:
   version "4.2.0"

@@ -15,7 +15,7 @@ import { getFilesPattern, readConfigFile } from '../utils/run'
 import YoEnv from 'yeoman-environment'
 import ReportGenerator from '../generator/test-report'
 import sanitize from 'sanitize-filename'
-import { resolve, dirname } from 'path'
+import { resolve, dirname, basename, extname, join } from 'path'
 
 interface RunCommonArguments extends Arguments, ElementRunArguments {}
 
@@ -59,9 +59,16 @@ const cmd: CommandModule = {
 		const result = await runSingleUser(runArgs)
 
 		if (args.export) {
-			const root = dirname(file || configFile)
+			let root: string
+			if (file) {
+				const fileName = basename(file, extname(file))
+				root = join(dirname(file), 'reports', fileName)
+			} else {
+				root = join(dirname(configFile), 'reports')
+			}
+
 			const dateString = sanitize(new Date().toISOString())
-			const reportPath = resolve(root, 'reports', dateString)
+			const reportPath = resolve(root, dateString)
 			const env = YoEnv.createEnv()
 
 			env.registerStub(ReportGenerator as any, 'report-generator')
@@ -72,7 +79,7 @@ const cmd: CommandModule = {
 					dir: reportPath,
 				},
 				() => {
-					console.log(`Your report has been saved in ${resolve(reportPath, 'index.html')}`)
+					console.log(`Your report has been saved in ${reportPath}`)
 				},
 			)
 		}

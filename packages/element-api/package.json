@@ -9,8 +9,8 @@
 		"build": "tsc -b"
 	},
 	"dependencies": {
-		"@flood/element-core": "^2.0.0-beta.13",
-		"@flood/element-report": "^2.0.0-beta.13"
+		"@flood/element-core": "2.0.0-beta.13",
+		"@flood/element-report": "2.0.0-beta.13"
 	},
 	"devDependencies": {
 		"@types/node": "12.7.4"

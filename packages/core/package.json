@@ -30,8 +30,8 @@
 	},
 	"homepage": "https://github.com/flood-io/element#readme",
 	"dependencies": {
-		"@flood/element-compiler": "^2.0.0-beta.13",
-		"@flood/element-report": "^2.0.0-beta.13",
+		"@flood/element-compiler": "2.0.0-beta.13",
+		"@flood/element-report": "2.0.0-beta.13",
 		"@types/faker": "^4.1.9",
 		"@types/node": "12.7.4",
 		"@types/puppeteer": "^2.0.1",

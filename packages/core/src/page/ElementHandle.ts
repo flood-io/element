@@ -3,6 +3,7 @@ import {
 	Page,
 	ChromiumBrowserContext,
 	CDPSession,
+	Frame,
 } from 'playwright'
 import {
 	ElementHandle as IElementHandle,
@@ -140,7 +141,7 @@ export class ElementHandle implements IElementHandle, Locator {
 	public element: PElementHandle
 	public page: Page
 
-	constructor(elt: PElementHandle, page: Page) {
+	constructor(elt: PElementHandle, page: Page, private frame: Frame) {
 		this.element = elt
 		this.page = page
 	}
@@ -308,7 +309,7 @@ export class ElementHandle implements IElementHandle, Locator {
 			locator = new BaseLocator(new CSSLocator(locator), 'handle.findElement')
 		}
 
-		return locator.find(this.page, this.element)
+		return locator.find(this.page, this.frame, this.element)
 	}
 
 	/**
@@ -319,7 +320,7 @@ export class ElementHandle implements IElementHandle, Locator {
 			const { BaseLocator } = await import('./Locator')
 			locator = new BaseLocator(new CSSLocator(locator), 'handle.findElements')
 		}
-		return locator.findMany(this.page, this.element)
+		return locator.findMany(this.page, this.frame, this.element)
 	}
 
 	/**

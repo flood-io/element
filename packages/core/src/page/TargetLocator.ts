@@ -9,6 +9,7 @@ import { getFrames } from '../utils/frames'
 export class TargetLocator implements ITargetLocator {
 	constructor(
 		private currentPage: Page,
+		private currentFrame: Frame,
 		private applyFrame: (frame: Frame | null) => void,
 		private applyPage: (page: number | Page) => void,
 	) {}
@@ -22,7 +23,7 @@ export class TargetLocator implements ITargetLocator {
 		const element = jsHandle.asElement()
 		if (!element) return null
 
-		return new ElementHandle(element, this.currentPage).initErrorString()
+		return new ElementHandle(element, this.currentPage, this.currentFrame).initErrorString()
 	}
 
 	private async findFrameFromWindow(id: string | null): Promise<Frame | undefined> {

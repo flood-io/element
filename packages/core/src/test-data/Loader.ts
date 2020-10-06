@@ -1,4 +1,5 @@
 import { readFile } from 'fs'
+import { basename } from 'path'
 import { promisify, inspect } from 'util'
 import parseCSV from 'csv-parse/lib/sync'
 
@@ -8,13 +9,19 @@ export abstract class Loader<T> {
 	public isSet = true
 	public lines: T[]
 	public isLoaded = false
-	constructor(public filePath: string, public requestedFilename: string) {}
+	public dataSource: { name: string; lines: T[] }[]
+	public loaderName: string
+	public requestedFilename: string
 	public abstract load(): Promise<void>
+	public abstract asName(name: string): void
+	constructor(public filePath: string) {
+		this.requestedFilename = basename(this.filePath)
+	}
 }
 
 export class NullLoader<T> extends Loader<T> {
 	constructor() {
-		super('', '')
+		super('')
 		this.lines = []
 		this.isLoaded = true
 		this.isSet = false
@@ -22,15 +29,15 @@ export class NullLoader<T> extends Loader<T> {
 	public async load(): Promise<void> {
 		this.isLoaded = true
 	}
+
+	public asName(name = ''): void {
+		this.loaderName = name
+	}
 }
 
 export class DataLoader<T> extends Loader<T> {
 	constructor(public lines: T[]) {
-		super('', '')
-
-		// handle init via TestData.fromData([{}]) to represent a
-		// working-but-useless placeholder loader
-		// TODO improve this degenerate case
+		super('')
 		if (lines.length === 1 && Object.keys(lines[0]).length === 0) {
 			this.isSet = false
 		}
@@ -40,17 +47,21 @@ export class DataLoader<T> extends Loader<T> {
 		this.isLoaded = true
 	}
 
+	public asName(name = ''): void {
+		this.loaderName = name
+	}
+
 	public toString(): string {
 		let s = 'inline data\n'
 
 		const pp = inspect
+		const show = Math.min(4, this.lines.length)
 
 		switch (this.lines.length) {
 			case 0:
 				s += '<empty>'
 				break
 			default:
-				const show = Math.min(4, this.lines.length)
 				s += `[\n`
 				for (let i = 0; i < show; i++) {
 					s += `  ${pp(this.lines[i])},\n`
@@ -87,14 +98,19 @@ export class JSONLoader<T> extends Loader<T> {
 		this.isLoaded = true
 	}
 
+	public asName(name = ''): void {
+		this.loaderName = name
+	}
+
 	public toString(): string {
 		return `json data ${this.requestedFilename}`
 	}
 }
 
 export class CSVLoader<T> extends Loader<T> {
-	constructor(public filePath: string, private separator: string = ',', requestedFilename: string) {
-		super(filePath, requestedFilename)
+	constructor(public filePath: string, private separator: string = ',') {
+		super(filePath)
+		this.loaderName = basename(filePath, '.csv')
 	}
 
 	public async load(): Promise<void> {
@@ -114,6 +130,10 @@ export class CSVLoader<T> extends Loader<T> {
 		}
 
 		this.isLoaded = true
+	}
+
+	public asName(name: string): void {
+		this.loaderName = name
 	}
 
 	public toString(): string {

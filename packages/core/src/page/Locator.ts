@@ -35,11 +35,15 @@ export class BaseLocator implements Locator {
 		return this.errorString
 	}
 
-	async find(page: Page, node?: PlaywrightElementHandle): Promise<IElementHandle | null> {
+	async find(
+		page: Page,
+		frame: Frame,
+		node?: PlaywrightElementHandle,
+	): Promise<IElementHandle | null> {
 		const args = [...this.pageFuncArgs]
 		if (node) args.push(node)
 
-		const handle = await page
+		const handle = await frame
 			.evaluateHandle(
 				(args: string[]) => {
 					const [fn, ...rest] = args
@@ -58,14 +62,19 @@ export class BaseLocator implements Locator {
 
 		const element = handle.asElement()
 		const { ElementHandle } = await import('./ElementHandle')
-		if (element) return new ElementHandle(element, page).initErrorString(this.toErrorString())
+		if (element)
+			return new ElementHandle(element, page, frame).initErrorString(this.toErrorString())
 		return null
 	}
 
-	async findMany(page: Page, node?: PlaywrightElementHandle): Promise<IElementHandle[]> {
+	async findMany(
+		page: Page,
+		frame: Frame,
+		node?: PlaywrightElementHandle,
+	): Promise<IElementHandle[]> {
 		const args = [...this.pageFuncArgs]
 		if (node) args.push(node)
-		const arrayHandle = await page
+		const arrayHandle = await frame
 			.evaluateHandle(
 				(args: string[]) => {
 					const [fn, ...rest] = args
@@ -95,7 +104,9 @@ export class BaseLocator implements Locator {
 		for (const property of properties.values()) {
 			const elementHandle = property.asElement()
 			if (elementHandle)
-				elements.push(new ElementHandle(elementHandle, page).initErrorString(thisErrorString))
+				elements.push(
+					new ElementHandle(elementHandle, page, frame).initErrorString(thisErrorString),
+				)
 		}
 
 		return Promise.all(elements)

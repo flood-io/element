@@ -1,4 +1,4 @@
-import { ElementHandle as PElementHandle, Page } from 'playwright'
+import { ElementHandle as PElementHandle, Frame, Page } from 'playwright'
 import { Point } from './Point'
 
 export enum BROWSER_TYPE {
@@ -60,9 +60,9 @@ export interface NavigationOptions {
  * @docOpaque
  */
 export interface Locator extends LocatorBuilder {
-	find(page: Page, node?: PElementHandle): Promise<ElementHandle | null>
+	find(page: Page, frame: Frame, node?: PElementHandle): Promise<ElementHandle | null>
 
-	findMany(page: Page, node?: PElementHandle): Promise<ElementHandle[]>
+	findMany(page: Page, frame: Frame, node?: PElementHandle): Promise<ElementHandle[]>
 }
 
 /**

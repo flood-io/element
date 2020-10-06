@@ -20,9 +20,6 @@
 		},
 		"bootstrap": {
 			"npmClient": "yarn"
-		},
-		"add": {
-			"exact": true
 		}
 	},
 	"ignoreChanges": [

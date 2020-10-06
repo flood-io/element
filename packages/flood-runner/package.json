@@ -22,8 +22,8 @@
 		"url": "https://github.com/flood-io/element/issues"
 	},
 	"dependencies": {
-		"@flood/element-core": "^2.0.0-beta.13",
-		"@flood/element-report": "^2.0.0-beta.13",
+		"@flood/element-core": "2.0.0-beta.13",
+		"@flood/element-report": "2.0.0-beta.13",
 		"@flood/node-influx": "^5.0.9",
 		"find-root": "^1.1.0",
 		"winston": "^3.2.1"

@@ -14,7 +14,7 @@ export const settings: TestSettings = {
 	actionDelay: '500ms',
 }
 
-const URL = 'http://127.0.0.1:5500/index.html'
+const URL = 'https://testscroll.hongla.dev/'
 
 export default () => {
 	step('[01] -  Test Scroll with Target is Point and ScrollDirection', async browser => {

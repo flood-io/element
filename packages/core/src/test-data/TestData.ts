@@ -1,6 +1,6 @@
 import { Option } from '../utils/Option'
 import { Feeder, FeedFilterFunction } from './Feeder'
-import { Loader } from './Loader'
+import { Loader, NullLoader } from './Loader'
 
 /**
  * A `TestDataFactory` is available to be imported into your test script as `TestData`. Use this to load a <[TestDataSource]> which provides new test data to each iteration of your test.
@@ -63,35 +63,59 @@ export class TestDataSource<T> {
 	/**
 	 * @internal
 	 */
-	public feeder: Feeder<T>
-	/**
-	 * @internal
-	 */
 	public instanceID: string
 
 	/**
 	 * @internal
 	 */
-	private loader: Loader<T>
+	private loaders: Loader<T>[]
 
 	constructor(loader: Loader<T>) {
-		this.feeder = new Feeder<T>()
-		this.loader = loader
+		this.loaders = [loader]
+	}
+
+	private static _instance: TestDataSource<any>
+	public static getInstance() {
+		return this._instance || (this._instance = new TestDataSource<any>(new NullLoader()))
+	}
+
+	/**
+	 * set loader
+	 * @param loader
+	 */
+	public setLoader(loader: Loader<T>): void {
+		this.loaders = [loader]
+	}
+
+	public addLoader(loader: Loader<T>): void {
+		this.loaders.push(loader)
 	}
 
 	/**
 	 * @internal
 	 */
 	public setInstanceID(id: string) {
-		this.feeder.instanceID = id
+		Feeder.getInstance().instanceID = id
+	}
+
+	/**
+	 * @internal
+	 * @param name
+	 */
+	public as(name: string): TestDataSource<T> {
+		this.loaders[this.loaders.length - 1].asName(name)
+		return this
 	}
 
 	/**
 	 * @internal
 	 */
 	public async load() {
-		await this.loader.load()
-		this.feeder.append(this.loader.lines)
+		await Promise.all(this.loaders.map(loader => loader.load()))
+		const feeder = Feeder.getInstance()
+		this.loaders.map(loader => {
+			feeder.append(loader.lines, loader.loaderName)
+		})
 	}
 
 	/**
@@ -100,7 +124,7 @@ export class TestDataSource<T> {
 	 * @param circular Default: true. Pass `false` to disable.
 	 */
 	public circular(circular = true): TestDataSource<T> {
-		this.feeder.circular(circular)
+		Feeder.getInstance().circular(circular, this.loaders[this.loaders.length - 1].loaderName)
 		return this
 	}
 
@@ -109,7 +133,7 @@ export class TestDataSource<T> {
 	 * @param shuffle Default: true. Pass `false` to disable.
 	 */
 	public shuffle(shuffle = true): TestDataSource<T> {
-		this.feeder.shuffle(shuffle)
+		Feeder.getInstance().shuffle(shuffle, this.loaders[this.loaders.length - 1].loaderName)
 		return this
 	}
 
@@ -127,60 +151,74 @@ export class TestDataSource<T> {
 	 * @param func filter function to compare each line
 	 */
 	public filter(func: FeedFilterFunction<T>): TestDataSource<T> {
-		this.feeder.filter(func)
+		Feeder.getInstance().filter(func)
 		return this
+	}
+
+	public isLoaded(): boolean {
+		return this.loaders.every(loader => loader.isLoaded)
+	}
+
+	public isSet(): boolean {
+		return this.loaders.every(loader => loader.isSet)
+	}
+
+	public get multiple(): boolean {
+		return this.loaders.length > 0
 	}
 
 	/**
 	 * @internal
 	 */
 	public feed(): Option<T> {
-		if (!this.loader.isLoaded) throw new Error(`Test data has not been loaded yet!`)
-		return this.feeder.feed()
+		if (!this.isLoaded) throw new Error(`Test data has not been loaded yet!`)
+		return Feeder.getInstance().feed()
 	}
 
 	/**
 	 * @internal
 	 */
 	public peek(): Option<T> {
-		if (!this.loader.isLoaded) throw new Error(`Test data has not been loaded yet!`)
-		return this.feeder.peek()
+		if (!this.isLoaded) throw new Error(`Test data has not been loaded yet!`)
+		return Feeder.getInstance().peek()
 	}
 
 	/**
 	 * @internal
 	 */
 	public get size(): number {
-		return this.feeder.size
+		return Feeder.getInstance().size
 	}
 
 	/**
 	 * @internal
 	 */
 	public get isComplete(): boolean {
-		return this.feeder.isComplete
+		return Feeder.getInstance().isComplete
 	}
 
 	/**
 	 * @internal
 	 */
 	public get isEmpty(): boolean {
-		return this.feeder.isEmpty
+		return Feeder.getInstance().isEmpty
 	}
 
 	/**
 	 * @internal
 	 */
 	public get isStart(): boolean {
-		return this.feeder.isStart
+		return Feeder.getInstance().isStart
 	}
 
 	/**
 	 * @internal
 	 */
 	public toString(): string {
-		if (this.loader.isSet) {
-			return [this.feeder.toString(), this.loader.toString()].filter(x => x.length).join(', ')
+		if (this.isSet()) {
+			return [Feeder.getInstance().toString(), this.loaders.map(loader => loader.toString())]
+				.filter(x => x.length)
+				.join(', ')
 		} else {
 			return 'no test data'
 		}

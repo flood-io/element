@@ -17,15 +17,17 @@ export class TestDataLoaders implements TestDataFactory {
 	 * Loads test data from a CSV file, returning a `<[TestDataSource]>` instance.
 	 */
 	public fromCSV<TRow>(filename: string, separator = ','): TestDataSource<TRow> {
-		const loader = new CSVLoader<TRow>(this.workRoot.testData(filename), separator, filename)
-		return new TestDataSource<TRow>(loader)
+		const loader = new CSVLoader<TRow>(this.workRoot.testData(filename), separator)
+		const testDataSource = TestDataSource.getInstance()
+		testDataSource.addLoader(loader)
+		return testDataSource
 	}
 
 	/**
 	 * Loads data from a JSON ffile
 	 */
 	public fromJSON<TRow>(filename: string): TestDataSource<TRow> {
-		const loader = new JSONLoader<TRow>(this.workRoot.testData(filename), filename)
+		const loader = new JSONLoader<TRow>(this.workRoot.testData(filename))
 		return new TestDataSource<TRow>(loader)
 	}
 }

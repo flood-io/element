@@ -140,10 +140,12 @@ export class ElementHandle implements IElementHandle, Locator {
 	 */
 	public element: PElementHandle
 	public page: Page
+	private frame: Frame
 
-	constructor(elt: PElementHandle, page: Page, private frame: Frame) {
+	constructor(elt: PElementHandle, page: Page, frame?: Frame) {
 		this.element = elt
 		this.page = page
+		this.frame = frame || page.mainFrame()
 	}
 
 	public async initErrorString(foundVia?: string): Promise<ElementHandle> {

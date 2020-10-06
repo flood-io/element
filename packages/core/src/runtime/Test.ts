@@ -182,10 +182,29 @@ export default class Test implements ITest {
 			}
 
 			debug('running hook function: beforeAll')
-			await this.runHookFn(this.hook.beforeAll, browser, testDataRecord, testObserver)
+			let hookResult = await this.runHookFn(
+				this.hook.beforeAll,
+				browser,
+				testDataRecord,
+				testObserver,
+			)
+			if (!hookResult) {
+				stepIterator.stop()
+			}
 
 			debug('running steps')
 			await stepIterator.run(async (step: Step) => {
+				debug('running hook function: beforeEach')
+				hookResult = await this.runHookFn(
+					this.hook.beforeEach,
+					browser,
+					testDataRecord,
+					testObserver,
+				)
+				if (!hookResult) {
+					stepIterator.stop()
+					return
+				}
 				const condition = await stepIterator.callCondition(step, iteration, browser)
 				if (!condition) {
 					await this.summarizeStepBeforeRunStep(step, testObserver)
@@ -210,12 +229,22 @@ export default class Test implements ITest {
 						this.recoverySteps,
 						(this.settings.tries = 0),
 					)
-
 					if (result) {
 						this.failed = false
 					} else {
-						throw Error('step -> failed')
+						stepIterator.stop()
 					}
+				}
+				debug('running hook function: afterEach')
+				hookResult = await this.runHookFn(
+					this.hook.afterEach,
+					browser,
+					testDataRecord,
+					testObserver,
+				)
+				if (!hookResult) {
+					stepIterator.stop()
+					return
 				}
 			})
 		} catch (err) {
@@ -223,10 +252,9 @@ export default class Test implements ITest {
 			console.error(chalk.red(err.message))
 		} finally {
 			await this.afterRunSteps(stepIterator)
+			await testObserver.after(this)
 			debug('running hook function: afterAll')
 			await this.runHookFn(this.hook.afterAll, browser, testDataRecord, testObserver)
-			// TODO report skipped steps
-			await testObserver.after(this)
 		}
 	}
 
@@ -333,14 +361,11 @@ export default class Test implements ITest {
 		step: Step,
 		testDataRecord: any,
 	) {
-		debug('running hook function: beforeEach')
-		await this.runHookFn(this.hook.beforeEach, browser, testDataRecord, testObserver)
 		let error: Error | null = null
 		step.subTitle = this.getStepSubtitle(step)
 		await testObserver.beforeStep(this, step)
 
 		const originalBrowserSettings = { ...browser.settings }
-
 		try {
 			debug(`Run step: ${step.name}`) // ${step.fn.toString()}`)
 			browser.settings = { ...this.settings, ...step.options }
@@ -361,9 +386,6 @@ export default class Test implements ITest {
 			step.prop = { passed: true }
 		}
 		await testObserver.afterStep(this, step)
-
-		debug('running hook function: afterEach')
-		await this.runHookFn(this.hook.afterEach, browser, testDataRecord, testObserver)
 		if (error === null) {
 			await this.doStepDelay()
 		}
@@ -440,9 +462,11 @@ export default class Test implements ITest {
 		browser: Browser<Step>,
 		testDataRecord: any,
 		testObserver: TestObserver,
-	): Promise<void> {
+	): Promise<boolean> {
+		let currentHook: HookBase = hooks[0]
 		try {
 			for (const hook of hooks) {
+				currentHook = hook
 				await this.prepareHookFuncObserver(hook.type, testObserver)
 				browser.settings = { ...this.settings }
 				browser.settings.waitTimeout = Math.max(
@@ -453,8 +477,11 @@ export default class Test implements ITest {
 				await this.doHookFnWithTimeout(hookFn, Number(hook.waitTimeout))
 				await this.finishedHookFuncObserver(hook.type, testObserver)
 			}
-		} catch (error) {
-			throw new Error(error)
+			return true
+		} catch (err) {
+			console.log(err.message)
+			await this.finishedHookFuncObserver(currentHook.type, testObserver)
+			return false
 		}
 	}
 

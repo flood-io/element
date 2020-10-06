@@ -27,6 +27,10 @@ export default class StepIterator {
 		this.stepCount = this.steps.length
 	}
 
+	stop(): void {
+		this.stepCount = this.steps.length
+	}
+
 	async run(iterator: (step: Step) => Promise<void>): Promise<void> {
 		while (this.stepCount < this.steps.length) {
 			this.currentStep = this.steps[this.stepCount]

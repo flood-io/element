@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-beta.13](https://github.com/flood-io/element/compare/v2.0.0-beta.12...v2.0.0-beta.13) (2020-10-06)
+
+
+### Bug Fixes
+
+* edit lerna.json to specify the exact version of dependencies ([947cc36](https://github.com/flood-io/element/commit/947cc36d2f858beb4e825650ba9105afcca1cd3a))
+
+
+
+
+
 # [2.0.0-beta.12](https://github.com/flood-io/element/compare/v2.0.0-beta.11...v2.0.0-beta.12) (2020-09-23)
 
 **Note:** Version bump only for package flood-element

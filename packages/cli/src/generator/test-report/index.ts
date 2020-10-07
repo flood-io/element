@@ -10,7 +10,7 @@ export default class Report extends Generator {
 	}
 
 	writing() {
-		this.fs.copyTpl(this.templatePath('index.html'), this.destinationPath('index.html'), {})
+		this.fs.copyTpl(this.templatePath('report.html'), this.destinationPath('report.html'), {})
 		this.fs.copyTpl(this.templatePath('styles.css'), this.destinationPath('styles.css'), {})
 		this.fs.copyTpl(this.templatePath('js'), this.destinationPath('js'), {})
 		this.fs.write(this.destinationPath('js/data.js'), `var data = ${this.options.data}`)

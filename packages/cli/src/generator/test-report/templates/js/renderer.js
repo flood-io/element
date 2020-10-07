@@ -164,7 +164,12 @@ function renderDetailData(iterations) {
 				return `
         <tr>
           <td rowspan=${steps.length}>
-            ${`${index + 1} (${getTimeString(iteration.duration)})`}
+            ${
+							steps.length > 1
+								? `<div>${`${index + 1}`}</div>
+            <div>(${getTimeString(iteration.duration)})</div>`
+								: `${index + 1} (${getTimeString(iteration.duration)})`
+						}
           </td>
           ${renderStepDetail(steps[0])}
         </tr>

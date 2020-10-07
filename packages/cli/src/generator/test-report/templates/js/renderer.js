@@ -16,9 +16,9 @@ function renderExecutionInfo(info) {
         <div class="info-property">Duration</div>
       </div>
       <div>
-        <div>${info.date}</div>
-        <div>${info.time}</div>
-        <div>${getTimeString(info.duration)}</div>
+        <div class="info-data">${info.date}</div>
+        <div class="info-data">${info.time}</div>
+        <div class="info-data">${getTimeString(info.duration)}</div>
       </div>
       <div>
         <div class="info-property">Execution Mode</div>
@@ -26,9 +26,9 @@ function renderExecutionInfo(info) {
         <div class="info-property">Operation System</div>
       </div>
       <div>
-        <div>${info.mode}</div>
-        <div>${info.browser}</div>
-        <div>${info.os}</div>
+        <div class="info-data">${info.mode}</div>
+        <div class="info-data">${info.browser}</div>
+        <div class="info-data">${info.os}</div>
       </div>
     </div>
   `)
@@ -151,7 +151,7 @@ function renderStepDetail(step) {
 	return `
     <td class="step-name">${step.name}</td>
     <td class="${step.status}-color step-result">${step.status}</td>
-    <td>${step.duration ? `${getTimeString(step.duration)}` : '-'}</td>
+    <td>${step.duration !== undefined ? `${getTimeString(step.duration)}` : '-'}</td>
   `
 }
 

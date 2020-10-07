@@ -327,7 +327,7 @@ export class Browser<T> implements BrowserInterface {
 	@addCallbacks()
 	public async clear(locatable: NullableLocatable | string): Promise<void> {
 		const locator = locatableToLocator(locatable, 'browser.clear()')
-		const elements = await locator.findMany(this.page, this.target)
+		const elements = await locator.findMany(this.page, undefined, this.target)
 		for (const element of elements) {
 			await element.clear()
 		}
@@ -464,7 +464,7 @@ export class Browser<T> implements BrowserInterface {
 
 		debug('locator %o', locator)
 
-		const maybeElement = await locator.find(this.page, this.target)
+		const maybeElement = await locator.find(this.page, undefined, this.target)
 		if (!maybeElement) {
 			throw toLocatorError(locatable, 'browser.findElement()')
 		}
@@ -481,7 +481,7 @@ export class Browser<T> implements BrowserInterface {
 		}
 
 		const locator = locatableToLocator(locatable, 'browser.maybeFindElement(locatable)')
-		const maybeElement = await locator.find(this.page, this.target)
+		const maybeElement = await locator.find(this.page, undefined, this.target)
 		if (!maybeElement) return null
 
 		const element = maybeElement as ElementHandle
@@ -494,7 +494,7 @@ export class Browser<T> implements BrowserInterface {
 	@addCallbacks()
 	public async findElements(locatable: NullableLocatable): Promise<ElementHandle[]> {
 		const locator = locatableToLocator(locatable, 'browser.findElements(locatable)')
-		const elements = await locator.findMany(this.page, this.target)
+		const elements = await locator.findMany(this.page, undefined, this.target)
 		elements.forEach(element => element.bindBrowser(this))
 		return elements
 	}

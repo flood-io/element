@@ -54,35 +54,35 @@ html {
 }
 
 .passed-color {
-	color: #2fc459;
+	color: #68d391;
 }
 
 .failed-color {
-	color: #d93f34;
+	color: #f56565;
 }
 
 .skipped-color {
-	color: #f0de1d;
+	color: #f6e05e;
 }
 
 .unexecuted-color {
-	color: #b0b0ae;
+	color: #cbd5e0;
 }
 
 .passed-bg-color {
-	background-color: #2fc459;
+	background-color: #68d391;
 }
 
 .failed-bg-color {
-	background-color: #d93f34;
+	background-color: #f56565;
 }
 
 .skipped-bg-color {
-	background-color: #f0de1d;
+	background-color: #f6e05e;
 }
 
 .unexecuted-bg-color {
-	background-color: #b0b0ae;
+	background-color: #cbd5e0;
 }
 
 .chart-legend {
@@ -115,7 +115,7 @@ html {
 
 .table th {
 	border: 1px solid #929296;
-	background-color: #b0b0ae;
+	background-color: #ebedf3;
 	padding: 0.75rem;
 }
 

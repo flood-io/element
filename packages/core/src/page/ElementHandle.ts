@@ -311,7 +311,7 @@ export class ElementHandle implements IElementHandle, Locator {
 			locator = new BaseLocator(new CSSLocator(locator), 'handle.findElement')
 		}
 
-		return locator.find(this.page, this.frame, this.element)
+		return locator.find(this.page, this.element, this.frame)
 	}
 
 	/**
@@ -322,7 +322,7 @@ export class ElementHandle implements IElementHandle, Locator {
 			const { BaseLocator } = await import('./Locator')
 			locator = new BaseLocator(new CSSLocator(locator), 'handle.findElements')
 		}
-		return locator.findMany(this.page, this.frame, this.element)
+		return locator.findMany(this.page, this.element, this.frame)
 	}
 
 	/**

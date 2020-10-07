@@ -37,8 +37,8 @@ export class BaseLocator implements Locator {
 
 	async find(
 		page: Page,
-		frame?: Frame,
 		node?: PlaywrightElementHandle,
+		frame?: Frame,
 	): Promise<IElementHandle | null> {
 		const args = [...this.pageFuncArgs]
 		if (node) args.push(node)
@@ -69,8 +69,8 @@ export class BaseLocator implements Locator {
 
 	async findMany(
 		page: Page,
-		frame?: Frame,
 		node?: PlaywrightElementHandle,
+		frame?: Frame,
 	): Promise<IElementHandle[]> {
 		const args = [...this.pageFuncArgs]
 		if (node) args.push(node)

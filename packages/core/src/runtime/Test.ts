@@ -281,22 +281,13 @@ export default class Test implements ITest {
 	}
 
 	summarizeStepAfterRunStep(step: Step): void {
-		if (step.prop?.passed) {
-			this.summaryStep.push({
-				name: step.name,
-				status: Status.PASSED,
-				subTitle: step.subTitle,
-				duration: step.duration,
-			})
-			step.duration = 0
-			return
-		}
 		this.summaryStep.push({
 			name: step.name,
-			status: Status.FAILED,
+			status: step.prop?.passed ? Status.PASSED : Status.FAILED,
 			subTitle: step.subTitle,
+			duration: step.duration,
 		})
-		return
+		step.duration = 0
 	}
 
 	summarizeStepAfterStopRunning(stepIterator: StepIterator): void {

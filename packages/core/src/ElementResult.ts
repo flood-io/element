@@ -15,7 +15,11 @@ export class ElementResult {
 		this._result = {
 			testScripts: [],
 			executionInfo: {
-				date: new Date().toLocaleDateString(),
+				date: new Date().toLocaleDateString(undefined, {
+					day: '2-digit',
+					month: 'short',
+					year: 'numeric',
+				}),
 				time: new Date().toLocaleTimeString(),
 				mode: '',
 				browser: [],

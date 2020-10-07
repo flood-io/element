@@ -2,7 +2,6 @@ import { step, TestSettings, Until, By, Device, Driver } from '@flood/element'
 import assert from 'assert'
 export const settings: TestSettings = {
 	loopCount: 1,
-	device: Device.iPadLandscape,
 	userAgent: 'I AM ROBOT',
 	disableCache: true,
 	actionDelay: '1s',
@@ -34,7 +33,7 @@ export default () => {
 		let select = await browser.findElement(By.id('challenger_age'))
 		await select.takeScreenshot()
 
-		await browser.click(By.css('input.btn'))
+		await browser.click(By.css('input.bt'))
 	})
 
 	step('Flood Challenge: Step 2', async (browser: Driver) => {

@@ -1,5 +1,6 @@
 html {
 	font-family: Arial, Helvetica, sans-serif;
+	color: #132f61;
 	margin: 5rem 20rem;
 }
 
@@ -30,7 +31,12 @@ html {
 .execution-info {
 	display: flex;
 	justify-content: space-between;
-	margin-bottom: 5rem;
+	margin-bottom: 3rem;
+}
+
+.execution-separate {
+	border: 1px dashed #d9d9e2;
+	margin-bottom: 2rem;
 }
 
 .execution-info div {
@@ -42,6 +48,10 @@ html {
 	font-weight: bold;
 }
 
+.info-data {
+	font-style: italic;
+}
+
 .summary-header {
 	display: flex;
 	justify-content: space-between;
@@ -50,11 +60,10 @@ html {
 .header-title {
 	flex: 1;
 	font-size: 2rem;
-	font-weight: bold;
 }
 
 .passed-color {
-	color: #68d391;
+	color: #1bc59b;
 }
 
 .failed-color {
@@ -70,7 +79,7 @@ html {
 }
 
 .passed-bg-color {
-	background-color: #68d391;
+	background-color: #1bc59b;
 }
 
 .failed-bg-color {
@@ -107,21 +116,21 @@ html {
 
 .table {
 	width: 100%;
-	border: 1px solid #929296;
+	border: 1px solid #d9d9e2;
 	border-collapse: collapse;
 	margin-top: 1rem;
 	margin-bottom: 5rem;
 }
 
 .table th {
-	border: 1px solid #929296;
+	border: 1px solid #d9d9e2;
 	background-color: #ebedf3;
 	padding: 0.75rem;
 }
 
 .table td {
 	text-align: center;
-	border: 1px solid #929296;
+	border: 1px solid #d9d9e2;
 }
 
 .table a {

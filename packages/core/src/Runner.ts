@@ -234,7 +234,6 @@ export class PersistentRunner extends Runner {
 		if (this.testCommander !== undefined) {
 			this.testCommander.on('rerun-test', async () => {
 				if (!this.testScriptFactory) return
-				// this.client = await this.launchClient(await this.testScriptFactory())
 				this.rerunTest()
 			})
 		}

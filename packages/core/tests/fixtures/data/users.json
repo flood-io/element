@@ -1,31 +1,31 @@
 [
 	{
 		"user": 1,
-		"username": "jonny.tester1@loadtest.io"
+		"username": "samantha4@loadtest.io"
 	},
 
 	{
 		"user": 2,
-		"username": "jonny.tester2@loadtest.io"
+		"username": "samantha5@loadtest.io"
 	},
 
 	{
 		"user": 1,
-		"username": "jonny.tester3@loadtest.io"
+		"username": "samantha6@loadtest.io"
 	},
 
 	{
 		"user": 2,
-		"username": "jonny.tester4@loadtest.io"
+		"username": "samantha7@loadtest.io"
 	},
 
 	{
 		"user": 1,
-		"username": "jonny.tester5@loadtest.io"
+		"username": "samantha8@loadtest.io"
 	},
 
 	{
 		"user": 2,
-		"username": "jonny.tester6@loadtest.io"
+		"username": "samantha9@loadtest.io"
 	}
 ]

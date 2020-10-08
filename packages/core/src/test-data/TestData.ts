@@ -87,8 +87,9 @@ export class TestDataSource<T> {
 		this.loaders = [loader]
 	}
 
-	public addLoader(loader: Loader<T>): void {
+	public addLoader(loader: Loader<T>): TestDataSource<T> {
 		this.loaders.push(loader)
+		return this
 	}
 
 	/**
@@ -103,7 +104,9 @@ export class TestDataSource<T> {
 	 * @param name
 	 */
 	public as(name: string): TestDataSource<T> {
-		this.loaders[this.loaders.length - 1].asName(name)
+		const loader = this.loaders[this.loaders.length - 1]
+		loader.asName(name)
+		Feeder.getInstance().configLoaderName(name, loader.loaderName)
 		return this
 	}
 
@@ -116,6 +119,11 @@ export class TestDataSource<T> {
 		this.loaders.map(loader => {
 			feeder.append(loader.lines, loader.loaderName)
 		})
+	}
+
+	public clear(): void {
+		this.loaders = []
+		Feeder.getInstance().clear()
 	}
 
 	/**
@@ -151,7 +159,7 @@ export class TestDataSource<T> {
 	 * @param func filter function to compare each line
 	 */
 	public filter(func: FeedFilterFunction<T>): TestDataSource<T> {
-		Feeder.getInstance().filter(func)
+		Feeder.getInstance().filter(func, this.loaders[this.loaders.length - 1].loaderName)
 		return this
 	}
 

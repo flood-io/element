@@ -1,5 +1,5 @@
 import { readFile } from 'fs'
-import { basename } from 'path'
+import { basename, extname } from 'path'
 import { promisify, inspect } from 'util'
 import parseCSV from 'csv-parse/lib/sync'
 
@@ -78,6 +78,10 @@ export class DataLoader<T> extends Loader<T> {
 }
 
 export class JSONLoader<T> extends Loader<T> {
+	constructor(public filePath: string) {
+		super(filePath)
+		this.loaderName = basename(filePath, extname(filePath))
+	}
 	public async load(): Promise<void> {
 		const data = readFilePromise(this.filePath, 'utf8')
 		data.catch(err => {
@@ -110,7 +114,7 @@ export class JSONLoader<T> extends Loader<T> {
 export class CSVLoader<T> extends Loader<T> {
 	constructor(public filePath: string, private separator: string = ',') {
 		super(filePath)
-		this.loaderName = basename(filePath, '.csv')
+		this.loaderName = basename(filePath, extname(filePath))
 	}
 
 	public async load(): Promise<void> {

@@ -11,12 +11,18 @@ type DataSourceItem = {
 	pointer: number
 }
 type DataSource = DataSourceItem[]
+type LoaderConfig = {
+	loaderName: string
+	circular: boolean
+	shuffle: boolean
+	filters: FeedFilterFunction<any>[]
+}
 
 export class Feeder<T> {
 	private dataSource: DataSource = []
-	private dataConfig: { loaderName: string; circular: boolean; shuffle: boolean }[] = []
+	private dataConfig: LoaderConfig[] = []
 
-	constructor(public instanceID: string = '', private filters: FeedFilterFunction<T>[] = []) {
+	constructor(public instanceID = '') {
 		this.reset()
 	}
 
@@ -30,19 +36,15 @@ export class Feeder<T> {
 
 		if (!lines || lines.length === 0) return this
 
+		let loader = this.loaderBy(loaderName)[0]
+		if (!loader) loader = this.config(loaderName)
+
+		const { filters = [], circular = true, shuffle = false } = loader
 		const newLines = lines.filter((line, index) =>
-			this.filters.every(func => func(line, index, instanceID)),
-		)
-		const source = this.dataSource.filter(source => source.name === loaderName)
-		const { circular, shuffle } = this.dataConfig.reduce(
-			(result, config) => {
-				if (config.loaderName === loaderName)
-					return { circular: config.circular, shuffle: config.shuffle }
-				return result
-			},
-			{ circular: true, shuffle: false },
+			filters.every(func => func(line, index, instanceID)),
 		)
 
+		const source = this.dataSource.filter(source => source.name === loaderName)
 		if (source.length > 0) {
 			if (shuffle) source[0].lines = knuthShuffle([...source[0].lines, ...newLines])
 			else source[0].lines = [...source[0].lines, ...newLines]
@@ -60,25 +62,44 @@ export class Feeder<T> {
 		return this
 	}
 
+	private loaderBy(loaderName: string): LoaderConfig[] {
+		return this.dataConfig.filter(config => config.loaderName === loaderName)
+	}
+
+	private config(loaderName: string): LoaderConfig {
+		const loader = this.loaderBy(loaderName)
+		if (loader.length) loader[0].loaderName = loaderName
+		else this.dataConfig.push({ loaderName, circular: true, shuffle: false, filters: [] })
+		return this.dataConfig[this.dataConfig.length - 1]
+	}
+
+	public configLoaderName(loaderName: string, oldName: string): void {
+		const loader = this.loaderBy(oldName)
+		if (loader.length) loader[0].loaderName = loaderName
+		else this.dataConfig.push({ loaderName, circular: true, shuffle: false, filters: [] })
+	}
+
 	/**
 	 * Configures the feeder to reset at the end, creating a repeating loop
 	 */
 	public circular(circular = true, loaderName = ''): Feeder<T> {
-		const loader = this.dataConfig.filter(config => config.loaderName === loaderName)
+		const loader = this.loaderBy(loaderName)
 		if (loader.length) loader[0].circular = circular
-		else this.dataConfig.push({ loaderName, circular, shuffle: false })
+		else this.dataConfig.push({ loaderName, circular, shuffle: false, filters: [] })
 		return this
 	}
 
 	public shuffle(shuffle = true, loaderName = ''): Feeder<T> {
-		const loader = this.dataConfig.filter(config => config.loaderName === loaderName)
+		const loader = this.loaderBy(loaderName)
 		if (loader.length) loader[0].shuffle = shuffle
-		else this.dataConfig.push({ loaderName, circular: true, shuffle })
+		else this.dataConfig.push({ loaderName, circular: true, shuffle, filters: [] })
 		return this
 	}
 
-	public filter(func: FeedFilterFunction<T>): Feeder<T> {
-		this.filters.push(func)
+	public filter(func: FeedFilterFunction<T>, loaderName = ''): Feeder<T> {
+		const loader = this.loaderBy(loaderName)
+		if (loader.length) loader[0].filters.push(func)
+		else this.dataConfig.push({ loaderName, circular: true, shuffle: false, filters: [func] })
 		return this
 	}
 
@@ -119,6 +140,11 @@ export class Feeder<T> {
 		}
 	}
 
+	public clear(): void {
+		this.dataSource = []
+		this.dataConfig = []
+	}
+
 	public reset(): void {
 		this.dataSource.forEach(source => {
 			source.pointer = 0
@@ -133,11 +159,10 @@ export class Feeder<T> {
 	}
 
 	private get maxLines(): number {
-		const arrLines = this.dataSource.reduce((result: number[], item: DataSourceItem) => {
-			result.push(item.lines.length)
-			return result
-		}, [])
-		return arrLines.reduce((a, b) => Math.max(a, b))
+		return this.dataSource.reduce((maxLine: number, item: DataSourceItem) => {
+			if (item.lines.length > maxLine) maxLine = item.lines.length
+			return maxLine
+		}, 0)
 	}
 
 	public get isComplete(): boolean {

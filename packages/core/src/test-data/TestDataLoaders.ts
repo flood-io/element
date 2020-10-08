@@ -28,7 +28,9 @@ export class TestDataLoaders implements TestDataFactory {
 	 */
 	public fromJSON<TRow>(filename: string): TestDataSource<TRow> {
 		const loader = new JSONLoader<TRow>(this.workRoot.testData(filename))
-		return new TestDataSource<TRow>(loader)
+		const testDataSource = TestDataSource.getInstance()
+		testDataSource.addLoader(loader)
+		return testDataSource
 	}
 }
 

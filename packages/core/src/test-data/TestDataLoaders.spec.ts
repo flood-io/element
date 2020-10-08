@@ -47,31 +47,47 @@ describe('TestDataLoaders', () => {
 
 	test('can load multiple csv and json file', async () => {
 		let data: TestDataSource<any> = null
-		const userKey = 'user'
-		const orderKey = 'order'
+		const userCSV = 'user'
+		const orderCSV = 'order'
 		const userJSON = 'userJSON'
-		data = loaders.fromCSV<JSONRow>('users.csv').as(userKey)
+		const userData = 'userData'
+		data = loaders.fromCSV<JSONRow>('users.csv').as(userCSV)
 		data = loaders.fromJSON<JSONRow>('users.json').as(userJSON)
-		data = loaders.fromCSV<JSONRow>('orders.csv').as(orderKey)
+		data = loaders.fromCSV<JSONRow>('orders.csv').as(orderCSV)
+		data = loaders
+			.fromData([
+				{
+					id: '1',
+					username: 'johny1@loadtest.io',
+				},
+				{
+					id: '2',
+					username: 'johny2@loadtest.io',
+				},
+			])
+			.as(userData)
 		await data.load()
-		expect(data.size).toBe(11)
+		expect(data.size).toBe(13)
 
 		const mustFeed = () => ensureDefined(data.feed())
 
 		let iterationData = mustFeed()
-		expect(iterationData[userKey].username).toBe('samantha1@loadtest.io')
-		expect(iterationData[orderKey].username).toBe('ivan1@loadtest.io')
+		expect(iterationData[userCSV].username).toBe('samantha1@loadtest.io')
+		expect(iterationData[orderCSV].username).toBe('ivan1@loadtest.io')
 		expect(iterationData[userJSON].username).toBe('samantha4@loadtest.io')
+		expect(iterationData[userData].username).toBe('johny1@loadtest.io')
 
 		iterationData = mustFeed()
-		expect(iterationData[userKey].username).toBe('samantha2@loadtest.io')
-		expect(iterationData[orderKey].username).toBe('ivan2@loadtest.io')
+		expect(iterationData[userCSV].username).toBe('samantha2@loadtest.io')
+		expect(iterationData[orderCSV].username).toBe('ivan2@loadtest.io')
 		expect(iterationData[userJSON].username).toBe('samantha5@loadtest.io')
+		expect(iterationData[userData].username).toBe('johny2@loadtest.io')
 
 		iterationData = mustFeed()
-		expect(iterationData[userKey].username).toBe('samantha3@loadtest.io')
-		expect(iterationData[orderKey].username).toBe('ivan1@loadtest.io')
+		expect(iterationData[userCSV].username).toBe('samantha3@loadtest.io')
+		expect(iterationData[orderCSV].username).toBe('ivan1@loadtest.io')
 		expect(iterationData[userJSON].username).toBe('samantha6@loadtest.io')
+		expect(iterationData[userData].username).toBe('johny1@loadtest.io')
 		data.clear()
 	})
 

@@ -10,7 +10,9 @@ export class TestDataLoaders implements TestDataFactory {
 	 */
 	public fromData<TRow>(lines: TRow[]): TestDataSource<TRow> {
 		const loader = new DataLoader<TRow>(lines)
-		return new TestDataSource<TRow>(loader)
+		const testDataSource = TestDataSource.getInstance()
+		testDataSource.addLoader(loader)
+		return testDataSource
 	}
 
 	/**

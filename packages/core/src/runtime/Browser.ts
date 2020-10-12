@@ -624,7 +624,7 @@ export class Browser<T> implements BrowserInterface {
 	}
 
 	private isCorrectScrollBehavior(behavior: string): behavior is ScrollBehavior {
-		return behavior === 'auto' || behavior === 'smooth'
+		return ['auto', 'smooth'].includes(behavior)
 	}
 
 	@addCallbacks()
@@ -650,11 +650,8 @@ export class Browser<T> implements BrowserInterface {
 		])
 
 		if (this.isPoint(target)) {
-			// target is Point
-			top = target[1]
-			left = target[0]
+			[left, top] = target
 		} else if (typeof target === 'string') {
-			// target is ScrollDirection
 			switch (target) {
 				case 'top':
 					top = 0
@@ -678,7 +675,6 @@ export class Browser<T> implements BrowserInterface {
 					)
 			}
 		} else if (this.isLocator(target) || this.isElementHandle(target)) {
-			// target is Locator or ElementHandle
 			const targetEl = await this.findElement(target)
 			await targetEl.element.evaluate(
 				(el, scrollOptions: ScrollIntoViewOptions) => {

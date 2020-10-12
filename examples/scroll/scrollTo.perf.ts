@@ -1,7 +1,7 @@
 import { step, TestSettings, By } from '@flood/element'
 
 export const settings: TestSettings = {
-	loopCount: 1,
+	loopCount: -1,
 	waitUntil: 'visible',
 	clearCache: false,
 	clearCookies: false,
@@ -89,6 +89,9 @@ export default () => {
 		// Or we can use the string 'window.innerWidth' and pass it as param in browser.scrollBy()
 		console.info('[INFO]: ScrollBy with innerWidth')
 		await browser.scrollBy('window.innerWidth', 0, { behavior: 'smooth' })
+		await browser.wait(2)
+
+		await browser.scrollBy(0, -innerHeight, { behavior: 'smooth' })
 		await browser.wait(10)
 	})
 }

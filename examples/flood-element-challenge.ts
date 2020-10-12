@@ -131,9 +131,6 @@ export default () => {
 		await browser.press(Key.TAB)
 		await browser.press(Key.ENTER)
 
-		// const takeTheChallengeBtn = await browser.findElement(By.visibleText('TAKE THE CHALLENGE'))
-		// await browser.click(takeTheChallengeBtn)
-
 		await browser.takeScreenshot()
 		const modal = By.css('#challenges-popup')
 		await browser.wait(Until.elementIsVisible(modal))
@@ -240,9 +237,7 @@ export default () => {
 
 		const promotionInput = await browser.findElement(By.id('challenge-3-promotion-code'))
 		await promotionInput?.focus()
-		// await browser.sendKeys(promotionCode)
-		console.log('Wait 1 second')
-		await browser.type(promotionInput, promotionCode)
+		await browser.sendKeys(promotionCode)
 	})
 
 	step('Test: Challenge 4', async browser => {
@@ -282,7 +277,6 @@ export default () => {
 		const cardLength = productCards.length
 		const totalProducts = (numOfPage - 1) * 18 + cardLength
 		await challenge5Input.focus()
-		// await challenge5Input.sendKeys(totalProducts + '')
 		await browser.sendKeys(totalProducts + '')
 
 		if (numOfPage > 1) {
@@ -303,11 +297,6 @@ export default () => {
 		for (let x = 1; x <= numOfPage; x++) {
 			const productCards = await browser.findElements(By.xpath('//div[@data-test-card]'))
 			for (let y = 0; y < productCards.length; y++) {
-				// await browser.scrollTo(productCards[y])
-				// await browser.evaluate(y => {
-				// 	const el = document.querySelectorAll('div[data-test-card]')[y]
-				// 	el.scrollIntoView({ block: 'nearest' })
-				// }, y)
 				const card = productCards[y]
 				await browser.scrollTo(card, { behavior: 'smooth', block: 'nearest' })
 				await browser.wait(0.5)
@@ -323,14 +312,9 @@ export default () => {
 				const anotherAddToCardBtn = await browser.findElement(By.visibleText('Add to cart'))
 				await browser.click(anotherAddToCardBtn)
 
-				// Using Mouse.move(), mouse.down() and mouse.up() to close the modal
 				await browser.mouse.move(1, 1)
 				await browser.mouse.down()
 				await browser.mouse.up()
-
-				// Or you can click into the close button in the modal
-				// const closeModalBtnEl = await browser.findElement(By.css('button[data-test-product-detail-modal-close]'))
-				// await closeModalBtnEl.click()
 			}
 
 			if (numOfPage > 1 && x < numOfPage) {

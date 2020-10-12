@@ -1,3 +1,5 @@
+import { BaseLocator } from './../page/Locator'
+import { ElementHandle as TargetElementHandle } from './../page/ElementHandle'
 import { Point } from './../page/Point'
 import { Condition } from '../page/Condition'
 import {
@@ -604,14 +606,14 @@ export class Browser<T> implements BrowserInterface {
 
 	// Check the target has type Locator or not
 	private isLocator(target: Locator | ElementHandle | Point | ScrollDirection): target is Locator {
-		return !Array.isArray(target) && (target as Locator).find !== undefined
+		return target instanceof BaseLocator
 	}
 
 	// Check the target has type ElementHandle or not
 	private isElementHandle(
 		target: Locator | ElementHandle | Point | ScrollDirection,
 	): target is ElementHandle {
-		return (target as ElementHandle).element !== undefined
+		return target instanceof TargetElementHandle
 	}
 
 	private isPoint(target: Locator | ElementHandle | Point | ScrollDirection): target is Point {
@@ -649,6 +651,17 @@ export class Browser<T> implements BrowserInterface {
 			document.body.scrollWidth,
 		])
 
+		if (this.isLocator(target) || this.isElementHandle(target)) {
+			const targetEl = await this.findElement(target)
+			await targetEl.element.evaluate(
+				(el, scrollOptions: ScrollIntoViewOptions) => {
+					el.scrollIntoView(scrollOptions)
+				},
+				{ behavior, block, inline },
+			)
+			return
+		}
+
 		if (this.isPoint(target)) {
 			[left, top] = target
 		} else if (typeof target === 'string') {
@@ -674,15 +687,6 @@ export class Browser<T> implements BrowserInterface {
 						'The input target is not Locator or ElementHandle or Point or Scroll Direction.',
 					)
 			}
-		} else if (this.isLocator(target) || this.isElementHandle(target)) {
-			const targetEl = await this.findElement(target)
-			await targetEl.element.evaluate(
-				(el, scrollOptions: ScrollIntoViewOptions) => {
-					el.scrollIntoView(scrollOptions)
-				},
-				{ behavior, block, inline },
-			)
-			return
 		} else {
 			throw new Error(
 				'The input target is not Locator or ElementHandle or Point or Scroll Direction.',

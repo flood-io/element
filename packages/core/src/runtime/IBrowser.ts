@@ -307,11 +307,17 @@ export interface Browser {
 
 	/**
 	 *
-	 * @param x the horizontal pixel value that you want to scroll by
-	 * @param y the vertical pixel value that you want to scroll by
+	 * @param x How many pixels to scroll by, along the x-axis (horizontal). Positive values will scroll to the right, while negative values will scroll to the left.
+	 * Param x can take 'window.innerWidth' as a special value
+	 * @param y How many pixels to scroll by, along the y-axis (vertical). Positive values will scroll down, while negative values scroll up.
+	 * Param y can take 'window.innerHeight' as a special value
 	 * @param scrollOptions behavior of scroll (auto or smooth)
 	 */
-	scrollBy(x: number, y: number, scrollOptions?: ScrollOptions): Promise<void>
+	scrollBy(
+		x: number | 'window.innerWidth',
+		y: number | 'window.innerHeight',
+		scrollOptions?: ScrollOptions,
+	): Promise<void>
 }
 
 /**

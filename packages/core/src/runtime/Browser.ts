@@ -604,12 +604,10 @@ export class Browser<T> implements BrowserInterface {
 		await this.client.browser.close()
 	}
 
-	// Check the target has type Locator or not
 	private isLocator(target: Locator | ElementHandle | Point | ScrollDirection): target is Locator {
 		return target instanceof BaseLocator
 	}
 
-	// Check the target has type ElementHandle or not
 	private isElementHandle(
 		target: Locator | ElementHandle | Point | ScrollDirection,
 	): target is ElementHandle {
@@ -652,7 +650,7 @@ export class Browser<T> implements BrowserInterface {
 		])
 
 		if (this.isLocator(target) || this.isElementHandle(target)) {
-			const targetEl = await this.findElement(target)
+			const targetEl = this.isLocator(target) ? await this.findElement(target) : target
 			await targetEl.element.evaluate(
 				(el, scrollOptions: ScrollIntoViewOptions) => {
 					el.scrollIntoView(scrollOptions)

@@ -232,10 +232,7 @@ export class PersistentRunner extends Runner {
 		)
 
 		if (this.testCommander !== undefined) {
-			this.testCommander.on('rerun-test', async () => {
-				if (!this.testScriptFactory) return
-				this.rerunTest()
-			})
+			this.testCommander.on('rerun-test', async () => this.rerunTest())
 		}
 	}
 
@@ -244,7 +241,11 @@ export class PersistentRunner extends Runner {
 	}
 
 	async runNextTest() {
-		const { testScriptFactory } = this
+		const { client, testScriptFactory } = this
+
+		if (client === undefined) {
+			return
+		}
 		if (testScriptFactory === undefined) {
 			return
 		}

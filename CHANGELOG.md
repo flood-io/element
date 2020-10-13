@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-beta.17](https://github.com/flood-io/element/compare/v2.0.0-beta.16...v2.0.0-beta.17) (2020-10-13)
+
+
+### Bug Fixes
+
+* cannot swith to a frame by Browser.switchTo() ([633dc54](https://github.com/flood-io/element/commit/633dc548e5fe871cb7632d37295eba3d404cd5be))
+* change params order for Locator.find & Locator.findMany ([48d5ae9](https://github.com/flood-io/element/commit/48d5ae9564339e73c8870e5edf01f1ef020fe788))
+* unit tests ([7dde7b7](https://github.com/flood-io/element/commit/7dde7b78d80dd226afcef5dd2f6e5a540871160e))
+
+
+
+
+
 # [2.0.0-beta.16](https://github.com/flood-io/element/compare/v2.0.0-beta.15...v2.0.0-beta.16) (2020-10-12)
 
 **Note:** Version bump only for package flood-element

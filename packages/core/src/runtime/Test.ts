@@ -232,6 +232,7 @@ export default class Test implements ITest {
 					if (result) {
 						this.failed = false
 					} else {
+						await this.afterRunSteps(stepIterator)
 						stepIterator.stop()
 					}
 				}
@@ -247,11 +248,11 @@ export default class Test implements ITest {
 					return
 				}
 			})
+			await this.afterRunSteps(stepIterator)
 		} catch (err) {
 			this.failed = true
 			console.error(chalk.red(err.message))
 		} finally {
-			await this.afterRunSteps(stepIterator)
 			await testObserver.after(this)
 			debug('running hook function: afterAll')
 			await this.runHookFn(this.hook.afterAll, browser, testDataRecord, testObserver)

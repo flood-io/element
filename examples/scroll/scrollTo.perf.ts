@@ -51,30 +51,13 @@ export default () => {
 		await browser.scrollTo(paragraph, { behavior: 'smooth', block: 'nearest' })
 		await browser.wait(2)
 
-		const beforeScrollTop = await browser.evaluate(() => ({
-			pageXOffset: window.pageXOffset,
-			pageYOffset: window.pageYOffset,
-		}))
-		console.log(beforeScrollTop)
-		await browser.wait(2)
-
 		console.info('[INFO]: ScrollBy without ScrollOptions')
 		await browser.scrollBy(700, 400)
 		await browser.wait(2)
-		const afterScrollTop = await browser.evaluate(() => ({
-			pageXOffset: window.pageXOffset,
-			pageYOffset: window.pageYOffset,
-		}))
-		console.log(afterScrollTop)
 
 		console.info('[INFO]: ScrollBy with ScrollOptions')
 		await browser.scrollBy(0, -400, { behavior: 'smooth' })
 		await browser.wait(2)
-		const afterScrollAgain = await browser.evaluate(() => ({
-			pageXOffset: window.pageXOffset,
-			pageYOffset: window.pageYOffset,
-		}))
-		console.log(afterScrollAgain)
 
 		await browser.scrollTo([0, 0])
 		await browser.wait(2)

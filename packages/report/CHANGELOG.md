@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-beta.18](https://github.com/flood-io/element/compare/v2.0.0-beta.17...v2.0.0-beta.18) (2020-10-15)
+
+
+### Features
+
+* export html report ([8c9671a](https://github.com/flood-io/element/commit/8c9671a57f1a27fe8899232dccc5b56a4f1eb337))
+
+
+
+
+
 # [2.0.0-beta.17](https://github.com/flood-io/element/compare/v2.0.0-beta.16...v2.0.0-beta.17) (2020-10-13)
 
 **Note:** Version bump only for package @flood/element-report

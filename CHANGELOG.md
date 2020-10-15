@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-beta.18](https://github.com/flood-io/element/compare/v2.0.0-beta.17...v2.0.0-beta.18) (2020-10-15)
+
+
+### Bug Fixes
+
+* wrong step count ([5fe8f8d](https://github.com/flood-io/element/commit/5fe8f8d87b2a0cbc8b6f40e6eba5b564b2cc0bb3))
+
+
+### Features
+
+* change report directory ([0be23c7](https://github.com/flood-io/element/commit/0be23c7975ed9f3fee0565d0e0bebc710af1d825))
+* change report directory for single file run ([4c4844a](https://github.com/flood-io/element/commit/4c4844ad34563bb2d3503a8b7c1257214b624827))
+* export html report ([8c9671a](https://github.com/flood-io/element/commit/8c9671a57f1a27fe8899232dccc5b56a4f1eb337))
+
+
+
+
+
 # [2.0.0-beta.17](https://github.com/flood-io/element/compare/v2.0.0-beta.16...v2.0.0-beta.17) (2020-10-13)
 
 

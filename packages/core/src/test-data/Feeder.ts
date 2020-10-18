@@ -1,5 +1,6 @@
 import { Option } from '../utils/Option'
 import { knuthShuffle } from 'knuth-shuffle'
+import { FileType } from './Loader'
 
 export type FeedFilterFunction<Line> = (line: Line, index: number, instanceID: string) => boolean
 
@@ -9,6 +10,7 @@ type DataSourceItem = {
 	circular: boolean
 	shuffle: boolean
 	pointer: number
+	type: FileType
 }
 type DataSource = DataSourceItem[]
 type LoaderConfig = {
@@ -31,7 +33,7 @@ export class Feeder<T> {
 		return this._instance || (this._instance = new Feeder<any>())
 	}
 
-	public append(lines: T[], loaderName = ''): Feeder<T> {
+	public append(lines: T[], loaderName = '', type: FileType): Feeder<T> {
 		const { instanceID } = this
 
 		if (!lines || lines.length === 0) return this
@@ -44,8 +46,21 @@ export class Feeder<T> {
 			filters.every(func => func(line, index, instanceID)),
 		)
 
+		function diffStructure(src1: any, src2: any, type: FileType): boolean {
+			if (type === FileType.CSV) {
+				return JSON.stringify(src1.shift()) !== JSON.stringify(src2.shift())
+			} else if (type === FileType.JSON) {
+				//Not yet implement
+				return false
+			}
+			return false
+		}
+
 		const source = this.dataSource.filter(source => source.name === loaderName)
 		if (source.length > 0) {
+			if (source[0].type === type && diffStructure(source[0].lines, newLines, source[0].type)) {
+				throw Error('Data files that have different data structures cannot have the same alias')
+			}
 			if (shuffle) source[0].lines = knuthShuffle([...source[0].lines, ...newLines])
 			else source[0].lines = [...source[0].lines, ...newLines]
 			source[0].circular = circular
@@ -57,6 +72,7 @@ export class Feeder<T> {
 				circular,
 				shuffle,
 				pointer: 0,
+				type,
 			})
 		}
 		return this

@@ -1,4 +1,5 @@
 import { Feeder } from './Feeder'
+import { FileType } from './Loader'
 
 function ensureDefined<T>(value: T | undefined | null): T | never {
 	if (value === undefined || value === null) {
@@ -27,14 +28,14 @@ describe('Feeder', () => {
 			.filter((line, index, instanceID) => line.user === instanceID)
 			.filter(line => !!line.username)
 			.filter(Boolean)
-			.append(lines)
+			.append(lines, 'test', FileType.CSV)
 
 		expect(feeder.feed()).toEqual({
 			user: '1',
 			username: 'johnny1@loadtest.io',
 			password: 'correcthorsebatterstaple!',
 		})
-		expect(feeder.isComplete).toBe(true)
+		expect(feeder.isComplete).toBe(false)
 		expect(feeder.feed()).toEqual({
 			user: '1',
 			username: 'johnny6@loadtest.io',
@@ -48,7 +49,7 @@ describe('Feeder', () => {
 	test('can be reset', async () => {
 		const feeder = new Feeder<Row>('1')
 			.filter((line, index, instanceID) => line.user === instanceID)
-			.append(lines)
+			.append(lines, 'test', FileType.CSV)
 			.circular(false)
 
 		expect(feeder.isStart).toBe(true)
@@ -64,7 +65,7 @@ describe('Feeder', () => {
 	test('is be looped by default', async () => {
 		const feeder = new Feeder<Row>('1')
 			.filter((line, index, instanceID) => line.user === instanceID)
-			.append(lines)
+			.append(lines, 'test', FileType.CSV)
 
 		expect(feeder.size).toBe(2)
 
@@ -77,7 +78,7 @@ describe('Feeder', () => {
 	})
 
 	test('can be randomized', async () => {
-		const feeder = new Feeder<Row>('1').shuffle().append(lines)
+		const feeder = new Feeder<Row>('1').shuffle().append(lines, 'test', FileType.CSV)
 
 		const mustFeed = () => ensureDefined(feeder.feed())
 		const users = [mustFeed()['username'], mustFeed()['username'], mustFeed()['username']]

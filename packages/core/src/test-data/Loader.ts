@@ -2,20 +2,63 @@ import { readFile } from 'fs'
 import { basename, extname } from 'path'
 import { promisify, inspect } from 'util'
 import parseCSV from 'csv-parse/lib/sync'
+import glob from 'glob'
 
 const readFilePromise = promisify(readFile)
 
+type ReadFileOption = {
+	delimiter?: string
+	columns?: boolean
+	type: FileType
+}
+
+export enum FileType {
+	CSV = 'csv',
+	JSON = 'json',
+	DATA = 'data',
+	NULL = 'null_loader',
+}
+
 export abstract class Loader<T> {
 	public isSet = true
-	public lines: T[]
 	public isLoaded = false
+	public lines: T[]
 	public dataSource: { name: string; lines: T[] }[]
 	public loaderName: string
-	public requestedFilename: string
+	public requestedFilename: string | string[]
+	public filePaths: string[] = []
+
 	public abstract load(): Promise<void>
 	public abstract asName(name: string): void
+	public abstract type(): FileType
+	public async read(path: string, option: ReadFileOption): Promise<T[]> {
+		let dataFile: string
+		let data = []
+		try {
+			dataFile = await readFilePromise(path, 'utf8')
+			if (option.type === FileType.CSV) {
+				data = parseCSV(dataFile, option)
+			} else if (option.type === FileType.JSON) {
+				data = JSON.parse(dataFile)
+			}
+		} catch (e) {
+			throw new Error(`unable to read file ${this.filePath}:\ncause: ${e}`)
+		}
+		return data
+	}
 	constructor(public filePath: string) {
-		this.requestedFilename = basename(this.filePath)
+		if (filePath.includes('*')) {
+			this.filePaths.push(...glob.sync(filePath))
+			if (this.filePaths.length === 0) {
+				throw Error('Found no test scripts matching testPathMatch pattern')
+			}
+			this.requestedFilename = this.filePaths
+				.map(file => basename(file, extname(file)).replace(/\*/gi, ''))
+				.join(',')
+		} else {
+			this.requestedFilename = basename(this.filePath)
+		}
+		this.loaderName = basename(filePath, extname(filePath)).replace(/\*/gi, '')
 	}
 }
 
@@ -33,6 +76,10 @@ export class NullLoader<T> extends Loader<T> {
 	public asName(name = ''): void {
 		this.loaderName = name
 	}
+
+	public type(): FileType {
+		return FileType.NULL
+	}
 }
 
 export class DataLoader<T> extends Loader<T> {
@@ -49,6 +96,10 @@ export class DataLoader<T> extends Loader<T> {
 
 	public asName(name = ''): void {
 		this.loaderName = name
+	}
+
+	public type(): FileType {
+		return FileType.DATA
 	}
 
 	public toString(): string {
@@ -80,25 +131,26 @@ export class DataLoader<T> extends Loader<T> {
 export class JSONLoader<T> extends Loader<T> {
 	constructor(public filePath: string) {
 		super(filePath)
-		this.loaderName = basename(filePath, extname(filePath))
 	}
 	public async load(): Promise<void> {
-		const data = readFilePromise(this.filePath, 'utf8')
-		data.catch(err => {
-			console.error(err)
-		})
-
-		const jsonData: T[] = JSON.parse(await data)
-		if (Array.isArray(jsonData)) {
-			this.lines = jsonData
+		if (this.filePaths.length) {
+			const allLines: any[] = []
+			for (const filePath of this.filePaths) {
+				const data = await this.read(filePath, { type: FileType.JSON })
+				if (Array.isArray(data)) {
+					allLines.push(...data)
+				} else {
+					allLines.push(data)
+				}
+			}
+			this.lines = allLines
 		} else {
-			this.lines = [jsonData]
+			this.lines = await this.read(this.filePath, { type: FileType.JSON })
 		}
 
 		if (this.lines.length === 0) {
 			throw new Error(`JSON file '${this.requestedFilename}' loaded but contains no rows of data.`)
 		}
-
 		this.isLoaded = true
 	}
 
@@ -109,23 +161,32 @@ export class JSONLoader<T> extends Loader<T> {
 	public toString(): string {
 		return `json data ${this.requestedFilename}`
 	}
+
+	public type(): FileType {
+		return FileType.JSON
+	}
 }
 
 export class CSVLoader<T> extends Loader<T> {
 	constructor(public filePath: string, private separator: string = ',') {
 		super(filePath)
-		this.loaderName = basename(filePath, extname(filePath))
 	}
 
 	public async load(): Promise<void> {
-		let data: string
-		try {
-			data = await readFilePromise(this.filePath, 'utf8')
-		} catch (e) {
-			throw new Error(`unable to read CSV file ${this.filePath}:\ncause: ${e}`)
+		if (this.filePaths.length) {
+			const allLines: any[] = []
+			for (const filePath of this.filePaths) {
+				const data = await this.read(filePath, {
+					type: FileType.CSV,
+					delimiter: this.separator,
+					columns: true,
+				})
+				allLines.push(...data)
+			}
+			this.lines = allLines
+		} else {
+			this.lines = await this.read(this.filePath, { type: FileType.CSV, delimiter: this.separator })
 		}
-
-		this.lines = parseCSV(data, { delimiter: this.separator, columns: true })
 
 		if (this.lines.length === 0) {
 			throw new Error(
@@ -142,5 +203,9 @@ export class CSVLoader<T> extends Loader<T> {
 
 	public toString(): string {
 		return `CSV data ${this.requestedFilename}`
+	}
+
+	public type(): FileType {
+		return FileType.CSV
 	}
 }

@@ -170,11 +170,11 @@ export default class Test implements ITest {
 			await testObserver.before(this)
 
 			debug('Feeding data')
-			testDataRecord = testData.feed()
+			testDataRecord = testData ? testData.feed() : {}
 			const invalidName: string[] = []
 			const validTestData = () => {
 				if (testDataRecord === null) return false
-				if (testData.multiple) {
+				if (testData && testData.multiple) {
 					for (const key in testDataRecord) {
 						if (testDataRecord[key] === null) {
 							invalidName.push(key)

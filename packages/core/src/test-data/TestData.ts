@@ -1,6 +1,6 @@
 import { Option } from '../utils/Option'
 import { Feeder, FeedFilterFunction } from './Feeder'
-import { Loader, NullLoader } from './Loader'
+import { FileType, Loader, NullLoader } from './Loader'
 
 /**
  * A `TestDataFactory` is available to be imported into your test script as `TestData`. Use this to load a <[TestDataSource]> which provides new test data to each iteration of your test.
@@ -79,14 +79,6 @@ export class TestDataSource<T> {
 		return this._instance || (this._instance = new TestDataSource<any>(new NullLoader()))
 	}
 
-	/**
-	 * set loader
-	 * @param loader
-	 */
-	public setLoader(loader: Loader<T>): void {
-		this.loaders = [loader]
-	}
-
 	public addLoader(loader: Loader<T>): TestDataSource<T> {
 		this.loaders.push(loader)
 		return this
@@ -110,11 +102,35 @@ export class TestDataSource<T> {
 		return this
 	}
 
+	// public get validLoaders(): boolean {}
 	/**
 	 * @internal
 	 */
 	public async load() {
-		await Promise.all(this.loaders.map(loader => loader.load()))
+		const loaderCheck: { type: FileType; alias: string }[] = []
+		await Promise.all(
+			this.loaders.map(loader => {
+				loaderCheck.push({ type: loader.type(), alias: loader.loaderName })
+				const invalidLoader = loaderCheck.reduce((invalidMsg, lc) => {
+					if (lc.type !== loader.type() && lc.alias === loader.loaderName) {
+						invalidMsg = 'Data files imported using different methods cannot have the same alias'
+					}
+					if (
+						loader.type() === FileType.DATA &&
+						lc.type !== FileType.DATA &&
+						loader.loaderName === ''
+					) {
+						invalidMsg =
+							'Alias name of the data imported using fromData() must be specified by using as()'
+					}
+					return invalidMsg
+				}, '')
+				if (invalidLoader) {
+					throw Error(invalidLoader)
+				}
+				return loader.load()
+			}),
+		)
 		const feeder = Feeder.getInstance()
 		this.loaders.map(loader => {
 			feeder.append(loader.lines, loader.loaderName)

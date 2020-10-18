@@ -173,19 +173,19 @@ export class CSVLoader<T> extends Loader<T> {
 	}
 
 	public async load(): Promise<void> {
+		const option = {
+			type: FileType.CSV,
+			delimiter: this.separator,
+		}
 		if (this.filePaths.length) {
 			const allLines: any[] = []
 			for (const filePath of this.filePaths) {
-				const data = await this.read(filePath, {
-					type: FileType.CSV,
-					delimiter: this.separator,
-					columns: true,
-				})
+				const data = await this.read(filePath, option)
 				allLines.push(...data)
 			}
 			this.lines = allLines
 		} else {
-			this.lines = await this.read(this.filePath, { type: FileType.CSV, delimiter: this.separator })
+			this.lines = await this.read(this.filePath, option)
 		}
 
 		if (this.lines.length === 0) {
@@ -193,7 +193,6 @@ export class CSVLoader<T> extends Loader<T> {
 				`CSV file '${this.requestedFilename}' loaded but contains no rows of data.\nNote that the first row of a CSV file is used as the header to name columns.\nFor details see https://github.com/flood-io/element/blob/master/packages/element/docs/examples/examples_test_data.md#csv-column-names`,
 			)
 		}
-
 		this.isLoaded = true
 	}
 

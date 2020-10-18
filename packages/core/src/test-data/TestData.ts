@@ -133,7 +133,7 @@ export class TestDataSource<T> {
 		)
 		const feeder = Feeder.getInstance()
 		this.loaders.map(loader => {
-			feeder.append(loader.lines, loader.loaderName)
+			feeder.append(loader.lines, loader.loaderName, loader.type())
 		})
 	}
 

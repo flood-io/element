@@ -91,17 +91,140 @@ describe('TestDataLoaders', () => {
 		data.clear()
 	})
 
-	test('can combine csv and json if the same name', async () => {
+	test('can combine 2 JSON/CSV/FromData with the same structure', async () => {
 		let data: TestDataSource<any> = null
 		const userKey = 'user'
-		data = loaders.fromCSV<JSONRow>('users.csv').as(userKey)
+		//2 JSON
+		data = loaders.fromJSON<JSONRow>('users_same.json').as(userKey)
 		data = loaders.fromJSON<JSONRow>('users.json').as(userKey)
 		await data.load()
 		expect(data.size).toBe(9)
 
-		const mustFeed = () => ensureDefined(data.feed())
+		let mustFeed = () => ensureDefined(data.feed())
 		for (let i = 1; i <= data.size; i++) {
 			expect(mustFeed().username).toBe(`samantha${i}@loadtest.io`)
 		}
+		data.clear()
+
+		//2 CSV
+		data = loaders.fromCSV<JSONRow>('users.csv').as(userKey)
+		data = loaders.fromCSV<JSONRow>('users_same.csv').as(userKey)
+		await data.load()
+		expect(data.size).toBe(6)
+
+		mustFeed = () => ensureDefined(data.feed())
+		for (let i = 1; i <= data.size; i++) {
+			expect(mustFeed().username).toBe(`samantha${i}@loadtest.io`)
+		}
+		data.clear()
+
+		//2 Data
+		data = loaders.fromData<any>([
+			{
+				id: 1,
+				username: 'test1@gmail.com',
+			},
+			{
+				id: 2,
+				username: 'test2@gmail.com',
+			},
+		])
+		data = loaders.fromData<any>([
+			{
+				id: 1,
+				username: 'test3@gmail.com',
+			},
+			{
+				id: 2,
+				username: 'test4@gmail.com',
+			},
+		])
+		await data.load()
+		expect(data.size).toBe(4)
+
+		mustFeed = () => ensureDefined(data.feed())
+		for (let i = 1; i <= data.size; i++) {
+			expect(mustFeed().username).toBe(`test${i}@gmail.com`)
+		}
+		data.clear()
+	})
+
+	test('can load data file with pattern', async () => {
+		let data: TestDataSource<any> = null
+		//CSV pattern
+		data = loaders.fromCSV<JSONRow>('users*.csv')
+		await data.load()
+		expect(data.size).toBe(6)
+
+		let mustFeed = () => ensureDefined(data.feed())
+		expect(mustFeed().username).toBe(`samantha4@loadtest.io`)
+		expect(mustFeed().username).toBe(`samantha5@loadtest.io`)
+		expect(mustFeed().username).toBe(`samantha6@loadtest.io`)
+		expect(mustFeed().username).toBe(`samantha1@loadtest.io`)
+		expect(mustFeed().username).toBe(`samantha2@loadtest.io`)
+		expect(mustFeed().username).toBe(`samantha3@loadtest.io`)
+		data.clear()
+
+		//JSON pattern
+		data = loaders.fromJSON<JSONRow>('users*.json')
+		await data.load()
+		expect(data.size).toBe(9)
+
+		mustFeed = () => ensureDefined(data.feed())
+		for (let i = 1; i <= data.size; i++) {
+			expect(mustFeed().username).toBe(`samantha${i}@loadtest.io`)
+		}
+		data.clear()
+	})
+
+	test('Should throw an error if load multiple method with the same alias', async () => {
+		let data: TestDataSource<any> = null
+		data = loaders.fromCSV<JSONRow>('users.csv').as('user')
+		data = loaders.fromJSON<JSONRow>('users.json').as('user')
+		await data.load().catch(err => {
+			expect(err.message).toEqual(
+				'Data files imported using different methods cannot have the same alias',
+			)
+		})
+		data.clear()
+	})
+
+	test('Should throw an error if load multiple file with the same method, same alias but different structure', async () => {
+		let data: TestDataSource<any> = null
+		data = loaders.fromCSV<JSONRow>('users.csv').as('user')
+		data = loaders.fromCSV<JSONRow>('diff_users.csv').as('user')
+		await data.load().catch(err => {
+			expect(err.message).toEqual(
+				'Data files that have different data structures cannot have the same alias',
+			)
+		})
+		data.clear()
+
+		data = loaders.fromJSON<JSONRow>('users.json').as('user')
+		data = loaders.fromJSON<JSONRow>('diff_users.json').as('user')
+		await data.load().catch(err => {
+			expect(err.message).toEqual(
+				'Data files that have different data structures cannot have the same alias',
+			)
+		})
+		data.clear()
+	})
+
+	test('Should throw an error if load multiple method included `fromData` but does not define alias for this', async () => {
+		let data: TestDataSource<any> = null
+		data = loaders.fromCSV<JSONRow>('users.csv').as('userCSV')
+		data = loaders.fromJSON<JSONRow>('users.json').as('userJSON')
+		data = loaders.fromData<any>([
+			{
+				id: 1,
+				name: 'test1@gmail.com',
+			},
+		])
+		await data.load().catch(err => {
+			expect(err.message).toEqual(
+				'Alias name of the data imported using fromData() must be specified by using as()',
+			)
+		})
+		data.clear()
 	})
 })

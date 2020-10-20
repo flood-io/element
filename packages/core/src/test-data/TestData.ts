@@ -92,17 +92,16 @@ export class TestDataSource<T> {
 	}
 
 	/**
-	 * @internal
-	 * @param name
+	 * set loader alias
+	 * @param name: name of the loader
 	 */
 	public as(name: string): TestDataSource<T> {
 		const loader = this.loaders[this.loaders.length - 1]
-		loader.asName(name)
 		Feeder.getInstance().configLoaderName(name, loader.loaderName)
+		loader.asName(name)
 		return this
 	}
 
-	// public get validLoaders(): boolean {}
 	/**
 	 * @internal
 	 */

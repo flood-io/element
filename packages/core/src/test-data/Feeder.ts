@@ -38,7 +38,7 @@ export class Feeder<T> {
 
 		if (!lines || lines.length === 0) return this
 
-		let loader = this.loaderBy(loaderName)[0]
+		let loader = this.loaderBy(loaderName)
 		if (!loader) loader = this.config(loaderName)
 
 		const { filters = [], circular = true, shuffle = false } = loader
@@ -46,19 +46,16 @@ export class Feeder<T> {
 			filters.every(func => func(line, index, instanceID)),
 		)
 
-		function diffStructure(src1: any, src2: any, type: FileType): boolean {
-			if (type === FileType.CSV) {
-				return JSON.stringify(src1.shift()) !== JSON.stringify(src2.shift())
-			} else if (type === FileType.JSON) {
-				//Not yet implement
-				return false
-			}
-			return false
+		function diffStructure(srcOne: any, srcTwo: any): boolean {
+			//check structure by getting the first item then compare the key
+			const keysOne = Object.keys(srcOne[0])
+			const keyTwo = Object.keys(srcTwo[0])
+			return JSON.stringify(keysOne) !== JSON.stringify(keyTwo)
 		}
 
 		const source = this.dataSource.filter(source => source.name === loaderName)
 		if (source.length > 0) {
-			if (source[0].type === type && diffStructure(source[0].lines, newLines, source[0].type)) {
+			if (source[0].type === type && diffStructure(source[0].lines, newLines)) {
 				throw Error('Data files that have different data structures cannot have the same alias')
 			}
 			if (shuffle) source[0].lines = knuthShuffle([...source[0].lines, ...newLines])
@@ -78,20 +75,18 @@ export class Feeder<T> {
 		return this
 	}
 
-	private loaderBy(loaderName: string): LoaderConfig[] {
-		return this.dataConfig.filter(config => config.loaderName === loaderName)
+	private loaderBy(loaderName: string): LoaderConfig | undefined {
+		return this.dataConfig.find(config => config.loaderName === loaderName)
 	}
 
 	private config(loaderName: string): LoaderConfig {
-		const loader = this.loaderBy(loaderName)
-		if (loader.length) loader[0].loaderName = loaderName
-		else this.dataConfig.push({ loaderName, circular: true, shuffle: false, filters: [] })
+		this.dataConfig.push({ loaderName, circular: true, shuffle: false, filters: [] })
 		return this.dataConfig[this.dataConfig.length - 1]
 	}
 
 	public configLoaderName(loaderName: string, oldName: string): void {
 		const loader = this.loaderBy(oldName)
-		if (loader.length) loader[0].loaderName = loaderName
+		if (loader) loader.loaderName = loaderName
 		else this.dataConfig.push({ loaderName, circular: true, shuffle: false, filters: [] })
 	}
 
@@ -100,21 +95,21 @@ export class Feeder<T> {
 	 */
 	public circular(circular = true, loaderName = ''): Feeder<T> {
 		const loader = this.loaderBy(loaderName)
-		if (loader.length) loader[0].circular = circular
+		if (loader) loader.circular = circular
 		else this.dataConfig.push({ loaderName, circular, shuffle: false, filters: [] })
 		return this
 	}
 
 	public shuffle(shuffle = true, loaderName = ''): Feeder<T> {
 		const loader = this.loaderBy(loaderName)
-		if (loader.length) loader[0].shuffle = shuffle
+		if (loader) loader.shuffle = shuffle
 		else this.dataConfig.push({ loaderName, circular: true, shuffle, filters: [] })
 		return this
 	}
 
 	public filter(func: FeedFilterFunction<T>, loaderName = ''): Feeder<T> {
 		const loader = this.loaderBy(loaderName)
-		if (loader.length) loader[0].filters.push(func)
+		if (loader) loader.filters.push(func)
 		else this.dataConfig.push({ loaderName, circular: true, shuffle: false, filters: [func] })
 		return this
 	}
@@ -186,7 +181,7 @@ export class Feeder<T> {
 			if (source.pointer > max) max = source.pointer
 			return max
 		}, 0)
-		return maxPointer >= this.maxLines - 1
+		return maxPointer >= this.maxLines
 	}
 
 	public get isStart(): boolean {

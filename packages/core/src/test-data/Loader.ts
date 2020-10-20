@@ -132,20 +132,23 @@ export class JSONLoader<T> extends Loader<T> {
 	constructor(public filePath: string) {
 		super(filePath)
 	}
+
+	private async processData(path: string): Promise<T[]> {
+		const data = await this.read(path, { type: FileType.JSON })
+		if (Array.isArray(data)) return data
+		else return [data]
+	}
+
 	public async load(): Promise<void> {
 		if (this.filePaths.length) {
 			const allLines: any[] = []
 			for (const filePath of this.filePaths) {
-				const data = await this.read(filePath, { type: FileType.JSON })
-				if (Array.isArray(data)) {
-					allLines.push(...data)
-				} else {
-					allLines.push(data)
-				}
+				const data = await this.processData(filePath)
+				allLines.push(...data)
 			}
 			this.lines = allLines
 		} else {
-			this.lines = await this.read(this.filePath, { type: FileType.JSON })
+			this.lines = await this.processData(this.filePath)
 		}
 
 		if (this.lines.length === 0) {
@@ -176,6 +179,7 @@ export class CSVLoader<T> extends Loader<T> {
 		const option = {
 			type: FileType.CSV,
 			delimiter: this.separator,
+			columns: true,
 		}
 		if (this.filePaths.length) {
 			const allLines: any[] = []

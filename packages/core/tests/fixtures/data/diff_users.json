@@ -1,0 +1,19 @@
+[
+	{
+		"user": 1,
+		"username": "samantha10@loadtest.io",
+		"age": 12
+	},
+
+	{
+		"user": 2,
+		"username": "samantha11@loadtest.io",
+		"age": 14
+	},
+
+	{
+		"user": 1,
+		"username": "samantha12@loadtest.io",
+		"age": 16
+	}
+]

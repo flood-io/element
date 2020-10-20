@@ -136,6 +136,9 @@ export class TestDataSource<T> {
 		})
 	}
 
+	/**
+	 * clear all loader data
+	 */
 	public clear(): void {
 		this.loaders = []
 		Feeder.getInstance().clear()

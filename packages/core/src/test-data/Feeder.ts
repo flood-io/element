@@ -46,16 +46,29 @@ export class Feeder<T> {
 			filters.every(func => func(line, index, instanceID)),
 		)
 
-		function diffStructure(srcOne: any, srcTwo: any): boolean {
-			//check structure by getting the first item then compare the key
-			const keysOne = Object.keys(srcOne[0])
-			const keyTwo = Object.keys(srcTwo[0])
-			return JSON.stringify(keysOne) !== JSON.stringify(keyTwo)
+		function validStructure(srcOne: any, srcTwo: any): boolean {
+			const keysOne = srcOne.reduce((keys: string[][], item: T) => {
+				keys.push(Object.keys(item))
+				return keys
+			}, [])
+			const keysTwo = srcTwo.reduce((keys: string[][], item: T) => {
+				keys.push(Object.keys(item))
+				return keys
+			}, [])
+
+			return keysOne.every((recordKeysOne: string[], index: number) => {
+				return keysTwo.every((recordKeysTwo: string[]) => {
+					if (recordKeysOne.length !== recordKeysTwo.length) return false
+					return recordKeysOne.every((key: string) => {
+						return keysTwo[index].indexOf(key) >= 0
+					})
+				})
+			})
 		}
 
 		const source = this.dataSource.filter(source => source.name === loaderName)
 		if (source.length > 0) {
-			if (source[0].type === type && diffStructure(source[0].lines, newLines)) {
+			if (source[0].type === type && !validStructure(source[0].lines, newLines)) {
 				throw Error('Data files that have different data structures cannot have the same alias')
 			}
 			if (shuffle) source[0].lines = knuthShuffle([...source[0].lines, ...newLines])

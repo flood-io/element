@@ -109,6 +109,7 @@ export class TestDataSource<T> {
 		const loaderCheck: { type: FileType; alias: string }[] = []
 		await Promise.all(
 			this.loaders.map(loader => {
+				if (loader.type() === FileType.NULL) return
 				loaderCheck.push({ type: loader.type(), alias: loader.loaderName })
 				const invalidLoader = loaderCheck.reduce((invalidMsg, lc) => {
 					if (lc.type !== loader.type() && lc.alias === loader.loaderName) {

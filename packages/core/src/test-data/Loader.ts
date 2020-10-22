@@ -46,6 +46,22 @@ export abstract class Loader<T> {
 		}
 		return data
 	}
+
+	public validStructure(lines: T[]): boolean {
+		const keys: string[] = []
+		let isValid = true
+		for (const line of lines) {
+			if (keys.length === 0) keys.push(...Object.keys(line))
+			else {
+				const lineKeys = Object.keys(line)
+				isValid =
+					keys.length === lineKeys.length && keys.every((key: string) => lineKeys.includes(key))
+				if (!isValid) return isValid
+			}
+		}
+		return isValid
+	}
+
 	constructor(public filePath: string) {
 		if (filePath.includes('*')) {
 			this.filePaths.push(...glob.sync(filePath))
@@ -154,6 +170,11 @@ export class JSONLoader<T> extends Loader<T> {
 		if (this.lines.length === 0) {
 			throw new Error(`JSON file '${this.requestedFilename}' loaded but contains no rows of data.`)
 		}
+
+		if (!this.validStructure(this.lines)) {
+			throw Error(`Data files that have different data structures cannot have the same alias`)
+		}
+
 		this.isLoaded = true
 	}
 
@@ -197,6 +218,11 @@ export class CSVLoader<T> extends Loader<T> {
 				`CSV file '${this.requestedFilename}' loaded but contains no rows of data.\nNote that the first row of a CSV file is used as the header to name columns.\nFor details see https://github.com/flood-io/element/blob/master/packages/element/docs/examples/examples_test_data.md#csv-column-names`,
 			)
 		}
+
+		if (!this.validStructure(this.lines)) {
+			throw Error(`Data files that have different data structures cannot have the same alias`)
+		}
+
 		this.isLoaded = true
 	}
 

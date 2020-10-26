@@ -53,6 +53,7 @@ export interface IReporter {
 		timing?: number,
 		errorMessage?: string,
 		content?: any[],
+		arg?: string,
 	): void
 
 	testAssertionError(err: TestScriptError): void

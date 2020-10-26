@@ -1,3 +1,5 @@
+import { ScreenshotOptions } from 'puppeteer'
+import chalk from 'chalk'
 import Interceptor from '../network/Interceptor'
 import { Browser } from './Browser'
 
@@ -25,7 +27,6 @@ import { Looper } from '../Looper'
 import { CancellationToken } from '../utils/CancellationToken'
 
 import { PuppeteerClientLike } from '../driver/Puppeteer'
-import { ScreenshotOptions } from 'puppeteer'
 import { TestSettings, ConcreteTestSettings, DEFAULT_STEP_WAIT_MILLISECONDS } from './Settings'
 import { ITest } from './ITest'
 import { EvaluatedScriptLike } from './EvaluatedScriptLike'
@@ -169,9 +170,29 @@ export default class Test implements ITest {
 			await testObserver.before(this)
 
 			debug('Feeding data')
-			testDataRecord = testData.feed()
-			if (testDataRecord === null) {
-				throw new Error('Test data exhausted, consider making it circular?')
+			testDataRecord = testData ? testData.feed() : {}
+			const invalidName: string[] = []
+			const validTestData = () => {
+				if (testDataRecord === null) return false
+				if (testData && testData.multiple) {
+					for (const key in testDataRecord) {
+						if (testDataRecord[key] === null) {
+							invalidName.push(key)
+						}
+					}
+				}
+				return invalidName.length === 0
+			}
+			if (!validTestData()) {
+				console.log(
+					chalk.red(
+						`${
+							!invalidName.length
+								? 'Test data exhausted'
+								: `Test data '${invalidName.join(',')}' exhausted`
+						}, consider making it circular?`,
+					),
+				)
 			} else {
 				debug(JSON.stringify(testDataRecord))
 			}

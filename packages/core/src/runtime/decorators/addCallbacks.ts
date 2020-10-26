@@ -2,6 +2,7 @@ import { AnyErrorData, interpretError } from '../errors/Types'
 // import interpretPuppeteerError from '../errors/interpretPuppeteerError'
 import { StructuredError } from '../../utils/StructuredError'
 import { Browser } from '../../interface/IBrowser'
+import { StepActionArgs } from '../../utils/StepActionArgs'
 
 /**
  * Defines a Function Decorator which wraps a method with class local before and after
@@ -35,7 +36,8 @@ export function addCallbacks() {
 				throw sErr
 			} finally {
 				if (browser.afterFunc instanceof Function) {
-					await browser.afterFunc(browser, propertyKey)
+					const arg = StepActionArgs(args)
+					await browser.afterFunc(browser, propertyKey, arg)
 				}
 			}
 			return ret

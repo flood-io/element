@@ -408,7 +408,7 @@ export default class Test implements ITest {
 			return
 		}
 
-		await new Promise(resolve => {
+		await new Promise<void>(resolve => {
 			if (!this.settings.stepDelay) {
 				resolve()
 				return
@@ -426,11 +426,16 @@ export default class Test implements ITest {
 		}
 	}
 
-	async didRunCommand(testObserver: TestObserver, browser: Browser<Step>, command: string) {
+	async didRunCommand(
+		testObserver: TestObserver,
+		browser: Browser<Step>,
+		command: string,
+		args: string,
+	) {
 		if (browser.customContext) {
-			await testObserver.afterStepAction(this, browser.customContext, command)
+			await testObserver.afterStepAction(this, browser.customContext, command, args)
 		} else {
-			await testObserver.afterHookAction(this, command)
+			await testObserver.afterHookAction(this, command, args)
 		}
 	}
 

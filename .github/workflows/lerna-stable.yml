@@ -35,7 +35,7 @@ jobs:
       - name: 'Build all'
         run: yarn build
       - name: 'Publish stable to NPM'
-        run: yarn lerna publish --conventional-graduate --dist-tag latest --yes --force-publish --exact --ignore-changes '**/*.md'
+        run: yarn lerna publish --conventional-graduate --dist-tag latest --yes --force-publish --exact --ignore-changes '**/*.md' 'packages/docs/**'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: 'Publish stable to Homebrew'

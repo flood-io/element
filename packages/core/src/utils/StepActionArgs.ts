@@ -22,24 +22,19 @@ export const StepActionArgs = (args: any[]): string => {
 
 	for (const arg of args) {
 		if (typeof arg === 'string') {
-			// console.log(arg)
 			result = `'${arg}'`
 			break
 		}
-	}
 
-	if (result === '') {
-		if (isInstanceOfCondition(args[0])) {
-			const locator: string = JSON.parse(JSON.stringify(args[0].locator)).errorString
-			result = `Util.${args[0].desc}(${locator})`
-		} else if (args[0] instanceof BaseLocator) {
-			result = args[0].toErrorString()
-		} else {
-			console.log(args[0])
+		if (isInstanceOfCondition(arg)) {
+			const locator: string = JSON.parse(JSON.stringify(arg.locator)).errorString
+			result = `Util.${arg.desc}(${locator})`
+			break
+		} else if (arg instanceof BaseLocator) {
+			result = arg.toErrorString()
+			break
 		}
 	}
-
-	// console.log(result)
 
 	return result
 }

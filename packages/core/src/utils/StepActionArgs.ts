@@ -30,7 +30,9 @@ export const StepActionArgs = (args: any[]): string => {
 			const locator: string = JSON.parse(JSON.stringify(arg.locator)).errorString
 			result = `Util.${arg.desc}(${locator})`
 			break
-		} else if (arg instanceof BaseLocator) {
+		}
+
+		if (arg instanceof BaseLocator) {
 			result = arg.toErrorString()
 			break
 		}

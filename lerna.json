@@ -8,7 +8,8 @@
 			"exact": true
 		},
 		"publish": {
-			"conventionalCommits": true
+			"conventionalCommits": true,
+			"ignoreChanges": ["**/*.md", "packages/docs/**"]
 		},
 		"version": {
 			"message": "chore(release): publish %s\n[skip ci]",
@@ -30,6 +31,8 @@
 		"coverage",
 		"examples",
 		"scripts",
-		"smoke"
+		"smoke",
+		"**/*.md",
+		"packages/docs/**"
 	]
 }

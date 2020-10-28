@@ -82,6 +82,7 @@ export default class StepIterator {
 			const { predicate } = stepWhile
 			const condition = await this.callPredicate(predicate, browser)
 			if (!condition) return false
+			this.goPreviousStep()
 			return true
 		}
 

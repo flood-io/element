@@ -1,4 +1,4 @@
-import { expect } from '../../utils/Expect'
+import { expect } from '@flood/element-report'
 
 type TimingRec = { start: number; end: number; thinkTime: number }
 type TimingSegmentName = 'beforeStep' | 'step' | 'afterStep'
@@ -22,12 +22,12 @@ export class Timing {
 	}
 	// TODO thinkTime
 
-	getDurationForSegment(segmentName: TimingSegmentName): number {
-		const { start, end } = expect(
-			this.segments.get(segmentName),
-			`No timing started for ${segmentName}`,
-		)
-		return end - start
+	getDurationForSegment(segmentName: TimingSegmentName, fromNow?: boolean): number {
+		const seg = expect(this.segments.get(segmentName), `No timing started for ${segmentName}`)
+		if (fromNow) {
+			return new Date().valueOf() - seg.start
+		}
+		return seg.end - seg.start
 	}
 
 	getThinkTimeForSegment(segmentName: TimingSegmentName): number {
@@ -38,8 +38,10 @@ export class Timing {
 		return thinkTime
 	}
 
-	getDurationWithoutThinkTimeForSegment(segmentName: TimingSegmentName): number {
-		return this.getDurationForSegment(segmentName) - this.getThinkTimeForSegment(segmentName)
+	getDurationWithoutThinkTimeForSegment(segmentName: TimingSegmentName, fromNow?: boolean): number {
+		return (
+			this.getDurationForSegment(segmentName, fromNow) - this.getThinkTimeForSegment(segmentName)
+		)
 	}
 
 	async measureThinkTime(segmentName: TimingSegmentName, func: Function, ...args: any[]) {

@@ -1,6 +1,7 @@
-import CustomDeviceDescriptors from '../utils/CustomDeviceDescriptors'
-import { Viewport } from 'puppeteer'
+import { ViewportSize } from 'playwright'
+import { BROWSER_TYPE } from '../page/types'
 import ms from 'ms'
+import { DeviceDescriptor } from '../page/Device'
 
 /**
  * Declares the settings for the test, overriding the settings constant exported in the test script.
@@ -43,14 +44,13 @@ export type ResponseTiming = 'page' | 'network' | 'step' | 'stepWithThinkTime'
 export type ConsoleMethod = 'log' | 'info' | 'debug' | 'warn' | 'error'
 
 /**
- * Represents the versions of chrome that the test script will run against.
+ * Represents the browser that the test script will run against.
  *
  * literal | description
  * --------|-----------
- * puppeteer | (Default) The browser bundled with [puppeteer]. It is a curated version of [chromium](https://www.chromium.org) (the open source version of Google Chrome). Using the puppeteer-bundled Chromium ensures the best compatibility with puppeteer, but lacks some features such as video support.
- * stable | The latest version of [Google Chrome](https://www.chromium.org/). Google Chrome has more features than chromium, but isn't tested as thoroughly against puppeteer, which can result in intermittent errors. If you don't need the extra features, please use `bundled`.
+ * The browser bundled with playwright: 'chromium' | 'firefox' | 'webkit'
  */
-export type ChromeVersion = 'puppeteer' | 'stable'
+export type BrowserType = BROWSER_TYPE
 
 /**
  * Element presence lists the accepted values for automatically waiting on elements before running actions.
@@ -115,13 +115,13 @@ export interface TestSettings {
 	/**
 	 * Specifies a device to emulate with browser device emulation.
 	 */
-	device?: string | null
+	device?: DeviceDescriptor | null
 
 	/**
 	 * Sets the viewport of the page.
 	 * @param viewport The viewport parameters.
 	 */
-	viewport?: Viewport | null
+	viewport?: ViewportSize | null
 
 	/**
 	 * Global wait timeout applied to all wait tasks.
@@ -197,7 +197,7 @@ export interface TestSettings {
 	/**
 	 * Whether to ignore HTTPS errors during navigation. Defaults to `false`
 	 */
-	ignoreHTTPSErrors?: boolean
+	ignoreHTTPSError?: boolean
 
 	/**
 	 * Controls whether each iteration should run within an Incognito window instead of a normal
@@ -208,7 +208,7 @@ export interface TestSettings {
 	/**
 	 * Specifies a version of Google Chrome
 	 */
-	chromeVersion?: ChromeVersion
+	browserType?: BROWSER_TYPE
 
 	/**
 
@@ -241,6 +241,16 @@ export interface TestSettings {
 	 * Define the loop count of the recovery step
 	 */
 	tries?: number
+
+	/**
+	 * Specifies the steps for ramping up and down load
+	 */
+	stages?: RampStage[]
+}
+
+export type RampStage = {
+	duration: string
+	target: number
 }
 
 /**
@@ -252,7 +262,7 @@ export const DEFAULT_SETTINGS: ConcreteTestSettings = {
 	loopCount: Infinity,
 	actionDelay: 2000,
 	stepDelay: 6000,
-	screenshotOnFailure: true,
+	screenshotOnFailure: false,
 	clearCookies: true,
 	clearCache: false,
 	waitTimeout: 30000,
@@ -262,10 +272,10 @@ export const DEFAULT_SETTINGS: ConcreteTestSettings = {
 	 * by default, don't filter any console messages from the browser
 	 */
 	consoleFilter: [],
-	userAgent: CustomDeviceDescriptors['Chrome Desktop Large'].userAgent,
-	device: 'Chrome Desktop Large',
-	ignoreHTTPSErrors: false,
-	chromeVersion: 'puppeteer',
+	userAgent: '',
+	device: null,
+	ignoreHTTPSError: false,
+	browserType: BROWSER_TYPE.CHROME,
 	blockedDomains: [],
 	incognito: false,
 	name: 'Element Test',
@@ -274,6 +284,7 @@ export const DEFAULT_SETTINGS: ConcreteTestSettings = {
 	extraHTTPHeaders: {},
 	launchArgs: [],
 	viewport: null,
+	stages: [],
 }
 
 /**
@@ -297,7 +308,7 @@ export function normalizeSettings(settings: TestSettings): TestSettings {
 	let convertedDuration = 0
 	// Convert user inputted seconds to milliseconds
 	if (typeof settings.waitTimeout === 'string' && settings.waitTimeout) {
-		convertedWaitTimeout = ms(settings.waitTimeout)
+		convertedWaitTimeout = ms(`${settings.waitTimeout}`)
 	} else if (typeof settings.waitTimeout === 'number') {
 		convertedWaitTimeout = settings.waitTimeout
 	}
@@ -307,7 +318,7 @@ export function normalizeSettings(settings: TestSettings): TestSettings {
 
 	// Ensure action delay is stored in milliseconds
 	if (typeof settings.actionDelay === 'string' && settings.actionDelay) {
-		convertedActionDelay = ms(settings.actionDelay)
+		convertedActionDelay = ms(`${settings.actionDelay}`)
 	} else if (typeof settings.actionDelay === 'number') {
 		convertedActionDelay = settings.actionDelay
 	}
@@ -317,7 +328,7 @@ export function normalizeSettings(settings: TestSettings): TestSettings {
 
 	// Ensure step delay is stored in seconds
 	if (typeof settings.stepDelay === 'string' && settings.stepDelay) {
-		convertedStepDelay = ms(settings.stepDelay)
+		convertedStepDelay = ms(`${settings.stepDelay}`)
 	} else if (typeof settings.stepDelay === 'number') {
 		convertedStepDelay = settings.stepDelay
 	}
@@ -326,7 +337,7 @@ export function normalizeSettings(settings: TestSettings): TestSettings {
 
 	// Convert user inputted seconds to milliseconds
 	if (typeof settings.duration === 'string' && settings.duration) {
-		convertedDuration = ms(settings.duration)
+		convertedDuration = ms(`${settings.duration}`)
 	} else if (typeof settings.duration === 'number') {
 		convertedDuration = settings.duration
 	}

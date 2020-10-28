@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>Test Report</title>
+		<link rel="icon" href="assets/favicon.ico" />
+		<link rel="stylesheet" type="text/css" href="styles.css" />
+		<script type="text/javascript" src="js/data.js"></script>
+		<script type="text/javascript" src="js/renderer.js"></script>
+	</head>
+	<body>
+		<div class="logo">
+			<img src="assets/element_logo.svg" />
+			<span>Element</span>
+		</div>
+		<div class="title">Test Run Report</div>
+		<script>
+			renderExecutionInfo(data.executionInfo)
+		</script>
+		<hr class="execution-separate" />
+		<div class="summary-header">
+			<span class="header-title">Summary</span>
+			<div class="chart-legend">
+				<div class="chart-legend-item">
+					<div class="passed-bg-color"></div>
+					<span>Passed</span>
+				</div>
+				<div class="chart-legend-item">
+					<div class="failed-bg-color"></div>
+					<span>Failed</span>
+				</div>
+				<div class="chart-legend-item">
+					<div class="skipped-bg-color"></div>
+					<span>Skipped</span>
+				</div>
+				<div class="chart-legend-item">
+					<div class="unexecuted-bg-color"></div>
+					<span>Unexecuted</span>
+				</div>
+			</div>
+		</div>
+		<script>
+			renderSummary(data.testScripts, data.scriptsWithError)
+		</script>
+		<hr class="execution-separate" />
+		<span class="header-title">Details</span>
+		<script>
+			renderScriptsDetail(data.testScripts)
+		</script>
+	</body>
+</html>

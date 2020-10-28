@@ -1,23 +1,30 @@
-import { ConcreteLaunchOptions, PuppeteerClient } from './driver/Puppeteer'
-import { Logger } from 'winston'
+import { ConcreteLaunchOptions, PlaywrightClient } from './driver/Playwright'
 import Test from './runtime/Test'
 import { EvaluatedScript } from './runtime/EvaluatedScript'
-import { TestObserver } from './runtime/test-observers/Observer'
+import { TestObserver } from './runtime/test-observers/TestObserver'
 import { TestSettings } from './runtime/Settings'
-import { IReporter } from './Reporter'
 import { AsyncFactory } from './utils/Factory'
 import { CancellationToken } from './utils/CancellationToken'
-import { TestScriptError } from './TestScriptError'
+import {
+	IReporter,
+	IterationResult,
+	reportRunTest,
+	Status,
+	StepResult,
+} from '@flood/element-report'
 import { Looper } from './Looper'
+import chalk from 'chalk'
 import ms from 'ms'
 
 export interface TestCommander {
 	on(event: 'rerun-test', listener: () => void): this
 }
 
+// eslint-disable-next-line @typescript-eslint/interface-name-prefix
 export interface IRunner {
 	run(testScriptFactory: AsyncFactory<EvaluatedScript>): Promise<void>
 	stop(): Promise<void>
+	getSummaryIterations(): IterationResult[]
 }
 
 function delay(t: number, v?: any) {
@@ -29,13 +36,13 @@ function delay(t: number, v?: any) {
 export class Runner {
 	protected looper: Looper
 	running = true
-	public clientPromise: Promise<PuppeteerClient> | undefined
+	public client: PlaywrightClient | undefined
+	public summaryIteration: IterationResult[] = []
 
 	constructor(
-		private clientFactory: AsyncFactory<PuppeteerClient>,
+		private clientFactory: AsyncFactory<PlaywrightClient>,
 		protected testCommander: TestCommander | undefined,
 		private reporter: IReporter,
-		protected logger: Logger,
 		private testSettingOverrides: TestSettings,
 		private launchOptionOverrides: Partial<ConcreteLaunchOptions>,
 		private testObserverFactory: (t: TestObserver) => TestObserver = x => x,
@@ -44,58 +51,56 @@ export class Runner {
 	async stop(): Promise<void> {
 		this.running = false
 		if (this.looper) await this.looper.kill()
-		if (this.clientPromise) (await this.clientPromise).close()
+		if (this.client) await this.client.close()
 		return
 	}
 
 	async run(testScriptFactory: AsyncFactory<EvaluatedScript>): Promise<void> {
 		const testScript = await testScriptFactory()
 
-		this.clientPromise = this.launchClient(testScript)
+		this.client = await this.launchClient(testScript)
 
-		await this.runTestScript(testScript, this.clientPromise)
+		await this.runTestScript(testScript, this.client)
 	}
 
-	async launchClient(testScript: EvaluatedScript): Promise<PuppeteerClient> {
+	async launchClient(testScript: EvaluatedScript): Promise<PlaywrightClient> {
 		const { settings } = testScript
 
 		const options: Partial<ConcreteLaunchOptions> = this.launchOptionOverrides
-		options.ignoreHTTPSErrors = settings.ignoreHTTPSErrors
+		options.ignoreHTTPSError = settings.ignoreHTTPSError
 		if (settings.viewport) {
-			options.defaultViewport = settings.viewport
+			options.viewport = settings.viewport
 			settings.device = null
 		}
-		if (options.chromeVersion == null) options.chromeVersion = settings.chromeVersion
-
+		if (settings.browserType) {
+			options.browserType = settings.browserType
+		}
 		if (options.args == null) options.args = []
 		if (Array.isArray(settings.launchArgs)) options.args.push(...settings.launchArgs)
 
-		return this.clientFactory(options)
+		return this.clientFactory(options, settings)
 	}
 
-	async runTestScript(
-		testScript: EvaluatedScript,
-		clientPromise: Promise<PuppeteerClient>,
-	): Promise<void> {
+	async runTestScript(testScript: EvaluatedScript, client: PlaywrightClient): Promise<void> {
 		if (!this.running) return
 
 		let testToCancel: Test | undefined
+		const reportTableData: number[][] = []
 
 		try {
 			const test = new Test(
-				await clientPromise,
+				client,
 				testScript,
 				this.reporter,
 				this.testSettingOverrides,
 				this.testObserverFactory,
 			)
-
 			testToCancel = test
 
 			const { settings } = test
 
 			if (settings.name) {
-				this.logger.info(`
+				console.info(`
 *************************************************************
 * Loaded test plan: ${settings.name}
 * ${settings.description}
@@ -103,66 +108,116 @@ export class Runner {
 				`)
 			}
 
-			if (settings.duration > 0) {
-				this.logger.debug(`Test timeout set to ${Number(settings.duration)}ms`)
-			}
-			this.logger.debug(`Test loop count set to ${settings.loopCount} iterations`)
-			this.logger.debug(`Settings: ${JSON.stringify(settings, null, 2)}`)
-
 			await test.beforeRun()
 
 			const cancelToken = new CancellationToken()
 
 			this.looper = new Looper(settings, this.running)
 			this.looper.killer = () => cancelToken.cancel()
-			await this.looper.run(async iteration => {
-				this.logger.info(`Starting iteration ${iteration}`)
-
-				const startTime = new Date()
+			let startTime = new Date()
+			await this.looper.run(async (iteration: number, isRestart: boolean) => {
+				const iterationName = this.getIterationName(iteration)
+				if (isRestart) {
+					console.log(`Restarting ${iterationName}`)
+					this.looper.restartLoopDone()
+				} else {
+					if (iteration > 1) {
+						console.log(chalk.grey('--------------------------------------------'))
+					}
+					startTime = new Date()
+					console.log(`${chalk.bold('\u25CC')} ${iterationName} of ${this.looper.iterations}`)
+				}
 				try {
 					await test.runWithCancellation(iteration, cancelToken, this.looper)
-				} catch (err) {
-					this.logger.error(
-						`[Iteration: ${iteration}] Error in Runner Loop: ${err.name}: ${err.message}\n${err.stack}`,
-					)
-					throw err
+					// eslint-disable-next-line no-empty
+				} catch {
+				} finally {
+					if (!this.looper.isRestart) {
+						const summarizedData = this.summarizeIteration(test, iteration, startTime)
+						reportTableData.push(summarizedData)
+					}
+					test.resetSummarizeStep()
 				}
-				const duration = new Date().valueOf() - startTime.valueOf()
-				this.logger.info(`Iteration completed in ${ms(duration)} (walltime)`)
 			})
 
-			this.logger.info(`Test completed after ${this.looper.iterations} iterations`)
+			console.log(`Test completed after ${this.looper.iterations} iterations`)
 			await test.runningBrowser?.close()
 		} catch (err) {
-			if (err instanceof TestScriptError) {
-				this.logger.error('\n' + err.toStringNodeFormat())
-			} else {
-				this.logger.error(`flood element error: ${err.message}`)
-				this.logger.debug(err.stack)
-			}
-
-			// if (process.env.NODE_ENV !== 'production') {
-			this.logger.debug(err.stack)
-			// }
-			throw err
+			throw Error(err)
+		} finally {
+			const table = reportRunTest(reportTableData)
+			console.groupEnd()
+			console.log(table)
 		}
 
 		if (testToCancel !== undefined) {
 			await testToCancel.cancel()
 		}
 	}
+
+	getIterationName(iteration: number): string {
+		return `Iteration ${iteration}`
+	}
+
+	summarizeIteration(test: Test, iteration: number, startTime: Date): number[] {
+		let passedMessage = '',
+			failedMessage = '',
+			skippedMessage = '',
+			unexecutedMessage = ''
+		let passedNo = 0,
+			failedNo = 0,
+			skippedNo = 0,
+			unexecutedNo = 0
+
+		const iterationName: string = this.getIterationName(iteration)
+		const duration: number = new Date().valueOf() - startTime.valueOf()
+		const stepResult: StepResult[] = test.summarizeStep()
+		const iterationResult = {
+			name: iterationName,
+			duration: duration,
+			stepResults: stepResult,
+		}
+		this.summaryIteration.push(iterationResult)
+
+		stepResult.forEach(step => {
+			switch (step.status) {
+				case Status.PASSED:
+					passedNo += 1
+					passedMessage = chalk.green(`${passedNo}`, `${Status.PASSED}`)
+					break
+				case Status.FAILED:
+					failedNo += 1
+					failedMessage = chalk.red(`${failedNo}`, `${Status.FAILED}`)
+					break
+				case Status.SKIPPED:
+					skippedNo += 1
+					skippedMessage = chalk.yellow(`${skippedNo}`, `${Status.SKIPPED}`)
+					break
+				case Status.UNEXECUTED:
+					unexecutedNo += 1
+					unexecutedMessage = chalk(`${unexecutedNo}`, `${Status.UNEXECUTED}`)
+					break
+			}
+		})
+		const finallyMessage = chalk(passedMessage, failedMessage, skippedMessage, unexecutedMessage)
+		console.log(`${iterationName} completed in ${ms(duration)} (walltime) ${finallyMessage}`)
+		return [iteration, passedNo, failedNo, skippedNo, unexecutedNo]
+	}
+
+	getSummaryIterations(): IterationResult[] {
+		return this.summaryIteration
+	}
 }
 
 export class PersistentRunner extends Runner {
 	public testScriptFactory: AsyncFactory<EvaluatedScript> | undefined
-	public clientPromise: Promise<PuppeteerClient> | undefined
+	public client: PlaywrightClient | undefined
 	private stopped = false
 
 	constructor(
-		clientFactory: AsyncFactory<PuppeteerClient>,
+		clientFactory: AsyncFactory<PlaywrightClient>,
 		testCommander: TestCommander | undefined,
 		reporter: IReporter,
-		logger: Logger,
 		testSettingOverrides: TestSettings,
 		launchOptionOverrides: Partial<ConcreteLaunchOptions>,
 		testObserverFactory: (t: TestObserver) => TestObserver = x => x,
@@ -171,26 +226,24 @@ export class PersistentRunner extends Runner {
 			clientFactory,
 			testCommander,
 			reporter,
-			logger,
 			testSettingOverrides,
 			launchOptionOverrides,
 			testObserverFactory,
 		)
 
 		if (this.testCommander !== undefined) {
-			this.testCommander.on('rerun-test', () => this.rerunTest())
+			this.testCommander.on('rerun-test', async () => this.rerunTest())
 		}
 	}
 
 	rerunTest() {
-		this.logger.info('rerun requested')
 		setImmediate(() => this.runNextTest())
 	}
 
 	async runNextTest() {
-		// destructure for type checking (narrowing past undefined)
-		const { clientPromise, testScriptFactory } = this
-		if (clientPromise === undefined) {
+		const { client, testScriptFactory } = this
+
+		if (client === undefined) {
 			return
 		}
 		if (testScriptFactory === undefined) {
@@ -202,10 +255,11 @@ export class PersistentRunner extends Runner {
 		}
 
 		try {
-			await this.runTestScript(await testScriptFactory(), clientPromise)
+			const evaluateScript = await testScriptFactory()
+			this.client = await this.launchClient(evaluateScript)
+			await this.runTestScript(evaluateScript, this.client)
 		} catch (err) {
-			this.logger.error('an error occurred in the script')
-			this.logger.error(err)
+			console.error(err.message)
 		}
 	}
 
@@ -228,10 +282,9 @@ export class PersistentRunner extends Runner {
 		this.testScriptFactory = testScriptFactory
 
 		// TODO detect changes in testScript settings affecting the client
-		this.clientPromise = this.launchClient(await testScriptFactory())
+		this.client = await this.launchClient(await testScriptFactory())
 
 		this.rerunTest()
 		await this.waitUntilStopped()
-		// return new Promise<void>((resolve, reject) => {})
 	}
 }

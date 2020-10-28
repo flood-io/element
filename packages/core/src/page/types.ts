@@ -1,11 +1,38 @@
-import {
-	EvaluateFn,
-	ExecutionContext,
-	ElementHandle as PElementHandle,
-	ClickOptions,
-	ScreenshotOptions,
-} from 'puppeteer'
+import { ElementHandle as PElementHandle, Frame, Page } from 'playwright'
 import { Point } from './Point'
+
+export enum BROWSER_TYPE {
+	CHROME = 'chromium',
+	FIREFOX = 'firefox',
+	WEBKIT = 'webkit',
+}
+
+export type MouseButtons = 'left' | 'right' | 'middle'
+
+export interface MousePressOptions {
+	/**
+	 * left, right, or middle.
+	 * @default left
+	 */
+	button?: MouseButtons
+	/**
+	 * The number of clicks.
+	 * @default 1
+	 */
+	clickCount?: number
+}
+
+export interface ClickOptions {
+	/** @default MouseButtons.Left */
+	button?: MouseButtons
+	/** @default 1 */
+	clickCount?: number
+	/**
+	 * Time to wait between mousedown and mouseup in milliseconds.
+	 * @default 0
+	 */
+	delay?: number
+}
 
 export interface LocatorBuilder {
 	pageFunc: EvaluateFn
@@ -19,6 +46,13 @@ export interface LocatorBuilder {
 	toString(): string
 }
 
+export type EvaluateFn<T = any> = string | ((arg1: T, ...args: any[]) => any)
+export interface NavigationOptions {
+	timeout?: number
+	waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' | undefined
+	referer?: string
+}
+
 /**
  * A Locator represents an object used to locate elements on the page. It is usually constructed using the helper methods of <[By]>.
  * An <[ElementHandle]> can also be used as a Locator which finds itself.
@@ -26,9 +60,9 @@ export interface LocatorBuilder {
  * @docOpaque
  */
 export interface Locator extends LocatorBuilder {
-	find(context: ExecutionContext, node?: PElementHandle): Promise<ElementHandle | null>
+	find(page: Page, node?: PElementHandle, frame?: Frame): Promise<ElementHandle | null>
 
-	findMany(context: ExecutionContext, node?: PElementHandle): Promise<ElementHandle[]>
+	findMany(page: Page, node?: PElementHandle, frame?: Frame): Promise<ElementHandle[]>
 }
 
 /**
@@ -74,6 +108,12 @@ export interface ElementHandle {
 	 * Sends a series of key presses to the element to simulate a user typing on the keyboard. Use this to fill in input fields.
 	 */
 	type(text: string): Promise<void>
+
+	/**
+	 *
+	 * @param names Send file uploading
+	 */
+	uploadFile(...names: string[]): Promise<void>
 
 	/**
 	 * Sends focus to this element so that it receives keyboard inputs.
@@ -195,4 +235,50 @@ export interface TargetLocator {
 	 * @param id number | string | ElementHandle
 	 */
 	frame(id: number | string | ElementHandle): Promise<void>
+}
+
+export interface BoundingBox {
+	/** The x-coordinate of top-left corner. */
+	x: number
+	/** The y-coordinate of top-left corner. */
+	y: number
+	/** The width. */
+	width: number
+	/** The height. */
+	height: number
+}
+
+export interface ScreenshotOptions {
+	/**
+	 * The file path to save the image to. The screenshot type will be inferred from file extension.
+	 * If `path` is a relative path, then it is resolved relative to current working directory.
+	 * If no path is provided, the image won't be saved to the disk.
+	 */
+	path?: string
+	/**
+	 * The screenshot type.
+	 * @default png
+	 */
+	type?: 'jpeg' | 'png'
+	/** The quality of the image, between 0-100. Not applicable to png images. */
+	quality?: number
+	/**
+	 * When true, takes a screenshot of the full scrollable page.
+	 * @default false
+	 */
+	fullPage?: boolean
+	/**
+	 * An object which specifies clipping region of the page.
+	 */
+	clip?: BoundingBox
+	/**
+	 * Hides default white background and allows capturing screenshots with transparency.
+	 * @default false
+	 */
+	omitBackground?: boolean
+	/**
+	 * The encoding of the image, can be either base64 or binary.
+	 * @default binary
+	 */
+	encoding?: 'base64' | 'binary'
 }

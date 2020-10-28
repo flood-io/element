@@ -3,6 +3,284 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-beta.19](https://github.com/flood-io/element/compare/v2.0.0-beta.18...v2.0.0-beta.19) (2020-10-27)
+
+
+### Features
+
+* fix test ([f70adf5](https://github.com/flood-io/element/commit/f70adf53ba6afc0447bc1d3d62436e0e100e933f))
+* update lerna.json ([ef9dc29](https://github.com/flood-io/element/commit/ef9dc29bc4767dd3dea81ec10c718cc534a16f9c))
+
+
+
+
+
+# [2.0.0-beta.18](https://github.com/flood-io/element/compare/v2.0.0-beta.17...v2.0.0-beta.18) (2020-10-15)
+
+
+### Bug Fixes
+
+* wrong step count ([5fe8f8d](https://github.com/flood-io/element/commit/5fe8f8d87b2a0cbc8b6f40e6eba5b564b2cc0bb3))
+
+
+### Features
+
+* change report directory ([0be23c7](https://github.com/flood-io/element/commit/0be23c7975ed9f3fee0565d0e0bebc710af1d825))
+* change report directory for single file run ([4c4844a](https://github.com/flood-io/element/commit/4c4844ad34563bb2d3503a8b7c1257214b624827))
+* export html report ([8c9671a](https://github.com/flood-io/element/commit/8c9671a57f1a27fe8899232dccc5b56a4f1eb337))
+
+
+
+
+
+# [2.0.0-beta.17](https://github.com/flood-io/element/compare/v2.0.0-beta.16...v2.0.0-beta.17) (2020-10-13)
+
+
+### Bug Fixes
+
+* cannot swith to a frame by Browser.switchTo() ([633dc54](https://github.com/flood-io/element/commit/633dc548e5fe871cb7632d37295eba3d404cd5be))
+* change params order for Locator.find & Locator.findMany ([48d5ae9](https://github.com/flood-io/element/commit/48d5ae9564339e73c8870e5edf01f1ef020fe788))
+* unit tests ([7dde7b7](https://github.com/flood-io/element/commit/7dde7b78d80dd226afcef5dd2f6e5a540871160e))
+
+
+
+
+
+# [2.0.0-beta.16](https://github.com/flood-io/element/compare/v2.0.0-beta.15...v2.0.0-beta.16) (2020-10-12)
+
+**Note:** Version bump only for package flood-element
+
+
+
+
+
+# [2.0.0-beta.15](https://github.com/flood-io/element/compare/v2.0.0-beta.14...v2.0.0-beta.15) (2020-10-06)
+
+
+### Bug Fixes
+
+* add flag --exact to specify updated dependencies exactly ([bb4b9cd](https://github.com/flood-io/element/commit/bb4b9cd7c53cee720d7f4c56de2f7534d2d9781c))
+
+
+
+
+
+# [2.0.0-beta.14](https://github.com/flood-io/element/compare/v2.0.0-beta.13...v2.0.0-beta.14) (2020-10-06)
+
+
+### Bug Fixes
+
+* remove caret(^) to specify version of dependencies ([bcd6f3b](https://github.com/flood-io/element/commit/bcd6f3bac1faeba68bbc0aed2ba96f6f355013b2))
+
+
+
+
+
+# [2.0.0-beta.13](https://github.com/flood-io/element/compare/v2.0.0-beta.12...v2.0.0-beta.13) (2020-10-06)
+
+
+### Bug Fixes
+
+* edit lerna.json to specify the exact version of dependencies ([947cc36](https://github.com/flood-io/element/commit/947cc36d2f858beb4e825650ba9105afcca1cd3a))
+
+
+
+
+
+# [2.0.0-beta.12](https://github.com/flood-io/element/compare/v2.0.0-beta.11...v2.0.0-beta.12) (2020-09-23)
+
+**Note:** Version bump only for package flood-element
+
+
+
+
+
+# [2.0.0-beta.11](https://github.com/flood-io/element/compare/v2.0.0-beta.10...v2.0.0-beta.11) (2020-09-21)
+
+**Note:** Version bump only for package flood-element
+
+
+
+
+
+# [2.0.0-beta.10](https://github.com/flood-io/element/compare/v2.0.0-beta.9...v2.0.0-beta.10) (2020-09-21)
+
+**Note:** Version bump only for package flood-element
+
+
+
+
+
+# [2.0.0-beta.9](https://github.com/flood-io/element/compare/v2.0.0-beta.8...v2.0.0-beta.9) (2020-09-21)
+
+
+### Reverts
+
+* Revert "chore: fix error when running `element --version` (#277)" (#281) ([6f7a7f1](https://github.com/flood-io/element/commit/6f7a7f19c43f793154ac08ede4487f83bd65f85d)), closes [#277](https://github.com/flood-io/element/issues/277) [#281](https://github.com/flood-io/element/issues/281)
+
+
+
+
+
+# [2.0.0-beta.8](https://github.com/flood-io/element/compare/v2.0.0-beta.7...v2.0.0-beta.8) (2020-09-21)
+
+
+### Bug Fixes
+
+* brew release workflows ([#278](https://github.com/flood-io/element/issues/278)) ([fdcdaf6](https://github.com/flood-io/element/commit/fdcdaf6767026655e208a2eb6ef953761f5cea5a))
+* update release workflows ([#263](https://github.com/flood-io/element/issues/263)) ([5eab840](https://github.com/flood-io/element/commit/5eab840283d4d81c5689992d7874776eff23fe96))
+
+
+### Reverts
+
+* Revert "fix: update release workflows (#263)" (#280) ([c8fc1d5](https://github.com/flood-io/element/commit/c8fc1d5cae2b39e47f50dcfced0d392458033918)), closes [#263](https://github.com/flood-io/element/issues/263) [#280](https://github.com/flood-io/element/issues/280)
+* Revert "fix: brew release workflows (#278)" (#279) ([3dcc97c](https://github.com/flood-io/element/commit/3dcc97c2cace7ebfe3317d2354fbe9008e7d6dde)), closes [#278](https://github.com/flood-io/element/issues/278) [#279](https://github.com/flood-io/element/issues/279)
+
+
+
+
+
+# [2.0.0-beta.7](https://github.com/flood-io/element/compare/v2.0.0-beta.6...v2.0.0-beta.7) (2020-09-18)
+
+
+* [FLO-1768] feat: Support running multiple users locally (#225) ([a381662](https://github.com/flood-io/element/commit/a381662a5259ad9a137a33fed480242138b6cdea)), closes [#225](https://github.com/flood-io/element/issues/225)
+
+
+### BREAKING CHANGES
+
+* change the core, replacing puppeteer by playwright
+
+* fix: build
+
+* chore: add element-schedular and element-worker
+
+* chore: add element-schedular and element-worker
+
+* chore: updated element-schedular
+
+* chore: updated element-schedular
+
+* chore: add worker id log running
+
+* chore: fix test
+
+* chore: change package name
+
+* chore: clean code
+
+* chore: clean code
+
+* chore: handle error for client error
+
+* chore: handle error for client error
+
+* chore: clean code + fix issue of synchronizing children
+
+* chore: fix test
+
+* chore: clean code
+
+* chore: improve functionality
+
+* chore: clean code
+
+* chore: remove redundant files
+
+* chore: remove redundant files
+
+* chore: add example for multiple users
+
+* chore: clean code
+
+* chore: clean code
+
+* chore: fix test
+
+* chore: clean code
+
+* chore: clean code
+
+* chore: change name
+
+* chore: rename Callsite to CallSite
+
+* chore: fix condition test name
+
+* chore: fix condition test name
+
+* Update launch.json
+
+* chore: fix add eol-last
+
+* chore: fix add eol-last
+
+* chore: fix add eol-last
+
+* chore: clean code
+
+* chore: clean code
+
+* chore: fix issue timing
+
+* chore: clean code
+
+* chore: clean code
+
+* Update tsconfig.json
+
+add a new line for `tsconfig.json`
+
+* chore: clean code after merge from beta
+
+Co-authored-by: phile <phi@flood.io>
+
+
+
+
+
+# [2.0.0-beta.6](https://github.com/flood-io/element/compare/v2.0.0-beta.5...v2.0.0-beta.6) (2020-09-18)
+
+**Note:** Version bump only for package flood-element
+
+
+
+
+
+# [2.0.0-beta.5](https://github.com/flood-io/element/compare/v2.0.0-beta.4...v2.0.0-beta.5) (2020-09-07)
+
+**Note:** Version bump only for package flood-element
+
+
+
+
+
+# [2.0.0-beta.4](https://github.com/flood-io/element/compare/v2.0.0-beta.3...v2.0.0-beta.4) (2020-08-31)
+
+**Note:** Version bump only for package flood-element
+
+
+
+
+
+# [2.0.0-beta.3](https://github.com/flood-io/element/compare/v2.0.0-beta.2...v2.0.0-beta.3) (2020-08-31)
+
+
+### Bug Fixes
+
+* find frame from current window if not found from current page ([#248](https://github.com/flood-io/element/issues/248)) ([8e92e79](https://github.com/flood-io/element/commit/8e92e79252e5432df0ad217d693bfde25ccc733c))
+
+
+
+
+
+# [2.0.0-beta.2](https://github.com/flood-io/element/compare/v2.0.0-beta.1...v2.0.0-beta.2) (2020-08-31)
+
+**Note:** Version bump only for package flood-element
+
+
+
+
+
 # [2.0.0-beta.1](https://github.com/flood-io/element/compare/v2.0.0-beta.0...v2.0.0-beta.1) (2020-08-31)
 
 

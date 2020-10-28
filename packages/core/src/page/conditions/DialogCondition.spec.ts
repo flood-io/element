@@ -1,20 +1,20 @@
 import { serve } from '../../../tests/support/fixture-server'
-import { launchPuppeteer, testPuppeteer } from '../../../tests/support/launch-browser'
-import { Page, Dialog } from 'puppeteer'
+import { launchPlaywright, testPlaywright } from '../../../tests/support/launch-browser'
+import { Page, Dialog } from 'playwright'
 import { Until } from '../Until'
 
-let page: Page, puppeteer: testPuppeteer
+let page: Page, playwright: testPlaywright
 
 describe('Condition', () => {
 	jest.setTimeout(30e3)
 	describe('DialogCondition', () => {
 		beforeAll(async () => {
-			puppeteer = await launchPuppeteer()
-			page = puppeteer.page
+			playwright = await launchPlaywright()
+			page = playwright.page
 		})
 
 		afterAll(async () => {
-			await puppeteer.close()
+			await playwright.close()
 		})
 
 		beforeEach(async () => {
@@ -23,7 +23,6 @@ describe('Condition', () => {
 
 		test('waits Until.alertIsPresent alert', async () => {
 			const condition = Until.alertIsPresent()
-			condition.settings.waitTimeout = 31e3
 
 			page.click('#alert')
 
@@ -35,7 +34,7 @@ describe('Condition', () => {
 
 		test('waits Until.alertIsPresent confirm', async () => {
 			const condition = Until.alertIsPresent()
-			condition.settings.waitTimeout = 31e3
+
 			page.click('#confirm')
 
 			const alert: Dialog | null = await condition.waitForEvent(page)
@@ -46,8 +45,7 @@ describe('Condition', () => {
 
 		test('waits Until.alertIsPresent prompt', async () => {
 			const condition = Until.alertIsPresent()
-			condition.settings.waitTimeout = 31e3
-			await page.waitForSelector('#prompt', { visible: true })
+			await page.waitForSelector('#prompt', { state: 'visible' })
 
 			page.click('#prompt', { delay: 100 })
 
@@ -56,7 +54,7 @@ describe('Condition', () => {
 			expect(alert.message()).toBe('enter your name')
 			await alert.accept('Ivan')
 
-			await page.waitForSelector('#prompt', { visible: true })
+			await page.waitForSelector('#prompt', { state: 'visible' })
 		})
 	})
 })

@@ -28,7 +28,7 @@ export const StepActionArgs = (args: any[]): string => {
 
 		if (isInstanceOfCondition(arg)) {
 			const locator: string = JSON.parse(JSON.stringify(arg.locator)).errorString
-			result = `Util.${arg.desc}(${locator})`
+			result = `Until.${arg.desc}(${locator})`
 			break
 		}
 

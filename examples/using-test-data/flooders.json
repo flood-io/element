@@ -1,0 +1,22 @@
+[
+	{
+		"id": "01",
+		"username": "Tien Nguyen",
+		"email": "tien@flood.io"
+	},
+	{
+		"id": "02",
+		"username": "Hong La",
+		"email": "hong@flood.io"
+	},
+	{
+		"id": "03",
+		"username": "Son Nguyen",
+		"email": "son@flood.io"
+	},
+	{
+		"id": "04",
+		"username": "Hoang Trinh",
+		"email": "hoang@flood.io"
+	}
+]

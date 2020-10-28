@@ -56,8 +56,15 @@ This setting can be useful for very noisy tests. When a method is filtered, it s
   Defaults to `-1` for no timeout.  
     
 ### extraHTTPHeaders
-&lt;undefined | unknown reflection type&gt;  (Optional)   Specifies a set of extra HTTP headers to set before each test loop.  
-  If this setting is undefined, the extra HTTP headers are left as-is between iterations.  
+`Object` (Optional) Specifies a set of extra HTTP headers to set before each test loop.  
+ If this setting is undefined, the extra HTTP headers are left as-is between iterations.
+
+```typescript
+export const settings: TestSettings = {
+	extraHTTPHeaders: { 'Accept-Language': 'en' },
+}
+```
+
 ### ignoreHTTPSErrors 
 `false` | `true`  (Optional)   Whether to ignore HTTPS errors during navigation. Defaults to `false`  
 ### incognito 

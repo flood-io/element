@@ -76,6 +76,42 @@ When running Element in cli mode (`element run`), place the data files in the sa
 
 When its running as a load test on [flood.io](https://flood.io), upload the data files alongside your script.
 
+## Using multiple test data files in a single test script
+
+Since Element 1.4, you can use multiple data files within a single test script by giving an alias for each file.
+
+```typescript
+interface User {
+	username: string
+	reportCount: number
+}
+
+interface Order {
+	id: string
+	productName: string
+}
+// import the data from multiple data files
+TestData.fromCSV<User>('users*.csv').as('user')
+TestData.fromJSON<Order>('order.json')
+	.as('order')
+	.shuffle()
+export default () => {
+	step('Step 1', async (browser: Browser, data: { user: User; order: Order }) => {
+		// verify and use the data
+		assert.ok(data.user.username, 'username is set')
+		assert.notEqual(data.order.productName, undefined, 'productName is set')
+	})
+}
+```
+
+**Notes:**
+
+1. In case no alias is set, then Element will auto-set the alias of the data with the name of the file (without the file extension). However, if the data were imported using `fromData()`, you need to specify the alias.
+2. Data files that have the same structure (for example, same number of columns and data types) can be concatenated and used under the same alias.
+3. Element 1.4 supports [glob](https://www.npmjs.com/package/glob) to find the data files that match the specified pattern, then concatenate them under 1 alias. As in the example above, supposed you have `user1.csv`, `user2.csv`,... and want to quickly import and concatenate them, just use the `user*.csv` pattern and Element will do the rest.
+4. Data files imported using different methods (for example, 1 by `fromCSV()` and 1 by `fromJSON()`) cannot have the same alias.
+5. When multiple data files are used, the `circular()` option is turned on by default, and whichever file reaches its end-of-file first will begin its next loop first (if the number of data rows is lower than the number of test iterations).
+
 ## Advanced topic: ensuring your data is well-defined
 
 When it's important that your test data is well-defined, Flood Element provides two main approaches: type checking and manual assertion

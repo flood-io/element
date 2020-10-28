@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-beta.20](https://github.com/flood-io/element/compare/v2.0.0-beta.19...v2.0.0-beta.20) (2020-10-28)
+
+
+### Bug Fixes
+
+* typo ([a786b4f](https://github.com/flood-io/element/commit/a786b4f376f7af05ba2e96426f05b0753619d0df))
+
+
+
+
+
+# [2.0.0-beta.19](https://github.com/flood-io/element/compare/v2.0.0-beta.18...v2.0.0-beta.19) (2020-10-27)
+
+
+### Features
+
+* fix test ([f70adf5](https://github.com/flood-io/element/commit/f70adf53ba6afc0447bc1d3d62436e0e100e933f))
+* update lerna.json ([ef9dc29](https://github.com/flood-io/element/commit/ef9dc29bc4767dd3dea81ec10c718cc534a16f9c))
+
+
+
+
+
 # [2.0.0-beta.18](https://github.com/flood-io/element/compare/v2.0.0-beta.17...v2.0.0-beta.18) (2020-10-15)
 
 

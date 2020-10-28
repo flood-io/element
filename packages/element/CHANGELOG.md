@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-beta.20](https://github.com/flood-io/element/compare/v2.0.0-beta.19...v2.0.0-beta.20) (2020-10-28)
+
+**Note:** Version bump only for package @flood/element
+
+
+
+
+
+# [2.0.0-beta.19](https://github.com/flood-io/element/compare/v2.0.0-beta.18...v2.0.0-beta.19) (2020-10-27)
+
+**Note:** Version bump only for package @flood/element
+
+
+
+
+
 # [2.0.0-beta.18](https://github.com/flood-io/element/compare/v2.0.0-beta.17...v2.0.0-beta.18) (2020-10-15)
 
 **Note:** Version bump only for package @flood/element

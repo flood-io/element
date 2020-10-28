@@ -8,9 +8,20 @@ export default () => {
 	step.once('Test once', async browser => {
 		console.log('Step once runs 1 time')
 	})
+	step.once('Test once with option', { waitTimeout: 150 }, async browser => {
+		console.log('Step once runs 1 time with option')
+	})
 	step.if(
 		() => true,
 		'Test if',
+		async browser => {
+			console.log('Step if runs with condition true')
+		},
+	)
+	step.if(
+		() => true,
+		'Test if with option',
+		{ waitTimeout: 150 },
 		async browser => {
 			console.log('Step if runs with condition true')
 		},
@@ -22,7 +33,18 @@ export default () => {
 			console.log('Test unless runs with condition false')
 		},
 	)
+	step.unless(
+		() => false,
+		'Test unless with option',
+		{ waitTimeout: 150 },
+		async browser => {
+			console.log('Test unless runs with condition false')
+		},
+	)
 	step.skip('Test skip', async browser => {
+		console.log('This step will not be run')
+	})
+	step.skip('Test skip with option', { waitTimeout: 150 }, async browser => {
 		console.log('This step will not be run')
 	})
 
@@ -38,12 +60,10 @@ export default () => {
 		console.log('Recovery step 2 done, restart step 1')
 		return RecoverWith.RESTART
 	})
-
 	step.recovery('Step 3', async browser => {
 		console.log('Recovery step 3 done, continue the next step')
 		return RecoverWith.CONTINUE
 	})
-
 	step('Step 1', async browser => {
 		if (!retry) {
 			retry = true
@@ -53,7 +73,6 @@ export default () => {
 			console.log('Done step 1')
 		}
 	})
-
 	step('Step 2', async browser => {
 		if (!restart) {
 			restart = true
@@ -63,16 +82,13 @@ export default () => {
 			console.log('Done step 2')
 		}
 	})
-
 	step('Step 3', async browser => {
 		console.log('Throw error step 3')
 		throw Error('Fail')
 	})
-
 	step('Step 4', async browser => {
 		console.log('Done step 4')
 	})
-
 	let count = 0
 	step.while(
 		() => count < 3,
@@ -82,12 +98,26 @@ export default () => {
 			console.log('Step 5')
 		},
 	)
-
+	step.while(
+		() => count < 3,
+		'Step 5 with option',
+		{ waitTimeout: 150 },
+		async browser => {
+			count += 1
+			console.log('Step 5')
+		},
+	)
 	step('Step 6', async browser => {
 		throw Error('Throw error step 6')
 	})
 	step.recovery({ tries: 2 }, async browser => {
 		console.log('Global recovery')
-		return RecoverWith.RETRY
+		return RecoverWith.CONTINUE
+	})
+	step.repeat(1, 'repeat 1', { waitTimeout: 150 }, async () => {
+		console.log('repeating step repeat 1')
+	})
+	step.repeat(1, { waitTimeout: 150 }, async () => {
+		console.log('repeating step repeat 1')
 	})
 }

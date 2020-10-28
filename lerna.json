@@ -1,14 +1,18 @@
 {
 	"lerna": "2.11.0",
 	"npmClient": "yarn",
-	"version": "2.0.0-beta.18",
+	"version": "2.0.0-beta.20",
 	"useWorkspaces": true,
 	"command": {
 		"init": {
 			"exact": true
 		},
 		"publish": {
-			"conventionalCommits": true
+			"conventionalCommits": true,
+			"ignoreChanges": [
+				"**/*.md",
+				"packages/docs/**"
+			]
 		},
 		"version": {
 			"message": "chore(release): publish %s\n[skip ci]",
@@ -30,6 +34,8 @@
 		"coverage",
 		"examples",
 		"scripts",
-		"smoke"
+		"smoke",
+		"**/*.md",
+		"packages/docs/**"
 	]
 }

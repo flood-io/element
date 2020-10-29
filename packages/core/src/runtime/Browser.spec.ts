@@ -10,6 +10,15 @@ import { DEFAULT_SETTINGS, normalizeSettings, TestSettings } from './Settings'
 let puppeteer: testPuppeteer
 const workRoot = testWorkRoot()
 
+const getCurrentPosition = async (
+	browser: Browser<any>,
+): Promise<{ top: number; left: number }> => {
+	return await browser.evaluate(() => ({
+		top: document.documentElement.scrollTop || document.body.scrollTop,
+		left: document.documentElement.scrollLeft || document.body.scrollLeft,
+	}))
+}
+
 describe('Browser', () => {
 	jest.setTimeout(30e3)
 	beforeAll(async () => {
@@ -227,5 +236,117 @@ describe('Browser', () => {
 		// switch page using the page itself
 		await browser.switchTo().page(newPage)
 		expect(browser.url).toContain('/page_2.html')
+	})
+
+	describe('scrollTo and scrollBy', () => {
+		let browser: Browser<any>
+		let docScrollHeight: number,
+			docScrollWidth: number,
+			docClientHeight: number,
+			docClientWidth: number
+		beforeEach(async () => {
+			const settings: any = normalizeSettings(DEFAULT_SETTINGS)
+			browser = new Browser(workRoot, puppeteer, settings)
+			const url = await serve('scroll.html')
+
+			await browser.visit(url)
+			docScrollHeight = await browser.evaluate(() =>
+				Math.max(
+					document.body.scrollHeight,
+					document.documentElement.scrollHeight,
+					document.body.offsetHeight,
+					document.documentElement.offsetHeight,
+					document.body.clientHeight,
+					document.documentElement.clientHeight,
+				),
+			)
+
+			docScrollWidth = await browser.evaluate(() =>
+				Math.max(
+					document.body.scrollWidth,
+					document.documentElement.scrollWidth,
+					document.body.offsetWidth,
+					document.documentElement.offsetWidth,
+					document.body.clientWidth,
+					document.documentElement.clientWidth,
+				),
+			)
+
+			docClientHeight = await browser.evaluate(() => document.documentElement.clientHeight)
+			docClientWidth = await browser.evaluate(() => document.documentElement.clientWidth)
+		})
+
+		afterEach(async () => {
+			await browser.scrollTo('top')
+		})
+		test('scrollTo', async () => {
+			await browser.scrollTo('bottom', { behavior: 'smooth' })
+			await browser.wait(2)
+			const currentPosAfterScrollBot = await getCurrentPosition(browser)
+			expect(docScrollHeight - docClientHeight).toBe(currentPosAfterScrollBot.top)
+
+			await browser.scrollTo('right')
+			const currentPosAfterScrollRight = await getCurrentPosition(browser)
+			expect(docScrollWidth - docClientWidth).toBe(currentPosAfterScrollRight.left)
+
+			await browser.scrollTo('left')
+			const currentPosAfterScrollLeft = await getCurrentPosition(browser)
+			expect(currentPosAfterScrollLeft.left).toBe(0)
+
+			await browser.scrollTo('top')
+			const currentPosAfterScrollTop = await getCurrentPosition(browser)
+			expect(currentPosAfterScrollTop.top).toBe(0)
+
+			await browser.scrollTo([1000, 500])
+			const currentPosAfterScrollToPoint = await getCurrentPosition(browser)
+			expect(currentPosAfterScrollToPoint).toStrictEqual({ top: 500, left: 1000 })
+
+			const btn = By.css('.btn')
+			await browser.scrollTo(btn, { block: 'center', inline: 'start' })
+			const btnEl = await browser.findElement(btn)
+			const btnLocation = await btnEl.location()
+			const btnHeight = (await btnEl.element.boundingBox()).height
+			expect(Math.round((docClientHeight - btnHeight) / 2)).toBe(btnLocation.y)
+			expect(btnLocation.x).toBe(0)
+
+			const paragraph = await browser.findElement(By.css('p'))
+			await browser.scrollTo(paragraph, { block: 'start' })
+			const paragraphLocation = await paragraph.location()
+			expect(paragraphLocation.y).toBe(0)
+		})
+
+		test('scrollBy', async () => {
+			const beforeScrollBy = await getCurrentPosition(browser)
+			await browser.scrollBy(700, 400)
+			const currentPosAfterScrollBy = await getCurrentPosition(browser)
+			expect(currentPosAfterScrollBy).toStrictEqual({
+				top: beforeScrollBy.top + 400,
+				left: beforeScrollBy.left + 700,
+			})
+
+			await browser.scrollBy(-700, -400)
+			const currentPosAfterScrollByAgain = await getCurrentPosition(browser)
+			expect(currentPosAfterScrollByAgain).toStrictEqual({
+				top: currentPosAfterScrollBy.top - 400,
+				left: currentPosAfterScrollBy.left - 700,
+			})
+
+			await browser.scrollTo('top')
+			const currentPosAfterScrollTop = await getCurrentPosition(browser)
+
+			await browser.scrollBy(0, 'window.innerHeight')
+			const currentPosAfterScrollInnerHeight = await getCurrentPosition(browser)
+			expect(currentPosAfterScrollInnerHeight).toStrictEqual({
+				top: currentPosAfterScrollTop.top + docClientHeight,
+				left: currentPosAfterScrollTop.left,
+			})
+
+			await browser.scrollBy('window.innerWidth', 0)
+			const currentPosAfterScrollInnerWidth = await getCurrentPosition(browser)
+			expect(currentPosAfterScrollInnerWidth).toStrictEqual({
+				top: currentPosAfterScrollInnerHeight.top,
+				left: currentPosAfterScrollInnerHeight.left + docClientWidth,
+			})
+		})
 	})
 })

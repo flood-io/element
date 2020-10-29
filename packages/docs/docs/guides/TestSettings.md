@@ -100,6 +100,18 @@ The list of Chromium flags can be found [here](https://peter.sh/experiments/chro
  `number`  (Optional)   Specifies the time (in seconds) to wait after each step.  
 ### userAgent
 `string`  (Optional)   Specifies a custom User Agent (UA) string to send.  
+
+### viewport
+`Object` Set the viewport with the below properties:
+
+- width `number` page width in pixels. Required.
+- height `number` page height in pixels. Required.
+- deviceScaleFactor `number` Specify device scale factor (can be thought of as dpr). Defaults to 1.
+- isMobile `boolean` Whether the meta viewport tag is taken into account. Defaults to `false`.
+- hasTouch `boolean` Specifies if viewport supports touch events. Defaults to `false`.
+- isLandscape `boolean` Specifies if viewport is in landscape mode. Defaults to `false`.
+
+
 ### waitTimeout
 `number`  (Optional)   Global wait timeout applied to all wait tasks.  
 ### waitUntil : (Optional) 

@@ -2,7 +2,7 @@ import { step, TestSettings, Until, By, Device, Driver } from '@flood/element'
 import assert from 'assert'
 export const settings: TestSettings = {
 	loopCount: 1,
-	device: Device.iPadLandscape,
+	// device: Device.iPadLandscape,
 	userAgent: 'I AM ROBOT',
 	disableCache: true,
 	actionDelay: '1s',

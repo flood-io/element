@@ -1,5 +1,5 @@
 import { Condition } from '../page/Condition'
-import { Page, Frame, ViewportSize } from 'playwright'
+import { Page, Frame, ViewportSize, BrowserContext } from 'playwright'
 import {
 	ElementHandle,
 	ScreenshotOptions,
@@ -291,6 +291,8 @@ export interface Browser {
 	waitForNewPage(): Promise<Page>
 
 	close(): Promise<void>
+
+	context(): BrowserContext
 }
 
 /**

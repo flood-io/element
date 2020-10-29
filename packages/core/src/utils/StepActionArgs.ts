@@ -1,28 +1,47 @@
 import { BaseLocator } from './../page/Locator'
 import {
-	ElementVisibilityCondition,
+	DialogCondition,
+	ElementSelectedCondition,
+	ElementStateCondition,
 	ElementTextCondition,
 	ElementTextNotMatchCondition,
-	ElementStateCondition,
-	ElementSelectedCondition,
+	ElementVisibilityCondition,
+	FrameCondition,
+	TitleCondition,
+	TitleNotMatchCondition,
+	URLCondition,
+	URLNotMatchCondition,
+	ElementLocatedCondition,
+	ElementsLocatedCondition,
 } from '../page/conditions/'
 
 export const StepActionArgs = (args: any[]): string => {
 	let result = ''
 
+	const conditions = [
+		DialogCondition,
+		ElementSelectedCondition,
+		ElementStateCondition,
+		ElementTextCondition,
+		ElementTextNotMatchCondition,
+		ElementVisibilityCondition,
+		FrameCondition,
+		TitleCondition,
+		TitleNotMatchCondition,
+		URLCondition,
+		URLNotMatchCondition,
+		ElementLocatedCondition,
+		ElementsLocatedCondition,
+	]
+
 	const isInstanceOfCondition = (arg: any): boolean => {
-		return (
-			arg instanceof ElementVisibilityCondition ||
-			arg instanceof ElementTextCondition ||
-			arg instanceof ElementTextNotMatchCondition ||
-			arg instanceof ElementStateCondition ||
-			arg instanceof ElementSelectedCondition
-		)
+		return conditions.some(condition => arg instanceof condition)
 	}
 
 	for (const arg of args) {
-		if (typeof arg === 'string') {
-			result = `'${arg}'`
+		const argType = typeof arg
+		if (argType === 'string' || argType === 'number') {
+			result = argType === 'string' ? `'${arg}'` : arg
 			break
 		}
 

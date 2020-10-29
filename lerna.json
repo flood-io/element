@@ -8,8 +8,7 @@
 			"exact": true
 		},
 		"publish": {
-			"conventionalCommits": true,
-			"ignoreChanges": ["*.md"]
+			"conventionalCommits": true
 		},
 		"version": {
 			"message": "chore(release): publish %s\n[skip ci]",

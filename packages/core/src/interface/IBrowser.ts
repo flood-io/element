@@ -33,13 +33,13 @@ export interface Browser {
 	 * @internal
 	 * @private
 	 */
-	beforeFunc: (b: Browser, name: string) => Promise<void>
+	beforeFunc: (browser: Browser, name: string) => Promise<void>
 
 	/**
 	 * @internal
 	 * @private
 	 */
-	afterFunc: (b: Browser, name: string, args?: string) => Promise<void>
+	afterFunc: (browser: Browser, name: string, args?: string) => Promise<void>
 
 	title(): Promise<string>
 

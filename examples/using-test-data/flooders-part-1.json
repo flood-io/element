@@ -1,0 +1,22 @@
+[
+	{
+		"id": "01",
+		"username": "Tien Nguyen",
+		"email": "narcissus@flower.io"
+	},
+	{
+		"id": "02",
+		"username": "Hong La",
+		"email": "jason-cat-lover@cactus.io"
+	},
+	{
+		"id": "03",
+		"username": "Son Nguyen",
+		"email": "professor@academic.io"
+	},
+	{
+		"id": "04",
+		"username": "Hoang Trinh",
+		"email": "talent-streamer@genius.io"
+	}
+]

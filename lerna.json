@@ -22,11 +22,5 @@
 			"npmClient": "yarn"
 		}
 	},
-	"ignoreChanges": [
-		"assets",
-		"coverage",
-		"examples",
-		"scripts",
-		"smoke"
-	]
+	"ignoreChanges": ["assets", "coverage", "examples", "scripts", "smoke", "**/*.md", "packages/docs/**"]
 }

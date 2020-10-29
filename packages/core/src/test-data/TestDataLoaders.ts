@@ -10,23 +10,25 @@ export class TestDataLoaders implements TestDataFactory {
 	 */
 	public fromData<TRow>(lines: TRow[]): TestDataSource<TRow> {
 		const loader = new DataLoader<TRow>(lines)
-		return new TestDataSource<TRow>(loader)
+		const testDataSource = TestDataSource.getInstance()
+		testDataSource.addLoader(loader)
+		return testDataSource
 	}
 
 	/**
 	 * Loads test data from a CSV file, returning a `<[TestDataSource]>` instance.
 	 */
 	public fromCSV<TRow>(filename: string, separator = ','): TestDataSource<TRow> {
-		const loader = new CSVLoader<TRow>(this.workRoot.testData(filename), separator, filename)
-		return new TestDataSource<TRow>(loader)
+		const loader = new CSVLoader<TRow>(this.workRoot.testData(filename), separator)
+		return TestDataSource.getInstance().addLoader(loader)
 	}
 
 	/**
-	 * Loads data from a JSON ffile
+	 * Loads data from a JSON file
 	 */
 	public fromJSON<TRow>(filename: string): TestDataSource<TRow> {
-		const loader = new JSONLoader<TRow>(this.workRoot.testData(filename), filename)
-		return new TestDataSource<TRow>(loader)
+		const loader = new JSONLoader<TRow>(this.workRoot.testData(filename))
+		return TestDataSource.getInstance().addLoader(loader)
 	}
 }
 

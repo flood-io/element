@@ -81,7 +81,7 @@ export class Feeder<T> {
 				lines: shuffle ? [...knuthShuffle(newLines)] : [...newLines],
 				circular,
 				shuffle,
-				pointer: 0,
+				pointer: -1,
 				type,
 			})
 		}
@@ -131,6 +131,9 @@ export class Feeder<T> {
 	 * Advances the feed by one iteration
 	 */
 	public feed(): Option<T> {
+		this.dataSource.forEach((item: DataSourceItem) => {
+			item.pointer++
+		})
 		return this.peek()
 	}
 
@@ -140,22 +143,22 @@ export class Feeder<T> {
 	public peek(): Option<T> {
 		if (this.dataSource.length === 1) {
 			const dataSource = this.dataSource[0]
-			const dataRow = dataSource.lines[dataSource.pointer++] || null
+			const dataRow = dataSource.lines[dataSource.pointer] || null
 			if (dataRow) return dataRow
 			else if (dataSource.circular) {
 				dataSource.pointer = 0
-				return dataSource.lines[dataSource.pointer++] || null
+				return dataSource.lines[dataSource.pointer] || null
 			}
 			return dataRow
 		} else {
 			const data: any = {}
 			this.dataSource.forEach((item: DataSourceItem) => {
 				const { name, lines, circular } = item
-				const dataRow = lines[item.pointer++] || null
+				const dataRow = lines[item.pointer] || null
 				if (dataRow) data[name] = dataRow
 				else if (circular) {
 					item.pointer = 0
-					data[name] = lines[item.pointer++]
+					data[name] = lines[item.pointer] || null
 				} else {
 					data[name] = dataRow
 				}
@@ -194,7 +197,7 @@ export class Feeder<T> {
 			if (source.pointer > max) max = source.pointer
 			return max
 		}, 0)
-		return maxPointer >= this.maxLines
+		return maxPointer >= this.maxLines - 1
 	}
 
 	public get isStart(): boolean {

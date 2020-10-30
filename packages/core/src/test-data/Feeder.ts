@@ -29,8 +29,11 @@ export class Feeder<T> {
 	}
 
 	private static _instance: Feeder<any>
-	public static getInstance() {
-		return this._instance || (this._instance = new Feeder<any>())
+	public static getInstance(): Feeder<any> {
+		if (!this._instance) {
+			this._instance = new Feeder<any>()
+		}
+		return this._instance
 	}
 
 	public append(lines: T[], loaderName = '', type: FileType): Feeder<T> {

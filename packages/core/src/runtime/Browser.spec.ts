@@ -349,4 +349,16 @@ describe('Browser', () => {
 			})
 		})
 	})
+
+	describe('getUrl', () => {
+		test('test API getUrl()', async () => {
+			const setting: any = normalizeSettings(DEFAULT_SETTINGS)
+			const browser = new Browser(workRoot, puppeteer, setting)
+			const URL = 'https://challenge.flood.io/'
+
+			await browser.visit(URL)
+			const currentURL = await browser.getUrl()
+			expect(currentURL).toBe(URL)
+		})
+	})
 })

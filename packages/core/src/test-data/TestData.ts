@@ -76,7 +76,10 @@ export class TestDataSource<T> {
 
 	private static _instance: TestDataSource<any>
 	public static getInstance() {
-		return this._instance || (this._instance = new TestDataSource<any>(new NullLoader()))
+		if (!this._instance) {
+			this._instance = new TestDataSource<any>(new NullLoader())
+		}
+		return this._instance
 	}
 
 	public addLoader(loader: Loader<T>): TestDataSource<T> {

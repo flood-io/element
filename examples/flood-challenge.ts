@@ -20,6 +20,8 @@ export default () => {
 			waitUntil: 'load',
 		})
 
+		await browser.wait(0.5)
+
 		let locator = By.css('#new_challenger > input.btn.btn-xl.btn-default')
 		await browser.wait(Until.elementIsVisible(locator))
 
@@ -35,7 +37,7 @@ export default () => {
 		let select = await browser.findElement(By.id('challenger_age'))
 		await select.takeScreenshot()
 
-		await browser.click(By.css('input.btn'))
+		await browser.click(By.css('input.btn'), { button: 'left', clickCount: 1, delay: 0.5 })
 	})
 
 	step('Flood Challenge: Step 2', async (browser: Browser) => {

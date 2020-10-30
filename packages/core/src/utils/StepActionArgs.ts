@@ -43,11 +43,6 @@ export const StepActionArgs = (args: any[]): string => {
 
 		result += result.length && args.indexOf(arg) !== 0 ? ', ' : ''
 
-		if (argType === 'string' || argType === 'number') {
-			result += argType === 'string' ? `'${arg}'` : arg
-			continue
-		}
-
 		if (isInstanceOfCondition(arg)) {
 			const locator: string = JSON.parse(JSON.stringify(arg.locator)).errorString
 			result += `Until.${arg.desc}(${locator})`
@@ -60,9 +55,18 @@ export const StepActionArgs = (args: any[]): string => {
 		}
 
 		try {
-			if (argType === 'object') {
-				result += JSON.stringify(arg)
-				continue
+			switch (argType) {
+				case 'string':
+					result += `'${arg}'`
+					continue
+				case 'number':
+					result += arg
+					continue
+				case 'object':
+					result += JSON.stringify(arg)
+					continue
+				default:
+					continue
 			}
 		} catch (err) {
 			break

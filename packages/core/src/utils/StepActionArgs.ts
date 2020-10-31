@@ -14,6 +14,7 @@ import {
 	ElementLocatedCondition,
 	ElementsLocatedCondition,
 } from '../page/conditions/'
+import { ElementHandle } from './../page/ElementHandle'
 
 export const StepActionArgs = (args: any[]): string => {
 	let result = ''
@@ -34,27 +35,45 @@ export const StepActionArgs = (args: any[]): string => {
 		ElementsLocatedCondition,
 	]
 
-	const isInstanceOfCondition = (arg: any): boolean => {
-		return conditions.some(condition => arg instanceof condition)
+	const isInstanceOfCondition = (arg: any): boolean =>
+		conditions.some(condition => arg instanceof condition)
+
+	const isAnElementHandle = (arg: any): boolean => arg instanceof ElementHandle
+
+	const getErrorStringOfElementHandle = (locator: ElementHandle): string => {
+		const locatorArr = locator.toErrorString().split(`'`)
+		return locatorArr
+			.filter((el, index) => index !== 0 && index !== locatorArr.length - 1)
+			.join(`'`)
 	}
 
 	for (const arg of args) {
 		const argType = typeof arg
 
-		result += result.length && args.indexOf(arg) !== 0 ? ', ' : ''
-
-		if (isInstanceOfCondition(arg)) {
-			const locator: string = JSON.parse(JSON.stringify(arg.locator)).errorString
-			result += `Until.${arg.desc}(${locator})`
-			continue
-		}
-
-		if (arg instanceof BaseLocator) {
-			result += arg.toErrorString()
-			continue
-		}
-
 		try {
+			result += result.length && args.indexOf(arg) !== 0 ? ', ' : ''
+
+			if (isAnElementHandle(arg)) {
+				result += getErrorStringOfElementHandle(arg)
+				continue
+			}
+
+			if (isInstanceOfCondition(arg)) {
+				if (isAnElementHandle(arg.locator)) {
+					result += getErrorStringOfElementHandle(arg.locator)
+					continue
+				} else {
+					const locator: string = JSON.parse(JSON.stringify(arg.locator)).errorString
+					result += `Until.${arg.desc}(${locator})`
+					continue
+				}
+			}
+
+			if (arg instanceof BaseLocator) {
+				result += arg.toErrorString()
+				continue
+			}
+
 			switch (argType) {
 				case 'string':
 					result += `'${arg}'`

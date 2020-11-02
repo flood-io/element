@@ -739,8 +739,7 @@ export class Browser<T> implements BrowserInterface {
 		)
 	}
 
-	@addCallbacks()
-	public async getUrl(): Promise<string> {
+	public getUrl(): string {
 		return this.page.url()
 	}
 }

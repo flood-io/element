@@ -322,7 +322,7 @@ export interface Browser {
 	/**
 	 * Get the current URL of the page
 	 */
-	getUrl(): Promise<string>
+	getUrl(): string
 }
 
 /**

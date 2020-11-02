@@ -357,7 +357,7 @@ describe('Browser', () => {
 			const URL = 'https://challenge.flood.io/'
 
 			await browser.visit(URL)
-			const currentURL = await browser.getUrl()
+			const currentURL = browser.getUrl()
 			expect(currentURL).toBe(URL)
 		})
 	})

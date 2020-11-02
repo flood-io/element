@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.9](https://github.com/flood-io/element/compare/v1.3.8...v1.3.9) (2020-11-02)
+
+
+### Bug Fixes
+
+* test ([35790e9](https://github.com/flood-io/element/commit/35790e904a46e3ef5c9a4047a8337dbcedf78bfd))
+* transaction count ([35aab3f](https://github.com/flood-io/element/commit/35aab3f383bba751ee6c086dc29b8b256bd7a924))
+
+
+
+
+
 ## [1.3.8](https://github.com/flood-io/element/compare/v1.3.7...v1.3.8) (2020-09-24)
 
 **Note:** Version bump only for package @flood/element-core

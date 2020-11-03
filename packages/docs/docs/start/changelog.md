@@ -2,6 +2,17 @@
 id: changelog
 title: Changelog
 ---
+
+## 1.4.0
+Released: Nov 2020
+
+### New features
+- Ability to support [multiple data files in a single test script](../guides/TestData.md#using-multiple-test-data-files-in-a-single-test-script)
+- Ability to [debug Element script with VSCode](../guides/editor.md#how-to-debug-element-script-with-vscode)
+- New APIs:
+  - [`browser.scrollBy()`](../api/browser.md#scrollbyx-y-options)
+  - [`browser.scrollTo()`](../api/browser.md#scrolltoposition-options)
+
 ## 1.3.6
 Released: 24 Sep 2020
 

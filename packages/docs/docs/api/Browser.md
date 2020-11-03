@@ -176,7 +176,7 @@ Presses a key on the keyboard specified by key code. For example, [Key.ALT][key.
 - options? (Optional)
 - returns: [Promise<`void`>][promise]
 
-### `scrollBy(x, y, [,option])`
+### `scrollBy(x, y[, options])`
 
 Scroll the document by the given number of pixels.
 
@@ -190,7 +190,7 @@ Scroll the document by the given number of pixels.
 
 - options is an object containing [ScrollOptions](#scrolloptions).
 
-### `scrollTo(position, [,option])`
+### `scrollTo(position[, options])`
 
 Scroll the document to the specified position.
 

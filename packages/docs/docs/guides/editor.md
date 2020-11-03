@@ -22,10 +22,10 @@ Under `.vscode` folder of your project, find the `launch.json` file and add the 
       "type": "node",
       "request": "launch",
       "args": [
-        "/usr/local/bin/element",
+        "/usr/local/bin/element", // your Element installation path
         "run",
-        "./test.ts",
-        "--devtools",
+        "./test.ts", //path to your test script 
+        "--devtools", // add this line if you want to open DevTools while debugging
         "--debug"
       ],
     }

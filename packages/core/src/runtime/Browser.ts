@@ -738,4 +738,8 @@ export class Browser<T> implements BrowserInterface {
 			behavior,
 		)
 	}
+
+	public getUrl(): string {
+		return this.page.url()
+	}
 }

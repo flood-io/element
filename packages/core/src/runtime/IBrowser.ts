@@ -318,6 +318,11 @@ export interface Browser {
 		y: number | 'window.innerHeight',
 		scrollOptions?: ScrollOptions,
 	): Promise<void>
+
+	/**
+	 * Get the current URL of the page
+	 */
+	getUrl(): string
 }
 
 /**

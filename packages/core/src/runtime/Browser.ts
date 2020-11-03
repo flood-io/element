@@ -143,7 +143,7 @@ export class Browser<T> implements BrowserInterface {
 
 	@addCallbacks()
 	public async evaluate(fn: EvaluateFn, ...args: any[]): Promise<any> {
-		return this.target.evaluate(fn, ...args)
+		return this.evaluateWithoutDecorator(fn, ...args)
 	}
 
 	@addCallbacks()
@@ -157,35 +157,7 @@ export class Browser<T> implements BrowserInterface {
 
 	@addCallbacks()
 	public async wait(timeoutOrCondition: Condition | number | string): Promise<any> {
-		if (typeof timeoutOrCondition === 'string') {
-			await new Promise(yeah => setTimeout(yeah, ms(timeoutOrCondition)))
-			return true
-		} else if (typeof timeoutOrCondition === 'number') {
-			await new Promise(yeah => setTimeout(yeah, timeoutOrCondition))
-			return true
-		}
-
-		debug('wait')
-		try {
-			const condition: Condition = timeoutOrCondition
-			condition.settings = this.settings
-			if (condition.hasWaitFor) {
-				return await condition.waitFor(this.target, this.page)
-			} else {
-				return await condition.waitForEvent(this.page)
-			}
-		} catch (err) {
-			debug('wait timed out')
-			throw new StructuredError<ActionErrorData>(
-				'wait timed out',
-				{
-					_kind: 'action',
-					kind: 'wait-timeout',
-					action: 'wait',
-				},
-				err,
-			)
-		}
+		await this.waitWithoutDecorator(timeoutOrCondition)
 	}
 
 	@addCallbacks()
@@ -233,7 +205,7 @@ export class Browser<T> implements BrowserInterface {
 	@autoWaitUntil()
 	@addCallbacks()
 	public async click(selectorOrLocator: NullableLocatable, options?: ClickOptions): Promise<void> {
-		const element = await this.findElement(selectorOrLocator)
+		const element = await this.findElementWithoutDecorator(selectorOrLocator)
 		return element.click(options)
 	}
 
@@ -247,16 +219,16 @@ export class Browser<T> implements BrowserInterface {
 		selectorOrLocator: NullableLocatable,
 		options?: ClickOptions,
 	): Promise<void> {
-		const element = await this.findElement(selectorOrLocator)
+		const element = await this.findElementWithoutDecorator(selectorOrLocator)
 		return element.click({ clickCount: 2, ...options })
 	}
 
 	@autoWaitUntil()
 	@addCallbacks()
 	public async selectByValue(locatable: NullableLocatable, ...values: string[]): Promise<string[]> {
-		const element = await this.findElement(locatable)
+		const element = await this.findElementWithoutDecorator(locatable)
 
-		return this.evaluate(
+		return this.evaluateWithoutDecorator(
 			(args: any[]) => {
 				const [element, values] = args as [HTMLSelectElement, any]
 
@@ -278,9 +250,9 @@ export class Browser<T> implements BrowserInterface {
 	@addCallbacks()
 	public async selectByIndex(locatable: NullableLocatable, index: string): Promise<string[]> {
 		// TODO: Write tests for this
-		const element = await this.findElement(locatable)
+		const element = await this.findElementWithoutDecorator(locatable)
 
-		return this.evaluate(
+		return this.evaluateWithoutDecorator(
 			(args: any[]) => {
 				const [element, index] = args as [HTMLSelectElement, number]
 				if (element.nodeName.toLowerCase() !== 'select')
@@ -301,9 +273,9 @@ export class Browser<T> implements BrowserInterface {
 	@autoWaitUntil()
 	@addCallbacks()
 	public async selectByText(locatable: NullableLocatable, text: string): Promise<string[]> {
-		const element = await this.findElement(locatable)
+		const element = await this.findElementWithoutDecorator(locatable)
 
-		return this.evaluate(
+		return this.evaluateWithoutDecorator(
 			(args: any[]) => {
 				const [element, text] = args as [HTMLSelectElement, string]
 				if (element.nodeName.toLowerCase() !== 'select')
@@ -340,7 +312,7 @@ export class Browser<T> implements BrowserInterface {
 		text: string,
 		options?: { delay: number },
 	): Promise<void> {
-		const element = await this.findElement(locatable)
+		const element = await this.findElementWithoutDecorator(locatable)
 
 		await element.focus()
 		return this.page.keyboard.type(text, options)
@@ -379,14 +351,14 @@ export class Browser<T> implements BrowserInterface {
 	@autoWaitUntil()
 	@addCallbacks()
 	public async blur(locatable: NullableLocatable): Promise<void> {
-		const element = await this.findElement(locatable)
+		const element = await this.findElementWithoutDecorator(locatable)
 		return element.blur()
 	}
 
 	@autoWaitUntil()
 	@addCallbacks()
 	public async focus(locatable: NullableLocatable): Promise<void> {
-		const element = await this.findElement(locatable)
+		const element = await this.findElementWithoutDecorator(locatable)
 		return element.focus()
 	}
 
@@ -457,19 +429,7 @@ export class Browser<T> implements BrowserInterface {
 	@autoWaitUntil()
 	@addCallbacks()
 	public async findElement(locatable: NullableLocatable): Promise<ElementHandle> {
-		const locator = locatableToLocator(locatable, 'browser.findElement(locatable)')
-
-		debug('locator %o', locator)
-
-		const maybeElement = await locator.find(this.page, undefined, this.target)
-		if (!maybeElement) {
-			throw toLocatorError(locatable, 'browser.findElement()')
-		}
-		const element = maybeElement as ElementHandle
-
-		element.bindBrowser(this)
-
-		return element
+		return this.findElementWithoutDecorator(locatable)
 	}
 
 	public async maybeFindElement(locatable: NullableLocatable): Promise<ElementHandle | null> {
@@ -606,5 +566,59 @@ export class Browser<T> implements BrowserInterface {
 
 	public async close(): Promise<void> {
 		await this.client.browser.close()
+	}
+
+	private async evaluateWithoutDecorator(fn: EvaluateFn, ...args: any[]): Promise<any> {
+		return this.target.evaluate(fn, ...args)
+	}
+
+	private async findElementWithoutDecorator(locatable: NullableLocatable): Promise<ElementHandle> {
+		const locator = locatableToLocator(locatable, 'browser.findElement(locatable)')
+
+		debug('locator %o', locator)
+
+		const maybeElement = await locator.find(this.page, undefined, this.target)
+		if (!maybeElement) {
+			throw toLocatorError(locatable, 'browser.findElement()')
+		}
+		const element = maybeElement as ElementHandle
+
+		element.bindBrowser(this)
+
+		return element
+	}
+
+	private async waitWithoutDecorator(
+		timeoutOrCondition: Condition | number | string,
+	): Promise<any> {
+		if (typeof timeoutOrCondition === 'string') {
+			await new Promise(yeah => setTimeout(yeah, ms(timeoutOrCondition)))
+			return true
+		} else if (typeof timeoutOrCondition === 'number') {
+			await new Promise(yeah => setTimeout(yeah, timeoutOrCondition))
+			return true
+		}
+
+		debug('wait')
+		try {
+			const condition: Condition = timeoutOrCondition
+			condition.settings = this.settings
+			if (condition.hasWaitFor) {
+				return await condition.waitFor(this.target, this.page)
+			} else {
+				return await condition.waitForEvent(this.page)
+			}
+		} catch (err) {
+			debug('wait timed out')
+			throw new StructuredError<ActionErrorData>(
+				'wait timed out',
+				{
+					_kind: 'action',
+					kind: 'wait-timeout',
+					action: 'wait',
+				},
+				err,
+			)
+		}
 	}
 }

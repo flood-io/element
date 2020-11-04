@@ -33,47 +33,88 @@ export const StepActionArgs = (args: any[]): string => {
 		URLNotMatchCondition,
 		ElementLocatedCondition,
 		ElementsLocatedCondition,
+		ElementHandle,
 	]
 
-	const isInstanceOfCondition = (arg: any): boolean =>
+	const isInstaceOf = (arg: any, conditions: Array<any>) =>
 		conditions.some(condition => arg instanceof condition)
 
-	const isAnElementHandle = (arg: any): boolean => arg instanceof ElementHandle
+	const isAnElementHandle = (arg: any): boolean => isInstaceOf(arg, [ElementHandle])
 
-	const getErrorStringOfElementHandle = (locator: ElementHandle): string => {
-		const locatorArr = locator.toErrorString().split(`'`)
-		return locatorArr
-			.filter((el, index) => index !== 0 && index !== locatorArr.length - 1)
-			.join(`'`)
+	const isURLCondition = (arg: any): boolean =>
+		isInstaceOf(arg, [URLCondition, URLNotMatchCondition])
+
+	const isTitleCondition = (arg: any): boolean =>
+		isInstaceOf(arg, [TitleCondition, TitleNotMatchCondition])
+
+	const isFrameCondition = (arg: any): boolean => isInstaceOf(arg, [FrameCondition])
+
+	const isElementTextCondition = (arg: any): boolean =>
+		isInstaceOf(arg, [ElementTextCondition, ElementTextNotMatchCondition])
+
+	const getErrorString = (locator: ElementHandle | BaseLocator): string => {
+		if (locator instanceof ElementHandle) {
+			const locatorArr = locator.toErrorString().split(`'`)
+			// Peek last 3 items
+			return locatorArr.slice(locatorArr.length - 4, locatorArr.length - 1).join(`'`)
+		}
+		return locator.toErrorString()
 	}
 
-	for (const arg of args) {
-		const argType = typeof arg
+	// Handle for param is pass to browser action as RegExp or string
+	const handleRegExpOrString = (desc: string, param: string): string =>
+		desc.toLowerCase().includes('match') ? param : `'${param}'`
 
+	for (const arg of args) {
 		try {
 			result += result.length && args.indexOf(arg) !== 0 ? ', ' : ''
 
-			if (isAnElementHandle(arg)) {
-				result += getErrorStringOfElementHandle(arg)
-				continue
-			}
+			if (isInstaceOf(arg, conditions)) {
+				let content = ''
+				const description = arg.desc ? arg.desc : ''
 
-			if (isInstanceOfCondition(arg)) {
-				if (isAnElementHandle(arg.locator)) {
-					result += getErrorStringOfElementHandle(arg.locator)
-					continue
-				} else {
-					const locator: string = JSON.parse(JSON.stringify(arg.locator)).errorString
-					result += `Until.${arg.desc}(${locator})`
+				if (isAnElementHandle(arg)) {
+					result += getErrorString(arg)
 					continue
 				}
-			}
 
-			if (arg instanceof BaseLocator) {
-				result += arg.toErrorString()
+				if ('locator' in arg) {
+					if (isAnElementHandle(arg.locator) && !isElementTextCondition(arg)) {
+						result += getErrorString(arg.locator)
+						continue
+					}
+					content = getErrorString(arg.locator)
+				}
+
+				if (isElementTextCondition(arg)) {
+					content = `${getErrorString(arg.locator)}, ${handleRegExpOrString(
+						description,
+						arg.pageFuncArgs[0],
+					)}`
+				}
+
+				if (isURLCondition(arg)) {
+					content = handleRegExpOrString(description, arg.url)
+				}
+
+				if (isTitleCondition(arg)) {
+					content = handleRegExpOrString(description, arg.expectedTitle)
+				}
+
+				if (isFrameCondition(arg)) {
+					content = `'${arg.id}'`
+				}
+
+				result += `Until.${description}(${content})`
 				continue
 			}
 
+			if (isInstaceOf(arg, [BaseLocator])) {
+				result += getErrorString(arg)
+				continue
+			}
+
+			const argType = typeof arg
 			switch (argType) {
 				case 'string':
 					result += `'${arg}'`

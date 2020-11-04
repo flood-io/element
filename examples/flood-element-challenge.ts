@@ -20,7 +20,6 @@ export const settings: TestSettings = {
 	disableCache: false,
 	waitTimeout: 60,
 	screenshotOnFailure: true,
-	viewport: { width: 1366, height: 768 },
 	actionDelay: '1s',
 	stepDelay: '2s',
 	browserType: BROWSER_TYPE.CHROME,
@@ -50,7 +49,10 @@ const adjustPriceRange = async (
 	const priceRange = await browser.findElement(By.css('p[data-test-range]'))
 	const priceSlider = await browser.findElement(By.css('span[data-test-slider]'))
 
-	await priceRange.click()
+	await browser.evaluate(() => {
+		const slider = document.querySelector('span[data-test-slider]')
+		slider.scrollIntoView({ block: 'end' })
+	})
 
 	const sliderLocation = await priceSlider.location()
 	const sliderWidth = (await priceSlider.size()).width
@@ -105,7 +107,8 @@ const adjustPriceRange = async (
 }
 
 const minimizePopup = async (browser: Browser): Promise<void> => {
-	await browser.click(By.css('button[data-test-minimize]'))
+	const minimizeBtn = await browser.findElement(By.css('button[data-test-minimize]'))
+	await browser.click(minimizeBtn)
 	await browser.wait(0.5)
 }
 
@@ -116,7 +119,8 @@ const maximizePopup = async (browser: Browser): Promise<void> => {
 
 const getChallangeText = async (browser: Browser): Promise<string> => {
 	const modal = await browser.findElement(By.id('challenges-popup'))
-	const challengeText = await (await modal.findElement(By.css('h6[data-test-title]'))).text()
+	const challengeText =
+		(await (await modal.findElement(By.css('h6[data-test-title]')))?.text()) ?? ''
 
 	return challengeText.split(' ')[1].split('/')[0]
 }
@@ -286,16 +290,15 @@ export default () => {
 	step('Test: Challenge 6', async browser => {
 		const challenge = await getChallangeText(browser)
 		assert.strictEqual(challenge, '6', 'The challenge should be challenge number 6')
-		const numOfPage = await getNumOfPages(browser)
+		const pages = await getNumOfPages(browser)
 
-		for (let x = 1; x <= numOfPage; x++) {
+		for (let x = 1; x <= pages; x++) {
 			const productCards = await browser.findElements(By.css('div[data-test-card]'))
-			for (let y = 0; y < productCards.length; y++) {
-				await browser.evaluate(y => {
-					const el = document.querySelectorAll('div[data-test-card]')[y]
+			for (const [index, card] of productCards.entries()) {
+				await browser.evaluate(index => {
+					const el = document.querySelectorAll('div[data-test-card]')[index]
 					el.scrollIntoView({ block: 'nearest' })
-				}, y)
-				const card = productCards[y]
+				}, index)
 				const location = await card.location()
 				await browser.mouse.move(location.x + 10, location.y + 10)
 
@@ -311,16 +314,18 @@ export default () => {
 				await anotherAddToCardBtn.click()
 
 				// Using Mouse.move(), mouse.down() and mouse.up() to close the modal
-				await browser.mouse.move(1, 1)
-				await browser.mouse.down()
-				await browser.mouse.up()
+				// await browser.mouse.move(1, 1)
+				// await browser.mouse.down()
+				// await browser.mouse.up()
 
 				// Or you can click into the close button in the modal
-				// const closeModalBtnEl = await browser.findElement(By.css('button[data-test-product-detail-modal-close]'))
-				// await closeModalBtnEl.click()
+				const closeModalBtnEl = await browser.findElement(
+					By.css('button[data-test-product-detail-modal-close]'),
+				)
+				await closeModalBtnEl.click()
 			}
 
-			if (numOfPage > 1 && x < numOfPage) {
+			if (pages > 1 && x < pages) {
 				const goToPageButton = await browser.findElement(
 					By.css(`button[aria-label="Go to page ${x + 1}"]`),
 				)
@@ -348,7 +353,7 @@ export default () => {
 
 		await minimizePopup(browser)
 
-		const checkBoxes = await browser.findElements(By.css('label[data-test-check]'))
+		const checkBoxes = await browser.findElements(By.css('label[data-test-filter-check]'))
 		await Promise.all(
 			checkBoxes.map(async checkBox => {
 				const text = await checkBox.text()
@@ -375,10 +380,10 @@ export default () => {
 		const subTotalSelector = await browser.findElement(By.id('subtotal-price'))
 
 		const challengeMinPriceText = (
-			await (await browser.findElement(By.id('challenge-9-min-price'))).text()
+			await (await browser.findElement(By.id('challenge-8-min-price'))).text()
 		).replace('$', '')
 		const challengeMaxPriceText = (
-			await (await browser.findElement(By.id('challenge-9-max-price'))).text()
+			await (await browser.findElement(By.id('challenge-8-max-price'))).text()
 		).replace('$', '')
 
 		let cartSubtotalText = (await subTotalSelector.text()).replace('$', '')
@@ -400,12 +405,10 @@ export default () => {
 
 			const firstProductAmount = parseInt(await firstProductAmountInput.getAttribute('value'))
 			if (firstProductAmount === 0) {
-				// const removeFirstProductBtn = await browser.findElement(By.css('button[data-test-remove]'))
 				await browser.click(By.css('button[data-test-remove]'))
 			}
 
-			const minusButton = await browser.findElement(By.css('button[data-test-minus]'))
-			await minusButton.click()
+			await browser.click(By.css('button[data-test-minus]'))
 			cartSubtotal = parseInt((await subTotalSelector.text()).replace('$', ''))
 		}
 	})

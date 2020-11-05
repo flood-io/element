@@ -35,6 +35,7 @@ import { autoWaitUntil } from './decorators/autoWait'
 import { locatableToLocator, toLocatorError } from './toLocatorError'
 import { Keyboard } from '../page/Keyboard'
 import ms from 'ms'
+import mime from 'mime-types'
 import { getFrames } from '../utils/frames'
 
 export const debug = debugFactory('element:runtime:browser')
@@ -627,6 +628,10 @@ export class Browser<T> implements BrowserInterface {
 		return ['auto', 'smooth'].includes(behavior)
 	}
 
+	public getMimeType(filePath: string): string | false {
+		return mime.lookup(filePath)
+	}
+
 	@addCallbacks()
 	public async scrollTo(
 		target: Locator | ElementHandle | Point | ScrollDirection,
@@ -661,7 +666,7 @@ export class Browser<T> implements BrowserInterface {
 		}
 
 		if (this.isPoint(target)) {
-			[left, top] = target
+			;[left, top] = target
 		} else if (typeof target === 'string') {
 			switch (target) {
 				case 'top':

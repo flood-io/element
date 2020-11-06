@@ -8,7 +8,7 @@ export default () => {
 	step(async browser => {
 		await browser.visit('https://the-internet.herokuapp.com/checkboxes')
 		await Promise.all([
-			browser.wait(Until.urlDoesNotMatch('/([A-Za-z]):([A-Za-z])/')),
+			browser.wait(Until.urlDoesNotMatch(/([A-Za-z]):([A-Za-z])/)),
 			browser.wait(Until.titleDoesNotMatch(/([A-Za-z]):([A-Za-z])/)),
 		])
 

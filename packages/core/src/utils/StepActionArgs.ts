@@ -16,60 +16,60 @@ import {
 } from '../page/conditions/'
 import { ElementHandle } from './../page/ElementHandle'
 
+const conditions = [
+	DialogCondition,
+	ElementSelectedCondition,
+	ElementStateCondition,
+	ElementTextCondition,
+	ElementTextNotMatchCondition,
+	ElementVisibilityCondition,
+	FrameCondition,
+	TitleCondition,
+	TitleNotMatchCondition,
+	URLCondition,
+	URLNotMatchCondition,
+	ElementLocatedCondition,
+	ElementsLocatedCondition,
+	ElementHandle,
+]
+
+const isInstanceOf = (arg: any, conditions: Array<any>) =>
+	conditions.some(condition => arg instanceof condition)
+
+const isAnElementHandle = (arg: any): boolean => isInstanceOf(arg, [ElementHandle])
+
+const isURLCondition = (arg: any): boolean =>
+	isInstanceOf(arg, [URLCondition, URLNotMatchCondition])
+
+const isTitleCondition = (arg: any): boolean =>
+	isInstanceOf(arg, [TitleCondition, TitleNotMatchCondition])
+
+const isFrameCondition = (arg: any): boolean => isInstanceOf(arg, [FrameCondition])
+
+const isElementTextCondition = (arg: any): boolean =>
+	isInstanceOf(arg, [ElementTextCondition, ElementTextNotMatchCondition])
+
+const getErrorString = (locator: ElementHandle | BaseLocator): string => {
+	if (locator instanceof ElementHandle) {
+		const locatorArr = locator.toErrorString().split(`'`)
+		// Peek last 3 items
+		return locatorArr.slice(locatorArr.length - 4, locatorArr.length - 1).join(`'`)
+	}
+	return locator.toErrorString()
+}
+
+// Handle for param is pass to browser action as RegExp or string
+const handleRegExpOrString = (desc: string, param: string): string =>
+	desc.toLowerCase().includes('match') ? param : `'${param}'`
+
 export const StepActionArgs = (args: any[]): string => {
 	let result = ''
-
-	const conditions = [
-		DialogCondition,
-		ElementSelectedCondition,
-		ElementStateCondition,
-		ElementTextCondition,
-		ElementTextNotMatchCondition,
-		ElementVisibilityCondition,
-		FrameCondition,
-		TitleCondition,
-		TitleNotMatchCondition,
-		URLCondition,
-		URLNotMatchCondition,
-		ElementLocatedCondition,
-		ElementsLocatedCondition,
-		ElementHandle,
-	]
-
-	const isInstaceOf = (arg: any, conditions: Array<any>) =>
-		conditions.some(condition => arg instanceof condition)
-
-	const isAnElementHandle = (arg: any): boolean => isInstaceOf(arg, [ElementHandle])
-
-	const isURLCondition = (arg: any): boolean =>
-		isInstaceOf(arg, [URLCondition, URLNotMatchCondition])
-
-	const isTitleCondition = (arg: any): boolean =>
-		isInstaceOf(arg, [TitleCondition, TitleNotMatchCondition])
-
-	const isFrameCondition = (arg: any): boolean => isInstaceOf(arg, [FrameCondition])
-
-	const isElementTextCondition = (arg: any): boolean =>
-		isInstaceOf(arg, [ElementTextCondition, ElementTextNotMatchCondition])
-
-	const getErrorString = (locator: ElementHandle | BaseLocator): string => {
-		if (locator instanceof ElementHandle) {
-			const locatorArr = locator.toErrorString().split(`'`)
-			// Peek last 3 items
-			return locatorArr.slice(locatorArr.length - 4, locatorArr.length - 1).join(`'`)
-		}
-		return locator.toErrorString()
-	}
-
-	// Handle for param is pass to browser action as RegExp or string
-	const handleRegExpOrString = (desc: string, param: string): string =>
-		desc.toLowerCase().includes('match') ? param : `'${param}'`
 
 	for (const arg of args) {
 		try {
 			result += result.length && args.indexOf(arg) !== 0 ? ', ' : ''
 
-			if (isInstaceOf(arg, conditions)) {
+			if (isInstanceOf(arg, conditions)) {
 				let content = ''
 				const description = arg.desc ? arg.desc : ''
 
@@ -78,8 +78,8 @@ export const StepActionArgs = (args: any[]): string => {
 					continue
 				}
 
-				if ('locator' in arg) {
-					if (isAnElementHandle(arg.locator) && !isElementTextCondition(arg)) {
+				if (!isElementTextCondition(arg) && 'locator' in arg) {
+					if (isAnElementHandle(arg.locator)) {
 						result += getErrorString(arg.locator)
 						continue
 					}
@@ -109,7 +109,7 @@ export const StepActionArgs = (args: any[]): string => {
 				continue
 			}
 
-			if (isInstaceOf(arg, [BaseLocator])) {
+			if (isInstanceOf(arg, [BaseLocator])) {
 				result += getErrorString(arg)
 				continue
 			}

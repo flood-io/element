@@ -30,7 +30,6 @@ export class VerboseReporter implements IReporter {
 		subtitle?: string,
 		timing?: number,
 		errorMessage?: string,
-		content?: any[],
 		args?: string,
 	): void {
 		const stepName = 'Step ' + (subtitle ? `'${label}' (${subtitle})` : `'${label}'`)

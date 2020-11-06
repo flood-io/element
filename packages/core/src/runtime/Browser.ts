@@ -574,7 +574,6 @@ export class Browser<T> implements BrowserInterface {
 
 	private async findElementWithoutDecorator(locatable: NullableLocatable): Promise<ElementHandle> {
 		const locator = locatableToLocator(locatable, 'browser.findElement(locatable)')
-
 		debug('locator %o', locator)
 
 		const maybeElement = await locator.find(this.page, undefined, this.target)
@@ -582,7 +581,6 @@ export class Browser<T> implements BrowserInterface {
 			throw toLocatorError(locatable, 'browser.findElement()')
 		}
 		const element = maybeElement as ElementHandle
-
 		element.bindBrowser(this)
 
 		return element

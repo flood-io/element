@@ -416,7 +416,8 @@ export class Browser<T> implements BrowserInterface {
 
 	@rewriteError()
 	public async emulateDevice(deviceName: string): Promise<void> {
-		const device = (devices && devices[deviceName]) || CustomDeviceDescriptors[deviceName]
+		const device =
+			devices && deviceName in devices ? devices[deviceName] : CustomDeviceDescriptors[deviceName]
 		if (!device) throw new Error(`Unknown device descriptor: ${deviceName}`)
 		return this.page.emulate(device)
 	}

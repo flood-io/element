@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-beta.24](https://github.com/flood-io/element/compare/v2.0.0-beta.23...v2.0.0-beta.24) (2020-11-09)
+
+
+### Features
+
+* implementing add more action details in terminal output ([3b3bb23](https://github.com/flood-io/element/commit/3b3bb23159d2bcac14442e964dc2ff2ae57678d6))
+* refactor code base on colleague's comment ([2ad6477](https://github.com/flood-io/element/commit/2ad6477c218aa1d42c7f81b44151a107663335de))
+
+
+
+
+
 # [2.0.0-beta.23](https://github.com/flood-io/element/compare/v2.0.0-beta.22...v2.0.0-beta.23) (2020-11-02)
 
 **Note:** Version bump only for package @flood/element-report

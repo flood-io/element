@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-beta.24](https://github.com/flood-io/element/compare/v2.0.0-beta.23...v2.0.0-beta.24) (2020-11-09)
+
+
+### Bug Fixes
+
+* fix example script ([dcb6431](https://github.com/flood-io/element/commit/dcb64310b3366db3556050fb758f9cba159d090b))
+* make consistency between name of func and its desc ([8efdfd7](https://github.com/flood-io/element/commit/8efdfd777da04d185a3c4d8ac50521dc99df6c97))
+* remove redundant lines ([6843bc6](https://github.com/flood-io/element/commit/6843bc6e6c91b119fcac57852afc2b9b7f18eb9e))
+
+
+### Features
+
+* create new funcs without decorator and call it from original func ([2541731](https://github.com/flood-io/element/commit/25417315c458b2c098953232a7a200690774f3a7))
+* fix wording and typo ([6638eeb](https://github.com/flood-io/element/commit/6638eeb7993414ba5d35503ed0ea86c39188b673))
+* handle conditions and refactor code ([7f41111](https://github.com/flood-io/element/commit/7f411110bddbc122f1194deb023263e6019f2a16))
+* implementing add more action details in terminal output ([3b3bb23](https://github.com/flood-io/element/commit/3b3bb23159d2bcac14442e964dc2ff2ae57678d6))
+* refactor code ([8e08737](https://github.com/flood-io/element/commit/8e087373dbaf85caf8651e13600445f03891a85b))
+* refactor code ([a7a94d0](https://github.com/flood-io/element/commit/a7a94d062386fa6e7627c05ba432bca91f4cf599))
+* refactor code base on colleague's comment ([2ad6477](https://github.com/flood-io/element/commit/2ad6477c218aa1d42c7f81b44151a107663335de))
+* refactor code to handle if locator is an ElementHandle ([04ec4b9](https://github.com/flood-io/element/commit/04ec4b90e1980216bb563221e0b9f357eceb44ff))
+* refactor code to handle more cases of action ([a086f39](https://github.com/flood-io/element/commit/a086f391aaf211340cefd3e26c01078c7000c83b))
+* update example script ([857449e](https://github.com/flood-io/element/commit/857449e8949b0fe54389ca8f648efe730e25e003))
+* update name of param to make it consistance ([fdba560](https://github.com/flood-io/element/commit/fdba56021ccb5dde3c3bad96c2edcd24e095c671))
+* update sample script and refactor code ([a6c63a2](https://github.com/flood-io/element/commit/a6c63a26f4f4ddb6c12a68846a63573452d72bed))
+* update StepActionArgs to handle multiple params for each action ([f2f63a4](https://github.com/flood-io/element/commit/f2f63a46596a653f8218c38728800979ffd86c62))
+
+
+
+
+
 # [2.0.0-beta.23](https://github.com/flood-io/element/compare/v2.0.0-beta.22...v2.0.0-beta.23) (2020-11-02)
 
 **Note:** Version bump only for package flood-element

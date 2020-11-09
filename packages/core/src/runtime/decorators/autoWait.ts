@@ -1,4 +1,3 @@
-import { Browser } from '../../interface/IBrowser'
 import { Locatable } from '../Locatable'
 import { Until } from '../../page/Until'
 
@@ -12,18 +11,18 @@ const isLocatable = (arg: Locatable | any): arg is Locatable => {
 export function autoWaitUntil<T>() {
 	return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
 		const originalFn = descriptor.value
-		descriptor.value = async function(this: Browser, ...args: any[]) {
+		descriptor.value = async function(...args: any[]) {
 			const locator = args.find(isLocatable)
 			const { waitUntil } = this.settings
 
 			if (locator && waitUntil) {
 				if (waitUntil === 'visible') {
-					await this.wait(Until.elementIsVisible(locator))
+					await this.waitWithoutDecorator(Until.elementIsVisible(locator))
 				} else if (waitUntil === 'present') {
-					await this.wait(Until.elementLocated(locator))
+					await this.waitWithoutDecorator(Until.elementLocated(locator))
 				} else if (waitUntil === 'ready') {
-					await this.wait(Until.elementIsVisible(locator))
-					await this.wait(Until.elementIsEnabled(locator))
+					await this.waitWithoutDecorator(Until.elementIsVisible(locator))
+					await this.waitWithoutDecorator(Until.elementIsEnabled(locator))
 				}
 				return originalFn.apply(this, args)
 			} else {

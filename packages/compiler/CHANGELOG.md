@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.0](https://github.com/flood-io/element/compare/v2.0.0-beta.24...v2.0.0-canary.0) (2020-11-12)
+
+**Note:** Version bump only for package @flood/element-compiler
+
+
+
+
+
 # [2.0.0-beta.24](https://github.com/flood-io/element/compare/v2.0.0-beta.23...v2.0.0-beta.24) (2020-11-09)
 
 **Note:** Version bump only for package @flood/element-compiler

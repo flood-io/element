@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.0](https://github.com/flood-io/element/compare/v2.0.0-beta.24...v2.0.0-canary.0) (2020-11-12)
+
+
+### Features
+
+* create file lerna-canary.yml and put into github workflows ([e73b54e](https://github.com/flood-io/element/commit/e73b54e7ef67b8c341d0fa4eac3e864b8d465710))
+* update lerna.json ([cacf0ef](https://github.com/flood-io/element/commit/cacf0effb21b0eccf7d8ec42722ef0d8179bc106))
+
+
+
+
+
 # [2.0.0-beta.24](https://github.com/flood-io/element/compare/v2.0.0-beta.23...v2.0.0-beta.24) (2020-11-09)
 
 

@@ -68,6 +68,7 @@ export class Looper {
 				await iterator(this.iterations)
 				if (this.iterations === this.iterationState.changeAt) {
 					this.iterationState.isNew = true
+					this.iterationState.changeAt = 0
 				}
 			}
 			this.finish()

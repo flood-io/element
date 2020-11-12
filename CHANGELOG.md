@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.1](https://github.com/flood-io/element/compare/v2.0.0-canary.0...v2.0.0-canary.1) (2020-11-12)
+
+
+### Features
+
+* update README.md (add canary channel) ([ce4a4d2](https://github.com/flood-io/element/commit/ce4a4d289d209091dae6bd2df7098b11d1aa8d9a))
+
+
+
+
+
 # [2.0.0-canary.0](https://github.com/flood-io/element/compare/v2.0.0-beta.24...v2.0.0-canary.0) (2020-11-12)
 
 

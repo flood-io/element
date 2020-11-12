@@ -82,13 +82,13 @@ export default class StepIterator {
 			const { predicate } = stepWhile
 			const condition = await this.callPredicate(predicate, browser)
 			if (!condition) return false
+			this.goPreviousStep()
 			return true
 		}
 
 		if (predicate) {
 			const condition = await this.callPredicate(predicate, browser)
 			if (!condition) return false
-			this.goPreviousStep()
 			return true
 		}
 		return true
@@ -116,6 +116,11 @@ export default class StepIterator {
 			stepRecover = recoverySteps['global']
 			if (!stepRecover) return false
 		}
+
+		if (looper.isNewIteration()) {
+			stepRecover.iteration = 0
+		}
+
 		const { recoveryStep, loopCount, iteration } = stepRecover
 		const settingRecoveryCount = loopCount || tries || 1
 		if (!recoveryStep || iteration >= settingRecoveryCount) {

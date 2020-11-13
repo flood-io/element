@@ -1,11 +1,13 @@
 import Generator from 'yeoman-generator'
 import { join } from 'path'
+import findRoot from 'find-root'
 
 export default class Report extends Generator {
 	options: { data: string; dir: string }
 
 	initializing() {
-		this.sourceRoot(join(__dirname, 'templates'))
+		const packageRoot = findRoot(__dirname)
+		this.sourceRoot(join(packageRoot, 'templates/report'))
 		this.destinationRoot(this.options.dir)
 	}
 

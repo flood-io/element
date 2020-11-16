@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.4.0-beta.0](https://github.com/flood-io/element/compare/v2.0.0-beta.24...v1.4.0-beta.0) (2020-11-16)
+
+
+### Features
+
+* mirage from 2.0-beta to 1.3.9 ([4df1383](https://github.com/flood-io/element/commit/4df138314a2db5b0a6468e12609c3eaba4e643b6))
+
+
+
+
+
 # [2.0.0-beta.24](https://github.com/flood-io/element/compare/v2.0.0-beta.23...v2.0.0-beta.24) (2020-11-09)
 
 **Note:** Version bump only for package element-cli

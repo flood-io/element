@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.2](https://github.com/flood-io/element/compare/v2.0.0-canary.1...v2.0.0-canary.2) (2020-11-16)
+
+
+### Bug Fixes
+
+* fail to export HTML report ([bdcbd13](https://github.com/flood-io/element/commit/bdcbd13109f54e4134cceb9936ae1ae743ca8fd4))
+
+
+
+
+
 # [2.0.0-canary.1](https://github.com/flood-io/element/compare/v2.0.0-canary.0...v2.0.0-canary.1) (2020-11-12)
 
 

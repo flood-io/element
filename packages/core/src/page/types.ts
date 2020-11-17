@@ -1,8 +1,8 @@
 import { ElementHandle as PElementHandle, Frame, Page } from 'playwright'
 import { Point } from './Point'
 
-export enum BROWSER_TYPE {
-	CHROME = 'chromium',
+export enum BROWSER {
+	CHROMIUM = 'chromium',
 	FIREFOX = 'firefox',
 	WEBKIT = 'webkit',
 }

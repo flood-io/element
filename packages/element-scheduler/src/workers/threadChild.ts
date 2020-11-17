@@ -65,7 +65,7 @@ async function execMethod(method: string, args: Array<any>) {
 			}
 
 			const clientFactory = (): AsyncFactory<PlaywrightClient> => {
-				return () => connectWS(wsEndpoint, childSettings.browserType)
+				return () => connectWS(wsEndpoint, childSettings.browser)
 			}
 
 			const runner = new Runner(clientFactory(), undefined, reporter, {}, childSettings)

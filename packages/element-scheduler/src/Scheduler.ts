@@ -1,9 +1,4 @@
-import {
-	TestSettings,
-	launchBrowserServer,
-	RuntimeEnvironment,
-	BROWSER_TYPE,
-} from '@flood/element-core'
+import { TestSettings, launchBrowserServer, RuntimeEnvironment, BROWSER } from '@flood/element-core'
 import { WorkerPool } from './WorkerPool'
 import { ActionConst, ChildMessages, WorkerInterface } from './types'
 import { assertIsValidateStages } from './assertIsValidateStages'
@@ -12,7 +7,7 @@ import { BrowserServer } from 'playwright'
 
 type SchedulerSetting = TestSettings & {
 	headless?: boolean | undefined
-	browserType?: BROWSER_TYPE
+	browser?: BROWSER
 	sandbox?: boolean | undefined
 }
 

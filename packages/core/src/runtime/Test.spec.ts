@@ -8,7 +8,7 @@ import { EventEmitterReporter } from '@flood/element-report'
 import { ConcreteTestSettings, normalizeSettings, TestSettings } from './Settings'
 import { readFileSync, writeFileSync } from 'fs-extra'
 import { tmpdir } from 'os'
-import { BROWSER_TYPE } from '../page/types'
+import { BROWSER } from '../page/types'
 
 let playwright: testPlaywright
 let testReporter: EventEmitterReporter = new EventEmitterReporter()
@@ -50,7 +50,8 @@ describe('Test', () => {
 			stepDelay: '5s',
 			clearCache: false,
 			device: null,
-			browserType: BROWSER_TYPE.CHROME,
+			browser: BROWSER.CHROMIUM,
+			browserLaunchOption: {},
 			ignoreHTTPSError: false,
 			userAgent: '',
 			clearCookies: true,

@@ -1,12 +1,12 @@
 import playwright, { LaunchOptions, Browser, Page, BrowserServer } from 'playwright'
 import { ConcreteTestSettings } from '../runtime/Settings'
-import { BROWSER_TYPE } from '../page/types'
+import { BROWSER } from '../page/types'
 
 export type ConcreteLaunchOptions = LaunchOptions & {
 	args: string[]
 	sandbox: boolean
 	debug: boolean
-	browserType: BROWSER_TYPE
+	browser: BROWSER
 	viewport: playwright.ViewportSize | null
 	ignoreHTTPSError: boolean
 }
@@ -19,7 +19,7 @@ const defaultLaunchOptions: ConcreteLaunchOptions = {
 	sandbox: true,
 	timeout: 60e3,
 	debug: false,
-	browserType: BROWSER_TYPE.CHROME,
+	browser: BROWSER.CHROMIUM,
 	viewport: null,
 	ignoreHTTPSError: false,
 }
@@ -89,12 +89,12 @@ export async function launchBrowserServer(
 
 	options.args.push('--auth-server-whitelist="hostname/domain"')
 
-	const browserType = options.browserType || BROWSER_TYPE.CHROME
+	const browserType = options.browser || BROWSER.CHROMIUM
 	return playwright[browserType].launchServer(options)
 }
 
-export async function connectWS(wsEndpoint: string, type?: BROWSER_TYPE) {
-	const browserType = type || BROWSER_TYPE.CHROME
+export async function connectWS(wsEndpoint: string, type?: BROWSER) {
+	const browserType = type || BROWSER.CHROMIUM
 	const browser = await playwright[browserType].connect({
 		wsEndpoint,
 	})
@@ -122,7 +122,10 @@ export async function launch(
 
 	options.args.push('--auth-server-whitelist="hostname/domain"')
 
-	const browserType = options.browserType || BROWSER_TYPE.CHROME
+	const browserType = options.executablePath
+		? BROWSER.CHROMIUM
+		: options.browser || BROWSER.CHROMIUM
+
 	const browser = await playwright[browserType].launch(options)
 	const page = await browser.newPage(pageSettings)
 	return new PlaywrightClient(browser, page)

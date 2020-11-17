@@ -66,14 +66,17 @@ export class Runner {
 	async launchClient(testScript: EvaluatedScript): Promise<PlaywrightClient> {
 		const { settings } = testScript
 
-		const options: Partial<ConcreteLaunchOptions> = this.launchOptionOverrides
+		let options: Partial<ConcreteLaunchOptions> = this.launchOptionOverrides
 		options.ignoreHTTPSError = settings.ignoreHTTPSError
 		if (settings.viewport) {
 			options.viewport = settings.viewport
 			settings.device = null
 		}
-		if (settings.browserType) {
-			options.browserType = settings.browserType
+		if (settings.browser) {
+			options.browser = settings.browser
+		}
+		if (settings.browserLaunchOption) {
+			options = { ...options, ...settings.browserLaunchOption }
 		}
 		if (options.args == null) options.args = []
 		if (Array.isArray(settings.launchArgs)) options.args.push(...settings.launchArgs)

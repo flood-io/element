@@ -1,5 +1,5 @@
 import { LaunchOptions, ViewportSize } from 'playwright'
-import { BROWSER } from '../page/types'
+import { BrowserType } from '../page/types'
 import ms from 'ms'
 import { DeviceDescriptor } from '../page/Device'
 
@@ -42,15 +42,6 @@ export type ResponseTiming = 'page' | 'network' | 'step' | 'stepWithThinkTime'
  * Specifies a `console` method
  */
 export type ConsoleMethod = 'log' | 'info' | 'debug' | 'warn' | 'error'
-
-/**
- * Represents the browser that the test script will run against.
- *
- * literal | description
- * --------|-----------
- * The browser bundled with playwright: 'chromium' | 'firefox' | 'webkit'
- */
-export type Browser = BROWSER
 
 /**
  * Element presence lists the accepted values for automatically waiting on elements before running actions.
@@ -210,7 +201,7 @@ export interface TestSettings {
 	/**
 	 * Specifies a version of Google Chrome
 	 */
-	browser?: BROWSER
+	browser?: BrowserType
 
 	/**
 	 * Specifies options to launch
@@ -282,7 +273,7 @@ export const DEFAULT_SETTINGS: ConcreteTestSettings = {
 	userAgent: '',
 	device: null,
 	ignoreHTTPSError: false,
-	browser: BROWSER.CHROMIUM,
+	browser: 'chromium',
 	browserLaunchOption: {},
 	blockedDomains: [],
 	incognito: false,

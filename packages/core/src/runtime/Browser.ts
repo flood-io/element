@@ -15,7 +15,7 @@ import {
 	ScreenshotOptions,
 	EvaluateFn,
 	ClickOptions,
-	BROWSER,
+	BrowserType,
 } from '../page/types'
 import { TargetLocator } from '../page/TargetLocator'
 import { PlaywrightClientLike } from '../driver/Playwright'
@@ -89,7 +89,7 @@ export class Browser<T> implements BrowserInterface {
 		}
 	}
 
-	public get browser(): BROWSER {
+	public get browser(): BrowserType {
 		return this.settings.browser
 	}
 
@@ -369,7 +369,7 @@ export class Browser<T> implements BrowserInterface {
 
 	@addCallbacks()
 	public async clearBrowserCache(): Promise<any> {
-		if (this.browser === BROWSER.CHROMIUM) {
+		if (this.browser === 'chromium') {
 			const context = (await this.page.context()) as ChromiumBrowserContext
 			const client = await context.newCDPSession(this.page)
 			await client.send('Network.clearBrowserCache')
@@ -514,7 +514,7 @@ export class Browser<T> implements BrowserInterface {
 		 * NOTES
 		 * handle CDPSession
 		 */
-		if (this.browser === BROWSER.CHROMIUM) {
+		if (this.browser === 'chromium') {
 			const client = await (this.page.context() as ChromiumBrowserContext).newCDPSession(this.page)
 			await client.send('Network.setCacheDisabled', { cacheDisabled })
 		} else {

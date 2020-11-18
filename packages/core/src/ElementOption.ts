@@ -10,7 +10,7 @@ import { EventEmitter } from 'events'
 import { extname, basename, join, dirname, resolve } from 'path'
 import sanitize from 'sanitize-filename'
 import { PlaywrightClient } from './driver/Playwright'
-import { BROWSER } from './page/types'
+import { BrowserType } from './page/types'
 import ms from 'ms'
 
 export interface ElementRunArguments {
@@ -32,7 +32,7 @@ export interface ElementRunArguments {
 	'fail-status-code': number
 	configFile: string
 	verbose?: boolean
-	browser: BROWSER
+	browser: BrowserType
 	export?: boolean
 	notExistingFiles: string[]
 }
@@ -53,7 +53,7 @@ export interface ElementOptions {
 	persistentRunner: boolean
 	testCommander?: TestCommander
 	failStatusCode: number
-	browser: BROWSER
+	browser: BrowserType
 	export?: boolean
 }
 
@@ -165,7 +165,7 @@ export function normalizeElementOptions(
 		testSettingOverrides: {},
 		persistentRunner: false,
 		failStatusCode: args['fail-status-code'],
-		browser: args.browser || BROWSER.CHROMIUM,
+		browser: args.browser || 'chromium',
 		export: args.export,
 	}
 

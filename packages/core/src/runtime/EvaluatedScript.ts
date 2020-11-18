@@ -35,7 +35,6 @@ import { TestDataSource, TestDataFactory } from '../test-data/TestData'
 import { BoundTestDataLoaders } from '../test-data/TestDataLoaders'
 import { EvaluatedScriptLike } from './EvaluatedScriptLike'
 import { Hook, HookType, normalizeHookBase } from './StepLifeCycle'
-import { BROWSER } from '../page/types'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:eval-script')
@@ -312,7 +311,6 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			Key,
 			RecoverWith,
 			userAgents,
-			BROWSER,
 		}
 
 		this.vm = createVirtualMachine(context, this.script.scriptRoot)

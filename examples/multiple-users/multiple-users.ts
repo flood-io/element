@@ -1,4 +1,4 @@
-import { BROWSER, step, TestSettings } from '@flood/element'
+import { BrowserType, step, TestSettings } from '@flood/element'
 
 export const settings: TestSettings = {
 	loopCount: -1,
@@ -16,7 +16,7 @@ export const settings: TestSettings = {
 			target: 4,
 		},
 	],
-	browser: BROWSER.CHROME,
+	browser: 'chromium',
 }
 
 export default () => {

@@ -4,8 +4,8 @@
   <a aria-label="Flood Logo" href="https://github.com/flood-io">
     <img src="https://img.shields.io/badge/MADE%20BY%20FLOOD-4285f4.svg?style=for-the-badge&labelColor=4285f4&logo=Flood&logoColor=FFFFFF">
   </a>
-  <a aria-label="NPM version" href="https://www.npmjs.com/package/@flood/element-cli/">
-    <img alt="" src="https://img.shields.io/npm/v/@flood/element-cli.svg?style=for-the-badge&labelColor=000000&color=6554C0">
+  <a aria-label="NPM version" href="https://www.npmjs.com/package/element-cli/">
+    <img alt="" src="https://img.shields.io/npm/v/element-cli.svg?style=for-the-badge&labelColor=000000&color=6554C0">
   </a>
   <a aria-label="License" href="/LICENSE">
     <img alt="" src="https://img.shields.io/npm/l/@flood/element-cli.svg?style=for-the-badge&labelColor=000000">
@@ -33,6 +33,7 @@ Scaling up Element tests is easy on [Flood](https://flood.io), by launching hund
   - [1. Install Element](#1-install-element)
     - [Stable release](#stable-release)
     - [Beta release channel](#beta-release-channel)
+    - [Canary release channel](#canary-release-channel)
   - [2. Initialize Your Project](#2-initialize-your-project)
   - [3. Write and Validate Your Script](#3-write-and-validate-your-script)
 - [4. Run a real Load Test on Flood](#4-run-a-real-load-test-on-flood)
@@ -53,8 +54,8 @@ First, make sure you have installed the [latest version of NodeJS](https://nodej
 
 #### Stable release
 
-<a aria-label="NPM version" href="https://www.npmjs.com/package/@flood/element-cli/">
-  <img alt="" src="https://img.shields.io/npm/v/@flood/element-cli.svg?style=for-the-badge&labelColor=000000&color=6554C0">
+<a aria-label="NPM version" href="https://www.npmjs.com/package/element-cli/">
+  <img alt="" src="https://img.shields.io/npm/v/element-cli.svg?style=for-the-badge&labelColor=000000&color=6554C0">
 </a>
 
 ```bash
@@ -80,8 +81,8 @@ This will install `element` along with anything else it needs to run, such as No
 
 #### Beta release channel
 
-<a aria-label="Beta NPM version" href="https://www.npmjs.com/package/@flood/element-cli/">
-  <img alt="" src="https://img.shields.io/npm/v/@flood/element-cli/beta.svg?style=for-the-badge&labelColor=000000">
+<a aria-label="Beta NPM version" href="https://www.npmjs.com/package/element-cli/">
+  <img alt="" src="https://img.shields.io/npm/v/element-cli/beta.svg?style=for-the-badge&labelColor=000000">
 </a>
 
 ```bash
@@ -91,6 +92,18 @@ yarn global add element-cli@beta
 # Using npm
 npm i -g element-cli@beta
 
+# Verify install
+element --version
+```
+#### Canary release channel
+<a aria-label="Canary NPM version" href="https://www.npmjs.com/package/element-cli/">
+  <img alt="" src="https://img.shields.io/npm/v/element-cli/canary.svg?style=for-the-badge&labelColor=000000">
+</a>
+```bash
+# Using yarn
+yarn global add element-cli@canary
+# Using npm
+npm i -g element-cli@canary
 # Verify install
 element --version
 ```

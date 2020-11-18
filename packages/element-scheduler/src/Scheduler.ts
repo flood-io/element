@@ -128,6 +128,7 @@ export class Scheduler {
 				if (doneWorkers === workingWorkers.length) {
 					const head: string[] = [
 						chalk.whiteBright('User'),
+						chalk.white('Iteration'),
 						chalk.blue('Response Time\nms'),
 						chalk.yellow('Latency\nms'),
 						chalk.magenta('Throughput\nkbps'),
@@ -149,8 +150,20 @@ export class Scheduler {
 							'center',
 							'center',
 							'center',
+							'center',
 						],
-						rowAligns: ['top', 'center', 'center', 'center', 'center', 'top', 'top', 'top', 'top'],
+						rowAligns: [
+							'top',
+							'center',
+							'center',
+							'center',
+							'center',
+							'center',
+							'top',
+							'top',
+							'top',
+							'top',
+						],
 					})
 
 					dataTable.sort((a, b) =>
@@ -171,6 +184,7 @@ export class Scheduler {
 						} = row
 						const hasGroup = rowSpans.some(row => row.id === worker.id)
 						const data = [
+							chalk.white(worker.iteration),
 							chalk.blue(responseTime),
 							chalk.yellow(latency),
 							chalk.magenta(throughput),
@@ -195,15 +209,27 @@ export class Scheduler {
 
 			const reportedWorker: string[] = []
 			let iterationInfo = ''
+			const sortedUsers: { id: string; name: string; order: string }[] = []
 			const onWorkerReport = (worker: WorkerInterface, data: string[]): void => {
 				const { workerName, workerId } = worker
 				const [msg, type] = data
+				const userAlias = sortedUsers.find(user => user.id === workerId)
+				let order = `User ${sortedUsers.length + 1}`
+				if (!userAlias) {
+					sortedUsers.push({
+						id: workerId,
+						name: workerName,
+						order,
+					})
+				} else {
+					order = userAlias.order
+				}
 
 				if (type === ITERATION) {
 					const { iterationMsg, iteration } = JSON.parse(msg)
 					iterationInfo = chalk.italic.grey(iterationMsg)
 					dataTable.push({
-						worker: { id: workerId, name: workerName, iteration },
+						worker: { id: workerId, name: order, iteration },
 					})
 				}
 
@@ -216,9 +242,7 @@ export class Scheduler {
 					return
 				}
 
-				const text = `${chalk.bold(workerName)}  ${iterationInfo}   ${
-					type === ITERATION ? '' : msg
-				}`
+				const text = `${chalk.bold(order)}  ${iterationInfo}   ${type === ITERATION ? '' : msg}`
 
 				if (!reportedWorker.includes(workerId)) {
 					this.spinnies.add(workerId, { text })

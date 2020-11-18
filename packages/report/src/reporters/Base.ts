@@ -17,7 +17,6 @@ export class BaseReporter implements IReporter {
 	reset(step: string): void {}
 
 	addMeasurement(measurement: string, value: string | number, label?: string): void {
-		console.log(measurement, value)
 		if (this.worker) {
 			this.sendReport(
 				JSON.stringify({ name: measurement, value, iteration: this.worker.iteration }),

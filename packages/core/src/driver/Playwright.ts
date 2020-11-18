@@ -93,7 +93,7 @@ export async function launchBrowserServer(
 	return playwright[browserType].launchServer(options)
 }
 
-export async function connectWS(wsEndpoint: string, type?: BrowserType) {
+export async function connectWS(wsEndpoint: string, type?: BrowserType): Promise<PlaywrightClient> {
 	const browserType = type || 'chromium'
 	const browser = await playwright[browserType].connect({
 		wsEndpoint,

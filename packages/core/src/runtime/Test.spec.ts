@@ -5,10 +5,9 @@ import Test from './Test'
 import { EvaluatedScript } from './EvaluatedScript'
 import { join } from 'path'
 import { EventEmitterReporter } from '@flood/element-report'
-import { ConcreteTestSettings, normalizeSettings, TestSettings } from './Settings'
+import { ConcreteTestSettings, normalizeSettings } from './Settings'
 import { readFileSync, writeFileSync } from 'fs-extra'
 import { tmpdir } from 'os'
-import { BrowserType } from '../page/types'
 
 let playwright: testPlaywright
 let testReporter: EventEmitterReporter = new EventEmitterReporter()

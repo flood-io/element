@@ -8,9 +8,12 @@ import { CancellationToken } from './utils/CancellationToken'
 import {
 	IReporter,
 	IterationResult,
+	ITERATION,
 	reportRunTest,
 	Status,
 	StepResult,
+	ACTION,
+	MEASUREMENT,
 } from '@flood/element-report'
 import { Looper } from './Looper'
 import chalk from 'chalk'
@@ -53,6 +56,11 @@ export class Runner {
 		if (this.looper) await this.looper.kill()
 		if (this.client) await this.client.close()
 		return
+	}
+
+	async runEvalScript(testScript: EvaluatedScript): Promise<void> {
+		this.client = await this.launchClient(testScript)
+		await this.runTestScript(testScript, this.client)
 	}
 
 	async run(testScriptFactory: AsyncFactory<EvaluatedScript>): Promise<void> {
@@ -118,14 +126,28 @@ export class Runner {
 			await this.looper.run(async (iteration: number, isRestart: boolean) => {
 				const iterationName = this.getIterationName(iteration)
 				if (isRestart) {
-					console.log(`Restarting ${iterationName}`)
+					if (!this.reporter.worker) {
+						console.log(`Restarting ${iterationName}`)
+					} else {
+						this.reporter.sendReport(`Restarting ${iterationName}`, ACTION)
+					}
 					this.looper.restartLoopDone()
 				} else {
-					if (iteration > 1) {
-						console.log(chalk.grey('--------------------------------------------'))
+					if (!this.reporter.worker) {
+						if (iteration > 1) {
+							console.log(chalk.grey('--------------------------------------------'))
+						}
+						startTime = new Date()
+						console.log(`${chalk.bold('\u25CC')} ${iterationName} of ${this.looper.loopCount}`)
+					} else {
+						this.reporter.sendReport(
+							JSON.stringify({
+								iterationMsg: `${iterationName} of ${this.looper.loopCount}`,
+								iteration,
+							}),
+							ITERATION,
+						)
 					}
-					startTime = new Date()
-					console.log(`${chalk.bold('\u25CC')} ${iterationName} of ${this.looper.iterations}`)
 				}
 				try {
 					await test.runWithCancellation(iteration, cancelToken, this.looper)
@@ -140,14 +162,18 @@ export class Runner {
 				}
 			})
 
-			console.log(`Test completed after ${this.looper.iterations} iterations`)
+			if (!this.reporter.worker) {
+				console.log(`Test completed after ${this.looper.loopCount} iterations`)
+			}
 			await test.runningBrowser?.close()
 		} catch (err) {
 			throw Error(err)
 		} finally {
-			const table = reportRunTest(reportTableData)
-			console.groupEnd()
-			console.log(table)
+			if (!this.reporter.worker) {
+				const table = reportRunTest(reportTableData)
+				console.groupEnd()
+				console.log(table)
+			}
 		}
 
 		if (testToCancel !== undefined) {
@@ -192,15 +218,25 @@ export class Runner {
 				case Status.SKIPPED:
 					skippedNo += 1
 					skippedMessage = chalk.yellow(`${skippedNo}`, `${Status.SKIPPED}`)
+					this.reporter.sendReport(
+						JSON.stringify({ name: 'skipped', value: skippedNo, iteration }),
+						MEASUREMENT,
+					)
 					break
 				case Status.UNEXECUTED:
 					unexecutedNo += 1
 					unexecutedMessage = chalk(`${unexecutedNo}`, `${Status.UNEXECUTED}`)
+					this.reporter.sendReport(
+						JSON.stringify({ name: 'unexecuted', value: unexecutedNo, iteration }),
+						MEASUREMENT,
+					)
 					break
 			}
 		})
 		const finallyMessage = chalk(passedMessage, failedMessage, skippedMessage, unexecutedMessage)
-		console.log(`${iterationName} completed in ${ms(duration)} (walltime) ${finallyMessage}`)
+		if (!this.reporter.worker) {
+			console.log(`${iterationName} completed in ${ms(duration)} (walltime) ${finallyMessage}`)
+		}
 		return [iteration, passedNo, failedNo, skippedNo, unexecutedNo]
 	}
 

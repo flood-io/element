@@ -1,7 +1,7 @@
 import Interceptor from '../network/Interceptor'
 import { Browser } from './Browser'
 
-import { EmptyReporter, IReporter, Status, StepResult } from '@flood/element-report'
+import { EmptyReporter, IReporter, Status, StepResult, WorkerReport } from '@flood/element-report'
 import { ObjectTrace } from '../utils/ObjectTrace'
 
 import {
@@ -144,7 +144,10 @@ export default class Test implements ITest {
 
 		this.failed = false
 		this.runningBrowser = null
-
+		const worker: WorkerReport | undefined = this.reporter.worker
+		if (worker) {
+			worker.setIteration(`${iteration}`)
+		}
 		debug('run() start')
 
 		const { testData } = this.script
@@ -367,7 +370,6 @@ export default class Test implements ITest {
 		} finally {
 			browser.settings = originalBrowserSettings
 		}
-
 		if (error !== null) {
 			debug('step error')
 			this.failed = true
@@ -378,6 +380,7 @@ export default class Test implements ITest {
 			step.prop = { passed: true }
 		}
 		await testObserver.afterStep(this, step)
+
 		if (error === null) {
 			await this.doStepDelay()
 		}

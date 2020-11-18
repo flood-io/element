@@ -30,7 +30,9 @@
 		"logform": "^2.1.2",
 		"merge-stream": "^2.0.0",
 		"parse-duration": "^0.1.2",
-		"winston": "^3.0.0"
+		"winston": "^3.0.0",
+		"spinnies": "^0.5.1",
+		"cli-table3": "^0.6.0"
 	},
 	"devDependencies": {
 		"@types/merge-stream": "^1.1.2"

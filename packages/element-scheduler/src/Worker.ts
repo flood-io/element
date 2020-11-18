@@ -9,6 +9,7 @@ import {
 	ParentMessageError,
 	ParentMessageOk,
 	MessageConst,
+	onReport,
 } from './types'
 import { join } from 'path'
 import { Worker as WorkerThread } from 'worker_threads'
@@ -34,6 +35,7 @@ export class Worker implements WorkerInterface {
 
 	private retries = 0
 	private onProcessEnd: OnEnd
+	private onProcessReport: onReport
 
 	private exitPromise: Promise<void>
 	private resolveExitPromise!: () => void
@@ -133,6 +135,8 @@ export class Worker implements WorkerInterface {
 					this.onProcessEnd(null, this, data[0] as number)
 				} else if (result === MessageConst.LOADED) {
 					this.resolveLoadPromise()
+				} else if (result === MessageConst.REPORT) {
+					this.onProcessReport(this, data as string[])
 				}
 				break
 			}
@@ -178,9 +182,15 @@ export class Worker implements WorkerInterface {
 		this.worker.terminate()
 	}
 
-	send(request: ChildMessage, onProcessStart: OnStart, onProcessEnd: OnEnd): void {
+	send(
+		request: ChildMessage,
+		onProcessStart: OnStart,
+		onProcessEnd: OnEnd,
+		onProcessReport: onReport,
+	): void {
 		onProcessStart(this)
 		this.onProcessEnd = (...args) => onProcessEnd(...args)
+		this.onProcessReport = (...args) => onProcessReport(...args)
 
 		this.retries = 0
 

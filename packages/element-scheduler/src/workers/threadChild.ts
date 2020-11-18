@@ -17,10 +17,11 @@ import {
 	RuntimeEnvironment,
 	WorkRoot,
 	mustCompileFile,
-	TestSettings,
 } from '@flood/element-core'
-import { ConsoleReporter } from './ConsoleReporter'
-import createLogger from './Logger'
+import { ACTION, BaseReporter, ReportCache, WorkerReport } from '@flood/element-report'
+import { EventEmitter } from 'events'
+import ms from 'ms'
+import { SchedulerSetting } from '../Scheduler'
 
 function environment(root: string, testData: string): RuntimeEnvironment {
 	const workRoot = new WorkRoot(root, {
@@ -51,29 +52,42 @@ async function execMethod(method: string, args: Array<any>) {
 	switch (method) {
 		case ActionConst.RUN: {
 			const [testScript, stageIterator] = args
-			const { wsEndpoint, workerName, rootEnv, testData, settings } = workerData.env
+			const { wsEndpoint, rootEnv, testData, settings, workerId, workerName } = workerData.env
 
-			const verboseBool = true
-			const logLevel = 'debug'
-			const logger = createLogger(logLevel, true)
-			const reporter = new ConsoleReporter(logger, verboseBool, workerName)
-			const childSettings: TestSettings = JSON.parse(settings)
-
+			const childSettings: SchedulerSetting = JSON.parse(settings)
+			const myEmitter = new EventEmitter()
+			const cache = new ReportCache(myEmitter)
+			const reporter = new BaseReporter(cache)
+			reporter.setWorker(new WorkerReport(workerId, workerName))
 			const env = environment(rootEnv, testData)
+
 			const testScriptFactory = async (): Promise<EvaluatedScript> => {
-				return new EvaluatedScript(env, await mustCompileFile(testScript))
+				return new EvaluatedScript(
+					env,
+					await mustCompileFile(testScript, {
+						showWebPackBar: false,
+						stricterTypeChecking: false,
+						traceResolution: false,
+					}),
+				)
 			}
 
 			const clientFactory = (): AsyncFactory<PlaywrightClient> => {
 				return () => connectWS(wsEndpoint, childSettings.browserType)
 			}
 
+			const startTime = new Date().valueOf()
+			const testScriptE = await testScriptFactory()
 			const runner = new Runner(clientFactory(), undefined, reporter, {}, childSettings)
-
-			await runner.run(testScriptFactory)
+			await runner.runEvalScript(testScriptE)
 			await runner.stop()
-
+			const executedTime = new Date().valueOf() - startTime
 			if (parentPort) {
+				parentPort.postMessage([
+					ParentMessages.OK,
+					MessageConst.REPORT,
+					[`The test completed in ${ms(executedTime)}`, ACTION],
+				])
 				parentPort.postMessage([ParentMessages.OK, MessageConst.RUN_COMPLETED, [stageIterator]])
 			}
 		}

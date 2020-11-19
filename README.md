@@ -4,8 +4,8 @@
   <a aria-label="Flood Logo" href="https://github.com/flood-io">
     <img src="https://img.shields.io/badge/MADE%20BY%20FLOOD-4285f4.svg?style=for-the-badge&labelColor=4285f4&logo=Flood&logoColor=FFFFFF">
   </a>
-  <a aria-label="NPM version" href="https://www.npmjs.com/package/@flood/element-cli/">
-    <img alt="" src="https://img.shields.io/npm/v/@flood/element-cli.svg?style=for-the-badge&labelColor=000000&color=6554C0">
+  <a aria-label="NPM version" href="https://www.npmjs.com/package/element-cli/">
+    <img alt="" src="https://img.shields.io/npm/v/element-cli.svg?style=for-the-badge&labelColor=000000&color=6554C0">
   </a>
   <a aria-label="License" href="/LICENSE">
     <img alt="" src="https://img.shields.io/npm/l/@flood/element-cli.svg?style=for-the-badge&labelColor=000000">
@@ -32,14 +32,14 @@ Scaling up Element tests is easy on [Flood](https://flood.io), by launching hund
 - [Quickstart](#quickstart)
   - [1. Install Element](#1-install-element)
     - [Stable release](#stable-release)
-    - [Beta release channel](#beta-release-channel)
-    - [Canary release channel](#canary-release-channel)
+    - [Beta release](#beta-release)
+    - [Canary release](#canary-release)
   - [2. Initialize Your Project](#2-initialize-your-project)
   - [3. Write and Validate Your Script](#3-write-and-validate-your-script)
-- [4. Run a real Load Test on Flood](#4-run-a-real-load-test-on-flood)
+  - [4. Run a real Load Test on Flood](#4-run-a-real-load-test-on-flood)
 - [About](#about)
   - [What can I do with it?](#what-can-i-do-with-it)
-- [Getting Started](#getting-started)
+- [Do more with Element](#do-more-with-element)
 - [Contributing](#contributing)
 - [Reporting Issues](#reporting-issues)
 - [Authors](#authors)
@@ -54,8 +54,8 @@ First, make sure you have installed the [latest version of NodeJS](https://nodej
 
 #### Stable release
 
-<a aria-label="NPM version" href="https://www.npmjs.com/package/@flood/element-cli/">
-  <img alt="" src="https://img.shields.io/npm/v/@flood/element-cli.svg?style=for-the-badge&labelColor=000000&color=6554C0">
+<a aria-label="NPM version" href="https://www.npmjs.com/package/element-cli/">
+  <img alt="" src="https://img.shields.io/npm/v/element-cli.svg?style=for-the-badge&labelColor=000000&color=6554C0">
 </a>
 
 ```bash
@@ -79,10 +79,10 @@ brew install flood-io/taps/element
 
 This will install `element` along with anything else it needs to run, such as NodeJS.
 
-#### Beta release channel
+#### Beta release
 
-<a aria-label="Beta NPM version" href="https://www.npmjs.com/package/@flood/element-cli/">
-  <img alt="" src="https://img.shields.io/npm/v/@flood/element-cli/beta.svg?style=for-the-badge&labelColor=000000">
+<a aria-label="Beta NPM version" href="https://www.npmjs.com/package/element-cli/">
+  <img alt="" src="https://img.shields.io/npm/v/element-cli/beta.svg?style=for-the-badge&labelColor=000000">
 </a>
 
 ```bash
@@ -96,10 +96,9 @@ npm i -g element-cli@beta
 element --version
 ```
 
-#### Canary release channel
-
-<a aria-label="Canary NPM version" href="https://www.npmjs.com/package/@flood/element-cli/">
-  <img alt="" src="https://img.shields.io/npm/v/@flood/element-cli/canary.svg?style=for-the-badge&labelColor=000000">
+#### Canary release
+<a aria-label="Canary NPM version" href="https://www.npmjs.com/package/element-cli/">
+  <img alt="" src="https://img.shields.io/npm/v/element-cli/canary.svg?style=for-the-badge&labelColor=000000">
 </a>
 
 ```bash
@@ -147,13 +146,11 @@ This will run the script in an instance of Chrome and output the results locally
 
 For details of the available options see the [`element run`](./packages/cli/README.md#element-run) guide.
 
-## 4. Run a real Load Test on [Flood](https://flood.io)
+### 4. Run a real Load Test on [Flood](https://flood.io)
 
-Now that you have a test script, upload it to [Flood](https://app.flood.io) as a new Stream and launch a Flood (a test).
+Now that you have a test script, upload it to [Flood](https://app.flood.io) as a [new Stream](https://guides.flood.io/scripting-and-tools/flood-element/getting-started-with-element#create-a-stream) and launch a Flood (a test).
 
-![Upload your script to Tricentis Flood](./packages/element/docs/examples/images/upload-script.png)
-
-Continue learning more Flood Element techniques by starting with our [API documentation](./packages/element/docs/SUMMARY.md). The main entry point to all tests is the [Browser](./packages/element/docs/api/Browser.md) class and a great place to get a feel for the capabilities of each test.
+Since Element version 1.3, you can [launch a flood directly from Element CLI](https://element.flood.io/docs/next/guides/cli#run-an-element-script-on-flood)
 
 ## About
 
@@ -166,7 +163,8 @@ Over the years, countless customers have mentioned that getting started with Loa
 - Measure your application's response time from different regions as experienced by your customers.
 - Create **realistic load scenarios** which stress test your network infrastructure without developing complex protocol level load test scripts.
 
-## Getting Started
+## Do more with Element
+Continue learning more Flood Element techniques by starting with our [API documentation](https://element.flood.io/docs/). The main entry point to all tests is the [Browser](https://element.flood.io/docs/1.0/api/browser) class and a great place to get a feel for the capabilities of each test.
 
 Visit <a aria-label="Element documentation" href="https://element.flood.io">https://element.flood.io</a> to view the documentation.
 
@@ -178,7 +176,7 @@ Please see our [CONTRIBUTING.md](/CONTRIBUTING.md).
 
 If you encounter any issues with the `@flood/element` project or Flood Element product, please [open an issue](https://github.com/flood-io/element/issues) on the GitHub project.
 
-If you're encountering issues with Flood itself, please contact [Flood Support](mailto:support@flood.io) from within the Flood Dashboard.
+If you're encountering issues with Flood itself, please contact Flood Support from within the Flood Dashboard, [send us an email](mailto:support@flood.io) or [ask our community](https://spectrum.chat/flood).
 
 ## Authors
 

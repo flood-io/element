@@ -116,7 +116,7 @@ Configure Browser to emulate a given device
 
 **Parameters**
 
-- fn [`EvaluateFn`][evaluatefn]
+- fn <function|string> Function to be evaluated in the page context
 - args `any`\[]
 - returns: [Promise<`any`>][promise]
 
@@ -128,7 +128,7 @@ If no element is found throws an error.
 **Parameters**
 
 - locator [`NullableLocatable`][nullablelocatable]
-- returns: [Promise&lt;[`ElementHan<][ElementHandle]>][promise]
+- returns: [Promise&lt;ElementHandle&gt;][promise]
 
 ### `findElements(locator)`
 
@@ -137,7 +137,7 @@ Uses the provided locator to find all elements matching the locator condition, r
 **Parameters**
 
 - locator [`NullableLocatable`][nullablelocatable]
-- returns: [Promise&lt;[`ElementHan<][ElementHandle]\[\]>][promise]
+- returns: [Promise&lt;ElementHandle&gt;][promise]
 
 ### `focus(locator)`
 
@@ -164,7 +164,7 @@ Uses the provided locator to find the first element it matches, returning an Ele
 **Parameters**
 
 - locator [`NullableLocatable`][nullablelocatable]
-- returns: [Promise&lt;[`ElementHandle`][ElementHandle] <null`>][promise]
+- returns: [Promise&lt;Element | null&gt;][promise]
 
 ### `press(keyCode[, options])`
 
@@ -227,6 +227,10 @@ await browser.sendKeys("Hello, World!", Key.ENTER);
 
 ### `sendKeyCombinations(...keys)`
 This will simulate the act of pressing a combination of [keys][] on the keyboard at the same time. Use commas to separate individual keys.
+
+:::info SOME COMBINATIONS MAY NOT WORK ON MACOS
+On MacOS, some combinations are emulated by the Operating System, instead of the browser. Therefore, you may find some combinations not working as expected, like Command + A (select all), Command + C (copy), Command + V (paste), etc. More information can be found [here](https://github.com/puppeteer/puppeteer/issues/1313)
+:::
 
 **Example:**
 
@@ -335,13 +339,13 @@ or a [Condition][], for more flexible conditions.
 
 - returns: [Promise<`any`>][promise]
 
-## `Locatable`
+# `Locatable`
 Locatable represents anything able to be located, either a string selector or a <[Locator]>. <[Locator]>s are generally created using <[By]> methods.
 
 ```typescript
 [Locator] | [ElementHandle] | string
 ```
-## `NullableLocatable`
+# `NullableLocatable`
 NullableLocatable represents a <[Locatable]> which could also be null.
 
 Note that most Element location API methods accept a NullableLocatable but will throw an <[Error]> if its actually <[null]>.
@@ -350,22 +354,51 @@ Note that most Element location API methods accept a NullableLocatable but will 
 [Locatable] | null
 ```
 
+# `NavigationOptions`
+An object which might have the following properties
+
+**Properties**
+* `timeout` &lt;number&gt; (Optional) Maximum navigation time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout. 
+* `waitUntil` &lt;string | array&gt; (Optional) When to consider navigation succeeded, defaults to load. Given an array of event strings, navigation is considered to be successful after all events have been fired. Events can be either:
+  * `"load"` - consider navigation to be finished when the load event is fired.
+  * `"domcontentloaded"` - consider navigation to be finished when the DOMContentLoaded event is fired.
+  * `"networkidle0"` - consider navigation to be finished when there are no more than 0 network connections for at least 500 ms.
+  * `"networkidle2"` - consider navigation to be finished when there are no more than 2 network connections for at least 500 ms.
+
+
+# `ScreenshotOptions`
+Defines the screenshot options.
+
+**Properties**
+* `clip` &lt;Object&gt; (Optional) An object which specifies clipping region of the page. Should have the following fields:
+  * `x` &lt;number&gt; The x-coordinate of top-left corner of clipping area.
+  * `y` &lt;number&gt; The y-coordinate of top-left corner of clipping area.
+  * `height` &lt;number&gt; The height of clipping area.
+  * `width` &lt;number&gt; The width of clipping area.  
+* `encoding` &lt;string&gt; (Optional) The encoding of the image, can be either `"base64"` or `"binary"`. Defaults to `binary`.
+* `fullPage` &lt;boolean&gt; (Optional) When true, takes a screenshot of the full scrollable page. Defaults to false. 
+* `omitBackground` &lt;boolean&gt; (Optional) Hides default white background and allows capturing screenshots with transparency. Defaults to `false`. 
+* `path` &lt;string&gt; (Optional) The file path to save the image to. The screenshot type will be inferred from file extension.  
+  If `path` is a relative path, then it is resolved relative to current working directory.  
+  If no path is provided, the image won't be saved to the disk.  
+* `quality` &lt;number&gt; (Optional) The quality of the image, between 0-100. Not applicable to `png` images.
+* `type` &lt;string&gt;  (Optional) Specify screenshot type, can be either `"jpeg"` or `"png"`. Defaults to `png`.
+
 [step]: ../guides/script
 [promise]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
-[nullablelocatable]: Locators
-[locatable]: Locators
-[clickoptions]: Puppeteer
+[nullablelocatable]: #nullablelocatable
+[locatable]: #locatable
+[clickoptions]: mouse.md#clickoptions
 [device]: Constants
 [elementhandle]: ElementHandle
 [locator]: Locators
 [key]: Constants#key
 [keys]: Constants#key
 [targetlocator]: TargetLocator
-[screenshotoptions]: Puppeteer
-[navigationoptions]: Puppeteer
+[screenshotoptions]: #screenshotoptions
+[navigationoptions]: #navigationoptions
 [until]: Waiters
-[condition]: Waiters
-[condition]: Waiters
+[condition]: Waiters#condition
 [by]: Locators
 [error]: https://nodejs.org/api/errors.html#errors_class_error
 [null]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/null

@@ -12,7 +12,7 @@ During execution, the timing of each step can be measured so that you can profil
 You first need to import the step creator from the Element package:
 
 ```ts title="my-test.perf.ts"
-import { step } from "@flood/element";
+import { step } from '@flood/element'
 ```
 
 Each test must export a defualt suite, which is what Element will use to detect the steps to run:
@@ -46,11 +46,11 @@ export default () => {
 };
 ```
 
-What we did here was defined 3 steps, giving each a descriptive title, and a callback function which will contain the actual business logic of our test, in the form of test actions.
+Here we've defined 3 steps, giving each a descriptive title and a callback function which will contain the actual business logic of our test in the form of test actions.
 
 ## Defining test actions
 
-A test without actions is pretty bare, so lets instruct the browser to navigate to a page:
+A test without actions is pretty bare, so let's instruct the browser to navigate to a page:
 
 ```diff title="my-test.perf.ts"
 import { step } from "@flood/element";
@@ -68,9 +68,9 @@ The browser exposes every action avaialable to you at a top level for interactin
 
 ## Handling failure
 
-A test step can fail for a number of reasons, most commonly though it will be because the state of the page wasn't as you expected it to be, which might in turn be because the application is overloaded, an error message is shown, or the inventory of stock you're testing against is exhausted.
+A test step can fail for a number of reasons, most commonly because the state of the page was not as expected. These unexpected states may result from your application being overloaded and not displaying the expected page elements, an error message being shown, or test data issues. For example, your script may be attempting to add an out of stock item to a cart.
 
-Handling failures is part of building a robust performance test suite. Element provides a number of methods for this:
+Handling failures is part of building a robust load test suite. Element provides a number of methods for this:
 
 ### Recovery steps
 
@@ -79,6 +79,7 @@ Recovery steps define an optional step which is called if a previous step fails,
 There are two types of recovery steps: global and local.
 
 **Global recovery**
+A global recovery step is executed in response to failures from any step in the script. This type of recovery step can be useful for application-wide error messages or alerts. Global recovery steps are executed only for steps without a local recovery step.
 
 ```diff title="my-test.perf.ts"
 import { step } from "@flood/element";
@@ -96,53 +97,51 @@ export default () => {
 ```
 
 **Local recovery**
+A local recovery step is executed in response to a failure in a particular step only, and it does not apply to failures in other steps. A local recovery step takes precedence over a global recovery step. Note that the 1st parameter to pass to the recovery step should be the exact name of the step to which you want to add recovery.
 
-```diff title="my-test.perf.ts"
-import { step } from "@flood/element";
+```ts title="my-test.perf.ts"
+import { step } from '@flood/element';
 
 export default () => {
-  step("Step 1", async (browser) => {
-   await browser.visit("https://google.com")
+  step('Step 1', async (browser) => {
+   await browser.visit('https://google.com')
   })
 
--  step.recovery(async browser => {
-+  step.recovery("Step 1", async browser => {
-+    let alertCloser = await browser.findElement(By.id("close"))
-+    if (alertCloser!=null) await alertCloser.click()
-+  })
+  step.recovery('Step 1', async browser => { // 'Step 1' indicates this is the recovery step for Step 1 above
+    let alertCloser = await browser.findElement(By.id('close'))
+    if (alertCloser!=null) await alertCloser.click()
+  })
 };
 ```
 
 **Recovery instructions**
 
-Element offers the ability to control what happens after a step has been recovered:
+Element offers the ability to control what happens after a step has been recovered. By returning one of these instructions, the test will change its course.
 
-By returning one of these instructions, the test will change its course:
-
-- `RecoverWith.RETRY`: Retry the previous step again. Element will only do this to `recoveryTries` count, which takes `1` as the default value. You can apply a general value for the whole test by putting this option within the `TestSettings`, or even override this value for a specific step by putting it into the recovery step as in the code snippet below.
+- `RecoverWith.RETRY`: Run the previous step again. Element will only do this up to the `tries` count, which is `1` by default. You can apply a general value for the whole test by putting this option within the `TestSettings`, or override this value for a specific step by putting it into the recovery step as in the code snippet below.
 - `RecoverWith.CONTINUE`: Continue to the next step. This is the default behaviour.
 - `RecoverWith.RESTART`: Exit this loop and restart the test at the beginning, resetting the browser in the process.
 
 ```ts title="my-test.perf.ts"
-import { step } from "@flood/element";
+import { step } from '@flood/element'
 
 export default () => {
-  step("Step 1", async (browser) => {
-    await browser.visit("https://google.com");
-  });
+	step('Step 1', async (browser) => {
+		await browser.visit('https://google.com')
+	})
 
-  step.recovery("Step 1", { recoveryTries: 2 }, async (browser) => {
-    let alertCloser = await browser.findElement(By.id("close"));
-    if (alertCloser != null) await alertCloser.click();
+	step.recovery('Step 1', { tries: 2 }, async (browser) => {
+		let alertCloser = await browser.findElement(By.id('close'))
+		if (alertCloser != null) await alertCloser.click()
 
-    return RecoverWith.RETRY; // retry "Step 1"
-  });
-};
+		return RecoverWith.RETRY // retry 'Step 1' up to 2 times 
+	})
+}
 ```
 
 ### Try/Catch
 
-Because Element scripts are JavaScript, you can use any error handling you typically would in JS, including `try/catch` or `.catch(...)`.
+Because Element scripts are in JavaScript, you can use any error handling you typically would in JS, including `try/catch` or `.catch(...)`.
 
 ```diff title="my-test.perf.ts"
 import { step } from "@flood/element";
@@ -160,88 +159,106 @@ export default () => {
 };
 ```
 
-### Which recovery method to use?
+### Which recovery method should you use
 
-Deciding on which recovery method to use depends on whether you want the recovery time measured separately from the step you were testing.
+The best recovery method to use depends on whether you want the recovery time measured separately from the step you were testing.
 
-Using `try/catch` will include the catch time in the total time because Element isn't aware of the time you're spending on this step.
-
-Using a recovery step will measure the time separately as "Step 1 (Recovery)"
+Using `try/catch` will include the catch time in the total step time.
+Using a recovery step will measure the time separately as "Step 1 (Recovery)".
 
 ## Conditional steps
+
 Flood Element supports conditional execution. If you want to execute a specific chain of actions only when a condition is satisfied, you can do so using either `step.if()` or `step.unless()`.
 
 ### step.if()
-Executed only when a condition is met
+
+Execute only when a condition is met.
+
 ```ts title="my-test.perf.ts"
-import { step } from "@flood/element";
+import { step } from '@flood/element'
 
 export default () => {
-  step.if(condition, 'Step name', async browser => {
-     // do something
-})
-};
+	step.if(condition, 'Step name', async (browser) => {
+		// do something
+	})
+}
 ```
 
 ### step.unless()
-Executed only when a the opposite of a condition is met
+
+Execute only when the opposite of a condition is met.
+
 ```ts title="my-test.perf.ts"
-import { step } from "@flood/element";
+import { step } from '@flood/element'
 
 export default () => {
-  step.unless(condition, 'Step name', async browser => {
-     // do something
-})
-};
+	step.unless(condition, 'Step name', async (browser) => {
+		// do something
+	})
+}
 ```
 
 ## Repeatable steps
-In case you want a step to run repeatedly for several times, or keep running while a condition is still true, you can do so using `step.repeat()` or `step.while()`
+
+To repeat a step a certain number of times or while a condition is still true, use `step.repeat()` or `step.while()`.
 
 ### step.repeat()
-Repeat a step for a pre-defined number of times
+
+Repeat a step for a predefined number of times.
+
 ```ts title="my-test.perf.ts"
-import { step } from "@flood/element";
+import { step } from '@flood/element'
 
 export default () => {
-  step.repeat(number, 'Step name', async browser => {
-     // do something
-})
-};
+	step.repeat(number, 'Step name', async (browser) => {
+		// do something
+	})
+}
 ```
 
 ### step.while()
-Repeat a step while a condition is still true
+
+Repeat a step while a condition is true.
+
 ```ts title="my-test.perf.ts"
-import { step } from "@flood/element";
+import { step } from '@flood/element'
 
 export default () => {
-  step.while(condition, 'Step name', async browser => {
-     // do something
-})
-};
+	step.while(condition, 'Step name', async (browser) => {
+		// do something
+	})
+}
 ```
 
-## Run a step once off
-For some specific steps like `authentication`, you might want to run only once in the whole test, regardless of how many times you test will iterate. In that case, `step.once()` is what you need.
+## Run a step once
+
+Run a step only once in the whole test regardless of the number of iterations. This can be used to create setup and teardown steps. For example, you can run an authentication step at the start of the test and a logout step at the end.
+
+
+### step.once()
 
 ```ts title="my-test.perf.ts"
-import { step } from "@flood/element";
+import { step } from '@flood/element'
 
 export default () => {
-  step.once('Step name', async browser => {
-     // do something
-})
-};
+	step.once('Step name', async (browser) => {
+		// do something
+	})
+}
 ```
 
 ## Mark a step as `skipped`
-Use `step.skip()` to skip the execution of a step in your test. 
+
+Skip the execution of a step in your test. Skipping a step is a little like commenting it out, but the step will be shown in the execution as skipped.
+
+### step.skip()
+
 ```ts title="my-test.perf.ts"
-import { step } from "@flood/element";
+import { step } from '@flood/element'
 
 export default () => {
-  step.skip('Step name', async browser => {
-     // do something
-})
-};
+	step.skip('Step name', async (browser) => {
+		// do something
+	})
+}
+```

@@ -1,5 +1,5 @@
 import React from 'react'
-import useThemeContext from '@theme/hooks/useThemeContext'
+import useThemeContext from '../../../../../docs-1/src/components/Main/FeatureBlock/node_modules/@theme/hooks/useThemeContext'
 import classnames from 'classnames'
 import styles from './styles.module.css'
 

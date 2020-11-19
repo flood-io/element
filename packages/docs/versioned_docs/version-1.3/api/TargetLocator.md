@@ -6,7 +6,7 @@ hide_title: true
 
 # `TargetLocator`
 
-The target locator is accessed through [`browser.switchTo()`](api/../Browser.md#switchto) and enables you to switch frames, tabs, or browser windows. As well as access the `activeElement` or an alert box.
+The target locator is accessed through [`browser.switchTo()`](Browser.md#switchto) and enables you to switch frames, tabs, or browser windows. As well as access the `activeElement` or an alert box.
 
 ## Methods
 
@@ -18,7 +18,7 @@ available.
 
 **Parameters**
 
-- returns: [Promise&lt;[`ElementHandle`][ElementHandle] \| `null`\>][promise]
+- returns: [Promise&lt;ElementHandle | null&gt;][promise]
 
 ### `TargetLocator.defaultContent()`
 
@@ -34,9 +34,9 @@ Changes the active target to another frame.
 
 Accepts either:
 
-number: Switch to frame by index in window.frames,
-string: Switch to frame by frame.name or frame.id, whichever matches first,
-ElementHandle: Switch to a frame using the supplied ElementHandle of a frame.
+- number: Switch to frame by index in window.frames,
+- string: Switch to frame by frame.name or frame.id, whichever matches first,
+- [ElementHandle][elementhandle]: Switch to a frame using the supplied ElementHandle of a frame.
 
 **Parameters**
 
@@ -44,4 +44,4 @@ ElementHandle: Switch to a frame using the supplied ElementHandle of a frame.
 - returns: [Promise&lt;`void`\>][promise]
 
 [promise]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
-[elementhandle]: ElementHandle
+[elementhandle]: element-handle

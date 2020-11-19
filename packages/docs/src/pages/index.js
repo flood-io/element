@@ -1,5 +1,5 @@
 import React from 'react'
-import Layout from '@theme/Layout'
+import Layout from '../../../docs-1/src/pages/node_modules/@theme/Layout'
 import { Header, Main } from '../components'
 
 const Home = () => {

@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.4](https://github.com/flood-io/element/compare/v2.0.0-canary.3...v2.0.0-canary.4) (2020-11-19)
+
+
+### Bug Fixes
+
+* refactor code ([3543923](https://github.com/flood-io/element/commit/3543923e18a4dcb30f743cd77e976f6b9429215e))
+* using optional chainning to check object is not null or undefined ([06dae48](https://github.com/flood-io/element/commit/06dae481758adf221de8075f1dd410c77d9790af))
+
+
+
+
+
 # [2.0.0-canary.3](https://github.com/flood-io/element/compare/v2.0.0-canary.2...v2.0.0-canary.3) (2020-11-19)
 
 

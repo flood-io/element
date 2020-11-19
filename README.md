@@ -33,7 +33,7 @@ Scaling up Element tests is easy on [Flood](https://flood.io), by launching hund
   - [1. Install Element](#1-install-element)
     - [Stable release](#stable-release)
     - [Beta release](#beta-release)
-		- [Canary release](#canary-release)
+    - [Canary release](#canary-release)
 
   - [2. Initialize Your Project](#2-initialize-your-project)
   - [3. Write and Validate Your Script](#3-write-and-validate-your-script)

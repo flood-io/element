@@ -2,7 +2,7 @@ import { Scheduler } from './Scheduler'
 import { mustCompileFile, ElementOptions, EvaluatedScript } from '@flood/element-core'
 
 export async function runCommandLine(opts: ElementOptions): Promise<void> {
-	const { testScript, runEnv, testSettingOverrides, headless, browserType } = opts
+	const { testScript, runEnv, testSettingOverrides, headless, browser } = opts
 
 	const evaluateScript = new EvaluatedScript(runEnv, await mustCompileFile(testScript))
 
@@ -10,7 +10,7 @@ export async function runCommandLine(opts: ElementOptions): Promise<void> {
 		...evaluateScript.settings,
 		...testSettingOverrides,
 		headless: headless,
-		browserType: browserType || evaluateScript.settings.browserType,
+		browser: browser || evaluateScript.settings.browser,
 	})
 
 	const installSignalHandlers = true

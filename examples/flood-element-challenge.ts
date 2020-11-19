@@ -8,7 +8,6 @@ import {
 	afterAll,
 	Key,
 	Browser,
-	BROWSER_TYPE,
 } from '@flood/element'
 import assert from 'assert'
 
@@ -22,7 +21,7 @@ export const settings: TestSettings = {
 	screenshotOnFailure: true,
 	actionDelay: '1s',
 	stepDelay: '2s',
-	browserType: BROWSER_TYPE.CHROME,
+	browser: 'chromium',
 }
 
 const URL = 'https://flood-element-challenge.vercel.app/'

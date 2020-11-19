@@ -1,5 +1,5 @@
-import { ViewportSize } from 'playwright'
-import { BROWSER_TYPE } from '../page/types'
+import { LaunchOptions, ViewportSize } from 'playwright'
+import { BrowserType } from '../page/types'
 import ms from 'ms'
 import { DeviceDescriptor } from '../page/Device'
 
@@ -44,15 +44,6 @@ export type ResponseTiming = 'page' | 'network' | 'step' | 'stepWithThinkTime'
 export type ConsoleMethod = 'log' | 'info' | 'debug' | 'warn' | 'error'
 
 /**
- * Represents the browser that the test script will run against.
- *
- * literal | description
- * --------|-----------
- * The browser bundled with playwright: 'chromium' | 'firefox' | 'webkit'
- */
-export type BrowserType = BROWSER_TYPE
-
-/**
  * Element presence lists the accepted values for automatically waiting on elements before running actions.
  *
  * - visible: waits until the element is visible on the page and is painted
@@ -62,6 +53,8 @@ export type BrowserType = BROWSER_TYPE
  * Set to `false` or `null` to disable.
  */
 export type ElementPresence = 'visible' | 'present' | 'ready' | false | null
+
+export type BrowserLaunchOptions = LaunchOptions
 
 /**
  * The TestSettings interface specifies the available settings you have to configure how your test runs. These properties should be exported using the property `settings`.
@@ -208,7 +201,12 @@ export interface TestSettings {
 	/**
 	 * Specifies a version of Google Chrome
 	 */
-	browserType?: BROWSER_TYPE
+	browser?: BrowserType
+
+	/**
+	 * Specifies options to launch
+	 */
+	browserLaunchOption?: BrowserLaunchOptions
 
 	/**
 
@@ -275,7 +273,8 @@ export const DEFAULT_SETTINGS: ConcreteTestSettings = {
 	userAgent: '',
 	device: null,
 	ignoreHTTPSError: false,
-	browserType: BROWSER_TYPE.CHROME,
+	browser: 'chromium',
+	browserLaunchOption: {},
 	blockedDomains: [],
 	incognito: false,
 	name: 'Element Test',

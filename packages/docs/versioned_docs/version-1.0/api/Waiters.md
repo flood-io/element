@@ -7,7 +7,7 @@ In any asynchronous testing environment, you need to wait for things to happen i
 
 Element comes with a deep set of helpers to handle waiting for elements to appear, become enabled, or change state in other ways.
 
-In most cases you don't want to wait for every element to appear before interacting with it, because it wouldn't make sense to interact with an invisble element. Flood Element supports automatic waiting, using the `autoWait` option — enabled by default since Element v1.2.
+In most cases you don't want to wait for every element to appear before interacting with it, because it wouldn't make sense to interact with an invisble element. Flood Element supports automatic waiting since version 1.2, using the `waitUntil: 'visible'` option in [Test Settings](../guides/TestSettings.md)
 
 # `Condition`
 

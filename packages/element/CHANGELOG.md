@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.3](https://github.com/flood-io/element/compare/v2.0.0-canary.2...v2.0.0-canary.3) (2020-11-19)
+
+
+### Bug Fixes
+
+* support adding browserLaunchOptions in TestSetting ([171c3a9](https://github.com/flood-io/element/commit/171c3a913a1693ebe26104d620582e9ef9f2a873))
+* support adding browserLaunchOptions in TestSetting ([73de72b](https://github.com/flood-io/element/commit/73de72bf02b264429ed77c7fc89942f7f2c6e5bb))
+
+
+
+
+
 # [2.0.0-canary.2](https://github.com/flood-io/element/compare/v2.0.0-canary.1...v2.0.0-canary.2) (2020-11-16)
 
 **Note:** Version bump only for package @flood/element

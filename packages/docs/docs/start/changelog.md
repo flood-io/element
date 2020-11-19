@@ -9,9 +9,11 @@ Released: Nov 2020
 ### New features
 - Ability to support [multiple data files in a single test script](../guides/TestData.md#using-multiple-test-data-files-in-a-single-test-script)
 - Ability to [debug Element script with VSCode](../guides/editor.md#how-to-debug-element-script-with-vscode)
+- Updated [Puppeteer](https://pptr.dev/) to the latest version (5.5.0)
 - New APIs:
   - [`browser.scrollBy()`](../api/browser#scrollbyx-y-options)
   - [`browser.scrollTo()`](../api/browser#scrolltoposition-options)
+  - [`browser.getMimeType()`](../api/browser#getmimetypefilepath)
 
 ## 1.3.6
 Released: 24 Sep 2020

@@ -34,6 +34,7 @@ Scaling up Element tests is easy on [Flood](https://flood.io), by launching hund
     - [Stable release](#stable-release)
     - [Beta release](#beta-release)
     - [Canary release](#canary-release)
+
   - [2. Initialize Your Project](#2-initialize-your-project)
   - [3. Write and Validate Your Script](#3-write-and-validate-your-script)
   - [4. Run a real Load Test on Flood](#4-run-a-real-load-test-on-flood)

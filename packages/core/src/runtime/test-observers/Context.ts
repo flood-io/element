@@ -10,7 +10,7 @@ export class Context {
 
 	private attached = false
 
-	public attachTest(test: Test) {
+	public attachTest(test: Test): void {
 		if (this.attached) return
 		this.attached = true
 		this.attachToPage(test.reporter, test.client.page)

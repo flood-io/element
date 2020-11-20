@@ -3,7 +3,7 @@ import interpretPuppeteerError from '../errors/interpretPuppeteerError'
 import { StructuredError } from '../../utils/StructuredError'
 import { Browser } from '../IBrowser'
 
-export function rewriteError() {
+export function rewriteError(): Function {
 	const errorInterpreters = [interpretPuppeteerError]
 	return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
 		const originalFn = descriptor.value

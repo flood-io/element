@@ -1,5 +1,5 @@
 import { ElementHandle } from './ElementHandle'
-import { Page, Frame } from 'playwright'
+import { Page, Frame } from 'puppeteer'
 import { TargetLocator as ITargetLocator, ElementHandle as IElementHandle } from './types'
 import { getFrames } from '../utils/frames'
 
@@ -9,7 +9,6 @@ import { getFrames } from '../utils/frames'
 export class TargetLocator implements ITargetLocator {
 	constructor(
 		private currentPage: Page,
-		private currentFrame: Frame,
 		private applyFrame: (frame: Frame | null) => void,
 		private applyPage: (page: number | Page) => void,
 	) {}
@@ -23,7 +22,7 @@ export class TargetLocator implements ITargetLocator {
 		const element = jsHandle.asElement()
 		if (!element) return null
 
-		return new ElementHandle(element, this.currentPage, this.currentFrame).initErrorString()
+		return new ElementHandle(element).initErrorString()
 	}
 
 	private async findFrameFromWindow(id: string | null): Promise<Frame | undefined> {

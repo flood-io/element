@@ -1,4 +1,5 @@
-import { IReporter, TraceData, TestEvent, TestScriptError } from '@flood/element-report'
+import { IReporter, TraceData, TestEvent } from '../../src/Reporter'
+import { TestScriptError } from '../../src/TestScriptError'
 
 export default class TestReporter implements IReporter {
 	public measurements: {

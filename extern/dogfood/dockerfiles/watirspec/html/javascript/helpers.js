@@ -1,10 +1,10 @@
-const WatirSpec = function() {
+var WatirSpec = function() {
     
   return {
     addMessage: function(string) {
-        const text = document.createTextNode(string);
-        const message = document.createElement('div');
-        const messages = document.getElementById('messages');
+        var text = document.createTextNode(string);
+        var message = document.createElement('div');
+        var messages = document.getElementById('messages');
 
         message.appendChild(text);
         messages.appendChild(message);

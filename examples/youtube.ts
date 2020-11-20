@@ -1,4 +1,4 @@
-import { step, TestSettings, Until, By, Device, MouseButtons } from '@flood/element'
+import { step, TestSettings, Until, By, Device } from '@flood/element'
 import * as assert from 'assert'
 
 var setUp = 1
@@ -45,15 +45,5 @@ export default () => {
 				await browser.takeScreenshot()
 			}
 		}
-	})
-
-	step('Test: Context Menu', { waitUntil: 'present' }, async browser => {
-		const video = await browser.findElement(By.tagName('video'))
-
-		await browser.click(video, { button: MouseButtons.RIGHT })
-
-		const contextMenu = await browser.findElement(By.css('body > div.ytp-popup.ytp-contextmenu'))
-
-		assert.strictEqual(await contextMenu.isDisplayed(), true)
 	})
 }

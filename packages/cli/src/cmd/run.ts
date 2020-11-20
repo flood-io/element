@@ -1,27 +1,178 @@
 import { Argv, Arguments, CommandModule } from 'yargs'
 import { checkFile } from './common'
 import {
-	ElementRunArguments,
-	runCommandLine as runSingleUser,
-	normalizeElementOptions,
+	WorkRoot,
+	FloodProcessEnv,
+	TestCommander,
+	TestSettings,
+	runCommandLine,
 	ElementOptions,
 } from '@flood/element-core'
-import { runCommandLine as runMultipleUser } from '@flood/element-scheduler'
-
-import chalk from 'chalk'
+import { watch } from 'chokidar'
 import { EventEmitter } from 'events'
-import { ReportCache } from '@flood/element-report'
-import { getFilesPattern, readConfigFile } from '../utils/run'
-import YoEnv from 'yeoman-environment'
-import ReportGenerator from '../generator/test-report'
+import { extname, basename, join, dirname, resolve } from 'path'
 import sanitize from 'sanitize-filename'
-import { resolve, dirname, basename, extname, join } from 'path'
+import createLogger from '.././utils/Logger'
+import { ConsoleReporter } from '.././utils/ConsoleReporter'
+import chalk from 'chalk'
+import ms from 'ms'
 
-interface RunCommonArguments extends Arguments, ElementRunArguments {}
+import { getFilesPattern, readConfigFile } from '../utils/compile'
+interface RunCommonArguments extends Arguments {
+	file: string
+	chrome?: string
+	strict?: boolean
+	headless?: boolean
+	devtools?: boolean
+	sandbox?: boolean
+	loopCount?: number
+	stepDelay?: string | number
+	actionDelay?: string | number
+	fastForward?: boolean
+	slowMo?: boolean
+	watch?: boolean
+	'work-root'?: string
+	'test-data-root'?: string
+	'fail-status-code': number
+	configFile: string
+}
 
-async function getAllTestScriptsFromConfiguration(
+function setupDelayOverrides(
 	args: RunCommonArguments,
-): Promise<RunCommonArguments> {
+	testSettingOverrides: TestSettings,
+): TestSettings {
+	if (testSettingOverrides == null) testSettingOverrides = {}
+	const { actionDelay, stepDelay } = args
+	let convertedActionDelay = 0
+	let convertedStepDelay = 0
+
+	if (typeof actionDelay === 'string' && actionDelay) {
+		convertedActionDelay = ms(actionDelay)
+	} else if (typeof actionDelay === 'number') {
+		convertedActionDelay = actionDelay
+	}
+	testSettingOverrides.actionDelay = convertedActionDelay > 0 ? convertedActionDelay : 0
+
+	if (typeof stepDelay === 'string' && stepDelay) {
+		convertedStepDelay = ms(stepDelay)
+	} else if (typeof stepDelay === 'number') {
+		convertedStepDelay = stepDelay
+	}
+	testSettingOverrides.stepDelay = convertedStepDelay > 0 ? convertedStepDelay : 0
+
+	if (args.fastForward) {
+		testSettingOverrides.stepDelay = 1000
+		testSettingOverrides.actionDelay = 1000
+	} else if (args.slowMo) {
+		testSettingOverrides.stepDelay = 10000
+		testSettingOverrides.actionDelay = 10000
+	}
+	return testSettingOverrides
+}
+
+function getWorkRootPath(file: string, root?: string): string {
+	const ext = extname(file)
+	const bare = basename(file, ext)
+
+	if (root == null) {
+		root = join(dirname(file), 'tmp', 'element-results', bare)
+	}
+
+	const dateString = sanitize(new Date().toISOString())
+
+	return resolve(root, dateString)
+}
+
+function getTestDataPath(file: string, root?: string): string {
+	root = root || dirname(file)
+
+	// return root
+	return resolve(root)
+}
+
+function initRunEnv(root: string, testDataRoot: string) {
+	const workRoot = new WorkRoot(root, {
+		'test-data': testDataRoot,
+	})
+
+	return {
+		workRoot,
+		stepEnv(): FloodProcessEnv {
+			return {
+				BROWSER_ID: 0,
+				FLOOD_GRID_REGION: 'local',
+				FLOOD_GRID_SQEUENCE_ID: 0,
+				FLOOD_GRID_SEQUENCE_ID: 0,
+				FLOOD_GRID_INDEX: 0,
+				FLOOD_GRID_NODE_SEQUENCE_ID: 0,
+				FLOOD_NODE_INDEX: 0,
+				FLOOD_SEQUENCE_ID: 0,
+				FLOOD_PROJECT_ID: 0,
+				SEQUENCE: 0,
+				FLOOD_LOAD_TEST: false,
+			}
+		},
+	}
+}
+
+function makeTestCommander(file: string): TestCommander {
+	const commander = new EventEmitter()
+	// TODO make this more reliable on linux
+	const watcher = watch(file, { persistent: true })
+	watcher.on('change', path => {
+		if (path === file) {
+			commander.emit('rerun-test')
+		}
+	})
+	return commander
+}
+
+async function runTestScript(args: RunCommonArguments): Promise<void> {
+	const { file, verbose } = args
+	const workRootPath = getWorkRootPath(file, args['work-root'])
+	const testDataPath = getTestDataPath(file, args['test-data-root'])
+
+	const verboseBool = !!verbose
+
+	const logLevel = verboseBool ? 'debug' : 'info'
+
+	const logger = createLogger(logLevel, true)
+	const reporter = new ConsoleReporter(logger, verboseBool)
+
+	logger.info(`workRootPath: ${workRootPath}`)
+	logger.info(`testDataPath: ${testDataPath}`)
+
+	const opts: ElementOptions = {
+		logger: logger,
+		testScript: file,
+		strictCompilation: args.strict ?? false,
+		reporter: reporter,
+		verbose: verboseBool,
+		headless: args.headless ?? true,
+		devtools: args.devtools ?? false,
+		chromeVersion: args.chrome,
+		sandbox: args.sandbox ?? true,
+
+		runEnv: initRunEnv(workRootPath, testDataPath),
+		testSettingOverrides: {},
+		persistentRunner: false,
+		failStatusCode: args['fail-status-code'],
+	}
+
+	if (args.loopCount) {
+		opts.testSettingOverrides.loopCount = args.loopCount
+	}
+	opts.testSettingOverrides = setupDelayOverrides(args, opts.testSettingOverrides)
+
+	if (args.watch) {
+		opts.persistentRunner = true
+		opts.testCommander = makeTestCommander(file)
+	}
+
+	await runCommandLine(opts)
+}
+
+async function runTestScriptWithConfiguration(args: RunCommonArguments): Promise<void> {
 	const fileErr = checkFile(args.configFile, 'Configuration file')
 	if (fileErr) throw fileErr
 	const { options, paths } = await readConfigFile(args.configFile)
@@ -29,9 +180,19 @@ async function getAllTestScriptsFromConfiguration(
 	if (!paths.testPathMatch || !paths.testPathMatch.length) {
 		throw Error('Found no test scripts matching testPathMatch pattern')
 	}
-	const { files, notExistingFiles } = getFilesPattern(paths.testPathMatch)
-
-	return { ...options, paths, testFiles: files.sort(), notExistingFiles: notExistingFiles.sort() }
+	const files: string[] = getFilesPattern(paths.testPathMatch)
+	console.info(
+		'The following test scripts that matched the testPathMatch pattern are going to be executed:',
+	)
+	for (const file of files.sort()) {
+		const arg: RunCommonArguments = {
+			...options,
+			...paths,
+			file,
+		}
+		await runTestScript(arg)
+	}
+	console.info('Test running with the config file has finished')
 }
 
 const cmd: CommandModule = {
@@ -39,50 +200,12 @@ const cmd: CommandModule = {
 	describe: 'Run [a test script| test scripts with configuration] locally',
 
 	async handler(args: RunCommonArguments): Promise<void> {
-		const { file, mu, configFile } = args
-		if (mu) {
-			if (!file) {
-				console.log(
-					chalk.redBright(
-						`The mode 'running the test with a config file' does not support running with multiple users`,
-					),
-				)
-				return
-			}
-			const myEmitter = new EventEmitter()
-			const cache = new ReportCache(myEmitter)
-			const opts: ElementOptions = normalizeElementOptions(args, cache)
-			await runMultipleUser(opts)
-			return
+		if (args.file) {
+			await runTestScript(args)
+		} else {
+			await runTestScriptWithConfiguration(args)
 		}
-		const runArgs = file ? args : await getAllTestScriptsFromConfiguration(args)
-		const result = await runSingleUser(runArgs)
-
-		if (args.export) {
-			let root: string
-			if (file) {
-				const fileName = basename(file, extname(file))
-				root = join(dirname(file), 'reports', fileName)
-			} else {
-				root = join(dirname(configFile), 'reports')
-			}
-
-			const dateString = sanitize(new Date().toISOString())
-			const reportPath = resolve(root, dateString)
-			const env = YoEnv.createEnv()
-
-			env.registerStub(ReportGenerator as any, 'report-generator')
-			env.run(
-				['report-generator'],
-				{
-					data: JSON.stringify(result, null, '\t'),
-					dir: reportPath,
-				},
-				() => {
-					console.log(`Your report has been saved in ${reportPath}`)
-				},
-			)
-		}
+		process.exit(0)
 	},
 	builder(yargs: Argv): Argv {
 		return yargs
@@ -105,10 +228,6 @@ const cmd: CommandModule = {
 
 					return chromeVersion
 				},
-			})
-			.option('browser-type', {
-				group: 'Browser:',
-				describe: 'Run in a specific browser',
 			})
 			.option('no-headless', {
 				group: 'Browser:',
@@ -192,15 +311,6 @@ const cmd: CommandModule = {
 				describe: 'Run test scripts with configuration',
 				type: 'string',
 				default: 'element.config.js',
-			})
-			.option('mu', {
-				describe: 'Run test scripts with multiple users',
-				type: 'boolean',
-				default: false,
-			})
-			.option('export', {
-				describe: 'Export a HTML report after the test finished running',
-				type: 'boolean',
 			})
 			.fail((msg, err) => {
 				if (err) console.error(chalk.redBright(err.message))

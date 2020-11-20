@@ -1,21 +1,21 @@
 import { serve } from '../../../tests/support/fixture-server'
-import { launchPlaywright, testPlaywright } from '../../../tests/support/launch-browser'
-import { Page, Frame } from 'playwright'
+import { launchPuppeteer, testPuppeteer } from '../../../tests/support/launch-browser'
+import { Page, Frame } from 'puppeteer'
 import { Until } from '../Until'
 import { By } from '../By'
 
-let page: Page, playwright: testPlaywright
+let page: Page, puppeteer: testPuppeteer
 
 describe('Condition', () => {
 	jest.setTimeout(30e3)
 	describe('FrameCondition', () => {
 		beforeAll(async () => {
-			playwright = await launchPlaywright()
-			page = playwright.page
+			puppeteer = await launchPuppeteer()
+			page = puppeteer.page
 		})
 
 		afterAll(async () => {
-			await playwright.close()
+			await puppeteer.close()
 		})
 
 		beforeEach(async () => {

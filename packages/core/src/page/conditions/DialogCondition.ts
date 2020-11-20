@@ -1,5 +1,5 @@
 import { Condition } from '../Condition'
-import { Page, Dialog } from 'playwright'
+import { Page, Dialog } from 'puppeteer'
 import { clearTimeout, setTimeout } from 'timers'
 
 const isDialog = (thing: any): thing is Dialog => {

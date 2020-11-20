@@ -1,4 +1,5 @@
-import { LocatorBuilder, EvaluateFn } from '../types'
+import { EvaluateFn } from 'puppeteer'
+import { LocatorBuilder } from '../types'
 
 export class TagNameLocator implements LocatorBuilder {
 	constructor(public tagName: string) {}

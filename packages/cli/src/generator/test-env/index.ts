@@ -110,8 +110,8 @@ export default class TestEnv extends Generator {
 			},
 
 			dependencies: {
-				'@flood/element': `${this.elementVersion}`,
-				'@flood/element-cli': `${this.elementVersion}`,
+				'@flood/element': `^${this.elementVersion}`,
+				'@flood/element-cli': `^${this.elementVersion}`,
 				assert: `*`,
 				faker: `*`,
 				prettier: '*',

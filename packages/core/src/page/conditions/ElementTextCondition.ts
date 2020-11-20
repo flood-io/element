@@ -1,5 +1,5 @@
 import { ElementCondition, NullableLocatable } from '../Condition'
-import { EvaluateFn } from '../types'
+import { EvaluateFn } from 'puppeteer'
 
 export class ElementTextCondition extends ElementCondition {
 	constructor(desc: string, locator: NullableLocatable, ...args: any[]) {
@@ -15,6 +15,7 @@ export class ElementTextCondition extends ElementCondition {
 		if (!node) return false
 		if (!node.textContent) return false
 		const text = node.textContent.trim()
+
 		if (typeof expectedText === 'string') {
 			if (expectedText.startsWith('/') && expectedText.endsWith('/')) {
 				// RegExp

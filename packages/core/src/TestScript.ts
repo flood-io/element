@@ -1,5 +1,5 @@
 import WebpackCompiler from './test-script/WebpackCompiler'
-import { ITestScript } from './interface/ITestScript'
+import { ITestScript } from './ITestScript'
 import { join } from 'path'
 import { tmpdir } from 'os'
 import { writeFileSync } from 'fs-extra'
@@ -30,7 +30,7 @@ export async function mustCompileString(
 	const testScript = await compileString(source, filename, testScriptOptions)
 
 	if (testScript.hasErrors) {
-		throw new Error(`Unable to compile script ${filename}:\n${testScript.formattedErrorString}`)
+		throw new Error(`unable to compile script ${filename}:\n${testScript.formattedErrorString}`)
 	}
 
 	return testScript
@@ -40,23 +40,19 @@ export async function mustCompileFile(
 	filename: string,
 	testScriptOptions?: TestScriptOptions,
 ): Promise<ITestScript> {
-	try {
-		const testScript = await compileFile(filename, testScriptOptions)
+	const testScript = await compileFile(filename, testScriptOptions)
 
-		if (testScript == null) {
-			throw new Error(
-				`Unable to compile script ${filename}:\nunable to read script at path ${filename}`,
-			)
-		}
-
-		if (testScript.hasErrors) {
-			throw new Error(
-				`Error: Unable to compile Element script ${filename}: ${testScript.formattedErrorString}`,
-			)
-		}
-
-		return testScript
-	} catch {
-		throw Error("This file couldn't be compiled")
+	if (testScript == null) {
+		throw new Error(
+			`unable to compile script ${filename}:\nunable to read script at path ${filename}`,
+		)
 	}
+
+	if (testScript.hasErrors) {
+		throw new Error(
+			`Error: Unable to compile Element script ${filename}: ${testScript.formattedErrorString}`,
+		)
+	}
+
+	return testScript
 }

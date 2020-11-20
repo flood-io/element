@@ -2,7 +2,7 @@ import { step, By, Until, TestSettings } from '@flood/element'
 import * as assert from 'assert'
 
 export const settings: TestSettings = {
-	loopCount: 1,
+	loopCount: Infinity,
 	clearCache: false,
 	clearCookies: true,
 	responseTimeMeasurement: 'step',
@@ -14,7 +14,7 @@ export const settings: TestSettings = {
 
 export default () => {
 	step('1. Start', async browser => {
-		await browser.visit('https://challenge.flood.io', { waitUntil: 'networkidle' })
+		await browser.visit('https://challenge.flood.io', { waitUntil: 'networkidle2' })
 
 		let startButton = By.css('#new_challenger > input.btn')
 		await browser.wait(Until.elementIsVisible(startButton))

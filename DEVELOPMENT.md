@@ -2,7 +2,7 @@
 
 ## Commit message format
 
-This repo has pre-commit hooks to enforce using semantic commit messages. Please see [CONTRIBUTING](./CONTRIBUTING.md)
+This repo has pre-commit hooks to enforce using semantic commit messagesm please see [CONTRIBUTING](./CONTRIBUTING.md)
 
 ## Packages
 

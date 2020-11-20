@@ -52,8 +52,4 @@ export interface WorkRoot {
 	join(kind: WorkRootKind, ...segments: string[]): string
 
 	testData(filename: string): string
-
-	getRoot(): string
-
-	getSubRoot(key: string): string
 }

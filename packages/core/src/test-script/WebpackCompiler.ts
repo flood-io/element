@@ -1,10 +1,11 @@
 import { Compiler, CompilerOutput } from '@flood/element-compiler'
 import parseComments from 'comment-parser'
-import { ITestScript } from '../interface/ITestScript'
+import { ITestScript } from '../ITestScript'
 import { VMScript } from 'vm2'
+import { TestScriptError } from '../TestScriptError'
 import { TestScriptOptions } from '../TestScriptOptions'
 import { readFileSync } from 'fs-extra'
-import { SourceUnmapper, TestScriptError, CallSite } from '@flood/element-report'
+import { SourceUnmapper } from './SourceUnmapper'
 import { dirname } from 'path'
 
 // FIXME: WebpackCompiler currently doesn't do anything with this, but it should
@@ -51,7 +52,7 @@ export default class WebpackCompiler implements ITestScript {
 		return readFileSync(this.sourceFile, { encoding: 'utf8' })
 	}
 
-	get sandboxesFilename() {
+	get sandboxedFilename() {
 		return this.sourceFile
 	}
 
@@ -89,27 +90,27 @@ export default class WebpackCompiler implements ITestScript {
 		const stack = error.stack || ''
 
 		const filteredStack = stack.split('\n').filter(s => s.includes(this.sourceFile))
-		let callSite: CallSite | undefined
+		let callsite
 		let unmappedStack: string[] = []
 
 		if (filteredStack.length > 0) {
-			callSite = this.sourceUnmapper.unMapCallSite(filteredStack[0])
-			unmappedStack = this.sourceUnmapper.unMapStackNodeStrings(filteredStack)
+			callsite = this.sourceUnmapper.unmapCallsite(filteredStack[0])
+			unmappedStack = this.sourceUnmapper.unmapStackNodeStrings(filteredStack)
 		}
 
-		return new TestScriptError(error.message, stack, callSite, unmappedStack, error)
+		return new TestScriptError(error.message, stack, callsite, unmappedStack, error)
 	}
 
 	// maybeLiftError?(error: Error): Error {}
 
-	// filterAndUnMapStack?(stack: string | Error | undefined): string[] {}
+	// filterAndUnmapStack?(stack: string | Error | undefined): string[] {}
 
 	public get vmScript(): VMScript {
 		if (!this.vmScriptCache) {
 			this.vmScriptCache = new VMScript(
 				// wrapCodeInModuleWrapper(this.source),
 				this.source,
-				this.sandboxesFilename,
+				this.sandboxedFilename,
 			)
 		}
 

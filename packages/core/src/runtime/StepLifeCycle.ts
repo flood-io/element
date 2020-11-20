@@ -1,5 +1,5 @@
 import ms from 'ms'
-import { Browser } from '../interface/IBrowser'
+import { Browser } from './IBrowser'
 import { DEFAULT_WAIT_TIMEOUT_MILLISECONDS } from './Settings'
 
 export declare function afterAll(fn: HookFn, waitTimeout?: string | number): void
@@ -11,7 +11,6 @@ export type HookFn = (this: void, browser: Browser) => Promise<any>
 export type HookBase = {
 	fn: HookFn
 	waitTimeout: string | number
-	type: HookType
 }
 
 export type Hook = {
@@ -19,13 +18,6 @@ export type Hook = {
 	afterEach: HookBase[]
 	beforeAll: HookBase[]
 	beforeEach: HookBase[]
-}
-
-export enum HookType {
-	afterAll,
-	afterEach,
-	beforeAll,
-	beforeEach,
 }
 
 /**

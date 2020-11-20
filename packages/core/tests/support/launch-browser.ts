@@ -1,8 +1,7 @@
-import { PlaywrightClientLike, launch } from '../../src/driver/Playwright'
-export { PlaywrightClientLike as testPlaywright }
-import { DEFAULT_SETTINGS } from '../../src/runtime/Settings'
+import { PuppeteerClientLike, launch } from '../../src/driver/Puppeteer'
+export { PuppeteerClientLike as testPuppeteer }
 
-export async function launchPlaywright(): Promise<PlaywrightClientLike> {
+export async function launchPuppeteer(): Promise<PuppeteerClientLike> {
 	let opts = {
 		sandbox: true,
 	}
@@ -11,5 +10,5 @@ export async function launchPlaywright(): Promise<PlaywrightClientLike> {
 		opts.sandbox = false
 	}
 
-	return launch(opts, DEFAULT_SETTINGS)
+	return launch(opts)
 }

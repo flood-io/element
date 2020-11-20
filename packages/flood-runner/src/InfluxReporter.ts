@@ -2,6 +2,7 @@ import { IPoint } from '@flood/node-influx/lib/src/index'
 import { serializePoint } from '@flood/node-influx/lib/src/line-protocol'
 import { Socket, createSocket } from 'dgram'
 import * as zlib from 'zlib'
+import { Logger } from 'winston'
 import MetricIdentifier from './MetricIdentifier'
 import { assertConfigString } from './ConfigUtils'
 import { numberOfBrowsers } from './ConcurrencyHack'
@@ -14,7 +15,7 @@ import {
 	CompoundMeasurement,
 	TestScriptError,
 	expect,
-} from '@flood/element-report'
+} from '@flood/element-api'
 
 import debugFactory from 'debug'
 const debug = debugFactory('element:grid:influx')
@@ -57,7 +58,7 @@ export default class InfluxReporter implements IReporter {
 	private socket: Socket
 	private measurements: Measurements = {}
 
-	constructor(private options: InfluxReporterOptions) {
+	constructor(private options: InfluxReporterOptions, private logger: Logger) {
 		this.createSocket()
 	}
 
@@ -92,8 +93,18 @@ export default class InfluxReporter implements IReporter {
 	}
 
 	private async send(point: IPoint) {
+		// const calltimeError = new Error()
+		// Error.captureStackTrace(calltimeError)
+		// this.logger.debug('send')
+		// this.logger.debug(JSON.stringify(point))
+		// this.logger.debug(JSON.stringify(calltimeError.stack))
+
 		const payload = serializePoint(point)
 		debug(payload)
+
+		// if (measurement === 'trace') {
+		// 	console.log(`REPORTER.send() ${JSON.stringify(payload, null, 2)}`)
+		// }
 
 		const message = Buffer.from(payload)
 
@@ -104,12 +115,12 @@ export default class InfluxReporter implements IReporter {
 				this.options.influxHost,
 				(err: Error, bytes: number) => {
 					if (err) {
-						console.error(`REPORTER.socket.send() ERROR: ${err.message}`)
+						this.logger.error(`REPORTER.socket.send() ERROR: ${err.message}`)
 					} else {
-						console.debug(
+						this.logger.debug(
 							`REPORTER.socket.send() wrote ${bytes} bytes to ${this.options.influxHost}:${this.options.influxPort}`,
 						)
-						console.debug(message.toString())
+						this.logger.debug(message.toString())
 					}
 					yeah()
 				},
@@ -198,6 +209,8 @@ export default class InfluxReporter implements IReporter {
 			})
 		}
 
+		this.logger.debug(`> ${printedResults.join(`, `)}`)
+
 		await Promise.all(sends)
 	}
 
@@ -206,30 +219,32 @@ export default class InfluxReporter implements IReporter {
 		delete point.tags['label']
 		point.fields['response_code'] = '0'
 		point.fields['value'] = numberOfBrowsers()
+		this.logger.debug('sending concurrency', point)
 		return this.send(point)
 	}
 
 	testLifecycle(stage: TestEvent, label: string): void {
+		// this.logger.debug(`lifecycle: stage: ${stage} label: ${label}`)
 		switch (stage) {
 			case TestEvent.AfterStepAction:
-				console.info(`---> ${label}()`)
+				this.logger.info(`---> ${label}()`)
 				break
 			case TestEvent.BeforeStep:
-				console.info(`===> Step '${label}'`)
+				this.logger.info(`===> Step '${label}'`)
 				break
 			case TestEvent.AfterStep:
-				console.info(`---> Step '${label}' finished`)
+				this.logger.info(`---> Step '${label}' finished`)
 				break
 			case TestEvent.StepSkipped:
-				console.info(`---- Step '${label}'`)
+				this.logger.info(`---- Step '${label}'`)
 				break
 		}
 	}
 
 	// TODO should we add more detail here?
 	testScriptError(message: string, error: TestScriptError): void {
-		console.error(`=!=> ${message} in ${this.stepName}: ${error.name}: ${error.message}`)
-		error.unmappedStack.forEach(line => console.error(`    ${line}`))
+		this.logger.error(`=!=> ${message} in ${this.stepName}: ${error.name}: ${error.message}`)
+		error.unmappedStack.forEach(line => this.logger.error(`    ${line}`))
 	}
 
 	testStepError(error: TestScriptError): void {
@@ -237,7 +252,7 @@ export default class InfluxReporter implements IReporter {
 	}
 
 	testInternalError(message: string, error: Error): void {
-		console.error(`=!=> Internal ${message} error in ${this.stepName}`, error.message)
+		this.logger.error(`=!=> Internal ${message} error in ${this.stepName}`, error.message)
 	}
 
 	testAssertionError(error: TestScriptError): void {

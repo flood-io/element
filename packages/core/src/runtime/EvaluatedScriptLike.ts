@@ -1,7 +1,7 @@
-import { TestScriptError } from '@flood/element-report'
+import { TestScriptError } from '../TestScriptError'
 import { TestSettings } from './Settings'
 import { TestDataSource } from '../test-data/TestData'
-import { ITest } from '../interface/ITest'
+import { ITest } from './ITest'
 import { RuntimeEnvironment } from '../runtime-environment/types'
 import { Step, StepRecoveryObject } from './Step'
 import { Hook } from './StepLifeCycle'
@@ -14,7 +14,7 @@ export interface EvaluatedScriptLike {
 	isScriptError(error: Error): boolean
 	maybeLiftError(error: Error): Error
 	liftError(error: Error): TestScriptError
-	filterAndUnMapStack(stack: string | Error | undefined): string[]
+	filterAndUnmapStack(stack: string | Error | undefined): string[]
 	bindTest(test: ITest): void
 	beforeTestRun(): Promise<void>
 	evaluate(): EvaluatedScriptLike

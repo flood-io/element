@@ -18,24 +18,23 @@ import {
 	RecoverWith,
 	extractStep,
 } from './Step'
-import { Browser } from '../interface/IBrowser'
+import { Browser } from './IBrowser'
 import Test from './Test'
 import { mustCompileFile } from '../TestScript'
-import { TestScriptError, TestScriptErrorMapper, expect } from '@flood/element-report'
-import { ITestScript } from '../interface/ITestScript'
+import { TestScriptError, TestScriptErrorMapper } from '../TestScriptError'
+import { ITestScript } from '../ITestScript'
 import { DEFAULT_SETTINGS, ConcreteTestSettings, normalizeSettings, TestSettings } from './Settings'
 import { RuntimeEnvironment } from '../runtime-environment/types'
+import { expect } from '../utils/Expect'
 
 import { Until } from '../page/Until'
 import { By } from '../page/By'
-import { MouseButtons, Key, userAgents } from '../page/Enums'
-import { Device } from '../page/Device'
+import { MouseButtons, Device, Key, userAgents } from '../page/Enums'
 
 import { TestDataSource, TestDataFactory } from '../test-data/TestData'
 import { BoundTestDataLoaders } from '../test-data/TestDataLoaders'
 import { EvaluatedScriptLike } from './EvaluatedScriptLike'
-import { Hook, HookType, normalizeHookBase } from './StepLifeCycle'
-import { BROWSER_TYPE } from '../page/types'
+import { Hook, normalizeHookBase } from './StepLifeCycle'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:eval-script')
@@ -43,7 +42,8 @@ const debug = require('debug')('element:runtime:eval-script')
 // TODO work out the right type for floodElementActual
 function createVirtualMachine(floodElementActual: any, root?: string): NodeVM {
 	const vm = new NodeVM({
-		console: 'redirect',
+		// console: 'redirect',
+		console: 'inherit',
 		sandbox: {},
 		wrapper: 'commonjs',
 		sourceExtensions: ['js', 'ts'],
@@ -101,8 +101,8 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		return this.script.liftError!(error)
 	}
-	public filterAndUnMapStack(stack: string | Error | undefined): string[] {
-		return this.script?.filterAndUnMapStack?.apply(this, stack)
+	public filterAndUnmapStack(stack: string | Error | undefined): string[] {
+		return this.script?.filterAndUnmapStack?.apply(this, stack)
 	}
 
 	public bindTest(test: Test): void {
@@ -191,25 +191,25 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 
 		const afterAll = (...args: any[]) => {
 			const [fn, waitTimeout] = args
-			const hookBase = normalizeHookBase({ fn, waitTimeout, type: HookType.afterAll })
+			const hookBase = normalizeHookBase({ fn, waitTimeout })
 			hook.afterAll.push(hookBase)
 		}
 
 		const afterEach = (...args: any[]) => {
 			const [fn, waitTimeout] = args
-			const hookBase = normalizeHookBase({ fn, waitTimeout, type: HookType.afterEach })
+			const hookBase = normalizeHookBase({ fn, waitTimeout })
 			hook.afterEach.push(hookBase)
 		}
 
 		const beforeAll = (...args: any[]) => {
 			const [fn, waitTimeout] = args
-			const hookBase = normalizeHookBase({ fn, waitTimeout, type: HookType.beforeAll })
+			const hookBase = normalizeHookBase({ fn, waitTimeout })
 			hook.beforeAll.push(hookBase)
 		}
 
 		const beforeEach = (...args: any[]) => {
 			const [fn, waitTimeout] = args
-			const hookBase = normalizeHookBase({ fn, waitTimeout, type: HookType.beforeEach })
+			const hookBase = normalizeHookBase({ fn, waitTimeout })
 			hook.beforeEach.push(hookBase)
 		}
 
@@ -312,7 +312,6 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			Key,
 			RecoverWith,
 			userAgents,
-			BROWSER_TYPE,
 		}
 
 		this.vm = createVirtualMachine(context, this.script.scriptRoot)

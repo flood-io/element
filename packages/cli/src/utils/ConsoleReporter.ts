@@ -89,6 +89,7 @@ cause.stack: ${detail.causeStack}`)
 
 	testScriptConsole(method: string, message?: any, ...optionalParams: any[]): void {
 		debug('testScriptConsole', method, message)
+		if (method === 'clear') return
 		if (method === 'log') method = 'info'
 		if (method === 'warning') method = 'warn'
 		const consolMethod = this.logger[method] || console.info

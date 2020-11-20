@@ -97,21 +97,20 @@ export default () => {
 ```
 
 **Local recovery**
-A local recovery step is executed in response to a failure in a particular step only, and it does not apply to failures in other steps. A local recovery step takes precedence over a global recovery step.
+A local recovery step is executed in response to a failure in a particular step only, and it does not apply to failures in other steps. A local recovery step takes precedence over a global recovery step. Note that the 1st parameter to pass to the recovery step should be the exact name of the step to which you want to add recovery.
 
-```diff title="my-test.perf.ts"
-import { step } from "@flood/element";
+```ts title="my-test.perf.ts"
+import { step } from '@flood/element';
 
 export default () => {
-  step("Step 1", async (browser) => {
-   await browser.visit("https://google.com")
+  step('Step 1', async (browser) => {
+   await browser.visit('https://google.com')
   })
 
--  step.recovery(async browser => {
-+  step.recovery("Step 1", async browser => {
-+    let alertCloser = await browser.findElement(By.id("close"))
-+    if (alertCloser!=null) await alertCloser.click()
-+  })
+  step.recovery('Step 1', async browser => { // 'Step 1' indicates this is the recovery step for Step 1 above
+    let alertCloser = await browser.findElement(By.id('close'))
+    if (alertCloser!=null) await alertCloser.click()
+  })
 };
 ```
 
@@ -119,7 +118,7 @@ export default () => {
 
 Element offers the ability to control what happens after a step has been recovered. By returning one of these instructions, the test will change its course.
 
-- `RecoverWith.RETRY`: Run the previous step again. Element will only do this up to the `recoveryTries` count, which is `1` by default. You can apply a general value for the whole test by putting this option within the `TestSettings`, or override this value for a specific step by putting it into the recovery step as in the code snippet below.
+- `RecoverWith.RETRY`: Run the previous step again. Element will only do this up to the `tries` count, which is `1` by default. You can apply a general value for the whole test by putting this option within the `TestSettings`, or override this value for a specific step by putting it into the recovery step as in the code snippet below.
 - `RecoverWith.CONTINUE`: Continue to the next step. This is the default behaviour.
 - `RecoverWith.RESTART`: Exit this loop and restart the test at the beginning, resetting the browser in the process.
 
@@ -131,11 +130,11 @@ export default () => {
 		await browser.visit('https://google.com')
 	})
 
-	step.recovery('Step 1', { recoveryTries: 2 }, async (browser) => {
+	step.recovery('Step 1', { tries: 2 }, async (browser) => {
 		let alertCloser = await browser.findElement(By.id('close'))
 		if (alertCloser != null) await alertCloser.click()
 
-		return RecoverWith.RETRY // retry "Step 1"
+		return RecoverWith.RETRY // retry 'Step 1' up to 2 times 
 	})
 }
 ```

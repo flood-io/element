@@ -323,6 +323,12 @@ export interface Browser {
 	 * Get the current URL of the page
 	 */
 	getUrl(): string
+
+	/**
+	 * get mime type of file
+	 * @param filePath
+	 */
+	getMimeType(filePath: string): string | false
 }
 
 /**

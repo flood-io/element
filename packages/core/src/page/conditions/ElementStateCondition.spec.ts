@@ -23,12 +23,12 @@ describe('Condition', () => {
 
 	describe('ElementStateCondition', () => {
 		test('waits Until.elementIsEnabled', async () => {
-			let condition = Until.elementIsEnabled(By.css('#btn'))
+			const condition = Until.elementIsEnabled(By.css('#btn'))
 			condition.settings.waitTimeout = 31e3
 			// Triggers a timeout of 500ms
 			await page.click('a#enable_btn')
 
-			let found = await condition.waitFor(page.mainFrame())
+			const found = await condition.waitFor(page.mainFrame())
 			expect(found).toBe(true)
 		}, 31e3)
 
@@ -39,7 +39,7 @@ describe('Condition', () => {
 					btn.removeAttribute('disabled')
 				}
 			})
-			let btn = await page.$('#btn')
+			const btn = await page.$('#btn')
 
 			expect(btn).not.toBeNull()
 			if (!btn) throw new Error('#btn was null')
@@ -48,12 +48,12 @@ describe('Condition', () => {
 				false,
 			)
 
-			let condition = Until.elementIsDisabled(By.css('#btn'))
+			const condition = Until.elementIsDisabled(By.css('#btn'))
 			condition.settings.waitTimeout = 31e3
 
 			await page.click('#btn')
 
-			let found = await condition.waitFor(page.mainFrame())
+			const found = await condition.waitFor(page.mainFrame())
 			expect(found).toBe(true)
 		}, 31e3)
 	})

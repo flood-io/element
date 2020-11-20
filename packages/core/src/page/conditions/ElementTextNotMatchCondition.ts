@@ -11,7 +11,7 @@ export class ElementTextNotMatchCondition extends ElementCondition {
 		return `waiting for element text to not equal "${this.pageFuncArgs[0]}"`
 	}
 
-	pageFunc: EvaluateFn = (node: HTMLElement, expectedText: string, partial: boolean = false) => {
+	pageFunc: EvaluateFn = (node: HTMLElement, expectedText: string, partial = false) => {
 		if (!node) return false
 		if (!node.textContent) return false
 		const text = node.textContent.trim()

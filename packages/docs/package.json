@@ -1,6 +1,6 @@
 {
 	"name": "element-docs",
-	"version": "1.4.0-beta.0",
+	"version": "0.0.1",
 	"private": true,
 	"scripts": {
 		"start": "docusaurus start",
@@ -27,5 +27,6 @@
 			"last 1 firefox version",
 			"last 1 safari version"
 		]
-	}
+	},
+	"devDependencies": {}
 }

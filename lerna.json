@@ -1,18 +1,14 @@
 {
 	"lerna": "2.11.0",
 	"npmClient": "yarn",
-	"version": "1.4.0-beta.0",
+	"version": "1.3.0-beta.28",
 	"useWorkspaces": true,
 	"command": {
 		"init": {
 			"exact": true
 		},
 		"publish": {
-			"conventionalCommits": true,
-			"ignoreChanges": [
-				"**/*.md",
-				"packages/docs/**"
-			]
+			"conventionalCommits": true
 		},
 		"version": {
 			"message": "chore(release): publish %s\n[skip ci]",
@@ -24,9 +20,6 @@
 		},
 		"bootstrap": {
 			"npmClient": "yarn"
-		},
-		"add": {
-			"exact": true
 		}
 	},
 	"ignoreChanges": [
@@ -34,8 +27,6 @@
 		"coverage",
 		"examples",
 		"scripts",
-		"smoke",
-		"**/*.md",
-		"packages/docs/**"
+		"smoke"
 	]
 }

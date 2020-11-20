@@ -1,5 +1,5 @@
 import { ElementCondition, NullableLocatable } from '../Condition'
-import { EvaluateFn } from '../types'
+import { EvaluateFn } from 'puppeteer'
 
 export class ElementSelectedCondition extends ElementCondition {
 	constructor(desc: string, locator: NullableLocatable, ...args: any[]) {

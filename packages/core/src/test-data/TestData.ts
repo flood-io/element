@@ -1,4 +1,4 @@
-import { Option } from '@flood/element-report'
+import { Option } from '../utils/Option'
 import { Feeder, FeedFilterFunction } from './Feeder'
 import { Loader } from './Loader'
 

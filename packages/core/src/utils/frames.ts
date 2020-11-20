@@ -1,4 +1,4 @@
-import { Frame } from 'playwright'
+import { Frame } from 'puppeteer'
 
 export function getFrames(childFrames: Frame[], collection?: Set<Frame>): Frame[] {
 	if (typeof collection === 'undefined') collection = new Set<Frame>()

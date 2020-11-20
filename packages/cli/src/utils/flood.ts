@@ -145,7 +145,7 @@ export function countVUH(options: LaunchOptions, gridCount: number) {
 export async function authenticate(username: string): Promise<void> {
 	const token = Buffer.from(`${username}:`).toString('base64')
 	const res = await (
-		await fetch('https://api.flood.io/api/users/me', {
+		await fetch('https://api.flood.io/account', {
 			headers: {
 				Authorization: `Basic ${token}`,
 			},

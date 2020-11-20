@@ -1,6 +1,6 @@
 import { EvaluatedScript } from './EvaluatedScript'
 import { mustCompileFile } from '../TestScript'
-import { ITestScript } from '../interface/ITestScript'
+import { ITestScript } from '../ITestScript'
 import { join } from 'path'
 import testRunEnv from '../../tests/support/test-run-env'
 import { DEFAULT_SETTINGS, normalizeSettings } from './Settings'
@@ -27,6 +27,9 @@ describe('EvaluatedScript', () => {
 		noSettingsTestScript = await mustCompileFile(
 			join(__dirname, '../../tests/fixtures/test-without-settings.ts'),
 		)
+		// dogfoodWaitTestScript = await mustCompileFile(
+		// join(__dirname, '../../tests/fixtures/dogfood-test-wait.ts'),
+		// )
 	})
 
 	describe('evaluate', () => {
@@ -58,7 +61,7 @@ describe('EvaluatedScript', () => {
 			expect(settings.duration).toBe(30e3)
 			expect(settings.waitTimeout).toBe(5000)
 			expect(settings.userAgent).toBe('I AM ROBOT')
-			expect(settings.ignoreHTTPSError).toBe(false)
+			expect(settings.ignoreHTTPSErrors).toBe(false)
 
 			expect(steps.map(step => step.name)).toEqual(['Step 1', 'Step 2', 'Step 3'])
 		})

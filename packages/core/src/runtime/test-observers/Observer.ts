@@ -52,33 +52,33 @@ export class NoOpTestObserver implements TestObserver {
 }
 
 export class NullTestObserver implements TestObserver {
-	async before(test: ITest): Promise<void> {
+	async before(): Promise<void> {
 		return
 	}
-	async after(test: ITest): Promise<void> {
-		return
-	}
-
-	async beforeStep(test: ITest, step: Step): Promise<void> {
-		return
-	}
-	async onStepPassed(test: ITest, step: Step): Promise<void> {
-		return
-	}
-	async onStepError(test: ITest, step: Step, error: StructuredError<any>): Promise<void> {
-		return
-	}
-	async onStepSkipped(test: ITest, step: Step): Promise<void> {
-		return
-	}
-	async afterStep(test: ITest, step: Step): Promise<void> {
+	async after(): Promise<void> {
 		return
 	}
 
-	async beforeStepAction(test: ITest, step: Step, command: string): Promise<void> {
+	async beforeStep(): Promise<void> {
 		return
 	}
-	async afterStepAction(test: ITest, step: Step, command: string): Promise<void> {
+	async onStepPassed(): Promise<void> {
+		return
+	}
+	async onStepError(): Promise<void> {
+		return
+	}
+	async onStepSkipped(): Promise<void> {
+		return
+	}
+	async afterStep(): Promise<void> {
+		return
+	}
+
+	async beforeStepAction(): Promise<void> {
+		return
+	}
+	async afterStepAction(): Promise<void> {
 		return
 	}
 }

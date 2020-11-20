@@ -7,12 +7,12 @@ import { TimingObserver } from './TimingObserver'
 
 export default class LifecycleObserver implements TestObserver {
 	constructor(public next: TestObserver) {}
-	async before(test: Test) {
+	async before(test: Test): Promise<void> {
 		test.reporter.testLifecycle(TestEvent.BeforeTest, 'test')
 		return this.next.before(test)
 	}
 
-	async after(test: Test) {
+	async after(test: Test): Promise<void> {
 		await this.next.after(test)
 
 		if (test.failed) {
@@ -24,23 +24,23 @@ export default class LifecycleObserver implements TestObserver {
 		test.reporter.testLifecycle(TestEvent.AfterTest, 'test')
 	}
 
-	async beforeStep(test: Test, step: Step) {
+	async beforeStep(test: Test, step: Step): Promise<void> {
 		test.reporter.testLifecycle(TestEvent.BeforeStep, step.name)
 		return this.next.beforeStep(test, step)
 	}
-	async onStepPassed(test: Test, step: Step) {
+	async onStepPassed(test: Test, step: Step): Promise<void> {
 		await this.next.onStepPassed(test, step)
 		test.reporter.testLifecycle(TestEvent.StepSucceeded, step.name)
 	}
-	async onStepError(test: Test, step: Step, error: StructuredError<any>) {
+	async onStepError(test: Test, step: Step, error: StructuredError<any>): Promise<void> {
 		await this.next.onStepError(test, step, error)
 		test.reporter.testLifecycle(TestEvent.StepFailed, step.name)
 	}
-	async onStepSkipped(test: Test, step: Step) {
+	async onStepSkipped(test: Test, step: Step): Promise<void> {
 		await this.next.onStepSkipped(test, step)
 		test.reporter.testLifecycle(TestEvent.StepSkipped, step.name)
 	}
-	async afterStep(test: Test, step: Step) {
+	async afterStep(test: Test, step: Step): Promise<void> {
 		const testObserver: TestObserver = this.next
 		await testObserver.afterStep(test, step)
 		const timing = await (testObserver as TimingObserver).getMeasurementTime(
@@ -49,11 +49,11 @@ export default class LifecycleObserver implements TestObserver {
 		test.reporter.testLifecycle(TestEvent.AfterStep, step.name, timing)
 	}
 
-	async beforeStepAction(test: Test, step: Step, command: string) {
+	async beforeStepAction(test: Test, step: Step, command: string): Promise<void> {
 		test.reporter.testLifecycle(TestEvent.BeforeStepAction, command)
 		return this.next.beforeStepAction(test, step, command)
 	}
-	async afterStepAction(test: Test, step: Step, command: string) {
+	async afterStepAction(test: Test, step: Step, command: string): Promise<void> {
 		await this.next.afterStepAction(test, step, command)
 		test.reporter.testLifecycle(TestEvent.AfterStepAction, command)
 	}

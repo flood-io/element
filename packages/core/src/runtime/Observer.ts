@@ -2,6 +2,7 @@ import NetworkRecorder from '../network/Recorder'
 import { RawResponse } from '../network/Protocol'
 import { ConsoleMethod } from './Settings'
 import { IReporter } from '../Reporter'
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:observer')
 
 interface Event {
@@ -22,7 +23,7 @@ export default class Observer {
 
 	constructor(private reporter: IReporter, public networkRecorder: NetworkRecorder) {}
 
-	public attachToNetworkRecorder() {
+	public attachToNetworkRecorder(): void {
 		if (this.attached) return
 		debug('attachToNetworkRecorder()')
 		this.attached = true
@@ -81,7 +82,7 @@ export default class Observer {
 
 	private onRawNetworkLoadingFinished({ requestId, encodedDataLength, timestamp }: RequestEvent) {
 		debug('onRawNetworkLoadingFinished', requestId)
-		// console.log(`onRawNetworkLoadingFinished: ${requestId}`)
+
 		if (!this.requests.has(requestId)) {
 			console.error(`Unknown request: ${requestId}`)
 			return
@@ -109,39 +110,32 @@ export default class Observer {
 		debug('onRawNetworkLoadingFailed', requestId)
 		this.removePendingRequest(requestId)
 		this.failedRequests.push(requestId)
-
-		// console.log(`Network.loadingFailed ${requestId} - ${errorText}`)
 	}
-
-	// private onNetworkResponse(response: Response) {
-	// 	// console.log(response.url)
-	// }
 
 	private removePendingRequest(requestId: string) {
-		this.requests.delete(requestId)
-		// console.log(`Pending requests: ${this.requests.size}`)
+		debug(`removePendingRequest ${requestId}`)
 	}
 
-	private onFrameAttached(event: any): void {}
+	private onFrameAttached(event: any): void {
+		debug(`onFrameAttached ${event}`)
+	}
 	private onDOMContentLoaded(event: any): void {
+		debug(`onDOMContentLoaded ${event}`)
 		this.networkRecorder.recordDOMContentLoadedEvent()
 	}
 
 	private onNavigate(event: any): void {
-		// this.logger.debug(`Frame scheduled navigation ${event}`)
+		debug(`Frame scheduled navigation ${event}`)
 	}
 
 	private onFrameStartedLoading(event: any): void {
-		// this.pendingFrameTransition = this.env.waitForNavigation({
-		// 	waitUntil: 'load',
-		// })
-		// this.logger.debug(`Page: Frame started loading id:${event.frameId}`)
+		debug(`onFrameStartedLoading ${event}`)
 	}
 
 	private onFrameClearedScheduledNavigation(event: any) {
-		// this.logger.debug(`Cancel frame navigation: id:${event.frameId}`)
+		debug(`onFrameClearedScheduledNavigation ${event}`)
 	}
 	private onFrameStoppedLoading(event: any) {
-		// this.logger.debug(`Page: Frame stoppped loading id:${event.frameId}`)
+		debug(`onFrameStoppedLoading ${event}`)
 	}
 }

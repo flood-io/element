@@ -77,17 +77,19 @@ describe('Recorder', () => {
 
 		test('records response headers for document', async () => {
 			const [document] = recorder.entriesForType('Document')
-			expect(document.response.headers.map(({ name }) => name).sort()).toEqual([
-				'Accept-Ranges',
-				'Cache-Control',
-				'Connection',
-				'Content-Length',
-				'Content-Type',
-				'Date',
-				'ETag',
-				'Last-Modified',
-				'X-Powered-By',
-			])
+			expect(document.response.headers.map(({ name }) => name).sort()).toEqual(
+				expect.arrayContaining([
+					'Accept-Ranges',
+					'Cache-Control',
+					'Connection',
+					'Content-Length',
+					'Content-Type',
+					'Date',
+					'ETag',
+					'Last-Modified',
+					'X-Powered-By',
+				]),
+			)
 		})
 
 		test('records document time', async () => {

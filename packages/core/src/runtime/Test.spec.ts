@@ -45,7 +45,7 @@ describe('Test', () => {
 
 	test('extracts settings during evaluation', async () => {
 		const test = await setupTest('test-with-export.ts')
-		let defaultSettings: Required<TestSettings> = {
+		const defaultSettings: Required<TestSettings> = {
 			actionDelay: '500ms',
 			stepDelay: '5s',
 			clearCache: false,

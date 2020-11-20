@@ -68,8 +68,7 @@ export class Manager {
 	}
 
 	private onRequestWillBeSent(event: Event): void {
-		if (event.redirectResponse) {
-		}
+		// if (event.redirectResponse) {}
 
 		this.handleRequestStart(
 			event.requestId,

@@ -8,7 +8,7 @@ function ensureDefined<T>(value: T | undefined | null): T | never {
 	}
 }
 
-let lines = [
+const lines = [
 	{ user: '1', username: 'johnny1@loadtest.io', password: 'correcthorsebatterstaple!' },
 	{ user: '2', username: 'johnny2@loadtest.io', password: 'correcthorsebatterstaple!' },
 	{ user: '3', username: 'johnny3@loadtest.io', password: 'correcthorsebatterstaple!' },
@@ -21,7 +21,7 @@ type Row = { user: string; username: string; password: string }
 
 describe('Feeder', () => {
 	test('Process line by line with filter', async () => {
-		let feeder = new Feeder<Row>('1')
+		const feeder = new Feeder<Row>('1')
 		feeder
 			.circular(false)
 			.filter((line, index, instanceID) => line.user === instanceID)
@@ -46,7 +46,7 @@ describe('Feeder', () => {
 	})
 
 	test('can be reset', async () => {
-		let feeder = new Feeder<Row>('1')
+		const feeder = new Feeder<Row>('1')
 			.filter((line, index, instanceID) => line.user === instanceID)
 			.append(lines)
 			.circular(false)
@@ -62,7 +62,7 @@ describe('Feeder', () => {
 	})
 
 	test('is be looped by default', async () => {
-		let feeder = new Feeder<Row>('1')
+		const feeder = new Feeder<Row>('1')
 			.filter((line, index, instanceID) => line.user === instanceID)
 			.append(lines)
 
@@ -77,15 +77,11 @@ describe('Feeder', () => {
 	})
 
 	test('can be randomized', async () => {
-		let feeder = new Feeder<Row>('1').shuffle().append(lines)
+		const feeder = new Feeder<Row>('1').shuffle().append(lines)
 
 		const mustFeed = () => ensureDefined(feeder.feed())
-		let users = [mustFeed()['username'], mustFeed()['username'], mustFeed()['username']]
+		const users = [mustFeed()['username'], mustFeed()['username'], mustFeed()['username']]
 
-		expect(users).not.toEqual([
-			'johnny1@loadtest.io',
-			'johnny2@loadtest.io',
-			'johnny3@loadtest.io',
-		])
+		expect(users).not.toEqual(['johnny1@loadtest.io', 'johnny2@loadtest.io', 'johnny3@loadtest.io'])
 	})
 })

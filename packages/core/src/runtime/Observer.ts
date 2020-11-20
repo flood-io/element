@@ -89,7 +89,7 @@ export default class Observer {
 
 		this.removePendingRequest(requestId)
 
-		let promise = new Promise((yeah, nah) => {
+		const promise = new Promise((yeah, nah) => {
 			this.networkRecorder
 				.recordResponseCompleted({
 					requestId,
@@ -105,7 +105,7 @@ export default class Observer {
 	}
 
 	private async onRawNetworkLoadingFailed(event: Event) {
-		let { requestId /*, errorText*/ } = event
+		const { requestId /*, errorText*/ } = event
 		debug('onRawNetworkLoadingFailed', requestId)
 		this.removePendingRequest(requestId)
 		this.failedRequests.push(requestId)

@@ -120,7 +120,7 @@ export class NullPuppeteerClient implements PuppeteerClientLike {
 	async close(): Promise<void> {
 		return
 	}
-	async reopenPage() {
+	async reopenPage(): Promise<void> {
 		return
 	}
 }

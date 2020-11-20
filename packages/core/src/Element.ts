@@ -1,37 +1,16 @@
-import { Logger } from 'winston'
-import { IReporter } from './Reporter'
-import { PuppeteerClient, launch } from './driver/Puppeteer'
-import { RuntimeEnvironment } from './runtime-environment/types'
-import { IRunner, Runner, PersistentRunner, TestCommander } from './Runner'
+import { launch } from './driver/Playwright'
+import { IRunner, Runner, PersistentRunner } from './Runner'
 import { mustCompileFile } from './TestScript'
 import { TestScriptOptions } from './TestScriptOptions'
 import { EvaluatedScript } from './runtime/EvaluatedScript'
-import { TestSettings, ChromeVersion } from './runtime/Settings'
-import { TestObserver } from './runtime/test-observers/Observer'
-import { AsyncFactory } from './utils/Factory'
+import { ElementOptions, ElementRunArguments, normalizeElementOptions } from './ElementOption'
+import { CustomConsole, IterationResult, ReportCache, TestResult } from '@flood/element-report'
+import chalk from 'chalk'
+import { EventEmitter } from 'events'
+import { ElementResult } from './ElementResult'
 
-export interface ElementOptions {
-	logger: Logger
-	runEnv: RuntimeEnvironment
-	reporter: IReporter
-	clientFactory?: AsyncFactory<PuppeteerClient>
-	testScript: string
-	strictCompilation: boolean
-	headless: boolean
-	devtools: boolean
-	chromeVersion: ChromeVersion | string | undefined
-	sandbox: boolean
-	process?: NodeJS.Process
-	verbose: boolean
-	testSettingOverrides: TestSettings
-	testObserverFactory?: (t: TestObserver) => TestObserver
-	persistentRunner: boolean
-	testCommander?: TestCommander
-	failStatusCode: number
-}
-
-export async function runCommandLine(opts: ElementOptions): Promise<void> {
-	const { logger, testScript, clientFactory } = opts
+export async function runSingleTestScript(opts: ElementOptions): Promise<IterationResult[]> {
+	const { testScript, clientFactory } = opts
 
 	// TODO proper types for args
 	let runnerClass: { new (...args: any[]): IRunner }
@@ -45,13 +24,12 @@ export async function runCommandLine(opts: ElementOptions): Promise<void> {
 		clientFactory || launch,
 		opts.testCommander,
 		opts.reporter,
-		logger,
 		opts.testSettingOverrides,
 		{
 			headless: opts.headless,
 			devtools: opts.devtools,
 			sandbox: opts.sandbox,
-			chromeVersion: opts.chromeVersion,
+			browserType: opts.browserType,
 			debug: opts.verbose,
 		},
 		opts.testObserverFactory,
@@ -61,19 +39,14 @@ export async function runCommandLine(opts: ElementOptions): Promise<void> {
 
 	if (installSignalHandlers) {
 		process.on('SIGINT', async () => {
-			logger.debug('Received SIGINT')
 			await runner.stop()
 		})
 
 		process.once('SIGUSR2', async () => {
-			// Usually received by nodemon on file change
-			logger.debug('Received SIGUSR2')
 			await runner.stop()
 			process.kill(process.pid, 'SIGUSR2')
 		})
 	}
-
-	logger.debug(`Loading test script: ${testScript}`)
 
 	const testScriptOptions: TestScriptOptions = {
 		stricterTypeChecking: opts.strictCompilation,
@@ -83,12 +56,71 @@ export async function runCommandLine(opts: ElementOptions): Promise<void> {
 	const testScriptFactory = async (): Promise<EvaluatedScript> => {
 		return new EvaluatedScript(opts.runEnv, await mustCompileFile(testScript, testScriptOptions))
 	}
+	await runner.run(testScriptFactory)
+	return runner.getSummaryIterations()
+}
 
-	try {
-		await runner.run(testScriptFactory)
-	} catch (err) {
-		console.log('Element exited with error')
-		console.error(err)
-		process.exit(opts.failStatusCode)
+export async function runCommandLine(args: ElementRunArguments): Promise<TestResult> {
+	const myEmitter = new EventEmitter()
+	const elementResult = new ElementResult()
+	const cache = new ReportCache(myEmitter)
+	global.console = new CustomConsole(process.stdout, process.stderr, myEmitter)
+
+	const prepareAndRunTestScript = async (
+		fileTitle: string,
+		args: ElementRunArguments,
+		cache: ReportCache,
+		elementResult: ElementResult,
+		isConfig: boolean,
+	) => {
+		console.group(chalk('Running', fileTitle))
+		const opts = normalizeElementOptions(args, cache)
+		elementResult.addExecutionInfo(opts, isConfig)
+		try {
+			const iterationResult = await runSingleTestScript(opts)
+			elementResult.addTestScript(args.file, iterationResult)
+		} catch (err) {
+			elementResult.addScriptWithError({ name: args.file, error: err.message })
+		}
+		console.groupEnd()
+		cache.resetCache()
 	}
+
+	if (args.testFiles) {
+		console.log(
+			chalk.grey(
+				'The following test scripts that matched the testPathMatch pattern are going to be executed:',
+			),
+		)
+		let order = 0
+		const numberOfFile = args.testFiles.length
+		for (const file of args.testFiles) {
+			const arg: ElementRunArguments = {
+				...args,
+				file,
+			}
+			if (order >= 1) {
+				console.log(
+					chalk.grey('------------------------------------------------------------------'),
+				)
+			}
+			order++
+			const fileTitle = chalk.grey(`${file} (${order} of ${numberOfFile})`)
+			await prepareAndRunTestScript(fileTitle, arg, cache, elementResult, true)
+		}
+		console.log(chalk.grey('Test running with the config file has finished'))
+	} else {
+		const fileTitle = chalk.grey(`${args.file} (1 of 1)`)
+		await prepareAndRunTestScript(fileTitle, args, cache, elementResult, false)
+	}
+
+	if (args.notExistingFiles) {
+		args.notExistingFiles.forEach(name =>
+			elementResult.addScriptWithError({ name, error: "Test script(s) couldn't be found" }),
+		)
+	}
+
+	myEmitter.removeAllListeners('add')
+	myEmitter.removeAllListeners('update')
+	return elementResult.getResult()
 }

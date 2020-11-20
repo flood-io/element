@@ -1,11 +1,11 @@
-import { Option } from '../utils/Option'
+import { Option } from '@flood/element-report'
 import { knuthShuffle } from 'knuth-shuffle'
 
 export type FeedFilterFunction<Line> = (line: Line, index: number, instanceID: string) => boolean
 
 export class Feeder<T> {
-	private resetOnEnd: boolean = true
-	private shuffleAfterLoad: boolean = false
+	private resetOnEnd = true
+	private shuffleAfterLoad = false
 
 	constructor(
 		public instanceID: string = '',
@@ -17,11 +17,11 @@ export class Feeder<T> {
 	}
 
 	public append(lines: T[]): Feeder<T> {
-		let { instanceID } = this
+		const { instanceID } = this
 
 		if (!lines || lines.length === 0) return this
 
-		let newLines = lines.filter((line, index) =>
+		const newLines = lines.filter((line, index) =>
 			this.filters.every(func => func(line, index, instanceID)),
 		)
 		if (this.shuffleAfterLoad) {
@@ -91,7 +91,7 @@ export class Feeder<T> {
 	}
 
 	public toString(): string {
-		let s: string[] = []
+		const s: string[] = []
 
 		if (this.shuffleAfterLoad) {
 			s.push('shuffled')

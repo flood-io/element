@@ -1,6 +1,4 @@
-// import { BaseLocator } from '../Locators'
-import { EvaluateFn } from 'puppeteer'
-import { LocatorBuilder } from '../types'
+import { LocatorBuilder, EvaluateFn } from '../types'
 
 export class CSSLocator implements LocatorBuilder {
 	constructor(public selector: string) {}
@@ -10,7 +8,12 @@ export class CSSLocator implements LocatorBuilder {
 	}
 
 	get pageFunc(): EvaluateFn<string | undefined> {
-		return (selector: string, node?: HTMLElement) => (node ?? document).querySelector(selector)
+		return (selector: string, node?: HTMLElement) => {
+			const elm = (node ?? document).querySelector(selector)
+			if (elm) return elm
+			const frames: HTMLFrameElement | null = (node ?? document).querySelector('frame')
+			return frames?.contentDocument?.querySelector(selector)
+		}
 	}
 
 	get pageFuncMany(): EvaluateFn<string> {

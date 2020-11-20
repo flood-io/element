@@ -16,8 +16,6 @@ export function preParseIndex(fileName: string) {
 		/* setParentNodes */ true,
 	)
 	ts.forEachChild(s, node => {
-		// debug('node', ts.Debug.showSyntaxKind(node))
-
 		switch (node.kind) {
 			case ts.SyntaxKind.ExportDeclaration:
 				getExport(ctx, node)

@@ -58,7 +58,7 @@ export class TracingObserver extends NetworkRecordingTestObserver {
 			const assertion: Assertion = {
 				assertionName: 'AssertionError',
 				message: sErr.message,
-				stack: test.script?.filterAndUnmapStack?.(sErr.stack) ?? 'No stack trace from script',
+				stack: test.script?.filterAndUnMapStack?.(sErr.stack) ?? 'No stack trace from script',
 				isFailure: true,
 			}
 
@@ -67,7 +67,7 @@ export class TracingObserver extends NetworkRecordingTestObserver {
 		} else {
 			const errorPayload = {
 				message: err.message,
-				stack: test.script?.filterAndUnmapStack?.(err)?.join('\n') ?? 'No stack trace from script',
+				stack: test.script?.filterAndUnMapStack?.(err)?.join('\n') ?? 'No stack trace from script',
 			}
 
 			this.trace.addError(errorPayload)

@@ -37,7 +37,7 @@ jobs:
       - name: 'Build all'
         run: yarn build
       - name: 'Publish beta to NPM'
-        run: yarn lerna publish --conventional-prerelease --dist-tag beta --yes --preid beta --include-merged-tags --force-publish
+        run: yarn lerna publish --conventional-prerelease --dist-tag beta --yes --preid beta --include-merged-tags --force-publish --exact --ignore-changes '**/*.md' 'packages/docs/**'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: 'Publish beta to Homebrew'

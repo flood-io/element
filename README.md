@@ -160,7 +160,7 @@ Please see our [CONTRIBUTING.md](/CONTRIBUTING.md).
 
 If you encounter any issues with the `@flood/element` project or Flood Element product, please [open an issue](https://github.com/flood-io/element/issues) on the GitHub project.
 
-If you're encountering issues with Flood itself, please contact Flood Support from within the Flood Dashboard.
+If you're encountering issues with Flood itself, please contact [Flood Support](mailto:support@flood.io) from within the Flood Dashboard.
 
 ## Authors
 

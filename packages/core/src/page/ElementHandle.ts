@@ -1,10 +1,17 @@
 import {
 	ElementHandle as PElementHandle,
-	ClickOptions,
-	ScreenshotOptions,
+	Page,
+	ChromiumBrowserContext,
+	CDPSession,
+	Frame,
+} from 'playwright'
+import {
+	ElementHandle as IElementHandle,
+	Locator,
 	EvaluateFn,
-} from 'puppeteer'
-import { ElementHandle as IElementHandle, Locator } from './types'
+	ScreenshotOptions,
+	ClickOptions,
+} from './types'
 import {
 	ErrorInterpreter,
 	AnyErrorData,
@@ -12,27 +19,22 @@ import {
 	EmptyErrorData,
 	interpretError,
 } from '../runtime/errors/Types'
-import interpretPuppeteerError from '../runtime/errors/interpretPuppeteerError'
 import { StructuredError } from '../utils/StructuredError'
 import { Key } from './Enums'
 import debugFactory from 'debug'
 import { Point } from './Point'
 import { CSSLocator } from './locators/index'
-// import { By } from './Locators'
 const debug = debugFactory('element:page:element-handle')
 
 /**
  * @internal
  */
 async function getProperty<T>(element: PElementHandle, prop: string): Promise<T | null> {
-	if (!element) {
-		return null
-	} else {
-		const handle = await element.getProperty(prop)
-		const value = (await handle.jsonValue()) as T
-		handle.dispose()
-		return value
-	}
+	if (!element) return null
+	const handle = await element.getProperty(prop)
+	const value = (await handle.jsonValue()) as T
+	handle.dispose()
+	return value
 }
 
 /**
@@ -41,7 +43,7 @@ async function getProperty<T>(element: PElementHandle, prop: string): Promise<T 
 function wrapDescriptiveError(
 	...errorInterpreters: ErrorInterpreter<ElementHandle, AnyErrorData>[]
 ) {
-	errorInterpreters.push(interpretPuppeteerError)
+	// errorInterpreters.push(interpretPuppeteerError)
 
 	return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
 		const originalFn = descriptor.value
@@ -137,8 +139,13 @@ export class ElementHandle implements IElementHandle, Locator {
 	 * @internal
 	 */
 	public element: PElementHandle
-	constructor(elt: PElementHandle) {
+	public page: Page
+	private frame: Frame
+
+	constructor(elt: PElementHandle, page: Page, frame?: Frame) {
 		this.element = elt
+		this.page = page
+		this.frame = frame || page.mainFrame()
 	}
 
 	public async initErrorString(foundVia?: string): Promise<ElementHandle> {
@@ -217,13 +224,12 @@ export class ElementHandle implements IElementHandle, Locator {
 	public async clear(): Promise<void> {
 		const tagName = await this.tagName()
 		if (tagName === 'SELECT') {
-			await this.element
-				.executionContext()
-				.evaluate((element: HTMLSelectElement) => (element.selectedIndex = -1), this.element)
+			await this.element.evaluate(
+				(element: HTMLSelectElement) => (element.selectedIndex = -1),
+				this.element,
+			)
 		} else if (tagName === 'INPUT') {
-			await this.element
-				.executionContext()
-				.evaluate((element: HTMLInputElement) => (element.value = ''), this.element)
+			await this.element.evaluate((element: HTMLInputElement) => (element.value = ''), this.element)
 		}
 	}
 
@@ -240,9 +246,7 @@ export class ElementHandle implements IElementHandle, Locator {
 	 */
 	@wrapDescriptiveError()
 	public async blur(): Promise<void> {
-		return await this.element
-			.executionContext()
-			.evaluate((node: HTMLElement) => node.blur(), this.element)
+		return await this.element.evaluate((node: HTMLElement) => node.blur(), this.element)
 	}
 
 	/**
@@ -280,7 +284,7 @@ export class ElementHandle implements IElementHandle, Locator {
 	 */
 	@wrapDescriptiveError()
 	public async uploadFile(...names: string[]): Promise<void> {
-		return this.element.uploadFile(...names.map(name => this.fs.testData(name)))
+		return this.element.setInputFiles([...names.map(name => this.fs.testData(name))])
 	}
 
 	/**
@@ -306,7 +310,8 @@ export class ElementHandle implements IElementHandle, Locator {
 			const { BaseLocator } = await import('./Locator')
 			locator = new BaseLocator(new CSSLocator(locator), 'handle.findElement')
 		}
-		return locator.find(this.element.executionContext(), this.element)
+
+		return locator.find(this.page, this.element, this.frame)
 	}
 
 	/**
@@ -317,7 +322,7 @@ export class ElementHandle implements IElementHandle, Locator {
 			const { BaseLocator } = await import('./Locator')
 			locator = new BaseLocator(new CSSLocator(locator), 'handle.findElements')
 		}
-		return locator.findMany(this.element.executionContext(), this.element)
+		return locator.findMany(this.page, this.element, this.frame)
 	}
 
 	/**
@@ -341,9 +346,7 @@ export class ElementHandle implements IElementHandle, Locator {
 		const handle = this.element.asElement()
 		if (!handle) return null
 
-		return handle
-			.executionContext()
-			.evaluate((element: HTMLElement, key: string) => element.getAttribute(key), this.element, key)
+		return handle.evaluate((element: HTMLElement, key: string) => element.getAttribute(key), key)
 	}
 
 	/**
@@ -357,7 +360,7 @@ export class ElementHandle implements IElementHandle, Locator {
 	 * If the remote element is selectable (such as an `<option>` or `input[type="checkbox"]`) this methos will indicate whether it is selected.
 	 */
 	public async isSelected(): Promise<boolean> {
-		if (await !this.isSelectable()) {
+		if (!this.isSelectable()) {
 			throw new Error('Element is not selectable')
 		}
 
@@ -413,12 +416,10 @@ export class ElementHandle implements IElementHandle, Locator {
 	 * @memberof ElementHandle
 	 */
 	public async text(): Promise<string> {
-		return this.element
-			.executionContext()
-			.evaluate(
-				(element: HTMLElement) => (element.textContent ? element.textContent.trim() : ''),
-				this.element,
-			)
+		return this.element.evaluate(
+			(element: HTMLElement) => (element.textContent ? element.textContent.trim() : ''),
+			this.element,
+		)
 	}
 
 	/**
@@ -460,14 +461,17 @@ export class ElementHandle implements IElementHandle, Locator {
 		return { x, y }
 	}
 
-	// TODO fix with better typings
-	private get elementClient(): any {
-		return (this.element as any)['_client']
+	private async elementClient(): Promise<CDPSession | null> {
+		try {
+			const context = this.page.context() as ChromiumBrowserContext
+			return context.newCDPSession(this.page)
+		} catch (err) {
+			return null
+		}
 	}
 
-	// TODO fix with better typings
 	private get elementRemoteObject(): any {
-		return (this.element as any)['_remoteObject']
+		return this.element['_objectId']
 	}
 
 	public async dispose(): Promise<void> {
@@ -475,19 +479,24 @@ export class ElementHandle implements IElementHandle, Locator {
 	}
 
 	public async highlight() {
-		await this.elementClient.send('Overlay.highlightNode', {
-			highlightConfig: {
-				showInfo: true,
-				displayAsMaterial: true,
-				borderColor: { r: 76, g: 175, b: 80, a: 1 },
-				contentColor: { r: 76, g: 175, b: 80, a: 0.24 },
-				shapeColor: { r: 76, g: 175, b: 80, a: 0.24 },
-			},
-			objectId: this.elementRemoteObject.objectId,
-		})
+		const client: CDPSession | null = await this.elementClient()
+		if (client) {
+			await client.send('Overlay.highlightNode', {
+				highlightConfig: {
+					showInfo: true,
+					borderColor: { r: 76, g: 175, b: 80, a: 1 },
+					contentColor: { r: 76, g: 175, b: 80, a: 0.24 },
+					shapeColor: { r: 76, g: 175, b: 80, a: 0.24 },
+				},
+				objectId: this.elementRemoteObject,
+			})
+		}
 	}
 
 	public async clearHighlights() {
-		await this.elementClient.send('Overlay.hideHighlight', {})
+		const client: CDPSession | null = await this.elementClient()
+		if (client) {
+			await client.send('Overlay.hideHighlight', {})
+		}
 	}
 }

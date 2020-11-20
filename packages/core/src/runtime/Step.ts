@@ -1,6 +1,6 @@
 import { ElementPresence, DEFAULT_WAIT_TIMEOUT_MILLISECONDS } from './Settings'
 import ms from 'ms'
-import { Browser } from './IBrowser'
+import { Browser } from '../interface/IBrowser'
 
 /**
  * Declares each step in your test. This must go within your main test expression.
@@ -181,6 +181,14 @@ export type Step = {
 	name: string
 	options: Partial<StepOptions>
 	fn: TestFn
+	subTitle?: string
+	duration?: number
+	prop?: {
+		recoveryTries?: number
+		skipped?: boolean
+		unexecuted?: boolean
+		passed?: boolean
+	}
 }
 
 /**

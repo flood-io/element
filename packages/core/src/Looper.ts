@@ -5,6 +5,7 @@ export class Looper {
 	private timeout: any
 	private cancelled = false
 	private loopCount: number
+	public isRestart = false
 
 	public done: Promise<void>
 	private doneResolve: () => void
@@ -40,6 +41,7 @@ export class Looper {
 	}
 
 	finish() {
+		this.isRestart = false
 		clearTimeout(this.timeout)
 	}
 
@@ -51,17 +53,23 @@ export class Looper {
 	}
 
 	restartLoop() {
+		this.isRestart = true
 		this.iterations -= 1
 	}
 
-	async run(iterator: (iteration: number) => Promise<void>): Promise<number> {
-		while (this.continueLoop) {
-			await iterator(++this.iterations)
-		}
-		this.finish()
+	restartLoopDone() {
+		this.isRestart = false
+	}
 
-		// XXX perhaps call this in a finally to ensure it gets called
-		this.doneResolve()
+	async run(iterator: (iteration: number, isRestart: boolean) => Promise<void>): Promise<number> {
+		try {
+			while (this.continueLoop) {
+				await iterator(++this.iterations, this.isRestart)
+			}
+			this.finish()
+		} finally {
+			this.doneResolve()
+		}
 
 		return this.iterations
 	}

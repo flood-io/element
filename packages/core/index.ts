@@ -11,7 +11,8 @@ export { Condition } from './src/page/Condition'
 /**
  * @docPage Constants
  */
-export { Device, Key, MouseButtons } from './src/page/Enums'
+export { Key, MouseButtons } from './src/page/Enums'
+export { Device } from './src/page/Device'
 
 /**
  * @docPage By
@@ -71,9 +72,9 @@ export const TestData = new NullTestDataLoaders()
 export {
 	TestSettings,
 	setup,
-	DEFAULT_SETTINGS,
 	ConsoleMethod,
 	ResponseTiming,
+	RampStage,
 } from './src/runtime/Settings'
 
 /**
@@ -92,7 +93,7 @@ export const ENV: FloodProcessEnv = nullFloodProcessEnv
 /**
  * @docPage Browser
  */
-export { Browser, Browser as Driver } from './src/runtime/IBrowser'
+export { Browser, Browser as Driver } from './src/interface/IBrowser'
 
 /**
  * @docPage Browser
@@ -100,25 +101,22 @@ export { Browser, Browser as Driver } from './src/runtime/IBrowser'
 export { Locatable, NullableLocatable } from './src/runtime/Locatable'
 
 /**
- * @docPage Browser
- */
-export {
-	ClickOptions,
-	ScreenshotOptions,
-	NavigationOptions,
-	BoundingBox,
-	LoadEvent,
-} from 'puppeteer'
-
-/**
  * @docPage DSL
  */
 export { step, TestFn, StepFunction, StepOptions, RecoverWith } from './src/runtime/Step'
 
 export { beforeAll, afterAll, beforeEach, afterEach, HookFn } from './src/runtime/StepLifeCycle'
+/**
+ * @docPage DSL
+ */
+export { suite } from './src/runtime/types'
 
 export * from './api'
 
 export { EvaluatedScript } from './src/runtime/EvaluatedScript'
 export { EvaluatedScriptLike } from './src/runtime/EvaluatedScriptLike'
 export { default as WorkRoot } from './src/runtime-environment/WorkRoot'
+export { BROWSER_TYPE } from './src/page/types'
+export { AsyncFactory } from './src/utils/Factory'
+export { default as PreCompiledTestScript } from './src/test-script/PreCompiledTestScript'
+export { Runner } from './src/Runner'

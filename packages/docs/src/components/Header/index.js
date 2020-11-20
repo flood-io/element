@@ -1,7 +1,7 @@
 import React from 'react'
 import classnames from 'classnames'
-import Link from '../../../../docs-1/src/components/Header/node_modules/@docusaurus/Link'
-import useBaseUrl from '../../../../docs-1/src/components/Header/node_modules/@docusaurus/useBaseUrl'
+import Link from '@docusaurus/Link'
+import useBaseUrl from '@docusaurus/useBaseUrl'
 import styles from './styles.module.css'
 
 const Header = () => {

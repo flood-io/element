@@ -1,7 +1,7 @@
 import React from 'react'
 import classnames from 'classnames'
-import useBaseUrl from '../../../../../docs-1/src/components/Header/node_modules/@docusaurus/useBaseUrl'
-import useThemeContext from '../../../../../docs-1/src/components/Main/FeatureBlock/node_modules/@theme/hooks/useThemeContext'
+import useBaseUrl from '@docusaurus/useBaseUrl'
+import useThemeContext from '@theme/hooks/useThemeContext'
 import styles from './styles.module.css'
 
 function FeatureBlock({ imageUrl, title, description }) {

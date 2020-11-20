@@ -18,7 +18,7 @@ export class Context {
 
 	// TODO deliberately detach from network recorder & observer
 
-	public attachToPage(reporter: IReporter, page: Page) {
+	public attachToPage(reporter: IReporter, page: Page): void {
 		this.networkRecorder = new NetworkRecorder(page)
 		this.observer = new NetworkObserver(reporter, this.networkRecorder)
 		this.observer.attachToNetworkRecorder()

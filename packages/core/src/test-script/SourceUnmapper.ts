@@ -35,7 +35,11 @@ export function callsiteToString(callsite: Callsite | undefined): string {
 // https://github.com/evanw/node-source-map-support
 export class SourceUnmapper {
 	// can't have async constructors, so:
-	public static async init(originalSource: string, originalFilename: string, sourceMap: string) {
+	public static async init(
+		originalSource: string,
+		originalFilename: string,
+		sourceMap: string,
+	): Promise<SourceUnmapper> {
 		const sourceMapConsumer = await new SourceMapConsumer(sourceMap)
 
 		return new SourceUnmapper(originalSource, originalFilename, sourceMapConsumer)

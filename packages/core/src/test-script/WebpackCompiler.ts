@@ -26,21 +26,12 @@ export default class WebpackCompiler implements ITestScript {
 		const output = await compiler.emit()
 		this.result = output
 
-		this.sourceUnmapper = await SourceUnmapper.init(
-			// this.originalSource,
-			output.content,
-			this.sourceFile,
-			this.sourceMap,
-		)
-
-		// writeFileSync(join(this.scriptRoot, 'bundle.js.map'), this.sourceMap, {
-		// 	encoding: 'utf8',
-		// })
+		this.sourceUnmapper = await SourceUnmapper.init(output.content, this.sourceFile, this.sourceMap)
 
 		return this
 	}
 
-	public get scriptRoot() {
+	public get scriptRoot(): string {
 		return dirname(this.sourceFile)
 	}
 
@@ -52,15 +43,15 @@ export default class WebpackCompiler implements ITestScript {
 		return readFileSync(this.sourceFile, { encoding: 'utf8' })
 	}
 
-	get sandboxedFilename() {
+	get sandboxedFilename(): string {
 		return this.sourceFile
 	}
 
-	get source() {
+	get source(): string {
 		return this.result?.content ?? ''
 	}
 
-	get sourceMap() {
+	get sourceMap(): string {
 		return this.result?.sourceMap ?? ''
 	}
 
@@ -101,17 +92,9 @@ export default class WebpackCompiler implements ITestScript {
 		return new TestScriptError(error.message, stack, callsite, unmappedStack, error)
 	}
 
-	// maybeLiftError?(error: Error): Error {}
-
-	// filterAndUnmapStack?(stack: string | Error | undefined): string[] {}
-
 	public get vmScript(): VMScript {
 		if (!this.vmScriptCache) {
-			this.vmScriptCache = new VMScript(
-				// wrapCodeInModuleWrapper(this.source),
-				this.source,
-				this.sandboxedFilename,
-			)
+			this.vmScriptCache = new VMScript(this.source, this.sandboxedFilename)
 		}
 
 		return this.vmScriptCache

@@ -10,7 +10,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 -   change version to make it consitent ([79d3a60](https://github.com/flood-io/element/commit/79d3a607a580b230536260ed68b40c1c701aaa1f))
 -   revert beta to 1.3.0-beta.28 ([5ff2220](https://github.com/flood-io/element/commit/5ff2220674ec1f89b31f2499f0d5f0aecc1c12af))
 
-## [1.3.0-beta.28](https://github.com/flood-io/element/compare/v1.3.0-beta.27...v1.3.0-beta.28) (2020-08-29)
+## [1.3.6](https://github.com/flood-io/element/compare/v1.3.5...v1.3.6) (2020-09-24)
 
 **Note:** Version bump only for package element-docs
 

@@ -26,7 +26,7 @@ export const settings: TestSettings = {
 	actionDelay: '500ms',
 }
 
-const URL = 'https://flood-element-challenge.vercel.app/'
+const URL = 'https://element-challenge.flood.io/'
 
 const getNumOfPages = async (browser: Browser): Promise<number> => {
 	return await browser.evaluate(() => {

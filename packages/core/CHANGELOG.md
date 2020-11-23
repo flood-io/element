@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.5](https://github.com/flood-io/element/compare/v2.0.0-canary.4...v2.0.0-canary.5) (2020-11-23)
+
+
+### Bug Fixes
+
+* set default viewport of browser instead of null ([3304bcc](https://github.com/flood-io/element/commit/3304bcc60f42882ed86265c24ad8ea3df9479fd0))
+
+
+
+
+
 # [2.0.0-canary.4](https://github.com/flood-io/element/compare/v2.0.0-canary.3...v2.0.0-canary.4) (2020-11-19)
 
 

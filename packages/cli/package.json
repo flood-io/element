@@ -21,7 +21,7 @@
 		"@flood/element-flood-runner": "1.4.0-beta.1",
 		"boxen": "^3.0",
 		"chalk": "^2.4.1",
-		"chokidar": "^2.0.4",
+		"chokidar": "^3.4.2",
 		"command-exists": "^1.2.7",
 		"debug": "^3.1.0",
 		"find-root": "^1.1.0",
@@ -40,7 +40,6 @@
 	"devDependencies": {
 		"@types/boxen": "^3.0.1",
 		"@types/chalk": "^2.2.0",
-		"@types/chokidar": "^1.7.5",
 		"@types/command-exists": "^1.2.0",
 		"@types/find-root": "^1.1.1",
 		"@types/ms": "^0.7.31",

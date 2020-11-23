@@ -7,6 +7,12 @@ import {
 	TestSettings,
 	runCommandLine,
 	ElementOptions,
+	DEFAULT_ACTION_DELAY,
+	DEFAULT_STEP_DELAY,
+	DEFAULT_STEP_DELAY_FAST_FORWARD,
+	DEFAULT_ACTION_DELAY_FAST_FORWARD,
+	DEFAULT_STEP_DELAY_SLOW_MO,
+	DEFAULT_ACTION_DELAY_SLOW_MO,
 } from '@flood/element-core'
 import { watch } from 'chokidar'
 import { EventEmitter } from 'events'
@@ -18,6 +24,7 @@ import chalk from 'chalk'
 import ms from 'ms'
 
 import { getFilesPattern, readConfigFile } from '../utils/compile'
+
 interface RunCommonArguments extends Arguments {
 	file: string
 	chrome?: string
@@ -37,35 +44,44 @@ interface RunCommonArguments extends Arguments {
 	configFile: string
 }
 
+function isNumber(value: string): boolean {
+	const numberPattern = /^[0-9]+$/
+	return numberPattern.test(value)
+}
+
 function setupDelayOverrides(
 	args: RunCommonArguments,
 	testSettingOverrides: TestSettings,
 ): TestSettings {
 	if (testSettingOverrides == null) testSettingOverrides = {}
-	const { actionDelay, stepDelay } = args
-	let convertedActionDelay = 0
-	let convertedStepDelay = 0
+	let { actionDelay, stepDelay } = args
 
-	if (typeof actionDelay === 'string' && actionDelay) {
-		convertedActionDelay = ms(actionDelay)
-	} else if (typeof actionDelay === 'number') {
-		convertedActionDelay = actionDelay
+	if (actionDelay) {
+		//received from the terminal so the value is always string, it is necessary to check the user wants to enter the string or number
+		if (!isNumber(actionDelay as string)) actionDelay = ms(actionDelay as string)
+		else {
+			if (actionDelay < 0) actionDelay = DEFAULT_ACTION_DELAY
+			else if (actionDelay < 1e3) actionDelay = (actionDelay as number) * 1e3
+		}
+		testSettingOverrides.actionDelay = actionDelay
 	}
-	testSettingOverrides.actionDelay = convertedActionDelay > 0 ? convertedActionDelay : 0
 
-	if (typeof stepDelay === 'string' && stepDelay) {
-		convertedStepDelay = ms(stepDelay)
-	} else if (typeof stepDelay === 'number') {
-		convertedStepDelay = stepDelay
+	if (stepDelay) {
+		//received from the terminal so the value is always string, it is necessary to check the user wants to enter the string or number
+		if (!isNumber(stepDelay as string)) stepDelay = ms(stepDelay as string)
+		else {
+			if (stepDelay < 0) stepDelay = DEFAULT_STEP_DELAY
+			else if (stepDelay < 1e3) stepDelay = (stepDelay as number) * 1e3
+		}
+		testSettingOverrides.stepDelay = stepDelay
 	}
-	testSettingOverrides.stepDelay = convertedStepDelay > 0 ? convertedStepDelay : 0
 
 	if (args.fastForward) {
-		testSettingOverrides.stepDelay = 1000
-		testSettingOverrides.actionDelay = 1000
+		testSettingOverrides.stepDelay = DEFAULT_STEP_DELAY_FAST_FORWARD
+		testSettingOverrides.actionDelay = DEFAULT_ACTION_DELAY_FAST_FORWARD
 	} else if (args.slowMo) {
-		testSettingOverrides.stepDelay = 10000
-		testSettingOverrides.actionDelay = 10000
+		testSettingOverrides.stepDelay = DEFAULT_STEP_DELAY_SLOW_MO
+		testSettingOverrides.actionDelay = DEFAULT_ACTION_DELAY_SLOW_MO
 	}
 	return testSettingOverrides
 }
@@ -120,7 +136,7 @@ function makeTestCommander(file: string): TestCommander {
 	// TODO make this more reliable on linux
 	const watcher = watch(file, { persistent: true })
 	watcher.on('change', path => {
-		if (path === file) {
+		if (resolve(path) === resolve(file)) {
 			commander.emit('rerun-test')
 		}
 	})
@@ -156,7 +172,6 @@ async function runTestScript(args: RunCommonArguments): Promise<void> {
 		runEnv: initRunEnv(workRootPath, testDataPath),
 		testSettingOverrides: {},
 		persistentRunner: false,
-		failStatusCode: args['fail-status-code'],
 	}
 
 	if (args.loopCount) {
@@ -190,18 +205,27 @@ async function runTestScriptWithConfiguration(args: RunCommonArguments): Promise
 			...paths,
 			file,
 		}
-		await runTestScript(arg)
+		try {
+			await runTestScript(arg)
+			// eslint-disable-next-line no-empty
+		} catch {}
 	}
 	console.info('Test running with the config file has finished')
 }
 
 const cmd: CommandModule = {
 	command: 'run [file] [options]',
-	describe: 'Run [a test script| test scripts with configuration] locally',
+	describe: 'Run a test script (or multiple test scripts with configuration) locally',
 
 	async handler(args: RunCommonArguments): Promise<void> {
 		if (args.file) {
-			await runTestScript(args)
+			try {
+				await runTestScript(args)
+			} catch (err) {
+				console.log('Element exited with error')
+				console.error(err)
+				process.exit(args['fail-status-code'])
+			}
 		} else {
 			await runTestScriptWithConfiguration(args)
 		}
@@ -279,7 +303,8 @@ const cmd: CommandModule = {
 			})
 			.option('strict', {
 				group: 'Running the test script:',
-				describe: 'Compile the script in strict mode. This can be helpful in diagnosing problems.',
+				describe:
+					'[DEPRECATED] Compile the script in strict mode. This can be helpful in diagnosing problems.',
 			})
 			.option('work-root', {
 				group: 'Paths:',
@@ -300,7 +325,7 @@ const cmd: CommandModule = {
 				default: 1,
 			})
 			.positional('file', {
-				describe: 'the test script to run',
+				describe: 'The test script to run',
 				coerce: file => {
 					const fileErr = checkFile(file as string)
 					if (fileErr) throw fileErr
@@ -308,7 +333,7 @@ const cmd: CommandModule = {
 				},
 			})
 			.option('config-file', {
-				describe: 'Run test scripts with configuration',
+				describe: 'Run multiple test scripts sequentially with a configuration file',
 				type: 'string',
 				default: 'element.config.js',
 			})

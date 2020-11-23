@@ -26,18 +26,22 @@ export abstract class Condition {
 	constructor(public desc: string = '*BASE CONDITION') {}
 
 	public abstract toString(): string
-	public abstract async waitFor(frame: Frame, page?: Page): Promise<unknown>
+	public abstract waitFor(frame: Frame, page?: Page): Promise<unknown>
 
-	public abstract async waitForEvent(page: Page): Promise<unknown>
+	public abstract waitForEvent(page: Page): Promise<unknown>
 
-	protected get timeout(): string | number {
-		if (typeof this.settings.waitTimeout === 'string' && this.settings.waitTimeout) {
-			return ms(this.settings.waitTimeout)
+	protected get timeout(): number {
+		const waitTimeout = this.settings.waitTimeout
+		if (waitTimeout) {
+			if (typeof waitTimeout === 'string') {
+				return ms(waitTimeout)
+			} else {
+				if (waitTimeout < 0) return DEFAULT_WAIT_TIMEOUT_MILLISECONDS
+				else if (waitTimeout < 1e3) return waitTimeout * 1e3
+				return waitTimeout
+			}
 		}
-		if (typeof this.settings.waitTimeout === 'number' && this.settings.waitTimeout <= 0) {
-			return DEFAULT_WAIT_TIMEOUT_MILLISECONDS
-		}
-		return this.settings.waitTimeout
+		return DEFAULT_WAIT_TIMEOUT_MILLISECONDS
 	}
 }
 
@@ -86,7 +90,10 @@ export abstract class ElementCondition extends LocatorCondition {
 
 	public async waitFor(frame: Frame): Promise<boolean> {
 		const argSeparator = '-SEP-'
-		const options: PageFnOptions = { polling: 'raf', timeout: Number(this.timeout) }
+		const options: PageFnOptions = {
+			polling: 'raf',
+			timeout: Number(this.timeout),
+		}
 		const locatorFunc = this.locatorPageFunc
 		const conditionFunc = this.pageFunc
 

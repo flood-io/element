@@ -22,7 +22,7 @@ describe('Recorder', () => {
 		beforeEach(async () => {
 			const reporter = new Reporter()
 			recorder = new NetworkRecorder(puppeteer.page)
-			const observer = new Observer(reporter, recorder)
+			const observer = new Observer(reporter, recorder, [])
 			await observer.attachToNetworkRecorder()
 			const url = await serve('wait.html')
 			await puppeteer.page.goto(url)

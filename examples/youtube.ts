@@ -1,7 +1,6 @@
-import { step, TestSettings, Until, By, Device } from '@flood/element'
-import * as assert from 'assert'
+import { step, TestSettings, By, Until } from '@flood/element'
 
-var setUp = 1
+var i = 0
 
 export const settings: TestSettings = {
 	clearCache: true,
@@ -12,38 +11,27 @@ export const settings: TestSettings = {
 	actionDelay: '7.5s',
 }
 
-/**
- * youtube
- * @version 1.0
- */
 export default () => {
-	step('Test: Start', async browser => {
-		if (setUp == 1) {
-			console.log('Load video for the first time')
-			await browser.visit('https://www.youtube.com/watch?v=6fvhLrBrPQI')
+	step('01_Home', async browser => {
+		await browser.visit('https://www.youtube.com/watch?v=oYTo0jwRfMo')
 
-			let btnPlay = await browser.findElement(
-				By.xpath('//button[@class="ytp-large-play-button ytp-button"]'),
-			)
-			btnPlay.click()
+		await browser.takeScreenshot()
+	})
 
+	step('02_ClickPlay', async browser => {
+		//Click on Play button
+		let playBtn = await browser.findElement(By.xpath('//button[@aria-label="Play"]'))
+		await playBtn.click()
+
+		await browser.takeScreenshot()
+	})
+
+	step('03_Play', async browser => {
+		//Take a screenshot every 5 seconds until video finishes
+
+		for (i = 0; i <= 60; i++) {
 			await browser.takeScreenshot()
-
-			setUp = 0
-		} else {
-			//Video page has already been opened
-			//Check to see if the video has finished playing
-			try {
-				await browser.wait(Until.elementIsVisible(By.xpath('//button[@title="Replay"]')))
-				//If the video has finished, restart and reload video page again
-				setUp = 1
-				await browser.takeScreenshot()
-				await console.log('Replaying video next iteration')
-			} catch {
-				//Video is still playing
-				await console.log('Video is still playing')
-				await browser.takeScreenshot()
-			}
+			await browser.wait(5)
 		}
 	})
 }

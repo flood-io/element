@@ -36,7 +36,7 @@ This is the bones of a basic script in Flood Element. It consists of a single st
 
 To help you validate that the script runs well locally before scaling to hundreds or thousands of users, you can use our Element CLI. If you save the above code as youtube.ts, open up your terminal in that directory and then type `element run youtube.ts`. Assuming you’ve got Element set up correctly, you should see something like this:
 
-![Step1](https://lh3.googleusercontent.com/pkjzl0qadFy9cEXRt7aX4rdTmYmc7N6wcTU7yUTX26VXxwN6I3oLc5fRANMaBaTDrgCZBsh8Vc97x2v_cFXtr995m7j_Uk83HPQQwLcgnaB4kIsqLLGIhfZjo38cfO_cMM-rJhFP)
+![Step 1](../../../static/docs_img/videoStreaming_step1.png)
 
 _(Note that screenshots are only available when using iTerm as your shell. They are also saved as files under …/tmp/element-results/youtube .)_
 
@@ -133,7 +133,7 @@ The final step is to upload it to Flood and run the test. Click [here](https://h
 
 [Here’s](https://api.flood.io/pfQuAGz3) a shareable link to a test I ran on Flood with this very script. One of the things I love about running it this way is that if you click on the arrow to the right of the sole transaction, you can see screenshots taken along the way to prove that the video is being played:
 
-![Step5](https://lh6.googleusercontent.com/UR4RiRbL1Wp2oMYrSbo_YclMHJiTb8epH8poBWJBBTmrFHR4Vp7m0GVLtBzKmtjlgqe9SKN4XdMk_2vMds0FDHSdjzxpbss4QHMhdbJvti8xaP_WvKqX2FOP3FdR_X00W8nKi4jy)
+![Step 5](../../../static/docs_img/videoStreaming_step5.png)
 
 ## Some Considerations for Load Testing Video with Flood Element
 

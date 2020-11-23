@@ -1,0 +1,151 @@
+{
+  "version-1.4/main": [
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "Getting Started",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-1.4/start/overview"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.4/start/install"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.4/start/init"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.4/start/scripting"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.4/start/changelog"
+        }
+      ]
+    },
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "Guides",
+      "items": [
+        {
+          "collapsed": true,
+          "type": "category",
+          "label": "Browser Interaction",
+          "items": [
+            {
+              "type": "doc",
+              "id": "version-1.4/guides/link-navigation"
+            },
+            {
+              "type": "doc",
+              "id": "version-1.4/guides/page-verification"
+            },
+            {
+              "type": "doc",
+              "id": "version-1.4/guides/form-interaction"
+            }
+          ]
+        },
+        {
+          "type": "doc",
+          "id": "version-1.4/guides/script"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.4/guides/hook"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.4/guides/test-data"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.4/guides/test-data-generation"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.4/guides/test-settings"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.4/guides/editor"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.4/guides/cli"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.4/guides/browser-load-testing"
+        }
+      ]
+    },
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "API reference",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-1.4/api/browser"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.4/api/locators"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.4/api/waiters"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.4/api/element-handle"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.4/api/mouse"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.4/api/target-locator"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.4/api/test-data"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.4/api/env"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.4/api/constants"
+        }
+      ]
+    },
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "Tutorials",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-1.4/tutorials/youtube"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.4/tutorials/woocommerce"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.4/tutorials/magento"
+        }
+      ]
+    }
+  ]
+}

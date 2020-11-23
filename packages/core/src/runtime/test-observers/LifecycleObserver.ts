@@ -61,7 +61,7 @@ export default class LifecycleObserver implements TestObserver {
 		return this.next.beforeStepAction(test, step, command)
 	}
 
-	async afterStepAction(test: Test, step: Step, command: string) {
+	async afterStepAction(test: Test, step: Step, command: string): Promise<void> {
 		await this.next.afterStepAction(test, step, command)
 		test.reporter.testLifecycle(TestEvent.AfterStepAction, command)
 	}

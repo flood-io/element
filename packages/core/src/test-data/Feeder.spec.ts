@@ -79,7 +79,6 @@ describe('Feeder', () => {
 
 	test('can be randomized', async () => {
 		const feeder = new Feeder<Row>('1').shuffle().append(lines, '', FileType.CSV)
-
 		const mustFeed = () => ensureDefined(feeder.feed())
 		const users = [mustFeed()['username'], mustFeed()['username'], mustFeed()['username']]
 

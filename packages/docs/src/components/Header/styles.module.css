@@ -1,5 +1,10 @@
 .heroHeader {
 	height: 70vh;
+	max-height: 740px;
+	/* background-image: url('/img/hero_background.svg'); */
+	/* background-repeat: no-repeat; */
+	/* background-position: right top; */
+	/* background-size: contain; */
 }
 
 .heroBanner {

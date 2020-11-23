@@ -42,7 +42,6 @@ const debug = require('debug')('element:runtime:eval-script')
 // TODO work out the right type for floodElementActual
 function createVirtualMachine(floodElementActual: any, root?: string): NodeVM {
 	const vm = new NodeVM({
-		// console: 'redirect',
 		console: 'inherit',
 		sandbox: {},
 		wrapper: 'commonjs',
@@ -121,14 +120,14 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 	}
 
 	public async beforeTestRun(): Promise<void> {
-		await this.testData.load()
+		if (this.testData) await this.testData.load()
 	}
 
 	private _testDataLoaders: TestDataFactory | undefined
 	public get testDataLoaders(): TestDataFactory {
 		if (this._testDataLoaders === undefined) {
 			this._testDataLoaders = new BoundTestDataLoaders(this, this.runEnv.workRoot)
-			this._testDataLoaders.fromData([{}])
+			// this._testDataLoaders.fromData([{}])
 		}
 
 		return this._testDataLoaders

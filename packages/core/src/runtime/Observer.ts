@@ -15,13 +15,15 @@ interface RequestEvent extends Event {
 }
 
 export default class Observer {
-	public consoleFilters: ConsoleMethod[] = []
-
 	private failedRequests: string[]
 	private requests: Set<string> = new Set()
 	private attached = false
 
-	constructor(private reporter: IReporter, public networkRecorder: NetworkRecorder) {}
+	constructor(
+		private reporter: IReporter,
+		public networkRecorder: NetworkRecorder,
+		private consoleFilters: ConsoleMethod[],
+	) {}
 
 	public attachToNetworkRecorder(): void {
 		if (this.attached) return
@@ -62,7 +64,8 @@ export default class Observer {
 		)
 
 		this.networkRecorder.attachEvent('console', msg => {
-			if (this.consoleFilters.length == 0 || !this.consoleFilters.includes(msg.type())) {
+			const msgType = msg.type() === 'warning' ? 'warn' : msg.type()
+			if (this.consoleFilters.length === 0 || !this.consoleFilters.includes(msgType)) {
 				this.reporter.testScriptConsole(msg.type(), msg.text())
 			}
 		})

@@ -3,7 +3,9 @@ id: test-settings
 title: 'Test Settings'
 ---
 
-The TestSettings interface specifies the available settings you have to configure how your test runs. These properties should be exported using the property `settings`.
+The `TestSettings` is used to configure how you want Element to behave during a test run, including wait timing, timeouts, browser agent, window size, and much more.
+
+Settings are specified by exporting a `const settings` from your test script, and loaded when your test script is first evaluated by the test runner.
 
 **Example:**
 
@@ -54,17 +56,29 @@ This setting can be useful for very noisy tests. When a method is filtered, it s
   Defaults to `-1` for no timeout.  
     
 ### extraHTTPHeaders
-&lt;undefined | unknown reflection type&gt;  (Optional)   Specifies a set of extra HTTP headers to set before each test loop.  
-  If this setting is undefined, the extra HTTP headers are left as-is between iterations.  
+`Object` (Optional) Specifies a set of extra HTTP headers to set before each test loop.  
+ If this setting is undefined, the extra HTTP headers are left as-is between iterations.
+
+```typescript
+export const settings: TestSettings = {
+	extraHTTPHeaders: { 'Accept-Language': 'en' },
+}
+```
+
 ### ignoreHTTPSErrors 
 `false` | `true`  (Optional)   Whether to ignore HTTPS errors during navigation. Defaults to `false`  
 ### incognito 
 `false` | `true`  (Optional)   Controls whether each iteration should run within an Incognito window instead of a normal  
   window. The Incognito session will be destroyed between each loop.  
+
+### launchArgs
+`string[]` Additional arguments to pass to the browser instance.
+The list of Chromium flags can be found [here](https://peter.sh/experiments/chromium-command-line-switches/)
+
 ### loopCount 
 `number`  (Optional)   Number of times to run this test.  
     
-  Defaults to `-1` for an unlimited number of loops.  
+  Defaults to `-1` (or `Infinity`) for an unlimited number of loops.  
     
 ### name 
 `string`  (Optional)   Speicifies the name of the test specified in the comments section  
@@ -86,6 +100,17 @@ This setting can be useful for very noisy tests. When a method is filtered, it s
  `number`  (Optional)   Specifies the time (in seconds) to wait after each step.  
 ### userAgent
 `string`  (Optional)   Specifies a custom User Agent (UA) string to send.  
+
+### viewport
+`Object` Set the viewport with the below properties:
+
+- width `number` page width in pixels. Required.
+- height `number` page height in pixels. Required.
+- deviceScaleFactor `number` Specify device scale factor (can be thought of as dpr). Defaults to 1.
+- isMobile `boolean` Whether the meta viewport tag is taken into account. Defaults to `false`.
+- hasTouch `boolean` Specifies if viewport supports touch events. Defaults to `false`.
+- isLandscape `boolean` Specifies if viewport is in landscape mode. Defaults to `false`.
+
 ### waitTimeout
 `number`  (Optional)   Global wait timeout applied to all wait tasks.  
 ### waitUntil : (Optional) 

@@ -20,7 +20,7 @@ export default class Interceptor {
 	}
 
 	async detach(page: Page) {
-		page.off('request', this.requestBlocker)
+		page.removeListener('request', this.requestBlocker)
 		await page.setRequestInterception(false)
 	}
 

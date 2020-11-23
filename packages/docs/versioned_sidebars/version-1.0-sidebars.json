@@ -57,6 +57,10 @@
         },
         {
           "type": "doc",
+          "id": "version-1.3/guides/test-data-generation"
+        },
+        {
+          "type": "doc",
           "id": "version-1.0/guides/test-settings"
         },
         {
@@ -96,15 +100,15 @@
         },
         {
           "type": "doc",
+          "id": "version-1.0/api/mouse"
+        },
+        {
+          "type": "doc",
           "id": "version-1.0/api/target-locator"
         },
         {
           "type": "doc",
           "id": "version-1.0/api/test-data"
-        },
-        {
-          "type": "doc",
-          "id": "version-1.0/api/settings"
         },
         {
           "type": "doc",

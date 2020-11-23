@@ -55,6 +55,4 @@ html[data-theme='dark'] {
 
 .main-wrapper {
 	overflow-x: hidden;
-	background-image: url('/img/hero_background.svg');
-	background-repeat: round;
 }

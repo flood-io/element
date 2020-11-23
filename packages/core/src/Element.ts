@@ -1,3 +1,5 @@
+import { join } from 'path'
+import findRoot from 'find-root'
 import { Logger } from 'winston'
 import { IReporter } from './Reporter'
 import { PuppeteerClient, launch } from './driver/Puppeteer'
@@ -27,7 +29,6 @@ export interface ElementOptions {
 	testObserverFactory?: (t: TestObserver) => TestObserver
 	persistentRunner: boolean
 	testCommander?: TestCommander
-	failStatusCode: number
 }
 
 export async function runCommandLine(opts: ElementOptions): Promise<void> {
@@ -84,11 +85,8 @@ export async function runCommandLine(opts: ElementOptions): Promise<void> {
 		return new EvaluatedScript(opts.runEnv, await mustCompileFile(testScript, testScriptOptions))
 	}
 
-	try {
-		await runner.run(testScriptFactory)
-	} catch (err) {
-		console.log('Element exited with error')
-		console.error(err)
-		process.exit(opts.failStatusCode)
-	}
+	// eslint-disable-next-line @typescript-eslint/no-var-requires
+	const pkg = require(join(findRoot(__dirname), 'package.json'))
+	console.log(`Running the test with:\n- Element v${pkg.version}\n- Node ${process.version}`)
+	await runner.run(testScriptFactory)
 }

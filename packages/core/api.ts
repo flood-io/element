@@ -47,3 +47,11 @@ export { StructuredError } from './src/utils/StructuredError'
 export { default as NetworkRecorder } from './src/network/Recorder'
 export { Entry } from './src/network/Protocol'
 export { default as NetworkObserver } from './src/runtime/Observer'
+export {
+	DEFAULT_ACTION_DELAY,
+	DEFAULT_STEP_DELAY,
+	DEFAULT_STEP_DELAY_FAST_FORWARD,
+	DEFAULT_ACTION_DELAY_FAST_FORWARD,
+	DEFAULT_STEP_DELAY_SLOW_MO,
+	DEFAULT_ACTION_DELAY_SLOW_MO,
+} from './src/runtime/Settings'

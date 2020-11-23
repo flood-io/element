@@ -68,7 +68,7 @@ describe('Test', () => {
 			disableCache: false,
 			extraHTTPHeaders: {},
 			launchArgs: [],
-			viewport: null,
+			viewport: { width: 1440, height: 900 },
 			tries: 0,
 			stages: [],
 		}

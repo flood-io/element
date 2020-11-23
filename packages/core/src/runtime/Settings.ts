@@ -282,7 +282,7 @@ export const DEFAULT_SETTINGS: ConcreteTestSettings = {
 	disableCache: false,
 	extraHTTPHeaders: {},
 	launchArgs: [],
-	viewport: null,
+	viewport: { width: 1440, height: 900 },
 	stages: [],
 }
 

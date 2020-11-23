@@ -104,6 +104,7 @@ element --version
 ```
 
 #### Canary release
+
 <a aria-label="Canary NPM version" href="https://www.npmjs.com/package/element-cli/">
   <img alt="" src="https://img.shields.io/npm/v/element-cli/canary.svg?style=for-the-badge&labelColor=000000">
 </a>

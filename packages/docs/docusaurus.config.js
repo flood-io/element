@@ -119,7 +119,7 @@ module.exports = {
 						},
 						{
 							label: 'Flood Challenge',
-							href: 'https://flood-element-challenge.vercel.app/',
+							href: 'https://element-challenge.flood.io/',
 						},
 					],
 				},

@@ -30,20 +30,26 @@ The goals of Element scripts are to be:
 Scaling up Element tests is easy on [Flood](https://flood.io), by launching hundreds or even thousands of instances of Google Chrome, and running the scripts you write to drive a load test. We call this Browser Level Load Testing.
 
 - [Quickstart](#quickstart)
-  - [1. Install Element](#1-install-element)
+
+  -   [1. Install Element](#1-install-element)
     -   [Stable release](#stable-release)
     -   [Beta release](#beta-release)
     -   [Canary release](#canary-release)
+  -   [2. Initialize Your Project](#2-initialize-your-project)
+  -   [3. Write and Validate Your Script](#3-write-and-validate-your-script)
+  -   [4. Run a real Load Test on Flood](#4-run-a-real-load-test-on-flood)
 
-  - [2. Initialize Your Project](#2-initialize-your-project)
-  - [3. Write and Validate Your Script](#3-write-and-validate-your-script)
-  - [4. Run a real Load Test on Flood](#4-run-a-real-load-test-on-flood)
-- [About](#about)
-  - [What can I do with it?](#what-can-i-do-with-it)
-- [Do more with Element](#do-more-with-element)
-- [Contributing](#contributing)
-- [Reporting Issues](#reporting-issues)
-- [Authors](#authors)
+-   [About](#about)
+
+- [What can I do with it?](#what-can-i-do-with-it)
+
+-   [Do more with Element](#do-more-with-element)
+
+-   [Contributing](#contributing)
+
+-   [Reporting Issues](#reporting-issues)
+
+-   [Authors](#authors)
 
 ## Quickstart
 
@@ -165,6 +171,7 @@ Over the years, countless customers have mentioned that getting started with Loa
 - Create **realistic load scenarios** which stress test your network infrastructure without developing complex protocol level load test scripts.
 
 ## Do more with Element
+
 Continue learning more Flood Element techniques by starting with our [API documentation](https://element.flood.io/docs/). The main entry point to all tests is the [Browser](https://element.flood.io/docs/1.0/api/browser) class and a great place to get a feel for the capabilities of each test.
 
 Visit <a aria-label="Element documentation" href="https://element.flood.io">https://element.flood.io</a> to view the documentation.

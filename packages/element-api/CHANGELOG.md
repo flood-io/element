@@ -3,136 +3,78 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [1.4.0-beta.1](https://github.com/flood-io/element/compare/v1.4.0-beta.0...v1.4.0-beta.1) (2020-11-23)
-
+## [1.4.0-beta.1](https://github.com/flood-io/element/compare/v1.4.0-beta.0...v1.4.0-beta.1) (2020-11-23)
 
 ### Features
 
-* change version to make it consitent ([79d3a60](https://github.com/flood-io/element/commit/79d3a607a580b230536260ed68b40c1c701aaa1f))
-* revert beta to 1.3.0-beta.28 ([5ff2220](https://github.com/flood-io/element/commit/5ff2220674ec1f89b31f2499f0d5f0aecc1c12af))
-
-
-
-
+-   change version to make it consitent ([79d3a60](https://github.com/flood-io/element/commit/79d3a607a580b230536260ed68b40c1c701aaa1f))
+-   revert beta to 1.3.0-beta.28 ([5ff2220](https://github.com/flood-io/element/commit/5ff2220674ec1f89b31f2499f0d5f0aecc1c12af))
 
 # [1.3.0-beta.28](https://github.com/flood-io/element/compare/v1.3.0-beta.27...v1.3.0-beta.28) (2020-08-29)
 
 **Note:** Version bump only for package @flood/element-api
 
-
-
-
-
 ## [1.3.8](https://github.com/flood-io/element/compare/v1.3.7...v1.3.8) (2020-09-24)
 
 **Note:** Version bump only for package @flood/element-api
-
-
-
-
 
 ## [1.3.7](https://github.com/flood-io/element/compare/v1.3.6...v1.3.7) (2020-09-24)
 
 **Note:** Version bump only for package @flood/element-api
 
-
-
-
-
 ## [1.3.6](https://github.com/flood-io/element/compare/v1.3.5...v1.3.6) (2020-09-24)
 
 **Note:** Version bump only for package @flood/element-api
-
-
-
-
 
 ## [1.3.5](https://github.com/flood-io/element/compare/v1.3.4...v1.3.5) (2020-09-22)
 
 **Note:** Version bump only for package @flood/element-api
 
-
-
-
-
 ## [1.3.3](https://github.com/flood-io/element/compare/v1.3.2...v1.3.3) (2020-09-16)
 
 **Note:** Version bump only for package @flood/element-api
-
-
-
-
 
 ## [1.3.2](https://github.com/flood-io/element/compare/v1.3.1...v1.3.2) (2020-09-09)
 
 **Note:** Version bump only for package @flood/element-api
 
-
-
-
-
 ## [1.3.1](https://github.com/flood-io/element/compare/v1.3.0-beta.28...v1.3.1) (2020-09-04)
-
 
 ### Bug Fixes
 
-* bump 1.3.1 ([#262](https://github.com/flood-io/element/issues/262)) ([b63ed9a](https://github.com/flood-io/element/commit/b63ed9a0d27e1184e377e7f28852fb70a1895d73))
+-   bump 1.3.1 ([#262](https://github.com/flood-io/element/issues/262)) ([b63ed9a](https://github.com/flood-io/element/commit/b63ed9a0d27e1184e377e7f28852fb70a1895d73))
 
-
-
-# [1.3.0](https://github.com/flood-io/element/compare/v1.3.0-beta.26...v1.3.0) (2020-08-29)
-
-
-
-## [1.2.5](https://github.com/flood-io/element/compare/v1.2.4...v1.2.5) (2020-08-11)
-
-
-
-## [1.2.4](https://github.com/flood-io/element/compare/v1.3.0-beta.18...v1.2.4) (2020-07-17)
-
-
-
-## [1.2.3](https://github.com/flood-io/element/compare/v1.2.3-beta.2...v1.2.3) (2020-04-07)
-
-
-
-
-
-# [1.3.0](https://github.com/flood-io/element/compare/v1.3.0-beta.20...v1.3.0) (2020-08-29)
-
-## [1.2.5](https://github.com/flood-io/element/compare/v1.2.4...v1.2.5) (2020-08-11)
-
-## [1.2.4](https://github.com/flood-io/element/compare/v1.3.0-beta.18...v1.2.4) (2020-07-17)
+## [1.3.0](https://github.com/flood-io/element/compare/v1.3.0-beta.20...v1.3.0) (2020-08-29)
 
 ## [1.2.3](https://github.com/flood-io/element/compare/v1.2.3-beta.2...v1.2.3) (2020-04-07)
 
 **Note:** Version bump only for package @flood/element-api
 
-# [1.3.0-beta.26](https://github.com/flood-io/element/compare/v1.3.0-beta.25...v1.3.0-beta.26) (2020-08-28)
+## [1.3.0-beta.26](https://github.com/flood-io/element/compare/v1.3.0-beta.25...v1.3.0-beta.26) (2020-08-28)
 
 **Note:** Version bump only for package @flood/element-api
 
-# [1.3.0-beta.25](https://github.com/flood-io/element/compare/v1.3.0-beta.24...v1.3.0-beta.25) (2020-08-28)
+## [1.3.0-beta.25](https://github.com/flood-io/element/compare/v1.3.0-beta.24...v1.3.0-beta.25) (2020-08-28)
 
 **Note:** Version bump only for package @flood/element-api
 
-# [1.3.0-beta.24](https://github.com/flood-io/element/compare/v1.3.0-beta.23...v1.3.0-beta.24) (2020-08-28)
+##[1.3.0-beta.24](https://github.com/flood-io/element/compare/v1.3.0-beta.23...v1.3.0-beta.24) (2020-08-28)
 
 **Note:** Version bump only for package @flood/element-api
 
-# [1.3.0-beta.23](https://github.com/flood-io/element/compare/v1.3.0-beta.22...v1.3.0-beta.23) (2020-08-27)
+## [1.3.0-beta.23](https://github.com/flood-io/element/compare/v1.3.0-beta.22...v1.3.0-beta.23) (2020-08-27)
 
 **Note:** Version bump only for package @flood/element-api
 
-# [1.3.0-beta.22](https://github.com/flood-io/element/compare/v1.3.0-beta.21...v1.3.0-beta.22) (2020-08-27)
+## [1.3.0-beta.22](https://github.com/flood-io/element/compare/v1.3.0-beta.21...v1.3.0-beta.22) (2020-08-27)
 
 **Note:** Version bump only for package @flood/element-api
 
-# [1.3.0-beta.21](https://github.com/flood-io/element/compare/v1.3.0-beta.20...v1.3.0-beta.21) (2020-08-21)
+## [1.3.0-beta.21](https://github.com/flood-io/element/compare/v1.3.0-beta.20...v1.3.0-beta.21) (2020-08-21)
 
 **Note:** Version bump only for package @flood/element-api
 
-# [1.3.0-beta.19](https://github.com/flood-io/element/compare/v1.3.0-beta.18...v1.3.0-beta.19) (2020-08-11)
+## [1.3.0-beta.19](https://github.com/flood-io/element/compare/v1.3.0-beta.18...v1.3.0-beta.19) (2020-08-11)
 
 ## [1.2.5](https://github.com/flood-io/element/compare/v1.2.4...v1.2.5) (2020-08-11)
 
@@ -142,71 +84,71 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 **Note:** Version bump only for package @flood/element-api
 
-# [1.3.0-beta.18](https://github.com/flood-io/element/compare/v1.3.0-beta.17...v1.3.0-beta.18) (2020-07-08)
+## [1.3.0-beta.18](https://github.com/flood-io/element/compare/v1.3.0-beta.17...v1.3.0-beta.18) (2020-07-08)
 
 **Note:** Version bump only for package @flood/element-api
 
-# [1.3.0-beta.17](https://github.com/flood-io/element/compare/v1.3.0-beta.16...v1.3.0-beta.17) (2020-07-07)
+## [1.3.0-beta.17](https://github.com/flood-io/element/compare/v1.3.0-beta.16...v1.3.0-beta.17) (2020-07-07)
 
 **Note:** Version bump only for package @flood/element-api
 
-# [1.3.0-beta.16](https://github.com/flood-io/element/compare/v1.3.0-beta.15...v1.3.0-beta.16) (2020-07-03)
+## [1.3.0-beta.16](https://github.com/flood-io/element/compare/v1.3.0-beta.15...v1.3.0-beta.16) (2020-07-03)
 
 **Note:** Version bump only for package @flood/element-api
 
-# [1.3.0-beta.15](https://github.com/flood-io/element/compare/v1.3.0-beta.14...v1.3.0-beta.15) (2020-07-03)
+## [1.3.0-beta.15](https://github.com/flood-io/element/compare/v1.3.0-beta.14...v1.3.0-beta.15) (2020-07-03)
 
 **Note:** Version bump only for package @flood/element-api
 
-# [1.3.0-beta.14](https://github.com/flood-io/element/compare/v1.3.0-beta.13...v1.3.0-beta.14) (2020-07-01)
+## [1.3.0-beta.14](https://github.com/flood-io/element/compare/v1.3.0-beta.13...v1.3.0-beta.14) (2020-07-01)
 
 **Note:** Version bump only for package @flood/element-api
 
-# [1.3.0-beta.13](https://github.com/flood-io/element/compare/v1.3.0-beta.12...v1.3.0-beta.13) (2020-06-24)
+## [1.3.0-beta.13](https://github.com/flood-io/element/compare/v1.3.0-beta.12...v1.3.0-beta.13) (2020-06-24)
 
 **Note:** Version bump only for package @flood/element-api
 
-# [1.3.0-beta.12](https://github.com/flood-io/element/compare/v1.3.0-beta.11...v1.3.0-beta.12) (2020-06-23)
+## [1.3.0-beta.12](https://github.com/flood-io/element/compare/v1.3.0-beta.11...v1.3.0-beta.12) (2020-06-23)
 
 **Note:** Version bump only for package @flood/element-api
 
-# [1.3.0-beta.11](https://github.com/flood-io/element/compare/v1.3.0-beta.10...v1.3.0-beta.11) (2020-06-10)
+## [1.3.0-beta.11](https://github.com/flood-io/element/compare/v1.3.0-beta.10...v1.3.0-beta.11) (2020-06-10)
 
 **Note:** Version bump only for package @flood/element-api
 
-# [1.3.0-beta.9](https://github.com/flood-io/element/compare/v1.3.0-beta.8...v1.3.0-beta.9) (2020-06-03)
+## [1.3.0-beta.9](https://github.com/flood-io/element/compare/v1.3.0-beta.8...v1.3.0-beta.9) (2020-06-03)
 
 **Note:** Version bump only for package @flood/element-api
 
-# [1.3.0-beta.8](https://github.com/flood-io/element/compare/v1.3.0-beta.7...v1.3.0-beta.8) (2020-06-03)
+## [1.3.0-beta.8](https://github.com/flood-io/element/compare/v1.3.0-beta.7...v1.3.0-beta.8) (2020-06-03)
 
 **Note:** Version bump only for package @flood/element-api
 
-# [1.3.0-beta.6](https://github.com/flood-io/element/compare/v1.3.0-beta.5...v1.3.0-beta.6) (2020-05-27)
+## [1.3.0-beta.6](https://github.com/flood-io/element/compare/v1.3.0-beta.5...v1.3.0-beta.6) (2020-05-27)
 
 **Note:** Version bump only for package @flood/element-api
 
-# [1.3.0-beta.5](https://github.com/flood-io/element/compare/v1.3.0-beta.4...v1.3.0-beta.5) (2020-05-20)
+## [1.3.0-beta.5](https://github.com/flood-io/element/compare/v1.3.0-beta.4...v1.3.0-beta.5) (2020-05-20)
 
 **Note:** Version bump only for package @flood/element-api
 
-# [1.3.0-beta.4](https://github.com/flood-io/element/compare/v1.3.0-beta.3...v1.3.0-beta.4) (2020-05-20)
+## [1.3.0-beta.4](https://github.com/flood-io/element/compare/v1.3.0-beta.3...v1.3.0-beta.4) (2020-05-20)
 
 **Note:** Version bump only for package @flood/element-api
 
-# [1.3.0-beta.3](https://github.com/flood-io/element/compare/v1.3.0-beta.2...v1.3.0-beta.3) (2020-05-06)
+## [1.3.0-beta.3](https://github.com/flood-io/element/compare/v1.3.0-beta.2...v1.3.0-beta.3) (2020-05-06)
 
 **Note:** Version bump only for package @flood/element-api
 
-# [1.3.0-beta.2](https://github.com/flood-io/element/compare/v1.3.0-beta.1...v1.3.0-beta.2) (2020-05-06)
+## [1.3.0-beta.2](https://github.com/flood-io/element/compare/v1.3.0-beta.1...v1.3.0-beta.2) (2020-05-06)
 
 **Note:** Version bump only for package @flood/element-api
 
-# [1.3.0-beta.1](https://github.com/flood-io/element/compare/v1.3.0-beta.0...v1.3.0-beta.1) (2020-04-28)
+## [1.3.0-beta.1](https://github.com/flood-io/element/compare/v1.3.0-beta.0...v1.3.0-beta.1) (2020-04-28)
 
 **Note:** Version bump only for package @flood/element-api
 
-# [1.3.0-beta.0](https://github.com/flood-io/element/compare/v1.2.3-beta.4...v1.3.0-beta.0) (2020-04-21)
+## [1.3.0-beta.0](https://github.com/flood-io/element/compare/v1.2.3-beta.4...v1.3.0-beta.0) (2020-04-21)
 
 **Note:** Version bump only for package @flood/element-api
 
@@ -242,51 +184,13 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 **Note:** Version bump only for package @flood/element-api
 
-## 1.2.1-feat.0 (2020-04-01)
+## [1.2.0](https://github.com/flood-io/element/compare/v1.2.0-feat.2...v1.2.0) (2020-04-01)
 
 **Note:** Version bump only for package @flood/element-api
-
-# [1.2.0](https://github.com/flood-io/element/compare/v1.2.0-feat.2...v1.2.0) (2020-04-01)
-
-**Note:** Version bump only for package @flood/element-api
-
-# 1.2.0-feat.2 (2020-04-01)
-
-**Note:** Version bump only for package @flood/element-api
-
-# 1.2.0-feat.1 (2020-04-01)
-
-**Note:** Version bump only for package @flood/element-api
-
-# 1.2.0-feat.0 (2020-04-01)
-
-**Note:** Version bump only for package @flood/element-api
-
-# 1.1.0-feat.0 (2020-04-01)
 
 ### Features
 
-- **example:** tesing release version bump to 1.1 ([5dbc19f](https://github.com/flood-io/element/commit/5dbc19fa8ac2dbaabe769786d69da95c8186718f))
-
-## 1.0.11-feat.4 (2020-04-01)
-
-**Note:** Version bump only for package @flood/element-api
-
-## 1.0.11-feat.3 (2020-04-01)
-
-**Note:** Version bump only for package @flood/element-api
-
-## 1.0.11-feat.2 (2020-04-01)
-
-**Note:** Version bump only for package @flood/element-api
-
-## 1.0.11-feat.1 (2020-04-01)
-
-**Note:** Version bump only for package @flood/element-api
-
-## 1.0.11-feat.0 (2020-04-01)
-
-**Note:** Version bump only for package @flood/element-api
+-   **example:** tesing release version bump to 1.1 ([5dbc19f](https://github.com/flood-io/element/commit/5dbc19fa8ac2dbaabe769786d69da95c8186718f))
 
 ## [1.0.11-alpha.2](https://github.com/flood-io/element/compare/v1.0.10-beta.63...v1.0.11-alpha.2) (2020-04-01)
 
@@ -406,7 +310,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
-- **api:** incorrect default exports from core ([58cc5e3](https://github.com/flood-io/element/commit/58cc5e3d560f10d51dd2ff4721f37caec0ab89cf))
+-   **api:** incorrect default exports from core ([58cc5e3](https://github.com/flood-io/element/commit/58cc5e3d560f10d51dd2ff4721f37caec0ab89cf))
 
 ## [1.0.10-beta.38](https://github.com/flood-io/element/compare/v1.0.10-beta.37...v1.0.10-beta.38) (2020-01-11)
 
@@ -440,7 +344,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Features
 
-- **compiler:** implements new webpack based script compiler ([#98](https://github.com/flood-io/element/issues/98)) ([3654578](https://github.com/flood-io/element/commit/3654578e44a0f2652721a14e2051c338b859b81b))
+-   **compiler:** implements new webpack based script compiler ([#98](https://github.com/flood-io/element/issues/98)) ([3654578](https://github.com/flood-io/element/commit/3654578e44a0f2652721a14e2051c338b859b81b))
 
 ## [1.0.10-beta.30](https://github.com/flood-io/element/compare/v1.0.10-beta.21...v1.0.10-beta.30) (2020-01-04)
 

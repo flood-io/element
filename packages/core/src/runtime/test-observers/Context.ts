@@ -23,13 +23,13 @@ export class Context {
 
 	// TODO deliberately detach from network recorder & observer
 
-	public attachToPage(reporter: IReporter, page: Page, consoleFilters: ConsoleMethod[]) {
+	public attachToPage(reporter: IReporter, page: Page, consoleFilters: ConsoleMethod[]): void {
 		this.networkRecorder = new NetworkRecorder(page)
 		this.observer = new NetworkObserver(reporter, this.networkRecorder, consoleFilters)
 		this.observer.attachToNetworkRecorder()
 	}
 
-	public async syncNetworkRecorder() {
+	public async syncNetworkRecorder(): Promise<void> {
 		await this.networkRecorder.sync()
 	}
 }

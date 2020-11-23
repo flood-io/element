@@ -29,22 +29,22 @@ export default class LifecycleObserver implements TestObserver {
 		return this.next.beforeStep(test, step)
 	}
 
-	async onStepPassed(test: Test, step: Step) {
+	async onStepPassed(test: Test, step: Step): Promise<void> {
 		await this.next.onStepPassed(test, step)
 		test.reporter.testLifecycle(TestEvent.StepSucceeded, step.name)
 	}
 
-	async onStepError(test: Test, step: Step, error: StructuredError<any>) {
+	async onStepError(test: Test, step: Step, error: StructuredError<any>): Promise<void>  {
 		await this.next.onStepError(test, step, error)
 		test.reporter.testLifecycle(TestEvent.StepFailed, step.name)
 	}
 
-	async onStepSkipped(test: Test, step: Step) {
+	async onStepSkipped(test: Test, step: Step): Promise<void> {
 		await this.next.onStepSkipped(test, step)
 		test.reporter.testLifecycle(TestEvent.StepSkipped, step.name)
 	}
 
-	async afterStep(test: Test, step: Step) {
+	async afterStep(test: Test, step: Step): Promise<void> {
 		const testObserver: TestObserver = this.next
 		await testObserver.afterStep(test, step)
 		let timing = 0
@@ -61,7 +61,7 @@ export default class LifecycleObserver implements TestObserver {
 		return this.next.beforeStepAction(test, step, command)
 	}
 
-	async afterStepAction(test: Test, step: Step, command: string) {
+	async afterStepAction(test: Test, step: Step, command: string): Promise<void> {
 		await this.next.afterStepAction(test, step, command)
 		test.reporter.testLifecycle(TestEvent.AfterStepAction, command)
 	}

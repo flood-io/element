@@ -8,6 +8,7 @@ import {
 } from '@flood/element-core'
 import { Logger } from 'winston'
 import chalk from 'chalk'
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element-cli:console-reporter')
 
 export class ConsoleReporter implements IReporter {
@@ -16,10 +17,12 @@ export class ConsoleReporter implements IReporter {
 
 	constructor(private logger: Logger, private verbose: boolean) {}
 
-	reset(step: string): void {}
+	reset(step: string): void {
+		debug(`reset ${step}`)
+	}
 
 	addMeasurement(measurement: string, value: string | number, label?: string): void {
-		this.logger.debug(`> ${measurement} ${value}`)
+		this.logger.debug(`> ${measurement} ${value} ${label}`)
 	}
 
 	addCompoundMeasurement(
@@ -27,11 +30,11 @@ export class ConsoleReporter implements IReporter {
 		value: CompoundMeasurement,
 		label: string,
 	): void {
-		this.logger.debug(`> ${measurement} ${JSON.stringify(value)}`)
+		this.logger.debug(`> ${measurement} ${JSON.stringify(value)}, label: ${label}`)
 	}
 
 	addTrace(traceData: TraceData, label: string): void {
-		this.logger.debug(`> trace:\n${JSON.stringify(traceData)}`)
+		this.logger.debug(`> trace:\n${JSON.stringify(traceData)}, label: ${label}`)
 	}
 
 	async flushMeasurements(): Promise<void> {}

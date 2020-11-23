@@ -76,3 +76,6 @@ packages/**/bin/*.js
 packages/examples/sap/tmp/
 tmp
 examples/customers
+
+reports
+examples/**/reports

@@ -350,7 +350,11 @@ export default class Test implements ITest {
 		}
 	}
 
-	async didRunCommand(testObserver: TestObserver, browser: Browser<Step>, command: string) {
+	async didRunCommand(
+		testObserver: TestObserver,
+		browser: Browser<Step>,
+		command: string,
+	): Promise<void> {
 		if (browser.customContext) {
 			await testObserver.afterStepAction(this, browser.customContext, command)
 		}

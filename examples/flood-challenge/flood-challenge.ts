@@ -1,4 +1,4 @@
-import { suite, By, Until, TestSettings } from '@flood/element'
+import { step, By, Until, TestSettings } from '@flood/element'
 import * as assert from 'assert'
 
 export const settings: TestSettings = {
@@ -11,7 +11,7 @@ export const settings: TestSettings = {
 	stepDelay: '1s',
 }
 
-export default suite(step => {
+export default () => {
 	step('1. Start', async browser => {
 		await browser.visit('https://challenge.flood.io')
 
@@ -84,4 +84,4 @@ export default suite(step => {
 
 		await browser.takeScreenshot()
 	})
-})
+}

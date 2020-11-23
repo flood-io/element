@@ -7,12 +7,12 @@ import { TimingObserver } from './TimingObserver'
 
 export default class LifecycleObserver implements TestObserver {
 	constructor(public next: TestObserver) {}
-	async before(test: Test) {
+	async before(test: Test): Promise<void> {
 		test.reporter.testLifecycle(TestEvent.BeforeTest, 'test')
 		return this.next.before(test)
 	}
 
-	async after(test: Test) {
+	async after(test: Test): Promise<void> {
 		await this.next.after(test)
 
 		if (test.failed) {
@@ -24,7 +24,7 @@ export default class LifecycleObserver implements TestObserver {
 		test.reporter.testLifecycle(TestEvent.AfterTest, 'test')
 	}
 
-	async beforeStep(test: Test, step: Step) {
+	async beforeStep(test: Test, step: Step): Promise<void> {
 		test.reporter.testLifecycle(TestEvent.BeforeStep, step.name)
 		return this.next.beforeStep(test, step)
 	}
@@ -56,7 +56,7 @@ export default class LifecycleObserver implements TestObserver {
 		test.reporter.testLifecycle(TestEvent.AfterStep, step.name, timing)
 	}
 
-	async beforeStepAction(test: Test, step: Step, command: string) {
+	async beforeStepAction(test: Test, step: Step, command: string): Promise<void> {
 		test.reporter.testLifecycle(TestEvent.BeforeStepAction, command)
 		return this.next.beforeStepAction(test, step, command)
 	}

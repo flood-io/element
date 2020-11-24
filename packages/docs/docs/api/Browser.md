@@ -156,6 +156,13 @@ Returns the Media (MIME) Type of a file
 - filePath `string` path to a file
 - returns: `string` media type of the file
 
+### `getUrl()`
+
+Returns the URL of the current page
+
+**Parameters**
+- returns: `string` URL of the current page
+
 ### `highlightElement(element)`
 
 Highlight an element. Useful in concert with takeScreenshot to tweak your locators.

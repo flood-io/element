@@ -22,7 +22,7 @@ import { PlaywrightClientLike } from '../driver/Playwright'
 import { WorkRoot } from '../runtime-environment/types'
 import KSUID from 'ksuid'
 import { Key, KeyDefinitions } from '../page/Enums'
-import { ConcreteTestSettings } from './Settings'
+import { ConcreteTestSettings, DEFAULT_WAIT_TIMEOUT_MILLISECONDS } from './Settings'
 import { NetworkErrorData, ActionErrorData } from './errors/Types'
 import { StructuredError } from '../utils/StructuredError'
 import debugFactory from 'debug'
@@ -165,7 +165,7 @@ export class Browser<T> implements BrowserInterface {
 		try {
 			return this.page.goto(url, {
 				timeout: Number(this.settings.waitTimeout),
-				waitUntil: 'networkidle',
+				waitUntil: 'load',
 				...options,
 			})
 		} catch (e) {
@@ -593,7 +593,10 @@ export class Browser<T> implements BrowserInterface {
 			await new Promise(yeah => setTimeout(yeah, ms(timeoutOrCondition)))
 			return true
 		} else if (typeof timeoutOrCondition === 'number') {
-			await new Promise(yeah => setTimeout(yeah, timeoutOrCondition))
+			let convertedTimeout = timeoutOrCondition
+			if (convertedTimeout < 0) convertedTimeout = DEFAULT_WAIT_TIMEOUT_MILLISECONDS
+			else if (convertedTimeout < 1e3) convertedTimeout *= 1e3
+			await new Promise(yeah => setTimeout(yeah, convertedTimeout))
 			return true
 		}
 

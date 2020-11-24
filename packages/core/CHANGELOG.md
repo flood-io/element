@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.6](https://github.com/flood-io/element/compare/v2.0.0-canary.4...v2.0.0-canary.6) (2020-11-24)
+
+
+### Bug Fixes
+
+* refactor code to fix timeout from root cause - step options ([e00e296](https://github.com/flood-io/element/commit/e00e296bc53d502f94200306891933dcfcbd6c7e))
+* remove redundant semi colon and fix step waitTimeout ([9085435](https://github.com/flood-io/element/commit/90854356299c4596a0262bbe835ad6b4205fde4b))
+* set default viewport of browser instead of null ([3304bcc](https://github.com/flood-io/element/commit/3304bcc60f42882ed86265c24ad8ea3df9479fd0))
+
+
+
+
+
 # [2.0.0-canary.5](https://github.com/flood-io/element/compare/v2.0.0-canary.4...v2.0.0-canary.5) (2020-11-23)
 
 

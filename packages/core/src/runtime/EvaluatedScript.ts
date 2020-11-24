@@ -173,10 +173,10 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			let options: StepOptions = {}
 
 			if (args.length === 3) {
-				;[name, options, fn] = args
+				[name, options, fn] = args
 				options = normalizeStepOptions(options)
 			} else {
-				;[name, fn] = args
+				[name, fn] = args
 			}
 
 			console.assert(typeof name === 'string', 'Step name must be a string')

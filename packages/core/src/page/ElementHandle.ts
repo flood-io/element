@@ -294,7 +294,6 @@ export class ElementHandle implements IElementHandle, Locator {
 	public async takeScreenshot(options?: ScreenshotOptions): Promise<void> {
 		return this.fs.saveScreenshot(async path => {
 			debug(`Saving screenshot to: ${path}`)
-			console.log(`Saving screenshot to: ${path}`)
 
 			const handle = this.element.asElement()
 			if (!handle) return false

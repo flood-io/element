@@ -33,9 +33,9 @@ export class VerboseReporter implements IReporter {
 		args?: string,
 	): void {
 		const stepName = 'Step ' + (subtitle ? `'${label}' (${subtitle})` : `'${label}'`)
-		const beforeRunStepMessage = `${stepName} is running ...`
-		const beforeRunHookMessage = chalk.white(`${label} is running ...`)
-		const afterRunHookMessage = `${chalk.green.bold('✔')} ${chalk.grey(`${label} finished`)}`
+		const beforeRunStepMessage = chalk.whiteBright(`${stepName} is running ...`)
+		const beforeRunHookMessage = chalk.whiteBright(`${label} is running ...`)
+		const afterRunHookMessage = `${chalk.green.bold('✔')} ${chalk.whiteBright(`${label} finished`)}`
 		let message = ''
 		switch (stage) {
 			case TestEvent.BeforeAllStep:
@@ -53,12 +53,12 @@ export class VerboseReporter implements IReporter {
 				console.groupEnd()
 				break
 			case TestEvent.BeforeStep:
-				console.group(chalk.white(beforeRunStepMessage))
+				console.group(beforeRunStepMessage)
 				console.group()
 				break
 			case TestEvent.AfterHookAction:
 			case TestEvent.AfterStepAction:
-				console.log(chalk.grey(`${label}(${args})`))
+				console.log(`${chalk.white(`${label}(${chalk.white.dim(args)})`)}`)
 				break
 			case TestEvent.StepSucceeded:
 				message = `${chalk.green.bold('✔')} ${chalk.green(
@@ -75,7 +75,7 @@ export class VerboseReporter implements IReporter {
 				console.groupEnd()
 				break
 			case TestEvent.StepSkipped:
-				console.group(`${chalk.cyan.bold('\u2296')} ${chalk.cyan(`${stepName} skipped`)}`)
+				console.group(`${chalk.yellow.bold('\u2296')} ${chalk.yellow(`${stepName} skipped`)}`)
 				console.groupEnd()
 				break
 			case TestEvent.StepUnexecuted:

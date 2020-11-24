@@ -12,6 +12,8 @@ Released: Nov 2020
 - New APIs:
   - [`browser.scrollBy()`](../api/browser#scrollbyx-y-options)
   - [`browser.scrollTo()`](../api/browser#scrolltoposition-options)
+  - [`browser.getMimeType()`](../api/browser#getmimetypefilepath)
+  - [`browser.getUrl()`](../api/browser#geturl)
 
 ## 1.3.6
 Released: 24 Sep 2020

@@ -1,7 +1,7 @@
 {
 	"lerna": "2.11.0",
 	"npmClient": "yarn",
-	"version": "1.4.0-beta.1",
+	"version": "1.4.0-beta.2",
 	"useWorkspaces": true,
 	"command": {
 		"init": {
@@ -23,5 +23,13 @@
 			"npmClient": "yarn"
 		}
 	},
-	"ignoreChanges": ["assets", "coverage", "examples", "scripts", "smoke", "**/*.md", "packages/docs/**"]
+	"ignoreChanges": [
+		"assets",
+		"coverage",
+		"examples",
+		"scripts",
+		"smoke",
+		"**/*.md",
+		"packages/docs/**"
+	]
 }

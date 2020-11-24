@@ -8,6 +8,8 @@ import { CustomConsole, IterationResult, ReportCache, TestResult } from '@flood/
 import chalk from 'chalk'
 import { EventEmitter } from 'events'
 import { ElementResult } from './ElementResult'
+import { join } from 'path'
+import findRoot from 'find-root'
 
 export async function runSingleTestScript(opts: ElementOptions): Promise<IterationResult[]> {
 	const { testScript, clientFactory } = opts
@@ -73,7 +75,11 @@ export async function runCommandLine(args: ElementRunArguments): Promise<TestRes
 		elementResult: ElementResult,
 		isConfig: boolean,
 	) => {
-		console.group(chalk('Running', fileTitle))
+		// eslint-disable-next-line @typescript-eslint/no-var-requires
+		const pkg = require(join(findRoot(__dirname), 'package.json'))
+		console.group(
+			chalk(`Running ${fileTitle} with\n- Element v${pkg.version}\n- Node ${process.version}`),
+		)
 		const opts = normalizeElementOptions(args, cache)
 		elementResult.addExecutionInfo(opts, isConfig)
 		try {
@@ -105,12 +111,12 @@ export async function runCommandLine(args: ElementRunArguments): Promise<TestRes
 				)
 			}
 			order++
-			const fileTitle = chalk.grey(`${file} (${order} of ${numberOfFile})`)
+			const fileTitle = chalk.greenBright(`${file} (${order} of ${numberOfFile})`)
 			await prepareAndRunTestScript(fileTitle, arg, cache, elementResult, true)
 		}
 		console.log(chalk.grey('Test running with the config file has finished'))
 	} else {
-		const fileTitle = chalk.grey(`${args.file} (1 of 1)`)
+		const fileTitle = chalk.greenBright(`${args.file} (1 of 1)`)
 		await prepareAndRunTestScript(fileTitle, args, cache, elementResult, false)
 	}
 

@@ -195,9 +195,11 @@ export type Step = {
  * @internal
  */
 export function normalizeStepOptions(stepOpts: StepOptions): StepOptions {
+	// Convert user inputted seconds to milliseconds
 	if (!stepOpts.waitTimeout) return stepOpts
 
 	let convertedWaitTimeout = DEFAULT_WAIT_TIMEOUT_MILLISECONDS
+
 	if (typeof stepOpts.waitTimeout === 'string') {
 		convertedWaitTimeout = ms(stepOpts.waitTimeout)
 	} else {
@@ -209,6 +211,7 @@ export function normalizeStepOptions(stepOpts: StepOptions): StepOptions {
 			convertedWaitTimeout *= 1e3
 		}
 	}
+
 	stepOpts.waitTimeout = convertedWaitTimeout
 	return stepOpts
 }

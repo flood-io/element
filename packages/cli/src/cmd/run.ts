@@ -47,13 +47,13 @@ const cmd: CommandModule = {
 						`The mode 'running the test with a config file' does not support running with multiple users`,
 					),
 				)
-				return
+				process.exit(0)
 			}
 			const myEmitter = new EventEmitter()
 			const cache = new ReportCache(myEmitter)
 			const opts: ElementOptions = normalizeElementOptions(args, cache)
 			await runMultipleUser(opts)
-			return
+			process.exit(0)
 		}
 		const runArgs = file ? args : await getAllTestScriptsFromConfiguration(args)
 		const result = await runSingleUser(runArgs)
@@ -83,6 +83,7 @@ const cmd: CommandModule = {
 				},
 			)
 		}
+		process.exit(0)
 	},
 	builder(yargs: Argv): Argv {
 		return yargs

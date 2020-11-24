@@ -194,6 +194,8 @@ export default class Test implements ITest {
 
 			debug('running steps')
 			await stepIterator.run(async (step: Step) => {
+				if (this.settings.waitTimeout) step.options.waitTimeout = this.settings.waitTimeout
+
 				debug('running hook function: beforeEach')
 				hookResult = await this.runHookFn(
 					this.hook.beforeEach,

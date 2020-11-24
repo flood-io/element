@@ -35,7 +35,7 @@ export class BaseReporter implements IReporter {
 	): void {
 		const stepName = 'Step ' + (subtitle ? `'${label}' (${subtitle})` : `'${label}'`)
 		const beforeRunStepMessage = `${stepName} is running ...`
-		const beforeRunHookMessage = chalk.grey(`${label} is running ...`)
+		const beforeRunHookMessage = chalk.white(`${label} is running ...`)
 		const afterRunHookMessage = `${chalk.green.bold('✔')} ${chalk.grey(`${label} finished`)}`
 		let message = ''
 		switch (stage) {
@@ -54,17 +54,17 @@ export class BaseReporter implements IReporter {
 				console.groupEnd()
 				break
 			case TestEvent.BeforeStep:
-				console.group(chalk.grey(beforeRunStepMessage))
+				console.group(chalk.white(beforeRunStepMessage))
 				console.group()
 				break
 			case TestEvent.StepSucceeded:
-				message = `${chalk.green.bold('✔')} ${chalk.grey(
+				message = `${chalk.green.bold('✔')} ${chalk.green(
 					`${stepName} passed (${timing?.toLocaleString()}ms)`,
 				)}`
 				this.updateMessage(beforeRunStepMessage, message)
 				break
 			case TestEvent.StepFailed:
-				message = `${chalk.redBright.bold('✘')} ${chalk.grey(
+				message = `${chalk.redBright.bold('✘')} ${chalk.red(
 					`${stepName} failed (${timing?.toLocaleString()}ms)`,
 				)}`
 				console.error(chalk.red(errorMessage?.length ? errorMessage : 'step error -> failed'))

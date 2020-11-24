@@ -34,7 +34,7 @@ export class VerboseReporter implements IReporter {
 	): void {
 		const stepName = 'Step ' + (subtitle ? `'${label}' (${subtitle})` : `'${label}'`)
 		const beforeRunStepMessage = `${stepName} is running ...`
-		const beforeRunHookMessage = chalk.grey(`${label} is running ...`)
+		const beforeRunHookMessage = chalk.white(`${label} is running ...`)
 		const afterRunHookMessage = `${chalk.green.bold('✔')} ${chalk.grey(`${label} finished`)}`
 		let message = ''
 		switch (stage) {
@@ -53,7 +53,7 @@ export class VerboseReporter implements IReporter {
 				console.groupEnd()
 				break
 			case TestEvent.BeforeStep:
-				console.group(chalk.grey(beforeRunStepMessage))
+				console.group(chalk.white(beforeRunStepMessage))
 				console.group()
 				break
 			case TestEvent.AfterHookAction:
@@ -61,13 +61,13 @@ export class VerboseReporter implements IReporter {
 				console.log(chalk.grey(`${label}(${args})`))
 				break
 			case TestEvent.StepSucceeded:
-				message = `${chalk.green.bold('✔')} ${chalk.grey(
+				message = `${chalk.green.bold('✔')} ${chalk.green(
 					`${stepName} passed (${timing?.toLocaleString()}ms)`,
 				)}`
 				this.updateMessage(beforeRunStepMessage, message)
 				break
 			case TestEvent.StepFailed:
-				message = `${chalk.red.bold('✘')} ${chalk.grey(`${stepName} failed`)}`
+				message = `${chalk.red.bold('✘')} ${chalk.red(`${stepName} failed`)}`
 				console.error(chalk.red(errorMessage?.length ? errorMessage : 'step error -> failed'))
 				this.updateMessage(beforeRunStepMessage, message)
 				break
@@ -75,7 +75,7 @@ export class VerboseReporter implements IReporter {
 				console.groupEnd()
 				break
 			case TestEvent.StepSkipped:
-				console.group(`${chalk.grey.bold('\u2296')} ${chalk.grey(`${stepName} skipped`)}`)
+				console.group(`${chalk.cyan.bold('\u2296')} ${chalk.cyan(`${stepName} skipped`)}`)
 				console.groupEnd()
 				break
 			case TestEvent.StepUnexecuted:

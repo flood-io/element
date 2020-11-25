@@ -38,5 +38,3 @@ jobs:
         run: yarn lerna publish --conventional-graduate --dist-tag latest --yes --force-publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - name: 'Publish stable to Homebrew'
-        run: yarn publish:brew

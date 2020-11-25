@@ -12,8 +12,8 @@ import {
 	AuthOptions,
 	Viewport,
 	EvaluateFn,
+	devices,
 } from 'puppeteer'
-import DeviceDescriptors from 'puppeteer/DeviceDescriptors'
 import { Browser as BrowserInterface } from './IBrowser'
 import { NullableLocatable } from './Locatable'
 import CustomDeviceDescriptors from '../utils/CustomDeviceDescriptors'
@@ -417,7 +417,8 @@ export class Browser<T> implements BrowserInterface {
 
 	@rewriteError()
 	public async emulateDevice(deviceName: string): Promise<void> {
-		const device = DeviceDescriptors[deviceName] || CustomDeviceDescriptors[deviceName]
+		const device =
+			devices && deviceName in devices ? devices[deviceName] : CustomDeviceDescriptors[deviceName]
 		if (!device) throw new Error(`Unknown device descriptor: ${deviceName}`)
 		return this.page.emulate(device)
 	}

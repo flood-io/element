@@ -9,12 +9,21 @@ module.exports = {
 	extends: [
 		'eslint:recommended',
 		'plugin:@typescript-eslint/recommended',
+		'plugin:react/recommended',
 		'plugin:import/warnings',
 		'plugin:import/errors',
+		'plugin:import/react',
 		'plugin:import/typescript',
-		'prettier/@typescript-eslint',
 		'plugin:prettier/recommended',
+		'prettier',
+		'prettier/@typescript-eslint',
+		'prettier/react',
 	],
+	settings: {
+		react: {
+			version: 'detect',
+		},
+	},
 	rules: {
 		'@typescript-eslint/no-explicit-any': 'off',
 		'@typescript-eslint/explicit-function-return-type': 'off',

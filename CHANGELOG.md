@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.4.0-beta.3](https://github.com/flood-io/element/compare/v1.4.0-beta.2...v1.4.0-beta.3) (2020-11-25)
+
+
+### Bug Fixes
+
+* remove publish beta to Homebrew ([8eb631e](https://github.com/flood-io/element/commit/8eb631eb5fd41e88621c101532a3733a021843a0))
+* remove publish homebrew on stable ([cafe937](https://github.com/flood-io/element/commit/cafe93768865c4150dd2c3749d8fd8ec45196294))
+
+
+### Features
+
+* update puppeteer to latest version and fix device descriptors ([baa62c0](https://github.com/flood-io/element/commit/baa62c0ac4d3f4cab9ac4ce7a8ec2daf6254f37b))
+
+
+
+
+
 # [1.4.0-beta.2](https://github.com/flood-io/element/compare/v1.4.0-beta.1...v1.4.0-beta.2) (2020-11-24)
 
 

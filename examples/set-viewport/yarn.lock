@@ -2,20 +2,20 @@
 # yarn lockfile v1
 
 
-"@flood/element-api@^1.3.0-beta.28":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@flood/element-api/-/element-api-1.3.0.tgz#e337593e639f34a24b7c581318d5fafc8752e8a7"
-  integrity sha512-kIZgGGF94UnQAj84f+i2RXGjCAJEgq/7ojH457IOb5Rvxz0r2LuUK5YZfgBSTozflH62ymxV1yWrAx9pol/fyg==
+"@flood/element-api@^1.3.9":
+  version "1.3.9"
+  resolved "https://registry.yarnpkg.com/@flood/element-api/-/element-api-1.3.9.tgz#390bf5e36c9bfc2f9b798e7525b848124909b18b"
+  integrity sha512-QP8JSEN/OGPKypySqmGIxDuN4AZdC/tZxgqcAed5Wuk4Va/1fkvZ795dSP2LzfrqQ1Dm9XJAy2tupzzbCHPMog==
   dependencies:
-    "@flood/element-core" "^1.3.0"
+    "@flood/element-core" "^1.3.9"
 
 "@flood/element-cli@../../packages/cli":
-  version "1.3.0-beta.28"
+  version "1.3.9"
   dependencies:
-    "@flood/element" "^1.3.0-beta.28"
-    "@flood/element-api" "^1.3.0-beta.28"
-    "@flood/element-core" "^1.3.0-beta.28"
-    "@flood/element-flood-runner" "^1.3.0-beta.28"
+    "@flood/element" "^1.3.9"
+    "@flood/element-api" "^1.3.9"
+    "@flood/element-core" "^1.3.9"
+    "@flood/element-flood-runner" "^1.3.9"
     boxen "^3.0"
     chalk "^2.4.1"
     chokidar "^2.0.4"
@@ -34,10 +34,10 @@
     yeoman-environment "2.3.0"
     yeoman-generator "3.1.0"
 
-"@flood/element-compiler@^1.3.0":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@flood/element-compiler/-/element-compiler-1.3.0.tgz#92feef7a8de159be9af74133fc412e16011c999a"
-  integrity sha512-tRiTdEKFGFO370+v7PHJgWU18+mHq1LnMWYi5sx0gN3DQzObEjb4HQBu/szal7byfLTjdxOQVJjy16EPu8DQmg==
+"@flood/element-compiler@^1.3.1":
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/@flood/element-compiler/-/element-compiler-1.3.1.tgz#0904d9ee7b306a1566e92941befdc2ede3c9e459"
+  integrity sha512-EmWg6U4yxZsxH3MSnV20LZ674Znexf4GrYlpBZsefFY0guQjKKXmuCGxJNk8zABjhckaZBrRwOcNNYNNga5qjQ==
   dependencies:
     find-root "^1.1.0"
     memory-fs "^0.5.0"
@@ -48,18 +48,18 @@
     webpack "^4.41.5"
     webpackbar "^4.0.0"
 
-"@flood/element-core@^1.3.0", "@flood/element-core@^1.3.0-beta.28":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@flood/element-core/-/element-core-1.3.0.tgz#2dceaad234ff346247c0f312b391c1fdccfae2a6"
-  integrity sha512-OiiF2AttFHiD+LQr0p4bohxEmfWBchZOhbvkMxo/ufr6Zu34UH+WDpaR5bUb14Roi+Royynh2ubyYKuETmg55g==
+"@flood/element-core@^1.3.9":
+  version "1.3.9"
+  resolved "https://registry.yarnpkg.com/@flood/element-core/-/element-core-1.3.9.tgz#9c3b953afc91ce02c3b57efce82aaf58601c69b1"
+  integrity sha512-J8OAZs4jaHsVj6+biblaIk15WHvW7+2f3VZPEXUlFAHnvpQ5wvEGPsgV14gIgsdPj2fvoNwufV7xaH+j1mw0XA==
   dependencies:
-    "@flood/element-compiler" "^1.3.0"
+    "@flood/element-compiler" "^1.3.1"
     "@types/faker" "^4.1.9"
     "@types/node" "12.7.4"
     "@types/puppeteer" "^2.0.1"
     assert "^1.4.1"
     comment-parser "^0.5.0"
-    csv "^3.1.0"
+    csv-parse "^4.12.0"
     d3-array "^1.2.0"
     diff "^3.3.0"
     faker "^4.1.0"
@@ -68,6 +68,7 @@
     knuth-shuffle "^1.0.8"
     ksuid "^1.2.0"
     micromatch "^4.0.2"
+    ms "^2.1.2"
     puppeteer "^2.1.1"
     recast "^0.13.0"
     sanitize-filename "^1.6.1"
@@ -78,27 +79,20 @@
     vm2 "^3.9.1"
     winston "^3.0.0"
 
-"@flood/element-flood-runner@^1.3.0-beta.28":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@flood/element-flood-runner/-/element-flood-runner-1.3.0.tgz#9dc117719f51512a526e985d2ca22735e7f95bed"
-  integrity sha512-4a+997SdrDlRMVictNQtS2X/A+Urvc/Z4FvYLz6mbsLYf6gcEhbpvKUQScPblxzjpAR1mJlFt9C6q/zVF+zBOw==
+"@flood/element-flood-runner@^1.3.9":
+  version "1.3.9"
+  resolved "https://registry.yarnpkg.com/@flood/element-flood-runner/-/element-flood-runner-1.3.9.tgz#041e184d170c9c34160a53e7c884fc17871a218c"
+  integrity sha512-MzbSB1oRriypHgBqgAeLfmswyv8Nr2E0bCAjM7Nw83qeYAwUAjNIgkQ2iFxdOsERiGXHgtCqxsL6t8l3cHdCiQ==
   dependencies:
-    "@flood/element-core" "^1.3.0"
+    "@flood/element-core" "^1.3.9"
     "@flood/node-influx" "^5.0.9"
     find-root "^1.1.0"
     winston "^3.2.1"
 
-"@flood/element@../../packages/element":
-  version "1.3.0-beta.28"
+"@flood/element@../../packages/element", "@flood/element@^1.3.9":
+  version "1.3.9"
   dependencies:
-    "@flood/element-core" "^1.3.0-beta.28"
-
-"@flood/element@^1.3.0-beta.28":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@flood/element/-/element-1.3.0.tgz#af20552be94b979b8cefab302912239d3686a59b"
-  integrity sha512-YG6EJVUkO6FgimvuwYHLFji31SOaXh5lFfMUUiK8GDF2pc+75rIvliV4iXfFwrwCAnTcZiam8ELJalMFPPVgWg==
-  dependencies:
-    "@flood/element-core" "^1.3.0"
+    "@flood/element-core" "^1.3.9"
 
 "@flood/node-influx@^5.0.9":
   version "5.0.9"
@@ -1176,32 +1170,10 @@ crypto-browserify@^3.11.0:
     randombytes "^2.0.0"
     randomfill "^1.0.3"
 
-csv-generate@^2.0.2:
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/csv-generate/-/csv-generate-2.2.2.tgz#c37808c5f3ead2deec940794073dd32d492adfd1"
-  integrity sha512-ETG8JGG0xOt2f1JzxrAcQONVc4+7srUdXeyLnow60ntBr+qiNCFTqi+ME6g0vZ4hMCbrwNrDPJPOYVznAeDDHQ==
-
-csv-parse@^2.4.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/csv-parse/-/csv-parse-2.5.0.tgz#65748997ecc3719c594622db1b9ea0e2eb7d56bb"
-  integrity sha512-4OcjOJQByI0YDU5COYw9HAqjo8/MOLLmT9EKyMCXUzgvh30vS1SlMK+Ho84IH5exN44cSnrYecw/7Zpu2m4lkA==
-
-csv-stringify@^3.0.0:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/csv-stringify/-/csv-stringify-3.1.1.tgz#3a4e180a84f9c45a6a0a0401c1b41b315b9131f0"
-  integrity sha512-Ni9r/BdQM2cGnWzwAP09zp12LVOAMHLJ86azNHGC7s4OUo2WidGfcM3QwYEjD8c4ELCL/a4AzfIsVCzroeys+g==
-  dependencies:
-    lodash.get "~4.4.2"
-
-csv@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/csv/-/csv-3.1.0.tgz#91ad8625e294bf37a5b366b84d01aa40b2d20f15"
-  integrity sha512-SfnePMkhjljB7ehvubZESGjgrnM7V/gBe5ubZWKxeKwgmTl/HtVCdfSaGRgH/i/vG7qJaSLMpP0krNbAuunRBg==
-  dependencies:
-    csv-generate "^2.0.2"
-    csv-parse "^2.4.0"
-    csv-stringify "^3.0.0"
-    stream-transform "^1.0.2"
+csv-parse@^4.12.0:
+  version "4.14.1"
+  resolved "https://registry.yarnpkg.com/csv-parse/-/csv-parse-4.14.1.tgz#b6b3736508fb94682fa6d450fe1755237221d291"
+  integrity sha512-4wmcO7QbWtDAncGFaBwlWFPhEN4Akr64IbM4zvDwEOFekI8blLc04Nw7XjQjtSNy+3AUAgBgtUa9nWo5Cq89Xg==
 
 cyclist@^1.0.1:
   version "1.0.1"
@@ -2034,9 +2006,9 @@ hash.js@^1.0.0, hash.js@^1.0.3:
     minimalistic-assert "^1.0.1"
 
 highlight.js@^9.17.1:
-  version "9.18.1"
-  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-9.18.1.tgz#ed21aa001fe6252bb10a3d76d47573c6539fe13c"
-  integrity sha512-OrVKYz70LHsnCgmbXctv/bfuvntIKDz177h0Co37DQ5jamGZLVmoCVMtjMtNZY3X9DrCcKfklHPNeA0uPZhSJg==
+  version "9.18.5"
+  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-9.18.5.tgz#d18a359867f378c138d6819edfc2a8acd5f29825"
+  integrity sha512-a5bFyofd/BHCX52/8i8uJkjr9DYwXIPnM/plwI6W7ezItLGqzt7X2G2nXuYSfsIJdkwwj/g9DG1LkcGJI/dDoA==
 
 hmac-drbg@^1.0.0:
   version "1.0.1"
@@ -2558,11 +2530,6 @@ locate-path@^5.0.0:
   dependencies:
     p-locate "^4.1.0"
 
-lodash.get@~4.4.2:
-  version "4.4.2"
-  resolved "https://registry.yarnpkg.com/lodash.get/-/lodash.get-4.4.2.tgz#2d177f652fa31e939b4438d5341499dfa3825e99"
-  integrity sha1-LRd/ZS+jHpObRDjVNBSZ36OCXpk=
-
 lodash@^4.17.10, lodash@^4.17.12, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.2, lodash@^4.3.0:
   version "4.17.19"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.19.tgz#e48ddedbe30b3321783c5b4301fbd353bc1e4a4b"
@@ -2863,7 +2830,7 @@ ms@2.0.0:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
   integrity sha1-VgiurfwAvmwpAd9fmGF4jeDVl8g=
 
-ms@^2.1.1:
+ms@^2.1.1, ms@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
@@ -3962,11 +3929,6 @@ stream-shift@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/stream-shift/-/stream-shift-1.0.1.tgz#d7088281559ab2778424279b0877da3c392d5a3d"
   integrity sha512-AiisoFqQ0vbGcZgQPY1cdP2I76glaVA/RauYR4G4thNFgkTqr90yXTo4LYX60Jl+sIlPNHHdGSwo01AvbKUSVQ==
-
-stream-transform@^1.0.2:
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/stream-transform/-/stream-transform-1.0.8.tgz#54f721122d310eca855a16c97939881ab5bbb76c"
-  integrity sha512-1q+dL790Ps0NV33rISMq9OLtfDA9KMJZdo1PHZXE85orrWsM4FAh8CVyAOTHO0rhyeM138KNPngBPrx33bFsxw==
 
 strftime@^0.10.0:
   version "0.10.0"

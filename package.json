@@ -13,6 +13,8 @@
 		"build:watch": "lerna run build:watch  --sort --parallel",
 		"build": "lerna run build --sort",
 		"test": "jest",
+		"lint": "eslint .",
+		"fmt": "eslint . --fix",
 		"publish:brew": "ts-node --project ./scripts/publish-brew-tap/tsconfig.json -- ./scripts/publish-brew-tap/index.ts",
 		"publish:pre": "lerna publish --force-publish=* --cd-version prerelease && yarn publish:brew",
 		"dev": "ts-node -r tsconfig-paths/register ./packages/cli/bin/element.ts",

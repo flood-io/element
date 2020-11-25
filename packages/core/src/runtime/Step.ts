@@ -196,14 +196,22 @@ export type Step = {
  */
 export function normalizeStepOptions(stepOpts: StepOptions): StepOptions {
 	// Convert user inputted seconds to milliseconds
-	let convertedWaitTimeout = 0
-	if (typeof stepOpts.waitTimeout === 'string' && stepOpts.waitTimeout) {
-		convertedWaitTimeout = ms(stepOpts.waitTimeout)
-	} else if (typeof stepOpts.waitTimeout === 'number') {
-		convertedWaitTimeout = stepOpts.waitTimeout
-	}
-	stepOpts.waitTimeout =
-		convertedWaitTimeout > 0 ? convertedWaitTimeout : DEFAULT_WAIT_TIMEOUT_MILLISECONDS
+	if (!stepOpts.waitTimeout) return stepOpts
 
+	let convertedWaitTimeout = DEFAULT_WAIT_TIMEOUT_MILLISECONDS
+
+	if (typeof stepOpts.waitTimeout === 'string') {
+		convertedWaitTimeout = ms(stepOpts.waitTimeout)
+	} else {
+		// for legacy code
+		convertedWaitTimeout = stepOpts.waitTimeout
+		if (convertedWaitTimeout <= 0) {
+			convertedWaitTimeout = DEFAULT_WAIT_TIMEOUT_MILLISECONDS
+		} else if (convertedWaitTimeout < 1e3) {
+			convertedWaitTimeout *= 1e3
+		}
+	}
+
+	stepOpts.waitTimeout = convertedWaitTimeout
 	return stepOpts
 }

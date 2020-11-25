@@ -29,7 +29,7 @@ export async function runSingleTestScript(opts: ElementOptions): Promise<Iterati
 			headless: opts.headless,
 			devtools: opts.devtools,
 			sandbox: opts.sandbox,
-			browserType: opts.browserType,
+			browser: opts.browser,
 			debug: opts.verbose,
 		},
 		opts.testObserverFactory,

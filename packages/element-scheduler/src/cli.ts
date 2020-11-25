@@ -3,7 +3,7 @@ import { mustCompileFile, ElementOptions, EvaluatedScript } from '@flood/element
 import Spinnies from 'spinnies'
 
 export async function runCommandLine(opts: ElementOptions): Promise<void> {
-	const { testScript, runEnv, testSettingOverrides, headless, browserType } = opts
+	const { testScript, runEnv, testSettingOverrides, headless, browser } = opts
 
 	const evaluateScript = new EvaluatedScript(runEnv, await mustCompileFile(testScript))
 

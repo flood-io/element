@@ -5,10 +5,9 @@ import Test from './Test'
 import { EvaluatedScript } from './EvaluatedScript'
 import { join } from 'path'
 import { EventEmitterReporter } from '@flood/element-report'
-import { ConcreteTestSettings, normalizeSettings, TestSettings } from './Settings'
+import { ConcreteTestSettings, normalizeSettings } from './Settings'
 import { readFileSync, writeFileSync } from 'fs-extra'
 import { tmpdir } from 'os'
-import { BROWSER_TYPE } from '../page/types'
 
 let playwright: testPlaywright
 let testReporter: EventEmitterReporter = new EventEmitterReporter()
@@ -50,7 +49,8 @@ describe('Test', () => {
 			stepDelay: '5s',
 			clearCache: false,
 			device: null,
-			browserType: BROWSER_TYPE.CHROME,
+			browser: 'chromium',
+			browserLaunchOption: {},
 			ignoreHTTPSError: false,
 			userAgent: '',
 			clearCookies: true,
@@ -68,7 +68,7 @@ describe('Test', () => {
 			disableCache: false,
 			extraHTTPHeaders: {},
 			launchArgs: [],
-			viewport: null,
+			viewport: { width: 1440, height: 900 },
 			tries: 0,
 			stages: [],
 		}

@@ -2,7 +2,7 @@ import {
 	TestSettings,
 	launchBrowserServer,
 	RuntimeEnvironment,
-	BROWSER_TYPE,
+	BrowserType,
 } from '@flood/element-core'
 import { WorkerPool } from './WorkerPool'
 import { ActionConst, ChildMessages, WorkerInterface } from './types'
@@ -15,7 +15,7 @@ import Table from 'cli-table3'
 
 export type SchedulerSetting = TestSettings & {
 	headless?: boolean | undefined
-	browserType?: BROWSER_TYPE
+	browser?: BrowserType
 	sandbox?: boolean | undefined
 	verbose?: boolean
 }

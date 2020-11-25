@@ -26,9 +26,9 @@ export abstract class Condition {
 	constructor(public desc: string = '*BASE CONDITION') {}
 
 	public abstract toString(): string
-	public abstract async waitFor(frame: Frame, page?: Page): Promise<unknown>
+	public abstract waitFor(frame: Frame, page?: Page): Promise<unknown>
 
-	public abstract async waitForEvent(page: Page): Promise<unknown>
+	public abstract waitForEvent(page: Page): Promise<unknown>
 
 	protected get timeout(): string | number {
 		if (typeof this.settings.waitTimeout === 'string' && this.settings.waitTimeout) {

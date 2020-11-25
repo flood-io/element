@@ -33,7 +33,7 @@ export class ElementResult {
 		let modeName: string = opt.headless ? 'headless' : 'no-headless'
 		modeName = isConfig ? `${modeName} with config file` : modeName
 		this._result.executionInfo.mode = modeName
-		this._result.executionInfo.browser = [opt.browserType]
+		this._result.executionInfo.browser = [opt.browser]
 	}
 
 	addTestScript(file: string, iterationResults: IterationResult[]): void {

@@ -73,7 +73,7 @@ async function execMethod(method: string, args: Array<any>) {
 			}
 
 			const clientFactory = (): AsyncFactory<PlaywrightClient> => {
-				return () => connectWS(wsEndpoint, childSettings.browserType)
+				return () => connectWS(wsEndpoint, childSettings.browser)
 			}
 
 			const startTime = new Date().valueOf()

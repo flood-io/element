@@ -1,5 +1,5 @@
 import { Condition } from '../page/Condition'
-import { Page, Frame, ViewportSize } from 'playwright'
+import { Page, Frame, ViewportSize, BrowserContext } from 'playwright'
 import {
 	ElementHandle,
 	ScreenshotOptions,
@@ -33,13 +33,13 @@ export interface Browser {
 	 * @internal
 	 * @private
 	 */
-	beforeFunc: (b: Browser, name: string) => Promise<void>
+	beforeFunc: (browser: Browser, name: string) => Promise<void>
 
 	/**
 	 * @internal
 	 * @private
 	 */
-	afterFunc: (b: Browser, name: string) => Promise<void>
+	afterFunc: (browser: Browser, name: string, args?: string) => Promise<void>
 
 	title(): Promise<string>
 
@@ -291,6 +291,8 @@ export interface Browser {
 	waitForNewPage(): Promise<Page>
 
 	close(): Promise<void>
+
+	context(): BrowserContext
 }
 
 /**

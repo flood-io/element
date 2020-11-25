@@ -7,7 +7,7 @@ In any asynchronous testing environment, you need to wait for things to happen i
 
 Element comes with a deep set of helpers to handle waiting for elements to appear, become enabled, or change state in other ways.
 
-In most cases you don't want to wait for every element to appear before interacting with it, because it wouldn't make sense to interact with an invisble element. Flood Element supports automatic waiting, using the `autoWait` option — enabled by default since Element v1.2.
+In most cases you don't want to wait for every element to appear before interacting with it, because it wouldn't make sense to interact with an invisble element. Flood Element supports automatic waiting since version 1.2, using the `waitUntil: 'visible'` option in [Test Settings](../guides/TestSettings.md)
 
 # `Condition`
 
@@ -32,7 +32,6 @@ The target frame may be specified as:
 - string name of the frame to wait for matching the frame's `name` or `id` attribute.
 - locator which may be used to first locate a FRAME or IFRAME on the current page before attempting to switch to it.
 
-Upon successful resolution of this condition, the driver will be left focused on the new frame.
 
 **Example:**
 
@@ -211,6 +210,16 @@ Creates a condition which will wait until the element's text becomes different f
 ### `Until.elementTextMatches(selectorOrLocator, regex)`
 
 Creates a condition which will wait until the element's text matches the target Regular Expression.
+
+**Parameters**
+
+- selectorOrLocator [`NullableLocatable`][nullablelocatable]
+- regex [`RegExp`][regexp]
+- returns: [`Condition`][condition]
+
+### `Until.elementTextDoesNotMatch(selectorOrLocator, regex)`
+
+Creates a condition which will wait until the element's text no longer matches the target Regular Expression.
 
 **Parameters**
 

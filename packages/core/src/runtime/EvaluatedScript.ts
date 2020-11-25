@@ -35,7 +35,6 @@ import { TestDataSource, TestDataFactory } from '../test-data/TestData'
 import { BoundTestDataLoaders } from '../test-data/TestDataLoaders'
 import { EvaluatedScriptLike } from './EvaluatedScriptLike'
 import { Hook, HookType, normalizeHookBase } from './StepLifeCycle'
-import { BROWSER_TYPE } from '../page/types'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:eval-script')
@@ -174,10 +173,10 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			let options: StepOptions = {}
 
 			if (args.length === 3) {
-				;[name, options, fn] = args
+				[name, options, fn] = args
 				options = normalizeStepOptions(options)
 			} else {
-				;[name, fn] = args
+				[name, fn] = args
 			}
 
 			console.assert(typeof name === 'string', 'Step name must be a string')
@@ -312,7 +311,6 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			Key,
 			RecoverWith,
 			userAgents,
-			BROWSER_TYPE,
 		}
 
 		this.vm = createVirtualMachine(context, this.script.scriptRoot)

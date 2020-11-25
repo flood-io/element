@@ -19,8 +19,9 @@ export const settings: TestSettings = {
 	disableCache: false,
 	waitTimeout: 60,
 	screenshotOnFailure: true,
-	viewport: { width: 1366, height: 768 },
-	launchArgs: ['--window-size=1920,1080'],
+	actionDelay: '1s',
+	stepDelay: '2s',
+	browser: 'chromium',
 }
 
 const URL = 'https://flood-element-challenge.vercel.app/'
@@ -47,7 +48,10 @@ const adjustPriceRange = async (
 	const priceRange = await browser.findElement(By.css('p[data-test-range]'))
 	const priceSlider = await browser.findElement(By.css('span[data-test-slider]'))
 
-	await priceRange.click()
+	await browser.evaluate(() => {
+		const slider = document.querySelector('span[data-test-slider]')
+		slider.scrollIntoView({ block: 'end' })
+	})
 
 	const sliderLocation = await priceSlider.location()
 	const sliderWidth = (await priceSlider.size()).width
@@ -69,10 +73,10 @@ const adjustPriceRange = async (
 
 	while (currentMaxPrice !== targetMaxPrice) {
 		if (currentMaxPrice > targetMaxPrice) {
-			await browser.page.keyboard.press(Key.ARROW_LEFT)
+			await browser.press(Key.ARROW_LEFT)
 			currentMaxPrice--
 		} else {
-			await browser.page.keyboard.press(Key.ARROW_RIGHT)
+			await browser.press(Key.ARROW_RIGHT)
 			currentMaxPrice++
 		}
 	}
@@ -92,10 +96,10 @@ const adjustPriceRange = async (
 
 	while (currentMinPrice !== targetMinPrice) {
 		if (currentMinPrice > targetMinPrice) {
-			await browser.page.keyboard.press(Key.ARROW_LEFT)
+			await browser.press(Key.ARROW_LEFT)
 			currentMinPrice--
 		} else {
-			await browser.page.keyboard.press(Key.ARROW_RIGHT)
+			await browser.press(Key.ARROW_RIGHT)
 			currentMinPrice++
 		}
 	}
@@ -108,14 +112,14 @@ const minimizePopup = async (browser: Browser): Promise<void> => {
 }
 
 const maximizePopup = async (browser: Browser): Promise<void> => {
-	const maximizeBtn = await browser.findElement(By.css('button[data-test-maximize]'))
-	await browser.click(maximizeBtn)
+	await browser.click(By.css('button[data-test-maximize]'))
 	await browser.wait(0.5)
 }
 
 const getChallangeText = async (browser: Browser): Promise<string> => {
 	const modal = await browser.findElement(By.id('challenges-popup'))
-	const challengeText = await (await modal.findElement(By.css('h6[data-test-title]'))).text()
+	const challengeText =
+		(await (await modal.findElement(By.css('h6[data-test-title]')))?.text()) ?? ''
 
 	return challengeText.split(' ')[1].split('/')[0]
 }
@@ -127,8 +131,10 @@ export default () => {
 		const pageTextVerified = By.css('h3')
 		await browser.wait(Until.elementIsVisible(pageTextVerified))
 
-		const takeTheChallengeBtn = await browser.findElement(By.visibleText('TAKE THE CHALLENGE'))
-		await browser.click(takeTheChallengeBtn)
+		// await browser.click(By.visibleText('TAKE THE CHALLENGE'))
+
+		await browser.press(Key.TAB)
+		await browser.press(Key.ENTER)
 
 		const modal = By.css('#challenges-popup')
 		await browser.wait(Until.elementIsVisible(modal))
@@ -189,10 +195,8 @@ export default () => {
 
 		const modalEl = await browser.findElement(By.id('challenges-popup'))
 		const keyword = await (await modalEl.findElement(By.id('challenge-2-category')))?.text()
-		if (keyword?.toLowerCase() !== 't-shirt') {
-			const targetButton = await browser.findElement(By.css(`button[value="${keyword}"]`))
-			await targetButton.click()
-		}
+		const targetButton = await browser.findElement(By.css(`button[value="${keyword}"]`))
+		await targetButton.click()
 
 		const productCard = By.css('div[data-test-card]')
 		await browser.wait(Until.elementsLocated(productCard))
@@ -215,7 +219,7 @@ export default () => {
 	step('Test: Challenge 3', async browser => {
 		const challenge = await getChallangeText(browser)
 		assert.strictEqual(challenge, '3', 'The challenge should be challenge number 3')
-		await browser.page.browserContext().overridePermissions(URL, ['clipboard-read'])
+		await browser.context().grantPermissions(['clipboard-read'])
 
 		const revealButton = await browser.findElement(By.visibleText('Reveal the deal'))
 		await revealButton.click()
@@ -225,13 +229,14 @@ export default () => {
 		const copyButton = await browser.findElement(copyBtnLocator)
 		await copyButton.click()
 
-		const promotionCode = await browser.page.evaluate(() => {
+		const promotionCode = await browser.evaluate(() => {
 			return navigator.clipboard.readText()
 		})
 
 		const promotionInput = await browser.findElement(By.id('challenge-3-promotion-code'))
 		await promotionInput?.focus()
-		await browser.type(promotionInput, promotionCode)
+
+		await browser.sendKeys(promotionCode)
 	})
 
 	step('Test: Challenge 4', async browser => {
@@ -284,41 +289,42 @@ export default () => {
 	step('Test: Challenge 6', async browser => {
 		const challenge = await getChallangeText(browser)
 		assert.strictEqual(challenge, '6', 'The challenge should be challenge number 6')
-		const numOfPage = await getNumOfPages(browser)
+		const pages = await getNumOfPages(browser)
 
-		for (let x = 1; x <= numOfPage; x++) {
+		for (let x = 1; x <= pages; x++) {
 			const productCards = await browser.findElements(By.css('div[data-test-card]'))
-			for (let y = 0; y < productCards.length; y++) {
-				await browser.page.evaluate(y => {
-					const el = document.querySelectorAll('div[data-test-card]')[y]
+			for (const [index, card] of productCards.entries()) {
+				await browser.evaluate(index => {
+					const el = document.querySelectorAll('div[data-test-card]')[index]
 					el.scrollIntoView({ block: 'nearest' })
-				}, y)
-				const card = productCards[y]
+				}, index)
 				const location = await card.location()
 				await browser.mouse.move(location.x + 10, location.y + 10)
 
 				await browser.wait(0.4)
 
 				const addToCartBtn = await card.findElement(By.visibleText('add to cart'))
-				await browser.click(addToCartBtn)
+				await addToCartBtn.click()
 
 				const productName = By.css('h3[data-test-name]')
 				await browser.wait(Until.elementLocated(productName))
 
 				const anotherAddToCardBtn = await browser.findElement(By.visibleText('Add to cart'))
-				await browser.click(anotherAddToCardBtn)
+				await anotherAddToCardBtn.click()
 
 				// Using Mouse.move(), mouse.down() and mouse.up() to close the modal
-				await browser.mouse.move(1, 1)
-				await browser.mouse.down()
-				await browser.mouse.up()
+				// await browser.mouse.move(1, 1)
+				// await browser.mouse.down()
+				// await browser.mouse.up()
 
 				// Or you can click into the close button in the modal
-				// const closeModalBtnEl = await browser.findElement(By.css('button[data-test-product-detail-modal-close]'))
-				// await closeModalBtnEl.click()
+				const closeModalBtnEl = await browser.findElement(
+					By.css('button[data-test-product-detail-modal-close]'),
+				)
+				await closeModalBtnEl.click()
 			}
 
-			if (numOfPage > 1 && x < numOfPage) {
+			if (pages > 1 && x < pages) {
 				const goToPageButton = await browser.findElement(
 					By.css(`button[aria-label="Go to page ${x + 1}"]`),
 				)
@@ -346,7 +352,7 @@ export default () => {
 
 		await minimizePopup(browser)
 
-		const checkBoxes = await browser.findElements(By.css('label[data-test-check]'))
+		const checkBoxes = await browser.findElements(By.css('label[data-test-filter-check]'))
 		await Promise.all(
 			checkBoxes.map(async checkBox => {
 				const text = await checkBox.text()
@@ -373,10 +379,10 @@ export default () => {
 		const subTotalSelector = await browser.findElement(By.id('subtotal-price'))
 
 		const challengeMinPriceText = (
-			await (await browser.findElement(By.id('challenge-9-min-price'))).text()
+			await (await browser.findElement(By.id('challenge-8-min-price'))).text()
 		).replace('$', '')
 		const challengeMaxPriceText = (
-			await (await browser.findElement(By.id('challenge-9-max-price'))).text()
+			await (await browser.findElement(By.id('challenge-8-max-price'))).text()
 		).replace('$', '')
 
 		let cartSubtotalText = (await subTotalSelector.text()).replace('$', '')
@@ -398,12 +404,10 @@ export default () => {
 
 			const firstProductAmount = parseInt(await firstProductAmountInput.getAttribute('value'))
 			if (firstProductAmount === 0) {
-				const removeFirstProductBtn = await browser.findElement(By.css('button[data-test-remove]'))
-				await browser.click(removeFirstProductBtn)
+				await browser.click(By.css('button[data-test-remove]'))
 			}
 
-			const minusButton = await browser.findElement(By.css('button[data-test-minus]'))
-			await minusButton.click()
+			await browser.click(By.css('button[data-test-minus]'))
 			cartSubtotal = parseInt((await subTotalSelector.text()).replace('$', ''))
 		}
 	})

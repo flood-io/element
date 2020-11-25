@@ -70,7 +70,7 @@ export {
 	TestSettings,
 	setup,
 	DEFAULT_SETTINGS,
-	BROWSER_TYPE,
+	BrowserType,
 	ConsoleMethod,
 	ResponseTiming,
 } from '@flood/element-core'

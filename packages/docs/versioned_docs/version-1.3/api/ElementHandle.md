@@ -6,7 +6,7 @@ hide_title: true
 
 # `ElementHandle`
 
-Example Handle represents a remote element in the DOM of the browser. It implements useful methods for querying and interacting with DOM elements.
+Element Handle represents a remote element in the DOM of the browser. It implements useful methods for querying and interacting with DOM elements.
 
 :::note
 
@@ -214,12 +214,15 @@ Sends a series of key presses to the element to simulate a user typing on the ke
 - text `string`
 - returns: [`Promise<void>`][promise]
 
-**Properties**
+### `uploadFile(filepath)`
+Sets the value of the file input. Names of the file(s) you uploaded with this script. Relative to the script.
+
+**Parameters**
+- filepath `string[]` relative path to the file to be uploaded, separated by comma in case there're more than 1 file
+- returns: [`Promise<void>`][promise]
 
 [promise]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
-[clickoptions]: Puppeteer
+[clickoptions]: mouse.md#clickoptions
 [locator]: Locators
 [elementhandle]: ElementHandle
-[locator]: Locators
-[elementhandle]: ElementHandle.md
-[screenshotoptions]: Puppeteer
+[screenshotoptions]: browser.md#screenshotoptions

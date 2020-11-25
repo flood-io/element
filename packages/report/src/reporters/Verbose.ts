@@ -58,7 +58,7 @@ export class VerboseReporter implements IReporter {
 				break
 			case TestEvent.AfterHookAction:
 			case TestEvent.AfterStepAction:
-				console.log(`${chalk.white(`${label}(${chalk.white.dim(args)})`)}`)
+				console.log(`${chalk.white(`${label}(${chalk.grey(args)})`)}`)
 				break
 			case TestEvent.StepSucceeded:
 				message = `${chalk.green.bold('✔')} ${chalk.green(
@@ -76,6 +76,7 @@ export class VerboseReporter implements IReporter {
 				break
 			case TestEvent.StepSkipped:
 				console.group(`${chalk.yellow.bold('\u2296')} ${chalk.yellow(`${stepName} skipped`)}`)
+				console.log('')
 				console.groupEnd()
 				break
 			case TestEvent.StepUnexecuted:

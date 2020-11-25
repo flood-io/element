@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import useBaseUrl from '@docusaurus/useBaseUrl'
 import useThemeContext from '@theme/hooks/useThemeContext'
@@ -19,4 +20,11 @@ function FeatureBlock({ imageUrl, title, description }) {
 		</div>
 	)
 }
+
+FeatureBlock.propTypes = {
+	imageUrl: PropTypes.string.isRequired,
+	title: PropTypes.string.isRequired,
+	description: PropTypes.string.isRequired,
+}
+
 export default FeatureBlock

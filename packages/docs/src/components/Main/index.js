@@ -29,7 +29,7 @@ const features = [
 		imageUrl: 'img/se_ic.png',
 		description: (
 			<>
-				Element's DSL is heavily influenced by <code>WebDriver.js</code>, making it really easy to
+				Element’s DSL is heavily influenced by <code>WebDriver.js</code>, making it really easy to
 				migrate your Selenium scripts to Element.
 			</>
 		),
@@ -88,7 +88,7 @@ const pros = [
 		imageUrl: 'img/check_ic.png',
 		description: (
 			<>
-				In today's modern applications, up to 80% of performance problems occur in the browser,
+				In today’s modern applications, up to 80% of performance problems occur in the browser,
 				which makes browser based load testing more important than ever.
 			</>
 		),

@@ -1,7 +1,12 @@
 !.eslintrc.js
-node_modules
-dist
+.buildkite/
+.git/
+.github/
+.vscode/
 coverage
-tests
+dist
 examples
+extern
+node_modules
 smoke
+tests

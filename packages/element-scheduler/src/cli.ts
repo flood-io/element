@@ -11,7 +11,7 @@ export async function runCommandLine(opts: ElementOptions): Promise<void> {
 		...evaluateScript.settings,
 		...testSettingOverrides,
 		headless: headless,
-		browserType: browserType || evaluateScript.settings.browserType,
+		browser: browser || evaluateScript.settings.browser,
 		verbose: opts.verbose,
 	})
 

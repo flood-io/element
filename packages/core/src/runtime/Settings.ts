@@ -315,7 +315,6 @@ export function normalizeSettings(settings: TestSettings): TestSettings {
 
 	if (settings.waitTimeout) {
 		if (typeof settings.waitTimeout === 'string') {
-			// support new string value for `waitTimeout`, still keep the raw value
 			convertedWaitTimeout = ms(settings.waitTimeout)
 		} else {
 			// legacy code
@@ -324,37 +323,37 @@ export function normalizeSettings(settings: TestSettings): TestSettings {
 			if (convertedWaitTimeout < 1e3) convertedWaitTimeout *= 1e3
 		}
 	}
-
 	settings.waitTimeout = convertedWaitTimeout
 
 	if (settings.actionDelay) {
 		if (typeof settings.actionDelay === 'string') {
 			convertedActionDelay = ms(settings.actionDelay)
 		} else {
+			// legacy code
 			convertedActionDelay = settings.actionDelay
 			if (convertedActionDelay < 0) convertedActionDelay = DEFAULT_ACTION_DELAY
 			if (convertedActionDelay < 1e3) convertedActionDelay *= 1e3
 		}
 	}
-
 	settings.actionDelay = convertedActionDelay
 
 	if (settings.stepDelay) {
 		if (typeof settings.stepDelay === 'string') {
 			convertedStepDelay = ms(settings.stepDelay)
 		} else {
+			// legacy code
 			convertedStepDelay = settings.stepDelay
 			if (convertedStepDelay < 0) convertedStepDelay = DEFAULT_STEP_DELAY
 			if (convertedStepDelay < 1e3) convertedStepDelay *= 1e3
 		}
 	}
-
 	settings.stepDelay = convertedStepDelay
 
 	if (settings.duration) {
 		if (typeof settings.duration === 'string') {
 			convertedDuration = ms(settings.duration)
 		} else {
+			// legacy code
 			convertedDuration = settings.duration
 			if (convertedDuration < 0) convertedDuration = DEFAULT_DURATION
 			if (convertedDuration < 1e3) convertedDuration *= 1e3

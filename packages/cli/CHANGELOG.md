@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.7](https://github.com/flood-io/element/compare/v2.0.0-canary.6...v2.0.0-canary.7) (2020-11-26)
+
+
+### Bug Fixes
+
+* clean code ([7e68f77](https://github.com/flood-io/element/commit/7e68f777aa2ae57a7a1e431158eeb081aa06300a))
+* time unit consistency and improvement ([f39d713](https://github.com/flood-io/element/commit/f39d7139714f90d6f28c50889073102b39b35ca2))
+
+
+
+
+
 # [2.0.0-canary.6](https://github.com/flood-io/element/compare/v2.0.0-canary.4...v2.0.0-canary.6) (2020-11-24)
 
 **Note:** Version bump only for package @flood/element-cli

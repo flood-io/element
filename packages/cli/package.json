@@ -1,6 +1,6 @@
 {
 	"name": "@flood/element-cli",
-	"version": "2.0.0-canary.6",
+	"version": "2.0.0-canary.7",
 	"license": "Apache-2.0",
 	"description": "The command line interface for Flood Element",
 	"repository": "flood-io/element",
@@ -15,11 +15,11 @@
 		"dev": "ts-node ./bin/element.ts"
 	},
 	"dependencies": {
-		"@flood/element": "2.0.0-canary.6",
-		"@flood/element-api": "2.0.0-canary.6",
-		"@flood/element-core": "2.0.0-canary.6",
-		"@flood/element-flood-runner": "2.0.0-canary.6",
-		"@flood/element-scheduler": "2.0.0-canary.6",
+		"@flood/element": "2.0.0-canary.7",
+		"@flood/element-api": "2.0.0-canary.7",
+		"@flood/element-core": "2.0.0-canary.7",
+		"@flood/element-flood-runner": "2.0.0-canary.7",
+		"@flood/element-scheduler": "2.0.0-canary.7",
 		"boxen": "^3.0",
 		"chalk": "^2.4.1",
 		"chokidar": "^3.4.2",

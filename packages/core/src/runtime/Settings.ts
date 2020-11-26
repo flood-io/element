@@ -27,7 +27,7 @@ export const DEFAULT_ACTION_WAIT_MILLISECONDS = 500
 export const DEFAULT_WAIT_TIMEOUT_MILLISECONDS = 30000
 export const DEFAULT_ACTION_DELAY = 2000
 export const DEFAULT_STEP_DELAY = 6000
-export const DEFAULT_DURATION = 0
+export const DEFAULT_DURATION = -1
 export const DEFAULT_STEP_DELAY_FAST_FORWARD = 1000
 export const DEFAULT_ACTION_DELAY_FAST_FORWARD = 1000
 export const DEFAULT_STEP_DELAY_SLOW_MO = 10000
@@ -356,9 +356,11 @@ export function normalizeSettings(settings: TestSettings): TestSettings {
 			convertedDuration = ms(settings.duration)
 		} else {
 			convertedDuration = settings.duration
+			if (convertedDuration < 0) convertedDuration = DEFAULT_DURATION
+			if (convertedDuration < 1e3) convertedDuration *= 1e3
 		}
-		settings.duration = convertedDuration
 	}
+	settings.duration = convertedDuration
 
 	return settings
 }

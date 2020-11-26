@@ -83,7 +83,6 @@ const cmd: CommandModule = {
 				},
 			)
 		}
-		process.exit(0)
 	},
 	builder(yargs: Argv): Argv {
 		return yargs

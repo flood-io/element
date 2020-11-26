@@ -1,5 +1,6 @@
+import { parentPort } from 'worker_threads'
 import { TestScriptError } from '../runtime/TestScriptError'
-import { IReporter } from '../runtime/IReporter'
+import { ACTION, IReporter, MEASUREMENT, WorkerReport } from '../runtime/IReporter'
 import { TraceData, TestEvent, CompoundMeasurement, MeasurementKind } from '../types/Report'
 import chalk from 'chalk'
 import { ReportCache } from './Cache'
@@ -9,12 +10,20 @@ const debug = require('debug')('element-cli:console-reporter')
 export class BaseReporter implements IReporter {
 	public responseCode: string
 	public stepName: string
+	public worker: WorkerReport
 
 	constructor(private cache: ReportCache) {}
 
 	reset(step: string): void {}
 
-	addMeasurement(measurement: string, value: string | number, label?: string): void {}
+	addMeasurement(measurement: string, value: string | number, label?: string): void {
+		if (this.worker) {
+			this.sendReport(
+				JSON.stringify({ name: measurement, value, iteration: this.worker.iteration }),
+				MEASUREMENT,
+			)
+		}
+	}
 
 	addCompoundMeasurement(
 		measurement: MeasurementKind,
@@ -23,6 +32,16 @@ export class BaseReporter implements IReporter {
 	): void {}
 
 	addTrace(traceData: TraceData, label: string): void {}
+
+	setWorker(worker: WorkerReport) {
+		this.worker = worker
+	}
+
+	sendReport(msg: string, logType: string): void {
+		if (parentPort) {
+			parentPort.postMessage([0, 'report', [msg, logType]])
+		}
+	}
 
 	async flushMeasurements(): Promise<void> {}
 
@@ -43,35 +62,60 @@ export class BaseReporter implements IReporter {
 			case TestEvent.AfterAllStep:
 			case TestEvent.BeforeEachStep:
 			case TestEvent.AfterEachStep:
-				console.group(beforeRunHookMessage)
-				console.group()
+				if (!this.worker) {
+					console.group(beforeRunHookMessage)
+					console.group()
+				} else {
+					this.sendReport(`${label} is running ...`, ACTION)
+				}
 				break
 			case TestEvent.BeforeAllStepFinished:
 			case TestEvent.AfterAllStepFinished:
 			case TestEvent.BeforeEachStepFinished:
 			case TestEvent.AfterEachStepFinished:
-				this.updateMessage(beforeRunHookMessage, afterRunHookMessage)
-				console.groupEnd()
+				if (!this.worker) {
+					this.updateMessage(beforeRunHookMessage, afterRunHookMessage)
+					console.groupEnd()
+				} else {
+					this.sendReport(`${chalk.green.bold('✔')} ${chalk.grey(`${label} finished`)}`, ACTION)
+				}
 				break
 			case TestEvent.BeforeStep:
-				console.group(chalk.grey(beforeRunStepMessage))
-				console.group()
+				if (!this.worker) {
+					console.group(chalk.grey(beforeRunStepMessage))
+					console.group()
+				} else {
+					this.sendReport(`${stepName} is running ...`, ACTION)
+				}
 				break
 			case TestEvent.StepSucceeded:
-				message = `${chalk.green.bold('✔')} ${chalk.grey(
-					`${stepName} passed (${timing?.toLocaleString()}ms)`,
-				)}`
-				this.updateMessage(beforeRunStepMessage, message)
+				if (!this.worker) {
+					message = `${chalk.green.bold('✔')} ${chalk.grey(
+						`${stepName} passed (${timing?.toLocaleString()}ms)`,
+					)}`
+					this.updateMessage(beforeRunStepMessage, message)
+				} else {
+					this.sendReport(`${stepName} passed (${timing?.toLocaleString()}ms)`, ACTION)
+				}
 				break
 			case TestEvent.StepFailed:
-				message = `${chalk.redBright.bold('✘')} ${chalk.grey(
-					`${stepName} failed (${timing?.toLocaleString()}ms)`,
-				)}`
-				console.error(chalk.red(errorMessage?.length ? errorMessage : 'step error -> failed'))
-				this.updateMessage(beforeRunStepMessage, message)
+				if (!this.worker) {
+					message = `${chalk.redBright.bold('✘')} ${chalk.grey(
+						`${stepName} failed (${timing?.toLocaleString()}ms)`,
+					)}`
+					console.error(chalk.red(errorMessage?.length ? errorMessage : 'step error -> failed'))
+					this.updateMessage(beforeRunStepMessage, message)
+				} else {
+					this.sendReport(
+						`${stepName} failed (${timing?.toLocaleString()}ms) -> ${chalk.red(
+							errorMessage || '',
+						)}`,
+						ACTION,
+					)
+				}
 				break
 			case TestEvent.AfterStep:
-				console.groupEnd()
+				if (!this.worker) console.groupEnd()
 				break
 		}
 	}

@@ -1,7 +1,7 @@
 import Interceptor from '../network/Interceptor'
 import { Browser } from './Browser'
 
-import { EmptyReporter, IReporter, Status, StepResult } from '@flood/element-report'
+import { EmptyReporter, IReporter, Status, StepResult, WorkerReport } from '@flood/element-report'
 import { ObjectTrace } from '../utils/ObjectTrace'
 
 import {
@@ -41,17 +41,21 @@ export default class Test implements ITest {
 	public steps: Step[]
 	public hook: Hook
 	public recoverySteps: StepRecoveryObject
+
 	public runningBrowser: Browser<Step> | null
+
 	public requestInterceptor: Interceptor
-	public iteration = 0
-	public failed: boolean
-	public stepCount: number
-	public summaryStep: StepResult[] = []
-	private hookMode = false
 
 	private testCancel: () => Promise<void> = async () => {
 		return
 	}
+
+	public iteration = 0
+
+	public failed: boolean
+
+	public stepCount: number
+	public summaryStep: StepResult[] = []
 
 	get skipping(): boolean {
 		return this.failed
@@ -140,7 +144,10 @@ export default class Test implements ITest {
 
 		this.failed = false
 		this.runningBrowser = null
-
+		const worker: WorkerReport | undefined = this.reporter.worker
+		if (worker) {
+			worker.setIteration(`${iteration}`)
+		}
 		debug('run() start')
 
 		const { testData } = this.script
@@ -178,7 +185,6 @@ export default class Test implements ITest {
 			}
 
 			debug('running hook function: beforeAll')
-
 			let hookResult = await this.runHookFn(
 				this.hook.beforeAll,
 				browser,
@@ -208,13 +214,12 @@ export default class Test implements ITest {
 					return
 				}
 
-				browser.customContext = step
-
 				await Promise.race([
 					this.runStep(testObserver, browser, step, testDataRecord),
 					cancelToken.promise,
 				])
 
+				browser.customContext = step
 				this.summarizeStepAfterRunStep(step)
 
 				if (cancelToken.isCancellationRequested) return
@@ -365,7 +370,6 @@ export default class Test implements ITest {
 		} finally {
 			browser.settings = originalBrowserSettings
 		}
-
 		if (error !== null) {
 			debug('step error')
 			this.failed = true
@@ -376,6 +380,7 @@ export default class Test implements ITest {
 			step.prop = { passed: true }
 		}
 		await testObserver.afterStep(this, step)
+
 		if (error === null) {
 			await this.doStepDelay()
 		}
@@ -416,11 +421,11 @@ export default class Test implements ITest {
 	}
 
 	public async willRunCommand(testObserver: TestObserver, browser: Browser<Step>, command: string) {
-		if (this.hookMode) {
-			await testObserver.beforeHookAction(this, command)
-		} else {
+		if (browser.customContext) {
 			await testObserver.beforeStepAction(this, browser.customContext, command)
 			debug(`Before action: '${command}()' waiting on actionDelay: ${this.settings.actionDelay}`)
+		} else {
+			await testObserver.beforeHookAction(this, command)
 		}
 	}
 
@@ -430,10 +435,10 @@ export default class Test implements ITest {
 		command: string,
 		args: string,
 	) {
-		if (this.hookMode) {
-			await testObserver.afterHookAction(this, command, args)
-		} else {
+		if (browser.customContext) {
 			await testObserver.afterStepAction(this, browser.customContext, command, args)
+		} else {
+			await testObserver.afterHookAction(this, command, args)
 		}
 	}
 
@@ -458,7 +463,6 @@ export default class Test implements ITest {
 		testDataRecord: any,
 		testObserver: TestObserver,
 	): Promise<boolean> {
-		this.hookMode = true
 		let currentHook: HookBase = hooks[0]
 		try {
 			for (const hook of hooks) {
@@ -478,8 +482,6 @@ export default class Test implements ITest {
 			console.log(err.message)
 			await this.finishedHookFuncObserver(currentHook.type, testObserver)
 			return false
-		} finally {
-			this.hookMode = false
 		}
 	}
 

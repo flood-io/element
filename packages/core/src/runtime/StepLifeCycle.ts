@@ -33,16 +33,13 @@ export enum HookType {
  */
 export function normalizeHookBase(hookBase: HookBase): HookBase {
 	const { waitTimeout } = hookBase
-	let convertedWaitTimeout = DEFAULT_WAIT_TIMEOUT_MILLISECONDS
-	if (waitTimeout) {
-		if (typeof waitTimeout === 'string') {
-			convertedWaitTimeout = ms(waitTimeout)
-		} else {
-			convertedWaitTimeout = waitTimeout
-			if (convertedWaitTimeout < 0) convertedWaitTimeout = DEFAULT_WAIT_TIMEOUT_MILLISECONDS
-			if (convertedWaitTimeout < 1e3) convertedWaitTimeout *= 1e3
-		}
+	let convertedWaitTimeout = 0
+	if (typeof waitTimeout === 'string' && waitTimeout) {
+		convertedWaitTimeout = ms(waitTimeout)
+	} else if (typeof waitTimeout === 'number') {
+		convertedWaitTimeout = waitTimeout
 	}
-	hookBase.waitTimeout = convertedWaitTimeout
+	hookBase.waitTimeout =
+		convertedWaitTimeout > 0 ? convertedWaitTimeout : DEFAULT_WAIT_TIMEOUT_MILLISECONDS
 	return hookBase
 }

@@ -34,6 +34,8 @@ export default class TestReporter implements IReporter {
 		this.traces.push(traceData)
 	}
 
+	sendReport(msg: string, logType: string): void {}
+
 	async flushMeasurements(): Promise<void> {}
 
 	testLifecycle(event: TestEvent, label: string): void {}

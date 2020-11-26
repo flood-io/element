@@ -1,5 +1,5 @@
 import { TestScriptError } from '../runtime/TestScriptError'
-import { IReporter } from '../runtime/IReporter'
+import { IReporter, WorkerReport } from '../runtime/IReporter'
 import { TraceData, TestEvent, CompoundMeasurement, MeasurementKind } from '../types/Report'
 import chalk from 'chalk'
 import ansiEscapes from 'ansi-escapes'
@@ -9,7 +9,10 @@ const debug = require('debug')('element-cli:console-reporter')
 export class VerboseReporter implements IReporter {
 	public responseCode: string
 	public stepName: string
+	public worker: WorkerReport
+
 	constructor(private cache: ReportCache) {}
+
 	reset(step: string): void {}
 
 	addMeasurement(measurement: string, value: string | number, label?: string): void {}
@@ -23,6 +26,12 @@ export class VerboseReporter implements IReporter {
 	addTrace(traceData: TraceData, label: string): void {}
 
 	async flushMeasurements(): Promise<void> {}
+
+	setWorker(worker: WorkerReport) {
+		this.worker = worker
+	}
+
+	sendReport(msg: string, logType: string): void {}
 
 	testLifecycle(
 		stage: TestEvent,
@@ -42,45 +51,61 @@ export class VerboseReporter implements IReporter {
 			case TestEvent.AfterAllStep:
 			case TestEvent.BeforeEachStep:
 			case TestEvent.AfterEachStep:
-				console.group(beforeRunHookMessage)
-				console.group()
+				if (!this.worker) {
+					console.group(beforeRunHookMessage)
+					console.group()
+				}
 				break
 			case TestEvent.BeforeAllStepFinished:
 			case TestEvent.AfterAllStepFinished:
 			case TestEvent.BeforeEachStepFinished:
 			case TestEvent.AfterEachStepFinished:
-				this.updateMessage(beforeRunHookMessage, afterRunHookMessage)
-				console.groupEnd()
+				if (!this.worker) {
+					this.updateMessage(beforeRunHookMessage, afterRunHookMessage)
+					console.groupEnd()
+				}
 				break
 			case TestEvent.BeforeStep:
-				console.group(chalk.grey(beforeRunStepMessage))
-				console.group()
+				if (!this.worker) {
+					console.group(chalk.grey(beforeRunStepMessage))
+					console.group()
+				}
 				break
 			case TestEvent.AfterHookAction:
 			case TestEvent.AfterStepAction:
-				console.log(chalk.grey(`${label}(${args})`))
+				if (!this.worker) console.log(chalk.grey(`${label}()`))
 				break
 			case TestEvent.StepSucceeded:
-				message = `${chalk.green.bold('✔')} ${chalk.grey(
-					`${stepName} passed (${timing?.toLocaleString()}ms)`,
-				)}`
-				this.updateMessage(beforeRunStepMessage, message)
+				if (!this.worker) {
+					message = `${chalk.green.bold('✔')} ${chalk.grey(
+						`${stepName} passed (${timing?.toLocaleString()}ms)`,
+					)}`
+					this.updateMessage(beforeRunStepMessage, message)
+				}
 				break
 			case TestEvent.StepFailed:
-				message = `${chalk.red.bold('✘')} ${chalk.grey(`${stepName} failed`)}`
-				console.error(chalk.red(errorMessage?.length ? errorMessage : 'step error -> failed'))
-				this.updateMessage(beforeRunStepMessage, message)
+				if (!this.worker) {
+					message = `${chalk.red.bold('✘')} ${chalk.grey(`${stepName} failed`)}`
+					console.error(chalk.red(errorMessage?.length ? errorMessage : 'step error -> failed'))
+					this.updateMessage(beforeRunStepMessage, message)
+				}
 				break
 			case TestEvent.AfterStep:
-				console.groupEnd()
+				if (!this.worker) {
+					console.groupEnd()
+				}
 				break
 			case TestEvent.StepSkipped:
-				console.group(`${chalk.grey.bold('\u2296')} ${chalk.grey(`${stepName} skipped`)}`)
-				console.groupEnd()
+				if (!this.worker) {
+					console.group(`${chalk.grey.bold('\u2296')} ${chalk.grey(`${stepName} skipped`)}`)
+					console.groupEnd()
+				}
 				break
 			case TestEvent.StepUnexecuted:
-				console.group(`${chalk.grey.bold('\u2296')} ${chalk.grey(`${stepName} is unexecuted`)}`)
-				console.groupEnd()
+				if (!this.worker) {
+					console.group(`${chalk.grey.bold('\u2296')} ${chalk.grey(`${stepName} is unexecuted`)}`)
+					console.groupEnd()
+				}
 				break
 		}
 	}

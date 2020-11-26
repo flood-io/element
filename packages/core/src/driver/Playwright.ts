@@ -1,6 +1,7 @@
 import playwright, { LaunchOptions, Browser, Page, BrowserServer } from 'playwright'
 import { ConcreteTestSettings } from '../runtime/Settings'
 import { BrowserType } from '../page/types'
+import chalk from 'chalk'
 
 export type ConcreteLaunchOptions = LaunchOptions & {
 	args: string[]
@@ -126,7 +127,10 @@ export async function launch(
 		? 'chromium'
 		: options.browser || 'chromium'
 
-	const browser = await playwright[browserType].launch(options)
+	const browser = await playwright[browserType].launch(options).catch(err => {
+		console.log(chalk.redBright(err.message))
+		return browser
+	})
 	const page = await browser.newPage(pageSettings)
 	return new PlaywrightClient(browser, page)
 }

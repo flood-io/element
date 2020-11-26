@@ -33,6 +33,8 @@ export class ConsoleReporter implements IReporter {
 		this.logger.debug(`[${this.workerName}] > trace:\n${JSON.stringify(traceData)}`)
 	}
 
+	sendReport(msg: string, logType: string): void {}
+
 	async flushMeasurements(): Promise<void> {}
 
 	testLifecycle(stage: TestEvent, label: string, subTitle?: string, timing?: number): void {
@@ -89,7 +91,8 @@ cause.stack: ${detail.causeStack}`)
 	}
 
 	testScriptConsole(method: string, message?: any, ...optionalParams: any[]): void {
-		if (method === 'log') method = 'info'
+		console.log(method, message)
+		if (['log', 'clear'].includes(method)) method = 'info'
 		if (method === 'warning') method = 'warn'
 		;(this.logger as any)[method](`page console.${method}: ${message} ${optionalParams.join(' ')}`)
 	}

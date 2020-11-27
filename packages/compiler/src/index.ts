@@ -15,8 +15,8 @@ export class Compiler {
 	private externalDebs: boolean | undefined
 
 	constructor(sourceFile: string, externalDeps?: boolean) {
-		this.sourceFile = resolve(sourceFile)
-		this.externalDebs = externalDeps
+this.sourceFile = resolve(sourceFile)
+this.externalDebs = externalDeps
 	}
 
 	public async emit(): Promise<CompilerOutput> {
@@ -99,7 +99,9 @@ export class Compiler {
 		const configFile = 'tsconfig.json'
 		const root = findRoot(__dirname)
 		const paths = [resolve(dirname(this.sourceFile)), resolve(root, 'compiler-home')]
-		const localConfig = paths.map(path => join(path, configFile)).find(path => sys.fileExists(path))
+		const localConfig = paths
+			.map((path) => join(path, configFile))
+			.find((path) => sys.fileExists(path))
 		return localConfig || configFile
 	}
 

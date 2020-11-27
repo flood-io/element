@@ -18,7 +18,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: yarn install --ignore-optional
-      - run: yarn lint
       - run: yarn test
         env:
           CI: true
@@ -30,7 +29,6 @@ jobs:
         with:
           node-version: '12.x'
       - run: yarn install --ignore-optional
-      - run: yarn lint
       - run: yarn test
         env:
           CI: true

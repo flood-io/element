@@ -1,6 +1,8 @@
 import React from 'react'
 import classnames from 'classnames'
+// eslint-disable-next-line import/no-unresolved
 import Link from '@docusaurus/Link'
+// eslint-disable-next-line import/no-unresolved
 import useBaseUrl from '@docusaurus/useBaseUrl'
 import styles from './styles.module.css'
 

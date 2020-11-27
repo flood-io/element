@@ -1,4 +1,5 @@
 import React from 'react'
+// eslint-disable-next-line import/no-unresolved
 import useThemeContext from '@theme/hooks/useThemeContext'
 import classnames from 'classnames'
 import styles from './styles.module.css'

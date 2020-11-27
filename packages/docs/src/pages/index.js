@@ -1,4 +1,5 @@
 import React from 'react'
+// eslint-disable-next-line import/no-unresolved
 import Layout from '@theme/Layout'
 import { Header, Main } from '../components'
 

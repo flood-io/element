@@ -1,5 +1,5 @@
 import React from 'react'
-import Layout from '@theme/Layout'
+import Layout from '@docusaurus/theme-classic/lib/theme/Layout'
 import { Header, Main } from '../components'
 
 const Home = () => {

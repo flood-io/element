@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.8](https://github.com/flood-io/element/compare/v2.0.0-canary.7...v2.0.0-canary.8) (2020-11-27)
+
+
+### Features
+
+* change the color at base and verbose mode ([8fc81ff](https://github.com/flood-io/element/commit/8fc81ff2268d13e40a6856823bdd278323345cef))
+* refactor code ([2052c76](https://github.com/flood-io/element/commit/2052c765a7db45b1f7154b8d05d5235a31ce4589))
+* update color of action's content ([d6db3d2](https://github.com/flood-io/element/commit/d6db3d2f9ab5ed2942bb0afa6279a4fd50b08be2))
+
+
+
+
+
 # [2.0.0-canary.7](https://github.com/flood-io/element/compare/v2.0.0-canary.6...v2.0.0-canary.7) (2020-11-26)
 
 

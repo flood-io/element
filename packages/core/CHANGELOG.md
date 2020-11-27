@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.8](https://github.com/flood-io/element/compare/v2.0.0-canary.7...v2.0.0-canary.8) (2020-11-27)
+
+
+### Features
+
+* refactor code ([2052c76](https://github.com/flood-io/element/commit/2052c765a7db45b1f7154b8d05d5235a31ce4589))
+
+
+
+
+
 # [2.0.0-canary.7](https://github.com/flood-io/element/compare/v2.0.0-canary.6...v2.0.0-canary.7) (2020-11-26)
 
 

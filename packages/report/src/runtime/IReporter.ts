@@ -17,7 +17,7 @@ export class WorkerReport {
 		this.name = name
 	}
 
-	setIteration(iteration: string) {
+	setIteration(iteration: string): void {
 		this.iteration = iteration
 	}
 }

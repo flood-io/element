@@ -16,7 +16,7 @@ export class BaseReporter implements IReporter {
 
 	reset(step: string): void {}
 
-	addMeasurement(measurement: string, value: string | number, label?: string): void {
+	addMeasurement(measurement: string, value: string | number): void {
 		if (this.worker) {
 			this.sendReport(
 				JSON.stringify({ name: measurement, value, iteration: this.worker.iteration }),
@@ -33,7 +33,7 @@ export class BaseReporter implements IReporter {
 
 	addTrace(traceData: TraceData, label: string): void {}
 
-	setWorker(worker: WorkerReport) {
+	setWorker(worker: WorkerReport): void {
 		this.worker = worker
 	}
 

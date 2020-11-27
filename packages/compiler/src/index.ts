@@ -62,13 +62,7 @@ export class Compiler {
 			},
 			cache: true,
 
-			plugins: showBar
-				? [
-						new WebpackBar({
-							name: 'Script Compiler',
-						}),
-				  ]
-				: [],
+			plugins: [],
 
 			module: {
 				rules: [
@@ -92,6 +86,13 @@ export class Compiler {
 
 			externals: ['@flood/element', '@flood/element-api'],
 		}
+
+		if (showBar)
+			options.plugins = [
+				new WebpackBar({
+					name: 'Script Compiler',
+				}),
+			]
 
 		if (!this.externalDebs) options.devtool = 'cheap-module-source-map'
 		return options

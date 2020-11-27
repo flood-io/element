@@ -249,5 +249,7 @@ export default class InfluxReporter implements IReporter {
 		c(message, ...optionalParams)
 	}
 
-	sendReport(msg: string, logType: string): void {}
+	sendReport(msg: string, logType: string): void {
+		debug(`> [influxReporter] sendReport: msg: ${msg}, type: ${logType}`)
+	}
 }

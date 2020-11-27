@@ -15,7 +15,7 @@ import Table from 'cli-table3'
 
 export type SchedulerSetting = TestSettings & {
 	headless?: boolean | undefined
-	browser?: BrowserType
+	browserType?: BrowserType
 	sandbox?: boolean | undefined
 	verbose?: boolean
 }
@@ -38,7 +38,7 @@ export class Scheduler {
 	private browserServer: BrowserServer
 	private spinnies: any
 
-	public setSpinnies(spinnies: any): void {
+	public setSpinnies(spinnies: unknown): void {
 		this.spinnies = spinnies
 	}
 

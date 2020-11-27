@@ -1,5 +1,5 @@
 import React from 'react'
-import useThemeContext from '@docusaurus/theme-classic/lib/theme/hooks/useThemeContext'
+import useThemeContext from '@theme/hooks/useThemeContext'
 import classnames from 'classnames'
 import styles from './styles.module.css'
 

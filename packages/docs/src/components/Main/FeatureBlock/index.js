@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import useBaseUrl from '@docusaurus/core/lib/client/exports/useBaseUrl'
-import useThemeContext from '@docusaurus/theme-classic/lib/theme/hooks/useThemeContext'
+import useBaseUrl from '@docusaurus/useBaseUrl'
+import useThemeContext from '@theme/hooks/useThemeContext'
 import styles from './styles.module.css'
 
 function FeatureBlock({ imageUrl, title, description }) {

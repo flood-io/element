@@ -27,11 +27,13 @@ export class VerboseReporter implements IReporter {
 
 	async flushMeasurements(): Promise<void> {}
 
-	setWorker(worker: WorkerReport) {
+	setWorker(worker: WorkerReport): void {
 		this.worker = worker
 	}
 
-	sendReport(msg: string, logType: string): void {}
+	sendReport(msg: string, logType: string): void {
+		console.log(`> [VerboseReporter] sendReport: msg: ${msg}, type: ${logType}`)
+	}
 
 	testLifecycle(
 		stage: TestEvent,

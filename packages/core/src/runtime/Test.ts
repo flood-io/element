@@ -1,7 +1,7 @@
 import Interceptor from '../network/Interceptor'
 import { Browser } from './Browser'
 
-import { EmptyReporter, IReporter, Status, StepResult } from '@flood/element-report'
+import { EmptyReporter, IReporter, Status, StepResult, WorkerReport } from '@flood/element-report'
 import { ObjectTrace } from '../utils/ObjectTrace'
 
 import {
@@ -140,6 +140,7 @@ export default class Test implements ITest {
 
 		this.failed = false
 		this.runningBrowser = null
+		this.reporter.worker?.setIteration(`${iteration}`)
 
 		debug('run() start')
 

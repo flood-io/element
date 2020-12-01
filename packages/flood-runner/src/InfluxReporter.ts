@@ -248,4 +248,8 @@ export default class InfluxReporter implements IReporter {
 		const c = (console as any)[method] || console.log
 		c(message, ...optionalParams)
 	}
+
+	sendReport(msg: string, logType: string): void {
+		debug(`> [influxReporter] sendReport: msg: ${msg}, type: ${logType}`)
+	}
 }

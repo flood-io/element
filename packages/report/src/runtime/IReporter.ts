@@ -1,11 +1,36 @@
 import { CompoundMeasurement, MeasurementKind, TestEvent, TraceData } from '../types/Report'
 import { TestScriptError } from './TestScriptError'
 
+export type Worker = {
+	id: string
+	name: string
+	iteration: string
+}
+
+export class WorkerReport {
+	public id: string
+	public name: string
+	public iteration: string
+
+	constructor(id: string, name: string) {
+		this.id = id
+		this.name = name
+	}
+
+	setIteration(iteration: string): void {
+		this.iteration = iteration
+	}
+}
+
+export const ACTION = 'action'
+export const ITERATION = 'iteration'
+export const MEASUREMENT = 'measurement'
 export interface IReporter {
 	reset(stepName: string): void
 
 	responseCode: string
 	stepName: string
+	worker?: WorkerReport
 
 	/**
 	 * Writes a measurement to the collection service
@@ -67,4 +92,6 @@ export interface IReporter {
 	addListener?(event: string | symbol, listener: (...args: any[]) => void): this
 	on?(event: string | symbol, listener: (...args: any[]) => void): this
 	once?(event: string | symbol, listener: (...args: any[]) => void): this
+	setWorker?(worker: WorkerReport): void
+	sendReport(msg: string, logType: string): void
 }

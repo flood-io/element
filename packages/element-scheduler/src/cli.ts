@@ -1,5 +1,6 @@
 import { Scheduler } from './Scheduler'
 import { mustCompileFile, ElementOptions, EvaluatedScript } from '@flood/element-core'
+import Spinnies from 'spinnies'
 
 export async function runCommandLine(opts: ElementOptions): Promise<void> {
 	const { testScript, runEnv, testSettingOverrides, headless, browser } = opts
@@ -11,6 +12,7 @@ export async function runCommandLine(opts: ElementOptions): Promise<void> {
 		...testSettingOverrides,
 		headless: headless,
 		browser: browser || evaluateScript.settings.browser,
+		verbose: opts.verbose,
 	})
 
 	const installSignalHandlers = true
@@ -25,8 +27,10 @@ export async function runCommandLine(opts: ElementOptions): Promise<void> {
 			process.kill(process.pid, 'SIGUSR2')
 		})
 	}
+	const spinnies = new Spinnies()
+	runner.setSpinnies(spinnies)
 
-	console.debug(`Loading test script: ${testScript}`)
+	spinnies.add('initializing', { text: 'Initializing users ...' })
 
 	await runner.run(testScript)
 	await runner.stop()

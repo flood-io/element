@@ -11,7 +11,7 @@ import { dirname } from 'path'
 export const TestScriptDefaultOptions: TestScriptOptions = {
 	stricterTypeChecking: false,
 	traceResolution: false,
-	showWebPackBar: true,
+	showCompilerProgress: true,
 }
 
 export default class WebpackCompiler implements ITestScript {
@@ -26,7 +26,7 @@ export default class WebpackCompiler implements ITestScript {
 
 	public async compile(): Promise<this> {
 		const compiler = new Compiler(this.sourceFile)
-		const output = await compiler.emit(this._options.showWebPackBar)
+		const output = await compiler.emit(this._options.showCompilerProgress)
 		this.result = output
 
 		this.sourceUnmapper = await SourceUnmapper.init(

@@ -53,9 +53,9 @@ export class BaseReporter implements IReporter {
 		errorMessage?: string,
 	): void {
 		const stepName = 'Step ' + (subtitle ? `'${label}' (${subtitle})` : `'${label}'`)
-		const beforeRunStepMessage = `${stepName} is running ...`
-		const beforeRunHookMessage = chalk.grey(`${label} is running ...`)
-		const afterRunHookMessage = `${chalk.green.bold('✔')} ${chalk.grey(`${label} finished`)}`
+		const beforeRunStepMessage = chalk.whiteBright(`${stepName} is running ...`)
+		const beforeRunHookMessage = chalk.whiteBright(`${label} is running ...`)
+		const afterRunHookMessage = `${chalk.green.bold('✔')} ${chalk.whiteBright(`${label} finished`)}`
 		let message = ''
 		switch (stage) {
 			case TestEvent.BeforeAllStep:
@@ -82,7 +82,7 @@ export class BaseReporter implements IReporter {
 				break
 			case TestEvent.BeforeStep:
 				if (!this.worker) {
-					console.group(chalk.grey(beforeRunStepMessage))
+					console.group(beforeRunStepMessage)
 					console.group()
 				} else {
 					this.sendReport(`${stepName} is running ...`, ACTION)
@@ -90,7 +90,7 @@ export class BaseReporter implements IReporter {
 				break
 			case TestEvent.StepSucceeded:
 				if (!this.worker) {
-					message = `${chalk.green.bold('✔')} ${chalk.grey(
+					message = `${chalk.green.bold('✔')} ${chalk.green(
 						`${stepName} passed (${timing?.toLocaleString()}ms)`,
 					)}`
 					this.updateMessage(beforeRunStepMessage, message)
@@ -100,11 +100,12 @@ export class BaseReporter implements IReporter {
 				break
 			case TestEvent.StepFailed:
 				if (!this.worker) {
-					message = `${chalk.redBright.bold('✘')} ${chalk.grey(
+					message = `${chalk.redBright.bold('✘')} ${chalk.red(
 						`${stepName} failed (${timing?.toLocaleString()}ms)`,
 					)}`
 					console.error(chalk.red(errorMessage?.length ? errorMessage : 'step error -> failed'))
 					this.updateMessage(beforeRunStepMessage, message)
+					console.log('')
 				} else {
 					this.sendReport(
 						`${stepName} failed (${timing?.toLocaleString()}ms) -> ${chalk.red(
@@ -112,6 +113,13 @@ export class BaseReporter implements IReporter {
 						)}`,
 						ACTION,
 					)
+				}
+				break
+			case TestEvent.StepSkipped:
+				if (!this.worker) {
+					console.group(`${chalk.yellow.bold('\u2296')} ${chalk.yellow(`${stepName} skipped`)}`)
+					console.log('')
+					console.groupEnd()
 				}
 				break
 			case TestEvent.AfterStep:

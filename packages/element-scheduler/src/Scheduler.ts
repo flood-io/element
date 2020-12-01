@@ -42,6 +42,86 @@ export class Scheduler {
 		this.spinnies = spinnies
 	}
 
+	private tableResult(dataTable: TableDataConfig[]): void {
+		const head: string[] = [
+			chalk.whiteBright('User'),
+			chalk.white('Iteration'),
+			chalk.blue('Response Time\nms'),
+			chalk.yellow('Latency\nms'),
+			chalk.magenta('Throughput\nkbps'),
+			chalk.greenBright('Transaction rate\nrpm'),
+			chalk.green('Passed'),
+			chalk.red('Failed'),
+			chalk.yellowBright('Skipped'),
+			chalk.white('Unexecuted'),
+		]
+		const table = new Table({
+			head,
+			colAligns: [
+				'center',
+				'center',
+				'center',
+				'center',
+				'center',
+				'center',
+				'center',
+				'center',
+				'center',
+				'center',
+			],
+			rowAligns: [
+				'top',
+				'center',
+				'center',
+				'center',
+				'center',
+				'center',
+				'top',
+				'top',
+				'top',
+				'top',
+			],
+		})
+
+		dataTable.sort((a, b) =>
+			a.worker.name > b.worker.name ? 1 : a.worker.name < b.worker.name ? -1 : 0,
+		)
+		const rowSpans: { rowSpan: number; id: string }[] = []
+		for (const row of dataTable) {
+			const {
+				worker,
+				response_time: responseTime = '0',
+				latency = '0',
+				throughput = '0',
+				transaction_rate: transactionRate = '0',
+				passed = '0',
+				failed = '0',
+				skipped = '0',
+				unexecuted = '0',
+			} = row
+			const hasGroup = rowSpans.some(row => row.id === worker.id)
+			const data = [
+				chalk.white(worker.iteration),
+				chalk.blue(responseTime),
+				chalk.yellow(latency),
+				chalk.magenta(throughput),
+				chalk.greenBright(transactionRate),
+				chalk.green(passed),
+				chalk.red(failed),
+				chalk.yellowBright(skipped),
+				chalk.white(unexecuted),
+			]
+			if (hasGroup) {
+				table.push(data)
+			} else {
+				const rowSpan = this.settings.loopCount || 0
+				rowSpans.push({ rowSpan, id: row.worker.id })
+				table.push([{ rowSpan, content: worker.name, vAlign: 'center' }, ...data])
+			}
+		}
+		console.log(table.toString())
+	}
+
 	public async run(testScript: string) {
 		const stages = this.settings.stages
 		assertIsValidateStages(stages)
@@ -126,83 +206,7 @@ export class Scheduler {
 				const { text } = this.spinnies.pick(worker.workerId)
 				this.spinnies.succeed(worker.workerId, { text: chalk.whiteBright(text) })
 				if (doneWorkers === workingWorkers.length) {
-					const head: string[] = [
-						chalk.whiteBright('User'),
-						chalk.white('Iteration'),
-						chalk.blue('Response Time\nms'),
-						chalk.yellow('Latency\nms'),
-						chalk.magenta('Throughput\nkbps'),
-						chalk.greenBright('Transaction rate\nrpm'),
-						chalk.green('Passed'),
-						chalk.red('Failed'),
-						chalk.yellowBright('Skipped'),
-						chalk.white('Unexecuted'),
-					]
-					const table = new Table({
-						head,
-						colAligns: [
-							'center',
-							'center',
-							'center',
-							'center',
-							'center',
-							'center',
-							'center',
-							'center',
-							'center',
-							'center',
-						],
-						rowAligns: [
-							'top',
-							'center',
-							'center',
-							'center',
-							'center',
-							'center',
-							'top',
-							'top',
-							'top',
-							'top',
-						],
-					})
-
-					dataTable.sort((a, b) =>
-						a.worker.name > b.worker.name ? 1 : a.worker.name < b.worker.name ? -1 : 0,
-					)
-					const rowSpans: { rowSpan: number; id: string }[] = []
-					for (const row of dataTable) {
-						const {
-							worker,
-							response_time: responseTime = '0',
-							latency = '0',
-							throughput = '0',
-							transaction_rate: transactionRate = '0',
-							passed = '0',
-							failed = '0',
-							skipped = '0',
-							unexecuted = '0',
-						} = row
-						const hasGroup = rowSpans.some(row => row.id === worker.id)
-						const data = [
-							chalk.white(worker.iteration),
-							chalk.blue(responseTime),
-							chalk.yellow(latency),
-							chalk.magenta(throughput),
-							chalk.greenBright(transactionRate),
-							chalk.green(passed),
-							chalk.red(failed),
-							chalk.yellowBright(skipped),
-							chalk.white(unexecuted),
-						]
-						if (hasGroup) {
-							table.push(data)
-						} else {
-							const rowSpan = this.settings.loopCount || 0
-							rowSpans.push({ rowSpan, id: row.worker.id })
-							table.push([{ rowSpan, content: worker.name, vAlign: 'center' }, ...data])
-						}
-					}
-					console.log(table.toString())
+					this.tableResult(dataTable)
 					next()
 				}
 			}

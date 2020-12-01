@@ -44,9 +44,9 @@ export class VerboseReporter implements IReporter {
 		args?: string,
 	): void {
 		const stepName = 'Step ' + (subtitle ? `'${label}' (${subtitle})` : `'${label}'`)
-		const beforeRunStepMessage = `${stepName} is running ...`
-		const beforeRunHookMessage = chalk.grey(`${label} is running ...`)
-		const afterRunHookMessage = `${chalk.green.bold('✔')} ${chalk.grey(`${label} finished`)}`
+		const beforeRunStepMessage = chalk.whiteBright(`${stepName} is running ...`)
+		const beforeRunHookMessage = chalk.whiteBright(`${label} is running ...`)
+		const afterRunHookMessage = `${chalk.green.bold('✔')} ${chalk.whiteBright(`${label} finished`)}`
 		let message = ''
 		switch (stage) {
 			case TestEvent.BeforeAllStep:
@@ -69,17 +69,17 @@ export class VerboseReporter implements IReporter {
 				break
 			case TestEvent.BeforeStep:
 				if (!this.worker) {
-					console.group(chalk.grey(beforeRunStepMessage))
+					console.group(beforeRunStepMessage)
 					console.group()
-				}
+				}	
 				break
 			case TestEvent.AfterHookAction:
 			case TestEvent.AfterStepAction:
-				if (!this.worker) console.log(chalk.grey(`${label}()`))
+				console.log(`${chalk.white(`${label}(${chalk.grey(args)})`)}`)
 				break
 			case TestEvent.StepSucceeded:
 				if (!this.worker) {
-					message = `${chalk.green.bold('✔')} ${chalk.grey(
+					message = `${chalk.green.bold('✔')} ${chalk.green(
 						`${stepName} passed (${timing?.toLocaleString()}ms)`,
 					)}`
 					this.updateMessage(beforeRunStepMessage, message)
@@ -87,7 +87,7 @@ export class VerboseReporter implements IReporter {
 				break
 			case TestEvent.StepFailed:
 				if (!this.worker) {
-					message = `${chalk.red.bold('✘')} ${chalk.grey(`${stepName} failed`)}`
+					message = `${chalk.red.bold('✘')} ${chalk.red(`${stepName} failed`)}`
 					console.error(chalk.red(errorMessage?.length ? errorMessage : 'step error -> failed'))
 					this.updateMessage(beforeRunStepMessage, message)
 				}
@@ -99,7 +99,8 @@ export class VerboseReporter implements IReporter {
 				break
 			case TestEvent.StepSkipped:
 				if (!this.worker) {
-					console.group(`${chalk.grey.bold('\u2296')} ${chalk.grey(`${stepName} skipped`)}`)
+					console.group(`${chalk.yellow.bold('\u2296')} ${chalk.yellow(`${stepName} skipped`)}`)
+					console.log('')
 					console.groupEnd()
 				}
 				break

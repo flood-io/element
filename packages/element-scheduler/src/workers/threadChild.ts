@@ -65,7 +65,7 @@ async function execMethod(method: string, args: Array<any>) {
 				return new EvaluatedScript(
 					env,
 					await mustCompileFile(testScript, {
-						showWebPackBar: false,
+						showCompilerProgress: false,
 						stricterTypeChecking: false,
 						traceResolution: false,
 					}),

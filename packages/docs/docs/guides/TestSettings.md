@@ -157,26 +157,30 @@ export default () => {
 ## DEFAULT SETTINGS
 The default settings for a Test. Any settings you provide are merged into these defaults.
 
-| Name                      | Default Value                                             | Comment                                                        |
-| ------------------------- | --------------------------------------------------------- | -------------------------------------------------------------- |
-| `actionDelay`             | 2                                                         |                                                                |
-| `blockedDomains`          | []                                                        |                                                                |
-| `chromeVersion`           | "puppeteer"                                               |                                                                |
-| `clearCache`              | false                                                     |                                                                |
-| `clearCookies`            | true                                                      |                                                                |
-| `consoleFilter`           | []                                                        | by default, don't filter any console messages from the browser |
-| `description`             | ""                                                        |                                                                |
-| `device`                  | "Chrome Desktop Large"                                    |                                                                |
-| `disableCache`            | false                                                     |                                                                |
-| `duration`                | -1                                                        |                                                                |
-| `extraHTTPHeaders`        |                                                           |                                                                |
-| `ignoreHTTPSErrors`       | false                                                     |                                                                |
-| `incognito`               | false                                                     |                                                                |
-| `loopCount`               | Infinity                                                  |                                                                |
-| `name`                    | "Element Test"                                            |                                                                |
-| `responseTimeMeasurement` | "step"                                                    |                                                                |
-| `screenshotOnFailure`     | true                                                      |                                                                |
-| `stepDelay`               | 6                                                         |                                                                |
-| `userAgent`               | CustomDeviceDescriptors['Chrome Desktop Large'].userAgent |                                                                |
-| `waitTimeout`             | 30                                                        |                                                                |
-| `waitUntil`               | false                                                     |                                                                |
+| Name                      | Default Value  | Comment                                                        |
+| ------------------------- | -------------- | -------------------------------------------------------------- |
+| `actionDelay`             | '2s'           |                                                                |
+| `blockedDomains`          | []             |                                                                |
+| `browser`                 | 'chromium'     | Since version 2.0                                              |
+| `browserLaunchOptions`    | {}             | Since version 2.0                                              |
+| ~~`chromeVersion`~~       | 'puppeteer'    | *DEPRECATED since version 2.0*                                 |
+| `clearCache`              | false          |                                                                |
+| `clearCookies`            | true           |                                                                |
+| `consoleFilter`           | []             | By default, don't filter any console messages from the browser |
+| `description`             | ''             |                                                                |
+| `device`                  | null           |                                                                |
+| `disableCache`            | false          |                                                                |
+| `duration`                | -1             | Defaults to -1 for unlimited number of loops                   |
+| `extraHTTPHeaders`        | {}             |                                                                |
+| `ignoreHTTPSErrors`       | false          |                                                                |
+| `incognito`               | false          |                                                                |
+| `launchArgs`              | []             |                                                                |
+| `loopCount`               | Infinity       | Equivalent to -1                                               |
+| `name`                    | 'Element Test' |                                                                |
+| `responseTimeMeasurement` | 'step'         |                                                                |
+| `screenshotOnFailure`     | true           |                                                                |
+| `stages`                  | []             | Since version 2.0                                              |
+| `stepDelay`               | '6s'           |                                                                |
+| `userAgent`               | ''             |                                                                |
+| `waitTimeout`             | '30s'          |                                                                |
+| `waitUntil`               | false          |                                                                |

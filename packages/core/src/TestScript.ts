@@ -42,7 +42,6 @@ export async function mustCompileFile(
 ): Promise<ITestScript> {
 	try {
 		const testScript = await compileFile(filename, testScriptOptions)
-
 		if (testScript == null) {
 			throw new Error(
 				`Unable to compile script ${filename}:\nunable to read script at path ${filename}`,

@@ -35,11 +35,11 @@ module.exports = {
 					position: 'left',
 					activeBaseRegex: `docs`,
 					items: [
-						// {
-						// 	label: 'Next',
-						// 	to: 'docs/next/',
-						// 	activeBaseRegex: `docs/next/(?!support|team|resources)`,
-						// },
+						{
+							label: 'Canary 2.0',
+							to: 'docs/next/',
+							activeBaseRegex: `docs/next/(?!support|team|resources)`,
+						},
 						{
 							label: versions[0],
 							to: 'docs/',

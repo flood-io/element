@@ -85,6 +85,11 @@ export class Scheduler {
 			],
 		})
 
+		const getRowSpan = (dataTable: TableDataConfig[]): number => {
+			const userCount = dataTable.filter(row => `${row.worker.iteration}` === '1').length
+			return dataTable.length / userCount
+		}
+
 		dataTable.sort((a, b) =>
 			a.worker.name > b.worker.name ? 1 : a.worker.name < b.worker.name ? -1 : 0,
 		)
@@ -116,7 +121,8 @@ export class Scheduler {
 			if (hasGroup) {
 				table.push(data)
 			} else {
-				const rowSpan = this.settings.loopCount || 0
+				const rowSpan =
+					this.settings.loopCount === -1 ? getRowSpan(dataTable) : this.settings.loopCount || 0
 				rowSpans.push({ rowSpan, id: row.worker.id })
 				table.push([{ rowSpan, content: worker.name, vAlign: 'center' }, ...data])
 			}

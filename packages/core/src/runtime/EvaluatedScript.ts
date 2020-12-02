@@ -29,6 +29,7 @@ import { expect } from '../utils/Expect'
 
 import { Until } from '../page/Until'
 import { By } from '../page/By'
+import { BaseLocator } from '../page/Locator'
 import { MouseButtons, Device, Key, userAgents } from '../page/Enums'
 
 import { TestDataSource, TestDataFactory } from '../test-data/TestData'
@@ -305,6 +306,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			// Actual implementation of @flood/chrome
 			By,
 			Until,
+			BaseLocator,
 			Device,
 			MouseButtons,
 			TestData: this.testDataLoaders,

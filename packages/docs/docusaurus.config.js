@@ -118,8 +118,12 @@ module.exports = {
 							href: 'https://www.flood.io/blog',
 						},
 						{
+							label: 'Element Challenge',
+							href: 'https://element-challenge.flood.io/',
+						},
+						{
 							label: 'Flood Challenge',
-							href: 'https://flood-element-challenge.vercel.app/',
+							href: 'https://challenge.flood.io/',
 						},
 					],
 				},

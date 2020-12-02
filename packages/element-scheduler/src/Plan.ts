@@ -30,7 +30,7 @@ export class Plan {
 	 */
 	public ticker(
 		onTick: (timestamp: number, target: number, stageIterator: number) => Promise<void>,
-		oneEndState: () => Promise<void>,
+		oneEndState: (forceStop?: boolean, sigint?: boolean) => Promise<void>,
 		oneNewState: () => Promise<void>,
 	) {
 		return new Promise(done => {
@@ -45,7 +45,7 @@ export class Plan {
 				if (!planStep) return done('end')
 				oneNewState().then(() => {
 					const [timeout, target] = planStep
-					const handleEndStage = setTimeout(() => oneEndState().then(internal), timeout)
+					const handleEndStage = setTimeout(() => oneEndState(true).then(internal), timeout)
 					onTick(...planStep).then(() => oneEndState().then(internal))
 					if (target < 1) {
 						clearTimeout(handleEndStage)

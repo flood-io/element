@@ -15,18 +15,6 @@ export async function runCommandLine(opts: ElementOptions): Promise<void> {
 		verbose: opts.verbose,
 	})
 
-	const installSignalHandlers = true
-
-	if (installSignalHandlers) {
-		process.on('SIGINT', async () => {
-			await runner.stop()
-		})
-
-		process.once('SIGUSR2', async () => {
-			await runner.stop()
-			process.kill(process.pid, 'SIGUSR2')
-		})
-	}
 	const spinnies = new Spinnies()
 	runner.setSpinnies(spinnies)
 

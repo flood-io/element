@@ -17,6 +17,7 @@ import { PassThrough } from 'stream'
 import mergeStream from 'merge-stream'
 import { Page } from 'playwright'
 import { WorkerConnection } from './WorkerConnection'
+const debug = require('debug')('element:worker')
 
 export type WorkerOptions = {
 	page?: Promise<Page>
@@ -165,7 +166,7 @@ export class Worker implements WorkerInterface {
 	}
 
 	private onExit = (exitCode: number) => {
-		console.log(`User ${this.workerName} exit: ${exitCode}`)
+		debug(`exit code: ${exitCode}`)
 		this.resolveExitPromise()
 	}
 
@@ -190,7 +191,7 @@ export class Worker implements WorkerInterface {
 	): void {
 		onProcessStart(this)
 		this.onProcessEnd = (...args) => onProcessEnd(...args)
-		this.onProcessReport = (...args) => onProcessReport(...args)
+		if (onProcessReport) this.onProcessReport = (...args) => onProcessReport(...args)
 
 		this.retries = 0
 

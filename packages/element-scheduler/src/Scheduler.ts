@@ -32,6 +32,8 @@ type TableDataConfig = {
 	unexecuted?: string
 }
 
+const SEPARATOR = '  '
+
 export class Scheduler {
 	constructor(public env: RuntimeEnvironment, public settings: SchedulerSetting) {}
 
@@ -162,21 +164,6 @@ export class Scheduler {
 				`Run ${target} user${target > 1 || target === 0 ? 's' : ''} | Duration ${timestamp}ms`,
 			)
 
-			process.on('SIGQUIT', async () => {
-				this.stop()
-				process.kill(process.pid, 'SIGUSR2')
-			})
-
-			process.on('SIGINT', async () => {
-				this.stop()
-				process.kill(process.pid, 'SIGUSR2')
-			})
-
-			process.once('SIGUSR2', async () => {
-				this.stop()
-				process.kill(process.pid, 'SIGUSR2')
-			})
-
 			let doneWorkers = 0
 			const errorWorkers: Promise<void>[] = []
 			dataTable = []
@@ -246,7 +233,9 @@ export class Scheduler {
 					return
 				}
 
-				const text = `${chalk.bold(order)}  ${iterationInfo}   ${type === ITERATION ? '' : msg}`
+				const text = `${chalk.bold(order)}${SEPARATOR}${iterationInfo}${SEPARATOR}${
+					type === ITERATION ? '' : msg
+				}`
 
 				if (!reportedWorker.includes(workerId)) {
 					this.spinnies.add(workerId, { text })
@@ -267,11 +256,49 @@ export class Scheduler {
 			})
 		}
 
-		const onEndStage = async (): Promise<void> => {
+		const onEndStage = async (forceStop?: boolean, sigint?: boolean): Promise<void> => {
+			const iterationCount = this.settings.loopCount || 0
 			for (const worker of workingWorkers) {
+				if (forceStop) {
+					const { workerId } = worker
+					let { text } = this.spinnies.pick(workerId)
+					const msg: string[] = text.split(SEPARATOR)
+					const msg3 = sigint
+						? 'This user has stop unexpected'
+						: 'This user has stop due to duration has reached'
+					text = `${msg[0]}${SEPARATOR}${msg[1]}${SEPARATOR}${msg3}`
+					this.spinnies.fail(workerId, { text })
+					const done = dataTable.filter(row => row.worker.id === workerId)
+					for (let idx = 1; idx <= iterationCount - done.length; idx++) {
+						const lastWorker = done[done.length - 1].worker
+						dataTable.push({
+							worker: {
+								id: workerId,
+								name: lastWorker.name,
+								iteration: lastWorker.iteration + idx,
+							},
+						})
+					}
+				}
 				await pool.removeWorker(worker.workerId)
 			}
+
+			if (forceStop) this.tableResult(dataTable)
 		}
+
+		process.removeAllListeners('SIGINT')
+		process.on('SIGQUIT', async () => {
+			await this.stop()
+		})
+
+		process.once('SIGUSR2', async () => {
+			await this.stop()
+		})
+
+		process.on('SIGINT', async () => {
+			await onEndStage(true, true)
+			await this.stop()
+		})
 
 		const onNewStage = async (): Promise<void> => {
 			return new Promise(resolve => {

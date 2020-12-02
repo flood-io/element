@@ -145,7 +145,9 @@ export class Runner {
 					} else {
 						this.reporter.sendReport(
 							JSON.stringify({
-								iterationMsg: `${iterationName} of ${this.looper.loopCount}`,
+								iterationMsg: `${iterationName} ${
+									this.looper.loopCount !== -1 ? `of ${this.looper.loopCount}` : ''
+								}`,
 								iteration,
 							}),
 							ITERATION,

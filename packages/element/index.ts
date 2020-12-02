@@ -109,4 +109,4 @@ export {
 /**
  * @docPage helpers
  */
-export { RecoverWith } from '@flood/element-core'
+export { RecoverWith, BaseLocator } from '@flood/element-core'

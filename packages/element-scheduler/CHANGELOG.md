@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.9](https://github.com/flood-io/element/compare/v2.0.0-canary.8...v2.0.0-canary.9) (2020-12-02)
+
+**Note:** Version bump only for package @flood/element-scheduler
+
+
+
+
+
 # [2.0.0-canary.8](https://github.com/flood-io/element/compare/v2.0.0-canary.7...v2.0.0-canary.8) (2020-11-27)
 
 **Note:** Version bump only for package @flood/element-scheduler

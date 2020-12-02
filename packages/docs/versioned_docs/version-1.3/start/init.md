@@ -41,7 +41,7 @@ Use the `run` command to run a test script locally with Element. Your test scrip
 element run my-element-test.ts
 ```
 
-By default, tests run on the CLI have their `loop-count` setting overridden to 1. Running multiple iterations of a test is fantastic for testing load and working with test data but is unnecessary when verifying a script locally. You can change this behaviour by passing the `--loop-count` command line flag when running your test.
+The number of `loopCount`, unless specified in the [Test Settings](../guides/TestSettings.md), will default to `Infinity`, or `-1`, for an unlimited number of loops. Running multiple iterations of a test is fantastic for testing load and working with test data but may be unnecessary when verifying a script locally. You can change this behaviour by passing the `--loop-count` command line flag when running your test.
 
 For more information on `element run`, run `element run --help`.
 

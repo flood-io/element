@@ -28,6 +28,7 @@ import { RuntimeEnvironment } from '../runtime-environment/types'
 
 import { Until } from '../page/Until'
 import { By } from '../page/By'
+import { BaseLocator } from '../page/Locator'
 import { MouseButtons, Key, userAgents } from '../page/Enums'
 import { Device } from '../page/Device'
 
@@ -173,10 +174,10 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			let options: StepOptions = {}
 
 			if (args.length === 3) {
-				[name, options, fn] = args
+				;[name, options, fn] = args
 				options = normalizeStepOptions(options)
 			} else {
-				[name, fn] = args
+				;[name, fn] = args
 			}
 
 			console.assert(typeof name === 'string', 'Step name must be a string')
@@ -305,6 +306,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			// Actual implementation of @flood/chrome
 			By,
 			Until,
+			BaseLocator,
 			Device,
 			MouseButtons,
 			TestData: this.testDataLoaders,

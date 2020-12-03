@@ -1,6 +1,6 @@
 {
 	"name": "@flood/element",
-	"version": "2.0.0-canary.9",
+	"version": "2.0.0-canary.10",
 	"description": "Element real browser load testing tool",
 	"author": "Ivan Vanderbyl <ivanvanderbyl@gmail.com>",
 	"homepage": "https://element.flood.io",
@@ -22,6 +22,6 @@
 		"url": "https://github.com/flood-io/element/issues"
 	},
 	"dependencies": {
-		"@flood/element-core": "2.0.0-canary.9"
+		"@flood/element-core": "2.0.0-canary.10"
 	}
 }

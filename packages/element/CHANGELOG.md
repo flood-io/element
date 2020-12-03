@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.10](https://github.com/flood-io/element/compare/v2.0.0-canary.9...v2.0.0-canary.10) (2020-12-03)
+
+
+### Features
+
+* export and mock BaseLocator ([8f96559](https://github.com/flood-io/element/commit/8f9655945cbc31e0fc32033cb9f98384a5587341))
+
+
+
+
+
 # [2.0.0-canary.9](https://github.com/flood-io/element/compare/v2.0.0-canary.8...v2.0.0-canary.9) (2020-12-02)
 
 **Note:** Version bump only for package @flood/element

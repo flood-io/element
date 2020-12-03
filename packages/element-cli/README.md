@@ -39,7 +39,7 @@ Run a test script locally.
 - `--slow-mo` Run the script in slow-motion: Increase the actionDelay and stepDelay settings in the test script to 10 seconds. Specify a number to set a different delay.
 - `--step-delay` Override stepDelay test script setting
 - `--action-delay` Override actionDelay test script setting
-- `--loop-count` Override the loopCount setting in the test script. This is normally overridden to 1 when running via the CLI.
+- `--loop-count` Override the loopCount setting in the test script.
 - `--strict` Compile the script in strict mode. This can be helpful in diagnosing problems.
 
 **Paths:**

@@ -298,7 +298,7 @@ const cmd: CommandModule = {
 			.option('loop-count', {
 				group: 'Running the test script:',
 				describe:
-					'Override the loopCount setting in the test script. This is normally overridden to 1 when running via the cli.',
+					'Override the loopCount setting in the test script',
 				type: 'number',
 			})
 			.option('strict', {

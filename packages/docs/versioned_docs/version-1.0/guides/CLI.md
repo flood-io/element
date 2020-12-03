@@ -72,9 +72,7 @@ Positionals:
   Specify a number to set a different delay.
   - `--step-delay` Override stepDelay test script setting `[number]`
   - `--action-delay` Override actionDelay test script setting `[number]`
-  - `--loop-count` Override the loopCount setting in the test script. This
-  is normally overridden to 1 when running via the cli.
-  `[number][default: 1]`
+  - `--loop-count` Override the loopCount setting in the test script `[number]`
   - ~~`--strict` Compile the script in strict mode. This can be helpful
   in diagnosing problems.~~ `DEPRECATED`
 

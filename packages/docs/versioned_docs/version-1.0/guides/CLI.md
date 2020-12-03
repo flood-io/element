@@ -78,8 +78,7 @@ Positionals:
 
 - Paths:
 
-  - `--work-root` Specify a custom work root. (Default: a directory named
-  after your test script, and at the same location)
+  - `--work-root` Specify a custom work root to save the test results. (Default: a directory named after your test script, under /tmp/element-results of your project folder)
   - `--test-data-root` Specify a custom path to find test data files. (Default: the
   same directory as the test script)
 

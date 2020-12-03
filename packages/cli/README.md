@@ -129,7 +129,7 @@ Specifically, this flag turns on the `strictNullChecks` and `noImplicitAny` Type
 
 #### `--work-root`
 
-Specify a custom work root. (Default: a directory named after your test script, and at the same location)
+Specify a custom work root to save the test results. (Default: a directory named after your test script, under /tmp/element-results of your project folder)
 
 #### `--test-data-root`
 

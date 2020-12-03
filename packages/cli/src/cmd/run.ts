@@ -208,7 +208,7 @@ async function runTestScriptWithConfiguration(args: RunCommonArguments): Promise
 		try {
 			await runTestScript(arg)
 			// eslint-disable-next-line no-empty
-		} catch {}
+		} catch { }
 	}
 	console.info('Test running with the config file has finished')
 }
@@ -309,7 +309,7 @@ const cmd: CommandModule = {
 			.option('work-root', {
 				group: 'Paths:',
 				describe:
-					'Specify a custom work root. (Default: a directory named after your test script, and at the same location)',
+					'Specify a custom work root to save the test results. (Default: a directory named after your test script, under /tmp/element-results of your project folder)',
 			})
 			.option('test-data-root', {
 				group: 'Paths:',

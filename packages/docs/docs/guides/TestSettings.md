@@ -120,7 +120,25 @@ The list of Chromium flags can be found [here](https://peter.sh/experiments/chro
 `false` | `true`  (Optional)   Take a screenshot of the page when a command fails, to aid in debugging.  
     
   Screenshots are saved to `/flood/result/screenshots` in the test archive.  
-    
+
+### stages
+ `Array`  (Optional) Since Element 2.0, you can specify the target number of Virtual Users (each running in a separate browser) to ramp up or down to for a specific period. This would be helpful for a local load test at a small scale.
+ 
+ For example, the below settings would have Element ramping up from 1 to 5 VUs (browsers) for 3 minutes, then staying flat at 5 VUs for 5 minutes, then ramping up from 5 to 10 VUs over the next 10 minutes before finally ramping down to 3 VUs for another 3 minutes.
+
+```typescript
+export const settings: TestSettings = {
+  stages: [
+    { duration: '3m', target: 5 },
+    { duration: '5m', target: 5 },
+    { duration: '10m', target: 10 },
+    { duration: '3m', target: 3 },
+  ],
+}
+```
+
+When running with multiple users locally, you will get a table which reports the load-testing metrics after the test finishes.
+
 ### stepDelay
  `number`  (Optional)   Specifies the time (in seconds) to wait after each step.  
 ### userAgent

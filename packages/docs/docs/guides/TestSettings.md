@@ -30,8 +30,33 @@ See [DEFAULT SETTINGS](#default-settings) for a list of the default value for ea
 Matching is applied to the `hostname` only, unless the blocked domain contains a `:` in which case it will match against `hostname` and `port`.  
 
 Example:  `["*.google-analytics.com", "*:1337"]`  
+
+### browser
+Since Element 2.0, you can set the browser type used to run the test, using one of the 3 browser types bundled with [Playwright](https://playwright.dev/), including `'chromium'`, `'firefox'` and `'webkit'`. Defaults to `'chromium'`.
+
+### browserLaunchOptions
+`Object` (Optional) Sets additional launch options on the browser. This will allow you to specify a custom Chromium-based browser type used to run the test, like [Microsoft Edge](https://www.microsoft.com/en-us/edge) or [Brave](https://brave.com/), rather than the [3 bundled ones](#browser).
+
+**Properties**
+- executablePath `string` path to the installation folder of a custom browser based on Chromium. If set, Element will ignore the [browser](#browser) settings, and use this custom browser instead.
+- downloadsPath `string` if specified, accepted downloads are downloaded into this directory. Otherwise, temporary directory is created and is deleted when browser is closed.
+- firefoxUserPrefs `Object` Firefox user preferences. Learn more about the Firefox user preferences [here](https://support.mozilla.org/en-US/kb/about-config-editor-firefox)
+- proxy `Object` Network proxy settings.
+  - server `string` Proxy to be used for all requests. HTTP and SOCKS proxies are supported, for example `http://myproxy.com:3128` or `socks5://myproxy.com:3128`. Short form `myproxy.com:3128` is considered an HTTP proxy.
+  - bypass `string` Optional coma-separated domains to bypass proxy, for example ".com, chromium.org, .domain.com".
+  - username `string` Optional username to use if HTTP proxy requires authentication.
+  - password `string` Optional password to use if HTTP proxy requires authentication.
+
+```typescript
+export const settings: TestSettings = {
+	browserLaunchOption: {
+		executablePath: '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
+	},
+}
+```
+
     
-### chromeVersion
+### ~~chromeVersion~~ (DEPRECATED since version 2.0)
 `puppeteer` or `stable` (Optional)   Specifies a version of Google Chrome to run the test
 ### clearCache
 `false` | `true`  (Optional)   Specifies whether Browser cache should be cleared after each test loop.  

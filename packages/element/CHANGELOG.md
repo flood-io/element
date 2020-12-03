@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.4.0-beta.4](https://github.com/flood-io/element/compare/v1.4.0-beta.3...v1.4.0-beta.4) (2020-12-03)
+
+
+### Features
+
+* export and mock BaseLocator ([0b09929](https://github.com/flood-io/element/commit/0b0992933c68ee9994685afe88288591af9ce7f7))
+
+
+
+
+
 # [1.4.0-beta.3](https://github.com/flood-io/element/compare/v1.4.0-beta.2...v1.4.0-beta.3) (2020-11-25)
 
 **Note:** Version bump only for package @flood/element

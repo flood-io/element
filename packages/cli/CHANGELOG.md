@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.4.0-beta.4](https://github.com/flood-io/element/compare/v1.4.0-beta.3...v1.4.0-beta.4) (2020-12-03)
+
+**Note:** Version bump only for package @flood/element-cli
+
+
+
+
+
 # [1.4.0-beta.3](https://github.com/flood-io/element/compare/v1.4.0-beta.2...v1.4.0-beta.3) (2020-11-25)
 
 **Note:** Version bump only for package @flood/element-cli

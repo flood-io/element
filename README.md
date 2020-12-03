@@ -72,19 +72,9 @@ yarn global add element-cli
 # Using npm
 npm i -g element-cli
 
-# Verify install
+# Verify installation
 element --version
 ```
-
-**On macOS:**
-
-If you are on macOS and don't already have NodeJS installed, consider installing `element` using homebrew.
-
-```bash
-brew install flood-io/taps/element
-```
-
-This will install `element` along with anything else it needs to run, such as NodeJS.
 
 #### Beta release
 
@@ -99,7 +89,7 @@ yarn global add element-cli@beta
 # Using npm
 npm i -g element-cli@beta
 
-# Verify install
+# Verify installation
 element --version
 ```
 
@@ -116,7 +106,7 @@ yarn global add element-cli@canary
 # Using npm
 npm i -g element-cli@canary
 
-# Verify install
+# Verify installation
 element --version
 ```
 

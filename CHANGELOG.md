@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.4.0-beta.6](https://github.com/flood-io/element/compare/v1.4.0-beta.5...v1.4.0-beta.6) (2020-12-04)
+
+
+### Bug Fixes
+
+* cannot read property 'indexOf' of undefined ([b40ff6c](https://github.com/flood-io/element/commit/b40ff6ceebe1a5d0d70bc83d67940d4cde8ef390))
+
+
+
+
+
 # [1.4.0-beta.5](https://github.com/flood-io/element/compare/v1.3.10-beta.0...v1.4.0-beta.5) (2020-12-04)
 
 

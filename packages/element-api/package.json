@@ -1,6 +1,6 @@
 {
 	"name": "@flood/element-api",
-	"version": "1.4.0-beta.4",
+	"version": "1.4.0-beta.5",
 	"description": "Internal API definitions for Element",
 	"main": "./dist/index.js",
 	"types": "./dist/index.ts.d",
@@ -9,7 +9,7 @@
 		"build": "tsc -b"
 	},
 	"dependencies": {
-		"@flood/element-core": "1.4.0-beta.4"
+		"@flood/element-core": "1.4.0-beta.5"
 	},
 	"devDependencies": {
 		"@types/node": "12.7.4"

@@ -49,6 +49,15 @@ export class Feeder<T> {
 			filters.every(func => func(line, index, instanceID)),
 		)
 
+		function checkWithTestKey(src: string[][], testKey: string[]): boolean {
+			return src.every((key: string[]) => {
+				if (key.length !== testKey.length) return false
+				return key.every((key: string) => {
+					return testKey.indexOf(key) >= 0
+				})
+			})
+		}
+
 		function validStructure(srcOne: any, srcTwo: any): boolean {
 			const keysOne = srcOne.reduce((keys: string[][], item: T) => {
 				keys.push(Object.keys(item))
@@ -59,14 +68,11 @@ export class Feeder<T> {
 				return keys
 			}, [])
 
-			return keysOne.every((recordKeysOne: string[], index: number) => {
-				return keysTwo.every((recordKeysTwo: string[]) => {
-					if (recordKeysOne.length !== recordKeysTwo.length) return false
-					return recordKeysOne.every((key: string) => {
-						return keysTwo[index].indexOf(key) >= 0
-					})
-				})
-			})
+			const testKey = keysOne[0]
+			const resultOne = checkWithTestKey(keysOne, testKey)
+			const resultTwo = checkWithTestKey(keysTwo, testKey)
+
+			return resultOne && resultTwo
 		}
 
 		const source = this.dataSource.filter(source => source.name === loaderName)

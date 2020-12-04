@@ -3,6 +3,63 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.10-beta.0](https://github.com/flood-io/element/compare/v1.4.0-beta.4...v1.3.10-beta.0) (2020-12-04)
+
+
+
+## [1.3.9](https://github.com/flood-io/element/compare/v2.0.0-beta.20...v1.3.9) (2020-11-02)
+
+
+### Bug Fixes
+
+* transaction count ([35aab3f](https://github.com/flood-io/element/commit/35aab3f383bba751ee6c086dc29b8b256bd7a924))
+
+
+
+## [1.3.8](https://github.com/flood-io/element/compare/v1.3.7...v1.3.8) (2020-09-24)
+
+
+
+## [1.3.7](https://github.com/flood-io/element/compare/v1.3.6...v1.3.7) (2020-09-24)
+
+
+
+## [1.3.6](https://github.com/flood-io/element/compare/v2.0.0-beta.12...v1.3.6) (2020-09-24)
+
+
+### Bug Fixes
+
+* handle fail exit code when running on local only ([6915605](https://github.com/flood-io/element/commit/69156058db7b28b2c18fb7928ddeeb8ed0366c7f))
+
+
+
+## [1.3.5](https://github.com/flood-io/element/compare/v2.0.0-beta.11...v1.3.5) (2020-09-22)
+
+
+
+## [1.3.3](https://github.com/flood-io/element/compare/v1.3.2...v1.3.3) (2020-09-16)
+
+
+
+## [1.3.2](https://github.com/flood-io/element/compare/v2.0.0-beta.5...v1.3.2) (2020-09-09)
+
+
+
+## [1.3.1](https://github.com/flood-io/element/compare/v2.0.0-beta.4...v1.3.1) (2020-09-04)
+
+
+### Bug Fixes
+
+* bump 1.3.1 ([#262](https://github.com/flood-io/element/issues/262)) ([b63ed9a](https://github.com/flood-io/element/commit/b63ed9a0d27e1184e377e7f28852fb70a1895d73))
+
+
+
+# [1.3.0](https://github.com/flood-io/element/compare/v1.3.0-beta.26...v1.3.0) (2020-08-29)
+
+
+
+
+
 ## [1.3.9](https://github.com/flood-io/element/compare/v1.3.8...v1.3.9) (2020-11-02)
 
 

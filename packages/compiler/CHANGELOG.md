@@ -3,76 +3,68 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [1.4.0-beta.4](https://github.com/flood-io/element/compare/v1.4.0-beta.3...v1.4.0-beta.4) (2020-12-03)
-
-**Note:** Version bump only for package @flood/element-compiler
-
-
-
-
-
-# [1.4.0-beta.3](https://github.com/flood-io/element/compare/v1.4.0-beta.2...v1.4.0-beta.3) (2020-11-25)
-
-**Note:** Version bump only for package @flood/element-compiler
-
-
-
-
-
-# [1.4.0-beta.2](https://github.com/flood-io/element/compare/v1.4.0-beta.1...v1.4.0-beta.2) (2020-11-24)
-
-
-### Bug Fixes
-
-* codacy resolved ([55d66e1](https://github.com/flood-io/element/commit/55d66e1bf8ecd5d03982a08b3211aecd3c0ea559))
-* make the changelog consistent to 1.4 ([4a366a9](https://github.com/flood-io/element/commit/4a366a913e601e324f9462d5eff448bafcfff1ab))
-
-
-
-
-
-## [1.4.0-beta.1](https://github.com/flood-io/element/compare/v1.4.0-beta.0...v1.4.0-beta.1) (2020-11-23)
-
-### Features
-
--   change version to make it consitent ([79d3a60](https://github.com/flood-io/element/commit/79d3a607a580b230536260ed68b40c1c701aaa1f))
--   revert beta to 1.3.0-beta.28 ([5ff2220](https://github.com/flood-io/element/commit/5ff2220674ec1f89b31f2499f0d5f0aecc1c12af))
-
 ## [1.3.1](https://github.com/flood-io/element/compare/v1.3.0-beta.28...v1.3.1) (2020-09-04)
 
-**Note:** Version bump only for package @flood/element-compiler
 
 ### Bug Fixes
 
--   bump 1.3.1 ([#262](https://github.com/flood-io/element/issues/262)) ([b63ed9a](https://github.com/flood-io/element/commit/b63ed9a0d27e1184e377e7f28852fb70a1895d73))
+* bump 1.3.1 ([#262](https://github.com/flood-io/element/issues/262)) ([b63ed9a](https://github.com/flood-io/element/commit/b63ed9a0d27e1184e377e7f28852fb70a1895d73))
 
-## [1.3.0](https://github.com/flood-io/element/compare/v1.3.0-beta.20...v1.3.0) (2020-08-29)
 
-## [1.3.0-beta.26](https://github.com/flood-io/element/compare/v1.3.0-beta.25...v1.3.0-beta.26) (2020-08-28)
+
+# [1.3.0](https://github.com/flood-io/element/compare/v1.3.0-beta.26...v1.3.0) (2020-08-29)
+
+
+
+## [1.2.5](https://github.com/flood-io/element/compare/v1.2.4...v1.2.5) (2020-08-11)
+
+
+
+## [1.2.4](https://github.com/flood-io/element/compare/v1.3.0-beta.18...v1.2.4) (2020-07-17)
+
+
+
+## [1.2.3](https://github.com/flood-io/element/compare/v1.2.3-beta.2...v1.2.3) (2020-04-07)
+
+
+
+
+
+# [1.3.0](https://github.com/flood-io/element/compare/v1.3.0-beta.20...v1.3.0) (2020-08-29)
+
+## [1.2.5](https://github.com/flood-io/element/compare/v1.2.4...v1.2.5) (2020-08-11)
+
+## [1.2.4](https://github.com/flood-io/element/compare/v1.3.0-beta.18...v1.2.4) (2020-07-17)
+
+## [1.2.3](https://github.com/flood-io/element/compare/v1.2.3-beta.2...v1.2.3) (2020-04-07)
 
 **Note:** Version bump only for package @flood/element-compiler
 
-## [1.3.0-beta.25](https://github.com/flood-io/element/compare/v1.3.0-beta.24...v1.3.0-beta.25) (2020-08-28)
+# [1.3.0-beta.26](https://github.com/flood-io/element/compare/v1.3.0-beta.25...v1.3.0-beta.26) (2020-08-28)
 
 **Note:** Version bump only for package @flood/element-compiler
 
-## [1.3.0-beta.24](https://github.com/flood-io/element/compare/v1.3.0-beta.23...v1.3.0-beta.24) (2020-08-28)
+# [1.3.0-beta.25](https://github.com/flood-io/element/compare/v1.3.0-beta.24...v1.3.0-beta.25) (2020-08-28)
 
 **Note:** Version bump only for package @flood/element-compiler
 
-## [1.3.0-beta.23](https://github.com/flood-io/element/compare/v1.3.0-beta.22...v1.3.0-beta.23) (2020-08-27)
+# [1.3.0-beta.24](https://github.com/flood-io/element/compare/v1.3.0-beta.23...v1.3.0-beta.24) (2020-08-28)
 
 **Note:** Version bump only for package @flood/element-compiler
 
-## [1.3.0-beta.22](https://github.com/flood-io/element/compare/v1.3.0-beta.21...v1.3.0-beta.22) (2020-08-27)
+# [1.3.0-beta.23](https://github.com/flood-io/element/compare/v1.3.0-beta.22...v1.3.0-beta.23) (2020-08-27)
 
 **Note:** Version bump only for package @flood/element-compiler
 
-## [1.3.0-beta.21](https://github.com/flood-io/element/compare/v1.3.0-beta.20...v1.3.0-beta.21) (2020-08-21)
+# [1.3.0-beta.22](https://github.com/flood-io/element/compare/v1.3.0-beta.21...v1.3.0-beta.22) (2020-08-27)
 
 **Note:** Version bump only for package @flood/element-compiler
 
-## [1.3.0-beta.1](https://github.com/flood-io/element/compare/v1.3.0-beta.0...v1.3.0-beta.1) (2020-04-28)
+# [1.3.0-beta.21](https://github.com/flood-io/element/compare/v1.3.0-beta.20...v1.3.0-beta.21) (2020-08-21)
+
+**Note:** Version bump only for package @flood/element-compiler
+
+# [1.3.0-beta.1](https://github.com/flood-io/element/compare/v1.3.0-beta.0...v1.3.0-beta.1) (2020-04-28)
 
 ## [1.2.5](https://github.com/flood-io/element/compare/v1.2.4...v1.2.5) (2020-08-11)
 
@@ -106,13 +98,51 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 **Note:** Version bump only for package @flood/element-compiler
 
-## [1.2.0](https://github.com/flood-io/element/compare/v1.2.0-feat.2...v1.2.0) (2020-04-01)
+## 1.2.1-feat.0 (2020-04-01)
 
 **Note:** Version bump only for package @flood/element-compiler
 
+# [1.2.0](https://github.com/flood-io/element/compare/v1.2.0-feat.2...v1.2.0) (2020-04-01)
+
+**Note:** Version bump only for package @flood/element-compiler
+
+# 1.2.0-feat.2 (2020-04-01)
+
+**Note:** Version bump only for package @flood/element-compiler
+
+# 1.2.0-feat.1 (2020-04-01)
+
+**Note:** Version bump only for package @flood/element-compiler
+
+# 1.2.0-feat.0 (2020-04-01)
+
+**Note:** Version bump only for package @flood/element-compiler
+
+# 1.1.0-feat.0 (2020-04-01)
+
 ### Features
 
--   **example:** tesing release version bump to 1.1 ([5dbc19f](https://github.com/flood-io/element/commit/5dbc19fa8ac2dbaabe769786d69da95c8186718f))
+- **example:** tesing release version bump to 1.1 ([5dbc19f](https://github.com/flood-io/element/commit/5dbc19fa8ac2dbaabe769786d69da95c8186718f))
+
+## 1.0.11-feat.4 (2020-04-01)
+
+**Note:** Version bump only for package @flood/element-compiler
+
+## 1.0.11-feat.3 (2020-04-01)
+
+**Note:** Version bump only for package @flood/element-compiler
+
+## 1.0.11-feat.2 (2020-04-01)
+
+**Note:** Version bump only for package @flood/element-compiler
+
+## 1.0.11-feat.1 (2020-04-01)
+
+**Note:** Version bump only for package @flood/element-compiler
+
+## 1.0.11-feat.0 (2020-04-01)
+
+**Note:** Version bump only for package @flood/element-compiler
 
 ## [1.0.11-alpha.2](https://github.com/flood-io/element/compare/v1.0.10-beta.63...v1.0.11-alpha.2) (2020-04-01)
 
@@ -208,14 +238,14 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
--   include faker and assert in built package just for good measure ([e6119ab](https://github.com/flood-io/element/commit/e6119ab749b7645eb59f42af8c8afe220deb31fc))
+- include faker and assert in built package just for good measure ([e6119ab](https://github.com/flood-io/element/commit/e6119ab749b7645eb59f42af8c8afe220deb31fc))
 
 ## [1.0.10-beta.44](https://github.com/flood-io/element/compare/v1.0.10-beta.43...v1.0.10-beta.44) (2020-02-04)
 
 ### Bug Fixes
 
--   add core node_modules to resolver path ([0f89dd1](https://github.com/flood-io/element/commit/0f89dd124809b39e797bc3de785432a3039f5168))
--   **compiler:** exclude faker and assert from compiled script ([1556ba2](https://github.com/flood-io/element/commit/1556ba2288bc88d867a8054e0a6af59a27c9bd39))
+- add core node_modules to resolver path ([0f89dd1](https://github.com/flood-io/element/commit/0f89dd124809b39e797bc3de785432a3039f5168))
+- **compiler:** exclude faker and assert from compiled script ([1556ba2](https://github.com/flood-io/element/commit/1556ba2288bc88d867a8054e0a6af59a27c9bd39))
 
 ## [1.0.10-beta.43](https://github.com/flood-io/element/compare/v1.0.10-beta.42...v1.0.10-beta.43) (2020-01-30)
 
@@ -269,4 +299,4 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Features
 
--   **compiler:** implements new webpack based script compiler ([#98](https://github.com/flood-io/element/issues/98)) ([3654578](https://github.com/flood-io/element/commit/3654578e44a0f2652721a14e2051c338b859b81b))
+- **compiler:** implements new webpack based script compiler ([#98](https://github.com/flood-io/element/issues/98)) ([3654578](https://github.com/flood-io/element/commit/3654578e44a0f2652721a14e2051c338b859b81b))

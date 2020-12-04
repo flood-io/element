@@ -33,7 +33,7 @@ The easiest way to install on MacOS is via [homebrew](https://brew.sh):
 brew install flood-io/taps/element
 ```
 
-### via npm or yarn
+**via npm or yarn**
 
 If you're installing as an npm package, please first ensure you have the most recent version of node installed.
 

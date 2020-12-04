@@ -17,7 +17,8 @@ import { PassThrough } from 'stream'
 import mergeStream from 'merge-stream'
 import { Page } from 'playwright'
 import { WorkerConnection } from './WorkerConnection'
-const debug = require('debug')('element:worker')
+import debugFactory from 'debug'
+const debug = debugFactory('element:worker')
 
 export type WorkerOptions = {
 	page?: Promise<Page>

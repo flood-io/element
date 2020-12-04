@@ -52,9 +52,7 @@ export class Feeder<T> {
 		function checkWithTestKey(src: string[][], testKey: string[]): boolean {
 			return src.every((key: string[]) => {
 				if (key.length !== testKey.length) return false
-				return key.every((key: string) => {
-					return testKey.indexOf(key) >= 0
-				})
+				return key.every(key => testKey.indexOf(key) >= 0)
 			})
 		}
 

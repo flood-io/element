@@ -5,37 +5,22 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [1.4.0-beta.4](https://github.com/flood-io/element/compare/v1.4.0-beta.3...v1.4.0-beta.4) (2020-12-03)
 
-
 ### Features
 
-* export and mock BaseLocator ([0b09929](https://github.com/flood-io/element/commit/0b0992933c68ee9994685afe88288591af9ce7f7))
-
-
-
-
+-   export and mock BaseLocator ([0b09929](https://github.com/flood-io/element/commit/0b0992933c68ee9994685afe88288591af9ce7f7))
 
 # [1.4.0-beta.3](https://github.com/flood-io/element/compare/v1.4.0-beta.2...v1.4.0-beta.3) (2020-11-25)
 
-
 ### Features
 
-* update puppeteer to latest version and fix device descriptors ([baa62c0](https://github.com/flood-io/element/commit/baa62c0ac4d3f4cab9ac4ce7a8ec2daf6254f37b))
-
-
-
-
+-   update puppeteer to latest version and fix device descriptors ([baa62c0](https://github.com/flood-io/element/commit/baa62c0ac4d3f4cab9ac4ce7a8ec2daf6254f37b))
 
 # [1.4.0-beta.2](https://github.com/flood-io/element/compare/v1.4.0-beta.1...v1.4.0-beta.2) (2020-11-24)
 
-
 ### Bug Fixes
 
-* codacy resolved ([55d66e1](https://github.com/flood-io/element/commit/55d66e1bf8ecd5d03982a08b3211aecd3c0ea559))
-* make the changelog consistent to 1.4 ([4a366a9](https://github.com/flood-io/element/commit/4a366a913e601e324f9462d5eff448bafcfff1ab))
-
-
-
-
+-   codacy resolved ([55d66e1](https://github.com/flood-io/element/commit/55d66e1bf8ecd5d03982a08b3211aecd3c0ea559))
+-   make the changelog consistent to 1.4 ([4a366a9](https://github.com/flood-io/element/commit/4a366a913e601e324f9462d5eff448bafcfff1ab))
 
 ## [1.4.0-beta.1](https://github.com/flood-io/element/compare/v1.4.0-beta.0...v1.4.0-beta.1) (2020-11-23)
 

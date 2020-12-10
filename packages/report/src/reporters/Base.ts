@@ -1,6 +1,6 @@
 import { parentPort } from 'worker_threads'
 import { TestScriptError } from '../runtime/TestScriptError'
-import { ACTION, IReporter, MEASUREMENT, WorkerReport } from '../runtime/IReporter'
+import { IReporter, WorkerReport } from '../runtime/IReporter'
 import { TraceData, TestEvent, CompoundMeasurement, MeasurementKind } from '../types/Report'
 import chalk from 'chalk'
 import { ReportCache } from './Cache'
@@ -20,7 +20,7 @@ export class BaseReporter implements IReporter {
 		if (this.worker) {
 			this.sendReport(
 				JSON.stringify({ name: measurement, value, iteration: this.worker.iteration }),
-				MEASUREMENT,
+				'measurement',
 			)
 		}
 	}
@@ -66,7 +66,7 @@ export class BaseReporter implements IReporter {
 					console.group(beforeRunHookMessage)
 					console.group()
 				} else {
-					this.sendReport(`${label} is running ...`, ACTION)
+					this.sendReport(`${label} is running ...`, 'action')
 				}
 				break
 			case TestEvent.BeforeAllStepFinished:
@@ -77,7 +77,7 @@ export class BaseReporter implements IReporter {
 					this.updateMessage(beforeRunHookMessage, afterRunHookMessage)
 					console.groupEnd()
 				} else {
-					this.sendReport(`${chalk.green.bold('✔')} ${chalk.grey(`${label} finished`)}`, ACTION)
+					this.sendReport(`${chalk.green.bold('✔')} ${chalk.grey(`${label} finished`)}`, 'action')
 				}
 				break
 			case TestEvent.BeforeStep:
@@ -85,7 +85,7 @@ export class BaseReporter implements IReporter {
 					console.group(beforeRunStepMessage)
 					console.group()
 				} else {
-					this.sendReport(`${stepName} is running ...`, ACTION)
+					this.sendReport(`${stepName} is running ...`, 'action')
 				}
 				break
 			case TestEvent.StepSucceeded:
@@ -95,7 +95,7 @@ export class BaseReporter implements IReporter {
 					)}`
 					this.updateMessage(beforeRunStepMessage, message)
 				} else {
-					this.sendReport(`${stepName} passed (${timing?.toLocaleString()}ms)`, ACTION)
+					this.sendReport(`${stepName} passed (${timing?.toLocaleString()}ms)`, 'action')
 				}
 				break
 			case TestEvent.StepFailed:
@@ -111,7 +111,7 @@ export class BaseReporter implements IReporter {
 						`${stepName} failed (${timing?.toLocaleString()}ms) -> ${chalk.red(
 							errorMessage || '',
 						)}`,
-						ACTION,
+						'action',
 					)
 				}
 				break

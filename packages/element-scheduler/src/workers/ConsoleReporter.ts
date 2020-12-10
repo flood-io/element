@@ -93,7 +93,8 @@ cause.stack: ${detail.causeStack}`)
 	}
 
 	testScriptConsole(method: string, message?: any, ...optionalParams: any[]): void {
-		if (['log', 'clear'].includes(method)) method = 'info'
+		if (method === 'clear') return
+		if (method === 'log') method = 'info'
 		if (method === 'warning') method = 'warn'
 		;(this.logger as any)[method](`page console.${method}: ${message} ${optionalParams.join(' ')}`)
 	}

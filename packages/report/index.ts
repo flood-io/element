@@ -3,7 +3,7 @@ export { BaseReporter } from './src/reporters/Base'
 export { EmptyReporter } from './src/reporters/Empty'
 export { Option } from './src/types/Option'
 export { expect } from './src/types/Expect'
-export { IReporter, WorkerReport, ACTION, ITERATION, MEASUREMENT } from './src/runtime/IReporter'
+export { IReporter, WorkerReport, Worker } from './src/runtime/IReporter'
 export {
 	MeasurementKind,
 	TraceData,

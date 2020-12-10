@@ -18,7 +18,7 @@ import {
 	WorkRoot,
 	mustCompileFile,
 } from '@flood/element-core'
-import { ACTION, BaseReporter, ReportCache, WorkerReport } from '@flood/element-report'
+import { BaseReporter, ReportCache, WorkerReport } from '@flood/element-report'
 import { EventEmitter } from 'events'
 import ms from 'ms'
 import { SchedulerSetting } from '../Scheduler'
@@ -86,7 +86,7 @@ async function execMethod(method: string, args: Array<any>) {
 				parentPort.postMessage([
 					ParentMessages.OK,
 					MessageConst.REPORT,
-					[`The test completed in ${ms(executedTime)}`, ACTION],
+					[`The test completed in ${ms(executedTime)}`, 'action'],
 				])
 				parentPort.postMessage([ParentMessages.OK, MessageConst.RUN_COMPLETED, [stageIterator]])
 			}

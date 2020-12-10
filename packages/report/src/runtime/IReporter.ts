@@ -4,27 +4,24 @@ import { TestScriptError } from './TestScriptError'
 export type Worker = {
 	id: string
 	name: string
-	iteration: string
+	iteration: number
 }
 
 export class WorkerReport {
 	public id: string
 	public name: string
-	public iteration: string
+	public iteration: number
 
 	constructor(id: string, name: string) {
 		this.id = id
 		this.name = name
 	}
 
-	setIteration(iteration: string): void {
+	setIteration(iteration: number): void {
 		this.iteration = iteration
 	}
 }
 
-export const ACTION = 'action'
-export const ITERATION = 'iteration'
-export const MEASUREMENT = 'measurement'
 export interface IReporter {
 	reset(stepName: string): void
 
@@ -93,5 +90,5 @@ export interface IReporter {
 	on?(event: string | symbol, listener: (...args: any[]) => void): this
 	once?(event: string | symbol, listener: (...args: any[]) => void): this
 	setWorker?(worker: WorkerReport): void
-	sendReport(msg: string, logType: string): void
+	sendReport(msg: string, type: 'action' | 'iteration' | 'measurement'): void
 }

@@ -1,4 +1,4 @@
-import { ChildMessage, OnStart, OnEnd, WorkerInterface, ChildMessages, onReport } from './types'
+import { ChildMessage, OnStart, OnEnd, WorkerInterface, ChildMessages, OnReport } from './types'
 import { Worker, WorkerOptions } from './Worker'
 import mergeStream from 'merge-stream'
 import faker from 'faker'
@@ -108,7 +108,7 @@ export class WorkerPool {
 		request: ChildMessage,
 		onStart: OnStart,
 		onEnd: OnEnd,
-		onReport?: onReport,
+		onReport?: OnReport,
 	): void {
 		for (let i = 0; i < target; i++) {
 			this.workers[i].send(request, onStart, onEnd, onReport)

@@ -1,4 +1,3 @@
-import { parentPort } from 'worker_threads'
 import { TestScriptError } from '../runtime/TestScriptError'
 import { IReporter, WorkerReport } from '../runtime/IReporter'
 import { TraceData, TestEvent, CompoundMeasurement, MeasurementKind } from '../types/Report'
@@ -12,18 +11,11 @@ export class BaseReporter implements IReporter {
 	public stepName: string
 	public worker: WorkerReport
 
-	constructor(private cache: ReportCache) {}
+	constructor(protected cache: ReportCache) {}
 
 	reset(step: string): void {}
 
-	addMeasurement(measurement: string, value: string | number): void {
-		if (this.worker) {
-			this.sendReport(
-				JSON.stringify({ name: measurement, value, iteration: this.worker.iteration }),
-				'measurement',
-			)
-		}
-	}
+	addMeasurement(measurement: string, value: string | number): void {}
 
 	addCompoundMeasurement(
 		measurement: MeasurementKind,
@@ -32,16 +24,6 @@ export class BaseReporter implements IReporter {
 	): void {}
 
 	addTrace(traceData: TraceData, label: string): void {}
-
-	setWorker(worker: WorkerReport): void {
-		this.worker = worker
-	}
-
-	sendReport(msg: string, logType: string): void {
-		if (parentPort) {
-			parentPort.postMessage([0, 'report', [msg, logType]])
-		}
-	}
 
 	async flushMeasurements(): Promise<void> {}
 
@@ -62,68 +44,41 @@ export class BaseReporter implements IReporter {
 			case TestEvent.AfterAllStep:
 			case TestEvent.BeforeEachStep:
 			case TestEvent.AfterEachStep:
-				if (!this.worker) {
-					console.group(beforeRunHookMessage)
-					console.group()
-				} else {
-					this.sendReport(`${label} is running ...`, 'action')
-				}
+				console.group(beforeRunHookMessage)
+				console.group()
 				break
 			case TestEvent.BeforeAllStepFinished:
 			case TestEvent.AfterAllStepFinished:
 			case TestEvent.BeforeEachStepFinished:
 			case TestEvent.AfterEachStepFinished:
-				if (!this.worker) {
-					this.updateMessage(beforeRunHookMessage, afterRunHookMessage)
-					console.groupEnd()
-				} else {
-					this.sendReport(`${chalk.green.bold('✔')} ${chalk.grey(`${label} finished`)}`, 'action')
-				}
+				this.updateMessage(beforeRunHookMessage, afterRunHookMessage)
+				console.groupEnd()
 				break
 			case TestEvent.BeforeStep:
-				if (!this.worker) {
-					console.group(beforeRunStepMessage)
-					console.group()
-				} else {
-					this.sendReport(`${stepName} is running ...`, 'action')
-				}
+				console.group(beforeRunStepMessage)
+				console.group()
 				break
 			case TestEvent.StepSucceeded:
-				if (!this.worker) {
-					message = `${chalk.green.bold('✔')} ${chalk.green(
-						`${stepName} passed (${timing?.toLocaleString()}ms)`,
-					)}`
-					this.updateMessage(beforeRunStepMessage, message)
-				} else {
-					this.sendReport(`${stepName} passed (${timing?.toLocaleString()}ms)`, 'action')
-				}
+				message = `${chalk.green.bold('✔')} ${chalk.green(
+					`${stepName} passed (${timing?.toLocaleString()}ms)`,
+				)}`
+				this.updateMessage(beforeRunStepMessage, message)
 				break
 			case TestEvent.StepFailed:
-				if (!this.worker) {
-					message = `${chalk.redBright.bold('✘')} ${chalk.red(
-						`${stepName} failed (${timing?.toLocaleString()}ms)`,
-					)}`
-					console.error(chalk.red(errorMessage?.length ? errorMessage : 'step error -> failed'))
-					this.updateMessage(beforeRunStepMessage, message)
-					console.log('')
-				} else {
-					this.sendReport(
-						`${stepName} failed (${timing?.toLocaleString()}ms) -> ${chalk.red(
-							errorMessage || '',
-						)}`,
-						'action',
-					)
-				}
+				message = `${chalk.redBright.bold('✘')} ${chalk.red(
+					`${stepName} failed (${timing?.toLocaleString()}ms)`,
+				)}`
+				console.error(chalk.red(errorMessage?.length ? errorMessage : 'step error -> failed'))
+				this.updateMessage(beforeRunStepMessage, message)
+				console.log('')
 				break
 			case TestEvent.StepSkipped:
-				if (!this.worker) {
-					console.group(`${chalk.yellow.bold('\u2296')} ${chalk.yellow(`${stepName} skipped`)}`)
-					console.log('')
-					console.groupEnd()
-				}
+				console.group(`${chalk.yellow.bold('\u2296')} ${chalk.yellow(`${stepName} skipped`)}`)
+				console.log('')
+				console.groupEnd()
 				break
 			case TestEvent.AfterStep:
-				if (!this.worker) console.groupEnd()
+				console.groupEnd()
 				break
 		}
 	}

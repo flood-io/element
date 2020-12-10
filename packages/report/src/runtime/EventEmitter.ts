@@ -74,10 +74,6 @@ export class EventEmitterReporter extends EventEmitter implements IReporter {
 		this.emit('trace', label, this.responseCode, traceData)
 	}
 
-	sendReport(msg: string, logType: string): void {
-		console.log(`> [EventEmitter] sendReport: msg: ${msg}, type: ${logType}`)
-	}
-
 	testLifecycle(event: TestEvent, label: string): void {
 		this.emit('testLifecycle', { label, event })
 	}

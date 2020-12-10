@@ -90,5 +90,5 @@ export interface IReporter {
 	on?(event: string | symbol, listener: (...args: any[]) => void): this
 	once?(event: string | symbol, listener: (...args: any[]) => void): this
 	setWorker?(worker: WorkerReport): void
-	sendReport(msg: string, type: 'action' | 'iteration' | 'measurement'): void
+	sendReport?(msg: string, type: 'action' | 'iteration' | 'measurement'): void
 }

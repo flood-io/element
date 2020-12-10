@@ -21,7 +21,7 @@ export default class WebpackCompiler implements ITestScript {
 
 	constructor(
 		public sourceFile: string,
-		public _options: TestScriptOptions = TestScriptDefaultOptions,
+		private _options: TestScriptOptions = TestScriptDefaultOptions,
 	) {}
 
 	public async compile(): Promise<this> {

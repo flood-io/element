@@ -1,4 +1,3 @@
-import { Condition } from '../page/Condition'
 import {
 	Frame,
 	Page,
@@ -7,6 +6,9 @@ import {
 	BrowserContext,
 	HTTPCredentials,
 } from 'playwright'
+import debugFactory from 'debug'
+import ms from 'ms'
+import { Condition } from '../page/Condition'
 import { Browser as BrowserInterface } from '../interface/IBrowser'
 import { NullableLocatable } from './Locatable'
 import {
@@ -20,23 +22,20 @@ import {
 import { TargetLocator } from '../page/TargetLocator'
 import { PlaywrightClientLike } from '../driver/Playwright'
 import { WorkRoot } from '../runtime-environment/types'
-import KSUID from 'ksuid'
 import { Key, KeyDefinitions } from '../page/Enums'
 import { ConcreteTestSettings, DEFAULT_WAIT_TIMEOUT_MILLISECONDS } from './Settings'
 import { NetworkErrorData, ActionErrorData } from './errors/Types'
 import { StructuredError } from '../utils/StructuredError'
-import debugFactory from 'debug'
 import Mouse from '../page/Mouse'
 import { addCallbacks } from './decorators/addCallbacks'
 import { autoWaitUntil } from './decorators/autoWait'
 import { locatableToLocator, toLocatorError } from './toLocatorError'
 import { Keyboard } from '../page/Keyboard'
 import { getFrames } from '../utils/frames'
-import ms from 'ms'
 import { DeviceDescriptor } from '../page/Device'
 
 export const debug = debugFactory('element:runtime:browser')
-const debugScreenshot = debugFactory('element:runtime:browser:screenshot')
+const terminalLink = require('terminal-link')
 
 export class Browser<T> implements BrowserInterface {
 	public screenshots: string[]
@@ -529,14 +528,13 @@ export class Browser<T> implements BrowserInterface {
 	}
 
 	public async saveScreenshot(fn: (path: string) => Promise<boolean>): Promise<void> {
-		const fileId = KSUID.randomSync().string
-
+		const fileId = `${this.workRoot.getSubRoot('test-script')}_${this.screenshots.length + 1}`
 		const path = this.workRoot.join('screenshots', `${fileId}.jpg`)
-		debugScreenshot(`Saving screenshot to: ${path}`)
 
 		if (await fn(path)) {
+			const link = terminalLink(fileId, path)
+			console.log(link)
 			this.screenshots.push(path)
-			debugScreenshot(`Saved screenshot to: ${path}`)
 		}
 	}
 

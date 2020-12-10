@@ -9,7 +9,7 @@ import { ActionConst, ChildMessages, WorkerInterface } from './types'
 import { assertIsValidateStages } from './assertIsValidateStages'
 import { Plan } from './Plan'
 import { BrowserServer } from 'playwright'
-import { ITERATION, MEASUREMENT } from '@flood/element-report'
+import { Worker } from '@flood/element-report'
 import chalk from 'chalk'
 import Table from 'cli-table3'
 
@@ -21,7 +21,7 @@ export type SchedulerSetting = TestSettings & {
 }
 
 type TableDataConfig = {
-	worker: { id: string; name: string; iteration: string }
+	worker: Worker
 	response_time?: string
 	latency?: string
 	throughput?: string
@@ -108,7 +108,7 @@ export class Scheduler {
 			} = row
 			const hasGroup = rowSpans.some(row => row.id === worker.id)
 			const data = [
-				chalk.white(worker.iteration),
+				chalk.white(`${worker.iteration}`),
 				chalk.blue(responseTime),
 				chalk.yellow(latency),
 				chalk.magenta(throughput),
@@ -222,7 +222,7 @@ export class Scheduler {
 					order = userAlias.order
 				}
 
-				if (type === ITERATION) {
+				if (type === 'iteration') {
 					const { iterationMsg, iteration } = JSON.parse(msg)
 					iterationInfo = chalk.italic.grey(iterationMsg)
 					dataTable.push({
@@ -230,17 +230,17 @@ export class Scheduler {
 					})
 				}
 
-				if (type === MEASUREMENT) {
+				if (type === 'measurement') {
 					const { name, value, iteration } = JSON.parse(msg)
 					const row = dataTable.filter(
-						row => row.worker.id === workerId && `${row.worker.iteration}` === `${iteration}`,
+						row => row.worker.id === workerId && row.worker.iteration === iteration,
 					)
 					row[0][name] = value
 					return
 				}
 
 				const text = `${chalk.bold(order)}${SEPARATOR}${iterationInfo}${SEPARATOR}${
-					type === ITERATION ? '' : msg
+					type === 'iteration' ? '' : msg
 				}`
 
 				if (!reportedWorker.includes(workerId)) {

@@ -74,7 +74,7 @@ export interface WorkerInterface {
 		request: ChildMessage,
 		onProcessStart: OnStart,
 		onProcessEnd: OnEnd,
-		onPrecessReport?: onReport,
+		onPrecessReport?: OnReport,
 	): void
 	waitForExit(): Promise<void>
 	waitForLoaded(): Promise<void>
@@ -89,4 +89,4 @@ export interface WorkerInterface {
 
 export type OnStart = (worker: WorkerInterface) => void
 export type OnEnd = (err: Error | null, result: unknown, iterator: number) => void
-export type onReport = (worker: WorkerInterface, data: string[]) => void
+export type OnReport = (worker: WorkerInterface, data: string[]) => void

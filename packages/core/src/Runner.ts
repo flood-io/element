@@ -8,12 +8,9 @@ import { CancellationToken } from './utils/CancellationToken'
 import {
 	IReporter,
 	IterationResult,
-	ITERATION,
 	reportRunTest,
 	Status,
 	StepResult,
-	ACTION,
-	MEASUREMENT,
 } from '@flood/element-report'
 import { Looper } from './Looper'
 import chalk from 'chalk'
@@ -132,7 +129,7 @@ export class Runner {
 					if (!this.reporter.worker) {
 						console.log(`Restarting ${iterationName}`)
 					} else {
-						this.reporter.sendReport(`Restarting ${iterationName}`, ACTION)
+						this.reporter.sendReport(`Restarting ${iterationName}`, 'action')
 					}
 					this.looper.restartLoopDone()
 				} else {
@@ -150,7 +147,7 @@ export class Runner {
 								}`,
 								iteration,
 							}),
-							ITERATION,
+							'iteration',
 						)
 					}
 				}
@@ -225,7 +222,7 @@ export class Runner {
 					skippedMessage = chalk.yellow(`${skippedNo}`, `${Status.SKIPPED}`)
 					this.reporter.sendReport(
 						JSON.stringify({ name: 'skipped', value: skippedNo, iteration }),
-						MEASUREMENT,
+						'measurement',
 					)
 					break
 				case Status.UNEXECUTED:
@@ -233,7 +230,7 @@ export class Runner {
 					unexecutedMessage = chalk(`${unexecutedNo}`, `${Status.UNEXECUTED}`)
 					this.reporter.sendReport(
 						JSON.stringify({ name: 'unexecuted', value: unexecutedNo, iteration }),
-						MEASUREMENT,
+						'measurement',
 					)
 					break
 			}

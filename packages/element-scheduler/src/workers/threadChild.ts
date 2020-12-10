@@ -18,7 +18,7 @@ import {
 	WorkRoot,
 	mustCompileFile,
 } from '@flood/element-core'
-import { BaseReporter, ReportCache, WorkerReport } from '@flood/element-report'
+import { MultipleUsersReporter, ReportCache, WorkerReport } from '@flood/element-report'
 import { EventEmitter } from 'events'
 import ms from 'ms'
 import { SchedulerSetting } from '../Scheduler'
@@ -57,7 +57,7 @@ async function execMethod(method: string, args: Array<any>) {
 			const childSettings: SchedulerSetting = JSON.parse(settings)
 			const myEmitter = new EventEmitter()
 			const cache = new ReportCache(myEmitter)
-			const reporter = new BaseReporter(cache)
+			const reporter = new MultipleUsersReporter(cache)
 			reporter.setWorker(new WorkerReport(workerId, workerName))
 			const env = environment(rootEnv, testData)
 

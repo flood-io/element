@@ -31,10 +31,6 @@ export class VerboseReporter implements IReporter {
 		this.worker = worker
 	}
 
-	sendReport(msg: string, logType: string): void {
-		console.log(`> [VerboseReporter] sendReport: msg: ${msg}, type: ${logType}`)
-	}
-
 	testLifecycle(
 		stage: TestEvent,
 		label: string,
@@ -53,62 +49,46 @@ export class VerboseReporter implements IReporter {
 			case TestEvent.AfterAllStep:
 			case TestEvent.BeforeEachStep:
 			case TestEvent.AfterEachStep:
-				if (!this.worker) {
-					console.group(beforeRunHookMessage)
-					console.group()
-				}
+				console.group(beforeRunHookMessage)
+				console.group()
 				break
 			case TestEvent.BeforeAllStepFinished:
 			case TestEvent.AfterAllStepFinished:
 			case TestEvent.BeforeEachStepFinished:
 			case TestEvent.AfterEachStepFinished:
-				if (!this.worker) {
-					this.updateMessage(beforeRunHookMessage, afterRunHookMessage)
-					console.groupEnd()
-				}
+				this.updateMessage(beforeRunHookMessage, afterRunHookMessage)
+				console.groupEnd()
 				break
 			case TestEvent.BeforeStep:
-				if (!this.worker) {
-					console.group(beforeRunStepMessage)
-					console.group()
-				}	
+				console.group(beforeRunStepMessage)
+				console.group()
 				break
 			case TestEvent.AfterHookAction:
 			case TestEvent.AfterStepAction:
 				console.log(`${chalk.white(`${label}(${chalk.grey(args)})`)}`)
 				break
 			case TestEvent.StepSucceeded:
-				if (!this.worker) {
-					message = `${chalk.green.bold('✔')} ${chalk.green(
-						`${stepName} passed (${timing?.toLocaleString()}ms)`,
-					)}`
-					this.updateMessage(beforeRunStepMessage, message)
-				}
+				message = `${chalk.green.bold('✔')} ${chalk.green(
+					`${stepName} passed (${timing?.toLocaleString()}ms)`,
+				)}`
+				this.updateMessage(beforeRunStepMessage, message)
 				break
 			case TestEvent.StepFailed:
-				if (!this.worker) {
-					message = `${chalk.red.bold('✘')} ${chalk.red(`${stepName} failed`)}`
-					console.error(chalk.red(errorMessage?.length ? errorMessage : 'step error -> failed'))
-					this.updateMessage(beforeRunStepMessage, message)
-				}
+				message = `${chalk.red.bold('✘')} ${chalk.red(`${stepName} failed`)}`
+				console.error(chalk.red(errorMessage?.length ? errorMessage : 'step error -> failed'))
+				this.updateMessage(beforeRunStepMessage, message)
 				break
 			case TestEvent.AfterStep:
-				if (!this.worker) {
-					console.groupEnd()
-				}
+				console.groupEnd()
 				break
 			case TestEvent.StepSkipped:
-				if (!this.worker) {
-					console.group(`${chalk.yellow.bold('\u2296')} ${chalk.yellow(`${stepName} skipped`)}`)
-					console.log('')
-					console.groupEnd()
-				}
+				console.group(`${chalk.yellow.bold('\u2296')} ${chalk.yellow(`${stepName} skipped`)}`)
+				console.log('')
+				console.groupEnd()
 				break
 			case TestEvent.StepUnexecuted:
-				if (!this.worker) {
-					console.group(`${chalk.grey.bold('\u2296')} ${chalk.grey(`${stepName} is unexecuted`)}`)
-					console.groupEnd()
-				}
+				console.group(`${chalk.grey.bold('\u2296')} ${chalk.grey(`${stepName} is unexecuted`)}`)
+				console.groupEnd()
 				break
 		}
 	}

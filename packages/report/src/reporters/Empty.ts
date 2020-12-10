@@ -29,8 +29,4 @@ export class EmptyReporter implements IReporter {
 	testScriptConsole(method: string, message?: any, ...optionalParams: any[]): void {
 		console[method](message, ...optionalParams)
 	}
-
-	sendReport(msg: string, logType: string): void {
-		console.log(`> [EmptyReporter] sendReport: msg: ${msg}, type: ${logType}`)
-	}
 }

@@ -38,6 +38,7 @@ export class Runner {
 	running = true
 	public client: PlaywrightClient | undefined
 	public summaryIteration: IterationResult[] = []
+	private sendReport: (msg: string, type: string) => void
 
 	constructor(
 		private clientFactory: AsyncFactory<PlaywrightClient>,
@@ -46,7 +47,9 @@ export class Runner {
 		private testSettingOverrides: TestSettings,
 		private launchOptionOverrides: Partial<ConcreteLaunchOptions>,
 		private testObserverFactory: (t: TestObserver) => TestObserver = x => x,
-	) {}
+	) {
+		if (reporter.sendReport) this.sendReport = reporter.sendReport
+	}
 
 	async stop(): Promise<void> {
 		this.running = false
@@ -123,13 +126,14 @@ export class Runner {
 			this.looper = new Looper(settings, this.running)
 			this.looper.killer = () => cancelToken.cancel()
 			let startTime = new Date()
+
 			await this.looper.run(async (iteration: number, isRestart: boolean) => {
 				const iterationName = this.getIterationName(iteration)
 				if (isRestart) {
 					if (!this.reporter.worker) {
 						console.log(`Restarting ${iterationName}`)
 					} else {
-						this.reporter.sendReport(`Restarting ${iterationName}`, 'action')
+						this.sendReport(`Restarting ${iterationName}`, 'action')
 					}
 					this.looper.restartLoopDone()
 				} else {
@@ -140,7 +144,7 @@ export class Runner {
 						startTime = new Date()
 						console.log(`${chalk.bold('\u25CC')} ${iterationName} of ${this.looper.loopCount}`)
 					} else {
-						this.reporter.sendReport(
+						this.sendReport(
 							JSON.stringify({
 								iterationMsg: `${iterationName} ${
 									this.looper.loopCount !== -1 ? `of ${this.looper.loopCount}` : ''
@@ -220,7 +224,7 @@ export class Runner {
 				case Status.SKIPPED:
 					skippedNo += 1
 					skippedMessage = chalk.yellow(`${skippedNo}`, `${Status.SKIPPED}`)
-					this.reporter.sendReport(
+					this.sendReport(
 						JSON.stringify({ name: 'skipped', value: skippedNo, iteration }),
 						'measurement',
 					)
@@ -228,7 +232,7 @@ export class Runner {
 				case Status.UNEXECUTED:
 					unexecutedNo += 1
 					unexecutedMessage = chalk(`${unexecutedNo}`, `${Status.UNEXECUTED}`)
-					this.reporter.sendReport(
+					this.sendReport(
 						JSON.stringify({ name: 'unexecuted', value: unexecutedNo, iteration }),
 						'measurement',
 					)

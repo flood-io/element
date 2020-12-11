@@ -7,6 +7,7 @@ import {
 	ScriptWithError,
 } from '@flood/element-report'
 import { ElementOptions } from './ElementOption'
+import { version } from './utils/Version'
 
 export class ElementResult {
 	private _result: TestResult
@@ -15,15 +16,18 @@ export class ElementResult {
 		this._result = {
 			testScripts: [],
 			executionInfo: {
-				date: new Date().toLocaleDateString(undefined, {
+				time: new Date().toLocaleString(undefined, {
 					day: '2-digit',
 					month: 'short',
 					year: 'numeric',
+					hour: '2-digit',
+					minute: '2-digit',
+					second: '2-digit',
 				}),
-				time: new Date().toLocaleTimeString(),
 				mode: '',
-				browser: [],
 				os: osName(),
+				elementVersion: version,
+				nodeVersion: process.version,
 			},
 			scriptsWithError: [],
 		}
@@ -33,7 +37,6 @@ export class ElementResult {
 		let modeName: string = opt.headless ? 'headless' : 'no-headless'
 		modeName = isConfig ? `${modeName} with config file` : modeName
 		this._result.executionInfo.mode = modeName
-		this._result.executionInfo.browser = [opt.browser]
 	}
 
 	addTestScript(file: string, iterationResults: IterationResult[]): void {

@@ -11,24 +11,24 @@ function renderExecutionInfo(info) {
 	document.writeln(`
     <div class="execution-info">
       <div>
+        <div class="info-property">Execution Mode</div>
         <div class="info-property">Execution Date</div>
-        <div class="info-property">Execution Time</div>
         <div class="info-property">Duration</div>
       </div>
-      <div>
-        <div class="info-data">${info.date}</div>
+			<div>
+				<div class="info-data">${info.mode}</div>
         <div class="info-data">${info.time}</div>
         <div class="info-data">${getTimeString(info.duration)}</div>
       </div>
       <div>
-        <div class="info-property">Execution Mode</div>
-        <div class="info-property">Browser</div>
-        <div class="info-property">Operation System</div>
+				<div class="info-property">Operation System</div>
+				<div class="info-property">Node Version</div>
+        <div class="info-property">Element Version</div>
       </div>
       <div>
-        <div class="info-data">${info.mode}</div>
-        <div class="info-data">${info.browser}</div>
-        <div class="info-data">${info.os}</div>
+				<div class="info-data">${info.os}</div>
+				<div class="info-data">${info.nodeVersion}</div>
+				<div class="info-data">${info.elementVersion}</div>
       </div>
     </div>
   `)

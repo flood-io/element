@@ -1,5 +1,6 @@
 import { Status } from './Status'
-export type Milliseconds = number
+
+type Milliseconds = number
 
 export type TestResult = {
 	executionInfo: ExecutionInfo
@@ -13,12 +14,12 @@ export type ScriptWithError = {
 }
 
 export type ExecutionInfo = {
-	date: string
 	time: string
 	duration?: Milliseconds
 	mode: string
-	browser: Array<string>
 	os: string
+	nodeVersion: string
+	elementVersion: string
 }
 
 export type TestScriptResult = {

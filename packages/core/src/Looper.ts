@@ -4,7 +4,7 @@ export class Looper {
 	public iterations = 0
 	private timeout: any
 	private cancelled = false
-	private loopCount: number
+	public loopCount: number
 	public isRestart = false
 
 	public done: Promise<void>

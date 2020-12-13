@@ -128,7 +128,8 @@ export class Runner {
 						console.log(chalk.grey('--------------------------------------------'))
 					}
 					startTime = new Date()
-					console.log(`${chalk.bold('\u25CC')} ${iterationName} of ${this.looper.iterations}`)
+					const numOfIteration = this.looper.loopCount === -1 ? '' : `of ${this.looper.loopCount}`
+					console.log(`${chalk.bold('\u25CC')} ${iterationName} ${numOfIteration}`)
 				}
 				try {
 					await test.runWithCancellation(iteration, cancelToken, this.looper)

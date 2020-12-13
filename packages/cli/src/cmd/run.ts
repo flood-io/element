@@ -56,6 +56,11 @@ const cmd: CommandModule = {
 			process.exit(0)
 		}
 		const runArgs = file ? args : await getAllTestScriptsFromConfiguration(args)
+		if (runArgs.fastForward && runArgs.slowMo) {
+			console.error(chalk.redBright(`Arguments fast-forward and slow-mo are mutually exclusive`))
+			process.exit(0)
+		}
+
 		const result = await runSingleUser(runArgs)
 
 		if (args.export) {

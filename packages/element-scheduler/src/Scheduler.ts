@@ -266,12 +266,12 @@ export class Scheduler {
 			const iterationCount = this.settings.loopCount || 0
 			for (const worker of workingWorkers) {
 				if (forceStop) {
-					const { workerId } = worker
+					const { workerId, workerName } = worker
 					let { text } = this.spinnies.pick(workerId)
 					const msg: string[] = text.split(SEPARATOR)
 					const msg3 = sigint
-						? 'This user has been stopped unexpectedly'
-						: 'Duration reached, this user has been stopped'
+						? `User ${workerName} has been stopped unexpectedly`
+						: `Duration reached, user ${workerName} has been stopped`
 					text = `${msg[0]}${SEPARATOR}${msg[1]}${SEPARATOR}${msg3}`
 					this.spinnies.fail(workerId, { text })
 					const done = dataTable.filter(row => row.worker.id === workerId)

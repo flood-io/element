@@ -20,7 +20,7 @@ export type SchedulerSetting = TestSettings & {
 	verbose?: boolean
 }
 
-type TableDataConfig = {
+type TableData = {
 	worker: Worker
 	response_time?: string
 	latency?: string
@@ -44,7 +44,7 @@ export class Scheduler {
 		this.spinnies = spinnies
 	}
 
-	private tableResult(dataTable: TableDataConfig[]): void {
+	private tableResult(dataTable: TableData[]): void {
 		const head: string[] = [
 			chalk.whiteBright('User'),
 			chalk.white('Iteration'),
@@ -85,7 +85,7 @@ export class Scheduler {
 			],
 		})
 
-		const getRowSpan = (dataTable: TableDataConfig[]): number => {
+		const getRowSpan = (dataTable: TableData[]): number => {
 			const userCount = dataTable.filter(row => `${row.worker.iteration}` === '1').length
 			return dataTable.length / userCount
 		}
@@ -151,7 +151,7 @@ export class Scheduler {
 
 		const waitForExit = () => pool.waitForExit().then(this.stop)
 		let workingWorkers: WorkerInterface[] = []
-		let dataTable: TableDataConfig[] = []
+		let dataTable: TableData[] = []
 
 		const onTicker = async (
 			timestamp: number,
@@ -270,8 +270,8 @@ export class Scheduler {
 					let { text } = this.spinnies.pick(workerId)
 					const msg: string[] = text.split(SEPARATOR)
 					const msg3 = sigint
-						? 'This user has stop unexpected'
-						: 'This user has stop due to duration has reached'
+						? 'This user has been stopped unexpectedly'
+						: 'Duration reached, this user has been stopped'
 					text = `${msg[0]}${SEPARATOR}${msg[1]}${SEPARATOR}${msg3}`
 					this.spinnies.fail(workerId, { text })
 					const done = dataTable.filter(row => row.worker.id === workerId)

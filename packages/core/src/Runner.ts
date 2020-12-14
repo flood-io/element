@@ -80,7 +80,7 @@ export class Runner {
 			options.viewport = settings.viewport
 			settings.device = null
 		}
-		if (settings.browser) {
+		if (!options.browser && settings.browser) {
 			options.browser = settings.browser
 		}
 		if (settings.browserLaunchOption) {

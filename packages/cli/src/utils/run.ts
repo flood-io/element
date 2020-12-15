@@ -1,7 +1,13 @@
 import { join } from 'path'
 import glob from 'glob'
+import { ElementConfig } from '@flood/element-core/src/ElementOption'
 
-export async function readConfigFile(file: string): Promise<any> {
+interface FilesPattern {
+	files: string[]
+	notExistingFiles: string[]
+}
+
+export async function readConfigFile(file: string): Promise<ElementConfig> {
 	const rootPath = process.cwd()
 	try {
 		return await import(join(rootPath, file))
@@ -10,7 +16,7 @@ export async function readConfigFile(file: string): Promise<any> {
 	}
 }
 
-export function getFilesPattern(testPathMatch?: string[]) {
+export function getFilesPattern(testPathMatch?: string[]): FilesPattern {
 	if (!testPathMatch || !testPathMatch.length) {
 		throw Error('Found no test scripts matching testPathMatch pattern')
 	}

@@ -81,7 +81,7 @@ export async function runCommandLine(args: ElementRunArguments): Promise<TestRes
 		cache.resetCache()
 	}
 
-	if (args.testFiles) {
+	if (!args.file && args.testFiles) {
 		console.log(
 			chalk.grey(
 				'The following test scripts that matched the testPathMatch pattern are going to be executed:',

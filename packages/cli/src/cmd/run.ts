@@ -7,7 +7,6 @@ import {
 	ElementOptions,
 } from '@flood/element-core'
 import { runCommandLine as runMultipleUser } from '@flood/element-scheduler'
-
 import chalk from 'chalk'
 import { EventEmitter } from 'events'
 import { ReportCache } from '@flood/element-report'
@@ -16,22 +15,38 @@ import YoEnv from 'yeoman-environment'
 import ReportGenerator from '../generator/test-report'
 import sanitize from 'sanitize-filename'
 import { resolve, dirname, basename, extname, join } from 'path'
+import { ElementConfig } from '@flood/element-core/src/ElementOption'
 
 interface RunCommonArguments extends Arguments, ElementRunArguments {}
 
-async function getAllTestScriptsFromConfiguration(
-	args: RunCommonArguments,
-): Promise<RunCommonArguments> {
-	const fileErr = checkFile(args.configFile, 'Configuration file')
+async function getConfigurationFromConfig(args: RunCommonArguments): Promise<RunCommonArguments> {
+	const { file, configFile } = args
+	const fileErr = checkFile(configFile, 'Configuration file')
 	if (fileErr) throw fileErr
-	const { options, paths } = await readConfigFile(args.configFile)
+	const configFileFromArgs: ElementConfig = await readConfigFile(configFile)
+	const { options, paths, testSettings } = configFileFromArgs
+	let testFiles: string[]
+	let notExistingFiles: string[]
 
-	if (!paths.testPathMatch || !paths.testPathMatch.length) {
-		throw Error('Found no test scripts matching testPathMatch pattern')
+	if (file) {
+		testFiles = [file]
+		notExistingFiles = []
+	} else {
+		if (!paths.testPathMatch || !paths.testPathMatch.length) {
+			throw Error('Found no test scripts matching testPathMatch pattern')
+		}
+		const filesPattern = getFilesPattern(paths.testPathMatch)
+		testFiles = filesPattern.files.sort()
+		notExistingFiles = filesPattern.notExistingFiles.sort()
 	}
-	const { files, notExistingFiles } = getFilesPattern(paths.testPathMatch)
 
-	return { ...options, paths, testFiles: files.sort(), notExistingFiles: notExistingFiles.sort() }
+	return {
+		...args,
+		options,
+		testSettings,
+		testFiles,
+		notExistingFiles,
+	}
 }
 
 const cmd: CommandModule = {
@@ -55,7 +70,7 @@ const cmd: CommandModule = {
 			await runMultipleUser(opts)
 			process.exit(0)
 		}
-		const runArgs = file ? args : await getAllTestScriptsFromConfiguration(args)
+		const runArgs = await getConfigurationFromConfig(args)
 		if (runArgs.fastForward && runArgs.slowMo) {
 			console.error(chalk.redBright(`Arguments fast-forward and slow-mo are mutually exclusive`))
 			process.exit(0)

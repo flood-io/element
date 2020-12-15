@@ -35,6 +35,7 @@ export interface ElementRunArguments {
 	browser: BrowserType
 	export?: boolean
 	notExistingFiles: string[]
+	mu: boolean
 }
 
 export interface ElementOptions {
@@ -55,6 +56,23 @@ export interface ElementOptions {
 	failStatusCode: number
 	browser: BrowserType
 	export?: boolean
+}
+
+export interface ElementConfig {
+	options: ElementOptions
+	paths: {
+		workRoot: string
+		testDataRoot: string
+		testPathMatch: string[]
+	}
+	flood?: {
+		hosted: boolean
+		vu: number
+		duration: number
+		rampup: number
+		regions: string[]
+	}
+	testSettings?: TestSettings
 }
 
 function getWorkRootPath(file: string, root?: string): string {

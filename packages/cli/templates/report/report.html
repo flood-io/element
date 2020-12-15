@@ -20,6 +20,27 @@
 		<hr class="execution-separate" />
 		<div class="summary-header">
 			<span class="header-title">Summary</span>
+			<div class="summary-view-switch">
+				<div>
+					<input
+						type="radio"
+						name="summary-view"
+						id="summary-view-number"
+						onclick="toggleSummaryView(data.testScripts, data.scriptsWithError, true)"
+						checked
+					/>
+					<label for="summary-view-number">Number</label>
+				</div>
+				<div>
+					<input
+						type="radio"
+						name="summary-view"
+						id="summary-view-percentage"
+						onclick="toggleSummaryView(data.testScripts, data.scriptsWithError, false)"
+					/>
+					<label for="summary-view-percentage">Percentage</label>
+				</div>
+			</div>
 			<div class="chart-legend">
 				<div class="chart-legend-item">
 					<div class="passed-bg-color"></div>

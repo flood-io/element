@@ -27,6 +27,6 @@ export class EmptyReporter implements IReporter {
 	testStepError(err: TestScriptError): void {}
 
 	testScriptConsole(method: string, message?: any, ...optionalParams: any[]): void {
-		;(console as any)[method](message, ...optionalParams)
+		console[method](message, ...optionalParams)
 	}
 }

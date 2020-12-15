@@ -1,7 +1,7 @@
 import { ConcreteTestSettings } from './runtime/Settings'
 
 export class Looper {
-	public iterations = 0
+	public iteration = 0
 	private timeout: any
 	private cancelled = false
 	public loopCount: number
@@ -47,14 +47,14 @@ export class Looper {
 
 	get continueLoop(): boolean {
 		const hasInfiniteLoops = this.loopCount <= 0
-		const hasLoopsLeft = this.iterations < this.loopCount
+		const hasLoopsLeft = this.iteration < this.loopCount
 
 		return !this.cancelled && (hasLoopsLeft || hasInfiniteLoops)
 	}
 
 	restartLoop() {
 		this.isRestart = true
-		this.iterations -= 1
+		this.iteration -= 1
 	}
 
 	restartLoopDone() {
@@ -64,13 +64,13 @@ export class Looper {
 	async run(iterator: (iteration: number, isRestart: boolean) => Promise<void>): Promise<number> {
 		try {
 			while (this.continueLoop) {
-				await iterator(++this.iterations, this.isRestart)
+				await iterator(++this.iteration, this.isRestart)
 			}
 			this.finish()
 		} finally {
 			this.doneResolve()
 		}
 
-		return this.iterations
+		return this.iteration
 	}
 }

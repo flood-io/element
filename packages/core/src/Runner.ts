@@ -38,6 +38,7 @@ export class Runner {
 	running = true
 	public client: PlaywrightClient | undefined
 	public summaryIteration: IterationResult[] = []
+	private sendReport: (msg: string, type: string) => void
 
 	constructor(
 		private clientFactory: AsyncFactory<PlaywrightClient>,
@@ -46,13 +47,20 @@ export class Runner {
 		private testSettingOverrides: TestSettings,
 		private launchOptionOverrides: Partial<ConcreteLaunchOptions>,
 		private testObserverFactory: (t: TestObserver) => TestObserver = x => x,
-	) {}
+	) {
+		if (reporter.sendReport) this.sendReport = reporter.sendReport
+	}
 
 	async stop(): Promise<void> {
 		this.running = false
 		if (this.looper) await this.looper.kill()
 		if (this.client) await this.client.close()
 		return
+	}
+
+	async runEvalScript(testScript: EvaluatedScript): Promise<void> {
+		this.client = await this.launchClient(testScript)
+		await this.runTestScript(testScript, this.client)
 	}
 
 	async run(testScriptFactory: AsyncFactory<EvaluatedScript>): Promise<void> {
@@ -72,7 +80,7 @@ export class Runner {
 			options.viewport = settings.viewport
 			settings.device = null
 		}
-		if (settings.browser) {
+		if (!options.browser && settings.browser) {
 			options.browser = settings.browser
 		}
 		if (settings.browserLaunchOption) {
@@ -118,18 +126,33 @@ export class Runner {
 			this.looper = new Looper(settings, this.running)
 			this.looper.killer = () => cancelToken.cancel()
 			let startTime = new Date()
+
 			await this.looper.run(async (iteration: number, isRestart: boolean) => {
 				const iterationName = this.getIterationName(iteration)
+				const numOfIteration = this.looper.loopCount === -1 ? '' : `of ${this.looper.loopCount}`
 				if (isRestart) {
-					console.log(`Restarting ${iterationName}`)
+					if (!this.reporter.worker) {
+						console.log(`Restarting ${iterationName}`)
+					} else {
+						this.sendReport(`Restarting ${iterationName}`, 'action')
+					}
 					this.looper.restartLoopDone()
 				} else {
-					if (iteration > 1) {
-						console.log(chalk.grey('--------------------------------------------'))
+					if (!this.reporter.worker) {
+						if (iteration > 1) {
+							console.log(chalk.grey('--------------------------------------------'))
+						}
+						startTime = new Date()
+						console.log(`${chalk.bold('\u25CC')} ${iterationName} ${numOfIteration}`)
+					} else {
+						this.sendReport(
+							JSON.stringify({
+								iterationMsg: `${iterationName} ${numOfIteration}`,
+								iteration,
+							}),
+							'iteration',
+						)
 					}
-					startTime = new Date()
-					const numOfIteration = this.looper.loopCount === -1 ? '' : `of ${this.looper.loopCount}`
-					console.log(`${chalk.bold('\u25CC')} ${iterationName} ${numOfIteration}`)
 				}
 				try {
 					await test.runWithCancellation(iteration, cancelToken, this.looper)
@@ -144,14 +167,18 @@ export class Runner {
 				}
 			})
 
-			console.log(`Test completed after ${this.looper.iterations} iterations`)
+			if (!this.reporter.worker) {
+				console.log(`Test completed after ${this.looper.loopCount} iterations`)
+			}
 			await test.runningBrowser?.close()
 		} catch (err) {
 			throw Error(err)
 		} finally {
-			const table = reportRunTest(reportTableData)
-			console.groupEnd()
-			console.log(table)
+			if (!this.reporter.worker) {
+				const table = reportRunTest(reportTableData)
+				console.groupEnd()
+				console.log(table)
+			}
 		}
 
 		if (testToCancel !== undefined) {
@@ -196,15 +223,25 @@ export class Runner {
 				case Status.SKIPPED:
 					skippedNo += 1
 					skippedMessage = chalk.yellow(`${skippedNo}`, `${Status.SKIPPED}`)
+					this.sendReport(
+						JSON.stringify({ name: 'skipped', value: skippedNo, iteration }),
+						'measurement',
+					)
 					break
 				case Status.UNEXECUTED:
 					unexecutedNo += 1
 					unexecutedMessage = chalk(`${unexecutedNo}`, `${Status.UNEXECUTED}`)
+					this.sendReport(
+						JSON.stringify({ name: 'unexecuted', value: unexecutedNo, iteration }),
+						'measurement',
+					)
 					break
 			}
 		})
 		const finallyMessage = chalk(passedMessage, failedMessage, skippedMessage, unexecutedMessage)
-		console.log(`${iterationName} completed in ${ms(duration)} (walltime) ${finallyMessage}`)
+		if (!this.reporter.worker) {
+			console.log(`${iterationName} completed in ${ms(duration)} (walltime) ${finallyMessage}`)
+		}
 		return [iteration, passedNo, failedNo, skippedNo, unexecutedNo]
 	}
 

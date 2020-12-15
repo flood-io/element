@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.11](https://github.com/flood-io/element/compare/v2.0.0-canary.10...v2.0.0-canary.11) (2020-12-15)
+
+
+### Bug Fixes
+
+* added worker name in case force stop ([ec4926b](https://github.com/flood-io/element/commit/ec4926bfe4dc15e0c38967f27ca2369f97d32cd4))
+* clean code ([24f8de9](https://github.com/flood-io/element/commit/24f8de9f43857605b96ac21d8f93246363436aef))
+* clean code ([987863d](https://github.com/flood-io/element/commit/987863d6553dd1bd3bb1a182c5a6b1e93cb784f2))
+* clean code ([41962df](https://github.com/flood-io/element/commit/41962df39ab273a5a6eb0d3020f983da86b34903))
+* clean code ([025913c](https://github.com/flood-io/element/commit/025913cb4e192d1c0d839374f0f006086f950e38))
+* codacy ([67d3f11](https://github.com/flood-io/element/commit/67d3f11387ec646309bd38494ba9210798b867b8))
+* handle data table on exit ([26e07c0](https://github.com/flood-io/element/commit/26e07c0c5baffebfe54291f436796ec3f8f8863d))
+* handle data table on exit ([0c9beda](https://github.com/flood-io/element/commit/0c9bedac49ecce1430cb75735d92853b85cf6001))
+* keep legacy code ([39b8a61](https://github.com/flood-io/element/commit/39b8a61f4da62bb0314e123fd99cc9cb4aac0da6))
+* remove default browser of elementOption ([00bc29a](https://github.com/flood-io/element/commit/00bc29a89eb39a709b373925f68aa82cd062f8a7))
+* remove redundant code ([0e347dc](https://github.com/flood-io/element/commit/0e347dcb21bea594f4713640959e42550ca95174))
+* remove redundant files ([18a04de](https://github.com/flood-io/element/commit/18a04de17701edb9b1a5ffbb279621ca14d968ba))
+* update order of browser: cli -> setting ([9d1fce9](https://github.com/flood-io/element/commit/9d1fce9df9bceeefa25a2d42b54e4865cbea1740))
+
+
+### Features
+
+* terminal output for multiple users ([75a9196](https://github.com/flood-io/element/commit/75a91966d827e6d5db6ede45a4a71104229e78ad))
+
+
+
+
+
 # [2.0.0-canary.10](https://github.com/flood-io/element/compare/v2.0.0-canary.9...v2.0.0-canary.10) (2020-12-03)
 
 

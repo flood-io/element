@@ -1,5 +1,5 @@
 import chalk from 'chalk'
-import { table, getBorderCharacters } from 'table'
+import { table, getBorderCharacters, TableUserConfig } from 'table'
 
 export function reportRunTest(reportTableData: number[][]): any {
 	const data: any[] = [
@@ -22,7 +22,7 @@ export function reportRunTest(reportTableData: number[][]): any {
 		]
 	})
 	data.push(...rowData)
-	const config = {
+	const config: TableUserConfig = {
 		border: getBorderCharacters('ramac'),
 		columns: {
 			0: {

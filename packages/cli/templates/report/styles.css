@@ -94,6 +94,16 @@ html {
 	background-color: #cbd5e0;
 }
 
+.summary-view-switch {
+	flex: 1;
+	display: flex;
+	align-items: flex-end;
+}
+
+.summary-view-switch div + div {
+	margin-left: 1rem;
+}
+
 .chart-legend {
 	flex: 1;
 	display: flex;
@@ -103,6 +113,10 @@ html {
 
 .chart-legend-item {
 	display: flex;
+}
+
+.chart-legend-item + .chart-legend-item {
+	margin-left: 2rem;
 }
 
 .chart-legend-item div {

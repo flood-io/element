@@ -1,3 +1,4 @@
+/* eslint-disable */
 function getTimeString(ms) {
 	if (ms < 1000) return `${ms}ms`
 	const s = Math.floor(ms / 1000)
@@ -5,6 +6,15 @@ function getTimeString(ms) {
 	const m = Math.floor(s / 60)
 	if (m < 60) return `${m}m ${s % 60}s`
 	return `${Math.floor(m / 60)}h ${m % 60}m`
+}
+
+function toggleSummaryView(executedScrips, unexecutedScript, isViewingNumber) {
+	var summaryTable = document.getElementById('table-summary')
+
+	summaryTable.innerHTML = `
+		${renderSummaryHeader()}
+    ${renderSummaryData(executedScrips, unexecutedScript, isViewingNumber)}
+	`
 }
 
 function renderExecutionInfo(info) {
@@ -44,12 +54,18 @@ function renderSummaryHeader() {
   `
 }
 
-function renderIterationResult(iteration, index) {
+function renderIterationResult(iteration, index, isViewingNumber) {
 	var result = {
 		passed: 0,
 		failed: 0,
 		skipped: 0,
 		unexecuted: 0,
+	}
+	var totalSteps = iteration.stepResults.length
+
+	function getShowValue(result) {
+		if (isViewingNumber) return result
+		return (result * 100) / totalSteps
 	}
 
 	iteration.stepResults.forEach(function(step) {
@@ -62,22 +78,30 @@ function renderIterationResult(iteration, index) {
       <div class="summary-result">
         ${
 					result.passed > 0
-						? `<div style="flex: ${result.passed}" class="passed-bg-color">${result.passed}</div>`
+						? `<div style="flex: ${result.passed}" class="passed-bg-color">
+							${getShowValue(result.passed)}
+						</div>`
 						: ''
 				}
         ${
 					result.failed > 0
-						? `<div style="flex: ${result.failed}" class="failed-bg-color">${result.failed}</div>`
+						? `<div style="flex: ${result.failed}" class="failed-bg-color">
+							${getShowValue(result.failed)}
+						</div>`
 						: ''
 				}
         ${
 					result.skipped > 0
-						? `<div style="flex: ${result.skipped}" class="skipped-bg-color">${result.skipped}</div>`
+						? `<div style="flex: ${result.skipped}" class="skipped-bg-color">
+							${getShowValue(result.skipped)}
+						</div>`
 						: ''
 				}
         ${
 					result.unexecuted > 0
-						? `<div style="flex: ${result.unexecuted}" class="unexecuted-bg-color">${result.unexecuted}</div>`
+						? `<div style="flex: ${result.unexecuted}" class="unexecuted-bg-color">
+							${getShowValue(result.unexecuted)}
+						</div>`
 						: ''
 				}
       </div>
@@ -99,7 +123,7 @@ function renderScriptWithError(scripts) {
 		.join('')
 }
 
-function renderExecutedScripts(scripts) {
+function renderExecutedScripts(scripts, isViewingNumber) {
 	return scripts
 		.map(function(script) {
 			var iterations = script.iterationResults
@@ -107,12 +131,12 @@ function renderExecutedScripts(scripts) {
 			return `
         <tr>
           <td rowspan=${iterations.length || 1}><a href="#${script.name}">${script.name}</a></td>
-          ${renderIterationResult(iterations[0], 1)}
+          ${renderIterationResult(iterations[0], 1, isViewingNumber)}
         </tr>
         ${iterations
 					.slice(1)
 					.map(function(iteration, index) {
-						return `<tr>${renderIterationResult(iteration, index + 2)}</tr>`
+						return `<tr>${renderIterationResult(iteration, index + 2, isViewingNumber)}</tr>`
 					})
 					.join('')}
       `
@@ -120,18 +144,18 @@ function renderExecutedScripts(scripts) {
 		.join('')
 }
 
-function renderSummaryData(scripts, scriptWithError) {
+function renderSummaryData(scripts, scriptWithError, isViewingNumber) {
 	return `
-    ${renderExecutedScripts(scripts)}
+    ${renderExecutedScripts(scripts, isViewingNumber, isViewingNumber)}
     ${renderScriptWithError(scriptWithError)}
   `
 }
 
 function renderSummary(executedScrips, unexecutedScript) {
 	document.writeln(`
-    <table class="table">
+    <table id="table-summary" class="table">
       ${renderSummaryHeader()}
-      ${renderSummaryData(executedScrips, unexecutedScript)}
+      ${renderSummaryData(executedScrips, unexecutedScript, true)}
     </table>
   `)
 }

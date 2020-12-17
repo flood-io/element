@@ -86,6 +86,8 @@ export class Runner {
 		if (settings.browserLaunchOption) {
 			options = { ...options, ...settings.browserLaunchOption }
 		}
+		settings.showScreenshot = !!options.showScreenshot
+
 		if (options.args == null) options.args = []
 		if (Array.isArray(settings.launchArgs)) options.args.push(...settings.launchArgs)
 

@@ -30,6 +30,7 @@ export async function runSingleTestScript(opts: ElementOptions): Promise<Iterati
 			devtools: opts.devtools,
 			sandbox: opts.sandbox,
 			browser: opts.browser,
+			showScreenshot: opts.showScreenshot,
 			debug: opts.verbose,
 		},
 		opts.testObserverFactory,

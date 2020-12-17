@@ -34,6 +34,7 @@ export interface ElementRunArguments {
 	verbose?: boolean
 	browser: BrowserType
 	export?: boolean
+	showScreenshot?: boolean
 	notExistingFiles: string[]
 }
 
@@ -55,6 +56,7 @@ export interface ElementOptions {
 	failStatusCode: number
 	browser: BrowserType
 	export?: boolean
+	showScreenshot?: boolean
 }
 
 function getWorkRootPath(file: string, root?: string): string {
@@ -168,6 +170,7 @@ export function normalizeElementOptions(
 		failStatusCode: args['fail-status-code'],
 		browser: args.browser,
 		export: args.export,
+		showScreenshot: args.showScreenshot,
 	}
 
 	if (args.loopCount) {

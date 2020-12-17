@@ -33,9 +33,10 @@ import { locatableToLocator, toLocatorError } from './toLocatorError'
 import { Keyboard } from '../page/Keyboard'
 import { getFrames } from '../utils/frames'
 import { DeviceDescriptor } from '../page/Device'
+import termImg from 'term-img'
+import chalk from 'chalk'
 
 export const debug = debugFactory('element:runtime:browser')
-const terminalLink = require('terminal-link')
 
 export class Browser<T> implements BrowserInterface {
 	public screenshots: string[]
@@ -415,6 +416,12 @@ export class Browser<T> implements BrowserInterface {
 	public async takeScreenshot(options?: ScreenshotOptions): Promise<void> {
 		await this.saveScreenshot(async path => {
 			await this.page.screenshot({ path, ...options })
+			console.log(chalk.grey(`Screenshot saved in ${path}`))
+			if (this.settings.showScreenshot) {
+				const fallback = () => void 0
+				const supportImg = termImg(path, { width: '50%', fallback })
+				if (supportImg) console.log(supportImg)
+			}
 			return true
 		})
 	}
@@ -532,8 +539,6 @@ export class Browser<T> implements BrowserInterface {
 		const path = this.workRoot.join('screenshots', `${fileId}.jpg`)
 
 		if (await fn(path)) {
-			const link = terminalLink(fileId, path)
-			console.log(link)
 			this.screenshots.push(path)
 		}
 	}

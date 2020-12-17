@@ -202,6 +202,10 @@ const cmd: CommandModule = {
 				describe: 'Export a HTML report after the test finished running',
 				type: 'boolean',
 			})
+			.option('--show-screenshot', {
+				describe: 'show screenshot image in terminal (iTerm)',
+				type: 'boolean',
+			})
 			.fail((msg, err) => {
 				if (err) console.error(chalk.redBright(err.message))
 				if (msg) console.error(chalk.redBright(msg))

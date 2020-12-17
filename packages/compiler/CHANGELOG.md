@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.11](https://github.com/flood-io/element/compare/v2.0.0-canary.10...v2.0.0-canary.11) (2020-12-15)
+
+
+### Features
+
+* terminal output for multiple users ([75a9196](https://github.com/flood-io/element/commit/75a91966d827e6d5db6ede45a4a71104229e78ad))
+
+
+
+
+
 # [2.0.0-canary.10](https://github.com/flood-io/element/compare/v2.0.0-canary.9...v2.0.0-canary.10) (2020-12-03)
 
 **Note:** Version bump only for package @flood/element-compiler

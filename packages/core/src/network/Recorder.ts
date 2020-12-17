@@ -1,25 +1,10 @@
 import { sum, mean } from 'd3-array'
 import { Page as PlaywrightPage, ChromiumBrowserContext } from 'playwright'
-import { Entry, RawResponse, EntryRequest, Page, EntryResponse } from './Protocol'
+import { Entry, RawResponse, EntryRequest, Page, EntryResponse, ResourceType } from './Protocol'
 import { AsyncQueue } from '../utils/AsyncQueue'
 import { Manager } from './Manager'
 import debugFactory from 'debug'
 const debug = debugFactory('element:network:recorder')
-
-export type ResourceType =
-	| 'document'
-	| 'stylesheet'
-	| 'image'
-	| 'media'
-	| 'font'
-	| 'script'
-	| 'texttrack'
-	| 'xhr'
-	| 'fetch'
-	| 'eventsource'
-	| 'websocket'
-	| 'manifest'
-	| 'other'
 
 export type PageEvents =
 	| 'load'
@@ -260,17 +245,17 @@ export default class Recorder {
 
 	public responseTimeForType(type: string) {
 		const entries = this.entriesForType(type).filter(({ request }) => request.duration > 0)
-		return round(sum(entries.map(({ request, response }) => request.duration)))
+		return round(sum(entries.map(({ request }) => request.duration)))
 	}
 
 	public latencyForType(type: string) {
 		const entries = this.entriesForType(type).filter(({ request }) => request.latency > 0)
-		return round(sum(entries.map(({ request, response }) => request.latency)))
+		return round(sum(entries.map(({ request }) => request.latency)) / entries.length)
 	}
 
 	public timeToFirstByteForType(type: string) {
 		const entries = this.entriesForType(type).filter(({ request }) => request.ttfb > 0)
-		return round(sum(entries.map(({ request, response }) => request.ttfb)))
+		return round(sum(entries.map(({ request }) => request.ttfb)))
 	}
 
 	public reset() {

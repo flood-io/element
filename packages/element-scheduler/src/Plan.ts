@@ -30,8 +30,8 @@ export class Plan {
 	 */
 	public ticker(
 		onTick: (timestamp: number, target: number, stageIterator: number) => Promise<void>,
-		oneEndState: () => Promise<void>,
-		oneNewState: () => Promise<void>,
+		onEndState: (forceStop?: boolean, sigint?: boolean) => Promise<void>,
+		onNewState: () => Promise<void>,
 	) {
 		return new Promise(done => {
 			const planSteps: PlanStep[] = []
@@ -43,13 +43,13 @@ export class Plan {
 			const internal = () => {
 				const planStep = planSteps.shift()
 				if (!planStep) return done('end')
-				oneNewState().then(() => {
+				onNewState().then(() => {
 					const [timeout, target] = planStep
-					const handleEndStage = setTimeout(() => oneEndState().then(internal), timeout)
-					onTick(...planStep).then(() => oneEndState().then(internal))
+					const handleEndStage = setTimeout(() => onEndState(true).then(internal), timeout)
+					onTick(...planStep).then(() => onEndState().then(internal))
 					if (target < 1) {
 						clearTimeout(handleEndStage)
-						oneEndState().then(internal)
+						onEndState().then(internal)
 					}
 				})
 			}

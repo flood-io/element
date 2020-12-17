@@ -1,5 +1,5 @@
 import { TestScriptError } from '../runtime/TestScriptError'
-import { IReporter } from '../runtime/IReporter'
+import { IReporter, WorkerReport } from '../runtime/IReporter'
 import { TraceData, TestEvent, CompoundMeasurement, MeasurementKind } from '../types/Report'
 import chalk from 'chalk'
 import ansiEscapes from 'ansi-escapes'
@@ -9,7 +9,10 @@ const debug = require('debug')('element-cli:console-reporter')
 export class VerboseReporter implements IReporter {
 	public responseCode: string
 	public stepName: string
+	public worker: WorkerReport
+
 	constructor(private cache: ReportCache) {}
+
 	reset(step: string): void {}
 
 	addMeasurement(measurement: string, value: string | number, label?: string): void {}
@@ -23,6 +26,10 @@ export class VerboseReporter implements IReporter {
 	addTrace(traceData: TraceData, label: string): void {}
 
 	async flushMeasurements(): Promise<void> {}
+
+	setWorker(worker: WorkerReport): void {
+		this.worker = worker
+	}
 
 	testLifecycle(
 		stage: TestEvent,

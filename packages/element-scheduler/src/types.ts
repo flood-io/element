@@ -1,6 +1,7 @@
 export enum MessageConst {
 	RUN_COMPLETED = 'completed',
 	LOADED = 'loaded',
+	REPORT = 'report',
 }
 
 export enum ActionConst {
@@ -69,7 +70,12 @@ export type ParentMessageError = [
 export type ParentMessage = ParentMessageOk | ParentMessageError | ParentMessagePageCall
 
 export interface WorkerInterface {
-	send(request: ChildMessage, onProcessStart: OnStart, onProcessEnd: OnEnd): void
+	send(
+		request: ChildMessage,
+		onProcessStart: OnStart,
+		onProcessEnd: OnEnd,
+		onPrecessReport?: OnReport,
+	): void
 	waitForExit(): Promise<void>
 	waitForLoaded(): Promise<void>
 	forceExit(): void
@@ -83,3 +89,4 @@ export interface WorkerInterface {
 
 export type OnStart = (worker: WorkerInterface) => void
 export type OnEnd = (err: Error | null, result: unknown, iterator: number) => void
+export type OnReport = (worker: WorkerInterface, data: string[]) => void

@@ -19,8 +19,8 @@ export class Compiler {
 		this.externalDebs = externalDeps
 	}
 
-	public async emit(): Promise<CompilerOutput> {
-		return this.webpackCompiler()
+	public async emit(showBar = true): Promise<CompilerOutput> {
+		return this.webpackCompiler(showBar)
 	}
 
 	private getFileName(file: string): string {
@@ -36,7 +36,7 @@ export class Compiler {
 		}
 	}
 
-	get webpackConfig(): WebpackConfig {
+	webpackConfig(showBar = true): WebpackConfig {
 		const loader = require.resolve('ts-loader')
 
 		const modules = ['node_modules']
@@ -62,11 +62,7 @@ export class Compiler {
 			},
 			cache: true,
 
-			plugins: [
-				new WebpackBar({
-					name: 'Script Compiler',
-				}),
-			],
+			plugins: [],
 
 			module: {
 				rules: [
@@ -91,6 +87,13 @@ export class Compiler {
 			externals: ['@flood/element', '@flood/element-api'],
 		}
 
+		if (showBar)
+			options.plugins = [
+				new WebpackBar({
+					name: 'Script Compiler',
+				}),
+			]
+
 		if (!this.externalDebs) options.devtool = 'cheap-module-source-map'
 		return options
 	}
@@ -103,8 +106,8 @@ export class Compiler {
 		return localConfig || configFile
 	}
 
-	private async webpackCompiler(): Promise<CompilerOutput> {
-		const compiler = webpack(this.webpackConfig)
+	private async webpackCompiler(showBar = true): Promise<CompilerOutput> {
+		const compiler = webpack(this.webpackConfig(showBar))
 		const fileSystem = new MemoryFileSystem()
 		if (!this.externalDebs) {
 			compiler.outputFileSystem = fileSystem

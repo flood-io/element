@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { TestScriptError } from '../runtime/TestScriptError'
-import { IReporter } from '../runtime/IReporter'
+import { IReporter, WorkerReport } from '../runtime/IReporter'
 import { TraceData, TestEvent, CompoundMeasurement, MeasurementKind } from '../types/Report'
 import chalk from 'chalk'
 import { ReportCache } from './Cache'
@@ -9,12 +11,13 @@ const debug = require('debug')('element-cli:console-reporter')
 export class BaseReporter implements IReporter {
 	public responseCode: string
 	public stepName: string
+	public worker: WorkerReport
 
-	constructor(private cache: ReportCache) {}
+	constructor(protected cache: ReportCache) {}
 
 	reset(step: string): void {}
 
-	addMeasurement(measurement: string, value: string | number, label?: string): void {}
+	addMeasurement(measurement: string, value: string | number): void {}
 
 	addCompoundMeasurement(
 		measurement: MeasurementKind,

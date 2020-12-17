@@ -166,7 +166,7 @@ export function normalizeElementOptions(
 		testSettingOverrides: {},
 		persistentRunner: false,
 		failStatusCode: args['fail-status-code'],
-		browser: args.browser || 'chromium',
+		browser: args.browser,
 		export: args.export,
 	}
 

@@ -35,18 +35,13 @@ export async function runSingleTestScript(opts: ElementOptions): Promise<Iterati
 		opts.testObserverFactory,
 	)
 
-	const installSignalHandlers = true
+	process.on('SIGINT', async () => {
+		await runner.stop()
+	})
 
-	if (installSignalHandlers) {
-		process.on('SIGINT', async () => {
-			await runner.stop()
-		})
-
-		process.once('SIGUSR2', async () => {
-			await runner.stop()
-			process.kill(process.pid, 'SIGUSR2')
-		})
-	}
+	process.once('SIGUSR2', async () => {
+		await runner.stop()
+	})
 
 	const testScriptOptions: TestScriptOptions = {
 		stricterTypeChecking: opts.strictCompilation,

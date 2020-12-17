@@ -1,9 +1,10 @@
 export { VerboseReporter } from './src/reporters/Verbose'
 export { BaseReporter } from './src/reporters/Base'
 export { EmptyReporter } from './src/reporters/Empty'
+export { MultipleUsersReporter } from './src/reporters/BaseEx'
 export { Option } from './src/types/Option'
 export { expect } from './src/types/Expect'
-export { IReporter } from './src/runtime/IReporter'
+export { IReporter, WorkerReport, Worker } from './src/runtime/IReporter'
 export {
 	MeasurementKind,
 	TraceData,

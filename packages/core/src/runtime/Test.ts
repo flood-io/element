@@ -140,6 +140,7 @@ export default class Test implements ITest {
 
 		this.failed = false
 		this.runningBrowser = null
+		this.reporter.worker?.setIteration(iteration)
 
 		debug('run() start')
 

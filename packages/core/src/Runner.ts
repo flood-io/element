@@ -73,7 +73,7 @@ export class Runner {
 	}
 
 	async launchClient(testScript: EvaluatedScript): Promise<PlaywrightClient> {
-		const { settings } = testScript
+		const settings = { ...this.testSettings, ...testScript.settings, ...this.testSettingOverrides }
 
 		let options: Partial<ConcreteLaunchOptions> = this.launchOptionOverrides
 		options.ignoreHTTPSError = settings.ignoreHTTPSError

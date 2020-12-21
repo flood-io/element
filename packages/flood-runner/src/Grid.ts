@@ -27,7 +27,7 @@ export async function run(file: string): Promise<void> {
 		devtools: false,
 		browser: 'chromium',
 		sandbox: false,
-		testSetting: {},
+		testSettings: {},
 		testSettingOverrides: {},
 		testObserverFactory,
 		persistentRunner: false,

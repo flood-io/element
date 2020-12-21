@@ -22,6 +22,11 @@ export interface RunArguments {
 	slowMo?: boolean
 	watch?: boolean
 	file?: string
+	headless?: boolean
+	devtools?: boolean
+	sandbox?: boolean
+	verbose?: boolean
+	browser?: BrowserType
 }
 
 export interface ElementRunArguments {
@@ -224,14 +229,19 @@ export function normalizeElementOptions(
 	}
 
 	if (runArgs?.file) {
-		const { loopCount, duration } = runArgs
-		if (loopCount) opts.testSettingOverrides.loopCount = loopCount
-		if (duration) opts.testSettingOverrides.duration = duration
+		const { loopCount, duration, headless, devtools, sandbox, browser, verbose } = runArgs
+		if (loopCount !== undefined) opts.testSettingOverrides.loopCount = loopCount
+		if (duration !== undefined) opts.testSettingOverrides.duration = duration
+		if (headless !== undefined) opts.headless = headless
+		if (devtools !== undefined) opts.devtools = devtools
+		if (sandbox !== undefined) opts.sandbox = sandbox
+		if (browser !== undefined) opts.browser = browser
+		if (verbose !== undefined) opts.verbose = verbose
 	}
 
 	opts.testSettingOverrides = setupDelayOverrides(args, opts.testSettingOverrides)
 
-	if (args.watch || (runArgs?.file && runArgs?.watch)) {
+	if ((runArgs?.file && runArgs?.watch) || args.watch) {
 		opts.persistentRunner = true
 		opts.testCommander = makeTestCommander(file)
 	}

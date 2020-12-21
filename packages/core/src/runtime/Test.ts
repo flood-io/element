@@ -70,8 +70,6 @@ export default class Test implements ITest {
 
 		try {
 			const { settings, steps, recoverySteps, hook } = script
-			console.log(testSettings)
-			console.log(settings)
 
 			this.settings = normalizeSettings({
 				...DEFAULT_SETTINGS,

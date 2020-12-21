@@ -19,17 +19,7 @@ import { resolve, dirname, basename, extname, join } from 'path'
 interface RunCommonArguments extends Arguments, ElementRunArguments {}
 
 async function getConfigurationFromConfig(args: RunCommonArguments): Promise<RunCommonArguments> {
-	const {
-		file,
-		configFile,
-		loopCount,
-		duration,
-		slowMo,
-		fastForward,
-		stepDelay,
-		actionDelay,
-		watch,
-	} = args
+	const { file, configFile } = args
 	const fileErr = checkFile(configFile, 'Configuration file')
 	if (fileErr) throw fileErr
 	const configFileFromArgs: any = await readConfigFile(configFile)
@@ -55,14 +45,7 @@ async function getConfigurationFromConfig(args: RunCommonArguments): Promise<Run
 		testFiles,
 		notExistingFiles,
 		runArgs: {
-			loopCount,
-			duration,
-			slowMo,
-			fastForward,
-			stepDelay,
-			actionDelay,
-			watch,
-			file,
+			...args,
 		},
 	}
 }

@@ -27,6 +27,7 @@ export interface RunArguments {
 	sandbox?: boolean
 	verbose?: boolean
 	browser?: BrowserType
+	export?: boolean
 }
 
 export interface ElementRunArguments {
@@ -53,7 +54,7 @@ export interface ElementRunArguments {
 	export?: boolean
 	notExistingFiles: string[]
 	mu: boolean
-	runArgs?: RunArguments
+	runArgs: RunArguments
 	testSettings?: TestSettings
 }
 
@@ -187,10 +188,11 @@ export function normalizeElementOptions(
 	const { file, verbose, runArgs, testSettings } = args
 	const workRootPath = getWorkRootPath(file, args['work-root'])
 	const testDataPath = getTestDataPath(file, args['test-data-root'])
-	const verboseBool = !!verbose
+	let verboseBool = !!verbose
+
+	if (runArgs?.file && !!runArgs.verbose) verboseBool = !!runArgs.verbose
 
 	const reporter = verboseBool ? new VerboseReporter(cache) : new BaseReporter(cache)
-	// const isRunSingleFile = !!runArgs?.file
 
 	const opts: ElementOptions = {
 		testScript: file,
@@ -229,14 +231,14 @@ export function normalizeElementOptions(
 	}
 
 	if (runArgs?.file) {
-		const { loopCount, duration, headless, devtools, sandbox, browser, verbose } = runArgs
+		const { loopCount, duration } = runArgs
 		if (loopCount !== undefined) opts.testSettingOverrides.loopCount = loopCount
 		if (duration !== undefined) opts.testSettingOverrides.duration = duration
-		if (headless !== undefined) opts.headless = headless
-		if (devtools !== undefined) opts.devtools = devtools
-		if (sandbox !== undefined) opts.sandbox = sandbox
-		if (browser !== undefined) opts.browser = browser
-		if (verbose !== undefined) opts.verbose = verbose
+		opts.headless = runArgs.headless ?? opts.headless
+		opts.devtools = runArgs.devtools ?? opts.devtools
+		opts.sandbox = runArgs.sandbox ?? opts.sandbox
+		opts.browser = runArgs.browser ?? opts.browser
+		opts.export = !!runArgs.export ?? opts.export
 	}
 
 	opts.testSettingOverrides = setupDelayOverrides(args, opts.testSettingOverrides)

@@ -60,7 +60,7 @@ const cmd: CommandModule = {
 			if (!file) {
 				console.log(
 					chalk.redBright(
-						`The mode 'running the test with a config file' does not support running with multiple users`,
+						`The mode 'running the test with a multiple files' does not support running with multiple users`,
 					),
 				)
 				process.exit(0)

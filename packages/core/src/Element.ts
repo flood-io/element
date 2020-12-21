@@ -24,6 +24,7 @@ export async function runSingleTestScript(opts: ElementOptions): Promise<Iterati
 		clientFactory || launch,
 		opts.testCommander,
 		opts.reporter,
+		opts.testSettings,
 		opts.testSettingOverrides,
 		{
 			headless: opts.headless,

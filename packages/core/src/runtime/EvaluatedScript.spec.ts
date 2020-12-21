@@ -47,7 +47,7 @@ describe('EvaluatedScript', () => {
 			expect(settings.responseTimeMeasurement).toBe(defaultSettings.responseTimeMeasurement)
 			expect(settings.userAgent).toBe(defaultSettings.userAgent)
 			expect(settings.device).toBe(defaultSettings.device)
-			expect(settings.ignoreHTTPSErrors).toBe(defaultSettings.ignoreHTTPSErrors)
+			expect(settings.ignoreHTTPSError).toBe(defaultSettings.ignoreHTTPSErrors)
 		})
 
 		test('captures test settings', async () => {

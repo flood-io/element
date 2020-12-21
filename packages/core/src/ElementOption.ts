@@ -13,6 +13,17 @@ import { PlaywrightClient } from './driver/Playwright'
 import { BrowserType } from './page/types'
 import ms from 'ms'
 
+export interface RunArguments {
+	loopCount?: number
+	duration?: string | number
+	stepDelay?: string | number
+	actionDelay?: string | number
+	fastForward?: boolean
+	slowMo?: boolean
+	watch?: boolean
+	file?: string
+}
+
 export interface ElementRunArguments {
 	testFiles: string[]
 	file: string
@@ -22,6 +33,7 @@ export interface ElementRunArguments {
 	devtools?: boolean
 	sandbox?: boolean
 	loopCount?: number
+	duration?: string | number
 	stepDelay?: string | number
 	actionDelay?: string | number
 	fastForward?: boolean
@@ -36,6 +48,8 @@ export interface ElementRunArguments {
 	export?: boolean
 	notExistingFiles: string[]
 	mu: boolean
+	runArgs?: RunArguments
+	testSettings?: TestSettings
 }
 
 export interface ElementOptions {
@@ -49,6 +63,7 @@ export interface ElementOptions {
 	sandbox: boolean
 	process?: NodeJS.Process
 	verbose: boolean
+	testSettings: TestSettings
 	testSettingOverrides: TestSettings
 	testObserverFactory?: (t: TestObserver) => TestObserver
 	persistentRunner: boolean
@@ -98,7 +113,8 @@ function setupDelayOverrides(
 	testSettingOverrides: TestSettings,
 ): TestSettings {
 	if (testSettingOverrides == null) testSettingOverrides = {}
-	const { actionDelay, stepDelay } = args
+	const actionDelay = args.runArgs?.actionDelay ?? args.actionDelay
+	const stepDelay = args.runArgs?.stepDelay ?? args.stepDelay
 
 	if (typeof actionDelay === 'string' && actionDelay) {
 		testSettingOverrides.actionDelay = ms(actionDelay)
@@ -112,10 +128,10 @@ function setupDelayOverrides(
 		testSettingOverrides.stepDelay = stepDelay
 	}
 
-	if (args.fastForward) {
+	if (args.runArgs?.fastForward || args.fastForward) {
 		testSettingOverrides.stepDelay = 1000
 		testSettingOverrides.actionDelay = 1000
-	} else if (args.slowMo) {
+	} else if (args.runArgs?.slowMo || args.slowMo) {
 		testSettingOverrides.stepDelay = 10000
 		testSettingOverrides.actionDelay = 10000
 	}
@@ -163,12 +179,13 @@ export function normalizeElementOptions(
 	args: ElementRunArguments,
 	cache: ReportCache,
 ): ElementOptions {
-	const { file, verbose } = args
+	const { file, verbose, runArgs, testSettings } = args
 	const workRootPath = getWorkRootPath(file, args['work-root'])
 	const testDataPath = getTestDataPath(file, args['test-data-root'])
 	const verboseBool = !!verbose
 
 	const reporter = verboseBool ? new VerboseReporter(cache) : new BaseReporter(cache)
+	// const isRunSingleFile = !!runArgs?.file
 
 	const opts: ElementOptions = {
 		testScript: file,
@@ -180,6 +197,7 @@ export function normalizeElementOptions(
 		sandbox: args.sandbox ?? true,
 
 		runEnv: initRunEnv(workRootPath, testDataPath),
+		testSettings: {},
 		testSettingOverrides: {},
 		persistentRunner: false,
 		failStatusCode: args['fail-status-code'],
@@ -187,12 +205,33 @@ export function normalizeElementOptions(
 		export: args.export,
 	}
 
+	opts.testSettings = { ...testSettings }
+
 	if (args.loopCount) {
-		opts.testSettingOverrides.loopCount = args.loopCount
+		opts.testSettings.loopCount = args.loopCount
 	}
+
+	if (args.duration) {
+		opts.testSettings.duration = args.duration
+	}
+
+	if (args.stepDelay) {
+		opts.testSettings.stepDelay = args.stepDelay
+	}
+
+	if (args.actionDelay) {
+		opts.testSettings.actionDelay = args.actionDelay
+	}
+
+	if (runArgs?.file) {
+		const { loopCount, duration } = runArgs
+		if (loopCount) opts.testSettingOverrides.loopCount = loopCount
+		if (duration) opts.testSettingOverrides.duration = duration
+	}
+
 	opts.testSettingOverrides = setupDelayOverrides(args, opts.testSettingOverrides)
 
-	if (args.watch) {
+	if (args.watch || (runArgs?.file && runArgs?.watch)) {
 		opts.persistentRunner = true
 		opts.testCommander = makeTestCommander(file)
 	}

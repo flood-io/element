@@ -15,15 +15,24 @@ import YoEnv from 'yeoman-environment'
 import ReportGenerator from '../generator/test-report'
 import sanitize from 'sanitize-filename'
 import { resolve, dirname, basename, extname, join } from 'path'
-import { ElementConfig } from '@flood/element-core/src/ElementOption'
 
 interface RunCommonArguments extends Arguments, ElementRunArguments {}
 
 async function getConfigurationFromConfig(args: RunCommonArguments): Promise<RunCommonArguments> {
-	const { file, configFile } = args
+	const {
+		file,
+		configFile,
+		loopCount,
+		duration,
+		slowMo,
+		fastForward,
+		stepDelay,
+		actionDelay,
+		watch,
+	} = args
 	const fileErr = checkFile(configFile, 'Configuration file')
 	if (fileErr) throw fileErr
-	const configFileFromArgs: ElementConfig = await readConfigFile(configFile)
+	const configFileFromArgs: any = await readConfigFile(configFile)
 	const { options, paths, testSettings } = configFileFromArgs
 	let testFiles: string[]
 	let notExistingFiles: string[]
@@ -41,11 +50,20 @@ async function getConfigurationFromConfig(args: RunCommonArguments): Promise<Run
 	}
 
 	return {
-		...args,
-		options,
+		...options,
 		testSettings,
 		testFiles,
 		notExistingFiles,
+		runArgs: {
+			loopCount,
+			duration,
+			slowMo,
+			fastForward,
+			stepDelay,
+			actionDelay,
+			watch,
+			file,
+		},
 	}
 }
 

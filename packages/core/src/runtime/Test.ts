@@ -62,7 +62,7 @@ export default class Test implements ITest {
 		public client: PlaywrightClientLike,
 		public script: EvaluatedScriptLike,
 		public reporter: IReporter = new EmptyReporter(),
-		testSettings: TestSettings,
+		settingsFromConfig: TestSettings,
 		settingsOverride: TestSettings,
 		public testObserverFactory: (t: TestObserver) => TestObserver = x => x,
 	) {
@@ -73,7 +73,7 @@ export default class Test implements ITest {
 
 			this.settings = normalizeSettings({
 				...DEFAULT_SETTINGS,
-				...testSettings,
+				...settingsFromConfig,
 				...settings,
 				...settingsOverride,
 			}) as ConcreteTestSettings

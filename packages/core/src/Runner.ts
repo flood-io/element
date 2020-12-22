@@ -44,7 +44,7 @@ export class Runner {
 		private clientFactory: AsyncFactory<PlaywrightClient>,
 		protected testCommander: TestCommander | undefined,
 		private reporter: IReporter,
-		private testSettings: TestSettings,
+		private settingsFromConfig: TestSettings,
 		private testSettingOverrides: TestSettings,
 		private launchOptionOverrides: Partial<ConcreteLaunchOptions>,
 		private testObserverFactory: (t: TestObserver) => TestObserver = x => x,
@@ -73,7 +73,11 @@ export class Runner {
 	}
 
 	async launchClient(testScript: EvaluatedScript): Promise<PlaywrightClient> {
-		const settings = { ...this.testSettings, ...testScript.settings, ...this.testSettingOverrides }
+		const settings = {
+			...this.settingsFromConfig,
+			...testScript.settings,
+			...this.testSettingOverrides,
+		}
 
 		let options: Partial<ConcreteLaunchOptions> = this.launchOptionOverrides
 		options.ignoreHTTPSError = settings.ignoreHTTPSError
@@ -104,7 +108,7 @@ export class Runner {
 				client,
 				testScript,
 				this.reporter,
-				this.testSettings,
+				this.settingsFromConfig,
 				this.testSettingOverrides,
 				this.testObserverFactory,
 			)

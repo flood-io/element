@@ -1,3 +1,4 @@
+import { ElementConfig } from '@flood/element-core/src/ElementOption'
 import { Argv, Arguments, CommandModule } from 'yargs'
 import { checkFile } from './common'
 import {
@@ -19,10 +20,10 @@ import { resolve, dirname, basename, extname, join } from 'path'
 interface RunCommonArguments extends Arguments, ElementRunArguments {}
 
 async function getConfigurationFromConfig(args: RunCommonArguments): Promise<RunCommonArguments> {
-	const { file, configFile } = args
+	const { file, configFile, _, $0, mu } = args
 	const fileErr = checkFile(configFile, 'Configuration file')
 	if (fileErr) throw fileErr
-	const configFileFromArgs: any = await readConfigFile(configFile)
+	const configFileFromArgs: ElementConfig = await readConfigFile(configFile)
 	const { options, paths, testSettings } = configFileFromArgs
 	let testFiles: string[]
 	let notExistingFiles: string[]
@@ -47,6 +48,12 @@ async function getConfigurationFromConfig(args: RunCommonArguments): Promise<Run
 		runArgs: {
 			...args,
 		},
+		_,
+		$0,
+		file,
+		'fail-status-code': args['fail-status-code'],
+		configFile,
+		mu,
 	}
 }
 

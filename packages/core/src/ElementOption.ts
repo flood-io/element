@@ -28,6 +28,8 @@ export interface RunArguments {
 	verbose?: boolean
 	browser?: BrowserType
 	export?: boolean
+	executablePath?: string
+	downloadsPath?: string
 }
 
 export interface ElementRunArguments {
@@ -56,6 +58,8 @@ export interface ElementRunArguments {
 	mu: boolean
 	runArgs: RunArguments
 	testSettings?: TestSettings
+	executablePath?: string
+	downloadsPath?: string
 }
 
 export interface ElementOptions {
@@ -77,6 +81,8 @@ export interface ElementOptions {
 	failStatusCode: number
 	browser: BrowserType
 	export?: boolean
+	executablePath?: string
+	downloadsPath?: string
 }
 
 export interface ElementConfig {
@@ -210,6 +216,8 @@ export function normalizeElementOptions(
 		failStatusCode: args['fail-status-code'],
 		browser: args.browser,
 		export: args.export,
+		executablePath: args.executablePath ?? '',
+		downloadsPath: args.downloadsPath ?? '',
 	}
 
 	opts.testSettings = { ...testSettings }
@@ -231,14 +239,16 @@ export function normalizeElementOptions(
 	}
 
 	if (runArgs?.file) {
-		const { loopCount, duration } = runArgs
+		const { loopCount, duration, executablePath, downloadsPath } = runArgs
 		if (loopCount !== undefined) opts.testSettingOverrides.loopCount = loopCount
 		if (duration !== undefined) opts.testSettingOverrides.duration = duration
-		opts.headless = runArgs.headless ?? opts.headless
-		opts.devtools = runArgs.devtools ?? opts.devtools
-		opts.sandbox = runArgs.sandbox ?? opts.sandbox
-		opts.browser = runArgs.browser ?? opts.browser
+		opts.headless = !!runArgs.headless ?? opts.headless
+		opts.devtools = !!runArgs.devtools ?? opts.devtools
+		opts.sandbox = !!runArgs.sandbox ?? opts.sandbox
 		opts.export = !!runArgs.export ?? opts.export
+		opts.browser = runArgs.browser ?? opts.browser
+		if (executablePath !== undefined) opts.executablePath = executablePath
+		if (downloadsPath !== undefined) opts.downloadsPath = downloadsPath
 	}
 
 	opts.testSettingOverrides = setupDelayOverrides(args, opts.testSettingOverrides)

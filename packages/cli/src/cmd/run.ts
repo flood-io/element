@@ -120,10 +120,6 @@ const cmd: CommandModule = {
 				default: 'chromium',
 				describe: `Sets the browser type used to run the test, using one of the 3 bundled browsers: 'chromium', 'firefox' and 'webkit'.`,
 			})
-			.option('browser-type', {
-				group: 'Browser:',
-				describe: 'Run in a specific browser',
-			})
 			.option('no-headless', {
 				group: 'Browser:',
 				describe:

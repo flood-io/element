@@ -17,6 +17,8 @@ import YoEnv from 'yeoman-environment'
 import ReportGenerator from '../generator/test-report'
 import sanitize from 'sanitize-filename'
 import { resolve, dirname, basename, extname, join } from 'path'
+import webpack, { Configuration } from 'webpack'
+import CssExtractPlugin from 'mini-css-extract-plugin'
 
 interface RunCommonArguments extends Arguments, ElementRunArguments {}
 
@@ -106,21 +108,64 @@ const cmd: CommandModule = {
 				root = join(dirname(configFile), 'reports')
 			}
 
-			const dateString = sanitize(new Date().toISOString())
-			const reportPath = resolve(root, dateString)
-			const env = YoEnv.createEnv()
+			const reportRoot = '../../templates/report/'
+			const webpackConfig: Configuration = {
+				entry: resolve(__dirname, reportRoot, 'script.ts'),
+				mode: 'production',
+				target: 'web',
+				output: {
+					path: resolve(__dirname, reportRoot),
+					filename: './script.js',
+					globalObject: 'this',
+					libraryTarget: 'umd',
+				},
+				resolve: {
+					extensions: ['.ts', '.scss'],
+				},
+				module: {
+					rules: [
+						{
+							test: /\.ts$/,
+							loader: require.resolve('ts-loader'),
+							options: {
+								onlyCompileBundledFiles: true,
+								compilerOptions: {
+									module: 'commonjs',
+									target: 'es5',
+								},
+							},
+						},
+						{
+							test: /\.scss$/i,
+							use: [CssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+						},
+					],
+				},
+				plugins: [new CssExtractPlugin({ filename: 'styles.css' })],
+			}
 
-			env.registerStub(ReportGenerator as any, 'report-generator')
-			env.run(
-				['report-generator'],
-				{
-					data: JSON.stringify(result, null, '\t'),
-					dir: reportPath,
-				},
-				() => {
-					console.log(`Your report has been saved in ${reportPath}`)
-				},
-			)
+			webpack(webpackConfig).run(error => {
+				if (error) {
+					console.log(error)
+					return
+				}
+				const dateString = sanitize(new Date().toISOString())
+				const reportPath = resolve(root, dateString)
+				const env = YoEnv.createEnv()
+
+				env.registerStub(ReportGenerator as any, 'report-generator')
+				env.run(
+					['report-generator'],
+					{
+						data: JSON.stringify(result, null, '\t'),
+						dir: reportPath,
+						force: true,
+					},
+					() => {
+						console.log(`Your report has been saved in ${reportPath}`)
+					},
+				)
+			})
 		}
 	},
 	builder(yargs: Argv): Argv {

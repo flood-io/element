@@ -1,0 +1,257 @@
+$passed-color: #1bc59b;
+$failed-color: #f56565;
+$skipped-color: #f6e05e;
+$unexecuted-color: #cbd5e0;
+
+html {
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+.logo {
+	display: flex;
+	align-items: center;
+	margin-bottom: 5rem;
+
+	& > img {
+		width: 3rem;
+		height: 3rem;
+	}
+
+	& > span {
+		margin-left: 0.5rem;
+		font-size: 1.5rem;
+		font-weight: bold;
+	}
+}
+
+.title {
+	font-size: 2.5rem;
+	color: #5e90ee;
+	text-align: center;
+	margin-bottom: 5rem;
+}
+
+.execution-info {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 7rem;
+
+	& > div {
+		display: flex;
+		flex-direction: column;
+	}
+}
+
+.separator {
+	border: 1px dashed #d9d9e2;
+	margin-bottom: 2rem;
+}
+
+.info-property {
+	font-weight: bold;
+}
+
+.info-data {
+	font-style: italic;
+}
+
+.section-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+
+	& > * {
+		flex: 1;
+	}
+
+	& > .header-title {
+		font-size: 2rem;
+	}
+
+	& > .filter {
+		display: flex;
+		align-items: flex-end;
+		justify-content: flex-end;
+		
+		& > div + div {
+			margin-left: 3rem;
+		}
+	}
+}
+
+.summary-view-switch {
+	display: flex;
+	justify-content: center;
+
+	& > div {
+		display: flex;
+		align-items: center;
+
+		& > input + label {
+			margin-left: 0.25rem;
+		}
+	}
+
+	& > div + div {
+		margin-left: 1rem;
+	}
+
+	& > div label {
+		margin-bottom: 0;
+	}
+}
+
+.chart-legend {
+	display: flex;
+	justify-content: space-between;
+}
+
+.chart-legend-item {
+	display: flex;
+	align-items: center;
+
+	& + & {
+		margin-left: 2rem;
+	}
+
+	& > span {
+		margin-left: 0.25rem;
+	}
+
+	& > div {
+		width: 1rem;
+		height: 1rem;
+	}
+
+	& > .passed {
+		background-color: $passed-color;
+	}
+
+	& > .failed {
+		background-color: $failed-color;
+	}
+
+	& > .skipped {
+		background-color: $skipped-color;
+	}
+
+	& > .unexecuted {
+		background-color: $unexecuted-color;
+	}
+}
+
+.table {
+	width: 100%;
+	border: 1px solid #d9d9e2;
+	border-collapse: collapse;
+	margin-top: 1rem;
+	margin-bottom: 5rem;
+
+	th {
+		border: 1px solid #d9d9e2;
+		background-color: #ebedf3;
+		padding: 0.75rem;
+	}
+
+	td {
+		text-align: center;
+		border: 1px solid #d9d9e2;
+		vertical-align: middle;
+		padding: 0;
+	}
+
+	a {
+		text-decoration: none;
+	}
+}
+
+.summary-result {
+	display: flex;
+	justify-content: stretch;
+	margin: 0.25rem;
+	border-radius: 0.25rem;
+
+	& > div {
+		padding: 0.25rem 0;
+	}
+
+	& > .passed {
+		background-color: $passed-color;
+	}
+
+	& > .failed {
+		background-color: $failed-color;
+	}
+
+	& > .skipped {
+		background-color: $skipped-color;
+	}
+
+	& > .unexecuted {
+		background-color: $unexecuted-color;
+	}
+}
+
+.unexecuted-script td {
+	padding: 0.5rem;
+}
+
+.script-with-error {
+	color: #b0b0ae;
+}
+
+.script-detail {
+	margin-top: 1rem;
+}
+
+.script-detail table {
+	margin-bottom: 3rem;
+}
+
+.script-detail table td {
+	padding: 0.5rem;
+}
+
+.step-name {
+	text-align: left !important;
+}
+
+.step-result {
+	text-transform: capitalize;
+
+	&.passed {
+		color: $passed-color;
+	}
+
+	&.failed {
+		color: $failed-color;
+	}
+
+	&.skipped {
+		color: $skipped-color;
+	}
+
+	&.unexecuted {
+		color: $unexecuted-color;
+	}
+}
+
+.custom-checkbox.checkbox-passed .custom-control-input:checked ~ .custom-control-label::before {
+	border-color: $passed-color;
+	background-color: $passed-color;
+}
+
+.custom-checkbox.checkbox-failed .custom-control-input:checked ~ .custom-control-label::before {
+	border-color: $failed-color;
+	background-color: $failed-color;
+}
+
+.custom-checkbox.checkbox-unexecuted .custom-control-input:checked ~ .custom-control-label::before {
+	border-color: $unexecuted-color;
+	background-color: $unexecuted-color;
+}
+
+.custom-checkbox.checkbox-skipped .custom-control-input:checked ~ .custom-control-label::before {
+	border-color: $skipped-color;
+	background-color: $skipped-color;
+}

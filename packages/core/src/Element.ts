@@ -11,6 +11,7 @@ import { ElementResult } from './ElementResult'
 
 export async function runSingleTestScript(opts: ElementOptions): Promise<IterationResult[]> {
 	const { testScript, clientFactory } = opts
+	const browserTypes = ['chromium', 'firefox', 'webkit']
 
 	// TODO proper types for args
 	let runnerClass: { new (...args: any[]): IRunner }
@@ -30,7 +31,7 @@ export async function runSingleTestScript(opts: ElementOptions): Promise<Iterati
 			headless: opts.headless,
 			devtools: opts.devtools,
 			sandbox: opts.sandbox,
-			browser: opts.browser,
+			browser: browserTypes.includes(opts.browser) ? opts.browser : 'chromium',
 			debug: opts.verbose,
 		},
 		opts.testObserverFactory,

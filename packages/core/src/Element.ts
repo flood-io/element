@@ -24,6 +24,7 @@ export async function runSingleTestScript(opts: ElementOptions): Promise<Iterati
 		clientFactory || launch,
 		opts.testCommander,
 		opts.reporter,
+		opts.testSettings,
 		opts.testSettingOverrides,
 		{
 			headless: opts.headless,
@@ -71,6 +72,7 @@ export async function runCommandLine(args: ElementRunArguments): Promise<TestRes
 		console.group(chalk('Running', fileTitle))
 		const opts = normalizeElementOptions(args, cache)
 		elementResult.addExecutionInfo(opts, isConfig)
+
 		try {
 			const iterationResult = await runSingleTestScript(opts)
 			elementResult.addTestScript(args.file, iterationResult)
@@ -82,11 +84,13 @@ export async function runCommandLine(args: ElementRunArguments): Promise<TestRes
 	}
 
 	if (args.testFiles) {
-		console.log(
-			chalk.grey(
-				'The following test scripts that matched the testPathMatch pattern are going to be executed:',
-			),
-		)
+		if (!args.runArgs?.file) {
+			console.log(
+				chalk.grey(
+					'The following test scripts that matched the testPathMatch pattern are going to be executed:',
+				),
+			)
+		}
 		let order = 0
 		const numberOfFile = args.testFiles.length
 		for (const file of args.testFiles) {
@@ -104,9 +108,6 @@ export async function runCommandLine(args: ElementRunArguments): Promise<TestRes
 			await prepareAndRunTestScript(fileTitle, arg, cache, elementResult, true)
 		}
 		console.log(chalk.grey('Test running with the config file has finished'))
-	} else {
-		const fileTitle = chalk.grey(`${args.file} (1 of 1)`)
-		await prepareAndRunTestScript(fileTitle, args, cache, elementResult, false)
 	}
 
 	if (args.notExistingFiles) {

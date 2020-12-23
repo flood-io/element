@@ -1,6 +1,5 @@
 import Interceptor from '../network/Interceptor'
 import { Browser } from './Browser'
-
 import { EmptyReporter, IReporter, Status, StepResult } from '@flood/element-report'
 import { ObjectTrace } from '../utils/ObjectTrace'
 
@@ -14,15 +13,17 @@ import {
 	Context,
 	NetworkRecordingTestObserver,
 } from './test-observers'
-
 import { AnyErrorData, EmptyErrorData, AssertionErrorData } from './errors/Types'
-
 import { Step, StepRecoveryObject } from './Step'
 import { Looper } from '../Looper'
-
 import { CancellationToken } from '../utils/CancellationToken'
-
-import { TestSettings, ConcreteTestSettings, DEFAULT_STEP_WAIT_MILLISECONDS } from './Settings'
+import {
+	TestSettings,
+	ConcreteTestSettings,
+	DEFAULT_STEP_WAIT_MILLISECONDS,
+	normalizeSettings,
+	DEFAULT_SETTINGS,
+} from './Settings'
 import { ITest } from '../interface/ITest'
 import { EvaluatedScriptLike } from './EvaluatedScriptLike'
 import { PlaywrightClientLike } from '../driver/Playwright'
@@ -61,6 +62,7 @@ export default class Test implements ITest {
 		public client: PlaywrightClientLike,
 		public script: EvaluatedScriptLike,
 		public reporter: IReporter = new EmptyReporter(),
+		settingsFromConfig: TestSettings,
 		settingsOverride: TestSettings,
 		public testObserverFactory: (t: TestObserver) => TestObserver = x => x,
 	) {
@@ -68,7 +70,13 @@ export default class Test implements ITest {
 
 		try {
 			const { settings, steps, recoverySteps, hook } = script
-			this.settings = settings as ConcreteTestSettings
+
+			this.settings = normalizeSettings({
+				...DEFAULT_SETTINGS,
+				...settingsFromConfig,
+				...settings,
+				...settingsOverride,
+			}) as ConcreteTestSettings
 			this.steps = steps
 			this.recoverySteps = recoverySteps
 			this.hook = hook
@@ -80,7 +88,6 @@ export default class Test implements ITest {
 			throw this.script.maybeLiftError(err)
 		}
 
-		Object.assign(this.settings, settingsOverride)
 		this.requestInterceptor = new Interceptor(this.settings.blockedDomains || [])
 	}
 

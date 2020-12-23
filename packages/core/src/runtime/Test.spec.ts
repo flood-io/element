@@ -25,7 +25,7 @@ const setupTest = async (scriptName: string) => {
 	writeFileSync(tmpFile, testScriptFile)
 
 	const script = await EvaluatedScript.mustCompileFile(tmpFile, runEnv)
-	const test = new Test(playwright, script, testReporter, {})
+	const test = new Test(playwright, script, testReporter, {}, {})
 
 	await test.beforeRun()
 	return test
@@ -55,7 +55,7 @@ describe('Test', () => {
 			userAgent: '',
 			clearCookies: true,
 			duration: -1,
-			loopCount: Infinity,
+			loopCount: -1,
 			name: 'Example Test',
 			description: 'This is an example test',
 			screenshotOnFailure: false,

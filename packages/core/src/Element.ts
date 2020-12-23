@@ -1,4 +1,4 @@
-import { launch } from './driver/Playwright'
+import { ConcreteLaunchOptions, launch } from './driver/Playwright'
 import { IRunner, Runner, PersistentRunner } from './Runner'
 import { mustCompileFile } from './TestScript'
 import { TestScriptOptions } from './TestScriptOptions'
@@ -31,22 +31,19 @@ export async function runSingleTestScript(opts: ElementOptions): Promise<Iterati
 		runnerClass = Runner
 	}
 
-	const launchOptionOverrides = {
+	const launchOptionOverrides: Partial<ConcreteLaunchOptions> = {
 		headless,
 		devtools,
 		sandbox,
 		browser: browserTypes.includes(browser) ? browser : 'chromium',
 		debug: verbose,
-		executablePath,
-		downloadsPath,
 	}
 
-	if (!executablePath) {
-		delete launchOptionOverrides.executablePath
+	if (executablePath) {
+		launchOptionOverrides.executablePath = executablePath
 	}
-
-	if (!downloadsPath) {
-		delete launchOptionOverrides.downloadsPath
+	if (downloadsPath) {
+		launchOptionOverrides.downloadsPath = downloadsPath
 	}
 
 	const runner = new runnerClass(

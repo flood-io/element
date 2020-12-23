@@ -49,8 +49,6 @@ export async function runSingleTestScript(opts: ElementOptions): Promise<Iterati
 		delete launchOptionOverrides.downloadsPath
 	}
 
-	console.log(launchOptionOverrides)
-
 	const runner = new runnerClass(
 		clientFactory || launch,
 		opts.testCommander,

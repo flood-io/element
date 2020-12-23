@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.12](https://github.com/flood-io/element/compare/v2.0.0-canary.11...v2.0.0-canary.12) (2020-12-23)
+
+
+### Bug Fixes
+
+* handle when user specifies both fast-forward and slow-mo are true ([0869892](https://github.com/flood-io/element/commit/08698926bb6d88813e9571b0af540901c3a964f2))
+
+
+### Features
+
+* handle launchOptionOverrides ([2351512](https://github.com/flood-io/element/commit/235151262a945d5650300fa7b0d4e4a258b5f836))
+* re-organize priority of settings (CLI > Test Scripts > Config) ([f3eb374](https://github.com/flood-io/element/commit/f3eb37431aa70015a8f7148d3f6feabef6a7eef2))
+* refactor code and handle when run with verbose mode ([46e2eca](https://github.com/flood-io/element/commit/46e2eca5fa029bcd5f48ae8c594c0beab3b2d31c))
+* resolve comment on github ([c1c29d8](https://github.com/flood-io/element/commit/c1c29d88deb8a1dc897965d2d40029f0752896b0))
+* update args from run single and multiple files ([7ac0c48](https://github.com/flood-io/element/commit/7ac0c48298322223523d1ecfcae578b96991b2ea))
+* update element.config.js template ([aef6b92](https://github.com/flood-io/element/commit/aef6b92039bf9d37be0a5904a9482e3593735f69))
+
+
+
+
+
 # [2.0.0-canary.11](https://github.com/flood-io/element/compare/v2.0.0-canary.10...v2.0.0-canary.11) (2020-12-15)
 
 **Note:** Version bump only for package @flood/element-cli

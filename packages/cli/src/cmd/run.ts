@@ -114,25 +114,11 @@ const cmd: CommandModule = {
 	},
 	builder(yargs: Argv): Argv {
 		return yargs
-			.option('chrome', {
-				group: 'Browser:',
-				describe:
-					'Specify which version of Google Chrome to use. Default: use the puppeteer bundled version. stable: ',
-				coerce: chrome => {
-					// [not specified] => undefined => use test script value
-					// --chrome => override to 'stable'
-					// --chrome string => override to <string>
-					let chromeVersion: string | undefined
-					if (typeof chrome === 'boolean') {
-						if (chrome) {
-							chromeVersion = 'stable'
-						}
-					} else {
-						chromeVersion = chrome
-					}
-
-					return chromeVersion
-				},
+			.option('browser', {
+				group: 'Browser',
+				type: 'string',
+				default: 'chromium',
+				describe: `Sets the browser type used to run the test, using one of the 3 bundled browsers: 'chromium', 'firefox' and 'webkit'.`,
 			})
 			.option('browser-type', {
 				group: 'Browser:',
@@ -186,10 +172,6 @@ const cmd: CommandModule = {
 					'Override the loopCount setting in the test script. This is normally overridden to 1 when running via the cli.',
 				type: 'number',
 			})
-			.option('strict', {
-				group: 'Running the test script:',
-				describe: 'Compile the script in strict mode. This can be helpful in diagnosing problems.',
-			})
 			.option('work-root', {
 				group: 'Paths:',
 				describe:
@@ -199,6 +181,18 @@ const cmd: CommandModule = {
 				group: 'Paths:',
 				describe:
 					'Specify a custom path to find test data files. (Default: the same directory as the test script)',
+			})
+			.option('executable-path', {
+				group: 'Paths',
+				type: 'string',
+				describe:
+					'Path to the installation folder of a custom browser based on Chromium. If set, Element will ignore the browser setting and use this custom browser instead.',
+			})
+			.option('downloads-path', {
+				group: 'Paths',
+				type: 'string',
+				describe:
+					'If specified, accepted downloads are downloaded into this directory. Otherwise, a temporary directory is created and is deleted when browser is closed.',
 			})
 			.option('verbose', {
 				describe: 'Verbose mode',

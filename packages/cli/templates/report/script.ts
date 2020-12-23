@@ -58,9 +58,13 @@ function renderIterationResult(
 	}
 	const totalSteps = iteration.stepResults.length
 
-	function getShowValue(result: number) {
-		if (isViewingNumber) return result
-		return (result * 100) / totalSteps
+	function getPercentString(value: number): string {
+		return value.toLocaleString(undefined, { style: 'percent', maximumFractionDigits: 2 })
+	}
+
+	function getShowValue(result: number): string {
+		if (isViewingNumber) return result + ''
+		return getPercentString(result / totalSteps)
 	}
 
 	iteration.stepResults.forEach(function(step) {

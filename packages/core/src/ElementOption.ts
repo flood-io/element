@@ -239,16 +239,16 @@ export function normalizeElementOptions(
 	}
 
 	if (runArgs?.file) {
-		const { loopCount, duration, executablePath, downloadsPath } = runArgs
+		const { loopCount, duration } = runArgs
 		if (loopCount !== undefined) opts.testSettingOverrides.loopCount = loopCount
 		if (duration !== undefined) opts.testSettingOverrides.duration = duration
-		opts.headless = !!runArgs.headless ?? opts.headless
-		opts.devtools = !!runArgs.devtools ?? opts.devtools
-		opts.sandbox = !!runArgs.sandbox ?? opts.sandbox
-		opts.export = !!runArgs.export ?? opts.export
+		opts.headless = runArgs.headless ?? opts.headless
+		opts.devtools = runArgs.devtools ?? opts.devtools
+		opts.sandbox = runArgs.sandbox ?? opts.sandbox
+		opts.export = runArgs.export ?? opts.export
 		opts.browser = runArgs.browser ?? opts.browser
-		if (executablePath !== undefined) opts.executablePath = executablePath
-		if (downloadsPath !== undefined) opts.downloadsPath = downloadsPath
+		opts.executablePath = runArgs.executablePath ?? opts.executablePath
+		opts.downloadsPath = runArgs.downloadsPath ?? opts.downloadsPath
 	}
 
 	opts.testSettingOverrides = setupDelayOverrides(args, opts.testSettingOverrides)

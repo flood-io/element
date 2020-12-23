@@ -10,7 +10,17 @@ import { EventEmitter } from 'events'
 import { ElementResult } from './ElementResult'
 
 export async function runSingleTestScript(opts: ElementOptions): Promise<IterationResult[]> {
-	const { testScript, clientFactory } = opts
+	const {
+		testScript,
+		clientFactory,
+		headless,
+		devtools,
+		sandbox,
+		verbose,
+		browser,
+		executablePath,
+		downloadsPath,
+	} = opts
 	const browserTypes = ['chromium', 'firefox', 'webkit']
 
 	// TODO proper types for args
@@ -21,19 +31,33 @@ export async function runSingleTestScript(opts: ElementOptions): Promise<Iterati
 		runnerClass = Runner
 	}
 
+	const launchOptionOverrides = {
+		headless,
+		devtools,
+		sandbox,
+		browser: browserTypes.includes(browser) ? browser : 'chromium',
+		debug: verbose,
+		executablePath,
+		downloadsPath,
+	}
+
+	if (!executablePath) {
+		delete launchOptionOverrides.executablePath
+	}
+
+	if (!downloadsPath) {
+		delete launchOptionOverrides.downloadsPath
+	}
+
+	console.log(launchOptionOverrides)
+
 	const runner = new runnerClass(
 		clientFactory || launch,
 		opts.testCommander,
 		opts.reporter,
 		opts.testSettings,
 		opts.testSettingOverrides,
-		{
-			headless: opts.headless,
-			devtools: opts.devtools,
-			sandbox: opts.sandbox,
-			browser: browserTypes.includes(opts.browser) ? opts.browser : 'chromium',
-			debug: opts.verbose,
-		},
+		launchOptionOverrides,
 		opts.testObserverFactory,
 	)
 

@@ -81,7 +81,7 @@
 								type="checkbox"
 								class="custom-control-input"
 								id="filter-passed"
-								onclick=""
+								onclick="filterDetail(data.testScripts, 'passed')"
 								checked
 							/>
 							<label for="filter-passed" class="custom-control-label">Passed</label>
@@ -91,7 +91,7 @@
 								type="checkbox"
 								class="custom-control-input"
 								id="filter-failed"
-								onclick=""
+								onclick="filterDetail(data.testScripts, 'failed')"
 								checked
 							/>
 							<label for="filter-failed" class="custom-control-label">Failed</label>
@@ -101,7 +101,7 @@
 								type="checkbox"
 								class="custom-control-input"
 								id="filter-skipped"
-								onclick=""
+								onclick="filterDetail(data.testScripts, 'skipped')"
 								checked
 							/>
 							<label for="filter-skipped" class="custom-control-label">Skipped</label>
@@ -111,7 +111,7 @@
 								type="checkbox"
 								class="custom-control-input"
 								id="filter-unexecuted"
-								onclick=""
+								onclick="filterDetail(data.testScripts, 'unexecuted')"
 								checked
 							/>
 							<label for="filter-unexecuted" class="custom-control-label">Unexecuted</label>

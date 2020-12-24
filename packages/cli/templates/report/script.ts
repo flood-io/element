@@ -27,6 +27,7 @@ type IterationResult = {
 	duration: Milliseconds
 	stepResults: Array<StepResult>
 }
+
 type Status = 'passed' | 'failed' | 'skipped' | 'unexecuted'
 
 type StepResult = {
@@ -36,6 +37,13 @@ type StepResult = {
 	duration?: Milliseconds
 }
 
+const filter = {
+	passed: true,
+	failed: true,
+	skipped: true,
+	unexecuted: true,
+}
+
 export function getTimeString(ms: number) {
 	if (ms < 1000) return `${ms}ms`
 	const s = Math.floor(ms / 1000)
@@ -43,6 +51,33 @@ export function getTimeString(ms: number) {
 	const m = Math.floor(s / 60)
 	if (m < 60) return `${m}m ${s % 60}s`
 	return `${Math.floor(m / 60)}h ${m % 60}m`
+}
+
+export function renderExecutionInfo(info: ExecutionInfo) {
+	document.writeln(`
+    <div class="execution-info">
+      <div>
+        <div class="info-property">Execution Mode</div>
+        <div class="info-property">Execution Date</div>
+        <div class="info-property">Duration</div>
+      </div>
+			<div>
+				<div class="info-data">${info.mode}</div>
+        <div class="info-data">${info.time}</div>
+        <div class="info-data">${getTimeString(info.duration)}</div>
+      </div>
+      <div>
+				<div class="info-property">Operation System</div>
+				<div class="info-property">Node Version</div>
+        <div class="info-property">Element Version</div>
+      </div>
+      <div>
+				<div class="info-data">${info.os}</div>
+				<div class="info-data">${info.nodeVersion}</div>
+				<div class="info-data">${info.elementVersion}</div>
+      </div>
+    </div>
+  `)
 }
 
 function renderIterationResult(
@@ -110,7 +145,7 @@ function renderIterationResult(
 
 function renderScriptWithError(scripts: ScriptWithError[]) {
 	return scripts
-		.map(function(script) {
+		.map(script => {
 			return `
         <tr class="unexecuted-script">
           <td class="script-with-error">${script.name}</td>
@@ -124,7 +159,7 @@ function renderScriptWithError(scripts: ScriptWithError[]) {
 
 function renderExecutedScripts(scripts: TestScriptResult[], isViewingNumber: boolean) {
 	return scripts
-		.map(function(script) {
+		.map(script => {
 			const iterations = script.iterationResults
 
 			return `
@@ -134,7 +169,7 @@ function renderExecutedScripts(scripts: TestScriptResult[], isViewingNumber: boo
         </tr>
         ${iterations
 					.slice(1)
-					.map(function(iteration, index) {
+					.map((iteration, index) => {
 						return `<tr>${renderIterationResult(iteration, index + 2, isViewingNumber)}</tr>`
 					})
 					.join('')}
@@ -179,33 +214,6 @@ export function toggleSummaryView(
 	}
 }
 
-export function renderExecutionInfo(info: ExecutionInfo) {
-	document.writeln(`
-    <div class="execution-info">
-      <div>
-        <div class="info-property">Execution Mode</div>
-        <div class="info-property">Execution Date</div>
-        <div class="info-property">Duration</div>
-      </div>
-			<div>
-				<div class="info-data">${info.mode}</div>
-        <div class="info-data">${info.time}</div>
-        <div class="info-data">${getTimeString(info.duration)}</div>
-      </div>
-      <div>
-				<div class="info-property">Operation System</div>
-				<div class="info-property">Node Version</div>
-        <div class="info-property">Element Version</div>
-      </div>
-      <div>
-				<div class="info-data">${info.os}</div>
-				<div class="info-data">${info.nodeVersion}</div>
-				<div class="info-data">${info.elementVersion}</div>
-      </div>
-    </div>
-  `)
-}
-
 export function renderSummary(
 	executedScrips: TestScriptResult[],
 	unexecutedScript: ScriptWithError[],
@@ -240,8 +248,12 @@ function renderStepDetail(step: StepResult) {
 function renderDetailData(iterations: IterationResult[]) {
 	return `
     ${iterations
-			.map(function(iteration, index) {
-				const steps = iteration.stepResults
+			.map((iteration, index) => {
+				const steps = iteration.stepResults.filter(step => filter[step.status])
+
+				if (steps.length === 0) {
+					return ''
+				}
 
 				return `
         <tr>
@@ -257,7 +269,7 @@ function renderDetailData(iterations: IterationResult[]) {
         </tr>
         ${steps
 					.slice(1)
-					.map(function(step) {
+					.map(step => {
 						return `<tr>${renderStepDetail(step)}</tr>`
 					})
 					.join('')}
@@ -268,21 +280,28 @@ function renderDetailData(iterations: IterationResult[]) {
 }
 
 function renderDetail(script: TestScriptResult) {
-	document.writeln(`
-    <div id=${script.name} class="script-detail">
-      <i>${script.name} (${getTimeString(script.duration)})</i>
-      <table class="table">
-        ${renderDetailHeader()}
-        ${renderDetailData(script.iterationResults)}
-      </table>
-    </div>
-  `)
+	const detailTable = document.getElementById(script.name)
+	const detailHTML = `
+		<i>${script.name} (${getTimeString(script.duration)})</i>
+		<table class="table">
+			${renderDetailHeader()}
+			${renderDetailData(script.iterationResults)}
+		</table>
+	`
+	if (detailTable) {
+		detailTable.innerHTML = detailHTML
+	}
 }
 
 export function renderScriptsDetail(scripts: TestScriptResult[]) {
-	return `
-    ${scripts.forEach(function(script) {
-			return renderDetail(script)
-		})}
-  `
+	scripts.forEach(script => {
+		document.writeln(`<div id=${script.name} class="script-detail"></div>`)
+		renderDetail(script)
+	})
+}
+
+export function filterDetail(scripts: TestScriptResult[], filterKey: keyof typeof filter) {
+	filter[filterKey] = !filter[filterKey]
+	console.log(scripts)
+	scripts.forEach(script => renderDetail(script))
 }

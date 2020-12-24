@@ -3,7 +3,6 @@ import { mustCompileFile } from '../TestScript'
 import { ITestScript } from '../interface/ITestScript'
 import { join } from 'path'
 import testRunEnv from '../../tests/support/test-run-env'
-import { DEFAULT_SETTINGS, normalizeSettings } from './Settings'
 
 let vmFeaturesTestScript: ITestScript
 let noSettingsTestScript: ITestScript
@@ -30,43 +29,20 @@ describe('EvaluatedScript', () => {
 	})
 
 	describe('evaluate', () => {
-		test('returns default test settings', async () => {
-			const script = new EvaluatedScript(runEnv, ensureDefined(noSettingsTestScript))
-			const { settings } = script
-			const defaultSettings: any = normalizeSettings(DEFAULT_SETTINGS)
-
-			expect(settings.name).toBe('Empty test for evaluating defaults')
-			expect(settings.description).toBe('Use this in the test environment.')
-			expect(settings.duration).toBe(defaultSettings.duration)
-			expect(settings.loopCount).toBe(defaultSettings.loopCount)
-			expect(settings.actionDelay).toBe(defaultSettings.actionDelay)
-			expect(settings.stepDelay).toBe(defaultSettings.stepDelay)
-			expect(settings.screenshotOnFailure).toBe(defaultSettings.screenshotOnFailure)
-			expect(settings.clearCookies).toBe(defaultSettings.clearCookies)
-			expect(settings.waitTimeout).toBe(defaultSettings.waitTimeout)
-			expect(settings.responseTimeMeasurement).toBe(defaultSettings.responseTimeMeasurement)
-			expect(settings.userAgent).toBe(defaultSettings.userAgent)
-			expect(settings.device).toBe(defaultSettings.device)
-			expect(settings.ignoreHTTPSErrors).toBe(defaultSettings.ignoreHTTPSErrors)
-		})
-
 		test('captures test settings', async () => {
 			const { settings, steps } = new EvaluatedScript(runEnv, ensureDefined(vmFeaturesTestScript))
 
 			expect(settings.name).toBe('Test Script for evaluating VM features')
 			expect(settings.description).toBe('Use this in the test environment.')
-			expect(settings.duration).toBe(30e3)
-			expect(settings.waitTimeout).toBe(5000)
+			expect(settings.duration).toBe('30s')
 			expect(settings.userAgent).toBe('I AM ROBOT')
-			expect(settings.ignoreHTTPSError).toBe(false)
 
 			expect(steps.map(step => step.name)).toEqual(['Step 1', 'Step 2', 'Step 3'])
 		})
 
 		test('allows overriding settings per step', async () => {
-			const { settings, steps } = new EvaluatedScript(runEnv, vmFeaturesTestScript)
+			const { steps } = new EvaluatedScript(runEnv, vmFeaturesTestScript)
 
-			expect(settings.waitTimeout).toBe(5000)
 			expect(steps[0].options).toEqual({ waitTimeout: 60000 })
 
 			// TODO move to Test.spec ?

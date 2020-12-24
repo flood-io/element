@@ -269,7 +269,7 @@ export type RampStage = {
 export const DEFAULT_SETTINGS: ConcreteTestSettings = {
 	waitUntil: false,
 	duration: -1,
-	loopCount: Infinity,
+	loopCount: -1,
 	actionDelay: 2000,
 	stepDelay: 6000,
 	screenshotOnFailure: false,

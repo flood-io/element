@@ -23,7 +23,7 @@ import Test from './Test'
 import { mustCompileFile } from '../TestScript'
 import { TestScriptError, TestScriptErrorMapper, expect } from '@flood/element-report'
 import { ITestScript } from '../interface/ITestScript'
-import { DEFAULT_SETTINGS, ConcreteTestSettings, normalizeSettings, TestSettings } from './Settings'
+import { DEFAULT_SETTINGS, TestSettings } from './Settings'
 import { RuntimeEnvironment } from '../runtime-environment/types'
 
 import { Until } from '../page/Until'
@@ -69,7 +69,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 	public steps: Step[]
 	public hook: Hook
 	public recoverySteps: StepRecoveryObject
-	public settings: ConcreteTestSettings
+	public settings: TestSettings
 
 	private vm: NodeVM
 
@@ -162,7 +162,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 		}
 
 		// establish base settings
-		let rawSettings = DEFAULT_SETTINGS
+		const rawSettings = DEFAULT_SETTINGS
 
 		const ENV = this.runEnv.stepEnv()
 
@@ -174,10 +174,10 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			let options: StepOptions = {}
 
 			if (args.length === 3) {
-				;[name, options, fn] = args
+				[name, options, fn] = args
 				options = normalizeStepOptions(options)
 			} else {
-				;[name, fn] = args
+				[name, fn] = args
 			}
 
 			console.assert(typeof name === 'string', 'Step name must be a string')
@@ -317,18 +317,8 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 
 		this.vm = createVirtualMachine(context, this.script.scriptRoot)
 
-		// manually extract test name and desc from the script
-		rawSettings.name = this.script.testName
-		rawSettings.description = this.script.testDescription
-
 		const result = this.vm.run(this.script.vmScript)
 		debug('eval %O', result)
-
-		// get settings exported from the script
-		const scriptSettings = result.settings
-		if (scriptSettings) {
-			rawSettings = { ...rawSettings, ...scriptSettings }
-		}
 
 		const testFn = expect(result.default, 'Test script must export a default function')
 
@@ -337,10 +327,18 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 		 */
 		testFn.apply(null, [])
 
+		// get settings exported from the script
+		const scriptSettings = result.settings
+		if (scriptSettings) {
+			this.settings = { ...scriptSettings }
+		}
+
 		// layer up the final settings
+		// and manually extract test name and desc from the script
 		this.settings = {
-			...DEFAULT_SETTINGS,
-			...normalizeSettings(rawSettings),
+			...this.settings,
+			name: this.script.testName,
+			description: this.script.testDescription,
 		}
 
 		this.steps = steps

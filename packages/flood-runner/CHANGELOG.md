@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.12](https://github.com/flood-io/element/compare/v2.0.0-canary.11...v2.0.0-canary.12) (2020-12-23)
+
+
+### Features
+
+* handle launchOptionOverrides ([2351512](https://github.com/flood-io/element/commit/235151262a945d5650300fa7b0d4e4a258b5f836))
+* re-organize priority of settings (CLI > Test Scripts > Config) ([f3eb374](https://github.com/flood-io/element/commit/f3eb37431aa70015a8f7148d3f6feabef6a7eef2))
+
+
+
+
+
 # [2.0.0-canary.11](https://github.com/flood-io/element/compare/v2.0.0-canary.10...v2.0.0-canary.11) (2020-12-15)
 
 

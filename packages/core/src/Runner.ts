@@ -44,6 +44,7 @@ export class Runner {
 		private clientFactory: AsyncFactory<PlaywrightClient>,
 		protected testCommander: TestCommander | undefined,
 		private reporter: IReporter,
+		private settingsFromConfig: TestSettings,
 		private testSettingOverrides: TestSettings,
 		private launchOptionOverrides: Partial<ConcreteLaunchOptions>,
 		private testObserverFactory: (t: TestObserver) => TestObserver = x => x,
@@ -72,7 +73,11 @@ export class Runner {
 	}
 
 	async launchClient(testScript: EvaluatedScript): Promise<PlaywrightClient> {
-		const { settings } = testScript
+		const settings = {
+			...this.settingsFromConfig,
+			...testScript.settings,
+			...this.testSettingOverrides,
+		}
 
 		let options: Partial<ConcreteLaunchOptions> = this.launchOptionOverrides
 		options.ignoreHTTPSError = settings.ignoreHTTPSError
@@ -105,6 +110,7 @@ export class Runner {
 				client,
 				testScript,
 				this.reporter,
+				this.settingsFromConfig,
 				this.testSettingOverrides,
 				this.testObserverFactory,
 			)
@@ -131,6 +137,7 @@ export class Runner {
 
 			await this.looper.run(async (iteration: number, isRestart: boolean) => {
 				const iterationName = this.getIterationName(iteration)
+				const numOfIteration = this.looper.loopCount === -1 ? '' : `of ${this.looper.loopCount}`
 				if (isRestart) {
 					if (!this.reporter.worker) {
 						console.log(`Restarting ${iterationName}`)
@@ -144,13 +151,11 @@ export class Runner {
 							console.log(chalk.grey('--------------------------------------------'))
 						}
 						startTime = new Date()
-						console.log(`${chalk.bold('\u25CC')} ${iterationName} of ${this.looper.loopCount}`)
+						console.log(`${chalk.bold('\u25CC')} ${iterationName} ${numOfIteration}`)
 					} else {
 						this.sendReport(
 							JSON.stringify({
-								iterationMsg: `${iterationName} ${
-									this.looper.loopCount !== -1 ? `of ${this.looper.loopCount}` : ''
-								}`,
+								iterationMsg: `${iterationName} ${numOfIteration}`,
 								iteration,
 							}),
 							'iteration',
@@ -262,6 +267,7 @@ export class PersistentRunner extends Runner {
 		clientFactory: AsyncFactory<PlaywrightClient>,
 		testCommander: TestCommander | undefined,
 		reporter: IReporter,
+		testSettings: TestSettings,
 		testSettingOverrides: TestSettings,
 		launchOptionOverrides: Partial<ConcreteLaunchOptions>,
 		testObserverFactory: (t: TestObserver) => TestObserver = x => x,
@@ -270,6 +276,7 @@ export class PersistentRunner extends Runner {
 			clientFactory,
 			testCommander,
 			reporter,
+			testSettings,
 			testSettingOverrides,
 			launchOptionOverrides,
 			testObserverFactory,

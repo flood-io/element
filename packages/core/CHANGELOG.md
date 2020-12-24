@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.12](https://github.com/flood-io/element/compare/v2.0.0-canary.11...v2.0.0-canary.12) (2020-12-23)
+
+
+### Bug Fixes
+
+* change param's name to make it more explicit ([b40c1d1](https://github.com/flood-io/element/commit/b40c1d1c70636772ac6c14d27b0fb716a392031a))
+* change the way show iteration when loopCount is -1 (Infinity) ([74e6fee](https://github.com/flood-io/element/commit/74e6fee48d017aa0e79ed9f14444afd253e654b9))
+* refactor and fix unit test ([be8131a](https://github.com/flood-io/element/commit/be8131a38367e8a3249e0560657f09bf5b6d84d2))
+
+
+### Features
+
+* handle launchOptionOverrides ([2351512](https://github.com/flood-io/element/commit/235151262a945d5650300fa7b0d4e4a258b5f836))
+* re-organize priority of settings (CLI > Test Scripts > Config) ([f3eb374](https://github.com/flood-io/element/commit/f3eb37431aa70015a8f7148d3f6feabef6a7eef2))
+* refactor code and handle when run with verbose mode ([46e2eca](https://github.com/flood-io/element/commit/46e2eca5fa029bcd5f48ae8c594c0beab3b2d31c))
+* update args from run single and multiple files ([7ac0c48](https://github.com/flood-io/element/commit/7ac0c48298322223523d1ecfcae578b96991b2ea))
+* update interface of ElementOptions ([268e723](https://github.com/flood-io/element/commit/268e723dc1c7eb6d0a0e028a6146574cf15622c9))
+
+
+
+
+
 # [2.0.0-canary.11](https://github.com/flood-io/element/compare/v2.0.0-canary.10...v2.0.0-canary.11) (2020-12-15)
 
 

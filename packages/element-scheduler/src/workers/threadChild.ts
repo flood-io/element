@@ -80,7 +80,7 @@ async function execMethod(method: string, args: Array<any>) {
 
 			const startTime = new Date().valueOf()
 			const testScriptE = await testScriptFactory()
-			const runner = new Runner(clientFactory(), undefined, reporter, {}, childSettings)
+			const runner = new Runner(clientFactory(), undefined, reporter, {}, {}, childSettings)
 			await runner.runEvalScript(testScriptE)
 			await runner.stop()
 			const executedTime = new Date().valueOf() - startTime

@@ -7,7 +7,7 @@ import { step, setup, By, Until } from '@flood/element'
  */
 export default function() {
 	setup({
-		loopCount: Infinity,
+		loopCount: -1,
 		actionDelay: '0.5s',
 		stepDelay: '5s',
 	})

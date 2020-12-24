@@ -205,8 +205,8 @@ export function normalizeElementOptions(
 		headless: args.headless ?? true,
 		devtools: args.devtools ?? false,
 		sandbox: args.sandbox ?? true,
-
 		runEnv: initRunEnv(workRootPath, testDataPath, file),
+		testSettings: {},
 		testSettingOverrides: {},
 		persistentRunner: false,
 		failStatusCode: args['fail-status-code'],

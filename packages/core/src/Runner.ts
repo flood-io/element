@@ -73,13 +73,13 @@ export class Runner {
 	}
 
 	async launchClient(testScript: EvaluatedScript): Promise<PlaywrightClient> {
+		let options: Partial<ConcreteLaunchOptions> = this.launchOptionOverrides
 		const settings = {
+			acceptDownloads: !!options.downloadsPath,
 			...this.settingsFromConfig,
 			...testScript.settings,
 			...this.testSettingOverrides,
 		}
-
-		let options: Partial<ConcreteLaunchOptions> = this.launchOptionOverrides
 		options.ignoreHTTPSError = settings.ignoreHTTPSError
 		if (settings.viewport) {
 			options.viewport = settings.viewport

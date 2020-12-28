@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.13](https://github.com/flood-io/element/compare/v2.0.0-canary.12...v2.0.0-canary.13) (2020-12-28)
+
+
+### Bug Fixes
+
+* can run a single test script without the config file ([a042306](https://github.com/flood-io/element/commit/a042306ff512621438c535f6a58089885e42cec8))
+
+
+### Features
+
+* apply the early return pattern ([89e917a](https://github.com/flood-io/element/commit/89e917a76fc8fed9b4df22be8440d1964053472a))
+* refactor code ([47d872d](https://github.com/flood-io/element/commit/47d872dbc42963668394dcbf98e7427ee39009da))
+
+
+
+
+
 # [2.0.0-canary.12](https://github.com/flood-io/element/compare/v2.0.0-canary.11...v2.0.0-canary.12) (2020-12-23)
 
 

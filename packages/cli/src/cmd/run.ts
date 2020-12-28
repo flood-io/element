@@ -23,11 +23,16 @@ interface RunCommonArguments extends Arguments, ElementRunArguments {}
 async function getConfigurationFromConfig(args: RunCommonArguments): Promise<RunCommonArguments> {
 	const { file, configFile, _, $0, mu } = args
 	const fileErr = checkFile(configFile, 'Configuration file')
-	if (fileErr) throw fileErr
-	const configFileFromArgs: ElementConfig = await readConfigFile(configFile)
-	const { options, paths, testSettings } = configFileFromArgs
 	let testFiles: string[]
 	let notExistingFiles: string[]
+
+	if (fileErr) {
+		if (!file) throw fileErr
+		return { ...args, testFiles: [file], notExistingFiles: [] }
+	}
+
+	const configFileFromArgs: ElementConfig = await readConfigFile(configFile)
+	const { options, paths, testSettings } = configFileFromArgs
 
 	if (file) {
 		testFiles = [file]
@@ -68,7 +73,7 @@ const cmd: CommandModule = {
 			if (!file) {
 				console.log(
 					chalk.redBright(
-						`The mode 'running the test with a multiple files' does not support running with multiple users`,
+						`The mode 'running the test with multiple test scripts' does not support running with multiple users`,
 					),
 				)
 				process.exit(0)

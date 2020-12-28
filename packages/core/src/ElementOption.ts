@@ -1,3 +1,4 @@
+import { isCorrectBrowserType } from './utils/BrowserTypes'
 import { IReporter, VerboseReporter, BaseReporter, ReportCache } from '@flood/element-report'
 import { TestCommander } from './Runner'
 import { FloodProcessEnv, RuntimeEnvironment } from './runtime-environment/types'
@@ -214,7 +215,7 @@ export function normalizeElementOptions(
 		testSettingOverrides: {},
 		persistentRunner: false,
 		failStatusCode: args['fail-status-code'],
-		browser: args.browser,
+		browser: isCorrectBrowserType(args.browser) ? args.browser : 'chromium',
 		export: args.export,
 		executablePath: args.executablePath ?? '',
 		downloadsPath: args.downloadsPath ?? '',

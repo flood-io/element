@@ -21,7 +21,6 @@ export async function runSingleTestScript(opts: ElementOptions): Promise<Iterati
 		executablePath,
 		downloadsPath,
 	} = opts
-	const browserTypes = ['chromium', 'firefox', 'webkit']
 
 	// TODO proper types for args
 	let runnerClass: { new (...args: any[]): IRunner }
@@ -35,7 +34,7 @@ export async function runSingleTestScript(opts: ElementOptions): Promise<Iterati
 		headless,
 		devtools,
 		sandbox,
-		browser: browserTypes.includes(browser) ? browser : 'chromium',
+		browser,
 		debug: verbose,
 	}
 

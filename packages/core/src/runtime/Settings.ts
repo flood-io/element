@@ -213,7 +213,7 @@ export interface TestSettings {
 	/**
 	 * Specifies options to launch
 	 */
-	browserLaunchOption?: BrowserLaunchOptions
+	browserLaunchOptions?: BrowserLaunchOptions
 
 	/**
 
@@ -281,7 +281,7 @@ export const DEFAULT_SETTINGS: ConcreteTestSettings = {
 	device: null,
 	ignoreHTTPSError: false,
 	browser: 'chromium',
-	browserLaunchOption: {},
+	browserLaunchOptions: {},
 	blockedDomains: [],
 	incognito: false,
 	name: 'Element Test',

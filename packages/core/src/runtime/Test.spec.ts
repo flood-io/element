@@ -50,7 +50,7 @@ describe('Test', () => {
 			clearCache: false,
 			device: null,
 			browser: 'chromium',
-			browserLaunchOption: {},
+			browserLaunchOptions: {},
 			ignoreHTTPSError: false,
 			userAgent: '',
 			clearCookies: true,

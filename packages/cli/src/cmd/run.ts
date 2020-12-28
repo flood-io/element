@@ -6,7 +6,7 @@ import {
 	runCommandLine as runSingleUser,
 	normalizeElementOptions,
 	ElementOptions,
-	isCorrectBrowserType,
+	checkBrowserType,
 } from '@flood/element-core'
 import { runCommandLine as runMultipleUser } from '@flood/element-scheduler'
 import chalk from 'chalk'
@@ -20,7 +20,7 @@ import { resolve, dirname, basename, extname, join } from 'path'
 
 interface RunCommonArguments extends Arguments, ElementRunArguments {}
 
-async function getConfigurationFromConfig(args: RunCommonArguments): Promise<RunCommonArguments> {
+async function getArgsFromConfig(args: RunCommonArguments): Promise<RunCommonArguments> {
 	const { file, configFile, _, $0, mu } = args
 	const fileErr = checkFile(configFile, 'Configuration file')
 	let testFiles: string[]
@@ -84,21 +84,15 @@ const cmd: CommandModule = {
 			await runMultipleUser(opts)
 			process.exit(0)
 		}
-		const configurationArgs = await getConfigurationFromConfig(args)
+		const configurationArgs = await getArgsFromConfig(args)
 		if (configurationArgs.fastForward && configurationArgs.slowMo) {
 			console.error(chalk.redBright(`Arguments fast-forward and slow-mo are mutually exclusive`))
 			process.exit(0)
 		}
 
-		if (configurationArgs.browser || configurationArgs.runArgs.browser) {
-			const browser = configurationArgs.browser ?? configurationArgs.runArgs.browser
-			if (!isCorrectBrowserType(browser)) {
-				console.warn(
-					chalk.yellowBright(
-						`The browser type must be one of 'chromium', 'firefox', and 'webkit'.\nRunning test scripts with default browser type is 'chromium'.`,
-					),
-				)
-			}
+		if (configurationArgs.browser || configurationArgs.runArgs?.browser) {
+			const browser = configurationArgs.browser ?? configurationArgs.runArgs?.browser
+			checkBrowserType(browser)
 		}
 
 		const result = await runSingleUser(configurationArgs)
@@ -134,7 +128,6 @@ const cmd: CommandModule = {
 			.option('browser', {
 				group: 'Browser',
 				type: 'string',
-				default: 'chromium',
 				describe: `Sets the browser type used to run the test, using one of the 3 bundled browsers: 'chromium', 'firefox' and 'webkit'.`,
 			})
 			.option('no-headless', {

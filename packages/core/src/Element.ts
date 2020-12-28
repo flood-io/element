@@ -8,6 +8,7 @@ import { CustomConsole, IterationResult, ReportCache, TestResult } from '@flood/
 import chalk from 'chalk'
 import { EventEmitter } from 'events'
 import { ElementResult } from './ElementResult'
+import { existsSync } from 'fs'
 
 export async function runSingleTestScript(opts: ElementOptions): Promise<IterationResult[]> {
 	const {
@@ -126,7 +127,8 @@ export async function runCommandLine(args: ElementRunArguments): Promise<TestRes
 			const fileTitle = chalk.grey(`${file} (${order} of ${numberOfFile})`)
 			await prepareAndRunTestScript(fileTitle, arg, cache, elementResult, true)
 		}
-		console.log(chalk.grey('Test running with the config file has finished'))
+		if (existsSync(args.configFile))
+			console.log(chalk.grey('Test running with the config file has finished'))
 	}
 
 	if (args.notExistingFiles) {

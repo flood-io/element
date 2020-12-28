@@ -27,7 +27,7 @@ async function getConfigurationFromConfig(args: RunCommonArguments): Promise<Run
 
 	if (fileErr) {
 		if (file) {
-			return { ...args, testFiles: [file], notExistingFiles: [], runArgs: args }
+			return { ...args, testFiles: [file], notExistingFiles: [] }
 		} else {
 			throw fileErr
 		}

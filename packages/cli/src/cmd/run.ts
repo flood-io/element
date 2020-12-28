@@ -26,12 +26,10 @@ async function getConfigurationFromConfig(args: RunCommonArguments): Promise<Run
 	let notExistingFiles: string[]
 
 	if (fileErr) {
-		if (file) {
-			return { ...args, testFiles: [file], notExistingFiles: [] }
-		} else {
-			throw fileErr
-		}
+		if (!file) throw fileErr
+		return { ...args, testFiles: [file], notExistingFiles: [] }
 	}
+
 	const configFileFromArgs: ElementConfig = await readConfigFile(configFile)
 	const { options, paths, testSettings } = configFileFromArgs
 

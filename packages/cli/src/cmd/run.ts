@@ -6,6 +6,7 @@ import {
 	runCommandLine as runSingleUser,
 	normalizeElementOptions,
 	ElementOptions,
+	isCorrectBrowserType,
 } from '@flood/element-core'
 import { runCommandLine as runMultipleUser } from '@flood/element-scheduler'
 import chalk from 'chalk'
@@ -78,13 +79,24 @@ const cmd: CommandModule = {
 			await runMultipleUser(opts)
 			process.exit(0)
 		}
-		const runArgs = await getConfigurationFromConfig(args)
-		if (runArgs.fastForward && runArgs.slowMo) {
+		const configurationArgs = await getConfigurationFromConfig(args)
+		if (configurationArgs.fastForward && configurationArgs.slowMo) {
 			console.error(chalk.redBright(`Arguments fast-forward and slow-mo are mutually exclusive`))
 			process.exit(0)
 		}
 
-		const result = await runSingleUser(runArgs)
+		if (configurationArgs.browser || configurationArgs.runArgs.browser) {
+			const browser = configurationArgs.browser ?? configurationArgs.runArgs.browser
+			if (!isCorrectBrowserType(browser)) {
+				console.warn(
+					chalk.yellowBright(
+						`The browser type must be one of 'chromium', 'firefox', and 'webkit'.\nRunning test scripts with default browser type is 'chromium'.`,
+					),
+				)
+			}
+		}
+
+		const result = await runSingleUser(configurationArgs)
 
 		if (args.export) {
 			let root: string

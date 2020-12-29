@@ -253,7 +253,7 @@ export interface TestSettings {
 	stages?: RampStage[]
 
 	/**
-	 * show screenshot on terminal (iTerm)
+	 * show screenshot on terminal (iTerm only)
 	 */
 	showScreenshot?: boolean
 }

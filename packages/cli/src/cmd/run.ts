@@ -231,7 +231,7 @@ const cmd: CommandModule = {
 				type: 'boolean',
 			})
 			.option('--show-screenshot', {
-				describe: 'show screenshot image in terminal (iTerm)',
+				describe: 'show screenshot in the terminal (iTerm only)',
 				type: 'boolean',
 			})
 			.fail((msg, err) => {

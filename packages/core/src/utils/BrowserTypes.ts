@@ -10,7 +10,7 @@ export const checkBrowserType = (browser: string): void => {
 	if (!isCorrectBrowserType(browser)) {
 		console.warn(
 			chalk.yellow.bold(
-				`The given browser type '${browser}' must be one in 'chromium', 'firefox', and 'webkit'.\n  Running test scripts with default browser type is 'chromium'.\n`,
+				`'${browser}' is not a valid option for --browser so default browser 'chromium' will be used. Our supported browsers include 'chromium', 'firefox', and 'webkit'`,
 			),
 		)
 	}

@@ -270,7 +270,7 @@ function renderDetailData(iterations: IterationResult[]) {
 				const steps = iteration.stepResults.filter(step => filter[step.status])
 
 				if (steps.length === 0) {
-					return '<tr><td colspan=4>No steps match the filter<td></tr>'
+					return '<tr><td colspan=3>No steps match the filter<td></tr>'
 				}
 
 				return `

@@ -1,4 +1,4 @@
-import { step, TestSettings, Until, By, Browser } from '@flood/element'
+import { step, TestSettings, Until, By, Browser, RecoverWith } from '@flood/element'
 import assert from 'assert'
 export const settings: TestSettings = {
 	loopCount: 1,
@@ -27,7 +27,10 @@ export default () => {
 
 		let element = await browser.findElement(locator)
 		await element.click()
+		assert.strictEqual(element, null)
 	})
+
+	// step.recovery('Flood Challenge: Start', async () => RecoverWith.CONTINUE)
 
 	step('Flood Challenge: Step 1', async (browser: Browser) => {
 		// await browser['waitForNavigationComplete']()
@@ -35,10 +38,12 @@ export default () => {
 
 		await browser.selectByValue(By.id('challenger_age'), '28')
 		let select = await browser.findElement(By.id('challenger_age'))
-		await select.takeScreenshot()
+		// await select.takeScreenshot()
 
 		await browser.click(By.css('input.btn'), { button: 'left', clickCount: 1, delay: 0.5 })
+		// assert.strictEqual(select, null)
 	})
+	// step.recovery('Flood Challenge: Step 1', async () => RecoverWith.CONTINUE)
 
 	step('Flood Challenge: Step 2', async (browser: Browser) => {
 		await browser.wait(Until.elementIsVisible('table tbody tr td:first-of-type label'))
@@ -74,7 +79,7 @@ export default () => {
 		let token = await element.text()
 		await browser.type(By.id('challenger_one_time_token'), token)
 
-		await browser.takeScreenshot()
+		// await browser.takeScreenshot()
 		await browser.click('input.btn')
 	})
 

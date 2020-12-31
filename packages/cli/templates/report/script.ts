@@ -1,40 +1,39 @@
 import './styles.scss'
 
-type Milliseconds = number
-
-type ScriptWithError = {
+interface ScriptWithError {
 	name: string
 	error: string
 }
 
-type ExecutionInfo = {
+interface ExecutionInfo {
 	time: string
-	duration: Milliseconds
+	duration: number
 	mode: string
 	os: string
 	nodeVersion: string
 	elementVersion: string
 }
 
-type TestScriptResult = {
+interface TestScriptResult {
 	name: string
-	duration: Milliseconds
+	duration: number
 	iterationResults: Array<IterationResult>
 }
 
-type IterationResult = {
+interface IterationResult {
 	name: string
-	duration: Milliseconds
+	duration: number
 	stepResults: Array<StepResult>
 }
 
 type Status = 'passed' | 'failed' | 'skipped' | 'unexecuted'
 
-type StepResult = {
+interface StepResult {
 	name: string
 	status: Status
 	subTitle?: string
-	duration?: Milliseconds
+	duration?: number
+	error?: string
 }
 
 const filter = {
@@ -43,6 +42,8 @@ const filter = {
 	skipped: true,
 	unexecuted: true,
 }
+let viewNumber = true
+let showError = false
 
 export function getTimeString(ms: number) {
 	if (ms < 1000) return `${ms}ms`
@@ -80,11 +81,7 @@ export function renderExecutionInfo(info: ExecutionInfo) {
   `)
 }
 
-function renderIterationResult(
-	iteration: IterationResult,
-	index: number,
-	isViewingNumber: boolean,
-) {
+function renderIterationResult(iteration: IterationResult, index: number) {
 	const result = {
 		passed: 0,
 		failed: 0,
@@ -98,7 +95,7 @@ function renderIterationResult(
 	}
 
 	function getShowValue(result: number): string {
-		if (isViewingNumber) return result + ''
+		if (viewNumber) return result + ''
 		return getPercentString(result / totalSteps)
 	}
 
@@ -157,7 +154,7 @@ function renderScriptWithError(scripts: ScriptWithError[]) {
 		.join('')
 }
 
-function renderExecutedScripts(scripts: TestScriptResult[], isViewingNumber: boolean) {
+function renderExecutedScripts(scripts: TestScriptResult[]) {
 	return scripts
 		.map(script => {
 			const iterations = script.iterationResults
@@ -165,12 +162,12 @@ function renderExecutedScripts(scripts: TestScriptResult[], isViewingNumber: boo
 			return `
         <tr>
           <td rowspan=${iterations.length || 1}><a href="#${script.name}">${script.name}</a></td>
-          ${renderIterationResult(iterations[0], 1, isViewingNumber)}
+          ${renderIterationResult(iterations[0], 1)}
         </tr>
         ${iterations
 					.slice(1)
 					.map((iteration, index) => {
-						return `<tr>${renderIterationResult(iteration, index + 2, isViewingNumber)}</tr>`
+						return `<tr>${renderIterationResult(iteration, index + 2)}</tr>`
 					})
 					.join('')}
       `
@@ -188,13 +185,9 @@ function renderSummaryHeader() {
   `
 }
 
-function renderSummaryData(
-	scripts: TestScriptResult[],
-	scriptWithError: ScriptWithError[],
-	isViewingNumber: boolean,
-) {
+function renderSummaryData(scripts: TestScriptResult[], scriptWithError: ScriptWithError[]) {
 	return `
-    ${renderExecutedScripts(scripts, isViewingNumber)}
+    ${renderExecutedScripts(scripts)}
     ${renderScriptWithError(scriptWithError)}
   `
 }
@@ -202,14 +195,15 @@ function renderSummaryData(
 export function toggleSummaryView(
 	executedScrips: TestScriptResult[],
 	unexecutedScript: ScriptWithError[],
-	isViewingNumber: boolean,
 ) {
 	const summaryTable = document.getElementById('table-summary')
+
+	viewNumber = !viewNumber
 
 	if (summaryTable) {
 		summaryTable.innerHTML = `
 			${renderSummaryHeader()}
-			${renderSummaryData(executedScrips, unexecutedScript, isViewingNumber)}
+			${renderSummaryData(executedScrips, unexecutedScript)}
 		`
 	}
 }
@@ -221,7 +215,7 @@ export function renderSummary(
 	document.writeln(`
     <table id="table-summary" class="table">
       ${renderSummaryHeader()}
-      ${renderSummaryData(executedScrips, unexecutedScript, true)}
+      ${renderSummaryData(executedScrips, unexecutedScript)}
     </table>
   `)
 }
@@ -238,8 +232,32 @@ function renderDetailHeader() {
 }
 
 function renderStepDetail(step: StepResult) {
+	function getError() {
+		if (!step.error) return ''
+
+		const errorId = `error-${step.name}`
+		const errorPart1 = step.error.slice(0, 100) || ''
+		const errorPart2 = step.error.slice(100) || ''
+
+		return `<div class="error with-show-more">
+			<input type="checkbox" class="trigger" id="${errorId}" />
+			<p class="wrapper">
+				<span class="always-show-section">${errorPart1}</span>
+				${
+					errorPart2
+						? `<span class="show-more-section">${errorPart2}</span>
+						<label for="${errorId}" class="button"></label>`
+						: ''
+				}
+			</p>
+		</div>`
+	}
+
 	return `
-    <td class="step-name">${step.name}</td>
+		<td class="step-name">
+			<div>${step.name}</div>
+			${showError ? getError() : ''}
+		</td>
     <td class="${step.status} step-result">${step.status}</td>
     <td>${step.duration !== undefined ? `${getTimeString(step.duration)}` : '-'}</td>
   `
@@ -252,7 +270,7 @@ function renderDetailData(iterations: IterationResult[]) {
 				const steps = iteration.stepResults.filter(step => filter[step.status])
 
 				if (steps.length === 0) {
-					return ''
+					return '<tr><td colspan=4>No steps match the filter<td></tr>'
 				}
 
 				return `
@@ -301,7 +319,12 @@ export function renderScriptsDetail(scripts: TestScriptResult[]) {
 }
 
 export function filterDetail(scripts: TestScriptResult[], filterKey: keyof typeof filter) {
+	console.log(showError)
 	filter[filterKey] = !filter[filterKey]
-	console.log(scripts)
+	scripts.forEach(script => renderDetail(script))
+}
+
+export function toggleShowError(scripts: TestScriptResult[]) {
+	showError = !showError
 	scripts.forEach(script => renderDetail(script))
 }

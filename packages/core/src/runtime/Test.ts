@@ -285,6 +285,7 @@ export default class Test implements ITest {
 			status: step.prop?.passed ? Status.PASSED : Status.FAILED,
 			subTitle: step.subTitle,
 			duration: step.duration,
+			error: step.prop?.error,
 		})
 		step.duration = 0
 	}
@@ -370,7 +371,7 @@ export default class Test implements ITest {
 			debug('step error')
 			this.failed = true
 			await testObserver.onStepError(this, step, this.liftToStructuredError(error))
-			step.prop = { passed: false }
+			step.prop = { passed: false, error: error.message }
 		} else {
 			await testObserver.onStepPassed(this, step)
 			step.prop = { passed: true }

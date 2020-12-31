@@ -75,46 +75,57 @@
 				<hr class="separator" />
 				<div class="section-header">
 					<span class="header-title">Details</span>
-					<div class="filter">
-						<div class="custom-checkbox checkbox-passed">
+					<div class="detail-actions">
+						<div class="toggle">
 							<input
+								id="error-toggle"
 								type="checkbox"
-								class="custom-control-input"
-								id="filter-passed"
-								onclick="filterDetail(data.testScripts, 'passed')"
-								checked
+								onclick="toggleShowError(data.testScripts)"
 							/>
-							<label for="filter-passed" class="custom-control-label">Passed</label>
+							<label for="error-toggle"></label>
+							All error messages
 						</div>
-						<div class="custom-checkbox checkbox-failed">
-							<input
-								type="checkbox"
-								class="custom-control-input"
-								id="filter-failed"
-								onclick="filterDetail(data.testScripts, 'failed')"
-								checked
-							/>
-							<label for="filter-failed" class="custom-control-label">Failed</label>
-						</div>
-						<div class="custom-checkbox checkbox-skipped">
-							<input
-								type="checkbox"
-								class="custom-control-input"
-								id="filter-skipped"
-								onclick="filterDetail(data.testScripts, 'skipped')"
-								checked
-							/>
-							<label for="filter-skipped" class="custom-control-label">Skipped</label>
-						</div>
-						<div class="custom-checkbox checkbox-unexecuted">
-							<input
-								type="checkbox"
-								class="custom-control-input"
-								id="filter-unexecuted"
-								onclick="filterDetail(data.testScripts, 'unexecuted')"
-								checked
-							/>
-							<label for="filter-unexecuted" class="custom-control-label">Unexecuted</label>
+						<div class="filter">
+							<div class="custom-checkbox checkbox-passed">
+								<input
+									type="checkbox"
+									class="custom-control-input"
+									id="filter-passed"
+									onclick="filterDetail(data.testScripts, 'passed')"
+									checked
+								/>
+								<label for="filter-passed" class="custom-control-label">Passed</label>
+							</div>
+							<div class="custom-checkbox checkbox-failed">
+								<input
+									type="checkbox"
+									class="custom-control-input"
+									id="filter-failed"
+									onclick="filterDetail(data.testScripts, 'failed')"
+									checked
+								/>
+								<label for="filter-failed" class="custom-control-label">Failed</label>
+							</div>
+							<div class="custom-checkbox checkbox-skipped">
+								<input
+									type="checkbox"
+									class="custom-control-input"
+									id="filter-skipped"
+									onclick="filterDetail(data.testScripts, 'skipped')"
+									checked
+								/>
+								<label for="filter-skipped" class="custom-control-label">Skipped</label>
+							</div>
+							<div class="custom-checkbox checkbox-unexecuted">
+								<input
+									type="checkbox"
+									class="custom-control-input"
+									id="filter-unexecuted"
+									onclick="filterDetail(data.testScripts, 'unexecuted')"
+									checked
+								/>
+								<label for="filter-unexecuted" class="custom-control-label">Unexecuted</label>
+							</div>
 						</div>
 					</div>
 				</div>

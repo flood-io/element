@@ -1,49 +1,49 @@
 .toggle {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
 
-	& > input {
-		display: none;
+  & > input {
+    display: none;
 
-		+ label {
-			width: 2rem;
-			height: 1em;
-			border-radius: 1em;
-			padding: 0.1rem;
-			margin: 0 0.5rem 0 0;
-			cursor: pointer;
-			background: #f0f0f0;
-			transition: all 0.4s ease;
+    + label {
+      width: 2rem;
+      height: 1em;
+      border-radius: 1em;
+      padding: 0.1rem;
+      margin: 0 0.5rem 0 0;
+      cursor: pointer;
+      background: #f0f0f0;
+      transition: all 0.4s ease;
 
-			&:after,
-			&:before {
-				position: relative;
-				display: block;
-				content: '';
-				width: 50%;
-				height: 100%;
-			}
+      &:after,
+      &:before {
+        position: relative;
+        display: block;
+        content: '';
+        width: 50%;
+        height: 100%;
+      }
 
-			&:after {
-				left: 0;
-				border-radius: 50%;
-				background: #ffffff;
-				transition: all 0.4s ease;
-			}
+      &:after {
+        left: 0;
+        border-radius: 50%;
+        background: #ffffff;
+        transition: all 0.4s ease;
+      }
 
-			&:before {
-				display: none;
-			}
-		}
+      &:before {
+        display: none;
+      }
+    }
 
-		&:checked + label {
-			background: #5e90ee;
-		}
+    &:checked + label {
+      background: #5e90ee;
+    }
 
-		&:checked + label:after {
-			left: 50%;
-		}
-	}
+    &:checked + label:after {
+      left: 50%;
+    }
+  }
 }

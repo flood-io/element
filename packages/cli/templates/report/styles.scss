@@ -1,5 +1,5 @@
-@use './toggle.scss';
-@use './show-more.scss';
+@use 'toggle';
+@use 'show-more';
 
 $passed-color: #1bc59b;
 $failed-color: #f56565;
@@ -78,17 +78,13 @@ $unexecuted-color: #cbd5e0;
   align-items: flex-end;
 }
 
-.filter {
-  display: flex;
-
-  & > div + div {
-    margin-left: 3rem;
-  }
-}
-
 .summary-view-switch {
   display: flex;
   justify-content: center;
+
+  & > div label {
+    margin-bottom: 0;
+  }
 
   & > div {
     display: flex;
@@ -102,9 +98,13 @@ $unexecuted-color: #cbd5e0;
   & > div + div {
     margin-left: 1rem;
   }
+}
 
-  & > div label {
-    margin-bottom: 0;
+.filter {
+  display: flex;
+
+  & > div + div {
+    margin-left: 3rem;
   }
 }
 

@@ -45,7 +45,7 @@ const filter = {
 let viewNumber = true
 let showError = false
 
-export function getTimeString(ms: number) {
+export function getTimeString(ms: number): string {
 	if (ms < 1000) return `${ms}ms`
 	const s = Math.floor(ms / 1000)
 	if (s < 60) return `${s}s ${ms % 1000}ms`
@@ -54,7 +54,7 @@ export function getTimeString(ms: number) {
 	return `${Math.floor(m / 60)}h ${m % 60}m`
 }
 
-export function renderExecutionInfo(info: ExecutionInfo) {
+export function renderExecutionInfo(info: ExecutionInfo): void {
 	document.writeln(`
     <div class="execution-info">
       <div>
@@ -81,7 +81,7 @@ export function renderExecutionInfo(info: ExecutionInfo) {
   `)
 }
 
-function renderIterationResult(iteration: IterationResult, index: number) {
+function renderIterationResult(iteration: IterationResult, index: number): string {
 	const result = {
 		passed: 0,
 		failed: 0,
@@ -140,7 +140,7 @@ function renderIterationResult(iteration: IterationResult, index: number) {
   `
 }
 
-function renderScriptWithError(scripts: ScriptWithError[]) {
+function renderScriptWithError(scripts: ScriptWithError[]): string {
 	return scripts
 		.map(script => {
 			return `
@@ -154,7 +154,7 @@ function renderScriptWithError(scripts: ScriptWithError[]) {
 		.join('')
 }
 
-function renderExecutedScripts(scripts: TestScriptResult[]) {
+function renderExecutedScripts(scripts: TestScriptResult[]): string {
 	return scripts
 		.map(script => {
 			const iterations = script.iterationResults
@@ -175,7 +175,7 @@ function renderExecutedScripts(scripts: TestScriptResult[]) {
 		.join('')
 }
 
-function renderSummaryHeader() {
+function renderSummaryHeader(): string {
 	return `
     <tr>
       <th style="width: 35%">Test script</th>
@@ -185,7 +185,10 @@ function renderSummaryHeader() {
   `
 }
 
-function renderSummaryData(scripts: TestScriptResult[], scriptWithError: ScriptWithError[]) {
+function renderSummaryData(
+	scripts: TestScriptResult[],
+	scriptWithError: ScriptWithError[],
+): string {
 	return `
     ${renderExecutedScripts(scripts)}
     ${renderScriptWithError(scriptWithError)}
@@ -195,7 +198,7 @@ function renderSummaryData(scripts: TestScriptResult[], scriptWithError: ScriptW
 export function toggleSummaryView(
 	executedScrips: TestScriptResult[],
 	unexecutedScript: ScriptWithError[],
-) {
+): void {
 	const summaryTable = document.getElementById('table-summary')
 
 	viewNumber = !viewNumber
@@ -211,7 +214,7 @@ export function toggleSummaryView(
 export function renderSummary(
 	executedScrips: TestScriptResult[],
 	unexecutedScript: ScriptWithError[],
-) {
+): void {
 	document.writeln(`
     <table id="table-summary" class="table">
       ${renderSummaryHeader()}
@@ -220,7 +223,7 @@ export function renderSummary(
   `)
 }
 
-function renderDetailHeader() {
+function renderDetailHeader(): string {
 	return `
     <tr>
       <th style="width: 15%">Iteration</th>
@@ -231,7 +234,7 @@ function renderDetailHeader() {
   `
 }
 
-function renderStepDetail(step: StepResult) {
+function renderStepDetail(step: StepResult): string {
 	function getError() {
 		if (!step.error) return ''
 
@@ -263,7 +266,7 @@ function renderStepDetail(step: StepResult) {
   `
 }
 
-function renderDetailData(iterations: IterationResult[]) {
+function renderDetailData(iterations: IterationResult[]): string {
 	return `
     ${iterations
 			.map((iteration, index) => {
@@ -297,7 +300,7 @@ function renderDetailData(iterations: IterationResult[]) {
   `
 }
 
-function renderDetail(script: TestScriptResult) {
+function renderDetail(script: TestScriptResult): void {
 	const detailTable = document.getElementById(script.name)
 	const detailHTML = `
 		<i>${script.name} (${getTimeString(script.duration)})</i>
@@ -311,20 +314,20 @@ function renderDetail(script: TestScriptResult) {
 	}
 }
 
-export function renderScriptsDetail(scripts: TestScriptResult[]) {
+export function renderScriptsDetail(scripts: TestScriptResult[]): void {
 	scripts.forEach(script => {
 		document.writeln(`<div id=${script.name} class="script-detail"></div>`)
 		renderDetail(script)
 	})
 }
 
-export function filterDetail(scripts: TestScriptResult[], filterKey: keyof typeof filter) {
+export function filterDetail(scripts: TestScriptResult[], filterKey: keyof typeof filter): void {
 	console.log(showError)
 	filter[filterKey] = !filter[filterKey]
 	scripts.forEach(script => renderDetail(script))
 }
 
-export function toggleShowError(scripts: TestScriptResult[]) {
+export function toggleShowError(scripts: TestScriptResult[]): void {
 	showError = !showError
 	scripts.forEach(script => renderDetail(script))
 }

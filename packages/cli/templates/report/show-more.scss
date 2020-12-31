@@ -13,11 +13,11 @@
     display: none;
   }
 
-  .trigger ~ .wrapper .button:before {
+  .trigger ~ .wrapper .button::before {
     content: '... Show more';
   }
 
-  .trigger:checked ~ .wrapper .button:before {
+  .trigger:checked ~ .wrapper .button::before {
     content: 'Show less';
   }
 

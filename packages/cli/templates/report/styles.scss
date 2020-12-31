@@ -1,5 +1,5 @@
-@use 'toggle';
-@use 'show-more';
+@use "toggle";
+@use "show-more";
 
 $passed-color: #1bc59b;
 $failed-color: #f56565;
@@ -100,14 +100,6 @@ $unexecuted-color: #cbd5e0;
   }
 }
 
-.filter {
-  display: flex;
-
-  & > div + div {
-    margin-left: 3rem;
-  }
-}
-
 .chart-legend {
   display: flex;
   justify-content: space-between;
@@ -144,6 +136,14 @@ $unexecuted-color: #cbd5e0;
 
   & > .unexecuted {
     background-color: $unexecuted-color;
+  }
+}
+
+.filter {
+  display: flex;
+
+  & > div + div {
+    margin-left: 3rem;
   }
 }
 

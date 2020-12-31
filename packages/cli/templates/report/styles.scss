@@ -121,20 +121,20 @@ $unexecuted-color: #cbd5e0;
   display: flex;
   justify-content: center;
 
-  & > div label {
-    margin-bottom: 0;
-  }
-
-  & > div {
+  & > .switch-button {
     display: flex;
     align-items: center;
 
     & > input + label {
       margin-left: 0.25rem;
     }
+
+    & > label {
+      margin-bottom: 0;
+    }
   }
 
-  & > div + div {
+  & > .switch-button + .switch-button {
     margin-left: 1rem;
   }
 }

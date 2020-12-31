@@ -39,4 +39,5 @@ export type StepResult = {
 	status: Status
 	subTitle?: string
 	duration?: Milliseconds
+	error?: string
 }

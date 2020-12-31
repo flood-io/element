@@ -1,3 +1,6 @@
+@use './toggle.scss';
+@use './show-more.scss';
+
 $passed-color: #1bc59b;
 $failed-color: #f56565;
 $skipped-color: #f6e05e;
@@ -63,19 +66,23 @@ $unexecuted-color: #cbd5e0;
 	& > * {
 		flex: 1;
 	}
+}
 
-	& > .header-title {
-		font-size: 2rem;
-	}
+.header-title {
+	font-size: 2rem;
+}
 
-	& > .filter {
-		display: flex;
-		align-items: flex-end;
-		justify-content: flex-end;
+.detail-actions {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+}
 
-		& > div + div {
-			margin-left: 3rem;
-		}
+.filter {
+	display: flex;
+
+	& > div + div {
+		margin-left: 3rem;
 	}
 }
 
@@ -214,6 +221,10 @@ $unexecuted-color: #cbd5e0;
 
 .step-name {
 	text-align: left !important;
+
+	.error {
+		color: red;
+	}
 }
 
 .step-result {

@@ -1,5 +1,5 @@
-@use "toggle";
-@use "show-more";
+@import 'toggle';
+@import 'show-more';
 
 $passed-color: #1bc59b;
 $failed-color: #f56565;
@@ -78,28 +78,6 @@ $unexecuted-color: #cbd5e0;
   align-items: flex-end;
 }
 
-.summary-view-switch {
-  display: flex;
-  justify-content: center;
-
-  & > div label {
-    margin-bottom: 0;
-  }
-
-  & > div {
-    display: flex;
-    align-items: center;
-
-    & > input + label {
-      margin-left: 0.25rem;
-    }
-  }
-
-  & > div + div {
-    margin-left: 1rem;
-  }
-}
-
 .chart-legend {
   display: flex;
   justify-content: space-between;
@@ -139,10 +117,32 @@ $unexecuted-color: #cbd5e0;
   }
 }
 
+.summary-view-switch {
+  display: flex;
+  justify-content: center;
+
+  & > div label {
+    margin-bottom: 0;
+  }
+
+  & > div {
+    display: flex;
+    align-items: center;
+
+    & > input + label {
+      margin-left: 0.25rem;
+    }
+  }
+
+  & > div + div {
+    margin-left: 1rem;
+  }
+}
+
 .filter {
   display: flex;
 
-  & > div + div {
+  & > .custom-checkbox + .custom-checkbox {
     margin-left: 3rem;
   }
 }

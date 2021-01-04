@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.14](https://github.com/flood-io/element/compare/v2.0.0-canary.13...v2.0.0-canary.14) (2021-01-04)
+
+
+### Features
+
+* check browserType when running scripts ([abc5def](https://github.com/flood-io/element/commit/abc5def870668ede1b605944a8bd76e2ed3b6bf6))
+* expose executablePath and downloadsPath ([3c1ae86](https://github.com/flood-io/element/commit/3c1ae8604c25f6192138f6bd8c7192a442eb7c7b))
+* handle when user give incorrect browser type ([b3c9a37](https://github.com/flood-io/element/commit/b3c9a37b679d50e92399a5ad60d97291ce2c6fd0))
+* remove 2 deprecated CLI flags and add 3 new ([a9cc706](https://github.com/flood-io/element/commit/a9cc706454ff828fb72e1bbed48fa2f49aaf6019))
+
+
+
+
+
 # [2.0.0-canary.13](https://github.com/flood-io/element/compare/v2.0.0-canary.12...v2.0.0-canary.13) (2020-12-28)
 
 

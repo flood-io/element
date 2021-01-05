@@ -1,12 +1,12 @@
-import { ElementCookies } from './../utils/ElementCookies'
 import { Condition } from '../page/Condition'
-import { Page, Frame, ViewportSize, BrowserContext } from 'playwright'
+import { Page, Frame, ViewportSize, BrowserContext, Cookie } from 'playwright'
 import {
 	ElementHandle,
 	ScreenshotOptions,
 	NavigationOptions,
 	EvaluateFn,
 	ClickOptions,
+	CookiesFilterParams,
 } from '../page/types'
 import { NullableLocatable } from '../runtime/Locatable'
 import { TargetLocator } from '../page/TargetLocator'
@@ -295,7 +295,7 @@ export interface Browser {
 
 	context(): BrowserContext
 
-	getCookies(): Promise<ElementCookies>
+	getCookies(filterBy?: CookiesFilterParams): Promise<Cookie[]>
 }
 
 /**

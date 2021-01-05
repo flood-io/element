@@ -6,6 +6,7 @@ import {
 	ChromiumBrowserContext,
 	BrowserContext,
 	HTTPCredentials,
+	Cookie,
 } from 'playwright'
 import { Browser as BrowserInterface } from '../interface/IBrowser'
 import { NullableLocatable } from './Locatable'
@@ -16,6 +17,7 @@ import {
 	EvaluateFn,
 	ClickOptions,
 	BrowserType,
+	CookiesFilterParams,
 } from '../page/types'
 import { TargetLocator } from '../page/TargetLocator'
 import { PlaywrightClientLike } from '../driver/Playwright'
@@ -34,7 +36,6 @@ import { Keyboard } from '../page/Keyboard'
 import { getFrames } from '../utils/frames'
 import ms from 'ms'
 import { DeviceDescriptor } from '../page/Device'
-import { ElementCookies } from './../utils/ElementCookies'
 
 export const debug = debugFactory('element:runtime:browser')
 const debugScreenshot = debugFactory('element:runtime:browser:screenshot')
@@ -570,9 +571,18 @@ export class Browser<T> implements BrowserInterface {
 	}
 
 	@addCallbacks()
-	public async getCookies(): Promise<ElementCookies> {
-		const cookies = await this.page.context().cookies()
-		return new ElementCookies(cookies)
+	public async getCookies(filterBy?: CookiesFilterParams): Promise<Cookie[]> {
+		const url = filterBy?.url
+		const name = filterBy?.name
+		let cookies = await this.page.context().cookies(url)
+		if (name) {
+			cookies = [
+				...cookies.filter(cookie =>
+					typeof name === 'string' ? cookie.name === name : name.includes(cookie.name),
+				),
+			]
+		}
+		return cookies
 	}
 
 	private async evaluateWithoutDecorator(fn: EvaluateFn, ...args: any[]): Promise<any> {

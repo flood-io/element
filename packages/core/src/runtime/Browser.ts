@@ -34,6 +34,7 @@ import { Keyboard } from '../page/Keyboard'
 import { getFrames } from '../utils/frames'
 import ms from 'ms'
 import { DeviceDescriptor } from '../page/Device'
+import { ElementCookies } from './../utils/ElementCookies'
 
 export const debug = debugFactory('element:runtime:browser')
 const debugScreenshot = debugFactory('element:runtime:browser:screenshot')
@@ -566,6 +567,12 @@ export class Browser<T> implements BrowserInterface {
 
 	public async close(): Promise<void> {
 		await this.client.browser.close()
+	}
+
+	@addCallbacks()
+	public async getCookies(): Promise<ElementCookies> {
+		const cookies = await this.page.context().cookies()
+		return new ElementCookies(cookies)
 	}
 
 	private async evaluateWithoutDecorator(fn: EvaluateFn, ...args: any[]): Promise<any> {

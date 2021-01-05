@@ -1,3 +1,4 @@
+import { ElementCookies } from './../utils/ElementCookies'
 import { Condition } from '../page/Condition'
 import { Page, Frame, ViewportSize, BrowserContext } from 'playwright'
 import {
@@ -293,6 +294,8 @@ export interface Browser {
 	close(): Promise<void>
 
 	context(): BrowserContext
+
+	getCookies(): Promise<ElementCookies>
 }
 
 /**

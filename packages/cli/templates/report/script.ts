@@ -322,7 +322,6 @@ export function renderScriptsDetail(scripts: TestScriptResult[]): void {
 }
 
 export function filterDetail(scripts: TestScriptResult[], filterKey: keyof typeof filter): void {
-	console.log(showError)
 	filter[filterKey] = !filter[filterKey]
 	scripts.forEach(script => renderDetail(script))
 }

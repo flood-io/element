@@ -1,4 +1,4 @@
-import { launch } from './driver/Playwright'
+import { ConcreteLaunchOptions, launch } from './driver/Playwright'
 import { IRunner, Runner, PersistentRunner } from './Runner'
 import { mustCompileFile } from './TestScript'
 import { TestScriptOptions } from './TestScriptOptions'
@@ -8,9 +8,21 @@ import { CustomConsole, IterationResult, ReportCache, TestResult } from '@flood/
 import chalk from 'chalk'
 import { EventEmitter } from 'events'
 import { ElementResult } from './ElementResult'
+import { existsSync } from 'fs'
 
 export async function runSingleTestScript(opts: ElementOptions): Promise<IterationResult[]> {
-	const { testScript, clientFactory } = opts
+	const {
+		testScript,
+		clientFactory,
+		headless,
+		devtools,
+		sandbox,
+		verbose,
+		browser,
+		executablePath,
+		downloadsPath,
+		showScreenshot,
+	} = opts
 
 	// TODO proper types for args
 	let runnerClass: { new (...args: any[]): IRunner }
@@ -20,20 +32,31 @@ export async function runSingleTestScript(opts: ElementOptions): Promise<Iterati
 		runnerClass = Runner
 	}
 
+	const launchOptionOverrides: Partial<ConcreteLaunchOptions> = {
+		headless,
+		devtools,
+		sandbox,
+		browser,
+		debug: verbose,
+	}
+
+	if (executablePath) {
+		launchOptionOverrides.executablePath = executablePath
+	}
+	if (downloadsPath) {
+		launchOptionOverrides.downloadsPath = downloadsPath
+	}
+	if (showScreenshot) {
+		opts.testSettingOverrides.showScreenshot = showScreenshot
+	}
+
 	const runner = new runnerClass(
 		clientFactory || launch,
 		opts.testCommander,
 		opts.reporter,
 		opts.testSettings,
 		opts.testSettingOverrides,
-		{
-			headless: opts.headless,
-			devtools: opts.devtools,
-			sandbox: opts.sandbox,
-			browser: opts.browser,
-			showScreenshot: opts.showScreenshot,
-			debug: opts.verbose,
-		},
+		launchOptionOverrides,
 		opts.testObserverFactory,
 	)
 
@@ -108,7 +131,8 @@ export async function runCommandLine(args: ElementRunArguments): Promise<TestRes
 			const fileTitle = chalk.grey(`${file} (${order} of ${numberOfFile})`)
 			await prepareAndRunTestScript(fileTitle, arg, cache, elementResult, true)
 		}
-		console.log(chalk.grey('Test running with the config file has finished'))
+		if (existsSync(args.configFile))
+			console.log(chalk.grey('Test running with the config file has finished'))
 	}
 
 	if (args.notExistingFiles) {

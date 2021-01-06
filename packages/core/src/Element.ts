@@ -21,6 +21,7 @@ export async function runSingleTestScript(opts: ElementOptions): Promise<Iterati
 		browser,
 		executablePath,
 		downloadsPath,
+		showScreenshot,
 	} = opts
 
 	// TODO proper types for args
@@ -44,6 +45,9 @@ export async function runSingleTestScript(opts: ElementOptions): Promise<Iterati
 	}
 	if (downloadsPath) {
 		launchOptionOverrides.downloadsPath = downloadsPath
+	}
+	if (showScreenshot) {
+		opts.testSettingOverrides.showScreenshot = showScreenshot
 	}
 
 	const runner = new runnerClass(

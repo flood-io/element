@@ -1,4 +1,4 @@
-import { step, TestSettings, RecoverWith } from '@flood/element'
+import { step, TestSettings, RecoverWith, Key } from '@flood/element'
 
 export const settings: TestSettings = {
 	loopCount: 1,

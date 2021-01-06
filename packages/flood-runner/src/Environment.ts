@@ -2,7 +2,7 @@ import { newMetricIdentifierFromObject } from './MetricIdentifier'
 import { GridConfig } from './GridConfig'
 import { WorkRoot, FloodProcessEnv } from '@flood/element-api'
 import findRoot from 'find-root'
-import { join } from 'path'
+import { join, extname, basename } from 'path'
 import { ensureDirSync } from 'fs-extra'
 import { devDefaults } from './defaults'
 import { ProcessEnv } from './types'
@@ -38,7 +38,10 @@ const num = (v?: string, defaultValue?: number): number | undefined => {
 	return n
 }
 
-export function initFromEnvironment(env: ProcessEnv = process.env): Partial<GridConfig> {
+export function initFromEnvironment(
+	env: ProcessEnv = process.env,
+	testScript = '',
+): Partial<GridConfig> {
 	let root: string
 	let testDataRoot: string
 
@@ -57,6 +60,7 @@ export function initFromEnvironment(env: ProcessEnv = process.env): Partial<Grid
 
 	const workRoot = new WorkRoot(root, {
 		'test-data': testDataRoot,
+		'test-script': basename(testScript, extname(testScript)),
 	})
 
 	const metricIdentifier = newMetricIdentifierFromObject({

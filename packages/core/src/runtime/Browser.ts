@@ -576,11 +576,9 @@ export class Browser<T> implements BrowserInterface {
 		const names = filterBy?.names
 		let cookies = await this.page.context().cookies(urls)
 		if (names) {
-			cookies = [
-				...cookies.filter(cookie =>
-					typeof names === 'string' ? cookie.name === names : names.includes(cookie.name),
-				),
-			]
+			cookies = cookies.filter(cookie =>
+				typeof names === 'string' ? cookie.name === names : names.includes(cookie.name),
+			)
 		}
 		return cookies
 	}

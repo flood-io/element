@@ -1,4 +1,4 @@
-import { IReporter, VerboseReporter, BaseReporter, ReportCache } from '@flood/element-report'
+import { IReporter, VerboseReporter, BaseReporter } from '@flood/element-report'
 import { TestCommander } from './Runner'
 import { FloodProcessEnv, RuntimeEnvironment } from './runtime-environment/types'
 import WorkRoot from './runtime-environment/WorkRoot'
@@ -12,7 +12,6 @@ import sanitize from 'sanitize-filename'
 import { PlaywrightClient } from './driver/Playwright'
 import { BrowserType } from './page/types'
 import ms from 'ms'
-
 export interface RunArguments {
 	loopCount?: number
 	duration?: string | number
@@ -181,10 +180,7 @@ function makeTestCommander(file: string): TestCommander {
 	return commander
 }
 
-export function normalizeElementOptions(
-	args: ElementRunArguments,
-	cache: ReportCache,
-): ElementOptions {
+export function normalizeElementOptions(args: ElementRunArguments, spinnies?: any): ElementOptions {
 	const { file, verbose, runArgs, testSettings } = args
 	const workRootPath = getWorkRootPath(file, args['work-root'])
 	const testDataPath = getTestDataPath(file, args['test-data-root'])
@@ -192,7 +188,7 @@ export function normalizeElementOptions(
 
 	if (runArgs?.file && !!runArgs.verbose) verboseBool = !!runArgs.verbose
 
-	const reporter = verboseBool ? new VerboseReporter(cache) : new BaseReporter(cache)
+	const reporter = verboseBool ? new VerboseReporter(spinnies) : new BaseReporter()
 
 	const opts: ElementOptions = {
 		testScript: file,

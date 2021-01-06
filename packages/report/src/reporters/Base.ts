@@ -1,19 +1,16 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-empty-function */
 import { TestScriptError } from '../runtime/TestScriptError'
 import { IReporter, WorkerReport } from '../runtime/IReporter'
 import { TraceData, TestEvent, CompoundMeasurement, MeasurementKind } from '../types/Report'
 import chalk from 'chalk'
-import { ReportCache } from './Cache'
-import ansiEscapes from 'ansi-escapes'
-const debug = require('debug')('element-cli:console-reporter')
+import debugFactory from 'debug'
+const debug = debugFactory('element-cli:console-reporter')
 
 export class BaseReporter implements IReporter {
 	public responseCode: string
 	public stepName: string
 	public worker: WorkerReport
 
-	constructor(protected cache: ReportCache) {}
+	constructor(public spinnies?: any) {}
 
 	reset(step: string): void {}
 
@@ -40,44 +37,41 @@ export class BaseReporter implements IReporter {
 		const beforeRunStepMessage = chalk.whiteBright(`${stepName} is running ...`)
 		const beforeRunHookMessage = chalk.whiteBright(`${label} is running ...`)
 		const afterRunHookMessage = `${chalk.green.bold('✔')} ${chalk.whiteBright(`${label} finished`)}`
-		let message = ''
 		switch (stage) {
 			case TestEvent.BeforeAllStep:
 			case TestEvent.AfterAllStep:
 			case TestEvent.BeforeEachStep:
 			case TestEvent.AfterEachStep:
-				console.group(beforeRunHookMessage)
-				console.group()
+				this.spinnies.add(label, { text: beforeRunHookMessage, indent: 4 })
 				break
 			case TestEvent.BeforeAllStepFinished:
 			case TestEvent.AfterAllStepFinished:
 			case TestEvent.BeforeEachStepFinished:
 			case TestEvent.AfterEachStepFinished:
-				this.updateMessage(beforeRunHookMessage, afterRunHookMessage)
-				console.groupEnd()
+				this.spinnies.succeed(label, { text: afterRunHookMessage, indent: 4 })
 				break
 			case TestEvent.BeforeStep:
-				console.group(beforeRunStepMessage)
-				console.group()
+				this.spinnies.add(stepName, { text: beforeRunStepMessage, indent: 4 })
 				break
 			case TestEvent.StepSucceeded:
-				message = `${chalk.green.bold('✔')} ${chalk.green(
-					`${stepName} passed (${timing?.toLocaleString()}ms)`,
-				)}`
-				this.updateMessage(beforeRunStepMessage, message)
+				this.spinnies.succeed(stepName, {
+					text: `${stepName} passed (${timing?.toLocaleString()}ms)`,
+					indent: 4,
+				})
 				break
 			case TestEvent.StepFailed:
-				message = `${chalk.redBright.bold('✘')} ${chalk.red(
-					`${stepName} failed (${timing?.toLocaleString()}ms)`,
-				)}`
 				console.error(chalk.red(errorMessage?.length ? errorMessage : 'step error -> failed'))
-				this.updateMessage(beforeRunStepMessage, message)
-				console.log('')
+				this.spinnies.fail(stepName, {
+					text: `${stepName} failed (${timing?.toLocaleString()}ms)`,
+					indent: 4,
+				})
 				break
 			case TestEvent.StepSkipped:
-				console.group(`${chalk.yellow.bold('\u2296')} ${chalk.yellow(`${stepName} skipped`)}`)
-				console.log('')
-				console.groupEnd()
+				this.spinnies.add(stepName, {
+					text: chalk.yellow(`${stepName} skipped`),
+					status: 'non-spinnable',
+					indent: 4,
+				})
 				break
 			case TestEvent.AfterStep:
 				console.groupEnd()
@@ -120,13 +114,5 @@ export class BaseReporter implements IReporter {
 				console.log(logMessage)
 				break
 		}
-	}
-	private updateMessage(previousMessage: string, newMessage: string): void {
-		const lines: number = this.cache.getLinesBetweenCurrentAndPreviousMessage(previousMessage)
-		process.stdout.write(ansiEscapes.cursorUp(lines) + ansiEscapes.eraseLine)
-		console.groupEnd()
-		console.log(newMessage)
-		this.cache.updateMessageInCache(previousMessage, newMessage)
-		process.stdout.write(ansiEscapes.cursorDown(lines) + ansiEscapes.eraseLine)
 	}
 }

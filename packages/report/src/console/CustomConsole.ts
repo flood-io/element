@@ -1,69 +1,40 @@
 import assert from 'assert'
 import { format } from 'util'
 import { Console } from 'console'
-import { LogCounters, LogMessage, LogTimers, LogType } from '../types/Console'
-import { EventEmitter } from 'events'
+import { LogCounters, LogTimers, LogType } from '../types/Console'
 
-type Formatter = (type: LogType, message: LogMessage) => string
-
-function simpleFormatter() {
-	const TITLE_INDENT = '    '
-	const CONSOLE_INDENT = TITLE_INDENT + '  '
-
-	return (type, message) => {
-		message = message
-			.split(/\n/)
-			.map(line => CONSOLE_INDENT + line)
-			.join('\n')
-
-		return message + '\n'
-	}
-}
 export class CustomConsole extends Console {
-	private _formatBuffer: Formatter
 	private _counters: LogCounters
 	private _timers: LogTimers
 	private _groupDepth: number
-	private _stdout: NodeJS.WriteStream
-	private _stderr: NodeJS.WriteStream
-	private _width: number
-	private _height: number
-	private _myEmitter: EventEmitter
+	private _spinnies: any
 
-	constructor(
-		stdout: NodeJS.WriteStream,
-		stderr: NodeJS.WriteStream,
-		myEmitter: EventEmitter,
-		formatBuffer: Formatter = (_type: LogType, message: string): string => message,
-	) {
+	constructor(stdout: NodeJS.WriteStream, stderr: NodeJS.WriteStream, spinnies: any) {
 		super(stdout, stderr)
-		this._stdout = stdout
-		this._stderr = stderr
-		this._formatBuffer = formatBuffer || simpleFormatter()
 		this._counters = {}
 		this._timers = {}
 		this._groupDepth = 0
-		if (stdout.isTTY) {
-			this._width = stdout.columns!
-		} else {
-			this._width = 1
-		}
-		this._height = 1
-		this._myEmitter = myEmitter
+		this._spinnies = spinnies
 	}
 
 	private _log(type: LogType, message: string): void {
-		const logMessage = `${this._formatBuffer(type, '  '.repeat(this._groupDepth) + message)}`
-		this._height = this.getHeightOfMessage(logMessage)
-		this._myEmitter.emit('add', message, this._height)
-		this._stdout.write(`${logMessage}\n`)
+		this._spinnies.add(`${message}_${new Date().valueOf()}`, {
+			text: message,
+			status: 'non-spinnable',
+			indent: this._groupDepth,
+		})
 	}
 
 	private _logError(type: LogType, message: string): void {
-		const logMessage = `${this._formatBuffer(type, '  '.repeat(this._groupDepth) + message)}`
-		this._height = this.getHeightOfMessage(logMessage)
-		this._myEmitter.emit('add', message, this._height)
-		this._stderr.write(`${logMessage}\n`)
+		this._spinnies.add(`${message}_${new Date().valueOf()}`, {
+			text: message,
+			status: 'non-spinnable',
+			indent: this._groupDepth,
+		})
+	}
+
+	setGroupDepth(groupDepth: number): void {
+		this._groupDepth = groupDepth
 	}
 
 	assert(value: unknown, message?: string | Error): void {
@@ -102,11 +73,11 @@ export class CustomConsole extends Console {
 	}
 
 	group(title?: string, ...args: Array<unknown>): void {
-		this._groupDepth++
-
 		if (title || args.length) {
 			this._log('group', format(title, ...args))
 		}
+
+		this._groupDepth += 2
 	}
 	groupCollapsed(title?: string, ...args: Array<unknown>): void {
 		this._groupDepth++
@@ -118,7 +89,7 @@ export class CustomConsole extends Console {
 
 	groupEnd() {
 		if (this._groupDepth > 0) {
-			this._groupDepth--
+			this._groupDepth -= 2
 		}
 	}
 
@@ -155,19 +126,5 @@ export class CustomConsole extends Console {
 
 	getBuffer() {
 		return null
-	}
-
-	private getHeightOfMessage(message: string): number {
-		const content = message.split('\n')
-		let height = 0
-		for (let i = 0; i < content.length; i++) {
-			const numberLine = Math.ceil(content[i].length / this._width)
-			if (numberLine <= 1) {
-				height += 1
-				continue
-			}
-			height += numberLine
-		}
-		return height
 	}
 }

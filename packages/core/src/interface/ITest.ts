@@ -35,7 +35,6 @@ export interface ITest {
 		testDataRecord: any,
 	): Promise<void>
 	doStepDelay(): Promise<void>
-	willRunCommand(testObserver: TestObserver, browser: Browser<Step>, command: string): Promise<void>
 	takeScreenshot(options?: ScreenshotOptions): Promise<void>
 	fetchScreenshots(): Promise<string[]>
 }

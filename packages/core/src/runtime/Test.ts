@@ -423,12 +423,16 @@ export default class Test implements ITest {
 		})
 	}
 
-	public async willRunCommand(testObserver: TestObserver, browser: Browser<Step>, command: string) {
+	public async willRunCommand(
+		testObserver: TestObserver,
+		browser: Browser<Step>,
+		command: string,
+		args: string,
+	) {
 		if (this.hookMode) {
-			await testObserver.beforeHookAction(this, command)
+			await testObserver.beforeHookAction(this, command, args)
 		} else {
-			await testObserver.beforeStepAction(this, browser.customContext, command)
-			debug(`Before action: '${command}()' waiting on actionDelay: ${this.settings.actionDelay}`)
+			await testObserver.beforeStepAction(this, browser.customContext, command, args)
 		}
 	}
 

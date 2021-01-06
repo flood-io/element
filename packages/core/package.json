@@ -73,7 +73,8 @@
 		"glob": "^7.1.2",
 		"lodash.upperfirst": "^4.3.1",
 		"morgan": "^1.9.1",
-		"run-script-os": "^1.0.3"
+		"run-script-os": "^1.0.3",
+		"spinnies": "^0.5.1"
 	},
 	"resolutions": {
 		"@types/node": "12.7.4"

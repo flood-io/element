@@ -31,7 +31,6 @@
 		"logform": "^2.1.2",
 		"merge-stream": "^2.0.0",
 		"parse-duration": "^0.1.2",
-		"spinnies": "^0.5.1",
 		"winston": "^3.0.0"
 	},
 	"devDependencies": {

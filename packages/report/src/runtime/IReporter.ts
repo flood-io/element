@@ -22,12 +22,14 @@ export class WorkerReport {
 	}
 }
 
+// eslint-disable-next-line @typescript-eslint/interface-name-prefix
 export interface IReporter {
 	reset(stepName: string): void
 
 	responseCode: string
 	stepName: string
 	worker?: WorkerReport
+	spinnies?: any
 
 	/**
 	 * Writes a measurement to the collection service

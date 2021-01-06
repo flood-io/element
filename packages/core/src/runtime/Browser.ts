@@ -1,4 +1,3 @@
-import { Condition } from '../page/Condition'
 import {
 	Frame,
 	Page,
@@ -8,6 +7,9 @@ import {
 	HTTPCredentials,
 	Cookie,
 } from 'playwright'
+import debugFactory from 'debug'
+import ms from 'ms'
+import { Condition } from '../page/Condition'
 import { Browser as BrowserInterface } from '../interface/IBrowser'
 import { NullableLocatable } from './Locatable'
 import {
@@ -22,23 +24,21 @@ import {
 import { TargetLocator } from '../page/TargetLocator'
 import { PlaywrightClientLike } from '../driver/Playwright'
 import { WorkRoot } from '../runtime-environment/types'
-import KSUID from 'ksuid'
 import { Key, KeyDefinitions } from '../page/Enums'
 import { ConcreteTestSettings, DEFAULT_WAIT_TIMEOUT_MILLISECONDS } from './Settings'
 import { NetworkErrorData, ActionErrorData } from './errors/Types'
 import { StructuredError } from '../utils/StructuredError'
-import debugFactory from 'debug'
 import Mouse from '../page/Mouse'
 import { addCallbacks } from './decorators/addCallbacks'
 import { autoWaitUntil } from './decorators/autoWait'
 import { locatableToLocator, toLocatorError } from './toLocatorError'
 import { Keyboard } from '../page/Keyboard'
 import { getFrames } from '../utils/frames'
-import ms from 'ms'
 import { DeviceDescriptor } from '../page/Device'
+import termImg from 'term-img'
+import chalk from 'chalk'
 
 export const debug = debugFactory('element:runtime:browser')
-const debugScreenshot = debugFactory('element:runtime:browser:screenshot')
 
 export class Browser<T> implements BrowserInterface {
 	public screenshots: string[]
@@ -418,6 +418,12 @@ export class Browser<T> implements BrowserInterface {
 	public async takeScreenshot(options?: ScreenshotOptions): Promise<void> {
 		await this.saveScreenshot(async path => {
 			await this.page.screenshot({ path, ...options })
+			console.log(chalk.grey(`Screenshot saved in ${path}`))
+			if (this.settings.showScreenshot) {
+				const fallback = () => void 0
+				const supportImg = termImg(path, { width: '50%', fallback })
+				if (supportImg) console.log(supportImg)
+			}
 			return true
 		})
 	}
@@ -531,14 +537,11 @@ export class Browser<T> implements BrowserInterface {
 	}
 
 	public async saveScreenshot(fn: (path: string) => Promise<boolean>): Promise<void> {
-		const fileId = KSUID.randomSync().string
-
+		const fileId = `${this.workRoot.getSubRoot('test-script')}_${this.screenshots.length + 1}`
 		const path = this.workRoot.join('screenshots', `${fileId}.jpg`)
-		debugScreenshot(`Saving screenshot to: ${path}`)
 
 		if (await fn(path)) {
 			this.screenshots.push(path)
-			debugScreenshot(`Saved screenshot to: ${path}`)
 		}
 	}
 

@@ -95,6 +95,7 @@ export class Runner {
 		}
 		options.browser =
 			options.browser && isCorrectBrowserType(options.browser) ? options.browser : 'chromium'
+
 		if (options.args == null) options.args = []
 		if (Array.isArray(settings.launchArgs)) options.args.push(...settings.launchArgs)
 

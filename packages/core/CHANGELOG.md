@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.15](https://github.com/flood-io/element/compare/v2.0.0-canary.14...v2.0.0-canary.15) (2021-01-06)
+
+
+### Bug Fixes
+
+* test ([145ff02](https://github.com/flood-io/element/commit/145ff022c313349ae2218a222c15ea38ba178d25))
+
+
+### Features
+
+* add name of screenshot ([d6d0ee0](https://github.com/flood-io/element/commit/d6d0ee03c7229b1215328c3cb04e4d20d861e869))
+* show screenshot on terminal (iTerm) ([8fa8c88](https://github.com/flood-io/element/commit/8fa8c88e6f86477a1adc95b2de4ed710d70d7531))
+
+
+
+
+
 # [2.0.0-canary.14](https://github.com/flood-io/element/compare/v2.0.0-canary.13...v2.0.0-canary.14) (2021-01-04)
 
 

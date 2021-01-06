@@ -572,13 +572,13 @@ export class Browser<T> implements BrowserInterface {
 
 	@addCallbacks()
 	public async getCookies(filterBy?: CookiesFilterParams): Promise<Cookie[]> {
-		const url = filterBy?.url
-		const name = filterBy?.name
-		let cookies = await this.page.context().cookies(url)
-		if (name) {
+		const urls = filterBy?.urls
+		const names = filterBy?.names
+		let cookies = await this.page.context().cookies(urls)
+		if (names) {
 			cookies = [
 				...cookies.filter(cookie =>
-					typeof name === 'string' ? cookie.name === name : name.includes(cookie.name),
+					typeof names === 'string' ? cookie.name === names : names.includes(cookie.name),
 				),
 			]
 		}

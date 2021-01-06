@@ -280,6 +280,6 @@ export interface ScreenshotOptions {
 }
 
 export interface CookiesFilterParams {
-	url?: string | string[] | undefined
-	name?: string | string[] | undefined
+	urls?: string | string[]
+	names?: string | string[]
 }

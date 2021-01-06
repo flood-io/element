@@ -220,13 +220,13 @@ describe('Browser', () => {
 		const url = await serve('test-cookies.html')
 
 		await browser.visit(url, { waitUntil: 'load' })
-		const getCookiesByStringName = await browser.getCookies({ name: 'element-cookie' })
+		const getCookiesByStringName = await browser.getCookies({ names: 'element-cookie' })
 
 		expect(getCookiesByStringName.length).toStrictEqual(1)
 		expect(getCookiesByStringName[0].name).toStrictEqual('element-cookie')
 
 		const getCookiesByStringArray = await browser.getCookies({
-			name: ['element-cookie', 'floodio'],
+			names: ['element-cookie', 'floodio'],
 		})
 
 		expect(getCookiesByStringArray.length).toStrictEqual(2)

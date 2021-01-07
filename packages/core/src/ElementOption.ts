@@ -27,6 +27,9 @@ export interface RunArguments {
 	verbose?: boolean
 	browser?: BrowserType
 	export?: boolean
+	executablePath?: string
+	downloadsPath?: string
+	showScreenshot?: boolean
 }
 
 export interface ElementRunArguments {
@@ -51,10 +54,13 @@ export interface ElementRunArguments {
 	verbose?: boolean
 	browser: BrowserType
 	export?: boolean
+	showScreenshot?: boolean
 	notExistingFiles: string[]
 	mu: boolean
 	runArgs: RunArguments
 	testSettings?: TestSettings
+	executablePath?: string
+	downloadsPath?: string
 }
 
 export interface ElementOptions {
@@ -76,6 +82,9 @@ export interface ElementOptions {
 	failStatusCode: number
 	browser: BrowserType
 	export?: boolean
+	executablePath?: string
+	downloadsPath?: string
+	showScreenshot?: boolean
 }
 
 export interface ElementConfig {
@@ -143,9 +152,10 @@ function setupDelayOverrides(
 	return testSettingOverrides
 }
 
-function initRunEnv(root: string, testDataRoot: string) {
+function initRunEnv(root: string, testDataRoot: string, testScript: string) {
 	const workRoot = new WorkRoot(root, {
 		'test-data': testDataRoot,
+		'test-script': basename(testScript, extname(testScript)),
 	})
 
 	return {
@@ -198,14 +208,16 @@ export function normalizeElementOptions(args: ElementRunArguments, spinnies?: an
 		headless: args.headless ?? true,
 		devtools: args.devtools ?? false,
 		sandbox: args.sandbox ?? true,
-
-		runEnv: initRunEnv(workRootPath, testDataPath),
+		runEnv: initRunEnv(workRootPath, testDataPath, file),
 		testSettings: {},
 		testSettingOverrides: {},
 		persistentRunner: false,
 		failStatusCode: args['fail-status-code'],
 		browser: args.browser,
 		export: args.export,
+		executablePath: args.executablePath ?? '',
+		downloadsPath: args.downloadsPath ?? '',
+		showScreenshot: args.showScreenshot,
 	}
 
 	opts.testSettings = { ...testSettings }
@@ -233,8 +245,10 @@ export function normalizeElementOptions(args: ElementRunArguments, spinnies?: an
 		opts.headless = runArgs.headless ?? opts.headless
 		opts.devtools = runArgs.devtools ?? opts.devtools
 		opts.sandbox = runArgs.sandbox ?? opts.sandbox
+		opts.export = runArgs.export ?? opts.export
 		opts.browser = runArgs.browser ?? opts.browser
-		opts.export = !!runArgs.export ?? opts.export
+		opts.executablePath = runArgs.executablePath ?? opts.executablePath
+		opts.downloadsPath = runArgs.downloadsPath ?? opts.downloadsPath
 	}
 
 	opts.testSettingOverrides = setupDelayOverrides(args, opts.testSettingOverrides)

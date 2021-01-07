@@ -21,11 +21,13 @@ import {
 import { MultipleUsersReporter, ReportCache, WorkerReport } from '@flood/element-report'
 import { EventEmitter } from 'events'
 import ms from 'ms'
+import { extname, basename } from 'path'
 import { SchedulerSetting } from '../Scheduler'
 
-function environment(root: string, testData: string): RuntimeEnvironment {
+function environment(root: string, testData: string, testScript: string): RuntimeEnvironment {
 	const workRoot = new WorkRoot(root, {
 		'test-data': testData,
+		'test-script': basename(testScript, extname(testScript)),
 	})
 
 	return {
@@ -59,7 +61,7 @@ async function execMethod(method: string, args: Array<any>) {
 			const cache = new ReportCache(myEmitter)
 			const reporter = new MultipleUsersReporter(cache)
 			reporter.setWorker(new WorkerReport(workerId, workerName))
-			const env = environment(rootEnv, testData)
+			const env = environment(rootEnv, testData, testScript)
 
 			const testScriptFactory = async (): Promise<EvaluatedScript> => {
 				return new EvaluatedScript(

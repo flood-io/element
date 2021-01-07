@@ -1,3 +1,4 @@
+import { checkBrowserType, isCorrectBrowserType } from './utils/BrowserTypes'
 import { ConcreteLaunchOptions, PlaywrightClient } from './driver/Playwright'
 import Test from './runtime/Test'
 import { EvaluatedScript } from './runtime/EvaluatedScript'
@@ -74,13 +75,13 @@ export class Runner {
 	}
 
 	async launchClient(testScript: EvaluatedScript): Promise<PlaywrightClient> {
+		let options: Partial<ConcreteLaunchOptions> = this.launchOptionOverrides
 		const settings = {
+			acceptDownloads: !!options.downloadsPath,
 			...this.settingsFromConfig,
 			...testScript.settings,
 			...this.testSettingOverrides,
 		}
-
-		let options: Partial<ConcreteLaunchOptions> = this.launchOptionOverrides
 		options.ignoreHTTPSError = settings.ignoreHTTPSError
 		if (settings.viewport) {
 			options.viewport = settings.viewport
@@ -88,10 +89,14 @@ export class Runner {
 		}
 		if (!options.browser && settings.browser) {
 			options.browser = settings.browser
+			checkBrowserType(options.browser)
 		}
-		if (settings.browserLaunchOption) {
-			options = { ...options, ...settings.browserLaunchOption }
+		if (settings.browserLaunchOptions) {
+			options = { ...settings.browserLaunchOptions, ...options }
 		}
+		options.browser =
+			options.browser && isCorrectBrowserType(options.browser) ? options.browser : 'chromium'
+
 		if (options.args == null) options.args = []
 		if (Array.isArray(settings.launchArgs)) options.args.push(...settings.launchArgs)
 

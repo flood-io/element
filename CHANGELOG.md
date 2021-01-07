@@ -3,6 +3,48 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.15](https://github.com/flood-io/element/compare/v2.0.0-canary.14...v2.0.0-canary.15) (2021-01-06)
+
+
+### Bug Fixes
+
+* test ([145ff02](https://github.com/flood-io/element/commit/145ff022c313349ae2218a222c15ea38ba178d25))
+
+
+### Features
+
+* add name of screenshot ([d6d0ee0](https://github.com/flood-io/element/commit/d6d0ee03c7229b1215328c3cb04e4d20d861e869))
+* show screenshot on terminal (iTerm) ([8fa8c88](https://github.com/flood-io/element/commit/8fa8c88e6f86477a1adc95b2de4ed710d70d7531))
+
+
+
+
+
+# [2.0.0-canary.14](https://github.com/flood-io/element/compare/v2.0.0-canary.13...v2.0.0-canary.14) (2021-01-04)
+
+
+### Bug Fixes
+
+* refactor code ([2e9dd85](https://github.com/flood-io/element/commit/2e9dd8546251795e70943b2271e95b0689fb9b8c))
+* refactor to avoid the redundant LOC ([8be971a](https://github.com/flood-io/element/commit/8be971a0dc797f73dc1d65801b4c79369a2dc6ea))
+* remove redundant console.log() ([ce928dc](https://github.com/flood-io/element/commit/ce928dca88f1ee19e372b30adaa0d2a2a764147d))
+
+
+### Features
+
+* check browserType when running scripts ([abc5def](https://github.com/flood-io/element/commit/abc5def870668ede1b605944a8bd76e2ed3b6bf6))
+* expose --browser as BrowserType ([26cb679](https://github.com/flood-io/element/commit/26cb679a332d6102d535192844b8bc1aae19af17))
+* expose executablePath and downloadsPath ([3c1ae86](https://github.com/flood-io/element/commit/3c1ae8604c25f6192138f6bd8c7192a442eb7c7b))
+* handle when user give incorrect browser type ([b3c9a37](https://github.com/flood-io/element/commit/b3c9a37b679d50e92399a5ad60d97291ce2c6fd0))
+* remove 2 deprecated CLI flags and add 3 new ([a9cc706](https://github.com/flood-io/element/commit/a9cc706454ff828fb72e1bbed48fa2f49aaf6019))
+* set settings.acceptDownloads base on options.downloadsPath ([7beef39](https://github.com/flood-io/element/commit/7beef3948618513377a3945a2dce93bf978fb4e5))
+* update warning message ([e16d7c0](https://github.com/flood-io/element/commit/e16d7c053a1ea5acfb1ae81987aa91ede01a6d6f))
+* update warning message when user gives incorrect browser type ([50281f2](https://github.com/flood-io/element/commit/50281f2b9eceaf6b6cf7a7e9e4c7c9d6369a2e7e))
+
+
+
+
+
 # [2.0.0-canary.13](https://github.com/flood-io/element/compare/v2.0.0-canary.12...v2.0.0-canary.13) (2020-12-28)
 
 

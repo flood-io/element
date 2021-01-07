@@ -213,7 +213,7 @@ export interface TestSettings {
 	/**
 	 * Specifies options to launch
 	 */
-	browserLaunchOption?: BrowserLaunchOptions
+	browserLaunchOptions?: BrowserLaunchOptions
 
 	/**
 
@@ -251,6 +251,11 @@ export interface TestSettings {
 	 * Specifies the steps for ramping up and down load
 	 */
 	stages?: RampStage[]
+
+	/**
+	 * show screenshot on terminal (iTerm only)
+	 */
+	showScreenshot?: boolean
 }
 
 export type RampStage = {
@@ -281,7 +286,7 @@ export const DEFAULT_SETTINGS: ConcreteTestSettings = {
 	device: null,
 	ignoreHTTPSError: false,
 	browser: 'chromium',
-	browserLaunchOption: {},
+	browserLaunchOptions: {},
 	blockedDomains: [],
 	incognito: false,
 	name: 'Element Test',
@@ -291,6 +296,7 @@ export const DEFAULT_SETTINGS: ConcreteTestSettings = {
 	launchArgs: [],
 	viewport: { width: 1440, height: 900 },
 	stages: [],
+	showScreenshot: false,
 }
 
 /**

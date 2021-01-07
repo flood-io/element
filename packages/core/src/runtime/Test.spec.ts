@@ -50,7 +50,7 @@ describe('Test', () => {
 			clearCache: false,
 			device: null,
 			browser: 'chromium',
-			browserLaunchOption: {},
+			browserLaunchOptions: {},
 			ignoreHTTPSError: false,
 			userAgent: '',
 			clearCookies: true,
@@ -71,6 +71,7 @@ describe('Test', () => {
 			viewport: { width: 1440, height: 900 },
 			tries: 0,
 			stages: [],
+			showScreenshot: false,
 		}
 		expect(test.settings).toEqual(normalizeSettings(defaultSettings))
 	})

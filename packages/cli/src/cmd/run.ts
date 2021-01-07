@@ -6,6 +6,7 @@ import {
 	runCommandLine as runSingleUser,
 	normalizeElementOptions,
 	ElementOptions,
+	checkBrowserType,
 } from '@flood/element-core'
 import { runCommandLine as runMultipleUser } from '@flood/element-scheduler'
 import chalk from 'chalk'
@@ -19,7 +20,7 @@ import { resolve, dirname, basename, extname, join } from 'path'
 
 interface RunCommonArguments extends Arguments, ElementRunArguments {}
 
-async function getConfigurationFromConfig(args: RunCommonArguments): Promise<RunCommonArguments> {
+async function getArgsFromConfig(args: RunCommonArguments): Promise<RunCommonArguments> {
 	const { file, configFile, _, $0, mu } = args
 	const fileErr = checkFile(configFile, 'Configuration file')
 	let testFiles: string[]
@@ -83,13 +84,18 @@ const cmd: CommandModule = {
 			await runMultipleUser(opts)
 			process.exit(0)
 		}
-		const runArgs = await getConfigurationFromConfig(args)
-		if (runArgs.fastForward && runArgs.slowMo) {
+		const configurationArgs = await getArgsFromConfig(args)
+		if (configurationArgs.fastForward && configurationArgs.slowMo) {
 			console.error(chalk.redBright(`Arguments fast-forward and slow-mo are mutually exclusive`))
 			process.exit(0)
 		}
 
-		const result = await runSingleUser(runArgs)
+		if (configurationArgs.browser || configurationArgs.runArgs?.browser) {
+			const browser = configurationArgs.browser ?? configurationArgs.runArgs?.browser
+			checkBrowserType(browser)
+		}
+
+		const result = await runSingleUser(configurationArgs)
 
 		if (args.export) {
 			let root: string
@@ -119,29 +125,10 @@ const cmd: CommandModule = {
 	},
 	builder(yargs: Argv): Argv {
 		return yargs
-			.option('chrome', {
-				group: 'Browser:',
-				describe:
-					'Specify which version of Google Chrome to use. Default: use the puppeteer bundled version. stable: ',
-				coerce: chrome => {
-					// [not specified] => undefined => use test script value
-					// --chrome => override to 'stable'
-					// --chrome string => override to <string>
-					let chromeVersion: string | undefined
-					if (typeof chrome === 'boolean') {
-						if (chrome) {
-							chromeVersion = 'stable'
-						}
-					} else {
-						chromeVersion = chrome
-					}
-
-					return chromeVersion
-				},
-			})
-			.option('browser-type', {
-				group: 'Browser:',
-				describe: 'Run in a specific browser',
+			.option('browser', {
+				group: 'Browser',
+				type: 'string',
+				describe: `Sets the browser type used to run the test, using one of the 3 bundled browsers: 'chromium', 'firefox' and 'webkit'.`,
 			})
 			.option('no-headless', {
 				group: 'Browser:',
@@ -191,10 +178,6 @@ const cmd: CommandModule = {
 					'Override the loopCount setting in the test script. This is normally overridden to 1 when running via the cli.',
 				type: 'number',
 			})
-			.option('strict', {
-				group: 'Running the test script:',
-				describe: 'Compile the script in strict mode. This can be helpful in diagnosing problems.',
-			})
 			.option('work-root', {
 				group: 'Paths:',
 				describe:
@@ -204,6 +187,18 @@ const cmd: CommandModule = {
 				group: 'Paths:',
 				describe:
 					'Specify a custom path to find test data files. (Default: the same directory as the test script)',
+			})
+			.option('executable-path', {
+				group: 'Paths',
+				type: 'string',
+				describe:
+					'Path to the installation folder of a custom browser based on Chromium. If set, Element will ignore the browser setting and use this custom browser instead.',
+			})
+			.option('downloads-path', {
+				group: 'Paths',
+				type: 'string',
+				describe:
+					'If specified, accepted downloads are downloaded into this directory. Otherwise, a temporary directory is created and is deleted when browser is closed.',
 			})
 			.option('verbose', {
 				describe: 'Verbose mode',
@@ -233,6 +228,10 @@ const cmd: CommandModule = {
 			})
 			.option('export', {
 				describe: 'Export a HTML report after the test finished running',
+				type: 'boolean',
+			})
+			.option('--show-screenshot', {
+				describe: 'show screenshot in the terminal (iTerm only)',
 				type: 'boolean',
 			})
 			.fail((msg, err) => {

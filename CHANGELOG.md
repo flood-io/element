@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.16](https://github.com/flood-io/element/compare/v2.0.0-canary.15...v2.0.0-canary.16) (2021-01-07)
+
+
+### Bug Fixes
+
+* refactor the way check file arg exist or not ([65e064e](https://github.com/flood-io/element/commit/65e064e76ceec0532a7b9fe3eee01546260910ca))
+
+
+
+
+
 # [2.0.0-canary.15](https://github.com/flood-io/element/compare/v2.0.0-canary.14...v2.0.0-canary.15) (2021-01-06)
 
 

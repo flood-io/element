@@ -5,6 +5,7 @@ import {
 	ChromiumBrowserContext,
 	BrowserContext,
 	HTTPCredentials,
+	Cookie,
 } from 'playwright'
 import debugFactory from 'debug'
 import ms from 'ms'
@@ -18,6 +19,7 @@ import {
 	EvaluateFn,
 	ClickOptions,
 	BrowserType,
+	CookiesFilterParams,
 } from '../page/types'
 import { TargetLocator } from '../page/TargetLocator'
 import { PlaywrightClientLike } from '../driver/Playwright'
@@ -569,6 +571,19 @@ export class Browser<T> implements BrowserInterface {
 
 	public async close(): Promise<void> {
 		await this.client.browser.close()
+	}
+
+	@addCallbacks()
+	public async getCookies(filterBy?: CookiesFilterParams): Promise<Cookie[]> {
+		const urls = filterBy?.urls
+		const names = filterBy?.names
+		let cookies = await this.page.context().cookies(urls)
+		if (names) {
+			cookies = cookies.filter(cookie =>
+				typeof names === 'string' ? cookie.name === names : names.includes(cookie.name),
+			)
+		}
+		return cookies
 	}
 
 	private async evaluateWithoutDecorator(fn: EvaluateFn, ...args: any[]): Promise<any> {

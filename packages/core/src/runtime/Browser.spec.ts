@@ -214,4 +214,23 @@ describe('Browser', () => {
 		await browser.switchTo().page(newPage)
 		expect(browser.url).toContain('/page_2.html')
 	})
+
+	test('action getCookies()', async () => {
+		const browser = new Browser(workRoot, playwright, DEFAULT_SETTINGS)
+		const url = await serve('test-cookies.html')
+
+		await browser.visit(url, { waitUntil: 'load' })
+		const getCookiesByStringName = await browser.getCookies({ names: 'element-cookie' })
+
+		expect(getCookiesByStringName.length).toStrictEqual(1)
+		expect(getCookiesByStringName[0].name).toStrictEqual('element-cookie')
+
+		const getCookiesByStringArray = await browser.getCookies({
+			names: ['element-cookie', 'floodio'],
+		})
+
+		expect(getCookiesByStringArray.length).toStrictEqual(2)
+		expect(getCookiesByStringArray[0].name).toStrictEqual('element-cookie')
+		expect(getCookiesByStringArray[1].name).toStrictEqual('floodio')
+	})
 })

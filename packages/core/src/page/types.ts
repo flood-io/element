@@ -278,3 +278,8 @@ export interface ScreenshotOptions {
 	 */
 	encoding?: 'base64' | 'binary'
 }
+
+export interface CookiesFilterParams {
+	urls?: string | string[]
+	names?: string | string[]
+}

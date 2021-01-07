@@ -108,7 +108,7 @@ export async function runCommandLine(args: ElementRunArguments): Promise<TestRes
 	}
 
 	if (args.testFiles) {
-		if (!args.runArgs?.file) {
+		if (args.runArgs && !args.runArgs.file) {
 			console.log(
 				chalk.grey(
 					'The following test scripts that matched the testPathMatch pattern are going to be executed:',

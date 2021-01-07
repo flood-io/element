@@ -7,12 +7,16 @@ import {
 	ScriptWithError,
 } from '@flood/element-report'
 import { ElementOptions } from './ElementOption'
-import { version } from './utils/Version'
+import { join } from 'path'
+import findRoot from 'find-root'
 
 export class ElementResult {
 	private _result: TestResult
 
 	constructor() {
+		// eslint-disable-next-line @typescript-eslint/no-var-requires
+		const pkg = require(join(findRoot(__dirname), 'package.json'))
+
 		this._result = {
 			testScripts: [],
 			executionInfo: {
@@ -26,7 +30,7 @@ export class ElementResult {
 				}),
 				mode: '',
 				os: osName(),
-				elementVersion: version,
+				elementVersion: pkg.version,
 				nodeVersion: process.version,
 			},
 			scriptsWithError: [],

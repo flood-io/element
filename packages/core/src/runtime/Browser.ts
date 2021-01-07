@@ -419,7 +419,7 @@ export class Browser<T> implements BrowserInterface {
 			console.log(chalk.grey(`Screenshot saved in ${path}`))
 			if (this.settings.showScreenshot) {
 				const fallback = () => void 0
-				const supportImg = termImg(path, { width: '50%', fallback })
+				const supportImg = termImg(path, { width: '40%', fallback })
 				if (supportImg) console.log(supportImg)
 			}
 			return true

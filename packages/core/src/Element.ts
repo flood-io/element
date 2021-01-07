@@ -1,3 +1,6 @@
+import chalk from 'chalk'
+import Spinnies from 'spinnies'
+import { existsSync } from 'fs'
 import { ConcreteLaunchOptions, launch } from './driver/Playwright'
 import { IRunner, Runner, PersistentRunner } from './Runner'
 import { mustCompileFile } from './TestScript'
@@ -5,9 +8,8 @@ import { TestScriptOptions } from './TestScriptOptions'
 import { EvaluatedScript } from './runtime/EvaluatedScript'
 import { ElementOptions, ElementRunArguments, normalizeElementOptions } from './ElementOption'
 import { CustomConsole, IterationResult, TestResult } from '@flood/element-report'
-import chalk from 'chalk'
+
 import { ElementResult } from './ElementResult'
-import Spinnies from 'spinnies'
 
 export async function runSingleTestScript(opts: ElementOptions): Promise<IterationResult[]> {
 	const {

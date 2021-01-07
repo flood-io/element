@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.17](https://github.com/flood-io/element/compare/v2.0.0-canary.16...v2.0.0-canary.17) (2021-01-07)
+
+
+### Bug Fixes
+
+* errors reported by codacy ([1a41918](https://github.com/flood-io/element/commit/1a41918b5cf89cd3e9ac2a81db26ac70d533589a))
+* errors reported by codacy ([3246406](https://github.com/flood-io/element/commit/32464067b05fa39378570a63bdbfb6827049204d))
+* errors reported by codacy ([6586df6](https://github.com/flood-io/element/commit/6586df62d008164950ae5d9e05aa060ca4741e37))
+* errors reported by codacy ([bb52432](https://github.com/flood-io/element/commit/bb524322c3c7ff2d2f84c312f7dabd3d61612f3c))
+* errors reported by codacy ([4cc2269](https://github.com/flood-io/element/commit/4cc22693975672c555d2ff1d960dbd78b4f273ab))
+* report table ([3e042dd](https://github.com/flood-io/element/commit/3e042ddc858f6921ef6ce112ea9e49da3da3e5fb))
+
+
+### Features
+
+* allow filtering steps by result ([29fd092](https://github.com/flood-io/element/commit/29fd092a8897a6f46d89f67ac4bd46ef12ceeec9))
+* view summary in number or percentage ([7d00010](https://github.com/flood-io/element/commit/7d0001070f834a2e1709cf1c34145d62632cfdea))
+
+
+
+
+
 # [2.0.0-canary.16](https://github.com/flood-io/element/compare/v2.0.0-canary.15...v2.0.0-canary.16) (2021-01-07)
 
 **Note:** Version bump only for package @flood/element-cli

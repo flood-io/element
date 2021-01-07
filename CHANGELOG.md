@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.17](https://github.com/flood-io/element/compare/v2.0.0-canary.16...v2.0.0-canary.17) (2021-01-07)
+
+
+### Bug Fixes
+
+* errors reported by codacy ([1a41918](https://github.com/flood-io/element/commit/1a41918b5cf89cd3e9ac2a81db26ac70d533589a))
+* errors reported by codacy ([3246406](https://github.com/flood-io/element/commit/32464067b05fa39378570a63bdbfb6827049204d))
+* errors reported by codacy ([6586df6](https://github.com/flood-io/element/commit/6586df62d008164950ae5d9e05aa060ca4741e37))
+* errors reported by codacy ([bb52432](https://github.com/flood-io/element/commit/bb524322c3c7ff2d2f84c312f7dabd3d61612f3c))
+* errors reported by codacy ([4cc2269](https://github.com/flood-io/element/commit/4cc22693975672c555d2ff1d960dbd78b4f273ab))
+* report table ([3e042dd](https://github.com/flood-io/element/commit/3e042ddc858f6921ef6ce112ea9e49da3da3e5fb))
+* update unit test ([e3be066](https://github.com/flood-io/element/commit/e3be06600910c40f506ed181dfecf8d2b8cff3e4))
+
+
+### Features
+
+* allow filtering steps by result ([29fd092](https://github.com/flood-io/element/commit/29fd092a8897a6f46d89f67ac4bd46ef12ceeec9))
+* implement ElementCookies ([f728792](https://github.com/flood-io/element/commit/f728792ae1eb7242daa6699348fafb77e57df431))
+* refactor code ([06b1950](https://github.com/flood-io/element/commit/06b19502ddf643f390057c493a3fbf28ae507e81))
+* refactor code base on suggestion of reviewers ([60c77ac](https://github.com/flood-io/element/commit/60c77ac1a225165539d22c85be36976c3059963a))
+* update API base on new AC ([81c1c53](https://github.com/flood-io/element/commit/81c1c536080975f43798180f5601d2127758ef24))
+* update unit test ([1e0d52b](https://github.com/flood-io/element/commit/1e0d52bbaf1be4a19db0644735dc30e355f93677))
+* view summary in number or percentage ([7d00010](https://github.com/flood-io/element/commit/7d0001070f834a2e1709cf1c34145d62632cfdea))
+
+
+
+
+
 # [2.0.0-canary.16](https://github.com/flood-io/element/compare/v2.0.0-canary.15...v2.0.0-canary.16) (2021-01-07)
 
 

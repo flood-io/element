@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.17](https://github.com/flood-io/element/compare/v2.0.0-canary.16...v2.0.0-canary.17) (2021-01-07)
+
+
+### Bug Fixes
+
+* update unit test ([e3be066](https://github.com/flood-io/element/commit/e3be06600910c40f506ed181dfecf8d2b8cff3e4))
+
+
+### Features
+
+* implement ElementCookies ([f728792](https://github.com/flood-io/element/commit/f728792ae1eb7242daa6699348fafb77e57df431))
+* refactor code ([06b1950](https://github.com/flood-io/element/commit/06b19502ddf643f390057c493a3fbf28ae507e81))
+* refactor code base on suggestion of reviewers ([60c77ac](https://github.com/flood-io/element/commit/60c77ac1a225165539d22c85be36976c3059963a))
+* update API base on new AC ([81c1c53](https://github.com/flood-io/element/commit/81c1c536080975f43798180f5601d2127758ef24))
+* update unit test ([1e0d52b](https://github.com/flood-io/element/commit/1e0d52bbaf1be4a19db0644735dc30e355f93677))
+
+
+
+
+
 # [2.0.0-canary.16](https://github.com/flood-io/element/compare/v2.0.0-canary.15...v2.0.0-canary.16) (2021-01-07)
 
 

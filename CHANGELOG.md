@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.18](https://github.com/flood-io/element/compare/v2.0.0-canary.17...v2.0.0-canary.18) (2021-01-08)
+
+
+### Bug Fixes
+
+* cannot find module '../../package.json' ([42ed4e6](https://github.com/flood-io/element/commit/42ed4e6d32bca65904e11a817361ef5a81265cd7))
+
+
+
+
+
 # [2.0.0-canary.17](https://github.com/flood-io/element/compare/v2.0.0-canary.16...v2.0.0-canary.17) (2021-01-07)
 
 

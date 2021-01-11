@@ -283,3 +283,6 @@ export interface CookiesFilterParams {
 	urls?: string | string[]
 	names?: string | string[]
 }
+
+// Using the type below for API scrollTo()
+export type ScrollDirection = 'top' | 'left' | 'bottom' | 'right'

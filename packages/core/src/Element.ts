@@ -9,6 +9,8 @@ import chalk from 'chalk'
 import { EventEmitter } from 'events'
 import { ElementResult } from './ElementResult'
 import { existsSync } from 'fs'
+import { join } from 'path'
+import findRoot from 'find-root'
 
 export async function runSingleTestScript(opts: ElementOptions): Promise<IterationResult[]> {
 	const {
@@ -93,7 +95,11 @@ export async function runCommandLine(args: ElementRunArguments): Promise<TestRes
 		elementResult: ElementResult,
 		isConfig: boolean,
 	) => {
-		console.group(chalk('Running', fileTitle))
+		// eslint-disable-next-line @typescript-eslint/no-var-requires
+		const pkg = require(join(findRoot(__dirname), 'package.json'))
+		console.group(
+			chalk(`Running ${fileTitle} with\n- Element v${pkg.version}\n- Node ${process.version}`),
+		)
 		const opts = normalizeElementOptions(args, cache)
 		elementResult.addExecutionInfo(opts, isConfig)
 

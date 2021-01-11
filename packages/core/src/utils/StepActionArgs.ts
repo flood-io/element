@@ -15,6 +15,14 @@ import {
 	ElementsLocatedCondition,
 } from '../page/conditions/'
 import { ElementHandle } from './../page/ElementHandle'
+import {
+	isInstanceOf,
+	isAnElementHandle,
+	isURLCondition,
+	isTitleCondition,
+	isFrameCondition,
+	isElementTextCondition,
+} from './CheckInstance'
 
 const conditions = [
 	DialogCondition,
@@ -32,22 +40,6 @@ const conditions = [
 	ElementsLocatedCondition,
 	ElementHandle,
 ]
-
-const isInstanceOf = (arg: any, conditions: Array<any>) =>
-	conditions.some(condition => arg instanceof condition)
-
-const isAnElementHandle = (arg: any): boolean => isInstanceOf(arg, [ElementHandle])
-
-const isURLCondition = (arg: any): boolean =>
-	isInstanceOf(arg, [URLCondition, URLNotMatchCondition])
-
-const isTitleCondition = (arg: any): boolean =>
-	isInstanceOf(arg, [TitleCondition, TitleNotMatchCondition])
-
-const isFrameCondition = (arg: any): boolean => isInstanceOf(arg, [FrameCondition])
-
-const isElementTextCondition = (arg: any): boolean =>
-	isInstanceOf(arg, [ElementTextCondition, ElementTextNotMatchCondition])
 
 const getErrorString = (locator: ElementHandle | BaseLocator): string => {
 	if (locator instanceof ElementHandle) {

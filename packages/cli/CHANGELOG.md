@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.19](https://github.com/flood-io/element/compare/v2.0.0-canary.18...v2.0.0-canary.19) (2021-01-11)
+
+
+### Bug Fixes
+
+* remove highlightElement api because playwright does not support yet ([3aeee26](https://github.com/flood-io/element/commit/3aeee26f0c9cdbe650611ece644d762ec3945377))
+
+
+### Features
+
+* add hooks to template ([ff17558](https://github.com/flood-io/element/commit/ff175585203103fc734c30b6f62faaa47e9821a5))
+
+
+
+
+
 # [2.0.0-canary.18](https://github.com/flood-io/element/compare/v2.0.0-canary.17...v2.0.0-canary.18) (2021-01-08)
 
 **Note:** Version bump only for package @flood/element-cli

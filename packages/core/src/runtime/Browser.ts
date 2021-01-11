@@ -590,6 +590,45 @@ export class Browser<T> implements BrowserInterface {
 		return this.page.url()
 	}
 
+	private isCorrectScrollBehavior(behavior: string): behavior is ScrollBehavior {
+		return ['auto', 'smooth'].includes(behavior)
+	}
+
+	public async scrollBy(
+		x: number | 'window.innerWidth',
+		y: number | 'window.innerHeight',
+		scrollOptions?: ScrollOptions,
+	): Promise<void> {
+		const behavior = scrollOptions?.behavior ?? 'auto'
+
+		if (!this.isCorrectScrollBehavior(behavior)) {
+			throw new Error('The input behavior is not correct (Must be "auto" or "smooth").')
+		}
+
+		if (x !== 'window.innerWidth' && typeof x !== 'number') {
+			throw new Error(
+				'The input x that you want to scroll by must be "window.innerWidth" or a number.',
+			)
+		}
+
+		if (y !== 'window.innerHeight' && typeof y !== 'number') {
+			throw new Error(
+				'The input y that you want to scroll by must be "window.innerHeight" or a number.',
+			)
+		}
+
+		await this.page.evaluate(
+			({ x, y, behavior }) => {
+				window.scrollBy({
+					top: y === 'window.innerHeight' ? window.innerHeight : y,
+					left: x === 'window.innerWidth' ? window.innerWidth : x,
+					behavior,
+				})
+			},
+			{ x, y, behavior },
+		)
+	}
+
 	private async evaluateWithoutDecorator(fn: EvaluateFn, ...args: any[]): Promise<any> {
 		return this.target.evaluate(fn, ...args)
 	}

@@ -661,16 +661,16 @@ export class Browser<T> implements BrowserInterface {
 			!isPoint(target) &&
 			typeof target !== 'string'
 		) {
-			console.log('hello')
 			const targetEl: ElementHandle = isLocator(target)
 				? await this.findElementWithoutDecorator(target)
 				: target
-			await targetEl.element.evaluate((elementNode, scrollOptions) => {
-				const span = document.createElement('span')
-				elementNode.appendChild(span)
-				const element = span.parentElement
-				element?.scrollIntoView(scrollOptions)
-			}, {behavior, block, inline})
+			await targetEl.element.evaluate(
+				(elementNode, scrollOptions) => {
+					const element = elementNode as HTMLElement
+					element.scrollIntoView(scrollOptions)
+				},
+				{ behavior, block, inline },
+			)
 			return
 		}
 

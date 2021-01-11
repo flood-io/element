@@ -10,16 +10,16 @@ export const settings: TestSettings = {
 
 export default () => {
 	beforeAll(async browser => {
-		// Run this hook before all steps in file
+		// Run this hook before running the first step
 		await browser.wait('500ms')
 	})
 
 	afterAll(async browser => {
-		// Run this hook after all steps in file
+		// Run this hook after running the last step
 		await browser.wait('500ms')
 	})
 
-	// if you want to do some actions before/after every step, use beforeEach/afterEach
+	// If you want to do some actions before/after every single step, use beforeEach/afterEach
 	// beforeEach(async browser => {})
 	// afterEach(async browser => {})
 

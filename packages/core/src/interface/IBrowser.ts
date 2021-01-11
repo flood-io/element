@@ -296,6 +296,8 @@ export interface Browser {
 	context(): BrowserContext
 
 	getCookies(filterBy?: CookiesFilterParams): Promise<Cookie[]>
+
+	getUrl(): string
 }
 
 /**

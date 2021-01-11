@@ -233,4 +233,13 @@ describe('Browser', () => {
 		expect(getCookiesByStringArray[0].name).toStrictEqual('element-cookie')
 		expect(getCookiesByStringArray[1].name).toStrictEqual('floodio')
 	})
+
+	test('action getUrl()', async () => {
+		const browser = new Browser(workRoot, playwright, DEFAULT_SETTINGS)
+		const URL = 'https://challenge.flood.io/'
+		await browser.visit(URL, { waitUntil: 'load' })
+
+		const currentUrl = browser.getUrl()
+		expect(currentUrl).toStrictEqual(URL)
+	})
 })

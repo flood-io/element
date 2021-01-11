@@ -586,6 +586,10 @@ export class Browser<T> implements BrowserInterface {
 		return cookies
 	}
 
+	public getUrl(): string {
+		return this.page.url()
+	}
+
 	private async evaluateWithoutDecorator(fn: EvaluateFn, ...args: any[]): Promise<any> {
 		return this.target.evaluate(fn, ...args)
 	}

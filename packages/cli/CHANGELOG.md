@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.20](https://github.com/flood-io/element/compare/v2.0.0-canary.19...v2.0.0-canary.20) (2021-01-12)
+
+
+### Bug Fixes
+
+* update message of test script template ([ab31c32](https://github.com/flood-io/element/commit/ab31c32cb93e6f95452574d571f8a82380b3e60f))
+
+
+
+
+
 # [2.0.0-canary.19](https://github.com/flood-io/element/compare/v2.0.0-canary.18...v2.0.0-canary.19) (2021-01-11)
 
 

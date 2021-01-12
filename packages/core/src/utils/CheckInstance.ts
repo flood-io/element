@@ -28,12 +28,12 @@ export const isFrameCondition = (arg: unknown): boolean => isInstanceOf(arg, [Fr
 export const isElementTextCondition = (arg: unknown): boolean =>
 	isInstanceOf(arg, [ElementTextCondition, ElementTextNotMatchCondition])
 
+// Using for API scrollBy() and scrollTo()
 export const isLocator = (
 	target: Locator | ElementHandle | Point | ScrollDirection,
-): target is Locator => {
-	return target instanceof BaseLocator
-}
+): target is Locator => isInstanceOf(target, [BaseLocator])
 
+// Using for API scrollBy() and scrollTo()
 export const isPoint = (
 	target: Locator | ElementHandle | Point | ScrollDirection,
 ): target is Point => {

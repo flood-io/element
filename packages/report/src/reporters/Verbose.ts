@@ -94,20 +94,10 @@ export class VerboseReporter implements IReporter {
 			case TestEvent.AfterStep:
 				break
 			case TestEvent.StepSkipped:
-				this.report.startAnimation(
-					stepName,
-					chalk.yellow(`${stepName} skipped`),
-					4,
-					'non-spinnable',
-				)
+				this.report.addText(stepName, chalk.yellow(`${stepName} skipped`), 4)
 				break
 			case TestEvent.StepUnexecuted:
-				this.report.startAnimation(
-					stepName,
-					chalk.grey(`${stepName} is unexecuted`),
-					4,
-					'non-spinnable',
-				)
+				this.report.addText(stepName, chalk.grey(`${stepName} is unexecuted`), 4)
 				break
 		}
 	}

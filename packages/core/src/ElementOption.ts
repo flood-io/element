@@ -198,7 +198,7 @@ export function normalizeElementOptions(args: ElementRunArguments, spinnies?: an
 
 	if (runArgs?.file && !!runArgs.verbose) verboseBool = !!runArgs.verbose
 
-	const reporter = verboseBool ? new VerboseReporter(spinnies) : new BaseReporter()
+	const reporter = verboseBool ? new VerboseReporter(spinnies) : new BaseReporter(spinnies)
 
 	const opts: ElementOptions = {
 		testScript: file,

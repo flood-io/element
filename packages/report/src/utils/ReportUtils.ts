@@ -1,4 +1,4 @@
-export type Status = 'succeed' | 'fail' | 'spinning' | 'non-spinnable' | 'stopped'
+export type Status = 'succeed' | 'fail' | 'spinning' | 'stopped'
 
 export class ReportUtils {
 	private store: { id: string; alias: string; status: 'running' | 'stopped' }[] = []
@@ -26,5 +26,14 @@ export class ReportUtils {
 			this.spinnies[method](report[0].alias, { text, indent })
 			report[0].status = 'stopped'
 		}
+	}
+
+	addText(id: string, text: string, indent: number): void {
+		const alias = `${id}_${new Date().valueOf()}`
+		this.spinnies.add(alias, {
+			text,
+			indent,
+			status: 'non-spinnable',
+		})
 	}
 }

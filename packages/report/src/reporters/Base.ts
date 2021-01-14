@@ -1,16 +1,23 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { TestScriptError } from '../runtime/TestScriptError'
 import { IReporter, WorkerReport } from '../runtime/IReporter'
 import { TraceData, TestEvent, CompoundMeasurement, MeasurementKind } from '../types/Report'
 import chalk from 'chalk'
 import debugFactory from 'debug'
+import { CustomConsole } from '../console/CustomConsole'
+import { ReportUtils } from '../utils/ReportUtils'
 const debug = debugFactory('element-cli:console-reporter')
 
 export class BaseReporter implements IReporter {
 	public responseCode: string
 	public stepName: string
 	public worker: WorkerReport
+	private report: ReportUtils
 
-	constructor(public spinnies?: any) {}
+	constructor(public spinnies?: any) {
+		this.report = new ReportUtils(spinnies)
+	}
 
 	reset(step: string): void {}
 
@@ -37,41 +44,41 @@ export class BaseReporter implements IReporter {
 		const beforeRunStepMessage = chalk.whiteBright(`${stepName} is running ...`)
 		const beforeRunHookMessage = chalk.whiteBright(`${label} is running ...`)
 		const afterRunHookMessage = `${chalk.green.bold('✔')} ${chalk.whiteBright(`${label} finished`)}`
+		const customConsole = global.console as CustomConsole
+		customConsole.setGroupDepth(6)
 		switch (stage) {
 			case TestEvent.BeforeAllStep:
 			case TestEvent.AfterAllStep:
 			case TestEvent.BeforeEachStep:
 			case TestEvent.AfterEachStep:
-				this.spinnies.add(label, { text: beforeRunHookMessage, indent: 4 })
+				this.report.startAnimation(label, beforeRunHookMessage, 4)
 				break
 			case TestEvent.BeforeAllStepFinished:
 			case TestEvent.AfterAllStepFinished:
 			case TestEvent.BeforeEachStepFinished:
 			case TestEvent.AfterEachStepFinished:
-				this.spinnies.succeed(label, { text: afterRunHookMessage, indent: 4 })
+				this.report.endAnimation(label, afterRunHookMessage, 4)
 				break
 			case TestEvent.BeforeStep:
-				this.spinnies.add(stepName, { text: beforeRunStepMessage, indent: 4 })
+				this.report.startAnimation(stepName, beforeRunStepMessage, 4)
 				break
 			case TestEvent.StepSucceeded:
-				this.spinnies.succeed(stepName, {
-					text: `${stepName} passed (${timing?.toLocaleString()}ms)`,
-					indent: 4,
-				})
+				this.report.endAnimation(stepName, `${stepName} passed (${timing?.toLocaleString()}ms)`, 4)
 				break
 			case TestEvent.StepFailed:
 				console.error(chalk.red(errorMessage?.length ? errorMessage : 'step error -> failed'))
-				this.spinnies.fail(stepName, {
-					text: `${stepName} failed (${timing?.toLocaleString()}ms)`,
-					indent: 4,
-				})
+				this.report.endAnimation(
+					stepName,
+					chalk.red(`${stepName} failed (${timing?.toLocaleString()}ms)`),
+					4,
+					'fail',
+				)
 				break
 			case TestEvent.StepSkipped:
-				this.spinnies.add(stepName, {
-					text: chalk.yellow(`${stepName} skipped`),
-					status: 'non-spinnable',
-					indent: 4,
-				})
+				this.report.addText(stepName, chalk.yellow(`${stepName} skipped`), 4)
+				break
+			case TestEvent.StepUnexecuted:
+				this.report.addText(stepName, chalk.grey(`${stepName} is unexecuted`), 4)
 				break
 			case TestEvent.AfterStep:
 				console.groupEnd()

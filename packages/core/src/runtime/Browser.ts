@@ -768,4 +768,12 @@ export class Browser<T> implements BrowserInterface {
 			)
 		}
 	}
+
+	@autoWaitUntil()
+	@addCallbacks()
+	public async drag(from: ElementHandle, to: ElementHandle): Promise<void> {
+		const dataTransfer = await this.page.evaluateHandle(() => new DataTransfer())
+		await from.element.dispatchEvent('dragstart', { dataTransfer })
+		await to.element.dispatchEvent('drop', { dataTransfer })
+	}
 }

@@ -498,4 +498,10 @@ export class ElementHandle implements IElementHandle, Locator {
 			await client.send('Overlay.hideHighlight', {})
 		}
 	}
+
+	public async drag(to: IElementHandle): Promise<void> {
+		const dataTransfer = await this.page.evaluateHandle(() => new DataTransfer())
+		await this.element.dispatchEvent('dragstart', { dataTransfer })
+		await to.element.dispatchEvent('drop', { dataTransfer })
+	}
 }

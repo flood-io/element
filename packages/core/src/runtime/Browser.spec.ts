@@ -362,4 +362,17 @@ describe('Browser', () => {
 			})
 		})
 	})
+
+	test('drag an element into another element', async () => {
+		const browser = new Browser(workRoot, playwright, DEFAULT_SETTINGS)
+		const url = await serve('html_drag_drop.html')
+
+		await browser.visit(url)
+		const from = await browser.findElement(By.id('#draggable'))
+		const to = await browser.findElement(By.id('#droppable'))
+
+		await browser.drag(from, to)
+		const resultText = await to.text()
+		expect(resultText).toBe('Dropped!')
+	})
 })

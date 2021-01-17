@@ -675,7 +675,7 @@ export class Browser<T> implements BrowserInterface {
 		}
 
 		if (isPoint(target)) {
-			[left, top] = target
+			;[left, top] = target
 		} else if (typeof target === 'string') {
 			switch (target) {
 				case 'top':
@@ -766,5 +766,13 @@ export class Browser<T> implements BrowserInterface {
 				err,
 			)
 		}
+	}
+
+	@autoWaitUntil()
+	@addCallbacks()
+	public async drag(from: ElementHandle, to: ElementHandle): Promise<void> {
+		const dataTransfer = await this.page.evaluateHandle(() => new DataTransfer())
+		await from.element.dispatchEvent('dragstart', { dataTransfer })
+		await to.element.dispatchEvent('drop', { dataTransfer })
 	}
 }

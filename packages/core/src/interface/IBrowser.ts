@@ -332,6 +332,11 @@ export interface Browser {
 		target: Locator | ElementHandle | Point | ScrollDirection,
 		scrollOptions?: ScrollIntoViewOptions,
 	): Promise<void>
+
+	/**
+	 * Drag an element into another element
+	 */
+	drag(from: ElementHandle, to: ElementHandle): Promise<void>
 }
 
 /**

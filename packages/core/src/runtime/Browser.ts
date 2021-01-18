@@ -33,7 +33,6 @@ import { locatableToLocator, toLocatorError } from './toLocatorError'
 import { Keyboard } from '../page/Keyboard'
 import { getFrames } from '../utils/frames'
 import { DeviceDescriptor } from '../page/Device'
-import termImg from 'term-img'
 import chalk from 'chalk'
 
 export const debug = debugFactory('element:runtime:browser')
@@ -417,11 +416,6 @@ export class Browser<T> implements BrowserInterface {
 		await this.saveScreenshot(async path => {
 			await this.page.screenshot({ path, ...options })
 			console.log(chalk.grey(`Screenshot saved in ${path}`))
-			if (this.settings.showScreenshot) {
-				const fallback = () => void 0
-				const supportImg = termImg(path, { width: '40%', fallback })
-				if (supportImg) console.log(supportImg)
-			}
 			return true
 		})
 	}

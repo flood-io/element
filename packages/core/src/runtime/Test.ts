@@ -32,7 +32,9 @@ import { Hook, HookBase, HookType } from './StepLifeCycle'
 import StepIterator from './StepIterator'
 import { getNumberWithOrdinal } from '../utils/numerical'
 import { StructuredError } from '../utils/StructuredError'
+import termImg from 'term-img'
 import chalk from 'chalk'
+import { basename } from 'path'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:test')
@@ -252,6 +254,12 @@ export default class Test implements ITest {
 				if (!hookResult) {
 					stepIterator.stop()
 					return
+				}
+				if (this.settings.showScreenshot && process.env.TERM_PROGRAM === 'iTerm.app') {
+					for (const path of browser.fetchScreenshots()) {
+						console.log(basename(path))
+						termImg(path, { width: '40%' })
+					}
 				}
 			})
 			await this.afterRunSteps(stepIterator)

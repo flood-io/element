@@ -255,14 +255,14 @@ export default class Test implements ITest {
 					stepIterator.stop()
 					return
 				}
-				if (this.settings.showScreenshot && process.env.TERM_PROGRAM === 'iTerm.app') {
-					for (const path of browser.fetchScreenshots()) {
-						console.log(basename(path))
-						termImg(path, { width: '40%' })
-					}
-				}
 			})
 			await this.afterRunSteps(stepIterator)
+			if (this.settings.showScreenshot && process.env.TERM_PROGRAM === 'iTerm.app') {
+				for (const path of browser.fetchScreenshots()) {
+					console.log(basename(path))
+					termImg(path, { width: '40%' })
+				}
+			}
 		} catch (err) {
 			this.failed = true
 			console.error(chalk.red(err.message))

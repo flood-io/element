@@ -3,43 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [1.4.0-beta.6](https://github.com/flood-io/element/compare/v1.4.0-beta.5...v1.4.0-beta.6) (2020-12-04)
-
-
-### Bug Fixes
-
-* cannot read property 'indexOf' of undefined ([b40ff6c](https://github.com/flood-io/element/commit/b40ff6ceebe1a5d0d70bc83d67940d4cde8ef390))
-
-
-
-
-
-# [1.4.0-beta.5](https://github.com/flood-io/element/compare/v1.3.10-beta.0...v1.4.0-beta.5) (2020-12-04)
-
+## [1.4.0-beta.6](https://github.com/flood-io/element/compare/v1.4.0-beta.5...v1.4.0-beta.6) (2020-12-04)
 
 ### Bug Fixes
 
-* fix CHANGELOG.md of each package ([6949219](https://github.com/flood-io/element/commit/694921922599c21394cbf3369852bdea75b85c38))
-* update correct version of each package ([e87e39b](https://github.com/flood-io/element/commit/e87e39b20ac06eb0197f1bd36c16eff46375e6bf))
-* using remark to beautify *.md file to pass codacy ([198fc3c](https://github.com/flood-io/element/commit/198fc3c873d914884dbafa5f492d3545cc5c3635))
+-   cannot read property 'indexOf' of undefined ([b40ff6c](https://github.com/flood-io/element/commit/b40ff6ceebe1a5d0d70bc83d67940d4cde8ef390))
 
+## [1.4.0-beta.5](https://github.com/flood-io/element/compare/v1.3.10-beta.0...v1.4.0-beta.5) (2020-12-04)
 
+### Bug Fixes
 
+-   fix CHANGELOG.md of each package ([6949219](https://github.com/flood-io/element/commit/694921922599c21394cbf3369852bdea75b85c38))
+-   update correct version of each package ([e87e39b](https://github.com/flood-io/element/commit/e87e39b20ac06eb0197f1bd36c16eff46375e6bf))
+-   using remark to beautify \*.md file to pass codacy ([198fc3c](https://github.com/flood-io/element/commit/198fc3c873d914884dbafa5f492d3545cc5c3635))
 
-
-# [1.4.0-beta.4](https://github.com/flood-io/element/compare/v1.4.0-beta.3...v1.4.0-beta.4) (2020-12-03)
+## [1.4.0-beta.4](https://github.com/flood-io/element/compare/v1.4.0-beta.3...v1.4.0-beta.4) (2020-12-03)
 
 ### Features
 
 -   export and mock BaseLocator ([0b09929](https://github.com/flood-io/element/commit/0b0992933c68ee9994685afe88288591af9ce7f7))
 
-# [1.4.0-beta.3](https://github.com/flood-io/element/compare/v1.4.0-beta.2...v1.4.0-beta.3) (2020-11-25)
+## [1.4.0-beta.3](https://github.com/flood-io/element/compare/v1.4.0-beta.2...v1.4.0-beta.3) (2020-11-25)
 
 ### Features
 
 -   update puppeteer to latest version and fix device descriptors ([baa62c0](https://github.com/flood-io/element/commit/baa62c0ac4d3f4cab9ac4ce7a8ec2daf6254f37b))
 
-# [1.4.0-beta.2](https://github.com/flood-io/element/compare/v1.4.0-beta.1...v1.4.0-beta.2) (2020-11-24)
+## [1.4.0-beta.2](https://github.com/flood-io/element/compare/v1.4.0-beta.1...v1.4.0-beta.2) (2020-11-24)
 
 ### Bug Fixes
 
@@ -48,7 +38,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [1.4.0-beta.1](https://github.com/flood-io/element/compare/v1.4.0-beta.0...v1.4.0-beta.1) (2020-11-23)
 
-## Features
+### Features
 
 -   change version to make it consitent ([79d3a60](https://github.com/flood-io/element/commit/79d3a607a580b230536260ed68b40c1c701aaa1f))
 -   revert beta to 1.3.0-beta.28 ([5ff2220](https://github.com/flood-io/element/commit/5ff2220674ec1f89b31f2499f0d5f0aecc1c12af))

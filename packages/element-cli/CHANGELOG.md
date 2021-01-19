@@ -3,37 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [1.4.0-beta.6](https://github.com/flood-io/element/compare/v1.4.0-beta.5...v1.4.0-beta.6) (2020-12-04)
+## [1.4.0-beta.6](https://github.com/flood-io/element/compare/v1.4.0-beta.5...v1.4.0-beta.6) (2020-12-04)
 
 **Note:** Version bump only for package element-cli
 
-
-
-
-
-# [1.4.0-beta.5](https://github.com/flood-io/element/compare/v1.3.10-beta.0...v1.4.0-beta.5) (2020-12-04)
-
+## [1.4.0-beta.5](https://github.com/flood-io/element/compare/v1.3.10-beta.0...v1.4.0-beta.5) (2020-12-04)
 
 ### Bug Fixes
 
-* fix CHANGELOG.md of each package ([6949219](https://github.com/flood-io/element/commit/694921922599c21394cbf3369852bdea75b85c38))
-* update correct version of each package ([e87e39b](https://github.com/flood-io/element/commit/e87e39b20ac06eb0197f1bd36c16eff46375e6bf))
-* using remark to beautify *.md file to pass codacy ([198fc3c](https://github.com/flood-io/element/commit/198fc3c873d914884dbafa5f492d3545cc5c3635))
+-   fix CHANGELOG.md of each package ([6949219](https://github.com/flood-io/element/commit/694921922599c21394cbf3369852bdea75b85c38))
+-   update correct version of each package ([e87e39b](https://github.com/flood-io/element/commit/e87e39b20ac06eb0197f1bd36c16eff46375e6bf))
+-   using remark to beautify \*.md file to pass codacy ([198fc3c](https://github.com/flood-io/element/commit/198fc3c873d914884dbafa5f492d3545cc5c3635))
 
-
-
-
-
-# [1.4.0-beta.4](https://github.com/flood-io/element/compare/v1.4.0-beta.3...v1.4.0-beta.4) (2020-12-03)
+## [1.4.0-beta.4](https://github.com/flood-io/element/compare/v1.4.0-beta.3...v1.4.0-beta.4) (2020-12-03)
 
 **Note:** Version bump only for package element-cli
 
-# [1.4.0-beta.3](https://github.com/flood-io/element/compare/v1.4.0-beta.2...v1.4.0-beta.3) (2020-11-25)
+## [1.4.0-beta.3](https://github.com/flood-io/element/compare/v1.4.0-beta.2...v1.4.0-beta.3) (2020-11-25)
 
 **Note:** Version bump only for package element-cli
 
-# [1.4.0-beta.2](https://github.com/flood-io/element/compare/v1.4.0-beta.1...v1.4.0-beta.2) (2020-11-24)
+## [1.4.0-beta.2](https://github.com/flood-io/element/compare/v1.4.0-beta.1...v1.4.0-beta.2) (2020-11-24)
 
+<!--lint disable no-duplicate-headings-->
 ### Bug Fixes
 
 -   codacy resolved ([55d66e1](https://github.com/flood-io/element/commit/55d66e1bf8ecd5d03982a08b3211aecd3c0ea559))

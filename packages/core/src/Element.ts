@@ -114,6 +114,7 @@ export async function runCommandLine(args: ElementRunArguments): Promise<TestRes
 	}
 
 	if (args.testFiles) {
+		const isConfigFile = existsSync(args.configFile)
 		if (args.runArgs && !args.runArgs.file) {
 			console.log(
 				chalk.grey(
@@ -135,10 +136,9 @@ export async function runCommandLine(args: ElementRunArguments): Promise<TestRes
 			}
 			order++
 			const fileTitle = chalk.grey(`${file} (${order} of ${numberOfFile})`)
-			await prepareAndRunTestScript(fileTitle, arg, cache, elementResult, true)
+			await prepareAndRunTestScript(fileTitle, arg, cache, elementResult, isConfigFile)
 		}
-		if (existsSync(args.configFile))
-			console.log(chalk.grey('Test running with the config file has finished'))
+		if (isConfigFile) console.log(chalk.grey('Test running with the config file has finished'))
 	}
 
 	if (args.notExistingFiles) {

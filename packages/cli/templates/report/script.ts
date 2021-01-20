@@ -34,6 +34,8 @@ interface StepResult {
 	subTitle?: string
 	duration?: number
 	error?: string
+	tableCellId: string
+	showError?: boolean
 }
 
 const filter = {
@@ -43,7 +45,6 @@ const filter = {
 	unexecuted: true,
 }
 let viewNumber = true
-let showError = false
 
 export function getTimeString(ms: number): string {
 	if (ms < 1000) return `${ms}ms`
@@ -234,32 +235,32 @@ function renderDetailHeader(): string {
   `
 }
 
+function getError(step: StepResult) {
+	if (!step.error) return ''
+
+	const errorId = `error-${step.name}`
+	const errorPart1 = step.error.slice(0, 100) || ''
+	const errorPart2 = step.error.slice(100) || ''
+
+	return `<div class="error with-show-more">
+		<input type="checkbox" class="trigger" id="${errorId}" />
+		<p class="wrapper">
+			<span class="always-show-section">${errorPart1}</span>
+			${
+				errorPart2
+					? `<span class="show-more-section">${errorPart2}</span>
+					<label for="${errorId}" class="button"></label>`
+					: ''
+			}
+		</p>
+	</div>`
+}
+
 function renderStepDetail(step: StepResult): string {
-	function getError() {
-		if (!step.error) return ''
-
-		const errorId = `error-${step.name}`
-		const errorPart1 = step.error.slice(0, 100) || ''
-		const errorPart2 = step.error.slice(100) || ''
-
-		return `<div class="error with-show-more">
-			<input type="checkbox" class="trigger" id="${errorId}" />
-			<p class="wrapper">
-				<span class="always-show-section">${errorPart1}</span>
-				${
-					errorPart2
-						? `<span class="show-more-section">${errorPart2}</span>
-						<label for="${errorId}" class="button"></label>`
-						: ''
-				}
-			</p>
-		</div>`
-	}
-
 	return `
-		<td class="step-name">
-			<div>${step.name}</div>
-			${showError ? getError() : ''}
+		<td class="step-name" id=${step.tableCellId}>
+			<div>${step.error ? (step.showError ? '▼' : '▶') : ''} ${step.name}</div>
+			${step.showError ? getError(step) : ''}
 		</td>
     <td class="${step.status} step-result">${step.status}</td>
     <td>${step.duration !== undefined ? `${getTimeString(step.duration)}` : '-'}</td>
@@ -314,19 +315,86 @@ function renderDetail(script: TestScriptResult): void {
 	}
 }
 
+function onStepClick(scripts: TestScriptResult[], cellId: string): void {
+	const [scriptIndex, iterationIndex, stepIndex] = cellId
+		.split('-')
+		.map(index => Number.parseInt(index))
+	const step = scripts[scriptIndex].iterationResults[iterationIndex].stepResults[stepIndex]
+
+	step.showError = !step.showError
+	const stepNameCell = document.getElementById(step.tableCellId)
+	if (stepNameCell) {
+		const tmpElement = document.createElement('id')
+		tmpElement.setAttribute('class', 'step-name')
+		tmpElement.setAttribute('id', step.tableCellId)
+		tmpElement.innerHTML = `
+			<div>${step.error ? (step.showError ? '▼' : '▶') : ''} ${step.name}</div>
+			${step.showError ? getError(step) : ''}
+		`
+		tmpElement.addEventListener('click', () => onStepClick(scripts, step.tableCellId))
+		stepNameCell.replaceWith(tmpElement)
+	}
+
+	const failedSteps = scripts
+		.map(script =>
+			script.iterationResults
+				.map(iteration => iteration.stepResults.filter(step => step.status === 'failed'))
+				.flat(),
+		)
+		.flat()
+
+	const errorToggle = document.getElementById('error-toggle')
+
+	if (failedSteps.every(step => step.showError)) {
+		errorToggle?.setAttribute('checked', 'true')
+	} else {
+		errorToggle?.removeAttribute('checked')
+	}
+}
+
 export function renderScriptsDetail(scripts: TestScriptResult[]): void {
-	scripts.forEach(script => {
+	scripts.forEach((script, scriptIndex) => {
+		script.iterationResults.forEach((iteration, iterationIndex) => {
+			iteration.stepResults.forEach(
+				(step, stepIndex) => (step.tableCellId = `${scriptIndex}-${iterationIndex}-${stepIndex}`),
+			)
+		})
 		document.writeln(`<div id=${script.name} class="script-detail"></div>`)
 		renderDetail(script)
 	})
+
+	const stepNameCells = document.getElementsByClassName('step-name')
+	Array.from(stepNameCells).forEach(cell =>
+		cell.addEventListener('click', () => onStepClick(scripts, cell.id)),
+	)
 }
 
 export function filterDetail(scripts: TestScriptResult[], filterKey: keyof typeof filter): void {
 	filter[filterKey] = !filter[filterKey]
 	scripts.forEach(script => renderDetail(script))
+
+	const stepNameCells = document.getElementsByClassName('step-name')
+	Array.from(stepNameCells).forEach(cell =>
+		cell.addEventListener('click', () => onStepClick(scripts, cell.id)),
+	)
 }
 
-export function toggleShowError(scripts: TestScriptResult[]): void {
-	showError = !showError
+function toggleScriptError(scripts: TestScriptResult[], showError: boolean): void {
+	scripts.forEach(script => {
+		script.iterationResults.forEach(iteration => {
+			iteration.stepResults.forEach(step => {
+				if (step.status === 'failed') step.showError = showError
+			})
+		})
+	})
+}
+
+export function toggleAllErrors(event, scripts: TestScriptResult[]): void {
+	toggleScriptError(scripts, event.target.checked)
 	scripts.forEach(script => renderDetail(script))
+
+	const stepNameCells = document.getElementsByClassName('step-name')
+	Array.from(stepNameCells).forEach(cell =>
+		cell.addEventListener('click', () => onStepClick(scripts, cell.id)),
+	)
 }

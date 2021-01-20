@@ -155,10 +155,11 @@ export class Runner {
 							console.log(chalk.grey('--------------------------------------------'))
 						}
 						startTime = new Date()
-						this.reporter.spinnies.add(iterationName, {
-							text: `${iterationName} ${numOfIteration}`,
-							indent: 2,
-						})
+						this.reporter.report?.startAnimation(
+							iterationName,
+							`${iterationName} ${numOfIteration}`,
+							2,
+						)
 					} else {
 						this.sendReport(
 							JSON.stringify({
@@ -174,10 +175,13 @@ export class Runner {
 					// eslint-disable-next-line no-empty
 				} catch {
 				} finally {
-					this.reporter.spinnies.succeed(iterationName, {
-						text: chalk.whiteBright(`${iterationName} ${numOfIteration}`),
-						indent: 2,
-					})
+					if (!this.reporter.worker) {
+						this.reporter.report?.endAnimation(
+							iterationName,
+							chalk.whiteBright(`${iterationName} ${numOfIteration}`),
+							2,
+						)
+					}
 					if (!this.looper.isRestart) {
 						const summarizedData = this.summarizeIteration(test, iteration, startTime)
 						reportTableData.push(summarizedData)

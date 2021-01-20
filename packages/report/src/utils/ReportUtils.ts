@@ -1,13 +1,19 @@
+import Spinnies from 'spinnies'
+
 export type Status = 'succeed' | 'fail' | 'spinning' | 'stopped'
 
 export class ReportUtils {
-	private store: { id: string; alias: string; status: 'running' | 'stopped' }[] = []
+	public store: {
+		id: string
+		alias: string
+		status: 'running' | 'stopped'
+	}[] = []
 
-	constructor(private spinnies: any) {}
+	constructor(public spinnies?: Spinnies) {}
 
 	startAnimation(id: string, text: string, indent: number, status: Status = 'spinning'): void {
 		const alias = `${id}_${new Date().valueOf()}`
-		this.spinnies.add(alias, {
+		this.spinnies?.add(alias, {
 			text,
 			indent,
 			status,
@@ -23,14 +29,14 @@ export class ReportUtils {
 	): void {
 		const report = this.store.filter(item => item.id === id && item.status === 'running')
 		if (report.length) {
-			this.spinnies[method](report[0].alias, { text, indent })
+			this.spinnies?.[method](report[0].alias, { text, indent })
 			report[0].status = 'stopped'
 		}
 	}
 
 	addText(id: string, text: string, indent: number): void {
 		const alias = `${id}_${new Date().valueOf()}`
-		this.spinnies.add(alias, {
+		this.spinnies?.add(alias, {
 			text,
 			indent,
 			status: 'non-spinnable',

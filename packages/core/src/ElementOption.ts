@@ -11,6 +11,7 @@ import { extname, basename, join, dirname, resolve } from 'path'
 import sanitize from 'sanitize-filename'
 import { PlaywrightClient } from './driver/Playwright'
 import { BrowserType } from './page/types'
+import Spinnies from 'spinnies'
 import ms from 'ms'
 export interface RunArguments {
 	loopCount?: number
@@ -190,7 +191,10 @@ function makeTestCommander(file: string): TestCommander {
 	return commander
 }
 
-export function normalizeElementOptions(args: ElementRunArguments, spinnies?: any): ElementOptions {
+export function normalizeElementOptions(
+	args: ElementRunArguments,
+	spinnies?: Spinnies,
+): ElementOptions {
 	const { file, verbose, runArgs, testSettings } = args
 	const workRootPath = getWorkRootPath(file, args['work-root'])
 	const testDataPath = getTestDataPath(file, args['test-data-root'])

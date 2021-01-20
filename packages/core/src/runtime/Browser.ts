@@ -49,6 +49,7 @@ export class Browser<T> implements BrowserInterface {
 
 	private newPageCallback: (resolve: (page: Page) => void) => void
 	private newPagePromise: Promise<Page>
+	private multipleUser = false
 
 	constructor(
 		public workRoot: WorkRoot,
@@ -79,6 +80,10 @@ export class Browser<T> implements BrowserInterface {
 
 	public testData(name: string): string {
 		return this.workRoot.testData(name)
+	}
+
+	public setMultipleUser(isMultiple: boolean): void {
+		this.multipleUser = isMultiple
 	}
 
 	public get target(): Frame {
@@ -421,7 +426,9 @@ export class Browser<T> implements BrowserInterface {
 	public async takeScreenshot(options?: ScreenshotOptions): Promise<void> {
 		await this.saveScreenshot(async path => {
 			await this.page.screenshot({ path, ...options })
-			console.log(chalk.grey(`Screenshot saved in ${path}`))
+			if (!this.multipleUser) {
+				console.log(chalk.grey(`Screenshot saved in ${path}`))
+			}
 			return true
 		})
 	}
@@ -669,7 +676,7 @@ export class Browser<T> implements BrowserInterface {
 		}
 
 		if (isPoint(target)) {
-			[left, top] = target
+			;[left, top] = target
 		} else if (typeof target === 'string') {
 			switch (target) {
 				case 'top':

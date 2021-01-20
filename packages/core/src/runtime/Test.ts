@@ -175,7 +175,7 @@ export default class Test implements ITest {
 
 			browser.beforeFunc = this.willRunCommand.bind(this, testObserver)
 			browser.afterFunc = this.didRunCommand.bind(this, testObserver)
-
+			browser.setMultipleUser(!!this.reporter.worker)
 			debug('running this.before(browser)')
 			await testObserver.before(this)
 
@@ -437,7 +437,7 @@ export default class Test implements ITest {
 		browser: Browser<Step>,
 		command: string,
 		args: string,
-	) {
+	): Promise<void> {
 		if (this.hookMode) {
 			await testObserver.beforeHookAction(this, command, args)
 		} else {

@@ -7,15 +7,16 @@ import chalk from 'chalk'
 import debugFactory from 'debug'
 import { CustomConsole } from '../console/CustomConsole'
 import { ReportUtils } from '../utils/ReportUtils'
+import Spinnies from 'spinnies'
 const debug = debugFactory('element-cli:console-reporter')
 
 export class BaseReporter implements IReporter {
 	public responseCode: string
 	public stepName: string
 	public worker: WorkerReport
-	private report: ReportUtils
+	public report: ReportUtils
 
-	constructor(public spinnies?: any) {
+	constructor(public spinnies?: Spinnies) {
 		this.report = new ReportUtils(spinnies)
 	}
 

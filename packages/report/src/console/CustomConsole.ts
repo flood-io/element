@@ -2,6 +2,7 @@ import assert from 'assert'
 import { format } from 'util'
 import { Console } from 'console'
 import { LogCounters, LogTimers, LogType } from '../types/Console'
+import Spinnies from 'spinnies'
 
 export class CustomConsole extends Console {
 	private _counters: LogCounters
@@ -9,7 +10,7 @@ export class CustomConsole extends Console {
 	private _groupDepth: number
 	private _spinnies: any
 
-	constructor(stdout: NodeJS.WriteStream, stderr: NodeJS.WriteStream, spinnies: any) {
+	constructor(stdout: NodeJS.WriteStream, stderr: NodeJS.WriteStream, spinnies: Spinnies) {
 		super(stdout, stderr)
 		this._counters = {}
 		this._timers = {}

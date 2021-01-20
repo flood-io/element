@@ -5,6 +5,7 @@ import {
 	ChromiumBrowserContext,
 	BrowserContext,
 	HTTPCredentials,
+	Cookie,
 } from 'playwright'
 import debugFactory from 'debug'
 import ms from 'ms'
@@ -18,6 +19,9 @@ import {
 	EvaluateFn,
 	ClickOptions,
 	BrowserType,
+	CookiesFilterParams,
+	Locator,
+	ScrollDirection,
 } from '../page/types'
 import { TargetLocator } from '../page/TargetLocator'
 import { PlaywrightClientLike } from '../driver/Playwright'
@@ -34,6 +38,8 @@ import { Keyboard } from '../page/Keyboard'
 import { getFrames } from '../utils/frames'
 import { DeviceDescriptor } from '../page/Device'
 import chalk from 'chalk'
+import { Point } from '../page/Point'
+import { isAnElementHandle, isLocator, isPoint } from '../utils/CheckInstance'
 
 export const debug = debugFactory('element:runtime:browser')
 
@@ -563,6 +569,142 @@ export class Browser<T> implements BrowserInterface {
 
 	public async close(): Promise<void> {
 		await this.client.browser.close()
+	}
+
+	@addCallbacks()
+	public async getCookies(filterBy?: CookiesFilterParams): Promise<Cookie[]> {
+		const urls = filterBy?.urls
+		const names = filterBy?.names
+		let cookies = await this.page.context().cookies(urls)
+		if (names) {
+			cookies = cookies.filter(cookie =>
+				typeof names === 'string' ? cookie.name === names : names.includes(cookie.name),
+			)
+		}
+		return cookies
+	}
+
+	public getUrl(): string {
+		return this.page.url()
+	}
+
+	private isCorrectScrollBehavior(behavior: string): behavior is ScrollBehavior {
+		return ['auto', 'smooth'].includes(behavior)
+	}
+
+	@addCallbacks()
+	public async scrollBy(
+		x: number | 'window.innerWidth',
+		y: number | 'window.innerHeight',
+		scrollOptions?: ScrollOptions,
+	): Promise<void> {
+		const behavior = scrollOptions?.behavior ?? 'auto'
+
+		if (!this.isCorrectScrollBehavior(behavior)) {
+			throw new Error('The input behavior is not correct (Must be "auto" or "smooth").')
+		}
+
+		if (x !== 'window.innerWidth' && typeof x !== 'number') {
+			throw new Error(
+				'The input x that you want to scroll by must be "window.innerWidth" or a number.',
+			)
+		}
+
+		if (y !== 'window.innerHeight' && typeof y !== 'number') {
+			throw new Error(
+				'The input y that you want to scroll by must be "window.innerHeight" or a number.',
+			)
+		}
+
+		await this.page.evaluate(
+			({ x, y, behavior }) => {
+				window.scrollBy({
+					top: y === 'window.innerHeight' ? window.innerHeight : y,
+					left: x === 'window.innerWidth' ? window.innerWidth : x,
+					behavior,
+				})
+			},
+			{ x, y, behavior },
+		)
+	}
+
+	@addCallbacks()
+	public async scrollTo(
+		target: Locator | ElementHandle | Point | ScrollDirection,
+		scrollOptions?: ScrollIntoViewOptions,
+	): Promise<void> {
+		const behavior = scrollOptions?.behavior ?? 'auto'
+
+		if (!this.isCorrectScrollBehavior(behavior)) {
+			throw new Error('The input behavior is not correct (Must be "auto" or "smooth").')
+		}
+
+		const block = scrollOptions?.block ?? 'start'
+		const inline = scrollOptions?.inline ?? 'nearest'
+
+		let top = 0
+		let left = 0
+		const [_scrollHeight, _currentTop, _scrollWidth] = await this.page.evaluate(() => [
+			document.body.scrollHeight,
+			window.pageYOffset || document.documentElement.scrollTop,
+			document.body.scrollWidth,
+		])
+
+		if (
+			(isLocator(target) || isAnElementHandle(target)) &&
+			!isPoint(target) &&
+			typeof target !== 'string'
+		) {
+			const targetEl: ElementHandle = isLocator(target)
+				? await this.findElementWithoutDecorator(target)
+				: target
+			await targetEl.element.evaluate(
+				(elementNode, scrollOptions) => {
+					const element = elementNode as HTMLElement
+					element.scrollIntoView(scrollOptions)
+				},
+				{ behavior, block, inline },
+			)
+			return
+		}
+
+		if (isPoint(target)) {
+			[left, top] = target
+		} else if (typeof target === 'string') {
+			switch (target) {
+				case 'top':
+					top = 0
+					left = 0
+					break
+				case 'bottom':
+					top = _scrollHeight
+					left = 0
+					break
+				case 'left':
+					top = _currentTop
+					left = 0
+					break
+				case 'right':
+					top = _currentTop
+					left = _scrollWidth
+					break
+				default:
+					throw new Error(
+						'The input target is not a Locator or an ElementHandle or a Point or a Scroll Direction.',
+					)
+			}
+		} else {
+			throw new Error(
+				'The input target is not a Locator or an ElementHandle or a Point or a Scroll Direction.',
+			)
+		}
+
+		await this.page.evaluate(
+			({ top, left, behavior }) => {
+				window.scrollTo({ top, left, behavior })
+			},
+			{ top, left, behavior },
+		)
 	}
 
 	private async evaluateWithoutDecorator(fn: EvaluateFn, ...args: any[]): Promise<any> {

@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.20](https://github.com/flood-io/element/compare/v2.0.0-canary.19...v2.0.0-canary.20) (2021-01-12)
+
+**Note:** Version bump only for package @flood/element-api
+
+
+
+
+
+# [2.0.0-canary.19](https://github.com/flood-io/element/compare/v2.0.0-canary.18...v2.0.0-canary.19) (2021-01-11)
+
+**Note:** Version bump only for package @flood/element-api
+
+
+
+
+
+# [2.0.0-canary.18](https://github.com/flood-io/element/compare/v2.0.0-canary.17...v2.0.0-canary.18) (2021-01-08)
+
+**Note:** Version bump only for package @flood/element-api
+
+
+
+
+
+# [2.0.0-canary.17](https://github.com/flood-io/element/compare/v2.0.0-canary.16...v2.0.0-canary.17) (2021-01-07)
+
+**Note:** Version bump only for package @flood/element-api
+
+
+
+
+
+# [2.0.0-canary.16](https://github.com/flood-io/element/compare/v2.0.0-canary.15...v2.0.0-canary.16) (2021-01-07)
+
+**Note:** Version bump only for package @flood/element-api
+
+
+
+
+
 # [2.0.0-canary.15](https://github.com/flood-io/element/compare/v2.0.0-canary.14...v2.0.0-canary.15) (2021-01-06)
 
 **Note:** Version bump only for package @flood/element-api

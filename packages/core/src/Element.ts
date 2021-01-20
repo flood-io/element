@@ -10,6 +10,8 @@ import { ElementOptions, ElementRunArguments, normalizeElementOptions } from './
 import { CustomConsole, IterationResult, TestResult } from '@flood/element-report'
 
 import { ElementResult } from './ElementResult'
+import { join } from 'path'
+import findRoot from 'find-root'
 
 export async function runSingleTestScript(opts: ElementOptions): Promise<IterationResult[]> {
 	const {
@@ -92,8 +94,12 @@ export async function runCommandLine(args: ElementRunArguments): Promise<TestRes
 		elementResult: ElementResult,
 		isConfig: boolean,
 	) => {
+		// eslint-disable-next-line @typescript-eslint/no-var-requires
+		const pkg = require(join(findRoot(__dirname), 'package.json'))
 		spinnies.add('Running', {
-			text: chalk('Running', fileTitle),
+			text: chalk(
+				`Running ${fileTitle} with\n- Element v${pkg.version}\n- Node ${process.version}`,
+			),
 			status: 'non-spinnable',
 			indent: 0,
 		})
@@ -109,7 +115,7 @@ export async function runCommandLine(args: ElementRunArguments): Promise<TestRes
 	}
 
 	if (args.testFiles) {
-		if (!args.runArgs?.file) {
+		if (args.runArgs && !args.runArgs.file) {
 			console.log(
 				chalk.grey(
 					'The following test scripts that matched the testPathMatch pattern are going to be executed:',

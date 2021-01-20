@@ -3,6 +3,77 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.20](https://github.com/flood-io/element/compare/v2.0.0-canary.19...v2.0.0-canary.20) (2021-01-12)
+
+
+### Bug Fixes
+
+* fix codacy ([95823e7](https://github.com/flood-io/element/commit/95823e79223f17b9c36320255c2b8039dc49fe39))
+* refactor some lines of code ([ca2b7b3](https://github.com/flood-io/element/commit/ca2b7b37d6e98c0701f54be4f9d3d515e2d3ac76))
+* remove redundant code ([7d8b07e](https://github.com/flood-io/element/commit/7d8b07e24a582c17d51f4d1a139e2ea14567792e))
+
+
+### Features
+
+* implement API getUrl() ([bc6ad6e](https://github.com/flood-io/element/commit/bc6ad6ef7d553be4e42f4e4bb7f49f237971a60a))
+* implement browser.scrollBy() from 1.4 to 2.0 ([bc0c57b](https://github.com/flood-io/element/commit/bc0c57b6223d19f0b5a656c1496ffa599ead474e))
+* implement browser.scrollTo(), browser.scrollBy() from 1.4 to 2.0 ([89dfb9c](https://github.com/flood-io/element/commit/89dfb9c9081d5d7adc6f43a34dd217291872b3c2))
+* print version of Element and Node when running ([b3d63eb](https://github.com/flood-io/element/commit/b3d63eb020043dba253e833380c4ac550fc130f6))
+
+
+
+
+
+# [2.0.0-canary.19](https://github.com/flood-io/element/compare/v2.0.0-canary.18...v2.0.0-canary.19) (2021-01-11)
+
+**Note:** Version bump only for package @flood/element-core
+
+
+
+
+
+# [2.0.0-canary.18](https://github.com/flood-io/element/compare/v2.0.0-canary.17...v2.0.0-canary.18) (2021-01-08)
+
+
+### Bug Fixes
+
+* cannot find module '../../package.json' ([42ed4e6](https://github.com/flood-io/element/commit/42ed4e6d32bca65904e11a817361ef5a81265cd7))
+
+
+
+
+
+# [2.0.0-canary.17](https://github.com/flood-io/element/compare/v2.0.0-canary.16...v2.0.0-canary.17) (2021-01-07)
+
+
+### Bug Fixes
+
+* update unit test ([e3be066](https://github.com/flood-io/element/commit/e3be06600910c40f506ed181dfecf8d2b8cff3e4))
+
+
+### Features
+
+* implement ElementCookies ([f728792](https://github.com/flood-io/element/commit/f728792ae1eb7242daa6699348fafb77e57df431))
+* refactor code ([06b1950](https://github.com/flood-io/element/commit/06b19502ddf643f390057c493a3fbf28ae507e81))
+* refactor code base on suggestion of reviewers ([60c77ac](https://github.com/flood-io/element/commit/60c77ac1a225165539d22c85be36976c3059963a))
+* update API base on new AC ([81c1c53](https://github.com/flood-io/element/commit/81c1c536080975f43798180f5601d2127758ef24))
+* update unit test ([1e0d52b](https://github.com/flood-io/element/commit/1e0d52bbaf1be4a19db0644735dc30e355f93677))
+
+
+
+
+
+# [2.0.0-canary.16](https://github.com/flood-io/element/compare/v2.0.0-canary.15...v2.0.0-canary.16) (2021-01-07)
+
+
+### Bug Fixes
+
+* refactor the way check file arg exist or not ([65e064e](https://github.com/flood-io/element/commit/65e064e76ceec0532a7b9fe3eee01546260910ca))
+
+
+
+
+
 # [2.0.0-canary.15](https://github.com/flood-io/element/compare/v2.0.0-canary.14...v2.0.0-canary.15) (2021-01-06)
 
 

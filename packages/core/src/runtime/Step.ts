@@ -188,6 +188,7 @@ export type Step = {
 		skipped?: boolean
 		unexecuted?: boolean
 		passed?: boolean
+		error?: string
 	}
 }
 

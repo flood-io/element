@@ -7,23 +7,31 @@ import {
 	ScriptWithError,
 } from '@flood/element-report'
 import { ElementOptions } from './ElementOption'
+import { join } from 'path'
+import findRoot from 'find-root'
 
 export class ElementResult {
 	private _result: TestResult
 
 	constructor() {
+		// eslint-disable-next-line @typescript-eslint/no-var-requires
+		const pkg = require(join(findRoot(__dirname), 'package.json'))
+
 		this._result = {
 			testScripts: [],
 			executionInfo: {
-				date: new Date().toLocaleDateString(undefined, {
+				time: new Date().toLocaleString(undefined, {
 					day: '2-digit',
 					month: 'short',
 					year: 'numeric',
+					hour: '2-digit',
+					minute: '2-digit',
+					second: '2-digit',
 				}),
-				time: new Date().toLocaleTimeString(),
 				mode: '',
-				browser: [],
 				os: osName(),
+				elementVersion: pkg.version,
+				nodeVersion: process.version,
 			},
 			scriptsWithError: [],
 		}
@@ -33,7 +41,6 @@ export class ElementResult {
 		let modeName: string = opt.headless ? 'headless' : 'no-headless'
 		modeName = isConfig ? `${modeName} with config file` : modeName
 		this._result.executionInfo.mode = modeName
-		this._result.executionInfo.browser = [opt.browser]
 	}
 
 	addTestScript(file: string, iterationResults: IterationResult[]): void {

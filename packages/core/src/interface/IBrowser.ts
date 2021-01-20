@@ -1,17 +1,21 @@
 import { Condition } from '../page/Condition'
-import { Page, Frame, ViewportSize, BrowserContext } from 'playwright'
+import { Page, Frame, ViewportSize, BrowserContext, Cookie } from 'playwright'
 import {
 	ElementHandle,
 	ScreenshotOptions,
 	NavigationOptions,
 	EvaluateFn,
 	ClickOptions,
+	CookiesFilterParams,
+	Locator,
+	ScrollDirection,
 } from '../page/types'
 import { NullableLocatable } from '../runtime/Locatable'
 import { TargetLocator } from '../page/TargetLocator'
 import Mouse from '../page/Mouse'
 import { TestSettings } from '../runtime/Settings'
 import { DeviceDescriptor } from '../page/Device'
+import { Point } from '../page/Point'
 
 /**
  * Browser is the main entry point in each <[step]>, it's your direct connection to the browser running the test.
@@ -293,6 +297,41 @@ export interface Browser {
 	close(): Promise<void>
 
 	context(): BrowserContext
+
+	/**
+	 *
+	 * @param filterBy urls or cookie's name (names). Urls and names can be a string or an array of string
+	 */
+	getCookies(filterBy?: CookiesFilterParams): Promise<Cookie[]>
+
+	/**
+	 * Get the current URL of the page
+	 */
+	getUrl(): string
+
+	/**
+	 *
+	 * @param x How many pixels to scroll by, along the x-axis (horizontal). Positive values will scroll to the right, while negative values will scroll to the left.
+	 * Param x can take 'window.innerWidth' as a special value
+	 * @param y How many pixels to scroll by, along the y-axis (vertical). Positive values will scroll down, while negative values scroll up.
+	 * Param y can take 'window.innerHeight' as a special value
+	 * @param scrollOptions behavior of scroll (auto or smooth)
+	 */
+	scrollBy(
+		x: number | 'window.innerWidth',
+		y: number | 'window.innerHeight',
+		scrollOptions?: ScrollOptions,
+	): Promise<void>
+
+	/**
+	 *
+	 * @param target target to scroll
+	 * @param behavior behavior of scroll (auto or smooth)
+	 */
+	scrollTo(
+		target: Locator | ElementHandle | Point | ScrollDirection,
+		scrollOptions?: ScrollIntoViewOptions,
+	): Promise<void>
 }
 
 /**

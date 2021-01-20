@@ -389,7 +389,10 @@ function toggleScriptError(scripts: TestScriptResult[], showError: boolean): voi
 	})
 }
 
-export function toggleAllErrors(event, scripts: TestScriptResult[]): void {
+export function toggleAllErrors(
+	event: { target: { checked: boolean } },
+	scripts: TestScriptResult[],
+): void {
 	toggleScriptError(scripts, event.target.checked)
 	scripts.forEach(script => renderDetail(script))
 

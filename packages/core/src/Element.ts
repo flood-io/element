@@ -1,14 +1,15 @@
+import chalk from 'chalk'
+import Spinnies from 'spinnies'
+import { existsSync } from 'fs'
 import { ConcreteLaunchOptions, launch } from './driver/Playwright'
 import { IRunner, Runner, PersistentRunner } from './Runner'
 import { mustCompileFile } from './TestScript'
 import { TestScriptOptions } from './TestScriptOptions'
 import { EvaluatedScript } from './runtime/EvaluatedScript'
 import { ElementOptions, ElementRunArguments, normalizeElementOptions } from './ElementOption'
-import { CustomConsole, IterationResult, ReportCache, TestResult } from '@flood/element-report'
-import chalk from 'chalk'
-import { EventEmitter } from 'events'
+import { CustomConsole, IterationResult, TestResult } from '@flood/element-report'
+
 import { ElementResult } from './ElementResult'
-import { existsSync } from 'fs'
 import { join } from 'path'
 import findRoot from 'find-root'
 
@@ -83,24 +84,26 @@ export async function runSingleTestScript(opts: ElementOptions): Promise<Iterati
 }
 
 export async function runCommandLine(args: ElementRunArguments): Promise<TestResult> {
-	const myEmitter = new EventEmitter()
 	const elementResult = new ElementResult()
-	const cache = new ReportCache(myEmitter)
-	global.console = new CustomConsole(process.stdout, process.stderr, myEmitter)
+	const spinnies = new Spinnies()
+	global.console = new CustomConsole(process.stdout, process.stderr, spinnies)
 
 	const prepareAndRunTestScript = async (
 		fileTitle: string,
 		args: ElementRunArguments,
-		cache: ReportCache,
 		elementResult: ElementResult,
 		isConfig: boolean,
 	) => {
 		// eslint-disable-next-line @typescript-eslint/no-var-requires
 		const pkg = require(join(findRoot(__dirname), 'package.json'))
-		console.group(
-			chalk(`Running ${fileTitle} with\n- Element v${pkg.version}\n- Node ${process.version}`),
-		)
-		const opts = normalizeElementOptions(args, cache)
+		spinnies.add('Running', {
+			text: chalk(
+				`Running ${fileTitle} with\n- Element v${pkg.version}\n- Node ${process.version}`,
+			),
+			status: 'non-spinnable',
+			indent: 0,
+		})
+		const opts = normalizeElementOptions(args, spinnies)
 		elementResult.addExecutionInfo(opts, isConfig)
 
 		try {
@@ -109,8 +112,6 @@ export async function runCommandLine(args: ElementRunArguments): Promise<TestRes
 		} catch (err) {
 			elementResult.addScriptWithError({ name: args.file, error: err.message })
 		}
-		console.groupEnd()
-		cache.resetCache()
 	}
 
 	if (args.testFiles) {
@@ -135,7 +136,7 @@ export async function runCommandLine(args: ElementRunArguments): Promise<TestRes
 			}
 			order++
 			const fileTitle = chalk.grey(`${file} (${order} of ${numberOfFile})`)
-			await prepareAndRunTestScript(fileTitle, arg, cache, elementResult, true)
+			await prepareAndRunTestScript(fileTitle, arg, elementResult, true)
 		}
 		if (existsSync(args.configFile))
 			console.log(chalk.grey('Test running with the config file has finished'))
@@ -147,7 +148,5 @@ export async function runCommandLine(args: ElementRunArguments): Promise<TestRes
 		)
 	}
 
-	myEmitter.removeAllListeners('add')
-	myEmitter.removeAllListeners('update')
 	return elementResult.getResult()
 }

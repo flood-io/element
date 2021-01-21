@@ -12,7 +12,7 @@ export interface HookObserver {
 	onAfterAllStepFinished(test: ITest): Promise<void>
 	onBeforeEachStepFinished(test: ITest): Promise<void>
 	onAfterEachStepFinished(test: ITest): Promise<void>
-	beforeHookAction(test: ITest, command: string): Promise<void>
+	beforeHookAction(test: ITest, command: string, arg?: string): Promise<void>
 	afterHookAction(test: ITest, command: string, arg?: string): Promise<void>
 }
 export interface TestObserver extends HookObserver {
@@ -26,7 +26,7 @@ export interface TestObserver extends HookObserver {
 	onStepUnexecuted(test: ITest, step: Step): Promise<void>
 	afterStep(test: ITest, step: Step): Promise<void>
 
-	beforeStepAction(test: ITest, step: Step, command: string): Promise<void>
+	beforeStepAction(test: ITest, step: Step, command: string, args?: string): Promise<void>
 	afterStepAction(test: ITest, step: Step, command: string, args?: string): Promise<void>
 }
 
@@ -60,8 +60,8 @@ export class NoOpTestObserver implements TestObserver {
 		return this.next.afterStep(test, step)
 	}
 
-	async beforeStepAction(test: ITest, step: Step, command: string): Promise<void> {
-		return this.next.beforeStepAction(test, step, command)
+	async beforeStepAction(test: ITest, step: Step, command: string, args?: string): Promise<void> {
+		return this.next.beforeStepAction(test, step, command, args)
 	}
 	async afterStepAction(test: ITest, step: Step, command: string, args?: string): Promise<void> {
 		return this.next.afterStepAction(test, step, command, args)
@@ -92,8 +92,8 @@ export class NoOpTestObserver implements TestObserver {
 		return this.next.onAfterEachStepFinished(test)
 	}
 
-	async beforeHookAction(test: ITest, command: string): Promise<void> {
-		return this.next.beforeHookAction(test, command)
+	async beforeHookAction(test: ITest, command: string, args: string): Promise<void> {
+		return this.next.beforeHookAction(test, command, args)
 	}
 	async afterHookAction(test: ITest, command: string, args: string): Promise<void> {
 		return this.next.afterHookAction(test, command, args)

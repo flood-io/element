@@ -75,9 +75,9 @@ export default class LifecycleObserver implements TestObserver {
 		test.reporter.testLifecycle(TestEvent.AfterStep, step.name, step.subTitle, timing)
 	}
 
-	async beforeStepAction(test: Test, step: Step, command: string) {
+	async beforeStepAction(test: Test, step: Step, command: string, args?: string) {
 		await this.next.beforeStepAction(test, step, command)
-		test.reporter.testLifecycle(TestEvent.BeforeStepAction, command)
+		test.reporter.testLifecycle(TestEvent.BeforeStepAction, command, '', 0, '', args)
 	}
 	async afterStepAction(test: Test, step: Step, command: string, args?: string) {
 		await this.next.afterStepAction(test, step, command, args)
@@ -116,9 +116,9 @@ export default class LifecycleObserver implements TestObserver {
 		await this.next.onAfterEachStepFinished(test)
 		test.reporter.testLifecycle(TestEvent.AfterEachStepFinished, 'afterEach')
 	}
-	async beforeHookAction(test: Test, command: string): Promise<void> {
-		await this.next.beforeHookAction(test, command)
-		test.reporter.testLifecycle(TestEvent.BeforeHookAction, command)
+	async beforeHookAction(test: Test, command: string, args?: string): Promise<void> {
+		await this.next.beforeHookAction(test, command, args)
+		test.reporter.testLifecycle(TestEvent.BeforeHookAction, command, '', 0, '', args)
 	}
 	async afterHookAction(test: Test, command: string, args?: string): Promise<void> {
 		await this.next.afterHookAction(test, command, args)

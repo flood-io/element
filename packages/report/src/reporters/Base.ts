@@ -1,19 +1,24 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { TestScriptError } from '../runtime/TestScriptError'
 import { IReporter, WorkerReport } from '../runtime/IReporter'
 import { TraceData, TestEvent, CompoundMeasurement, MeasurementKind } from '../types/Report'
 import chalk from 'chalk'
-import { ReportCache } from './Cache'
-import ansiEscapes from 'ansi-escapes'
-const debug = require('debug')('element-cli:console-reporter')
+import debugFactory from 'debug'
+import { CustomConsole } from '../console/CustomConsole'
+import { ReportUtils } from '../utils/ReportUtils'
+import Spinnies from 'spinnies'
+const debug = debugFactory('element-cli:console-reporter')
 
 export class BaseReporter implements IReporter {
 	public responseCode: string
 	public stepName: string
 	public worker: WorkerReport
+	public report: ReportUtils
 
-	constructor(protected cache: ReportCache) {}
+	constructor(public spinnies?: Spinnies) {
+		this.report = new ReportUtils(spinnies)
+	}
 
 	reset(step: string): void {}
 
@@ -40,44 +45,41 @@ export class BaseReporter implements IReporter {
 		const beforeRunStepMessage = chalk.whiteBright(`${stepName} is running ...`)
 		const beforeRunHookMessage = chalk.whiteBright(`${label} is running ...`)
 		const afterRunHookMessage = `${chalk.green.bold('✔')} ${chalk.whiteBright(`${label} finished`)}`
-		let message = ''
+		const customConsole = global.console as CustomConsole
+		customConsole.setGroupDepth(6)
 		switch (stage) {
 			case TestEvent.BeforeAllStep:
 			case TestEvent.AfterAllStep:
 			case TestEvent.BeforeEachStep:
 			case TestEvent.AfterEachStep:
-				console.group(beforeRunHookMessage)
-				console.group()
+				this.report.startAnimation(label, beforeRunHookMessage, 4)
 				break
 			case TestEvent.BeforeAllStepFinished:
 			case TestEvent.AfterAllStepFinished:
 			case TestEvent.BeforeEachStepFinished:
 			case TestEvent.AfterEachStepFinished:
-				this.updateMessage(beforeRunHookMessage, afterRunHookMessage)
-				console.groupEnd()
+				this.report.endAnimation(label, afterRunHookMessage, 4)
 				break
 			case TestEvent.BeforeStep:
-				console.group(beforeRunStepMessage)
-				console.group()
+				this.report.startAnimation(stepName, beforeRunStepMessage, 4)
 				break
 			case TestEvent.StepSucceeded:
-				message = `${chalk.green.bold('✔')} ${chalk.green(
-					`${stepName} passed (${timing?.toLocaleString()}ms)`,
-				)}`
-				this.updateMessage(beforeRunStepMessage, message)
+				this.report.endAnimation(stepName, `${stepName} passed (${timing?.toLocaleString()}ms)`, 4)
 				break
 			case TestEvent.StepFailed:
-				message = `${chalk.redBright.bold('✘')} ${chalk.red(
-					`${stepName} failed (${timing?.toLocaleString()}ms)`,
-				)}`
 				console.error(chalk.red(errorMessage?.length ? errorMessage : 'step error -> failed'))
-				this.updateMessage(beforeRunStepMessage, message)
-				console.log('')
+				this.report.endAnimation(
+					stepName,
+					chalk.red(`${stepName} failed (${timing?.toLocaleString()}ms)`),
+					4,
+					'fail',
+				)
 				break
 			case TestEvent.StepSkipped:
-				console.group(`${chalk.yellow.bold('\u2296')} ${chalk.yellow(`${stepName} skipped`)}`)
-				console.log('')
-				console.groupEnd()
+				this.report.addText(stepName, chalk.yellow(`${stepName} skipped`), 4)
+				break
+			case TestEvent.StepUnexecuted:
+				this.report.addText(stepName, chalk.grey(`${stepName} is unexecuted`), 4)
 				break
 			case TestEvent.AfterStep:
 				console.groupEnd()
@@ -120,13 +122,5 @@ export class BaseReporter implements IReporter {
 				console.log(logMessage)
 				break
 		}
-	}
-	private updateMessage(previousMessage: string, newMessage: string): void {
-		const lines: number = this.cache.getLinesBetweenCurrentAndPreviousMessage(previousMessage)
-		process.stdout.write(ansiEscapes.cursorUp(lines) + ansiEscapes.eraseLine)
-		console.groupEnd()
-		console.log(newMessage)
-		this.cache.updateMessageInCache(previousMessage, newMessage)
-		process.stdout.write(ansiEscapes.cursorDown(lines) + ansiEscapes.eraseLine)
 	}
 }

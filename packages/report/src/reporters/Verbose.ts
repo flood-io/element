@@ -1,17 +1,24 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { TestScriptError } from '../runtime/TestScriptError'
 import { IReporter, WorkerReport } from '../runtime/IReporter'
 import { TraceData, TestEvent, CompoundMeasurement, MeasurementKind } from '../types/Report'
 import chalk from 'chalk'
-import ansiEscapes from 'ansi-escapes'
-import { ReportCache } from './Cache'
-const debug = require('debug')('element-cli:console-reporter')
+import debugFactory from 'debug'
+import { CustomConsole } from '../console/CustomConsole'
+import { ReportUtils } from '@flood/element-report/src/utils/ReportUtils'
+import Spinnies from 'spinnies'
+const debug = debugFactory('element-cli:console-reporter')
 
 export class VerboseReporter implements IReporter {
 	public responseCode: string
 	public stepName: string
 	public worker: WorkerReport
+	public report: ReportUtils
 
-	constructor(private cache: ReportCache) {}
+	constructor(public spinnies?: Spinnies) {
+		this.report = new ReportUtils(spinnies)
+	}
 
 	reset(step: string): void {}
 
@@ -42,53 +49,56 @@ export class VerboseReporter implements IReporter {
 		const stepName = 'Step ' + (subtitle ? `'${label}' (${subtitle})` : `'${label}'`)
 		const beforeRunStepMessage = chalk.whiteBright(`${stepName} is running ...`)
 		const beforeRunHookMessage = chalk.whiteBright(`${label} is running ...`)
-		const afterRunHookMessage = `${chalk.green.bold('✔')} ${chalk.whiteBright(`${label} finished`)}`
-		let message = ''
+		const afterRunHookMessage = `${chalk.green(`${label} finished`)}`
+		const customConsole = global.console as CustomConsole
+		customConsole.setGroupDepth(6)
 		switch (stage) {
 			case TestEvent.BeforeAllStep:
 			case TestEvent.AfterAllStep:
 			case TestEvent.BeforeEachStep:
 			case TestEvent.AfterEachStep:
-				console.group(beforeRunHookMessage)
-				console.group()
+				this.report.startAnimation(label, beforeRunHookMessage, 4)
 				break
 			case TestEvent.BeforeAllStepFinished:
 			case TestEvent.AfterAllStepFinished:
 			case TestEvent.BeforeEachStepFinished:
 			case TestEvent.AfterEachStepFinished:
-				this.updateMessage(beforeRunHookMessage, afterRunHookMessage)
-				console.groupEnd()
+				this.report.endAnimation(label, afterRunHookMessage, 4, 'succeed')
 				break
 			case TestEvent.BeforeStep:
-				console.group(beforeRunStepMessage)
-				console.group()
+				this.report.startAnimation(stepName, beforeRunStepMessage, 4)
+				break
+			case TestEvent.BeforeHookAction:
+				this.report.startAnimation(label, `${chalk.white(`${label}(${chalk.grey(args)})`)}`, 6)
 				break
 			case TestEvent.AfterHookAction:
+				this.report.endAnimation(label)
+				break
+			case TestEvent.BeforeStepAction:
+				this.report.startAnimation(label, `${chalk.white(`${label}(${chalk.grey(args)})`)}`, 6)
+				break
 			case TestEvent.AfterStepAction:
-				console.log(`${chalk.white(`${label}(${chalk.grey(args)})`)}`)
+				this.report.endAnimation(label)
 				break
 			case TestEvent.StepSucceeded:
-				message = `${chalk.green.bold('✔')} ${chalk.green(
+				this.report.endAnimation(
+					stepName,
 					`${stepName} passed (${timing?.toLocaleString()}ms)`,
-				)}`
-				this.updateMessage(beforeRunStepMessage, message)
+					4,
+					'succeed',
+				)
 				break
 			case TestEvent.StepFailed:
-				message = `${chalk.red.bold('✘')} ${chalk.red(`${stepName} failed`)}`
 				console.error(chalk.red(errorMessage?.length ? errorMessage : 'step error -> failed'))
-				this.updateMessage(beforeRunStepMessage, message)
+				this.report.endAnimation(stepName, chalk.red(`${stepName} failed`), 4, 'fail')
 				break
 			case TestEvent.AfterStep:
-				console.groupEnd()
 				break
 			case TestEvent.StepSkipped:
-				console.group(`${chalk.yellow.bold('\u2296')} ${chalk.yellow(`${stepName} skipped`)}`)
-				console.log('')
-				console.groupEnd()
+				this.report.addText(stepName, chalk.yellow(`${stepName} skipped`), 4)
 				break
 			case TestEvent.StepUnexecuted:
-				console.group(`${chalk.grey.bold('\u2296')} ${chalk.grey(`${stepName} is unexecuted`)}`)
-				console.groupEnd()
+				this.report.addText(stepName, chalk.grey(`${stepName} is unexecuted`), 4)
 				break
 		}
 	}
@@ -128,14 +138,5 @@ export class VerboseReporter implements IReporter {
 				console.log(logMessage)
 				break
 		}
-	}
-
-	private updateMessage(previousMessage: string, newMessage: string): void {
-		const lines: number = this.cache.getLinesBetweenCurrentAndPreviousMessage(previousMessage)
-		process.stdout.write(ansiEscapes.cursorUp(lines) + ansiEscapes.eraseLine)
-		console.groupEnd()
-		console.log(newMessage)
-		this.cache.updateMessageInCache(previousMessage, newMessage)
-		process.stdout.write(ansiEscapes.cursorDown(lines) + ansiEscapes.eraseLine)
 	}
 }

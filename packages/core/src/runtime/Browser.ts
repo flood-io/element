@@ -37,7 +37,6 @@ import { locatableToLocator, toLocatorError } from './toLocatorError'
 import { Keyboard } from '../page/Keyboard'
 import { getFrames } from '../utils/frames'
 import { DeviceDescriptor } from '../page/Device'
-import termImg from 'term-img'
 import chalk from 'chalk'
 import { Point } from '../page/Point'
 import { isAnElementHandle, isLocator, isPoint } from '../utils/CheckInstance'
@@ -50,6 +49,7 @@ export class Browser<T> implements BrowserInterface {
 
 	private newPageCallback: (resolve: (page: Page) => void) => void
 	private newPagePromise: Promise<Page>
+	private multipleUser = false
 
 	constructor(
 		public workRoot: WorkRoot,
@@ -80,6 +80,10 @@ export class Browser<T> implements BrowserInterface {
 
 	public testData(name: string): string {
 		return this.workRoot.testData(name)
+	}
+
+	public setMultipleUser(isMultiple: boolean): void {
+		this.multipleUser = isMultiple
 	}
 
 	public get target(): Frame {
@@ -422,11 +426,8 @@ export class Browser<T> implements BrowserInterface {
 	public async takeScreenshot(options?: ScreenshotOptions): Promise<void> {
 		await this.saveScreenshot(async path => {
 			await this.page.screenshot({ path, ...options })
-			console.log(chalk.grey(`Screenshot saved in ${path}`))
-			if (this.settings.showScreenshot) {
-				const fallback = () => void 0
-				const supportImg = termImg(path, { width: '50%', fallback })
-				if (supportImg) console.log(supportImg)
+			if (!this.multipleUser) {
+				console.log(chalk.grey(`Screenshot saved in ${path}`))
 			}
 			return true
 		})
@@ -675,7 +676,7 @@ export class Browser<T> implements BrowserInterface {
 		}
 
 		if (isPoint(target)) {
-			[left, top] = target
+			;[left, top] = target
 		} else if (typeof target === 'string') {
 			switch (target) {
 				case 'top':

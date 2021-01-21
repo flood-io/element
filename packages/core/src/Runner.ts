@@ -7,6 +7,7 @@ import { TestSettings } from './runtime/Settings'
 import { AsyncFactory } from './utils/Factory'
 import { CancellationToken } from './utils/CancellationToken'
 import {
+	CustomConsole,
 	IReporter,
 	IterationResult,
 	reportRunTest,
@@ -154,7 +155,11 @@ export class Runner {
 							console.log(chalk.grey('--------------------------------------------'))
 						}
 						startTime = new Date()
-						console.log(`${chalk.bold('\u25CC')} ${iterationName} ${numOfIteration}`)
+						this.reporter.report?.startAnimation(
+							iterationName,
+							`${iterationName} ${numOfIteration}`,
+							2,
+						)
 					} else {
 						this.sendReport(
 							JSON.stringify({
@@ -170,6 +175,13 @@ export class Runner {
 					// eslint-disable-next-line no-empty
 				} catch {
 				} finally {
+					if (!this.reporter.worker) {
+						this.reporter.report?.endAnimation(
+							iterationName,
+							chalk.whiteBright(`${iterationName} ${numOfIteration}`),
+							2,
+						)
+					}
 					if (!this.looper.isRestart) {
 						const summarizedData = this.summarizeIteration(test, iteration, startTime)
 						reportTableData.push(summarizedData)
@@ -179,6 +191,7 @@ export class Runner {
 			})
 
 			if (!this.reporter.worker) {
+				console.groupEnd()
 				console.log(`Test completed after ${this.looper.loopCount} iterations`)
 			}
 			await test.runningBrowser?.close()
@@ -187,7 +200,6 @@ export class Runner {
 		} finally {
 			if (!this.reporter.worker) {
 				const table = reportRunTest(reportTableData)
-				console.groupEnd()
 				console.log(table)
 			}
 		}
@@ -251,6 +263,8 @@ export class Runner {
 		})
 		const finallyMessage = chalk(passedMessage, failedMessage, skippedMessage, unexecutedMessage)
 		if (!this.reporter.worker) {
+			const customConsole = global.console as CustomConsole
+			customConsole.setGroupDepth(2)
 			console.log(`${iterationName} completed in ${ms(duration)} (walltime) ${finallyMessage}`)
 		}
 		return [iteration, passedNo, failedNo, skippedNo, unexecutedNo]

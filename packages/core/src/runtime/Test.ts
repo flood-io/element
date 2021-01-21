@@ -32,7 +32,9 @@ import { Hook, HookBase, HookType } from './StepLifeCycle'
 import StepIterator from './StepIterator'
 import { getNumberWithOrdinal } from '../utils/numerical'
 import { StructuredError } from '../utils/StructuredError'
+import termImg from 'term-img'
 import chalk from 'chalk'
+import { basename } from 'path'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:test')
@@ -173,7 +175,7 @@ export default class Test implements ITest {
 
 			browser.beforeFunc = this.willRunCommand.bind(this, testObserver)
 			browser.afterFunc = this.didRunCommand.bind(this, testObserver)
-
+			browser.setMultipleUser(!!this.reporter.worker)
 			debug('running this.before(browser)')
 			await testObserver.before(this)
 
@@ -255,6 +257,12 @@ export default class Test implements ITest {
 				}
 			})
 			await this.afterRunSteps(stepIterator)
+			if (this.settings.showScreenshot && process.env.TERM_PROGRAM === 'iTerm.app') {
+				for (const path of browser.fetchScreenshots()) {
+					console.log(basename(path))
+					termImg(path, { width: '40%' })
+				}
+			}
 		} catch (err) {
 			this.failed = true
 			console.error(chalk.red(err.message))
@@ -424,12 +432,16 @@ export default class Test implements ITest {
 		})
 	}
 
-	public async willRunCommand(testObserver: TestObserver, browser: Browser<Step>, command: string) {
+	public async willRunCommand(
+		testObserver: TestObserver,
+		browser: Browser<Step>,
+		command: string,
+		args: string,
+	): Promise<void> {
 		if (this.hookMode) {
-			await testObserver.beforeHookAction(this, command)
+			await testObserver.beforeHookAction(this, command, args)
 		} else {
-			await testObserver.beforeStepAction(this, browser.customContext, command)
-			debug(`Before action: '${command}()' waiting on actionDelay: ${this.settings.actionDelay}`)
+			await testObserver.beforeStepAction(this, browser.customContext, command, args)
 		}
 	}
 

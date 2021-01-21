@@ -1,4 +1,5 @@
 import { CompoundMeasurement, MeasurementKind, TestEvent, TraceData } from '../types/Report'
+import { ReportUtils } from '../utils/ReportUtils'
 import { TestScriptError } from './TestScriptError'
 
 export type Worker = {
@@ -22,12 +23,14 @@ export class WorkerReport {
 	}
 }
 
+// eslint-disable-next-line
 export interface IReporter {
 	reset(stepName: string): void
 
 	responseCode: string
 	stepName: string
 	worker?: WorkerReport
+	report?: ReportUtils
 
 	/**
 	 * Writes a measurement to the collection service

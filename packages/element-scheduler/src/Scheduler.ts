@@ -7,6 +7,7 @@ import { BrowserServer } from 'playwright'
 import { Worker } from '@flood/element-report'
 import chalk from 'chalk'
 import Table from 'cli-table3'
+import Spinnies from 'spinnies'
 
 export type SchedulerSetting = TestSettings & {
 	headless?: boolean | undefined
@@ -34,7 +35,7 @@ export class Scheduler {
 	private browserServer: BrowserServer
 	private spinnies: any
 
-	public setSpinnies(spinnies: unknown): void {
+	public setSpinnies(spinnies: Spinnies): void {
 		this.spinnies = spinnies
 	}
 

@@ -21,7 +21,10 @@ export function addCallbacks() {
 			Error.captureStackTrace(calltimeError)
 			const calltimeStack = calltimeError.stack
 			try {
-				if (browser.beforeFunc instanceof Function) await browser.beforeFunc(browser, propertyKey)
+				if (browser.beforeFunc instanceof Function) {
+					const arg = StepActionArgs(args)
+					await browser.beforeFunc(browser, propertyKey, arg)
+				}
 				ret = await originalFn.apply(browser, args)
 			} catch (e) {
 				const newError = interpretError<Browser, AnyErrorData>(

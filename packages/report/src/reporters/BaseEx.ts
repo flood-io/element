@@ -3,14 +3,9 @@ import chalk from 'chalk'
 import { WorkerReport } from '../runtime/IReporter'
 import { BaseReporter } from './Base'
 import { TestEvent } from '../types/Report'
-import { ReportCache } from './Cache'
 
 export class MultipleUsersReporter extends BaseReporter {
 	public worker: WorkerReport
-
-	constructor(protected cache: ReportCache) {
-		super(cache)
-	}
 
 	addMeasurement(measurement: string, value: string | number): void {
 		this.sendReport(

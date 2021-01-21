@@ -7,9 +7,10 @@ import styles from './styles.module.css'
 function FeatureBlock({ imageUrl, title, description }) {
 	const imgUrl = useBaseUrl(imageUrl)
 	const { isDarkTheme } = useThemeContext()
+	const styleClassName = isDarkTheme ? styles.dark : styles.light
 	return (
 		<div className={classnames('col col--4', styles.wrapper)}>
-			<div className={classnames(styles.content, isDarkTheme ? styles.dark : styles.light)}>
+			<div className={classnames(styles.content, styleClassName)}>
 				<div className={styles.header}>
 					<img className={styles.img} src={imgUrl} alt={title} />
 					<h3>{title}</h3>

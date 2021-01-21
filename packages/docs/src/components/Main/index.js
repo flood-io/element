@@ -35,12 +35,12 @@ const features = [
 		),
 	},
 	{
-		title: <>Built on Puppeteer</>,
-		imageUrl: 'img/puppeteer_ic.png',
+		title: <>Built on Playwright</>,
+		imageUrl: 'img/playwright_ic.png',
 		description: (
 			<>
-				Thanks to the speed of the <code>Puppeteer</code> automation library, Element generates load
-				by launching thousands of instances of Google Chrome.
+				Thanks to the speed of the <code>Playwright</code> automation library, Element generates
+				load by launching thousands of instances of Chromium, Firefox, and Webkit.
 			</>
 		),
 	},

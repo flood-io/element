@@ -16,7 +16,9 @@
 		"publish:brew": "ts-node --project ./scripts/publish-brew-tap/tsconfig.json -- ./scripts/publish-brew-tap/index.ts",
 		"publish:pre": "lerna publish --force-publish=* --cd-version prerelease && yarn publish:brew",
 		"dev": "ts-node -r tsconfig-paths/register ./packages/cli/bin/element.ts",
-		"elementctl": "ts-node -r tsconfig-paths/register ./packages/element-cli/bin/element.ts"
+		"elementctl": "ts-node -r tsconfig-paths/register ./packages/element-cli/bin/element.ts",
+		"dev:docs": "cd ./packages/docs/ && yarn start",
+		"docs:version": "cd ./packages/docs/ && docusaurus docs:version"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.7.7",

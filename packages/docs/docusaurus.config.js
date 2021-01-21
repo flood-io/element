@@ -12,7 +12,7 @@ module.exports = {
 		announcementBar: {
 			id: 'supportus',
 			content:
-				'⭐️ If you like Flood Element, give it a star on <a target="_blank" rel="noopener noreferrer" href="https://github.com/flood-io/element">GitHub</a>! ⭐️',
+				'🚀&nbsp;&nbsp;&nbsp;Flood Element v2.0 is now available, checkout the cool features <a target="_blank" rel="noopener noreferrer" href="https://www.flood.io/blog/whats-new-in-element-v2.0">here</a>&nbsp;&nbsp;🚀',
 			backgroundColor: '#23232C',
 			textColor: '#FFFFFF',
 		},
@@ -21,6 +21,9 @@ module.exports = {
 			indexName: 'flood_element',
 			// appId: 'app-id', // Optional, if you run the DocSearch crawler on your own
 			// algoliaOptions: {}, // Optional, if provided by Algolia
+		},
+		colorMode: {
+			defaultMode: 'light',
 		},
 		navbar: {
 			title: 'Element',

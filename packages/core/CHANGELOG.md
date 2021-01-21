@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.22](https://github.com/flood-io/element/compare/v2.0.0-canary.21...v2.0.0-canary.22) (2021-01-21)
+
+
+### Features
+
+* drag & drop an element into another element ([0cf82a9](https://github.com/flood-io/element/commit/0cf82a9acd03b0634ec26c8d3d693a66f99e7fa9))
+
+
+
+
+
 # [2.0.0-canary.21](https://github.com/flood-io/element/compare/v2.0.0-canary.20...v2.0.0-canary.21) (2021-01-21)
 
 **Note:** Version bump only for package @flood/element-core

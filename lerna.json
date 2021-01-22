@@ -1,7 +1,7 @@
 {
 	"lerna": "2.11.0",
 	"npmClient": "yarn",
-	"version": "1.5.0",
+	"version": "1.4.0-beta.7",
 	"useWorkspaces": true,
 	"command": {
 		"init": {
@@ -12,12 +12,7 @@
 		},
 		"version": {
 			"message": "chore(release): publish %s\n[skip ci]",
-			"allowBranch": [
-				"master",
-				"beta",
-				"canary",
-				"feature/*"
-			]
+			"allowBranch": ["master", "beta", "canary", "feature/*"]
 		},
 		"bootstrap": {
 			"npmClient": "yarn"

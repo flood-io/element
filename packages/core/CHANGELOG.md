@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.23](https://github.com/flood-io/element/compare/v2.0.0-canary.22...v2.0.0-canary.23) (2021-01-22)
+
+
+### Bug Fixes
+
+* move spinnies from devDep to Dep ([9b9888f](https://github.com/flood-io/element/commit/9b9888f0fc191f0c0a2c8d4ebb78059c44be62ab))
+
+
+
+
+
 # [2.0.0-canary.22](https://github.com/flood-io/element/compare/v2.0.0-canary.21...v2.0.0-canary.22) (2021-01-21)
 
 

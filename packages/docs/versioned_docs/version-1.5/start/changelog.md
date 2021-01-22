@@ -3,8 +3,8 @@ id: changelog
 title: Changelog
 ---
 
-## 1.4.0
-Released: Nov 2020
+## 1.5
+Released: Jan 2021
 
 ### New features
 - Ability to support [multiple data files in a single test script](../guides/TestData.md#using-multiple-test-data-files-in-a-single-test-script)

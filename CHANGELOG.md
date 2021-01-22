@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.4.0-beta.7](https://github.com/flood-io/element/compare/v1.4.0-beta.6...v1.4.0-beta.7) (2021-01-22)
+
+
+### Bug Fixes
+
+* flood-runner default to run in production env ([2f4d429](https://github.com/flood-io/element/commit/2f4d42906f21f0821bbd716981fc003ade55d8e3))
+
+
+
+
+
 # [1.4.0-beta.6](https://github.com/flood-io/element/compare/v1.4.0-beta.5...v1.4.0-beta.6) (2020-12-04)
 
 

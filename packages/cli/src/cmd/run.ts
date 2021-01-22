@@ -195,10 +195,12 @@ async function runTestScriptWithConfiguration(args: RunCommonArguments): Promise
 	if (!paths.testPathMatch || !paths.testPathMatch.length) {
 		throw Error('Found no test scripts matching testPathMatch pattern')
 	}
+
 	const files: string[] = getFilesPattern(paths.testPathMatch)
 	console.info(
 		'The following test scripts that matched the testPathMatch pattern are going to be executed:',
 	)
+
 	for (const file of files.sort()) {
 		const arg: RunCommonArguments = {
 			...options,

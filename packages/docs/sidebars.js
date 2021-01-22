@@ -18,6 +18,7 @@ module.exports = {
 			'guides/script',
 			'guides/hook',
 			'guides/test-data',
+			'guides/test-data-generation',
 			'guides/test-settings',
 			'guides/editor',
 			'guides/cli',

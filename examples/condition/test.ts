@@ -79,15 +79,22 @@ export default () => {
 		'Step 5',
 		async browser => {
 			count += 1
-			console.log('Step 5')
+			console.log(`Step 5 run at ${count}`)
 		},
 	)
 
+	let globalRecovery = false
 	step('Step 6', async browser => {
-		throw Error('Throw error step 6')
+		if (!globalRecovery) {
+			throw Error('Throw error step 6')
+		} else {
+			console.log('Done step 6')
+		}
 	})
+
 	step.recovery({ tries: 2 }, async browser => {
 		console.log('Global recovery')
+		globalRecovery = true
 		return RecoverWith.RETRY
 	})
 }

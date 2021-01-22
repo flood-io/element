@@ -1,3 +1,6 @@
+import { BaseLocator } from './../page/Locator'
+import { ElementHandle as TargetElementHandle } from './../page/ElementHandle'
+import { Point } from './../page/Point'
 import { Condition } from '../page/Condition'
 import {
 	NavigationOptions,
@@ -9,12 +12,12 @@ import {
 	AuthOptions,
 	Viewport,
 	EvaluateFn,
+	devices,
 } from 'puppeteer'
-import DeviceDescriptors from 'puppeteer/DeviceDescriptors'
 import { Browser as BrowserInterface } from './IBrowser'
 import { NullableLocatable } from './Locatable'
 import CustomDeviceDescriptors from '../utils/CustomDeviceDescriptors'
-import { ElementHandle } from '../page/types'
+import { ElementHandle, Locator, ScrollDirection } from '../page/types'
 import { TargetLocator } from '../page/TargetLocator'
 import { PuppeteerClientLike } from '../driver/Puppeteer'
 import { WorkRoot } from '../runtime-environment/types'
@@ -32,6 +35,7 @@ import { autoWaitUntil } from './decorators/autoWait'
 import { locatableToLocator, toLocatorError } from './toLocatorError'
 import { Keyboard } from '../page/Keyboard'
 import ms from 'ms'
+import mime from 'mime-types'
 import { getFrames } from '../utils/frames'
 
 export const debug = debugFactory('element:runtime:browser')
@@ -200,7 +204,7 @@ export class Browser<T> implements BrowserInterface {
 		try {
 			return this.page.goto(url, {
 				timeout: Number(this.settings.waitTimeout),
-				waitUntil: ['load', 'domcontentloaded', 'networkidle0', 'networkidle2'],
+				waitUntil: 'load',
 				...options,
 			})
 		} catch (e) {
@@ -413,7 +417,8 @@ export class Browser<T> implements BrowserInterface {
 
 	@rewriteError()
 	public async emulateDevice(deviceName: string): Promise<void> {
-		const device = DeviceDescriptors[deviceName] || CustomDeviceDescriptors[deviceName]
+		const device =
+			devices && deviceName in devices ? devices[deviceName] : CustomDeviceDescriptors[deviceName]
 		if (!device) throw new Error(`Unknown device descriptor: ${deviceName}`)
 		return this.page.emulate(device)
 	}
@@ -599,5 +604,148 @@ export class Browser<T> implements BrowserInterface {
 
 	public async close(): Promise<void> {
 		await this.client.browser.close()
+	}
+
+	private isLocator(target: Locator | ElementHandle | Point | ScrollDirection): target is Locator {
+		return target instanceof BaseLocator
+	}
+
+	private isElementHandle(
+		target: Locator | ElementHandle | Point | ScrollDirection,
+	): target is ElementHandle {
+		return target instanceof TargetElementHandle
+	}
+
+	private isPoint(target: Locator | ElementHandle | Point | ScrollDirection): target is Point {
+		return (
+			Array.isArray(target) &&
+			target.length === 2 &&
+			typeof target[0] === 'number' &&
+			typeof target[1] === 'number'
+		)
+	}
+
+	private isCorrectScrollBehavior(behavior: string): behavior is ScrollBehavior {
+		return ['auto', 'smooth'].includes(behavior)
+	}
+
+	public getMimeType(filePath: string): string | false {
+		return mime.lookup(filePath)
+	}
+
+	@addCallbacks()
+	public async scrollTo(
+		target: Locator | ElementHandle | Point | ScrollDirection,
+		scrollOptions?: ScrollIntoViewOptions,
+	): Promise<void> {
+		const behavior = scrollOptions?.behavior ?? 'auto'
+
+		if (!this.isCorrectScrollBehavior(behavior)) {
+			throw new Error('The input behavior is not correct (Must be "auto" or "smooth").')
+		}
+
+		const block = scrollOptions?.block ?? 'start'
+		const inline = scrollOptions?.inline ?? 'nearest'
+
+		let top = 0
+		let left = 0
+		const [_scrollHeight, _currentTop, _scrollWidth] = await this.page.evaluate(() => [
+			document.body.scrollHeight,
+			window.pageYOffset || document.documentElement.scrollTop,
+			document.body.scrollWidth,
+		])
+
+		if (this.isLocator(target) || this.isElementHandle(target)) {
+			const targetEl = this.isLocator(target) ? await this.findElement(target) : target
+			await targetEl.element.evaluate(
+				(el, scrollOptions: ScrollIntoViewOptions) => {
+					el.scrollIntoView(scrollOptions)
+				},
+				{ behavior, block, inline },
+			)
+			return
+		}
+
+		if (this.isPoint(target)) {
+			;[left, top] = target
+		} else if (typeof target === 'string') {
+			switch (target) {
+				case 'top':
+					top = 0
+					left = 0
+					break
+				case 'bottom':
+					top = _scrollHeight
+					left = 0
+					break
+				case 'left':
+					top = _currentTop
+					left = 0
+					break
+				case 'right':
+					top = _currentTop
+					left = _scrollWidth
+					break
+				default:
+					throw new Error(
+						'The input target is not Locator or ElementHandle or Point or Scroll Direction.',
+					)
+			}
+		} else {
+			throw new Error(
+				'The input target is not Locator or ElementHandle or Point or Scroll Direction.',
+			)
+		}
+
+		await this.page.evaluate(
+			(top, left, behavior) => {
+				window.scrollTo({ top, left, behavior })
+			},
+			top,
+			left,
+			behavior,
+		)
+	}
+
+	@addCallbacks()
+	public async scrollBy(
+		x: number | 'window.innerWidth',
+		y: number | 'window.innerHeight',
+		scrollOptions?: ScrollOptions,
+	): Promise<void> {
+		const behavior = scrollOptions?.behavior ?? 'auto'
+
+		if (!this.isCorrectScrollBehavior(behavior)) {
+			throw new Error('The input behavior is not correct (Must be "auto" or "smooth").')
+		}
+
+		if (x !== 'window.innerWidth' && typeof x !== 'number') {
+			throw new Error(
+				'The input x that you want to scroll by must be "window.innerWidth" or a number.',
+			)
+		}
+
+		if (y !== 'window.innerHeight' && typeof y !== 'number') {
+			throw new Error(
+				'The input y that you want to scroll by must be "window.innerHeight" or a number.',
+			)
+		}
+
+		await this.page.evaluate(
+			(x, y, behavior) => {
+				window.scrollBy({
+					top: y === 'window.innerHeight' ? window.innerHeight : y,
+					left: x === 'window.innerWidth' ? window.innerWidth : x,
+					behavior,
+				})
+			},
+			x,
+			y,
+			behavior,
+		)
+	}
+
+	public getUrl(): string {
+		return this.page.url()
 	}
 }

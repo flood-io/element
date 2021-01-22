@@ -33,7 +33,7 @@ export class ConsoleReporter implements IReporter {
 	testAssertionError(err: TestScriptError): void {}
 	testStepError(err: TestScriptError): void {}
 
-	testScriptConsole(method: ConsoleMethod, message?: any, ...optionalParams: any[]): void {
+	testScriptConsole(method: ConsoleMethod, message?: unknown, ...optionalParams: any[]): void {
 		if (method in console) {
 			console[method](message, ...optionalParams)
 		}

@@ -116,13 +116,10 @@ export {
 export { step, TestFn, StepFunction, StepOptions, RecoverWith } from './src/runtime/Step'
 
 export { beforeAll, afterAll, beforeEach, afterEach, HookFn } from './src/runtime/StepLifeCycle'
-/**
- * @docPage DSL
- */
-export { suite } from './src/runtime/types'
 
 export * from './api'
 
 export { EvaluatedScript } from './src/runtime/EvaluatedScript'
 export { EvaluatedScriptLike } from './src/runtime/EvaluatedScriptLike'
 export { default as WorkRoot } from './src/runtime-environment/WorkRoot'
+export { BaseLocator } from './src/page/Locator'

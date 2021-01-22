@@ -148,6 +148,14 @@ Makes the element located by the first argument the receiver of future input.
 - locator [`NullableLocatable`][nullablelocatable] The [Locator][] to use to find an element to send focus to.
 - returns: [Promise<`void`>][promise]
 
+### `getMimeType(filePath)`
+
+Returns the Media (MIME) Type of a file
+
+**Parameters**
+- filePath `string` path to a file
+- returns: `string` media type of the file
+
 ### `highlightElement(element)`
 
 Highlight an element. Useful in concert with takeScreenshot to tweak your locators.
@@ -175,6 +183,35 @@ Presses a key on the keyboard specified by key code. For example, [Key.ALT][key.
 - keyCode `string`
 - options? (Optional)
 - returns: [Promise<`void`>][promise]
+
+### `scrollBy(x, y[, options])`
+
+Scroll the document by the given number of pixels.
+
+**Parameters**
+
+- x `number` How many pixels to scroll by, along the x-axis (horizontal). Positive values will scroll to the right, while negative values will scroll to the left.
+
+- y `number` How many pixels to scroll by, along the y-axis (vertical). Positive values will scroll down, while negative values scroll up.
+
+- x and y can take `'window.innerHeight'` and `'window.innerWidth'` as special values
+
+- options is an object containing [ScrollOptions](#scrolloptions).
+
+### `scrollTo(position[, options])`
+
+Scroll the document to the specified position.
+
+**Parameters**
+
+- position can be any of these types:
+
+  - [`ElementHandle`](ElementHandle.md)
+  - [`Locator`](Locators.md)
+  - `Point`: an array of `x`(number) and `y`(number) co-ordinate
+  - `String`: 'top', 'bottom', 'left' or 'right'
+
+- options is an object containing [ScrollOptions](#scrolloptions).
 
 ### `selectByIndex(locatable, index)`
 
@@ -383,6 +420,18 @@ Defines the screenshot options.
   If no path is provided, the image won't be saved to the disk.  
 * `quality` &lt;number&gt; (Optional) The quality of the image, between 0-100. Not applicable to `png` images.
 * `type` &lt;string&gt;  (Optional) Specify screenshot type, can be either `"jpeg"` or `"png"`. Defaults to `png`.
+# ScrollOptions
+
+Is an Object with the following properties:
+
+- `behaviour`: Defines the transition animation. One of `'auto'` (default) or `'smooth'`.
+- `block`: Defines vertical alignment. One of `'start'` (default), `'center'`, `'end'`, or `'nearest'`.
+- `inline`: Defines horizental alignment. One of `'start'`, `'center'`, `'end'`, or `'nearest'` (default).
+
+**Note:**
+
+1. If you use `behaviour: 'smooth'`, it may take the browser some time to scroll. Therefore, consider adding a wait after the scroll action to avoid unexpected error.
+2. `block` and `inline` only work with `browser.scrollTo()`, with [`ElementHandle`](ElementHandle.md) or [`Locator`](Locators.md) as the 1st parameter.
 
 [step]: ../guides/script
 [promise]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise

@@ -9,7 +9,6 @@ const exists = promisify(fs.exists)
 
 import {
 	Step,
-	StepDefinition,
 	TestFn,
 	StepOptions,
 	normalizeStepOptions,
@@ -19,7 +18,6 @@ import {
 	RecoverWith,
 	extractStep,
 } from './Step'
-import { SuiteDefinition } from './types'
 import { Browser } from './IBrowser'
 import Test from './Test'
 import { mustCompileFile } from '../TestScript'
@@ -31,6 +29,7 @@ import { expect } from '../utils/Expect'
 
 import { Until } from '../page/Until'
 import { By } from '../page/By'
+import { BaseLocator } from '../page/Locator'
 import { MouseButtons, Device, Key, userAgents } from '../page/Enums'
 
 import { TestDataSource, TestDataFactory } from '../test-data/TestData'
@@ -122,14 +121,14 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 	}
 
 	public async beforeTestRun(): Promise<void> {
-		await this.testData.load()
+		if (this.testData) await this.testData.load()
 	}
 
 	private _testDataLoaders: TestDataFactory | undefined
 	public get testDataLoaders(): TestDataFactory {
 		if (this._testDataLoaders === undefined) {
 			this._testDataLoaders = new BoundTestDataLoaders(this, this.runEnv.workRoot)
-			this._testDataLoaders.fromData([{}])
+			// this._testDataLoaders.fromData([{}])
 		}
 
 		return this._testDataLoaders
@@ -213,26 +212,6 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			const hookBase = normalizeHookBase({ fn, waitTimeout })
 			hook.beforeEach.push(hookBase)
 		}
-
-		// re-scope this for captureSuite to close over:
-		const evalScope = this as EvaluatedScript
-
-		type WithDataCallback = (this: null, s: StepDefinition) => void
-
-		// closes over evalScope (this) and ENV
-		const captureSuite: SuiteDefinition = Object.assign(
-			(
-				callback: (this: null, s: StepDefinition) => void,
-			): ((this: null, s: StepDefinition) => void) => {
-				return callback
-			},
-			{
-				withData: <T>(data: TestDataSource<T>, callback: WithDataCallback) => {
-					evalScope.testData = expect(data, 'TestData is not present')
-					return callback
-				},
-			},
-		)
 
 		const step: StepExtended = (...nameOrOptionsOrFn: any[]) => {
 			const [name, option, fn] = extractStep(nameOrOptionsOrFn)
@@ -327,13 +306,13 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			// Actual implementation of @flood/chrome
 			By,
 			Until,
+			BaseLocator,
 			Device,
 			MouseButtons,
 			TestData: this.testDataLoaders,
 			Key,
 			RecoverWith,
 			userAgents,
-			suite: captureSuite,
 		}
 
 		this.vm = createVirtualMachine(context, this.script.scriptRoot)

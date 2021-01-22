@@ -9,11 +9,12 @@ import {
 	Viewport,
 	EvaluateFn,
 } from 'puppeteer'
-import { ElementHandle } from '../page/types'
+import { ElementHandle, Locator, ScrollDirection } from '../page/types'
 import { NullableLocatable } from './Locatable'
 import { TargetLocator } from '../page/TargetLocator'
 import Mouse from '../page/Mouse'
 import { TestSettings } from './Settings'
+import { Point } from '../page/Point'
 
 /**
  * Browser is the main entry point in each <[step]>, it's your direct connection to the browser running the test.
@@ -293,6 +294,41 @@ export interface Browser {
 	waitForNewPage(): Promise<Page>
 
 	close(): Promise<void>
+
+	/**
+	 *
+	 * @param target target to scroll
+	 * @param behavior behavior of scroll (auto or smooth)
+	 */
+	scrollTo(
+		target: Locator | ElementHandle | Point | ScrollDirection,
+		scrollOptions?: ScrollIntoViewOptions,
+	): Promise<void>
+
+	/**
+	 *
+	 * @param x How many pixels to scroll by, along the x-axis (horizontal). Positive values will scroll to the right, while negative values will scroll to the left.
+	 * Param x can take 'window.innerWidth' as a special value
+	 * @param y How many pixels to scroll by, along the y-axis (vertical). Positive values will scroll down, while negative values scroll up.
+	 * Param y can take 'window.innerHeight' as a special value
+	 * @param scrollOptions behavior of scroll (auto or smooth)
+	 */
+	scrollBy(
+		x: number | 'window.innerWidth',
+		y: number | 'window.innerHeight',
+		scrollOptions?: ScrollOptions,
+	): Promise<void>
+
+	/**
+	 * Get the current URL of the page
+	 */
+	getUrl(): string
+
+	/**
+	 * get mime type of file
+	 * @param filePath
+	 */
+	getMimeType(filePath: string): string | false
 }
 
 /**

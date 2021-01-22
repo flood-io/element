@@ -1,5 +1,5 @@
 {
-  "version-1.4/main": [
+  "version-1.5.1/main": [
     {
       "collapsed": true,
       "type": "category",
@@ -7,23 +7,23 @@
       "items": [
         {
           "type": "doc",
-          "id": "version-1.4/start/overview"
+          "id": "version-1.5.1/start/overview"
         },
         {
           "type": "doc",
-          "id": "version-1.4/start/install"
+          "id": "version-1.5.1/start/install"
         },
         {
           "type": "doc",
-          "id": "version-1.4/start/init"
+          "id": "version-1.5.1/start/init"
         },
         {
           "type": "doc",
-          "id": "version-1.4/start/scripting"
+          "id": "version-1.5.1/start/scripting"
         },
         {
           "type": "doc",
-          "id": "version-1.4/start/changelog"
+          "id": "version-1.5.1/start/changelog"
         }
       ]
     },
@@ -39,49 +39,49 @@
           "items": [
             {
               "type": "doc",
-              "id": "version-1.4/guides/link-navigation"
+              "id": "version-1.5.1/guides/link-navigation"
             },
             {
               "type": "doc",
-              "id": "version-1.4/guides/page-verification"
+              "id": "version-1.5.1/guides/page-verification"
             },
             {
               "type": "doc",
-              "id": "version-1.4/guides/form-interaction"
+              "id": "version-1.5.1/guides/form-interaction"
             }
           ]
         },
         {
           "type": "doc",
-          "id": "version-1.4/guides/script"
+          "id": "version-1.5.1/guides/script"
         },
         {
           "type": "doc",
-          "id": "version-1.4/guides/hook"
+          "id": "version-1.5.1/guides/hook"
         },
         {
           "type": "doc",
-          "id": "version-1.4/guides/test-data"
+          "id": "version-1.5.1/guides/test-data"
         },
         {
           "type": "doc",
-          "id": "version-1.4/guides/test-data-generation"
+          "id": "version-1.5.1/guides/test-data-generation"
         },
         {
           "type": "doc",
-          "id": "version-1.4/guides/test-settings"
+          "id": "version-1.5.1/guides/test-settings"
         },
         {
           "type": "doc",
-          "id": "version-1.4/guides/editor"
+          "id": "version-1.5.1/guides/editor"
         },
         {
           "type": "doc",
-          "id": "version-1.4/guides/cli"
+          "id": "version-1.5.1/guides/cli"
         },
         {
           "type": "doc",
-          "id": "version-1.4/guides/browser-load-testing"
+          "id": "version-1.5.1/guides/browser-load-testing"
         }
       ]
     },
@@ -92,39 +92,39 @@
       "items": [
         {
           "type": "doc",
-          "id": "version-1.4/api/browser"
+          "id": "version-1.5.1/api/browser"
         },
         {
           "type": "doc",
-          "id": "version-1.4/api/locators"
+          "id": "version-1.5.1/api/locators"
         },
         {
           "type": "doc",
-          "id": "version-1.4/api/waiters"
+          "id": "version-1.5.1/api/waiters"
         },
         {
           "type": "doc",
-          "id": "version-1.4/api/element-handle"
+          "id": "version-1.5.1/api/element-handle"
         },
         {
           "type": "doc",
-          "id": "version-1.4/api/mouse"
+          "id": "version-1.5.1/api/mouse"
         },
         {
           "type": "doc",
-          "id": "version-1.4/api/target-locator"
+          "id": "version-1.5.1/api/target-locator"
         },
         {
           "type": "doc",
-          "id": "version-1.4/api/test-data"
+          "id": "version-1.5.1/api/test-data"
         },
         {
           "type": "doc",
-          "id": "version-1.4/api/env"
+          "id": "version-1.5.1/api/env"
         },
         {
           "type": "doc",
-          "id": "version-1.4/api/constants"
+          "id": "version-1.5.1/api/constants"
         }
       ]
     },
@@ -135,15 +135,15 @@
       "items": [
         {
           "type": "doc",
-          "id": "version-1.4/tutorials/youtube"
+          "id": "version-1.5.1/tutorials/youtube"
         },
         {
           "type": "doc",
-          "id": "version-1.4/tutorials/woocommerce"
+          "id": "version-1.5.1/tutorials/woocommerce"
         },
         {
           "type": "doc",
-          "id": "version-1.4/tutorials/magento"
+          "id": "version-1.5.1/tutorials/magento"
         }
       ]
     }

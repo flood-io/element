@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.5.0](https://github.com/flood-io/element/compare/v1.4.0-beta.6...v1.5.0) (2021-01-22)
+
+
+### Bug Fixes
+
+* fix codacy ([2cf3b36](https://github.com/flood-io/element/commit/2cf3b36da27e527f78fc0b9e55c8fea5aa2b90ec))
+
+
+### Features
+
+* update version of each packages ([017830f](https://github.com/flood-io/element/commit/017830fa5c1922e481ebd59f7519dd63b2b2ec18))
+
+
+
+
+
 ## [1.4.0-beta.6](https://github.com/flood-io/element/compare/v1.4.0-beta.5...v1.4.0-beta.6) (2020-12-04)
 
 ### Bug Fixes

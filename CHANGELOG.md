@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.1](https://github.com/flood-io/element/compare/v1.5.0...v1.5.1) (2021-01-22)
+
+
+### Bug Fixes
+
+* add empty lines ([e341efe](https://github.com/flood-io/element/commit/e341efe50594ba2cc7faa2e4d67d30095b7f9813))
+* correct the version at changelog.md ([c5b93e8](https://github.com/flood-io/element/commit/c5b93e89901b7fbf731b7d70e56003f14452c1b0))
+* correct the version from 1.5.1 to 1.5 ([f972d7c](https://github.com/flood-io/element/commit/f972d7c17590fd204021789241d2244f56b1b5bd))
+* fix element version of documentation ([be7ec02](https://github.com/flood-io/element/commit/be7ec027a009dd4c5ba0d5ac7a21128c779dfbd1))
+
+
+
+
+
 # [1.5.0](https://github.com/flood-io/element/compare/v1.4.0-beta.6...v1.5.0) (2021-01-22)
 
 

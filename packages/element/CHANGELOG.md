@@ -27,7 +27,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [1.4.0-beta.2](https://github.com/flood-io/element/compare/v1.4.0-beta.1...v1.4.0-beta.2) (2020-11-24)
 
-<!--lint disable no-duplicate-headings-->
 ### Bug Fixes
 
 -   codacy resolved ([55d66e1](https://github.com/flood-io/element/commit/55d66e1bf8ecd5d03982a08b3211aecd3c0ea559))
@@ -35,7 +34,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [1.4.0-beta.1](https://github.com/flood-io/element/compare/v1.4.0-beta.0...v1.4.0-beta.1) (2020-11-23)
 
-<!--lint disable no-duplicate-headings-->
 ### Features
 
 -   change version to make it consitent ([79d3a60](https://github.com/flood-io/element/commit/79d3a607a580b230536260ed68b40c1c701aaa1f))

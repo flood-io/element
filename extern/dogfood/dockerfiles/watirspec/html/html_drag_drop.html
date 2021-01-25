@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Drag and Drop - Demo</title>
+		<style>
+			#content {
+				display: flex;
+				padding: 2rem;
+			}
+			.box {
+				width: 200px;
+				height: 50px;
+				border: 2px solid black;
+				text-align: center;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+
+			.box + .box {
+				margin-left: 2rem;
+			}
+		</style>
+		<script>
+			function allowDrop(ev) {
+				ev.preventDefault()
+			}
+			function drop(event) {
+				event.preventDefault()
+				event.target.innerHTML = 'Dropped!'
+				document.getElementById('draggable').innerHTML = ''
+			}
+		</script>
+	</head>
+	<body>
+		<div id="content">
+			<div class="box">
+				<p id="draggable" draggable="true">Drag me to my target</p>
+			</div>
+			<div class="box" id="droppable" ondrop="drop(event)" ondragover="allowDrop(event)">
+				Drop here
+			</div>
+		</div>
+	</body>
+</html>

@@ -199,6 +199,11 @@ export interface ElementHandle {
 	toErrorString(): string
 
 	dispose(): Promise<void>
+
+	/**
+	 * Drag this element into another element
+	 */
+	drag(to: ElementHandle): Promise<void>
 }
 
 /**

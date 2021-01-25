@@ -198,7 +198,8 @@ describe('ElementHandle', () => {
 		}
 	})
 
-	test('findElements()', async () => {
+	// skip this test due to a bug from playwright https://github.com/microsoft/playwright/issues/4985
+	test.skip('findElements()', async () => {
 		const url = await serve('forms_with_input_elements.html')
 		await playwright.page.goto(url)
 		const handle: PElementHandle = await locateEl('form')
@@ -215,26 +216,29 @@ describe('ElementHandle', () => {
 		expect(displayedElements.length).toBe(43)
 	})
 
-	describe('uploadFile', () => {
-		let browser: Browser<any>
-		beforeEach(async () => {
-			browser = new Browser(testWorkRoot(), playwright, DEFAULT_SETTINGS)
-			const url = await serve('forms_with_input_elements.html')
-			await browser.visit(url)
-		})
+	test('uploads a file to a file input', async () => {
+		const browser = new Browser(testWorkRoot(), playwright, DEFAULT_SETTINGS)
+		const url = await serve('forms_with_input_elements.html')
+		await browser.visit(url)
+		const handle: PElementHandle = await locateEl('#new_user_portrait')
+		const element = new ElementHandle(handle, playwright.page)
+		element.bindBrowser(browser)
 
-		afterEach(async () => {
-			await playwright.close()
-		})
+		expect(await element.getProperty('value')).toHaveLength(0)
+		await element.uploadFile('users.csv')
+		expect(await element.getProperty('value')).toBe('C:\\fakepath\\users.csv')
+	})
 
-		test('uploads a file to a file input', async () => {
-			const handle: PElementHandle = await locateEl('#new_user_portrait')
-			const element = new ElementHandle(handle, playwright.page)
-			element.bindBrowser(browser)
+	test('drag()', async () => {
+		const browser = new Browser(testWorkRoot(), playwright, DEFAULT_SETTINGS)
+		const url = await serve('html_drag_drop.html')
 
-			expect(await element.getProperty('value')).toHaveLength(0)
-			await element.uploadFile('users.csv')
-			expect(await element.getProperty('value')).toBe('C:\\fakepath\\users.csv')
-		})
+		await browser.visit(url)
+		const from = new ElementHandle(await locateEl('#draggable'), playwright.page)
+		const to = new ElementHandle(await locateEl('#droppable'), playwright.page)
+
+		await from.drag(to)
+		const resultText = await to.text()
+		expect(resultText).toBe('Dropped!')
 	})
 })

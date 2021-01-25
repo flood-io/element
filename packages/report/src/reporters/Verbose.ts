@@ -6,7 +6,7 @@ import { TraceData, TestEvent, CompoundMeasurement, MeasurementKind } from '../t
 import chalk from 'chalk'
 import debugFactory from 'debug'
 import { CustomConsole } from '../console/CustomConsole'
-import { ReportUtils } from '@flood/element-report/src/utils/ReportUtils'
+import { ReportUtils } from '../utils/ReportUtils'
 import Spinnies from 'spinnies'
 const debug = debugFactory('element-cli:console-reporter')
 

@@ -219,14 +219,13 @@ const cmd: CommandModule = {
 			})
 			.option('loop-count', {
 				group: 'Running the test script:',
-				describe:
-					'Override the loopCount setting in the test script. This is normally overridden to 1 when running via the cli.',
+				describe: 'Override the loopCount setting in the test script',
 				type: 'number',
 			})
 			.option('work-root', {
 				group: 'Paths:',
 				describe:
-					'Specify a custom work root. (Default: a directory named after your test script, and at the same location)',
+					'Specify a custom work root to save the test results. (Default: a directory named after your test script, under /tmp/element-results of your project folder)',
 			})
 			.option('test-data-root', {
 				group: 'Paths:',

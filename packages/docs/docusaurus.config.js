@@ -22,9 +22,6 @@ module.exports = {
 			// appId: 'app-id', // Optional, if you run the DocSearch crawler on your own
 			// algoliaOptions: {}, // Optional, if provided by Algolia
 		},
-		colorMode: {
-			defaultMode: 'light',
-		},
 		navbar: {
 			title: 'Element',
 			hideOnScroll: true,
@@ -64,7 +61,6 @@ module.exports = {
 			],
 		},
 		footer: {
-			style: 'light',
 			links: [
 				{
 					title: 'Our Products',

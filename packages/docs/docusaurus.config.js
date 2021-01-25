@@ -139,8 +139,6 @@ module.exports = {
 			'@docusaurus/preset-classic',
 			{
 				docs: {
-					// It is recommended to set document id as docs home page (`docs/` path).
-					homePageId: 'start/overview',
 					sidebarPath: require.resolve('./sidebars.js'),
 					editUrl: 'https://github.com/flood-io/element/edit/master/packages/docs/',
 				},

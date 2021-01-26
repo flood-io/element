@@ -12,7 +12,7 @@ module.exports = {
 		announcementBar: {
 			id: 'supportus',
 			content:
-				'🚀&nbsp;&nbsp;&nbsp;Flood Element v2.0 is now available, checkout the cool features <a target="_blank" rel="noopener noreferrer" href="https://www.flood.io/blog/whats-new-in-element-v2.0">here</a>&nbsp;&nbsp;🚀',
+				'🚀&nbsp;&nbsp;Flood Element v2.0 is now available, checkout the cool features <a target="_blank" rel="noopener noreferrer" href="https://www.flood.io/blog/element-2.0">here</a>&nbsp;&nbsp;🚀',
 			backgroundColor: '#23232C',
 			textColor: '#FFFFFF',
 		},

@@ -26,11 +26,11 @@ element init [dir] [options]
 Init a test script, a default configuration file and a minimal environment to get you started with Flood Element.
 **Positionals**
 
--   `[dir]` (string) the directory to initialize with an Element test script. Defaults to the current directory.
+- `[dir]` (string) the directory to initialize with an Element test script. Defaults to the current directory.
 
 **Options**
 
--   `--skip-install` (boolean) Skip yarn/npm install. Defaults to `false`.
+- `--skip-install` (boolean) Skip yarn/npm install. Defaults to `false`.
 
 ### Generate a basic test script from a template
 
@@ -46,7 +46,7 @@ element plan <file> [options]
 
 **Options**
 
--   `--json` (boolean) Output the test plan as JSON format. Defaults to `false`.
+- `--json` (boolean) Output the test plan as JSON format. Defaults to `false`.
 
 ### Run a test script locally
 
@@ -60,33 +60,34 @@ Positionals:
 
 **options:**
 
--   Browser:
-    -   `--browser` Specify the browser type used to run the test, using either `'chromium'` (default), `'firefox'` or `'webkit'`.
-    -   `--executable-path` path to the installation folder of a custom Chromium-based browser, used to run the test. If set, Element will ignore the browser settings, and use this custom browser instead.
-    -   `--chrome` Specify which version of Google Chrome to use. `DEPRECATED`
-    -   `--no-headless` Run in non-headless mode so that you can see what the browser is doing as it runs the test.
-    -   `--devtools` Run in non-headless mode and also open devtools
-    -   `--no-sandbox` Disable the chrome sandbox - advanced option, mostly necessary on linux.
+- Browser:
 
--   Running the test script:
+  - `--browser` Specify the browser type used to run the test, using either `'chromium'` (default), `'firefox'` or `'webkit'`.
+  - `--executable-path` path to the installation folder of a custom Chromium-based browser, used to run the test. If set, Element will ignore the browser settings, and use this custom browser instead.
+  - `--chrome` Specify which version of Google Chrome to use. `DEPRECATED`
+  - `--no-headless` Run in non-headless mode so that you can see what the browser is doing as it runs the test.
+  - `--devtools` Run in non-headless mode and also open devtools
+  - `--no-sandbox` Disable the chrome sandbox - advanced option, mostly necessary on linux.
 
-    -   `--watch` Watch `<file>` and rerun the test when it changes.
-    -   `--fast-forward`, `--ff` Run the script in fast-forward: override the actionDelay and stepDelay settings to 1 second in the test script. Specify a number to set a different delay.
-    -   `--slow-mo` Run the script in slow-motion: Increase the actionDelay
+- Running the test script:
+
+  - `--watch` Watch `<file>` and rerun the test when it changes.
+  - `--fast-forward`, `--ff` Run the script in fast-forward: override the actionDelay and stepDelay settings to 1 second in the test script. Specify a number to set a different delay.
+  - `--slow-mo` Run the script in slow-motion: Increase the actionDelay
         and stepDelay settings in the test script to 10 seconds.
         Specify a number to set a different delay.
-    -   `--step-delay` Override stepDelay test script setting `[number]`
-    -   `--action-delay` Override actionDelay test script setting `[number]`
-    -   `--loop-count` Override the loopCount setting in the test script `[number]`
-    -   ~~`--strict` Compile the script in strict mode. This can be helpful
+  - `--step-delay` Override stepDelay test script setting `[number]`
+  - `--action-delay` Override actionDelay test script setting `[number]`
+  - `--loop-count` Override the loopCount setting in the test script `[number]`
+  - ~~`--strict` Compile the script in strict mode. This can be helpful
         in diagnosing problems.~~ `DEPRECATED`
-        			\- `--fail-status-code` Specify an exit code when the test fails. Defaults to 1.
-        			\- `--config-file` Specify the path to a config file to run the test with. If a path is not passed, defaults to `element.config.js`. This flag only works when [running a test with a config file](cli.md#run-a-test-locally-with-the-default-config-file)
+  - `--fail-status-code` Specify an exit code when the test fails. Defaults to 1.
+  - `--config-file` Specify the path to a config file to run the test with. If a path is not passed, defaults to `element.config.js`. This flag only works when [running a test with a config file](cli.md#run-a-test-locally-with-the-default-config-file)
 
--   Paths:
+- Paths:
 
-    -   `--work-root` Specify a custom work root to save the test results. (Default: a directory named after your test script, under /tmp/element-results of your project folder)
-    -   `--test-data-root` Specify a custom path to find test data files. (Default: the
+  - `--work-root` Specify a custom work root to save the test results. (Default: a directory named after your test script, under /tmp/element-results of your project folder)
+  - `--test-data-root` Specify a custom path to find test data files. (Default: the
         same directory as the test script)
 
 ### Generate a config file from a template

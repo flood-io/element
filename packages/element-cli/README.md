@@ -27,7 +27,9 @@ Run a test script locally.
 
 **Browser:**
 
-- `--chrome` Specify which version of Google Chrome to use. Default: use the puppeteer bundled version.
+- `--browser` Specify the browser type used to run the test, using either `'chromium'` (default), `'firefox'` or `'webkit'`.
+- `--executable-path` path to the installation folder of a custom Chromium-based browser, used to run the test. If set, Element will ignore the browser settings, and use this custom browser instead.
+- `--chrome` Specify which version of Google Chrome to use. `DEPRECATED`
 - `--no-headless` Run in non-headless mode so that you can see what the browser is doing as it runs the test
 - `--devtools` Run in non-headless mode and also open devtools
 - `--no-sandbox` Disable the chrome sandbox - advanced option, mostly necessary on linux

@@ -62,7 +62,8 @@
 		"webpack": "^4.41.5"
 	},
 	"resolutions": {
-		"@types/node": "12.7.4"
+		"@types/node": "12.7.4",
+		"**/terser-webpack-plugin": "^1.4.3"
 	},
 	"workspaces": [
 		"packages/*"

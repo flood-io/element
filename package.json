@@ -67,6 +67,9 @@
 	"workspaces": [
 		"packages/*"
 	],
+	"nohoist": [
+		"packages/docs/**"
+	],
 	"standard-version": {
 		"changelog": {
 			"header": "Element Changelog"

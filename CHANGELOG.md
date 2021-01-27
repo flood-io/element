@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.27](https://github.com/flood-io/element/compare/v2.0.0-canary.26...v2.0.0-canary.27) (2021-01-27)
+
+
+### Bug Fixes
+
+* unknown options when running tests on webkit ([a18b81f](https://github.com/flood-io/element/commit/a18b81fb40d975c58c5d5c19eaedf29bd55f8a12))
+
+
+
+
+
 # [2.0.0-canary.26](https://github.com/flood-io/element/compare/v2.0.0-canary.25...v2.0.0-canary.26) (2021-01-27)
 
 

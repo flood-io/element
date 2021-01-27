@@ -116,6 +116,10 @@ export async function launch(
 		...passedOptions,
 	}
 
+	// due to the error "Cannot parse arguments: Unknown option --disable-gpu" when running a test with webkit browser
+	if (options.browser !== 'webkit') {
+		options.args.push('--disable-gpu')
+	}
 	options.args.push('--disable-dev-shm-usage')
 
 	if (!options.sandbox) {

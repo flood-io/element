@@ -116,7 +116,6 @@ export async function launch(
 		...passedOptions,
 	}
 
-	options.args.push('--disable-gpu')
 	options.args.push('--disable-dev-shm-usage')
 
 	if (!options.sandbox) {

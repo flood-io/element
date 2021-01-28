@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.29](https://github.com/flood-io/element/compare/v2.0.0-canary.28...v2.0.0-canary.29) (2021-01-28)
+
+
+### Features
+
+* update playwright to 1.8 ([bf33b13](https://github.com/flood-io/element/commit/bf33b13766e271a533aa04332bdb03cebf712e69))
+
+
+
+
+
 # [2.0.0-canary.28](https://github.com/flood-io/element/compare/v2.0.0-canary.27...v2.0.0-canary.28) (2021-01-28)
 
 **Note:** Version bump only for package @flood/element-core

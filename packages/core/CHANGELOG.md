@@ -3,6 +3,37 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.27](https://github.com/flood-io/element/compare/v2.0.0-canary.26...v2.0.0-canary.27) (2021-01-27)
+
+
+### Bug Fixes
+
+* unknown options when running tests on webkit ([a18b81f](https://github.com/flood-io/element/commit/a18b81fb40d975c58c5d5c19eaedf29bd55f8a12))
+
+
+
+
+
+# [2.0.0-canary.26](https://github.com/flood-io/element/compare/v2.0.0-canary.25...v2.0.0-canary.26) (2021-01-27)
+
+
+### Bug Fixes
+
+* unknown option --disable-gpu ([9bce1e6](https://github.com/flood-io/element/commit/9bce1e6aa60b9dcac8820577608b1afff274d194))
+* use --disable-gpu only when not using webkit ([e0423ac](https://github.com/flood-io/element/commit/e0423aca4cf65cab057ce19e5d7d88de37fab316))
+
+
+
+
+
+# [2.0.0-canary.25](https://github.com/flood-io/element/compare/v2.0.0-canary.24...v2.0.0-canary.25) (2021-01-26)
+
+**Note:** Version bump only for package @flood/element-core
+
+
+
+
+
 # [2.0.0-canary.24](https://github.com/flood-io/element/compare/v2.0.0-canary.23...v2.0.0-canary.24) (2021-01-22)
 
 **Note:** Version bump only for package @flood/element-core

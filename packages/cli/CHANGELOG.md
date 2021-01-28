@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.27](https://github.com/flood-io/element/compare/v2.0.0-canary.26...v2.0.0-canary.27) (2021-01-27)
+
+**Note:** Version bump only for package @flood/element-cli
+
+
+
+
+
+# [2.0.0-canary.26](https://github.com/flood-io/element/compare/v2.0.0-canary.25...v2.0.0-canary.26) (2021-01-27)
+
+**Note:** Version bump only for package @flood/element-cli
+
+
+
+
+
+# [2.0.0-canary.25](https://github.com/flood-io/element/compare/v2.0.0-canary.24...v2.0.0-canary.25) (2021-01-26)
+
+
+### Bug Fixes
+
+* error reported by codacy ([59cf4cc](https://github.com/flood-io/element/commit/59cf4cc2bc3512358c71883e12c5e0cd8ac03981))
+
+
+### Features
+
+* toggle error on step name click ([eab6cf8](https://github.com/flood-io/element/commit/eab6cf89e65fb5ea9de08967f7d6164945e68eda))
+
+
+
+
+
 # [2.0.0-canary.24](https://github.com/flood-io/element/compare/v2.0.0-canary.23...v2.0.0-canary.24) (2021-01-22)
 
 **Note:** Version bump only for package @flood/element-cli

@@ -116,14 +116,16 @@ export async function launch(
 		...passedOptions,
 	}
 
-	options.args.push('--disable-gpu')
-	options.args.push('--disable-dev-shm-usage')
+	// due to the errors "Cannot parse arguments: Unknown option ..." when running a test with webkit browser
+	if (options.browser !== 'webkit') {
+		options.args.push('--disable-gpu')
+		options.args.push('--disable-dev-shm-usage')
+		options.args.push('--auth-server-whitelist="hostname/domain"')
+	}
 
 	if (!options.sandbox) {
 		options.args.push('--no-sandbox')
 	}
-
-	options.args.push('--auth-server-whitelist="hostname/domain"')
 
 	const browserType: BrowserType = options.executablePath
 		? 'chromium'

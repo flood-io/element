@@ -48,7 +48,7 @@
 		"micromatch": "^4.0.2",
 		"ms": "^2.1.2",
 		"os-name": "^4.0.0",
-		"playwright": "^1.7.1",
+		"playwright": "^1.8.0",
 		"recast": "^0.13.0",
 		"sanitize-filename": "^1.6.1",
 		"source-map": "^0.7.0",

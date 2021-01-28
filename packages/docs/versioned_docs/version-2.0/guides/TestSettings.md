@@ -19,43 +19,88 @@ export const settings: TestSettings = {
 See [DEFAULT SETTINGS](#default-settings) for a list of the default value for each setting.
 
 ## Setting Properties
+
 ### actionDelay
+
 `number`  (Optional)   Specifies the time (in seconds) to wait between each action call.  
-    
+
   Waiting between actions simulates the behaviour of a real user as they read, think and act on the page's content.  
-    
-### blockedDomains 
+
+### blockedDomains
+
 `string\[]`  (Optional)   Blocks requests to a list a domains. Accepts partial matches using `*` or any matcher accepted by [Micromatch](https://github.com/micromatch/micromatch).
-    
+
 Matching is applied to the `hostname` only, unless the blocked domain contains a `:` in which case it will match against `hostname` and `port`.  
 
-Example:  `["*.google-analytics.com", "*:1337"]`  
-    
-### chromeVersion
+Example:  `["*.google-analytics.com", "*:1337"]`
+
+### browser
+
+Since Element 2.0, you can set the browser type used to run the test, using one of the 3 browser types bundled with [Playwright](https://playwright.dev/), including `'chromium'`, `'firefox'` and `'webkit'`. Defaults to `'chromium'`.
+
+### browserLaunchOptions
+
+`Object` (Optional) Sets additional launch options on the browser. This will allow you to specify a custom Chromium-based browser type used to run the test, like [Microsoft Edge](https://www.microsoft.com/en-us/edge) or [Brave](https://brave.com/), rather than the [3 bundled ones](#browser).
+
+**Properties**
+
+-   executablePath `string` path to the installation folder of a custom browser based on Chromium. If set, Element will ignore the [browser](#browser) settings, and use this custom browser instead.
+-   downloadsPath `string` if specified, accepted downloads are downloaded into this directory. Otherwise, temporary directory is created and is deleted when browser is closed.
+-   firefoxUserPrefs `Object` Firefox user preferences. Learn more about the Firefox user preferences [here](https://support.mozilla.org/en-US/kb/about-config-editor-firefox)
+-   proxy `Object` Network proxy settings.
+    -   server `string` Proxy to be used for all requests. HTTP and SOCKS proxies are supported, for example `http://myproxy.com:3128` or `socks5://myproxy.com:3128`. Short form `myproxy.com:3128` is considered an HTTP proxy.
+    -   bypass `string` Optional coma-separated domains to bypass proxy, for example ".com, chromium.org, .domain.com".
+    -   username `string` Optional username to use if HTTP proxy requires authentication.
+    -   password `string` Optional password to use if HTTP proxy requires authentication.
+
+```typescript
+export const settings: TestSettings = {
+	browserLaunchOption: {
+		executablePath: '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
+	},
+}
+```
+
+### ~~chromeVersion~~ (DEPRECATED since version 2.0)
+
 `puppeteer` or `stable` (Optional)   Specifies a version of Google Chrome to run the test
+
 ### clearCache
-`false` | `true`  (Optional)   Specifies whether Browser cache should be cleared after each test loop.  
+
+`false` \| `true`  (Optional)   Specifies whether Browser cache should be cleared after each test loop.  
+
 ### clearCookies
-`false` | `true`  (Optional)   Specifies whether cookies should be cleared after each test loop.  
+
+`false` \| `true`  (Optional)   Specifies whether cookies should be cleared after each test loop.  
+
 ### consoleFilter
+
 [ConsoleMethod](#console-method)(Optional)   Specify which console methods to filter out. By default no console methods are filtered.  
-    
+
 This setting can be useful for very noisy tests. When a method is filtered, it still works as normal but the message will be omitted from the Element output.  
-    
+
 ### description
+
 `string`  (Optional)   Speicifies the description of the test specified in the comments section  
+
 ### device
+
 `string`  (Optional)   Specifies a device to emulate with browser device emulation.  
+
 ### disableCache
-`false` | `true`  (Optional)   Disables browser request cache for all requests.  
+
+`false` \| `true`  (Optional)   Disables browser request cache for all requests.  
+
 ### duration
+
 `number`  (Optional)   Maximum duration to run the test for.  
-    
+
   Note that when running a load test via [Flood](https://flood.io), the duration of the load test takes precedence over this setting.  
-    
+
   Defaults to `-1` for no timeout.  
-    
+
 ### extraHTTPHeaders
+
 `Object` (Optional) Specifies a set of extra HTTP headers to set before each test loop.  
  If this setting is undefined, the extra HTTP headers are left as-is between iterations.
 
@@ -65,66 +110,105 @@ export const settings: TestSettings = {
 }
 ```
 
-### ignoreHTTPSErrors 
-`false` | `true`  (Optional)   Whether to ignore HTTPS errors during navigation. Defaults to `false`  
-### incognito 
-`false` | `true`  (Optional)   Controls whether each iteration should run within an Incognito window instead of a normal  
+### ignoreHTTPSErrors
+
+`false` \| `true`  (Optional)   Whether to ignore HTTPS errors during navigation. Defaults to `false`  
+
+### incognito
+
+`false` \| `true`  (Optional)   Controls whether each iteration should run within an Incognito window instead of a normal  
   window. The Incognito session will be destroyed between each loop.  
 
 ### launchArgs
+
 `string[]` Additional arguments to pass to the browser instance.
 The list of Chromium flags can be found [here](https://peter.sh/experiments/chromium-command-line-switches/)
 
-### loopCount 
+### loopCount
+
 `number`  (Optional)   Number of times to run this test.  
-    
+
   Defaults to `-1` (or `Infinity`) for an unlimited number of loops.  
-    
-### name 
+
+### name
+
 `string`  (Optional)   Speicifies the name of the test specified in the comments section  
-### responseTimeMeasurement 
+
+### responseTimeMeasurement
+
 [ResponseTiming](#responsetiming)  (Optional)   Configures how we record response time for each step.  
-    
+
   Possible values:  
-  - `"page"`: Record the document loading response time. This is usually what you consider response time on paged web apps.  
-  - `"network"`: Takes the mean response time of all network requests which occur during a step. This is useful for Single Page Application which don't actually trigger a navigation.  
-  - `"step"`: (Default) Records the wall clock time of a step. This is useful for Single Page Application which don't actually trigger a navigation.  
-  - `"stepWithThinkTime"`: Records the wall clock time of a step including `actionDelay` time.  
-    
+
+-   `"page"`: Record the document loading response time. This is usually what you consider response time on paged web apps.  
+-   `"network"`: Takes the mean response time of all network requests which occur during a step. This is useful for Single Page Application which don't actually trigger a navigation.  
+-   `"step"`: (Default) Records the wall clock time of a step. This is useful for Single Page Application which don't actually trigger a navigation.  
+-   `"stepWithThinkTime"`: Records the wall clock time of a step including `actionDelay` time.  
+
 ### screenshotOnFailure
-`false` | `true`  (Optional)   Take a screenshot of the page when a command fails, to aid in debugging.  
-    
-  Screenshots are saved to `/flood/result/screenshots` in the test archive.  
-    
+
+`false` \| `true`  (Optional)   Take a screenshot of the page when a command fails, to aid in debugging.  
+
+  Screenshots are saved to `/flood/result/screenshots` in the test archive.
+
+### stages
+
+ `Array`  (Optional) Since Element 2.0, you can specify the target number of Virtual Users (each running in a separate browser) to ramp up or down to for a specific period. This would be helpful for a local load test at a small scale.
+
+ For example, the below settings would have Element ramping up from 1 to 5 VUs (browsers) for 3 minutes, then staying flat at 5 VUs for 5 minutes, then ramping up from 5 to 10 VUs over the next 10 minutes before finally ramping down to 3 VUs for another 3 minutes.
+
+```typescript
+export const settings: TestSettings = {
+  stages: [
+    { duration: '3m', target: 5 },
+    { duration: '5m', target: 5 },
+    { duration: '10m', target: 10 },
+    { duration: '3m', target: 3 },
+  ],
+}
+```
+
+When running with multiple users locally, you will get a table which reports the load-testing metrics after the test finishes.
+
 ### stepDelay
+
  `number`  (Optional)   Specifies the time (in seconds) to wait after each step.  
+
 ### userAgent
+
 `string`  (Optional)   Specifies a custom User Agent (UA) string to send.  
 
 ### viewport
+
 `Object` Set the viewport with the below properties:
 
-- width `number` page width in pixels. Required.
-- height `number` page height in pixels. Required.
-- deviceScaleFactor `number` Specify device scale factor (can be thought of as dpr). Defaults to 1.
-- isMobile `boolean` Whether the meta viewport tag is taken into account. Defaults to `false`.
-- hasTouch `boolean` Specifies if viewport supports touch events. Defaults to `false`.
-- isLandscape `boolean` Specifies if viewport is in landscape mode. Defaults to `false`.
-
+-   width `number` page width in pixels. Required.
+-   height `number` page height in pixels. Required.
+-   deviceScaleFactor `number` Specify device scale factor (can be thought of as dpr). Defaults to 1.
+-   isMobile `boolean` Whether the meta viewport tag is taken into account. Defaults to `false`.
+-   hasTouch `boolean` Specifies if viewport supports touch events. Defaults to `false`.
+-   isLandscape `boolean` Specifies if viewport is in landscape mode. Defaults to `false`.
 
 ### waitTimeout
+
 `number`  (Optional)   Global wait timeout applied to all wait tasks.  
-### waitUntil : (Optional) 
-  - present: only checks for presence in the DOM
-  - visible: waits until the element is visible on the page and is painted
-  - ready: waits until the element is painted and not disabled
+
+### waitUntil : (Optional)
+
+-   present: only checks for presence in the DOM
+-   visible: waits until the element is visible on the page and is painted
+-   ready: waits until the element is painted and not disabled
+
 ## Console Method
+
 Specifies a `console` method
 
 ```typescript
 "log" | "info" | "debug" | "warn" | "error"
 ```
+
 ## ResponseTiming
+
 Specifies a method for recording response times.
 
 | literal           | description                                                                                                                                                                          |
@@ -137,10 +221,12 @@ Specifies a method for recording response times.
 ```typescript
 "page" | "network" | "step" | "stepWithThinkTime"
 ```
-## setup(settings)
-* `settings` &lt;[TestSettings]&gt;   
 
-* returns: &lt;void&gt; 
+## setup(settings)
+
+-   `settings` &lt;[TestSettings]>   
+
+-   returns: &lt;void> 
 
 Declares the settings for the test, overriding the settings constant exported in the test script.
 
@@ -155,28 +241,33 @@ export default () => {
 ```
 
 ## DEFAULT SETTINGS
+
 The default settings for a Test. Any settings you provide are merged into these defaults.
 
-| Name                      | Default Value                                             | Comment                                                        |
-| ------------------------- | --------------------------------------------------------- | -------------------------------------------------------------- |
-| `actionDelay`             | 2                                                         |                                                                |
-| `blockedDomains`          | []                                                        |                                                                |
-| `chromeVersion`           | "puppeteer"                                               |                                                                |
-| `clearCache`              | false                                                     |                                                                |
-| `clearCookies`            | true                                                      |                                                                |
-| `consoleFilter`           | []                                                        | by default, don't filter any console messages from the browser |
-| `description`             | ""                                                        |                                                                |
-| `device`                  | "Chrome Desktop Large"                                    |                                                                |
-| `disableCache`            | false                                                     |                                                                |
-| `duration`                | -1                                                        |                                                                |
-| `extraHTTPHeaders`        |                                                           |                                                                |
-| `ignoreHTTPSErrors`       | false                                                     |                                                                |
-| `incognito`               | false                                                     |                                                                |
-| `loopCount`               | Infinity                                                  |                                                                |
-| `name`                    | "Element Test"                                            |                                                                |
-| `responseTimeMeasurement` | "step"                                                    |                                                                |
-| `screenshotOnFailure`     | true                                                      |                                                                |
-| `stepDelay`               | 6                                                         |                                                                |
-| `userAgent`               | CustomDeviceDescriptors['Chrome Desktop Large'].userAgent |                                                                |
-| `waitTimeout`             | 30                                                        |                                                                |
-| `waitUntil`               | false                                                     |                                                                |
+| Name                      | Default Value  | Comment                                                        |
+| ------------------------- | -------------- | -------------------------------------------------------------- |
+| `actionDelay`             | '2s'           |                                                                |
+| `blockedDomains`          | []             |                                                                |
+| `browser`                 | 'chromium'     | Since version 2.0                                              |
+| `browserLaunchOptions`    | {}             | Since version 2.0                                              |
+| ~~`chromeVersion`~~       | 'puppeteer'    | *DEPRECATED since version 2.0*                                 |
+| `clearCache`              | false          |                                                                |
+| `clearCookies`            | true           |                                                                |
+| `consoleFilter`           | []             | By default, don't filter any console messages from the browser |
+| `description`             | ''             |                                                                |
+| `device`                  | null           |                                                                |
+| `disableCache`            | false          |                                                                |
+| `duration`                | -1             | Defaults to -1 for unlimited number of loops                   |
+| `extraHTTPHeaders`        | {}             |                                                                |
+| `ignoreHTTPSErrors`       | false          |                                                                |
+| `incognito`               | false          |                                                                |
+| `launchArgs`              | []             |                                                                |
+| `loopCount`               | Infinity       | Equivalent to -1                                               |
+| `name`                    | 'Element Test' |                                                                |
+| `responseTimeMeasurement` | 'step'         |                                                                |
+| `screenshotOnFailure`     | true           |                                                                |
+| `stages`                  | []             | Since version 2.0                                              |
+| `stepDelay`               | '6s'           |                                                                |
+| `userAgent`               | ''             |                                                                |
+| `waitTimeout`             | '30s'          |                                                                |
+| `waitUntil`               | false          |                                                                |

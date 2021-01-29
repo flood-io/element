@@ -28,7 +28,7 @@ export class Feeder<T> {
 	}
 
 	private static _instance: Feeder<any>
-	public static getInstance() {
+	public static getInstance(): Feeder<any> {
 		return this._instance || (this._instance = new Feeder<any>())
 	}
 

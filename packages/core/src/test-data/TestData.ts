@@ -75,7 +75,7 @@ export class TestDataSource<T> {
 	}
 
 	private static _instance: TestDataSource<any>
-	public static getInstance() {
+	public static getInstance(): TestDataSource<any> {
 		return this._instance || (this._instance = new TestDataSource<any>(new NullLoader()))
 	}
 

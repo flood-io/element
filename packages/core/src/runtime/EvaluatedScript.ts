@@ -121,14 +121,14 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 	}
 
 	public async beforeTestRun(): Promise<void> {
-		await this.testData.load()
+		if (this.testData) await this.testData.load()
 	}
 
 	private _testDataLoaders: TestDataFactory | undefined
 	public get testDataLoaders(): TestDataFactory {
 		if (this._testDataLoaders === undefined) {
 			this._testDataLoaders = new BoundTestDataLoaders(this, this.runEnv.workRoot)
-			this._testDataLoaders.fromData([{}])
+			// this._testDataLoaders.fromData([{}])
 		}
 
 		return this._testDataLoaders
@@ -174,10 +174,10 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 			let options: StepOptions = {}
 
 			if (args.length === 3) {
-				[name, options, fn] = args
+				;[name, options, fn] = args
 				options = normalizeStepOptions(options)
 			} else {
-				[name, fn] = args
+				;[name, fn] = args
 			}
 
 			console.assert(typeof name === 'string', 'Step name must be a string')

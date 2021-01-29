@@ -1,20 +1,86 @@
 import { readFile } from 'fs'
+import { basename, extname } from 'path'
 import { promisify, inspect } from 'util'
 import parseCSV from 'csv-parse/lib/sync'
+import glob from 'glob'
 
 const readFilePromise = promisify(readFile)
 
+type ReadFileOption = {
+	delimiter?: string
+	columns?: boolean
+	type: FileType
+}
+
+export enum FileType {
+	CSV = 'csv',
+	JSON = 'json',
+	DATA = 'data',
+	NULL = 'null_loader',
+}
+
 export abstract class Loader<T> {
 	public isSet = true
-	public lines: T[]
 	public isLoaded = false
-	constructor(public filePath: string, public requestedFilename: string) {}
+	public lines: T[]
+	public dataSource: { name: string; lines: T[] }[]
+	public loaderName: string
+	public requestedFilename: string | string[]
+	public filePaths: string[] = []
+
 	public abstract load(): Promise<void>
+	public abstract asName(name: string): void
+	public abstract type(): FileType
+	public async read(path: string, option: ReadFileOption): Promise<T[]> {
+		let dataFile: string
+		let data = []
+		try {
+			dataFile = await readFilePromise(path, 'utf8')
+			if (option.type === FileType.CSV) {
+				data = parseCSV(dataFile, option)
+			} else if (option.type === FileType.JSON) {
+				data = JSON.parse(dataFile)
+			}
+		} catch (e) {
+			throw new Error(`unable to read file ${this.filePath}:\ncause: ${e}`)
+		}
+		return data
+	}
+
+	public validStructure(lines: T[]): boolean {
+		const keys: string[] = []
+		let isValid = true
+		for (const line of lines) {
+			if (keys.length === 0) keys.push(...Object.keys(line))
+			else {
+				const lineKeys = Object.keys(line)
+				isValid =
+					keys.length === lineKeys.length && keys.every((key: string) => lineKeys.includes(key))
+				if (!isValid) return isValid
+			}
+		}
+		return isValid
+	}
+
+	constructor(public filePath: string) {
+		if (filePath.includes('*')) {
+			this.filePaths.push(...glob.sync(filePath))
+			if (this.filePaths.length === 0) {
+				throw Error('Found no test scripts matching testPathMatch pattern')
+			}
+			this.requestedFilename = this.filePaths
+				.map(file => basename(file, extname(file)).replace(/\*/gi, ''))
+				.join(',')
+		} else {
+			this.requestedFilename = basename(this.filePath)
+		}
+		this.loaderName = basename(filePath, extname(filePath)).replace(/\*/gi, '')
+	}
 }
 
 export class NullLoader<T> extends Loader<T> {
 	constructor() {
-		super('', '')
+		super('')
 		this.lines = []
 		this.isLoaded = true
 		this.isSet = false
@@ -22,15 +88,19 @@ export class NullLoader<T> extends Loader<T> {
 	public async load(): Promise<void> {
 		this.isLoaded = true
 	}
+
+	public asName(name = ''): void {
+		this.loaderName = name
+	}
+
+	public type(): FileType {
+		return FileType.NULL
+	}
 }
 
 export class DataLoader<T> extends Loader<T> {
 	constructor(public lines: T[]) {
-		super('', '')
-
-		// handle init via TestData.fromData([{}]) to represent a
-		// working-but-useless placeholder loader
-		// TODO improve this degenerate case
+		super('')
 		if (lines.length === 1 && Object.keys(lines[0]).length === 0) {
 			this.isSet = false
 		}
@@ -40,17 +110,25 @@ export class DataLoader<T> extends Loader<T> {
 		this.isLoaded = true
 	}
 
+	public asName(name = ''): void {
+		this.loaderName = name
+	}
+
+	public type(): FileType {
+		return FileType.DATA
+	}
+
 	public toString(): string {
 		let s = 'inline data\n'
 
 		const pp = inspect
+		const show = Math.min(4, this.lines.length)
 
 		switch (this.lines.length) {
 			case 0:
 				s += '<empty>'
 				break
 			default:
-				const show = Math.min(4, this.lines.length)
 				s += `[\n`
 				for (let i = 0; i < show; i++) {
 					s += `  ${pp(this.lines[i])},\n`
@@ -67,45 +145,73 @@ export class DataLoader<T> extends Loader<T> {
 }
 
 export class JSONLoader<T> extends Loader<T> {
-	public async load(): Promise<void> {
-		const data = readFilePromise(this.filePath, 'utf8')
-		data.catch(err => {
-			console.error(err)
-		})
+	constructor(public filePath: string) {
+		super(filePath)
+	}
 
-		const jsonData: T[] = JSON.parse(await data)
-		if (Array.isArray(jsonData)) {
-			this.lines = jsonData
+	private async processData(path: string): Promise<T[]> {
+		const data = await this.read(path, { type: FileType.JSON })
+		if (Array.isArray(data)) return data
+		else return [data]
+	}
+
+	public async load(): Promise<void> {
+		if (this.filePaths.length) {
+			const allLines: any[] = []
+			for (const filePath of this.filePaths) {
+				const data = await this.processData(filePath)
+				allLines.push(...data)
+			}
+			this.lines = allLines
 		} else {
-			this.lines = [jsonData]
+			this.lines = await this.processData(this.filePath)
 		}
 
 		if (this.lines.length === 0) {
 			throw new Error(`JSON file '${this.requestedFilename}' loaded but contains no rows of data.`)
 		}
 
+		if (!this.validStructure(this.lines)) {
+			throw Error(`Data files that have different data structures cannot have the same alias`)
+		}
+
 		this.isLoaded = true
+	}
+
+	public asName(name = ''): void {
+		this.loaderName = name
 	}
 
 	public toString(): string {
 		return `json data ${this.requestedFilename}`
 	}
+
+	public type(): FileType {
+		return FileType.JSON
+	}
 }
 
 export class CSVLoader<T> extends Loader<T> {
-	constructor(public filePath: string, private separator: string = ',', requestedFilename: string) {
-		super(filePath, requestedFilename)
+	constructor(public filePath: string, private separator: string = ',') {
+		super(filePath)
 	}
 
 	public async load(): Promise<void> {
-		let data: string
-		try {
-			data = await readFilePromise(this.filePath, 'utf8')
-		} catch (e) {
-			throw new Error(`unable to read CSV file ${this.filePath}:\ncause: ${e}`)
+		const option = {
+			type: FileType.CSV,
+			delimiter: this.separator,
+			columns: true,
 		}
-
-		this.lines = parseCSV(data, { delimiter: this.separator, columns: true })
+		if (this.filePaths.length) {
+			const allLines: any[] = []
+			for (const filePath of this.filePaths) {
+				const data = await this.read(filePath, option)
+				allLines.push(...data)
+			}
+			this.lines = allLines
+		} else {
+			this.lines = await this.read(this.filePath, option)
+		}
 
 		if (this.lines.length === 0) {
 			throw new Error(
@@ -113,10 +219,22 @@ export class CSVLoader<T> extends Loader<T> {
 			)
 		}
 
+		if (!this.validStructure(this.lines)) {
+			throw Error(`Data files that have different data structures cannot have the same alias`)
+		}
+
 		this.isLoaded = true
+	}
+
+	public asName(name: string): void {
+		this.loaderName = name
 	}
 
 	public toString(): string {
 		return `CSV data ${this.requestedFilename}`
+	}
+
+	public type(): FileType {
+		return FileType.CSV
 	}
 }

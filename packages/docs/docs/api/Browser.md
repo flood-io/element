@@ -103,6 +103,16 @@ currently outside the viewport it will first scroll to that element.
 - options? [`ClickOptions`][clickoptions] (Optional)
 - returns: [Promise<`void`>][promise]
 
+### `drag(sourceElement, targetElement)`
+
+Drags the source element to the target element
+
+**Parameters**
+
+- sourceElement [`ElementHandle`][elementhandle]
+- targetElement [`ElementHandle`][elementhandle]
+- returns: [Promise<`void`>][promise]
+
 ### `emulateDevice(deviceName)`
 
 Configure Browser to emulate a given device

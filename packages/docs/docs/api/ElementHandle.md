@@ -65,6 +65,15 @@ currently outside the viewport it will first scroll to that element.
 
 - returns: [`Promise<void>`][promise]
 
+### `drag(targetElement)`
+
+Drags this element to the target element
+
+**Parameters**
+
+- targetElement [`ElementHandle`][elementhandle]
+- returns: [`Promise<void>`][promise]
+
 ### `findElement(locator)`
 
 Locates an element using the supplied [Locator][], returning an [ElementHandle][].

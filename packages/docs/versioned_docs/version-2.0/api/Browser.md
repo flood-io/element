@@ -103,6 +103,16 @@ currently outside the viewport it will first scroll to that element.
 - options? [`ClickOptions`][clickoptions] (Optional)
 - returns: [Promise<`void`>][promise]
 
+### `drag(sourceElement, targetElement)`
+
+Drags the source element to the target element
+
+**Parameters**
+
+- sourceElement [`ElementHandle`][elementhandle]
+- targetElement [`ElementHandle`][elementhandle]
+- returns: [Promise<`void`>][promise]
+
 ### `emulateDevice(deviceName)`
 
 Configure Browser to emulate a given device
@@ -147,6 +157,14 @@ Makes the element located by the first argument the receiver of future input.
 
 - locator [`NullableLocatable`][nullablelocatable] The [Locator][] to use to find an element to send focus to.
 - returns: [Promise<`void`>][promise]
+
+### `getMimeType(filePath)`
+
+Returns the Media (MIME) Type of a file
+
+**Parameters**
+- filePath `string` path to a file
+- returns: `string` media type of the file
 
 ### `highlightElement(element)`
 

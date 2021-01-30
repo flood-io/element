@@ -179,9 +179,6 @@ export default class Test implements ITest {
 			await testObserver.before(this)
 
 			debug('Feeding data')
-			// testDataRecord = testData.feed()
-			// if (testDataRecord === null) {
-			// 	throw new Error('Test data exhausted, consider making it circular?')
 			testDataRecord = testData ? testData.feed() : {}
 			const invalidName: string[] = []
 			const validTestData = () => {

@@ -13,7 +13,7 @@ export const settings: TestSettings = {
 	stepDelay: '2s',
 }
 
-type Flooders = {
+type Flooder = {
 	name: string
 	email: string
 }
@@ -101,7 +101,7 @@ const solarSystemPart2: SolarSystemPlanet[] = [
 ]
 
 TestData.fromCSV<User>('./users.csv').as('users')
-TestData.fromJSON<Flooders>('./flooders*.json')
+TestData.fromJSON<Flooder>('./flooders*.json')
 	.as('flooders')
 	.shuffle()
 

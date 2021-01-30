@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.30](https://github.com/flood-io/element/compare/v2.0.0-canary.29...v2.0.0-canary.30) (2021-01-30)
+
+
+### Bug Fixes
+
+* add return type to function ([eac16f0](https://github.com/flood-io/element/commit/eac16f00d1f46efdfa69bd2d66795f4f2780fb2f))
+* implement multiple test data from element 1.5 to 2.0 ([d99d4d7](https://github.com/flood-io/element/commit/d99d4d7cb03ec481d0107f76831ff77fc09ba9aa))
+* remove redundant lines of code and refactor code ([35c9726](https://github.com/flood-io/element/commit/35c97264ba4fa5fc6f725a573217d82206b1041d))
+
+
+
+
+
 # [2.0.0-canary.29](https://github.com/flood-io/element/compare/v2.0.0-canary.28...v2.0.0-canary.29) (2021-01-28)
 
 

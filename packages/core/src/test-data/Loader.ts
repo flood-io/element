@@ -157,7 +157,7 @@ export class JSONLoader<T> extends Loader<T> {
 
 	public async load(): Promise<void> {
 		if (this.filePaths.length) {
-			const allLines: any[] = []
+			const allLines: T[] = []
 			for (const filePath of this.filePaths) {
 				const data = await this.processData(filePath)
 				allLines.push(...data)
@@ -203,7 +203,7 @@ export class CSVLoader<T> extends Loader<T> {
 			columns: true,
 		}
 		if (this.filePaths.length) {
-			const allLines: any[] = []
+			const allLines: T[] = []
 			for (const filePath of this.filePaths) {
 				const data = await this.read(filePath, option)
 				allLines.push(...data)

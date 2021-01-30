@@ -128,7 +128,6 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 	public get testDataLoaders(): TestDataFactory {
 		if (this._testDataLoaders === undefined) {
 			this._testDataLoaders = new BoundTestDataLoaders(this, this.runEnv.workRoot)
-			// this._testDataLoaders.fromData([{}])
 		}
 
 		return this._testDataLoaders

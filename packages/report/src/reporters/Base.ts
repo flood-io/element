@@ -117,6 +117,8 @@ export class BaseReporter implements IReporter {
 			case 'error':
 				console.log(chalk.red(logMessage))
 				break
+			case 'clear':
+				break
 			case 'log':
 			default:
 				console.log(logMessage)

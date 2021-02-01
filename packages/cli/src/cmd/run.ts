@@ -274,7 +274,7 @@ const cmd: CommandModule = {
 				describe: 'Export a HTML report after the test finished running',
 				type: 'boolean',
 			})
-			.option('--show-screenshot', {
+			.option('show-screenshot', {
 				describe: 'show screenshot in the terminal (iTerm only)',
 				type: 'boolean',
 			})

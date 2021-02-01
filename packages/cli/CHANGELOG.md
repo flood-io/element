@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.32](https://github.com/flood-io/element/compare/v2.0.0-canary.31...v2.0.0-canary.32) (2021-02-01)
+
+
+### Bug Fixes
+
+* remove redundant `--` ([f1821b6](https://github.com/flood-io/element/commit/f1821b60657cddd4566ec55a6e7a974fd355a30b))
+
+
+
+
+
 # [2.0.0-canary.31](https://github.com/flood-io/element/compare/v2.0.0-canary.30...v2.0.0-canary.31) (2021-02-01)
 
 **Note:** Version bump only for package @flood/element-cli

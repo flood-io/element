@@ -19,8 +19,9 @@ const features = [
 		imageUrl: 'img/json_ic.png',
 		description: (
 			<>
-				Load testing without test data is like using lorem ipsum in production. Element ships with
-				rich support for <code>CSV</code> and <code>JSON</code> data loading.
+				Load testing without test data is like using lorem ipsum in production. Element is shipped
+				with rich support for loading data from multiple <code>CSV</code> and <code>JSON</code>{' '}
+				files.
 			</>
 		),
 	},
@@ -39,8 +40,9 @@ const features = [
 		imageUrl: 'img/playwright_ic.png',
 		description: (
 			<>
-				Thanks to the speed of the <code>Playwright</code> automation library, Element generates
-				load by launching thousands of instances of Chromium, Firefox, and Webkit.
+				Thanks to the speed and cross-browser support of <code>Playwright</code> automation library,
+				Element generates load by launching thousands of instances of <code>Chromium</code>,{' '}
+				<code>Firefox</code>, or <code>Webkit</code>.
 			</>
 		),
 	},
@@ -59,7 +61,29 @@ const features = [
 		imageUrl: 'img/terminal_ic.png',
 		description: (
 			<>
-				Generate new tests, validate, and run them locally, with our interactive <code>CLI</code>.
+				Initiate new tests, validate, and watch your scripts being executed locally in real-time
+				with our intuitive and progressive <code>CLI</code>.
+			</>
+		),
+	},
+	{
+		title: <>Simulating multiple local users</>,
+		imageUrl: 'img/mu_ic.png',
+		description: (
+			<>
+				Generate a number of virtual users, ramping up and/or down for a specific duration, each
+				running a browser instance to perform load testing locally at a small scale.
+			</>
+		),
+	},
+	{
+		title: <>HTML test report</>,
+		imageUrl: 'img/html_report_ic.png',
+		description: (
+			<>
+				View an <code>HTML report</code> of the final test results of your test suite. So that while
+				you assess the performance, you can also evaluate the quality of the application under test
+				without the hassle of writing separate scripts for non-functional and functional testing.
 			</>
 		),
 	},

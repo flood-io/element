@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.31](https://github.com/flood-io/element/compare/v2.0.0-canary.30...v2.0.0-canary.31) (2021-02-01)
+
+
+### Bug Fixes
+
+* implement api getMimeType from version 1.5 to 2.0 ([d8591d7](https://github.com/flood-io/element/commit/d8591d7c2605dda63ecd461a68e0344362faba55))
+
+
+
+
+
 # [2.0.0-canary.30](https://github.com/flood-io/element/compare/v2.0.0-canary.29...v2.0.0-canary.30) (2021-01-30)
 
 **Note:** Version bump only for package @flood/element-report

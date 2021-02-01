@@ -337,6 +337,12 @@ export interface Browser {
 	 * Drag an element into another element
 	 */
 	drag(from: ElementHandle, to: ElementHandle): Promise<void>
+
+	/**
+	 * get mime type of file
+	 * @param filePath
+	 */
+	getMimeType(filePath: string): string | false
 }
 
 /**

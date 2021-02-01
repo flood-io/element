@@ -9,6 +9,7 @@ import {
 } from 'playwright'
 import debugFactory from 'debug'
 import ms from 'ms'
+import mime from 'mime-types'
 import { Condition } from '../page/Condition'
 import { Browser as BrowserInterface } from '../interface/IBrowser'
 import { NullableLocatable } from './Locatable'
@@ -712,6 +713,10 @@ export class Browser<T> implements BrowserInterface {
 			},
 			{ top, left, behavior },
 		)
+	}
+
+	public getMimeType(filePath: string): string | false {
+		return mime.lookup(filePath)
 	}
 
 	private async evaluateWithoutDecorator(fn: EvaluateFn, ...args: any[]): Promise<any> {

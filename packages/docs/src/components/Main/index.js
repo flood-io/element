@@ -87,6 +87,16 @@ const features = [
 			</>
 		),
 	},
+	{
+		title: <>Quick Flood launching</>,
+		imageUrl: 'img/flood_ic.png',
+		description: (
+			<>
+				Launch your load test on Flood without opening the browser. Just authenticate your Flood
+				account on Element and initiate a flood directly from Element CLI.
+			</>
+		),
+	},
 ]
 
 const pros = [

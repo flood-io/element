@@ -1,0 +1,112 @@
+.bg--cli {
+	background-color: rgba(98, 2, 238, 0.04);
+}
+
+.bg--mu {
+	background-color: rgba(155, 206, 211, 0.1);
+}
+
+h2 {
+	font-size: 2.25rem;
+	line-height: 1.5;
+	font-weight: 400;
+}
+
+main {
+	display: flex;
+	flex-direction: column;
+}
+
+.section--v2 {
+	margin: 0;
+	padding: 5rem 0;
+	font-size: 1.125rem;
+	font-weight: 300;
+}
+
+.section--v2 .container {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+}
+
+.left-side {
+	width: calc(100% * 2 / 3);
+	padding: 0 2.5rem;
+}
+
+.left-side,
+.right-side {
+	display: flex;
+	flex-flow: column nowrap;
+	justify-content: center;
+}
+
+.section--v2:nth-child(2n) .container {
+	flex-flow: row-reverse;
+}
+
+.right-side {
+	width: calc(100% / 3);
+	padding: 0 0.5rem;
+}
+
+.right-side img {
+	max-width: 100%;
+}
+
+.section--v2 ul {
+	list-style: none;
+}
+
+.section--v2 ul li {
+	line-height: 1.5;
+	margin-bottom: 1.125rem;
+	position: relative;
+}
+
+.section--v2 ul li::before {
+	position: absolute;
+	content: '';
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	top: 0.6rem;
+	left: -1.5rem;
+}
+
+.bg--cli ul li::before {
+	background-color: rgb(113, 53, 146);
+}
+
+.bg--playwright ul li::before {
+	background-color: rgb(50, 77, 91);
+}
+
+@media only screen and (max-width: 1024px) {
+	.section--v2 {
+		padding: 2rem;
+	}
+
+	.section--v2 .container,
+	.section--v2:nth-child(2n) .container {
+		flex-flow: column-reverse;
+	}
+
+	.left-side,
+	.right-side {
+		width: 100%;
+		padding: 2rem 0;
+	}
+
+	.right-side img {
+		max-width: 500px;
+		margin: 0 auto;
+	}
+}
+
+@media only screen and (max-width: 768px) {
+	.right-side img {
+		max-width: 300px;
+	}
+}

@@ -8,21 +8,26 @@ const v2Features = [
 		bgClassName: 'bg--cli',
 		description: (
 			<>
-				<p>The terminal log in v2.0 is renovated to be more professional and user-friendly.</p>
+				<p>
+					Element v2.0’s CLI is renovated to be more professional and user-friendly, for a better
+					developer experience.
+				</p>
 				<ul>
 					<li>
 						Stay up-to-date on how your test is executed in real-time with the intuitive and
-						progressive console log{' '}
+						progressive terminal output.
 					</li>
 					<li>
-						Find what’s you’re looking for at the first glance thanks to the smart indentation,
-						spacing and coloring throughout the log
+						Find what you're looking for at first glance thanks to smart indentation, spacing and
+						coloring.
 					</li>
-					<li>View either a concise or comprehensive log (verbose mode) at your discrete</li>
+					<li>View either concise or comprehensive output with the optional verbose mode.</li>
 					<li>
-						See taken screenshots right on the terminal <i>(only on iTerm2 - MacOS)</i>
+						See taken screenshots right within the terminal <i>(only on iTerm2 - MacOS).</i>
 					</li>
-					<li>Presented with a summary table as a simple test report once the execution is done</li>
+					<li>
+						After completion, you’re now presented with a summary table as a simple test report.
+					</li>
 				</ul>
 			</>
 		),
@@ -41,13 +46,13 @@ const v2Features = [
 				<ul>
 					<li>
 						Automate your cross-browser testing across Chromium, WebKit (browser engine used by
-						Safari) and Firefox browsers with a single API
+						Safari) and Firefox browsers with a single API.
 					</li>
 					<li>
 						Simulate multiple devices with a single browser instance with a more powerful browser
-						context feature
+						context feature.
 					</li>
-					<li>Build automation for single-page apps that rely on the modern web platform</li>
+					<li>Build automation for single-page apps that rely on the modern web platform.</li>
 				</ul>
 			</>
 		),
@@ -58,9 +63,10 @@ const v2Features = [
 		bgClassName: 'bg--mu',
 		description: (
 			<p>
-				Since Element 2.0, you can simulate a number of virtual users on your local machine (each
-				running in a separate browser) to ramp up and/or down for a specific period. This would be
-				helpful for a local load test at a small scale.
+				With Element 2.0, you can now simulate a number of virtual users on your local machine, each
+				running in a separate browser instance, with the ability to ramp up and/or down for a
+				specific period. This feature brings small scale load testing locally, so that you can build
+				and test your element scripts before uploading them to flood to run at larger scales.
 			</p>
 		),
 	},
@@ -71,15 +77,15 @@ const v2Features = [
 		description: (
 			<>
 				<p>
-					Don’t just think of Flood Element as a load test scripting tool. With a wide range of
-					browser interaction APIs, plus various assertion methods, you can totally leverage Flood
-					Element to automate your functional testing.
+					Flood is no longer just a load test scripting tool. With a wide range of browser
+					interaction APIs and various assertion methods, you can leverage Element to completely
+					automate your functional testing.
 				</p>
 				<p>
-					Since v2.0, we’ll also show you an HTML report of the final test results of your test
-					suite. So besides assessing the performance, you can also evaluate the quality of the
-					application under test without the hassle of writing separate scripts for non-functional
-					and functional testing.
+					With v2.0, we’ll also show you a HTML report of the final test results of your test suite.
+					So while assessing the performance, you can also evaluate the quality of the application
+					under test without the hassle of writing separate scripts for non-functional and
+					functional testing.
 				</p>
 			</>
 		),
@@ -89,9 +95,25 @@ const v2Features = [
 const MainV2 = () => {
 	return (
 		<main>
-			{v2Features.map((feature, idx) => (
-				<Section key={idx} {...feature} />
-			))}
+			{v2Features.map((feature, idx) => {
+				if (feature.bgClassName === 'bg--html-report') {
+					return (
+						<Section key={idx} {...feature}>
+							<h3>Let’s see what else it has in store for you!</h3>
+							<div>
+								<a href="/">
+									<button className="btn--get-started">Get Started</button>
+								</a>
+								<a className="view-docs" href="/docs">
+									View Documentation
+								</a>
+							</div>
+						</Section>
+					)
+				}
+
+				return <Section key={idx} {...feature} />
+			})}
 		</main>
 	)
 }

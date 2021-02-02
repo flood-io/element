@@ -246,18 +246,23 @@ export class Runner {
 				case Status.SKIPPED:
 					skippedNo += 1
 					skippedMessage = chalk.yellow(`${skippedNo}`, `${Status.SKIPPED}`)
-					this.sendReport(
-						JSON.stringify({ name: 'skipped', value: skippedNo, iteration }),
-						'measurement',
-					)
+					if (this.reporter.worker) {
+						this.sendReport(
+							JSON.stringify({ name: 'skipped', value: skippedNo, iteration }),
+							'measurement',
+						)
+					}
+
 					break
 				case Status.UNEXECUTED:
 					unexecutedNo += 1
 					unexecutedMessage = chalk(`${unexecutedNo}`, `${Status.UNEXECUTED}`)
-					this.sendReport(
-						JSON.stringify({ name: 'unexecuted', value: unexecutedNo, iteration }),
-						'measurement',
-					)
+					if (this.reporter.worker) {
+						this.sendReport(
+							JSON.stringify({ name: 'unexecuted', value: unexecutedNo, iteration }),
+							'measurement',
+						)
+					}
 					break
 			}
 		})

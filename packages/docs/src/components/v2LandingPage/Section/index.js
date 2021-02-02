@@ -3,7 +3,7 @@ import classnames from 'classnames'
 import useThemeContext from '@theme/hooks/useThemeContext'
 import './styles.css'
 
-const Section = ({ title, imageUrl, description, bgClassName }) => {
+const Section = ({ title, imageUrl, description, bgClassName, children }) => {
 	const { isDarkTheme } = useThemeContext()
 	const styleClassName = isDarkTheme ? 'dark' : 'light'
 	return (
@@ -12,6 +12,7 @@ const Section = ({ title, imageUrl, description, bgClassName }) => {
 				<div className="left-side">
 					<h2>{title}</h2>
 					{description}
+					{children}
 				</div>
 				<div className="right-side">
 					<img src={imageUrl} alt={title} />

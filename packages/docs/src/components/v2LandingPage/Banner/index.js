@@ -12,8 +12,9 @@ const Banner = () => {
 				<div>
 					<h1>Flood Element 2.0 is now available!</h1>
 					<p>
-						In this version, we introduce a total transformation in the CLI look as well as the core
-						library that Flood Element is built on and many more cool features.
+						In this version, we’re introducing a total transformation of the Element CLI’s look and
+						feel for a better developer experience, the core library that Flood Element is built on,
+						and many more cool features.
 					</p>
 				</div>
 			</section>

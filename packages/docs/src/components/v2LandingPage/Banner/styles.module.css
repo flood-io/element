@@ -1,0 +1,60 @@
+.bannerHeader {
+	height: 70vh;
+	max-height: 740px;
+	display: flex;
+}
+
+.bannerMain {
+	display: grid;
+	grid-template-columns: minmax(350px, 500px) minmax(400px, 600px);
+	background-image: url('/img/v2_header_light.png');
+	background-repeat: no-repeat;
+	background-position: right center;
+	background-size: contain;
+}
+
+.dark {
+	background-image: url('/img/v2_header_dark.png');
+}
+
+.bannerMain > div {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	font-weight: 300;
+	height: 65%;
+}
+
+.bannerMain > div > h1 {
+	font-size: 3.75rem;
+	line-height: 3.75rem;
+	letter-spacing: -0.00833em;
+	font-weight: 500;
+}
+
+.bannerMain > div > p {
+	font-size: 1.2rem;
+	margin: 1rem 0;
+}
+
+@media only screen and (max-width: 1024px) {
+	.bannerMain {
+		padding: 0 2rem;
+		display: flex;
+		justify-content: center;
+	}
+
+	.bannerMain > div {
+		height: 60%;
+	}
+
+	.bannerHeader {
+		max-height: 600px;
+	}
+}
+
+@media only screen and (max-width: 767px) {
+	.bannerMain > div {
+		height: 100%;
+	}
+}

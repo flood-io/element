@@ -22,6 +22,7 @@ main {
 	padding: 5rem 0;
 	font-size: 1.125rem;
 	font-weight: 300;
+	text-align: justify;
 }
 
 .section--v2 .container {
@@ -31,7 +32,8 @@ main {
 }
 
 .left-side {
-	width: calc(100% * 2 / 3);
+	/* width: calc(100% * 2 / 3); */
+	width: 60%;
 	padding: 0 2.5rem;
 }
 
@@ -47,8 +49,9 @@ main {
 }
 
 .right-side {
-	width: calc(100% / 3);
-	padding: 0 0.5rem;
+	/* width: calc(100% / 3); */
+	width: 40%;
+	padding: 0 1rem;
 }
 
 .right-side img {
@@ -57,6 +60,7 @@ main {
 
 .section--v2 ul {
 	list-style: none;
+	margin: 0;
 }
 
 .section--v2 ul li {
@@ -86,7 +90,7 @@ main {
 .bg--html-report h3 {
 	font-size: 1.4rem;
 	font-weight: 300;
-	margin: 4rem 0 1.5rem 0;
+	margin: 2.5rem 0 1.5rem 0;
 	line-height: 1.5;
 }
 
@@ -144,5 +148,9 @@ main {
 @media only screen and (max-width: 768px) {
 	.right-side img {
 		max-width: 300px;
+	}
+
+	.section--v2 h2 {
+		text-align: center;
 	}
 }

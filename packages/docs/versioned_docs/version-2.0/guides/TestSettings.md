@@ -63,7 +63,7 @@ export const settings: TestSettings = {
 
 ### ~~chromeVersion~~ (DEPRECATED since version 2.0)
 
-`puppeteer` or `stable` (Optional)   Specifies a version of Google Chrome to run the test
+~~`puppeteer` or `stable` (Optional)   Specifies a version of Google Chrome to run the test~~
 
 ### clearCache
 
@@ -153,9 +153,11 @@ The list of Chromium flags can be found [here](https://peter.sh/experiments/chro
 
 ### stages
 
- `Array`  (Optional) Since Element 2.0, you can specify the target number of Virtual Users (each running in a separate browser) to ramp up or down to for a specific period. This would be helpful for a local load test at a small scale.
+ `Array`  (Optional) Since Element 2.0, you can specify the target number of Virtual Users (VUs), each running in a separate browser instance, to ramp up or down to for a specific period. This would be helpful for a local load test at a small scale.
 
- For example, the below settings would have Element ramping up from 1 to 5 VUs (browsers) for 3 minutes, then staying flat at 5 VUs for 5 minutes, then ramping up from 5 to 10 VUs over the next 10 minutes before finally ramping down to 3 VUs for another 3 minutes.
+Note that this setting is only applicable when [running test scripts locally](cli#run-a-test-script-locally) with the option `--mu`.
+
+ For example, the below settings would have Element ramp up from 1 to 5 VUs (browser instances) for 3 minutes, then stay flat at 5 VUs for 5 minutes, then continue to ramp up from 5 to 10 VUs over the next 10 minutes before finally ramp down to 3 VUs for another 3 minutes.
 
 ```typescript
 export const settings: TestSettings = {
@@ -169,6 +171,8 @@ export const settings: TestSettings = {
 ```
 
 When running with multiple users locally, you will get a table which reports the load-testing metrics after the test finishes.
+
+<!-- ![testing-metrics-for-multi-users](../../../static/docs_img/testingMetrics.png) -->
 
 ### stepDelay
 
@@ -250,7 +254,7 @@ The default settings for a Test. Any settings you provide are merged into these 
 | `blockedDomains`          | []             |                                                                |
 | `browser`                 | 'chromium'     | Since version 2.0                                              |
 | `browserLaunchOptions`    | {}             | Since version 2.0                                              |
-| ~~`chromeVersion`~~       | 'puppeteer'    | *DEPRECATED since version 2.0*                                 |
+| ~~`chromeVersion`~~       | ~~'puppeteer'~~    | *DEPRECATED since version 2.0*                                 |
 | `clearCache`              | false          |                                                                |
 | `clearCookies`            | true           |                                                                |
 | `consoleFilter`           | []             | By default, don't filter any console messages from the browser |

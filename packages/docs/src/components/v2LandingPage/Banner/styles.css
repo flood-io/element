@@ -7,14 +7,27 @@
 .bannerMain {
 	display: grid;
 	grid-template-columns: minmax(350px, 500px) minmax(400px, 600px);
+	position: relative;
+	text-align: justify;
+}
+
+.bannerMain::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	z-index: -1;
 	background-image: url('/img/v2_header_light.png');
 	background-repeat: no-repeat;
 	background-position: right center;
 	background-size: contain;
 }
 
-.dark {
+.bannerMain.dark::after {
 	background-image: url('/img/v2_header_dark.png');
+	opacity: 0.3;
 }
 
 .bannerMain > div {
@@ -54,7 +67,21 @@
 }
 
 @media only screen and (max-width: 767px) {
+	.bannerHeader {
+		height: 100vh;
+		max-height: 100vh;
+	}
+
 	.bannerMain > div {
 		height: 100%;
+		display: flex;
+		flex-flow: column nowrap;
+		justify-content: center;
+	}
+
+	.bannerMain > div > h1 {
+		font-size: 3rem;
+		line-height: 3rem;
+		text-align: center;
 	}
 }

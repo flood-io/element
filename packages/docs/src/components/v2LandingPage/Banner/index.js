@@ -1,14 +1,14 @@
 import React from 'react'
 import classnames from 'classnames'
 import useThemeContext from '@theme/hooks/useThemeContext'
-import styles from './styles.module.css'
+import './styles.css'
 
 const Banner = () => {
 	const { isDarkTheme } = useThemeContext()
-	const styleClassName = isDarkTheme ? styles.dark : styles.light
+	const styleClassName = isDarkTheme ? 'dark' : 'light'
 	return (
-		<div className={styles.bannerHeader}>
-			<section className={classnames('container', styles.bannerMain, styleClassName)}>
+		<div className="bannerHeader">
+			<section className={classnames('container bannerMain', styleClassName)}>
 				<div>
 					<h1>Flood Element 2.0 is now available!</h1>
 					<p>

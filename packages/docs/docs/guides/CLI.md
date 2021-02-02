@@ -64,7 +64,7 @@ Positionals:
 
   - `--browser` Specify the browser type used to run the test, using either `'chromium'` (default), `'firefox'` or `'webkit'`.
   - `--executable-path` path to the installation folder of a custom Chromium-based browser, used to run the test. If set, Element will ignore the browser settings, and use this custom browser instead.
-  - `--chrome` Specify which version of Google Chrome to use. `DEPRECATED`
+  - ~~`--chrome` Specify which version of Google Chrome to use.~~ `DEPRECATED`
   - `--no-headless` Run in non-headless mode so that you can see what the browser is doing as it runs the test.
   - `--devtools` Run in non-headless mode and also open devtools
   - `--no-sandbox` Disable the chrome sandbox - advanced option, mostly necessary on linux.
@@ -76,6 +76,7 @@ Positionals:
   - `--slow-mo` Run the script in slow-motion: Increase the actionDelay
         and stepDelay settings in the test script to 10 seconds.
         Specify a number to set a different delay.
+  - `--verbose` Verbose mode - display details of all commands/actions to the terminal.
   - `--step-delay` Override stepDelay test script setting `[number]`
   - `--action-delay` Override actionDelay test script setting `[number]`
   - `--loop-count` Override the loopCount setting in the test script `[number]`
@@ -94,7 +95,16 @@ Positionals:
   - `--export` Generate an HTML report and a JSON data file for the test results. The report(s) will be located in a directory named after your test script under [your project folder]/reports.
   - `--mu` Run test scripts with multiple users and simulate stages of ramping up or down. If not specified, run as a single user. This flag only works if one or more `stages` are configured in Test Settings. [Learn more](test-settings#stages)
   - `--show-screenshot` Display the screenshots right in the terminal output (for iTerm on MacOS only). If not specified, only the paths to screenshots are displayed.
-  - `--verbose` Verbose mode - display details of all commands/actions to the terminal. If not specified, use simple mode - display only general status and information.
+
+:::info PRIORITY OF SETTING VALUES
+When you run a test, either with [multiple test scripts](cli#run-a-test-locally-with-the-default-config-file) or [a single test script](cli#run-a-test-script-locally), Element will get the setting values based on this priority order:
+- CLI flags used in the command _'element run'_
+- [Test settings](test-settings) specified in the test script itself
+- Config file (default: _'element.config.js'_)
+- [Default settings](test-settings#default-settings) of Element
+
+For example, let's say you set _actionDelay: '3s'_ and _'stepDelay: '5s'_ in the test script. Then if you'd like to just quickly verify the script, you can run _'element run --ff'_ to override the _actionDelay_ and _stepDelay_ settings to 1 second for this particular execution. This would save you from the chore of updating the test script's settings back and forth.
+:::
 
 ### Generate a config file from a template
 
@@ -103,6 +113,8 @@ element generate config [file-name]
 ```
 
 Flood Element supports using a config file across tests within a project. The default config file name (if not specified) is `element.config.js`, with the content as below.
+
+Note that there is already a default config file created when you [initiate an Element project](cli#init-a-local-element-project).
 
 ```js
 module.exports = {

@@ -76,7 +76,7 @@ Positionals:
   - `--loop-count` Override the loopCount setting in the test script `[number]`
   - ~~`--strict` Compile the script in strict mode. This can be helpful
     in diagnosing problems.~~ `DEPRECATED`
-  - `--fail-status-code` Specify an exit code when the test fails. `[number]` Defaults to 1.
+  - `--fail-status-code` Specify an exit code when the test fails. Defaults to 1. `[number]`
   - `--config-file` Specify the path to a config file to run the test with. If a path is not specified, defaults to `element.config.js`. This flag only works when [running a test with a config file](cli#run-a-test-locally-with-the-default-config-file)
 
 - Paths:

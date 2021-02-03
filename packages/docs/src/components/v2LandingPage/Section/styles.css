@@ -8,8 +8,9 @@
 
 h2 {
 	font-size: 2.25rem;
-	line-height: 1.5;
+	line-height: 1.25;
 	font-weight: 400;
+	text-align: left;
 }
 
 main {

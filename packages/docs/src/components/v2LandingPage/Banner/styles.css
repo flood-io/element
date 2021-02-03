@@ -9,6 +9,7 @@
 	grid-template-columns: minmax(350px, 500px) minmax(400px, 600px);
 	position: relative;
 	text-align: justify;
+	padding-top: 6.25rem;
 }
 
 .bannerMain::after {
@@ -43,6 +44,7 @@
 	line-height: 3.75rem;
 	letter-spacing: -0.00833em;
 	font-weight: 500;
+	text-align: left;
 }
 
 .bannerMain > div > p {
@@ -70,6 +72,10 @@
 	.bannerHeader {
 		height: 100vh;
 		max-height: 100vh;
+	}
+
+	.bannerMain {
+		padding-top: 0;
 	}
 
 	.bannerMain > div {

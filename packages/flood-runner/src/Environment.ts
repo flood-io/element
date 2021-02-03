@@ -45,7 +45,7 @@ export function initFromEnvironment(
 	let root: string
 	let testDataRoot: string
 
-	if (env.NODE_ENV === 'development') {
+	if (env.NODE_ENV !== 'production') {
 		devDefaults(env)
 		const projectRoot = findRoot(__dirname)
 		root = join(projectRoot, 'tmp/data')

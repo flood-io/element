@@ -24,6 +24,7 @@ element init [dir] [options]
 ```
 
 Init a test script, a default configuration file and a minimal environment to get you started with Flood Element.
+
 **Positionals**
 
 - `[dir]` (string) the directory to initialize with an Element test script. Defaults to the current directory.
@@ -38,11 +39,21 @@ Init a test script, a default configuration file and a minimal environment to ge
 element generate <file>
 ```
 
+**Positionals**
+
+- `file` (string) the test script file name to create. Specify a TypeScript file format, for example, `my-test-script.ts`.
+
+You should make sure that `package.json` file in the project root folder has the attribute `name` before running this command.
+
 ### Output the test script plan without executing it
 
 ```shell
 element plan <file> [options]
 ```
+
+**Positionals**
+
+- `file` (string) the test script (or path to the test script) to output the plan from. Specify a test script written in TypeScript with a `.ts` extension.
 
 **Options**
 
@@ -54,11 +65,11 @@ element plan <file> [options]
 element run <file> [options]
 ```
 
-Positionals:
+**Positionals**
 
-**file:** the test script (or path to the test script) to run. Specifies a test script written in TypeScript with a `.ts` extension.
+- `file` (string) the test script (or path to the test script) to run. Specify a test script written in TypeScript with a `.ts` extension.
 
-**options:**
+**Options:**
 
 - Browser:
 

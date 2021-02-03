@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.34](https://github.com/flood-io/element/compare/v2.0.0-canary.33...v2.0.0-canary.34) (2021-02-03)
+
+**Note:** Version bump only for package @flood/element-report
+
+
+
+
+
 # [2.0.0-canary.33](https://github.com/flood-io/element/compare/v2.0.0-canary.32...v2.0.0-canary.33) (2021-02-02)
 
 **Note:** Version bump only for package @flood/element-report

@@ -94,7 +94,7 @@ Positionals:
 - Other options:
   - `--export` Generate an HTML report and a JSON data file for the test results. The report(s) will be located in a directory named after your test script under [your project folder]/reports.
   - `--mu` Run test scripts with multiple users and simulate stages of ramping up or down. If not specified, run as a single user. This flag only works if one or more `stages` are configured in Test Settings. [Learn more](test-settings#stages)
-  - `--show-screenshot` Display the screenshots right in the terminal output (for iTerm on MacOS only). If not specified, only the paths to screenshots are displayed.
+  - `--show-screenshot` Display the screenshots right in the terminal output (for iTerm2 on MacOS only). If not specified, only the paths to screenshots are displayed.
 
 :::info PRIORITY OF SETTING VALUES
 When you run a test, either with [multiple test scripts](cli#run-a-test-locally-with-the-default-config-file) or [a single test script](cli#run-a-test-script-locally), Element will get the setting values based on this priority order:

@@ -1,6 +1,6 @@
-import React from 'react'
-import useThemeContext from '@theme/hooks/useThemeContext'
+import React, { useState, useEffect } from 'react'
 import classnames from 'classnames'
+import useThemeContext from '@theme/hooks/useThemeContext'
 import styles from './styles.module.css'
 
 const data = [
@@ -47,9 +47,14 @@ const data = [
 ]
 
 const ComparisonTable = () => {
+	const [styleClassName, setStyleClassName] = useState(styles.light)
 	const { isDarkTheme } = useThemeContext()
+	useEffect(() => {
+		setStyleClassName(isDarkTheme ? styles.dark : styles.light)
+	}, [isDarkTheme])
+
 	return (
-		<div className={classnames(styles.container, isDarkTheme ? styles.dark : styles.light)}>
+		<div className={classnames(styles.container, styleClassName)}>
 			<table>
 				<thead>
 					<tr>

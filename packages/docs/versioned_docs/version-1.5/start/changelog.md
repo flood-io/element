@@ -3,7 +3,7 @@ id: changelog
 title: Changelog
 ---
 
-## 1.5
+## 1.5.0
 Released: Jan 2021
 
 ### New features

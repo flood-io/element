@@ -1,5 +1,5 @@
 import { Condition, NullableLocatable } from '../Condition'
-import { Frame, Page } from 'puppeteer'
+import { Frame, Page } from 'playwright'
 import { getFrames } from '../../utils/frames'
 import { setTimeout } from 'timers'
 
@@ -11,48 +11,6 @@ export class FrameCondition extends Condition {
 	toString() {
 		return `frame [name='${this.id}']`
 	}
-
-	// public async waitFor(frame: Frame, page: Page): Promise<Frame | Error> {
-	// 	let { timeout } = this
-
-	// 	console.log(page.target().type())
-
-	// 	page.on('framenavigated', frame => {
-	// 		console.log(`Frame: '${frame.name()}'`)
-	// 	})
-
-	// 	return frame.waitForFunction(
-	// 		(id: string) => {
-	// 			function getFrames(frame) {
-	// 				const frames = []
-
-	// 				Array.from(frame.frames).forEach(f => {
-	// 					frames.push(f)
-	// 					frames.push(...getFrames(f))
-	// 				})
-
-	// 				return frames
-	// 			}
-
-	// 			let frames = getFrames(window)
-	// 			return frames.find(frame => frame.name === id || frame.id === id)
-
-	// 			// if (typeof title === 'string') {
-	// 			// 	if (title.startsWith('/') && title.endsWith('/')) {
-	// 			// 		// RegExp
-	// 			// 		let exp = new RegExp(title.slice(1, title.length - 1))
-	// 			// 		return exp.test(document.title)
-	// 			// 	} else if (partial) {
-	// 			// 		return document.title.indexOf(title) > -1
-	// 			// 	} else {
-	// 			// 		return document.title.trim() === title.trim()
-	// 			// 	}
-	// 			// }
-	// 		},
-	// 		{ polling: 'raf', timeout },
-	// 		this.id,
-	// 	)
-	// }
 
 	async waitForEvent() {
 		return

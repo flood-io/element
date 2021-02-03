@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>Test Report</title>
+		<link rel="icon" href="assets/favicon.ico" />
+		<link
+			rel="stylesheet"
+			href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+			integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+			crossorigin="anonymous"
+		/>
+		<link rel="stylesheet" type="text/css" href="styles.css" />
+		<script type="text/javascript" src="js/data.js"></script>
+		<script type="text/javascript" src="js/script.js"></script>
+	</head>
+	<body class="fluid-container">
+		<div class="row content">
+			<div class="col-lg-2 col-md-1"></div>
+			<div class="col-lg-8 col-md-10">
+				<div class="logo">
+					<img src="assets/element_logo.svg" />
+					<span>Element</span>
+				</div>
+				<div class="title">Test Run Report</div>
+				<script>
+					renderExecutionInfo(data.executionInfo)
+				</script>
+				<hr class="separator" />
+				<div class="section-header">
+					<span class="header-title">Summary</span>
+					<div class="summary-view-switch">
+						<div class="switch-button">
+							<input
+								type="radio"
+								name="summary-view"
+								id="summary-view-number"
+								onclick="toggleSummaryView(data.testScripts, data.scriptsWithError, true)"
+								checked
+							/>
+							<label for="summary-view-number">Number</label>
+						</div>
+						<div class="switch-button">
+							<input
+								type="radio"
+								name="summary-view"
+								id="summary-view-percentage"
+								onclick="toggleSummaryView(data.testScripts, data.scriptsWithError, false)"
+							/>
+							<label for="summary-view-percentage">Percentage</label>
+						</div>
+					</div>
+					<div class="chart-legend">
+						<div class="chart-legend-item">
+							<div class="passed"></div>
+							<span>Passed</span>
+						</div>
+						<div class="chart-legend-item">
+							<div class="failed"></div>
+							<span>Failed</span>
+						</div>
+						<div class="chart-legend-item">
+							<div class="skipped"></div>
+							<span>Skipped</span>
+						</div>
+						<div class="chart-legend-item">
+							<div class="unexecuted"></div>
+							<span>Unexecuted</span>
+						</div>
+					</div>
+				</div>
+				<script>
+					renderSummary(data.testScripts, data.scriptsWithError)
+				</script>
+				<hr class="separator" />
+				<div class="section-header">
+					<span class="header-title">Details</span>
+					<div class="detail-actions">
+						<div class="toggle">
+							<input
+								id="error-toggle"
+								type="checkbox"
+								onclick="toggleAllErrors(event, data.testScripts)"
+							/>
+							<label for="error-toggle"></label>
+							All error messages
+						</div>
+						<div class="filter">
+							<div class="custom-checkbox checkbox-passed">
+								<input
+									type="checkbox"
+									class="custom-control-input"
+									id="filter-passed"
+									onclick="filterDetail(data.testScripts, 'passed')"
+									checked
+								/>
+								<label for="filter-passed" class="custom-control-label">Passed</label>
+							</div>
+							<div class="custom-checkbox checkbox-failed">
+								<input
+									type="checkbox"
+									class="custom-control-input"
+									id="filter-failed"
+									onclick="filterDetail(data.testScripts, 'failed')"
+									checked
+								/>
+								<label for="filter-failed" class="custom-control-label">Failed</label>
+							</div>
+							<div class="custom-checkbox checkbox-skipped">
+								<input
+									type="checkbox"
+									class="custom-control-input"
+									id="filter-skipped"
+									onclick="filterDetail(data.testScripts, 'skipped')"
+									checked
+								/>
+								<label for="filter-skipped" class="custom-control-label">Skipped</label>
+							</div>
+							<div class="custom-checkbox checkbox-unexecuted">
+								<input
+									type="checkbox"
+									class="custom-control-input"
+									id="filter-unexecuted"
+									onclick="filterDetail(data.testScripts, 'unexecuted')"
+									checked
+								/>
+								<label for="filter-unexecuted" class="custom-control-label">Unexecuted</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<script>
+					renderScriptsDetail(data.testScripts)
+				</script>
+			</div>
+			<div class="col-lg-2 col-md-1"></div>
+		</div>
+	</body>
+</html>

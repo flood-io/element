@@ -1,2 +1,2 @@
 export { default as Test } from '../Test'
-export { ITest } from '../ITest'
+export { ITest } from '../../interface/ITest'

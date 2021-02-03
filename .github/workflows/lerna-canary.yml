@@ -1,0 +1,42 @@
+name: Lerna Publish Canary
+
+on:
+  pull_request:
+    branches: [canary]
+    types: [closed]
+  push:
+    branches:
+      - canary
+jobs:
+  publish_release:
+    name: Publish release
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.main.ref }}
+      - run: git fetch --prune --unshallow
+
+      - uses: actions/setup-node@v1
+        with:
+          always-auth: true
+          registry-url: 'https://registry.npmjs.org'
+          node-version: '12.x'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Configure CI Git User
+        run: |
+          git config --global user.email octobot@github.com
+          git config --global user.name GitHub Actions
+
+      - run: yarn install
+        env:
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
+      - name: 'Build all'
+        run: yarn build
+      - name: 'Publish canary to NPM'
+        run: yarn lerna publish prerelease --dist-tag canary --preid canary --yes --include-merged-tags --exact --force-publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

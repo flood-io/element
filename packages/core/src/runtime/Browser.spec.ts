@@ -1,13 +1,13 @@
 import { serve } from '../../tests/support/fixture-server'
 import { testWorkRoot } from '../../tests/support/test-run-env'
-import { launchPuppeteer, testPuppeteer } from '../../tests/support/launch-browser'
+import { launchPlaywright, testPlaywright } from '../../tests/support/launch-browser'
 import { Browser } from './Browser'
 import { Until } from '../page/Until'
 import { By } from '../page/By'
 import { Key } from '../page/Enums'
-import { DEFAULT_SETTINGS, normalizeSettings, TestSettings } from './Settings'
+import { DEFAULT_SETTINGS } from './Settings'
 
-let puppeteer: testPuppeteer
+let playwright: testPlaywright
 const workRoot = testWorkRoot()
 
 const getCurrentPosition = async (
@@ -22,25 +22,25 @@ const getCurrentPosition = async (
 describe('Browser', () => {
 	jest.setTimeout(30e3)
 	beforeAll(async () => {
-		puppeteer = await launchPuppeteer()
+		playwright = await launchPlaywright()
 
-		puppeteer.page.on('console', msg =>
+		playwright.page.on('console', msg =>
 			console.log(`>> remote console.${msg.type()}: ${msg.text()}`),
 		)
 	})
 
 	afterAll(async () => {
-		await puppeteer.close()
+		await playwright.close()
 	})
 
 	test('fires callbacks on action command calls', async () => {
 		const beforeSpy = jest.fn()
 		const afterSpy = jest.fn()
-		const setting: TestSettings = normalizeSettings(DEFAULT_SETTINGS)
+
 		const browser = new Browser(
 			workRoot,
-			puppeteer,
-			setting,
+			playwright,
+			DEFAULT_SETTINGS,
 			async (_browser, actionName) => {
 				beforeSpy(actionName)
 			},
@@ -56,11 +56,10 @@ describe('Browser', () => {
 	})
 
 	test('throws an error', async () => {
-		const setting: any = normalizeSettings(DEFAULT_SETTINGS)
 		const browser = new Browser(
 			workRoot,
-			puppeteer,
-			{ ...setting },
+			playwright,
+			{ ...DEFAULT_SETTINGS },
 			async name => {},
 			async name => {},
 		)
@@ -73,15 +72,12 @@ describe('Browser', () => {
 	})
 
 	test('returns active element', async () => {
-		const setting: any = normalizeSettings(DEFAULT_SETTINGS)
-		const browser = new Browser(workRoot, puppeteer, setting)
+		const browser = new Browser(workRoot, playwright, DEFAULT_SETTINGS)
 
 		const url = await serve('forms_with_input_elements.html')
 
 		await browser.visit(url)
-		const condition = Until.elementIsVisible(By.id('new_user_first_name'))
-		condition.settings.waitTimeout = 31e3
-		await browser.wait(condition)
+		await browser.wait(Until.elementIsVisible(By.id('new_user_first_name')))
 
 		const el1 = await browser.switchTo().activeElement()
 		expect(el1).toBeDefined()
@@ -93,8 +89,7 @@ describe('Browser', () => {
 		let browser: Browser<any>
 
 		beforeEach(async () => {
-			const setting: any = normalizeSettings(DEFAULT_SETTINGS)
-			browser = new Browser(workRoot, puppeteer, setting)
+			browser = new Browser(workRoot, playwright, DEFAULT_SETTINGS)
 			const url = await serve('frames.html')
 			await browser.visit(url)
 		})
@@ -144,8 +139,7 @@ describe('Browser', () => {
 		test.todo('it receives timing data')
 
 		test.skip('can inject polyfill for TTI', async () => {
-			const setting: any = normalizeSettings(DEFAULT_SETTINGS)
-			const browser = new Browser(workRoot, puppeteer, setting)
+			const browser = new Browser(workRoot, playwright, DEFAULT_SETTINGS)
 			await browser.visit('https://www.google.com')
 
 			const result = await browser.interactionTiming()
@@ -155,9 +149,8 @@ describe('Browser', () => {
 
 	describe('auto waiting', () => {
 		test('automatically applies a wait step to actions', async () => {
-			const setting: any = normalizeSettings(DEFAULT_SETTINGS)
-			const browser = new Browser(workRoot, puppeteer, {
-				...setting,
+			const browser = new Browser(workRoot, playwright, {
+				...DEFAULT_SETTINGS,
 				waitUntil: 'visible',
 			})
 			const url = await serve('wait.html')
@@ -171,8 +164,7 @@ describe('Browser', () => {
 		})
 
 		test('fails to return a visible link without waiting', async () => {
-			const setting: any = normalizeSettings(DEFAULT_SETTINGS)
-			const browser = new Browser(workRoot, puppeteer, setting)
+			const browser = new Browser(workRoot, playwright, DEFAULT_SETTINGS)
 			const url = await serve('wait.html')
 			await browser.visit(url)
 
@@ -186,8 +178,7 @@ describe('Browser', () => {
 
 	describe('send key combination', () => {
 		test('can send combination keys', async () => {
-			const setting: any = normalizeSettings(DEFAULT_SETTINGS)
-			const browser = new Browser(workRoot, puppeteer, setting)
+			const browser = new Browser(workRoot, playwright, DEFAULT_SETTINGS)
 			const url = await serve('combination_keys.html')
 			await browser.visit(url)
 			const input = await browser.findElement(By.id('text'))
@@ -215,8 +206,7 @@ describe('Browser', () => {
 	})
 
 	test('multiple pages handling', async () => {
-		const setting: any = normalizeSettings(DEFAULT_SETTINGS)
-		const browser = new Browser(workRoot, puppeteer, setting)
+		const browser = new Browser(workRoot, playwright, DEFAULT_SETTINGS)
 		const url = await serve('page_1.html')
 
 		await browser.visit(url)
@@ -225,17 +215,41 @@ describe('Browser', () => {
 		expect(newPage.url()).toContain('/page_2.html')
 
 		const pages = await browser.pages
+		expect(pages.length).toEqual(2)
 
-		// 3 tabs - about:blank, page_1.html & page_2.html
-		expect(pages.length).toEqual(3)
-
-		// switch page using page index in browser.pages
-		await browser.switchTo().page(1)
+		await browser.switchTo().page(0)
 		expect(browser.url).toContain('/page_1.html')
 
-		// switch page using the page itself
 		await browser.switchTo().page(newPage)
 		expect(browser.url).toContain('/page_2.html')
+	})
+
+	test('action getCookies()', async () => {
+		const browser = new Browser(workRoot, playwright, DEFAULT_SETTINGS)
+		const url = await serve('test-cookies.html')
+
+		await browser.visit(url, { waitUntil: 'load' })
+		const getCookiesByStringName = await browser.getCookies({ names: 'element-cookie' })
+
+		expect(getCookiesByStringName.length).toStrictEqual(1)
+		expect(getCookiesByStringName[0].name).toStrictEqual('element-cookie')
+
+		const getCookiesByStringArray = await browser.getCookies({
+			names: ['element-cookie', 'floodio'],
+		})
+
+		expect(getCookiesByStringArray.length).toStrictEqual(2)
+		expect(getCookiesByStringArray[0].name).toStrictEqual('element-cookie')
+		expect(getCookiesByStringArray[1].name).toStrictEqual('floodio')
+	})
+
+	test('action getUrl()', async () => {
+		const browser = new Browser(workRoot, playwright, DEFAULT_SETTINGS)
+		const URL = 'https://challenge.flood.io/'
+		await browser.visit(URL, { waitUntil: 'load' })
+
+		const currentUrl = browser.getUrl()
+		expect(currentUrl).toStrictEqual(URL)
 	})
 
 	describe('scrollTo and scrollBy', () => {
@@ -245,8 +259,7 @@ describe('Browser', () => {
 			docClientHeight: number,
 			docClientWidth: number
 		beforeEach(async () => {
-			const settings: any = normalizeSettings(DEFAULT_SETTINGS)
-			browser = new Browser(workRoot, puppeteer, settings)
+			browser = new Browser(workRoot, playwright, DEFAULT_SETTINGS)
 			const url = await serve('scroll.html')
 
 			await browser.visit(url)
@@ -350,15 +363,16 @@ describe('Browser', () => {
 		})
 	})
 
-	describe('getUrl', () => {
-		test('test API getUrl()', async () => {
-			const setting: any = normalizeSettings(DEFAULT_SETTINGS)
-			const browser = new Browser(workRoot, puppeteer, setting)
-			const URL = 'https://challenge.flood.io/'
+	test('drag an element into another element', async () => {
+		const browser = new Browser(workRoot, playwright, DEFAULT_SETTINGS)
+		const url = await serve('html_drag_drop.html')
 
-			await browser.visit(URL)
-			const currentURL = browser.getUrl()
-			expect(currentURL).toBe(URL)
-		})
+		await browser.visit(url)
+		const from = await browser.findElement(By.id('#draggable'))
+		const to = await browser.findElement(By.id('#droppable'))
+
+		await browser.drag(from, to)
+		const resultText = await to.text()
+		expect(resultText).toBe('Dropped!')
 	})
 })

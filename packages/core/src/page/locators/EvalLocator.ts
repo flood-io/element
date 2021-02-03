@@ -1,6 +1,4 @@
-// import { BaseLocator } from '../Locators'
-import { EvaluateFn } from 'puppeteer'
-import { LocatorBuilder } from '../types'
+import { LocatorBuilder, EvaluateFn } from '../types'
 
 export class EvalLocator implements LocatorBuilder {
 	constructor(

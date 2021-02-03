@@ -6,24 +6,21 @@ Install Element CLI on your own machine to quickly iterate the development of yo
 Once you're satisfied, upload it to [Tricentis Flood](https://flood.io) use it to generate 1000s of users of load in a full-scale load test.
 
 -   [Flood Element CLI](#flood-element-cli)
-
--   [Installation](#installation)
-
--   [Getting started](#getting-started)
-    -   [`element run <file>`](#element-run-file)
-    -   [`element plan <file> [options]`](#element-plan-file-options)
-    -   [`element init [dir] [options]`](#element-init-dir-options)
-    -   [`element generate <file>`](#element-generate-file)
-    -   [`element generate config [file-name]`](#element-generate-config-file-name)
-    -   [`element run`](#element-run)
-    -   [`element run --config-file [path-to-config-file]`](#element-run---config-file-path-to-config-file)
-
--   [Run an Element script on Flood](#run-an-element-script-on-flood)
-    -   [`element flood authenticate <flood-api-token>`](#element-flood-authenticate-flood-api-token)
-    -   [`element flood project ls`](#element-flood-project-ls)
-    -   [`element flood use 'project-name'`](#element-flood-use-project-name)
-    -   [`element flood project`](#element-flood-project)
-    -   [`element flood run <path-to-script> [options]`](#element-flood-run-path-to-script-options)
+    		\- [Installation](#installation)
+    		\- [Getting started](#getting-started)
+    			\- [`element run <file>`](#element-run-file)
+    			\- [`element plan <file> [options]`](#element-plan-file-options)
+    			\- [`element init [dir] [options]`](#element-init-dir-options)
+    			\- [`element generate <file>`](#element-generate-file)
+    			\- [`element generate config [file-name]`](#element-generate-config-file-name)
+    			\- [`element run`](#element-run)
+    			\- [`element run --config-file [path-to-config-file]`](#element-run---config-file-path-to-config-file)
+    		\- [Run an Element script on Flood](#run-an-element-script-on-flood)
+    			\- [`element flood authenticate <flood-api-token>`](#element-flood-authenticate-flood-api-token)
+    			\- [`element flood project ls`](#element-flood-project-ls)
+    			\- [`element flood use 'project-name'`](#element-flood-use-project-name)
+    			\- [`element flood project`](#element-flood-project)
+    			\- [`element flood run <path-to-script> [options]`](#element-flood-run-path-to-script-options)
 
 ## Installation
 
@@ -67,13 +64,21 @@ element run test.ts
 
 Note that if your script loads CSV or JSON test data, the file is assumed to be in the same directory as the test script.
 
-#### `--watch`
+**`--watch`**
 
 `--watch` runs your test script, then re-runs it when the script is changed (when you save it in your editor for example).
 
 `--watch` runs the test script against a single instance of the browser, so combining with `--no-headless` or `--devtools` shows the browser as the script runs, then leaves it open for you to inspect.
 
-#### `--no-headless` / `--devtools`
+**`--browser`**
+
+Specify the browser type used to run the test, using either `'chromium'` (default), `'firefox'` or `'webkit'`
+
+**`--executable-path`**
+
+Path to the installation folder of a custom Chromium-based browser, used to run the test. If set, Element will ignore the browser settings, and use this custom browser instead.
+
+**`--no-headless` / `--devtools`**
 
 While developing your script, it can be handy to watch the script as it works through the actions you've defined.
 
@@ -83,7 +88,7 @@ While developing your script, it can be handy to watch the script as it works th
 
 Consider combining these flags with `--watch`. This will leave the test browser open for you to explore the state of the page e.g. via Chrome Devtools.
 
-#### `--ff` / `--slow-mo`
+**`--ff` / `--slow-mo`**
 
 When running a script as a load test, you usually will set `actionDelay` and `stepDelay` to simulate users' think time, and perhaps to avoid overwhelming the target site.
 
@@ -97,42 +102,29 @@ You can use `--ff N` and `--slow-mo N` to set the delays to N seconds.
 
 You can also use `--step-delay TIME_IN_SECONDS` or `--action-delay TIME_IN_SECONDS`.
 
-#### `--loop-count N`
+**`--loop-count N`**
 
 Set the number of iterations to run your test for. Since `element run` is usually used for developing and debugging test scripts, this is `1` by default.
 
 Setting a higher `--loop-count` could be useful for things like testing test data supply or generation.
 
-#### `--chrome <custom-chrome-path>`
-
-Set the version of chrome to use. By default, `element run` uses the version of Chromium bundled with Puppeteer.
-
--   `--chrome` with no arguments will be equivalent to `'puppeteer'` (i.e. use the version of Chromium bundled with Puppeteer). Change it to `'stable'` to use the Chrome version installed on your system.
--   `--chrome /path/to/chrome` will use Chrome at the given path.
-
-Note that when running as a load test on [Tricentis Flood](https://flood.io), the versions of Chrome are recent but fixed to particular versions and may not match the custom version you select with this flag.
-Using the puppeteer-bundled version is a safe choice unless you need to test features which Chromium doesn't support such as DRM video playback.
-
-#### `--no-sandbox`
+**`--no-sandbox`**
 
 Switch off the chrome sandbox. This is useful for some linux configurations which lack kernel support for the Chrome sandbox.
 
-#### `--verbose`
+**`--verbose`**
+Print out the Test Settings and some load testing metrics like `throughput`, `response_time`, `latency`, `transaction_rate`, `passed`, `failed` while the test is running. 
 
-Print out the Test Settings and some load testing metrics like `throughput`, `response_time`, `latency`, `transaction_rate`, `passed`, `failed` while the test is running.
-
-#### `--strict` (DEPRECATED)
+**`--strict` (DEPRECATED)**
 
 Compile your script with stricter typescript type-checking. This can be useful for writing more robust test scripts and sometimes as a debugging tool for discovering subtle problems with your script.
 
 Specifically, this flag turns on the `strictNullChecks` and `noImplicitAny` TypeScript compiler flags. See the [TypeScript documentation](https://www.typescriptlang.org/docs/handbook/compiler-options.html) for more information.
 
-#### `--work-root`
+**`--work-root`**
+Specify a custom work root to save the test results. (Default: a directory named after your test script, under /tmp/element-results of your project folder)
 
-Specify a custom work root. (Default: a directory named after your test script, and at the same location)
-
-#### `--test-data-root`
-
+**`--test-data-root`**
 Specify a custom path to find test data files. (Default: the same directory as the test script)
 
 ### `element plan <file> [options]`
@@ -163,7 +155,6 @@ Generate a config file from a template.
 Flood Element supports using a config file across tests within a project. The default config file name (if not specified) is element.config.js, with the content as below.
 
 ```js
-
 module.exports = {
 	options: {
 		headless: true,
@@ -240,7 +231,7 @@ This command would be useful in case you forgot the Flood project that is being 
 
 Launch a flood from CLI with a test script 
 
-#### Options
+**Options**
 
 -   `--hosted`: indicates you're going to run a flood on hosted grid. Ignore this option if you want to run an on-demand test.
 -   `--vu`: number of virtual users to simulate. Default to `500` if not specified

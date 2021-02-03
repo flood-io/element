@@ -1,6 +1,6 @@
-import { MousePressOptions, ClickOptions, Page } from 'puppeteer'
+import { Page } from 'playwright'
 import { Point, isPoint } from './Point'
-import { ElementHandle } from './types'
+import { ElementHandle, MousePressOptions, ClickOptions } from './types'
 
 const isElementHandle = (thing: any): thing is ElementHandle => {
 	return typeof thing === 'object' && typeof thing.centerPoint === 'function'

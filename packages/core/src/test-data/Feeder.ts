@@ -1,4 +1,4 @@
-import { Option } from '../utils/Option'
+import { Option } from '@flood/element-report'
 import { knuthShuffle } from 'knuth-shuffle'
 import { FileType } from './Loader'
 
@@ -19,7 +19,6 @@ type LoaderConfig = {
 	shuffle: boolean
 	filters: FeedFilterFunction<any>[]
 }
-
 export class Feeder<T> {
 	private dataSource: DataSource = []
 	private dataConfig: LoaderConfig[] = []
@@ -30,10 +29,7 @@ export class Feeder<T> {
 
 	private static _instance: Feeder<any>
 	public static getInstance(): Feeder<any> {
-		if (!this._instance) {
-			this._instance = new Feeder<any>()
-		}
-		return this._instance
+		return this._instance || (this._instance = new Feeder<any>())
 	}
 
 	public append(lines: T[], loaderName = '', type: FileType): Feeder<T> {
@@ -49,13 +45,6 @@ export class Feeder<T> {
 			filters.every(func => func(line, index, instanceID)),
 		)
 
-		function checkWithTestKey(src: string[][], testKey: string[]): boolean {
-			return src.every((key: string[]) => {
-				if (key.length !== testKey.length) return false
-				return key.every(key => testKey.indexOf(key) >= 0)
-			})
-		}
-
 		function validStructure(srcOne: any, srcTwo: any): boolean {
 			const keysOne = srcOne.reduce((keys: string[][], item: T) => {
 				keys.push(Object.keys(item))
@@ -66,11 +55,14 @@ export class Feeder<T> {
 				return keys
 			}, [])
 
-			const testKey = keysOne[0]
-			const resultOne = checkWithTestKey(keysOne, testKey)
-			const resultTwo = checkWithTestKey(keysTwo, testKey)
-
-			return resultOne && resultTwo
+			return keysOne.every((recordKeysOne: string[], index: number) => {
+				return keysTwo.every((recordKeysTwo: string[]) => {
+					if (recordKeysOne.length !== recordKeysTwo.length) return false
+					return recordKeysOne.every((key: string) => {
+						return keysTwo[index].indexOf(key) >= 0
+					})
+				})
+			})
 		}
 
 		const source = this.dataSource.filter(source => source.name === loaderName)
@@ -88,10 +80,11 @@ export class Feeder<T> {
 				lines: shuffle ? [...knuthShuffle(newLines)] : [...newLines],
 				circular,
 				shuffle,
-				pointer: -1,
+				pointer: 0,
 				type,
 			})
 		}
+
 		return this
 	}
 
@@ -138,9 +131,6 @@ export class Feeder<T> {
 	 * Advances the feed by one iteration
 	 */
 	public feed(): Option<T> {
-		this.dataSource.forEach((item: DataSourceItem) => {
-			item.pointer++
-		})
 		return this.peek()
 	}
 
@@ -150,22 +140,22 @@ export class Feeder<T> {
 	public peek(): Option<T> {
 		if (this.dataSource.length === 1) {
 			const dataSource = this.dataSource[0]
-			const dataRow = dataSource.lines[dataSource.pointer] || null
+			const dataRow = dataSource.lines[dataSource.pointer++] || null
 			if (dataRow) return dataRow
 			else if (dataSource.circular) {
 				dataSource.pointer = 0
-				return dataSource.lines[dataSource.pointer] || null
+				return dataSource.lines[dataSource.pointer++] || null
 			}
 			return dataRow
 		} else {
 			const data: any = {}
 			this.dataSource.forEach((item: DataSourceItem) => {
 				const { name, lines, circular } = item
-				const dataRow = lines[item.pointer] || null
+				const dataRow = lines[item.pointer++] || null
 				if (dataRow) data[name] = dataRow
 				else if (circular) {
 					item.pointer = 0
-					data[name] = lines[item.pointer] || null
+					data[name] = lines[item.pointer++]
 				} else {
 					data[name] = dataRow
 				}
@@ -204,7 +194,7 @@ export class Feeder<T> {
 			if (source.pointer > max) max = source.pointer
 			return max
 		}, 0)
-		return maxPointer >= this.maxLines - 1
+		return maxPointer >= this.maxLines
 	}
 
 	public get isStart(): boolean {

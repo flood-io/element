@@ -11,8 +11,7 @@ module.exports = {
 	themeConfig: {
 		announcementBar: {
 			id: 'supportus',
-			content:
-				'⭐️ If you like Flood Element, give it a star on <a target="_blank" rel="noopener noreferrer" href="https://github.com/flood-io/element">GitHub</a>! ⭐️',
+			content: `🚀&nbsp;&nbsp;Flood Element v2.0 is now available, checkout the cool features <a target="_blank" rel="noopener noreferrer" href="/v2">here</a>&nbsp;&nbsp;🚀`,
 			backgroundColor: '#23232C',
 			textColor: '#FFFFFF',
 		},
@@ -35,11 +34,6 @@ module.exports = {
 					position: 'left',
 					activeBaseRegex: `docs`,
 					items: [
-						// {
-						// 	label: 'Next',
-						// 	to: 'docs/next/',
-						// 	activeBaseRegex: `docs/next/(?!support|team|resources)`,
-						// },
 						{
 							label: versions[0],
 							to: 'docs/',
@@ -66,7 +60,6 @@ module.exports = {
 			],
 		},
 		footer: {
-			style: 'light',
 			links: [
 				{
 					title: 'Our Products',
@@ -118,8 +111,12 @@ module.exports = {
 							href: 'https://www.flood.io/blog',
 						},
 						{
+							label: 'Element Challenge',
+							href: 'https://element-challenge.flood.io/',
+						},
+						{
 							label: 'Flood Challenge',
-							href: 'https://flood-element-challenge.vercel.app/',
+							href: 'https://challenge.flood.io/',
 						},
 					],
 				},
@@ -137,8 +134,6 @@ module.exports = {
 			'@docusaurus/preset-classic',
 			{
 				docs: {
-					// It is recommended to set document id as docs home page (`docs/` path).
-					homePageId: 'start/overview',
 					sidebarPath: require.resolve('./sidebars.js'),
 					editUrl: 'https://github.com/flood-io/element/edit/master/packages/docs/',
 				},

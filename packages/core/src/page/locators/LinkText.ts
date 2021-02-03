@@ -1,5 +1,4 @@
-import { EvaluateFn } from 'puppeteer'
-import { LocatorBuilder } from '../types'
+import { LocatorBuilder, EvaluateFn } from '../types'
 
 export class LinkTextLocator implements LocatorBuilder {
 	constructor(public linkText: string, public partial: boolean = false) {}
@@ -11,7 +10,6 @@ export class LinkTextLocator implements LocatorBuilder {
 	get pageFunc(): EvaluateFn {
 		return (targetText: string, partial: boolean) => {
 			const links = Array.from(document.querySelectorAll('body a'))
-
 			return links.find(link => {
 				if (!link.textContent) return false
 				const text = link.textContent.trim()

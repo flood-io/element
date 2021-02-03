@@ -27,7 +27,9 @@ Run a test script locally.
 
 **Browser:**
 
-- `--chrome` Specify which version of Google Chrome to use. Default: use the puppeteer bundled version.
+- `--browser` Specify the browser type used to run the test, using either `'chromium'` (default), `'firefox'` or `'webkit'`.
+- `--executable-path` path to the installation folder of a custom Chromium-based browser, used to run the test. If set, Element will ignore the browser settings, and use this custom browser instead.
+- `--chrome` Specify which version of Google Chrome to use. `DEPRECATED`
 - `--no-headless` Run in non-headless mode so that you can see what the browser is doing as it runs the test
 - `--devtools` Run in non-headless mode and also open devtools
 - `--no-sandbox` Disable the chrome sandbox - advanced option, mostly necessary on linux
@@ -39,12 +41,12 @@ Run a test script locally.
 - `--slow-mo` Run the script in slow-motion: Increase the actionDelay and stepDelay settings in the test script to 10 seconds. Specify a number to set a different delay.
 - `--step-delay` Override stepDelay test script setting
 - `--action-delay` Override actionDelay test script setting
-- `--loop-count` Override the loopCount setting in the test script. This is normally overridden to 1 when running via the CLI.
+- `--loop-count` Override the loopCount setting in the test script.
 - `--strict` Compile the script in strict mode. This can be helpful in diagnosing problems.
 
 **Paths:**
 
-- `--work-root` Specify a custom work root. (Default: a directory named after your test script, and at the same location)
+- `--work-root` Specify a custom work root to save the test results. (Default: a directory named after your test script, under /tmp/element-results of your project folder)
 - `--test-data-root` Specify a custom path to find test data files. (Default: the same directory as the test script)
 
 **Positionals:**

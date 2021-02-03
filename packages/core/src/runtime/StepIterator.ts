@@ -1,5 +1,5 @@
 import { ConditionFn, RecoverWith, Step, StepRecoveryObject } from './Step'
-import { Browser as BrowserInterface } from './IBrowser'
+import { Browser as BrowserInterface } from '../interface/IBrowser'
 import { Looper } from '../Looper'
 
 export default class StepIterator {
@@ -27,6 +27,10 @@ export default class StepIterator {
 		this.stepCount = this.steps.length
 	}
 
+	stop(): void {
+		this.stepCount = this.steps.length
+	}
+
 	async run(iterator: (step: Step) => Promise<void>): Promise<void> {
 		while (this.stepCount < this.steps.length) {
 			this.currentStep = this.steps[this.stepCount]
@@ -35,13 +39,9 @@ export default class StepIterator {
 		}
 	}
 
-	stop(): void {
-		this.stepCount = this.steps.length
-	}
-
 	loopUnexecutedSteps(callBackFn: (step: Step) => void): void {
-		const { repeat } = this.currentStep.options
-		if (repeat) {
+		if (!this.currentStep) return
+		if (this.currentStep.options?.repeat) {
 			callBackFn(this.currentStep)
 		}
 		while (this.stepCount < this.steps.length) {
@@ -58,12 +58,11 @@ export default class StepIterator {
 		const { once, skip, pending, repeat, stepWhile, predicate } = step.options
 
 		if (pending || (once && iteration > 1)) {
-			console.log(`(Pending) ${step.name}`)
+			step.prop = { unexecuted: true }
 			return false
 		}
-
 		if (skip) {
-			console.log(`Skip test ${step.name}`)
+			step.prop = { skipped: true }
 			return false
 		}
 
@@ -81,16 +80,22 @@ export default class StepIterator {
 		if (stepWhile) {
 			const { predicate } = stepWhile
 			const condition = await this.callPredicate(predicate, browser)
-			if (!condition) return false
-			this.goPreviousStep()
+			if (!condition) {
+				step.prop = { unexecuted: true }
+				return false
+			}
 			return true
 		}
 
 		if (predicate) {
 			const condition = await this.callPredicate(predicate, browser)
-			if (!condition) return false
+			if (!condition) {
+				step.prop = { unexecuted: true }
+				return false
+			}
 			return true
 		}
+
 		return true
 	}
 
@@ -116,11 +121,6 @@ export default class StepIterator {
 			stepRecover = recoverySteps['global']
 			if (!stepRecover) return false
 		}
-
-		if (looper.isNewIteration()) {
-			stepRecover.iteration = 0
-		}
-
 		const { recoveryStep, loopCount, iteration } = stepRecover
 		const settingRecoveryCount = loopCount || tries || 1
 		if (!recoveryStep || iteration >= settingRecoveryCount) {
@@ -128,14 +128,21 @@ export default class StepIterator {
 			return false
 		}
 		stepRecover.iteration += 1
+		if (step.prop) {
+			step.prop.recoveryTries = stepRecover.iteration
+		} else {
+			step.prop = { recoveryTries: stepRecover.iteration }
+		}
 		try {
 			const result = await recoveryStep.fn.call(null, browser)
 			const { repeat } = step.options
 			if (result === RecoverWith.CONTINUE) {
 				stepRecover.iteration = 0
+				step.prop.recoveryTries = 0
 			} else if (result === RecoverWith.RESTART) {
 				if (repeat) repeat.iteration = 0
 				looper.restartLoop()
+				step.prop.recoveryTries = 0
 				this.stepEnd()
 			} else if (result === RecoverWith.RETRY) {
 				if (repeat) repeat.iteration -= 1

@@ -18,24 +18,24 @@ import {
 	RecoverWith,
 	extractStep,
 } from './Step'
-import { Browser } from './IBrowser'
+import { Browser } from '../interface/IBrowser'
 import Test from './Test'
 import { mustCompileFile } from '../TestScript'
-import { TestScriptError, TestScriptErrorMapper } from '../TestScriptError'
-import { ITestScript } from '../ITestScript'
-import { DEFAULT_SETTINGS, ConcreteTestSettings, normalizeSettings, TestSettings } from './Settings'
+import { TestScriptError, TestScriptErrorMapper, expect } from '@flood/element-report'
+import { ITestScript } from '../interface/ITestScript'
+import { DEFAULT_SETTINGS, TestSettings } from './Settings'
 import { RuntimeEnvironment } from '../runtime-environment/types'
-import { expect } from '../utils/Expect'
 
 import { Until } from '../page/Until'
 import { By } from '../page/By'
 import { BaseLocator } from '../page/Locator'
-import { MouseButtons, Device, Key, userAgents } from '../page/Enums'
+import { MouseButtons, Key, userAgents } from '../page/Enums'
+import { Device } from '../page/Device'
 
 import { TestDataSource, TestDataFactory } from '../test-data/TestData'
 import { BoundTestDataLoaders } from '../test-data/TestDataLoaders'
 import { EvaluatedScriptLike } from './EvaluatedScriptLike'
-import { Hook, normalizeHookBase } from './StepLifeCycle'
+import { Hook, HookType, normalizeHookBase } from './StepLifeCycle'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('element:runtime:eval-script')
@@ -43,7 +43,7 @@ const debug = require('debug')('element:runtime:eval-script')
 // TODO work out the right type for floodElementActual
 function createVirtualMachine(floodElementActual: any, root?: string): NodeVM {
 	const vm = new NodeVM({
-		console: 'inherit',
+		console: 'redirect',
 		sandbox: {},
 		wrapper: 'commonjs',
 		sourceExtensions: ['js', 'ts'],
@@ -69,7 +69,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 	public steps: Step[]
 	public hook: Hook
 	public recoverySteps: StepRecoveryObject
-	public settings: ConcreteTestSettings
+	public settings: TestSettings
 
 	private vm: NodeVM
 
@@ -101,8 +101,8 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		return this.script.liftError!(error)
 	}
-	public filterAndUnmapStack(stack: string | Error | undefined): string[] {
-		return this.script?.filterAndUnmapStack?.apply(this, stack)
+	public filterAndUnMapStack(stack: string | Error | undefined): string[] {
+		return this.script?.filterAndUnMapStack?.apply(this, stack)
 	}
 
 	public bindTest(test: Test): void {
@@ -128,7 +128,6 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 	public get testDataLoaders(): TestDataFactory {
 		if (this._testDataLoaders === undefined) {
 			this._testDataLoaders = new BoundTestDataLoaders(this, this.runEnv.workRoot)
-			// this._testDataLoaders.fromData([{}])
 		}
 
 		return this._testDataLoaders
@@ -162,7 +161,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 		}
 
 		// establish base settings
-		let rawSettings = DEFAULT_SETTINGS
+		const rawSettings = DEFAULT_SETTINGS
 
 		const ENV = this.runEnv.stepEnv()
 
@@ -191,25 +190,25 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 
 		const afterAll = (...args: any[]) => {
 			const [fn, waitTimeout] = args
-			const hookBase = normalizeHookBase({ fn, waitTimeout })
+			const hookBase = normalizeHookBase({ fn, waitTimeout, type: HookType.afterAll })
 			hook.afterAll.push(hookBase)
 		}
 
 		const afterEach = (...args: any[]) => {
 			const [fn, waitTimeout] = args
-			const hookBase = normalizeHookBase({ fn, waitTimeout })
+			const hookBase = normalizeHookBase({ fn, waitTimeout, type: HookType.afterEach })
 			hook.afterEach.push(hookBase)
 		}
 
 		const beforeAll = (...args: any[]) => {
 			const [fn, waitTimeout] = args
-			const hookBase = normalizeHookBase({ fn, waitTimeout })
+			const hookBase = normalizeHookBase({ fn, waitTimeout, type: HookType.beforeAll })
 			hook.beforeAll.push(hookBase)
 		}
 
 		const beforeEach = (...args: any[]) => {
 			const [fn, waitTimeout] = args
-			const hookBase = normalizeHookBase({ fn, waitTimeout })
+			const hookBase = normalizeHookBase({ fn, waitTimeout, type: HookType.beforeEach })
 			hook.beforeEach.push(hookBase)
 		}
 
@@ -317,18 +316,8 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 
 		this.vm = createVirtualMachine(context, this.script.scriptRoot)
 
-		// manually extract test name and desc from the script
-		rawSettings.name = this.script.testName
-		rawSettings.description = this.script.testDescription
-
 		const result = this.vm.run(this.script.vmScript)
 		debug('eval %O', result)
-
-		// get settings exported from the script
-		const scriptSettings = result.settings
-		if (scriptSettings) {
-			rawSettings = { ...rawSettings, ...scriptSettings }
-		}
 
 		const testFn = expect(result.default, 'Test script must export a default function')
 
@@ -337,10 +326,18 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 		 */
 		testFn.apply(null, [])
 
+		// get settings exported from the script
+		const scriptSettings = result.settings
+		if (scriptSettings) {
+			this.settings = { ...scriptSettings }
+		}
+
 		// layer up the final settings
+		// and manually extract test name and desc from the script
 		this.settings = {
-			...DEFAULT_SETTINGS,
-			...normalizeSettings(rawSettings),
+			...this.settings,
+			name: this.script.testName,
+			description: this.script.testDescription,
 		}
 
 		this.steps = steps

@@ -1,6 +1,7 @@
-import CustomDeviceDescriptors from '../utils/CustomDeviceDescriptors'
-import { Viewport } from 'puppeteer'
+import { LaunchOptions, ViewportSize } from 'playwright'
+import { BrowserType } from '../page/types'
 import ms from 'ms'
+import { DeviceDescriptor } from '../page/Device'
 
 /**
  * Declares the settings for the test, overriding the settings constant exported in the test script.
@@ -20,13 +21,13 @@ import ms from 'ms'
  */
 export declare function setup(settings: TestSettings): void
 
-// Waits is milliseconds
+// Waits is seconds
 export const DEFAULT_STEP_WAIT_MILLISECONDS = 5000
 export const DEFAULT_ACTION_WAIT_MILLISECONDS = 500
 export const DEFAULT_WAIT_TIMEOUT_MILLISECONDS = 30000
 export const DEFAULT_ACTION_DELAY = 2000
 export const DEFAULT_STEP_DELAY = 6000
-export const DEFAULT_DURATION = 0
+export const DEFAULT_DURATION = -1
 export const DEFAULT_STEP_DELAY_FAST_FORWARD = 1000
 export const DEFAULT_ACTION_DELAY_FAST_FORWARD = 1000
 export const DEFAULT_STEP_DELAY_SLOW_MO = 10000
@@ -50,16 +51,6 @@ export type ResponseTiming = 'page' | 'network' | 'step' | 'stepWithThinkTime'
 export type ConsoleMethod = 'log' | 'info' | 'debug' | 'warn' | 'error'
 
 /**
- * Represents the versions of chrome that the test script will run against.
- *
- * literal | description
- * --------|-----------
- * puppeteer | (Default) The browser bundled with [puppeteer]. It is a curated version of [chromium](https://www.chromium.org) (the open source version of Google Chrome). Using the puppeteer-bundled Chromium ensures the best compatibility with puppeteer, but lacks some features such as video support.
- * stable | The latest version of [Google Chrome](https://www.chromium.org/). Google Chrome has more features than chromium, but isn't tested as thoroughly against puppeteer, which can result in intermittent errors. If you don't need the extra features, please use `bundled`.
- */
-export type ChromeVersion = 'puppeteer' | 'stable'
-
-/**
  * Element presence lists the accepted values for automatically waiting on elements before running actions.
  *
  * - visible: waits until the element is visible on the page and is painted
@@ -69,6 +60,8 @@ export type ChromeVersion = 'puppeteer' | 'stable'
  * Set to `false` or `null` to disable.
  */
 export type ElementPresence = 'visible' | 'present' | 'ready' | false | null
+
+export type BrowserLaunchOptions = LaunchOptions
 
 /**
  * The TestSettings interface specifies the available settings you have to configure how your test runs. These properties should be exported using the property `settings`.
@@ -122,13 +115,13 @@ export interface TestSettings {
 	/**
 	 * Specifies a device to emulate with browser device emulation.
 	 */
-	device?: string | null
+	device?: DeviceDescriptor | null
 
 	/**
 	 * Sets the viewport of the page.
 	 * @param viewport The viewport parameters.
 	 */
-	viewport?: Viewport | null
+	viewport?: ViewportSize | null
 
 	/**
 	 * Global wait timeout applied to all wait tasks.
@@ -204,7 +197,7 @@ export interface TestSettings {
 	/**
 	 * Whether to ignore HTTPS errors during navigation. Defaults to `false`
 	 */
-	ignoreHTTPSErrors?: boolean
+	ignoreHTTPSError?: boolean
 
 	/**
 	 * Controls whether each iteration should run within an Incognito window instead of a normal
@@ -215,7 +208,12 @@ export interface TestSettings {
 	/**
 	 * Specifies a version of Google Chrome
 	 */
-	chromeVersion?: ChromeVersion
+	browser?: BrowserType
+
+	/**
+	 * Specifies options to launch
+	 */
+	browserLaunchOptions?: BrowserLaunchOptions
 
 	/**
 
@@ -248,6 +246,21 @@ export interface TestSettings {
 	 * Define the loop count of the recovery step
 	 */
 	tries?: number
+
+	/**
+	 * Specifies the steps for ramping up and down load
+	 */
+	stages?: RampStage[]
+
+	/**
+	 * show screenshot on terminal (iTerm only)
+	 */
+	showScreenshot?: boolean
+}
+
+export type RampStage = {
+	duration: string
+	target: number
 }
 
 /**
@@ -256,23 +269,24 @@ export interface TestSettings {
 export const DEFAULT_SETTINGS: ConcreteTestSettings = {
 	waitUntil: false,
 	duration: -1,
-	loopCount: Infinity,
-	actionDelay: DEFAULT_ACTION_DELAY,
-	stepDelay: DEFAULT_STEP_DELAY,
-	screenshotOnFailure: true,
+	loopCount: -1,
+	actionDelay: 2000,
+	stepDelay: 6000,
+	screenshotOnFailure: false,
 	clearCookies: true,
 	clearCache: false,
-	waitTimeout: DEFAULT_WAIT_TIMEOUT_MILLISECONDS,
+	waitTimeout: 30000,
 	responseTimeMeasurement: 'step',
 	tries: 0,
 	/**
 	 * by default, don't filter any console messages from the browser
 	 */
 	consoleFilter: [],
-	userAgent: CustomDeviceDescriptors['Chrome Desktop Large'].userAgent,
-	device: 'Chrome Desktop Large',
-	ignoreHTTPSErrors: false,
-	chromeVersion: 'puppeteer',
+	userAgent: '',
+	device: null,
+	ignoreHTTPSError: false,
+	browser: 'chromium',
+	browserLaunchOptions: {},
 	blockedDomains: [],
 	incognito: false,
 	name: 'Element Test',
@@ -280,7 +294,9 @@ export const DEFAULT_SETTINGS: ConcreteTestSettings = {
 	disableCache: false,
 	extraHTTPHeaders: {},
 	launchArgs: [],
-	viewport: null,
+	viewport: { width: 1440, height: 900 },
+	stages: [],
+	showScreenshot: false,
 }
 
 /**
@@ -305,7 +321,6 @@ export function normalizeSettings(settings: TestSettings): TestSettings {
 
 	if (settings.waitTimeout) {
 		if (typeof settings.waitTimeout === 'string') {
-			// support new string value for `waitTimeout`, still keep the raw value
 			convertedWaitTimeout = ms(settings.waitTimeout)
 		} else {
 			// legacy code
@@ -320,6 +335,7 @@ export function normalizeSettings(settings: TestSettings): TestSettings {
 		if (typeof settings.actionDelay === 'string') {
 			convertedActionDelay = ms(settings.actionDelay)
 		} else {
+			// legacy code
 			convertedActionDelay = settings.actionDelay
 			if (convertedActionDelay < 0) convertedActionDelay = DEFAULT_ACTION_DELAY
 			if (convertedActionDelay < 1e3) convertedActionDelay *= 1e3
@@ -331,6 +347,7 @@ export function normalizeSettings(settings: TestSettings): TestSettings {
 		if (typeof settings.stepDelay === 'string') {
 			convertedStepDelay = ms(settings.stepDelay)
 		} else {
+			// legacy code
 			convertedStepDelay = settings.stepDelay
 			if (convertedStepDelay < 0) convertedStepDelay = DEFAULT_STEP_DELAY
 			if (convertedStepDelay < 1e3) convertedStepDelay *= 1e3
@@ -342,10 +359,13 @@ export function normalizeSettings(settings: TestSettings): TestSettings {
 		if (typeof settings.duration === 'string') {
 			convertedDuration = ms(settings.duration)
 		} else {
+			// legacy code
 			convertedDuration = settings.duration
+			if (convertedDuration < 0) convertedDuration = DEFAULT_DURATION
+			if (convertedDuration < 1e3) convertedDuration *= 1e3
 		}
-		settings.duration = convertedDuration
 	}
+	settings.duration = convertedDuration
 
 	return settings
 }

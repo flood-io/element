@@ -1,11 +1,11 @@
 import { ConcreteTestSettings } from './runtime/Settings'
 
 export class Looper {
-	public iterations = 0
+	public iteration = 0
 	private timeout: any
 	private cancelled = false
-	private loopCount: number
-	private iterationState: { isNew: boolean; changeAt: number } = { isNew: true, changeAt: 0 }
+	public loopCount: number
+	public isRestart = false
 
 	public done: Promise<void>
 	private doneResolve: () => void
@@ -41,41 +41,36 @@ export class Looper {
 	}
 
 	finish() {
+		this.isRestart = false
 		clearTimeout(this.timeout)
 	}
 
 	get continueLoop(): boolean {
 		const hasInfiniteLoops = this.loopCount <= 0
-		const hasLoopsLeft = this.iterations < this.loopCount
+		const hasLoopsLeft = this.iteration < this.loopCount
 
 		return !this.cancelled && (hasLoopsLeft || hasInfiniteLoops)
 	}
 
-	restartLoop(): void {
-		this.iterationState.isNew = false
-		this.iterationState.changeAt = this.iterations
-		this.iterations -= 1
+	restartLoop() {
+		this.isRestart = true
+		this.iteration -= 1
 	}
 
-	isNewIteration(): boolean {
-		return this.iterationState.isNew
+	restartLoopDone() {
+		this.isRestart = false
 	}
 
-	async run(iterator: (iteration: number) => Promise<void>): Promise<number> {
+	async run(iterator: (iteration: number, isRestart: boolean) => Promise<void>): Promise<number> {
 		try {
 			while (this.continueLoop) {
-				this.iterations += 1
-				await iterator(this.iterations)
-				if (this.iterations === this.iterationState.changeAt) {
-					this.iterationState.isNew = true
-					this.iterationState.changeAt = 0
-				}
+				await iterator(++this.iteration, this.isRestart)
 			}
 			this.finish()
 		} finally {
 			this.doneResolve()
 		}
 
-		return this.iterations
+		return this.iteration
 	}
 }

@@ -1,6 +1,6 @@
 {
 	"name": "flood-element",
-	"version": "1.3.0",
+	"version": "2.0.0",
 	"main": "index.js",
 	"repository": "git@github.com:flood-io/element.git",
 	"author": "Ivan Vanderbyl <ivanvanderbyl@gmail.com>",
@@ -16,9 +16,9 @@
 		"publish:brew": "cd ./scripts/publish-brew-tap && yarn && ts-node --project ./tsconfig.json -- ./index.ts",
 		"publish:pre": "lerna publish --force-publish=* --cd-version prerelease && yarn publish:brew",
 		"dev": "ts-node -r tsconfig-paths/register ./packages/cli/bin/element.ts",
+		"elementctl": "ts-node -r tsconfig-paths/register ./packages/element-cli/bin/element.ts",
 		"dev:docs": "cd ./packages/docs/ && yarn start",
-		"docs:version": "cd ./packages/docs/ && docusaurus docs:version",
-		"elementctl": "ts-node -r tsconfig-paths/register ./packages/element-cli/bin/element.ts"
+		"docs:version": "cd ./packages/docs/ && docusaurus docs:version"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.7.7",
@@ -62,10 +62,14 @@
 		"webpack": "^4.41.5"
 	},
 	"resolutions": {
-		"@types/node": "12.7.4"
+		"@types/node": "12.7.4",
+		"**/terser-webpack-plugin": "^1.4.3"
 	},
 	"workspaces": [
 		"packages/*"
+	],
+	"nohoist": [
+		"packages/docs/**"
 	],
 	"standard-version": {
 		"changelog": {

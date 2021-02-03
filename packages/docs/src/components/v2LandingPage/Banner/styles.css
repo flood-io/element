@@ -52,11 +52,12 @@
 	margin: 1rem 0;
 }
 
-@media only screen and (max-width: 1024px) {
+@media only screen and (max-device-width: 1024px) {
 	.bannerMain {
 		padding: 0 2rem;
 		display: flex;
 		justify-content: center;
+		background-color: rgba(255, 255, 255, 0.8);
 	}
 
 	.bannerMain > div {
@@ -68,14 +69,24 @@
 	}
 }
 
-@media only screen and (max-width: 767px) {
+@media only screen and (max-device-width: 768px) {
+	.bannerMain > div {
+		height: 100%;
+	}
+}
+
+@media only screen and (max-device-width: 480px) {
 	.bannerHeader {
-		height: 100vh;
-		max-height: 100vh;
+		height: calc(100vh - 92px);
+		max-height: calc(100vh - 92px);
 	}
 
 	.bannerMain {
 		padding-top: 0;
+	}
+
+	.bannerMain::after {
+		display: none;
 	}
 
 	.bannerMain > div {
@@ -86,8 +97,12 @@
 	}
 
 	.bannerMain > div > h1 {
-		font-size: 3rem;
-		line-height: 3rem;
+		font-size: 2.5rem;
+		line-height: 2.5rem;
 		text-align: center;
+	}
+
+	.bannerMain > div > p {
+		margin-bottom: 0;
 	}
 }

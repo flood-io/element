@@ -302,8 +302,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 -   chore: clean code
 
 -   Update tsconfig.json
-
-add a new line for `tsconfig.json`
+    add a new line for `tsconfig.json`
 
 -   chore: clean code after merge from beta
 

@@ -30,12 +30,16 @@ The goals of Element scripts are to be:
 Scaling up Element tests is easy on [Flood](https://flood.io), by launching hundreds or even thousands of instances of Google Chrome, and running the scripts you write to drive a load test. We call this Browser Level Load Testing.
 
 -   [Quickstart](#quickstart)
+
     -   [1. Install Element](#1-install-element)
         -   [Stable release](#stable-release)
         -   [Beta release](#beta-release)
         -   [Canary release](#canary-release)
+
     -   [2. Initialize Your Project](#2-initialize-your-project)
+
     -   [3. Write and Validate Your Script](#3-write-and-validate-your-script)
+
     -   [4. Run a real Load Test on Flood](#4-run-a-real-load-test-on-flood)
 -   [About](#about)
     -   [What can I do with it?](#what-can-i-do-with-it)

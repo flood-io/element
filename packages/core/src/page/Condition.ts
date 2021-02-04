@@ -96,7 +96,7 @@ export abstract class ElementCondition extends LocatorCondition {
 			const args2: any[] = args.slice(indexSep + 1, args.length)
 
 			const locatorFunc: EvaluateFn = () => null
-			const conditionFunc = (node: HTMLElement, ...args: any[]) => false
+			const conditionFunc = (node: HTMLElement, ...args: any[]): boolean => false
 
 			const [arg1, ...rest] = args1
 			const node: HTMLElement | null = locatorFunc(arg1, ...rest)

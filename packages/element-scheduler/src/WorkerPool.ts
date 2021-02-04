@@ -15,7 +15,7 @@ export type PoolExitResult = {
 	forceExited: boolean
 }
 
-const identityFn = () => {
+const identityFn = (): void => {
 	return
 }
 
@@ -43,7 +43,7 @@ export class WorkerPool {
 		}
 	}
 
-	addWorker(workerName?: string) {
+	addWorker(workerName?: string): void {
 		const id = faker.random.uuid()
 		const name = workerName || `User ${this.workers.length}`
 		const { maxRetries } = this.options

@@ -1,8 +1,7 @@
-import { step, TestSettings, Until, By, Device, Driver } from '@flood/element'
+import { step, TestSettings, Until, By, Driver } from '@flood/element'
 import assert from 'assert'
 export const settings: TestSettings = {
 	loopCount: 1,
-	device: Device.iPadLandscape,
 	userAgent: 'I AM ROBOT',
 	disableCache: true,
 	actionDelay: '1s',
@@ -79,6 +78,6 @@ export default () => {
 		await browser.wait(Until.elementIsVisible('h2'))
 		let element = await browser.findElement('h2')
 		let completionText = await element.text()
-		assert.equal(completionText, "You're Done!")
+		assert.strictEqual(completionText, "You're Done!")
 	})
 }

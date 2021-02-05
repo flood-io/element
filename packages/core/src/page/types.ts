@@ -1,7 +1,7 @@
 import { ElementHandle as PElementHandle, Frame, Page } from 'playwright'
 import { Point } from './Point'
 
-export type BrowserType = 'chromium' | 'firefox' | 'webkit'
+export type BrowserType = 'chrome' | 'chromium' | 'firefox' | 'webkit'
 
 export type MouseButtons = 'left' | 'right' | 'middle'
 

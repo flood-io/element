@@ -67,7 +67,7 @@ export class PlaywrightClient implements PlaywrightClientLike {
 	}
 
 	async closePages(): Promise<void> {
-		const pages = await this.page.context().pages()
+		const pages = this.page.context().pages()
 		for (const page of pages) {
 			await page.close()
 		}
@@ -92,12 +92,20 @@ export async function launchBrowserServer(
 
 	options.args.push('--auth-server-whitelist="hostname/domain"')
 
-	const browserType = options.browser || 'chromium'
+	let browserType = options.browser || 'chromium'
+	// can not run multiple user on chrome, need to switch back to chromium
+	if (browserType === 'chrome') {
+		browserType = 'chromium'
+	}
 	return playwright[browserType].launchServer(options)
 }
 
 export async function connectWS(wsEndpoint: string, type?: BrowserType): Promise<PlaywrightClient> {
-	const browserType = type || 'chromium'
+	let browserType = type || 'chromium'
+	// can not run multiple user on chrome, need to switch back to chromium
+	if (browserType === 'chrome') {
+		browserType = 'chromium'
+	}
 	const browser = await playwright[browserType].connect({
 		wsEndpoint,
 	})
@@ -127,9 +135,21 @@ export async function launch(
 		options.args.push('--no-sandbox')
 	}
 
-	const browserType: BrowserType = options.executablePath
-		? 'chromium'
-		: options.browser || 'chromium'
+	let browserType: BrowserType = options.executablePath ? 'chromium' : options.browser || 'chromium'
+
+	if (browserType === 'chrome') {
+		browserType = 'chromium'
+		switch (process.platform) {
+			case 'darwin':
+				options.executablePath = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+				break
+			case 'win32':
+				options.executablePath = 'C:/Program Files (x86)/GoogleChrome/Applicationchrome.exe'
+				break
+			default:
+				options.executablePath = '/usr/bin/google-chrome-stable'
+		}
+	}
 
 	const browser = await playwright[browserType].launch(options).catch(err => {
 		console.log(chalk.redBright(err.message))

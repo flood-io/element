@@ -40,7 +40,7 @@ element generate <file>
 
 **Positionals**
 
-- `file` (string) the test script file name to create. Specify a TypeScript file format, for example, `my-test-script.ts`.
+- `file` (string) the test script name to generate. Specify a file name with a `.ts` extension (TypeScript), for example, `my-test-script.ts`.
 
 You should make sure that `package.json` file in the project root folder has the attribute `name` before running this command.
 

@@ -93,7 +93,7 @@ export async function launchBrowserServer(
 	options.args.push('--auth-server-whitelist="hostname/domain"')
 
 	let browserType = options.browser || 'chromium'
-	// can not run multiple user on chrome, need to switch back to chromium
+	// can not run multiple users on chrome, need to switch back to chromium
 	if (browserType === 'chrome') {
 		browserType = 'chromium'
 	}
@@ -102,7 +102,7 @@ export async function launchBrowserServer(
 
 export async function connectWS(wsEndpoint: string, type?: BrowserType): Promise<PlaywrightClient> {
 	let browserType = type || 'chromium'
-	// can not run multiple user on chrome, need to switch back to chromium
+	// can not run multiple users on chrome, need to switch back to chromium
 	if (browserType === 'chrome') {
 		browserType = 'chromium'
 	}

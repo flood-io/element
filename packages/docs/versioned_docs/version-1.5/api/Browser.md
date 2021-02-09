@@ -148,6 +148,21 @@ Makes the element located by the first argument the receiver of future input.
 - locator [`NullableLocatable`][nullablelocatable] The [Locator][] to use to find an element to send focus to.
 - returns: [Promise<`void`>][promise]
 
+### `getMimeType(filePath)`
+
+Returns the Media (MIME) Type of a file
+
+**Parameters**
+- filePath `string` path to a file
+- returns: `string` media type of the file
+
+### `getUrl()`
+
+Returns the URL of the current page as a string
+
+**Parameters**
+- returns: `string` URL of the current page
+
 ### `highlightElement(element)`
 
 Highlight an element. Useful in concert with takeScreenshot to tweak your locators.

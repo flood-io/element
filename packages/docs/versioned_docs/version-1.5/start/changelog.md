@@ -3,8 +3,8 @@ id: changelog
 title: Changelog
 ---
 
-## 1.4.0
-Released: Nov 2020
+## 1.5.0
+Released: Jan 2021
 
 ### New features
 - Ability to support [multiple data files in a single test script](../guides/TestData.md#using-multiple-test-data-files-in-a-single-test-script)
@@ -12,6 +12,7 @@ Released: Nov 2020
 - New APIs:
   - [`browser.scrollBy()`](../api/browser#scrollbyx-y-options)
   - [`browser.scrollTo()`](../api/browser#scrolltoposition-options)
+  - [`browser.getUrl()`](../api/browser#geturl)
 
 ## 1.3.6
 Released: 24 Sep 2020

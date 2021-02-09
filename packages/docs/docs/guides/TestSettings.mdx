@@ -37,7 +37,14 @@ Example:  `["*.google-analytics.com", "*:1337"]`
 
 ### browser
 
-Since Element 2.0, you can set the browser type used to run the test, using one of the 3 browser types bundled with [Playwright](https://playwright.dev/), including `'chromium'`, `'firefox'` and `'webkit'`. Defaults to `'chromium'`.
+Since Element 2.0, you can set the browser type used to run the test, either using one of the 3 browser types bundled with [Playwright](https://playwright.dev/), including `'chromium'`, `'firefox'` and `'webkit'` or using `'chrome'` installed on the machine. Defaults to `'chromium'`.
+
+Note that using `'chrome'` only works if Google Chrome is installed in the default path:
+- **On Windows:** C:/Program Files (x86)/GoogleChrome/Applicationchrome.exe
+- **On MacOS:** /Applications/Google Chrome.app/Contents/MacOS/Google Chrome
+- **On Flood Grid:** /usr/bin/google-chrome-stable
+
+Otherwise, you need to specify the custom path with *executablePath* property in [browserLaunchOptions](#browserlaunchoptions) setting.
 
 ### browserLaunchOptions
 
@@ -65,6 +72,8 @@ export const settings: TestSettings = {
 ### ~~chromeVersion~~ (DEPRECATED since version 2.0)
 
 ~~`puppeteer` or `stable` (Optional)   Specifies a version of Google Chrome to run the test~~
+
+This setting is no longer supported since version 2.0. Instead, you can use [browser](#browser) setting or *executablePath* property in [browserLaunchOptions](#browserlaunchoptions) setting to specify the target browser.
 
 ### clearCache
 

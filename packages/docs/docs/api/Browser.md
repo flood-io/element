@@ -200,14 +200,21 @@ Returns the Media (MIME) Type of a file
 - filePath `string` path to a file
 - returns: `string` media type of the file
 
-### `highlightElement(element)`
+### `getUrl()`
 
-Highlight an element. Useful in concert with takeScreenshot to tweak your locators.
+Returns the URL of the current page as a string
 
 **Parameters**
+- returns: `string` URL of the current page
 
-- element [`ElementHandle`][elementhandle]
-- returns: [Promise<`void`>][promise]
+### ~~`highlightElement(element)`~~ DEPRECATED since version 2.0
+
+~~Highlight an element. Useful in concert with takeScreenshot to tweak your locators.~~
+
+~~**Parameters**~~
+
+- ~~element [`ElementHandle`][elementhandle]~~
+- ~~returns: [Promise<`void`>][promise]~~
 
 ### `maybeFindElement(locator)`
 

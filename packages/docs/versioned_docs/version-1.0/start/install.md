@@ -30,7 +30,7 @@ We use the Yarn package manager throughout these docs, however, each command is 
 Install using Homebrew:
 
 ```bash title="brew"
-brew install floodio/taps/element
+brew install flood-io/taps/element
 ```
 
 Or if you prefer using Yarn or NPM:

@@ -35,8 +35,6 @@
 		"husky": "^3.0.5",
 		"jest": "^25.2.2",
 		"prettier": "^1.19.1",
-		"standard-changelog": "^2.0.13",
-		"standard-version": "^8.0.1",
 		"test-listen": "^1.1.0",
 		"ts-node": "^8.8.1",
 		"tsconfig-paths": "^3.9.0",

@@ -70,6 +70,7 @@
 		"@types/prettier": "^1.13.2",
 		"@types/sanitize-filename": "^1.1.28",
 		"express": "^4.16.1",
+		"front-matter": "^4.0.2",
 		"glob": "^7.1.2",
 		"lodash.upperfirst": "^4.3.1",
 		"morgan": "^1.9.1",

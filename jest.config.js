@@ -3,6 +3,10 @@
 
 const os = require('os')
 const cpuCount = os.cpus().length
+const { defaults: tsjPreset } = require('ts-jest/presets')
+const { pathsToModuleNameMapper } = require('ts-jest/utils')
+const { compilerOptions } = require('./tsconfig')
+
 
 module.exports = {
 	maxConcurrency: 10,
@@ -81,7 +85,7 @@ module.exports = {
 	// ],
 
 	// A map from regular expressions to module names that allow to stub out resources with a single module
-	// moduleNameMapper: {},
+	moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths),
 
 	// An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
 	// modulePathIgnorePatterns: [],
@@ -174,7 +178,9 @@ module.exports = {
 	// timers: "real",
 
 	// A map from regular expressions to paths to transformers
-	// transform: null,
+	transform: {
+		...tsjPreset.transform
+	},
 
 	// An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
 	transformIgnorePatterns: ['/node_modules/'],

@@ -7482,35 +7482,10 @@ conventional-changelog-angular@^5.0.3:
     compare-func "^1.3.1"
     q "^1.5.1"
 
-conventional-changelog-atom@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/conventional-changelog-atom/-/conventional-changelog-atom-2.0.1.tgz#dc88ce650ffa9ceace805cbe70f88bfd0cb2c13a"
-  integrity sha512-9BniJa4gLwL20Sm7HWSNXd0gd9c5qo49gCi8nylLFpqAHhkFTj7NQfROq3f1VpffRtzfTQp4VKU5nxbe2v+eZQ==
-  dependencies:
-    q "^1.5.1"
-
 conventional-changelog-atom@^2.0.7:
   version "2.0.8"
   resolved "https://registry.yarnpkg.com/conventional-changelog-atom/-/conventional-changelog-atom-2.0.8.tgz#a759ec61c22d1c1196925fca88fe3ae89fd7d8de"
   integrity sha512-xo6v46icsFTK3bb7dY/8m2qvc8sZemRgdqLb/bjpBsH2UyOS8rKNTgcb5025Hri6IpANPApbXMg15QLb1LJpBw==
-  dependencies:
-    q "^1.5.1"
-
-conventional-changelog-cli@^2.0.23:
-  version "2.0.23"
-  resolved "https://registry.yarnpkg.com/conventional-changelog-cli/-/conventional-changelog-cli-2.0.23.tgz#3f6b2bb3e1e6a6f520f7fa514fe8fba2d92faab0"
-  integrity sha512-a/jDZHEUpSHQMAqeDrmrFhz9CKHBKhBGpJyc38BCfNjFA1RKchpq/Qqbo1BZwRLWrW/PX7IGsUicTyhniqUH9g==
-  dependencies:
-    add-stream "^1.0.0"
-    conventional-changelog "^3.1.10"
-    lodash "^4.14.14"
-    meow "^4.0.0"
-    tempfile "^1.1.1"
-
-conventional-changelog-codemirror@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/conventional-changelog-codemirror/-/conventional-changelog-codemirror-2.0.1.tgz#acc046bc0971460939a0cc2d390e5eafc5eb30da"
-  integrity sha512-23kT5IZWa+oNoUaDUzVXMYn60MCdOygTA2I+UjnOMiYVhZgmVwNd6ri/yDlmQGXHqbKhNR5NoXdBzSOSGxsgIQ==
   dependencies:
     q "^1.5.1"
 
@@ -7533,14 +7508,6 @@ conventional-changelog-conventionalcommits@4.3.0:
   dependencies:
     compare-func "^1.3.1"
     lodash "^4.17.15"
-    q "^1.5.1"
-
-conventional-changelog-conventionalcommits@^4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/conventional-changelog-conventionalcommits/-/conventional-changelog-conventionalcommits-4.1.0.tgz#eb7d47a9c5f1a6f9846a649482294e4ac50d7683"
-  integrity sha512-J3xolGrH8PTxpCqueHOuZtv3Cp73SQOWiBQzlsaugZAZ+hZgcJBonmC+1bQbfGs2neC2S18p2L1Gx+nTEglJTQ==
-  dependencies:
-    compare-func "^1.3.1"
     q "^1.5.1"
 
 conventional-changelog-conventionalcommits@^4.3.0:
@@ -7611,13 +7578,6 @@ conventional-changelog-core@^4.1.7:
     shelljs "^0.8.3"
     through2 "^4.0.0"
 
-conventional-changelog-ember@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/conventional-changelog-ember/-/conventional-changelog-ember-2.0.2.tgz#284ffdea8c83ea8c210b65c5b4eb3e5cc0f4f51a"
-  integrity sha512-qtZbA3XefO/n6DDmkYywDYi6wDKNNc98MMl2F9PKSaheJ25Trpi3336W8fDlBhq0X+EJRuseceAdKLEMmuX2tg==
-  dependencies:
-    q "^1.5.1"
-
 conventional-changelog-ember@^2.0.8:
   version "2.0.9"
   resolved "https://registry.yarnpkg.com/conventional-changelog-ember/-/conventional-changelog-ember-2.0.9.tgz#619b37ec708be9e74a220f4dcf79212ae1c92962"
@@ -7625,31 +7585,10 @@ conventional-changelog-ember@^2.0.8:
   dependencies:
     q "^1.5.1"
 
-conventional-changelog-eslint@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/conventional-changelog-eslint/-/conventional-changelog-eslint-3.0.1.tgz#f65e0e7f63dc09c044244b8785313a602e628002"
-  integrity sha512-yH3+bYrtvgKxSFChUBQnKNh9/U9kN2JElYBm253VpYs5wXhPHVc9ENcuVGWijh24nnOkei7wEJmnmUzgZ4ok+A==
-  dependencies:
-    q "^1.5.1"
-
-conventional-changelog-eslint@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/conventional-changelog-eslint/-/conventional-changelog-eslint-3.0.2.tgz#e9eb088cda6be3e58b2de6a5aac63df0277f3cbe"
-  integrity sha512-Yi7tOnxjZLXlCYBHArbIAm8vZ68QUSygFS7PgumPRiEk+9NPUeucy5Wg9AAyKoBprSV3o6P7Oghh4IZSLtKCvQ==
-  dependencies:
-    q "^1.5.1"
-
 conventional-changelog-eslint@^3.0.8:
   version "3.0.9"
   resolved "https://registry.yarnpkg.com/conventional-changelog-eslint/-/conventional-changelog-eslint-3.0.9.tgz#689bd0a470e02f7baafe21a495880deea18b7cdb"
   integrity sha512-6NpUCMgU8qmWmyAMSZO5NrRd7rTgErjrm4VASam2u5jrZS0n38V7Y9CzTtLT2qwz5xEChDR4BduoWIr8TfwvXA==
-  dependencies:
-    q "^1.5.1"
-
-conventional-changelog-express@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/conventional-changelog-express/-/conventional-changelog-express-2.0.1.tgz#fea2231d99a5381b4e6badb0c1c40a41fcacb755"
-  integrity sha512-G6uCuCaQhLxdb4eEfAIHpcfcJ2+ao3hJkbLrw/jSK/eROeNfnxCJasaWdDAfFkxsbpzvQT4W01iSynU3OoPLIw==
   dependencies:
     q "^1.5.1"
 
@@ -7667,21 +7606,6 @@ conventional-changelog-jquery@^3.0.10:
   dependencies:
     q "^1.5.1"
 
-conventional-changelog-jquery@^3.0.4:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/conventional-changelog-jquery/-/conventional-changelog-jquery-3.0.4.tgz#7eb598467b83db96742178e1e8d68598bffcd7ae"
-  integrity sha512-IVJGI3MseYoY6eybknnTf9WzeQIKZv7aNTm2KQsiFVJH21bfP2q7XVjfoMibdCg95GmgeFlaygMdeoDDa+ZbEQ==
-  dependencies:
-    q "^1.5.1"
-
-conventional-changelog-jshint@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/conventional-changelog-jshint/-/conventional-changelog-jshint-2.0.1.tgz#11c0e8283abf156a4ff78e89be6fdedf9bd72202"
-  integrity sha512-kRFJsCOZzPFm2tzRHULWP4tauGMvccOlXYf3zGeuSW4U0mZhk5NsjnRZ7xFWrTFPlCLV+PNmHMuXp5atdoZmEg==
-  dependencies:
-    compare-func "^1.3.1"
-    q "^1.5.1"
-
 conventional-changelog-jshint@^2.0.7:
   version "2.0.9"
   resolved "https://registry.yarnpkg.com/conventional-changelog-jshint/-/conventional-changelog-jshint-2.0.9.tgz#f2d7f23e6acd4927a238555d92c09b50fe3852ff"
@@ -7694,11 +7618,6 @@ conventional-changelog-preset-loader@^2.1.1:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/conventional-changelog-preset-loader/-/conventional-changelog-preset-loader-2.3.0.tgz#580fa8ab02cef22c24294d25e52d7ccd247a9a6a"
   integrity sha512-/rHb32J2EJnEXeK4NpDgMaAVTFZS3o1ExmjKMtYVgIC4MQn0vkNSbYpdGRotkfGGRWiqk3Ri3FBkiZGbAfIfOQ==
-
-conventional-changelog-preset-loader@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/conventional-changelog-preset-loader/-/conventional-changelog-preset-loader-2.2.0.tgz#571e2b3d7b53d65587bea9eedf6e37faa5db4fcc"
-  integrity sha512-zXB+5vF7D5Y3Cb/rJfSyCCvFphCVmF8mFqOdncX3BmjZwAtGAPfYrBcT225udilCKvBbHgyzgxqz2GWDB5xShQ==
 
 conventional-changelog-preset-loader@^2.3.4:
   version "2.3.4"
@@ -7769,23 +7688,6 @@ conventional-changelog@3.1.21:
     conventional-changelog-jquery "^3.0.10"
     conventional-changelog-jshint "^2.0.7"
     conventional-changelog-preset-loader "^2.3.4"
-
-conventional-changelog@^3.1.10:
-  version "3.1.10"
-  resolved "https://registry.yarnpkg.com/conventional-changelog/-/conventional-changelog-3.1.10.tgz#889a8daa4b7673a1dc1605746f9ae66546b373c1"
-  integrity sha512-6RDj31hL39HUkpqvPjRlOxAwJRwur8O2qu9m6R0FBNDGwCJyy4SYH9NfyshozxYSeklrauKRf3oSbyoEZVzu9Q==
-  dependencies:
-    conventional-changelog-angular "^5.0.3"
-    conventional-changelog-atom "^2.0.1"
-    conventional-changelog-codemirror "^2.0.1"
-    conventional-changelog-conventionalcommits "^4.1.0"
-    conventional-changelog-core "^4.0.0"
-    conventional-changelog-ember "^2.0.2"
-    conventional-changelog-eslint "^3.0.2"
-    conventional-changelog-express "^2.0.1"
-    conventional-changelog-jquery "^3.0.4"
-    conventional-changelog-jshint "^2.0.1"
-    conventional-changelog-preset-loader "^2.2.0"
 
 conventional-commits-filter@^2.0.2:
   version "2.0.2"
@@ -13233,7 +13135,7 @@ lodash@4.17.14:
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.14.tgz#9ce487ae66c96254fe20b599f21b6816028078ba"
   integrity sha512-mmKYbW3GLuJeX+iGP+Y7Gp1AiGHGbXHCOh/jZmrawMmsE7MS4znI3RL2FsjbqOyMayHInjOeykW7PEajUk1/xw==
 
-lodash@^4.14.14, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.12, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.2, lodash@^4.2.1, lodash@^4.3.0:
+lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.12, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.2, lodash@^4.2.1, lodash@^4.3.0:
   version "4.17.15"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
   integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==

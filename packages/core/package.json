@@ -69,6 +69,7 @@
 		"@types/mkdirp": "^0.5.2",
 		"@types/prettier": "^1.13.2",
 		"@types/sanitize-filename": "^1.1.28",
+		"@types/test-listen": "^1.1.0",
 		"express": "^4.16.1",
 		"front-matter": "^4.0.2",
 		"glob": "^7.1.2",
@@ -77,7 +78,8 @@
 		"markdown-table": "^2.0.0",
 		"morgan": "^1.9.1",
 		"nodemon": "^2.0.7",
-		"run-script-os": "^1.0.3"
+		"run-script-os": "^1.0.3",
+		"test-listen": "^1.1.0"
 	},
 	"resolutions": {
 		"@types/node": "12.7.4"

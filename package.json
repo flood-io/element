@@ -52,11 +52,6 @@
 	"nohoist": [
 		"packages/docs/**"
 	],
-	"standard-version": {
-		"changelog": {
-			"header": "Element Changelog"
-		}
-	},
 	"commitlint": {
 		"extends": [
 			"@commitlint/config-conventional"

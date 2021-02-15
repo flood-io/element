@@ -79,7 +79,8 @@
 		"morgan": "^1.9.1",
 		"nodemon": "^2.0.7",
 		"run-script-os": "^1.0.3",
-		"test-listen": "^1.1.0"
+		"test-listen": "^1.1.0",
+		"typedoc": "^0.20.25"
 	},
 	"resolutions": {
 		"@types/node": "12.7.4"

@@ -7,7 +7,7 @@ const packageTmp = join(__dirname, '../../tmp')
 const workRoot = join(packageTmp, 'test-work-root')
 
 export function testWorkRoot(root = workRoot, testData = testDataRoot): WorkRoot {
-	return new WorkRoot(root, { 'test-data': testData })
+	return new WorkRoot(root, { 'test-data': testData, 'test-script': '' })
 }
 
 export default function testRunEnv(

@@ -5,7 +5,6 @@ import { join } from 'path'
 import testRunEnv from '../../tests/support/test-run-env'
 
 let vmFeaturesTestScript: ITestScript
-let noSettingsTestScript: ITestScript
 
 const runEnv = testRunEnv()
 
@@ -22,9 +21,6 @@ describe('EvaluatedScript', () => {
 		jest.setTimeout(30e3)
 		vmFeaturesTestScript = await mustCompileFile(
 			join(__dirname, '../../tests/fixtures/vm-features.ts'),
-		)
-		noSettingsTestScript = await mustCompileFile(
-			join(__dirname, '../../tests/fixtures/test-without-settings.ts'),
 		)
 	})
 

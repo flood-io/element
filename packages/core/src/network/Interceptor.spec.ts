@@ -13,7 +13,7 @@ const testIntercept = async (page: Page, domains: string[]): Promise<Intercepted
 	await intercept.attach(page)
 
 	const errors: any[] = []
-	let response = null
+	let response: Response | null = null
 
 	try {
 		response = await page.goto(url)
@@ -42,7 +42,7 @@ describe('Network/Interceptor', () => {
 	test('accepts requests without any blocking', async () => {
 		const { page } = playwright
 		const [errors, response] = await testIntercept(page, ['*.google.com'])
-		expect(response.ok()).toBeTruthy()
+		expect(response?.ok()).toBeTruthy()
 		expect(errors).toHaveLength(0)
 	})
 

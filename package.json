@@ -28,7 +28,6 @@
 		"@types/test-listen": "^1.1.0",
 		"@typescript-eslint/eslint-plugin": "^2.15.0",
 		"@typescript-eslint/parser": "^2.15.0",
-		"commonmark": "^0.28.1",
 		"conventional-changelog-cli": "^2.0.23",
 		"conventional-changelog-eslint": "^3.0.1",
 		"doctrine": "^2.0.0",

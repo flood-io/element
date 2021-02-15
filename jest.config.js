@@ -85,8 +85,14 @@ module.exports = {
 	// ],
 
 	// A map from regular expressions to module names that allow to stub out resources with a single module
-	moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths),
-
+	moduleNameMapper: {
+		'@flood/element-compiler': '<rootDir>/packages/compiler/src/index.ts',
+		'@flood/element-cli': '<rootDir>/packages/cli/src/index.ts',
+		'@flood/element-core': '<rootDir>/packages/core/src/index.ts',
+		'@flood/element-scheduler': '<rootDir>/packages/element-scheduler/src/index.ts',
+		'@flood/element-report': '<rootDir>/packages/report/index.ts'
+	},
+	
 	// An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
 	// modulePathIgnorePatterns: [],
 

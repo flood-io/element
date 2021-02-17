@@ -202,19 +202,19 @@ Returns the Media (MIME) Type of a file
 
 ### `getUrl()`
 
-Returns the URL of the current page as a string
+Returns the URL of the current page
 
 **Parameters**
 - returns: `string` URL of the current page
 
-### ~~`highlightElement(element)`~~ DEPRECATED since version 2.0
+### `highlightElement(element)`
 
-~~Highlight an element. Useful in concert with takeScreenshot to tweak your locators.~~
+Highlight an element. Useful in concert with takeScreenshot to tweak your locators.
 
-~~**Parameters**~~
+**Parameters**
 
-- ~~element [`ElementHandle`][elementhandle]~~
-- ~~returns: [Promise<`void`>][promise]~~
+- element [`ElementHandle`][elementhandle]
+- returns: [Promise<`void`>][promise]
 
 ### `maybeFindElement(locator)`
 

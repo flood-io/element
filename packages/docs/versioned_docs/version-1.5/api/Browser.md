@@ -158,7 +158,7 @@ Returns the Media (MIME) Type of a file
 
 ### `getUrl()`
 
-Returns the URL of the current page as a string
+Returns the URL of the current page
 
 **Parameters**
 - returns: `string` URL of the current page

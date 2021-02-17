@@ -12,7 +12,7 @@ Released: Feb 2021
 - Support running tests on different browsers including Chromium, Chrome, Firefox, and Webkit with [browser](../guides/test-settings#browser) setting or [`--browser`][cli-run] CLI flag.
 - Support running tests with a custom version of Microsoft Edge, Google Chrome or any Chromium-based browsers by *executablePath* property in [browserLaunchOptions](../guides/test-settings#browserlaunchoptions) setting or [`--executablePath`][cli-run] CLI flag.
 - Support [simulating multiple users on the local machine](../guides/test-settings#stages), with the ability to ramp up or down.
-- Generate an HTML report of the final test results with [`--mu`][cli-run] CLI flag.
+- Generate an HTML report of the final test results with [`--export`][cli-run] CLI flag.
 - New APIs:
   - [`browser.drag()`](../api/browser#dragsourceelement-targetelement)
   - [`browser.getCookies()`](../api/browser#getcookiesfilterby)
@@ -26,8 +26,6 @@ Released: Feb 2021
 - [`--chrome`](../guides/cli#run-a-test-script-locally) CLI flag
 - [`chromeVersion`](../guides/test-settings#chromeversion-deprecated-since-version-20) setting in Test Settings
 - [`suite`](../api/env#suite-deprecated-since-version-20)
-- [`browser.highlightElement()`](../api/browser#highlightelementelement-deprecated-since-version-20)
-- [`ElementHandle.highlight()`](../api/element-handle#highlight-deprecated-since-version-20)
 
 ## 1.5.0
 Released: Jan 2021

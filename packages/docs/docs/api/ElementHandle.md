@@ -126,11 +126,11 @@ getProperty
 - key `string`
 - returns: [`Promise<string | null>`][promise]
 
-### ~~`highlight()`~~ DEPRECATED since version 2.0
+### `highlight()`
 
-~~**Parameters**~~
+**Parameters**
 
-- ~~returns: [`Promise<void>`][promise]~~
+- returns: [`Promise<void>`][promise]
 
 ### `isDisplayed()`
 

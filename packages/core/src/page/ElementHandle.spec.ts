@@ -198,8 +198,7 @@ describe('ElementHandle', () => {
 		}
 	})
 
-	// skip this test due to a bug from playwright https://github.com/microsoft/playwright/issues/4985
-	test.skip('findElements()', async () => {
+	test('findElements()', async () => {
 		const url = await serve('forms_with_input_elements.html')
 		await playwright.page.goto(url)
 		const handle: PElementHandle = await locateEl('form')

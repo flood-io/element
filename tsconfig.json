@@ -38,6 +38,9 @@
       "@flood/element-scheduler": [
         "packages/element-scheduler/src/index.ts"
       ],
+      "@flood/element-report": [
+        "packages/report/index.ts"
+      ],
       "@flood/element-*": [
         "packages/*/src/index.ts"
       ]

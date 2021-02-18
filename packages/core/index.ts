@@ -106,10 +106,6 @@ export { Locatable, NullableLocatable } from './src/runtime/Locatable'
 export { step, TestFn, StepFunction, StepOptions, RecoverWith } from './src/runtime/Step'
 
 export { beforeAll, afterAll, beforeEach, afterEach, HookFn } from './src/runtime/StepLifeCycle'
-/**
- * @docPage DSL
- */
-export { suite } from './src/runtime/types'
 
 export * from './api'
 

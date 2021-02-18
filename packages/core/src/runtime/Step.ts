@@ -98,7 +98,7 @@ export interface StepExtended extends StepBase {
 }
 
 export type StepDefinition = (name: string, fn: TestFn) => Promise<any>
-export type TestFn = (this: void, browser: Browser, data?: unknown) => Promise<any>
+export type TestFn = (this: void, browser: Browser, data?: any) => Promise<any>
 export type ConditionFn = (this: void, browser: Browser) => boolean | Promise<boolean>
 export type StepOptions = {
 	pending?: boolean

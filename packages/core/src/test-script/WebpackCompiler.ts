@@ -36,10 +36,6 @@ export default class WebpackCompiler implements ITestScript {
 			this.sourceMap,
 		)
 
-		// writeFileSync(join(this.scriptRoot, 'bundle.js.map'), this.sourceMap, {
-		// 	encoding: 'utf8',
-		// })
-
 		return this
 	}
 

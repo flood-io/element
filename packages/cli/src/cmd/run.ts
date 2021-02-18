@@ -17,9 +17,7 @@ import YoEnv from 'yeoman-environment'
 import ReportGenerator from '../generator/test-report'
 import sanitize from 'sanitize-filename'
 import { resolve, dirname, basename, extname, join } from 'path'
-import webpack, { Configuration } from 'webpack'
-import CssExtractPlugin from 'mini-css-extract-plugin'
-import findRoot from 'find-root'
+import { compileReport } from '../utils/compile'
 
 interface RunCommonArguments extends Arguments, ElementRunArguments {}
 
@@ -101,6 +99,11 @@ const cmd: CommandModule = {
 		const result = await runSingleUser(configurationArgs)
 
 		if (args.export) {
+			try {
+				await compileReport()
+			} catch (error) {
+				console.log(error)
+			}
 			let root: string
 			if (file) {
 				const fileName = basename(file, extname(file))
@@ -109,62 +112,22 @@ const cmd: CommandModule = {
 				root = join(dirname(configFile), 'reports')
 			}
 
-			const packageRoot = findRoot(__dirname)
-			const reportRoot = `${packageRoot}/templates/report/`
-			const webpackConfig: Configuration = {
-				entry: resolve(__dirname, reportRoot, 'script.ts'),
-				mode: 'production',
-				target: 'web',
-				output: {
-					path: resolve(__dirname, reportRoot),
-					filename: './script.js',
-					globalObject: 'this',
-					libraryTarget: 'umd',
-				},
-				resolve: {
-					extensions: ['.ts', '.scss'],
-				},
-				module: {
-					rules: [
-						{
-							test: /\.ts$/,
-							loader: require.resolve('ts-loader'),
-							options: {
-								configFile: resolve(__dirname, packageRoot, 'report-tsconfig.json'),
-								onlyCompileBundledFiles: true,
-							},
-						},
-						{
-							test: /\.scss$/i,
-							use: [CssExtractPlugin.loader, 'css-loader', 'sass-loader'],
-						},
-					],
-				},
-				plugins: [new CssExtractPlugin({ filename: 'styles.css' })],
-			}
+			const dateString = sanitize(new Date().toISOString())
+			const reportPath = resolve(root, dateString)
+			const env = YoEnv.createEnv()
 
-			webpack(webpackConfig).run(error => {
-				if (error) {
-					console.log(error)
-					return
-				}
-				const dateString = sanitize(new Date().toISOString())
-				const reportPath = resolve(root, dateString)
-				const env = YoEnv.createEnv()
-
-				env.registerStub(ReportGenerator as any, 'report-generator')
-				env.run(
-					['report-generator'],
-					{
-						data: JSON.stringify(result, null, '\t'),
-						dir: reportPath,
-						force: true,
-					},
-					() => {
-						console.log(`Your report has been saved in ${reportPath}`)
-					},
-				)
-			})
+			env.registerStub(ReportGenerator as any, 'report-generator')
+			env.run(
+				['report-generator'],
+				{
+					data: JSON.stringify(result, null, '\t'),
+					dir: reportPath,
+					force: true,
+				},
+				() => {
+					console.log(`Your report has been saved in ${reportPath}`)
+				},
+			)
 		}
 	},
 	builder(yargs: Argv): Argv {

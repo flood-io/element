@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "target": "ES2018",
+    "target": "es2015",
     "moduleResolution": "node",
     "removeComments": true,
     "lib": [
@@ -21,15 +21,9 @@
     "emitDecoratorMetadata": true,
     "declaration": true,
     "allowJs": false,
-    "checkJs": false,
-    "baseUrl": "./",
-    "paths": {
-      "@flood/element": [
-        "../../packages/core/index.ts"
-      ]
-    }
+    "checkJs": false
   },
   "files": [
-    "condition.ts"
+    "./test.ts"
   ]
 }

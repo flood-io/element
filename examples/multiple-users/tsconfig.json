@@ -30,6 +30,6 @@
     }
   },
   "files": [
-    "condition.ts"
+    "multiple-users.ts"
   ]
 }

@@ -557,11 +557,7 @@ export class Browser<T> implements BrowserInterface {
 		} else {
 			this.client.page = page
 		}
-		/**
-		 * NOTES
-		 * playwright does not have method bringtoFront()
-		 */
-		// await this.client.page.bringToFront()
+		await this.client.page.bringToFront()
 	}
 
 	public async waitForNewPage(): Promise<Page> {

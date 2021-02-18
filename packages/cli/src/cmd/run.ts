@@ -19,6 +19,7 @@ import sanitize from 'sanitize-filename'
 import { resolve, dirname, basename, extname, join } from 'path'
 import webpack, { Configuration } from 'webpack'
 import CssExtractPlugin from 'mini-css-extract-plugin'
+import findRoot from 'find-root'
 
 interface RunCommonArguments extends Arguments, ElementRunArguments {}
 
@@ -108,7 +109,8 @@ const cmd: CommandModule = {
 				root = join(dirname(configFile), 'reports')
 			}
 
-			const reportRoot = '../../templates/report/'
+			const packageRoot = findRoot(__dirname)
+			const reportRoot = `${packageRoot}/templates/report/`
 			const webpackConfig: Configuration = {
 				entry: resolve(__dirname, reportRoot, 'script.ts'),
 				mode: 'production',
@@ -128,11 +130,8 @@ const cmd: CommandModule = {
 							test: /\.ts$/,
 							loader: require.resolve('ts-loader'),
 							options: {
+								configFile: resolve(__dirname, packageRoot, 'report-tsconfig.json'),
 								onlyCompileBundledFiles: true,
-								compilerOptions: {
-									module: 'commonjs',
-									target: 'es5',
-								},
 							},
 						},
 						{

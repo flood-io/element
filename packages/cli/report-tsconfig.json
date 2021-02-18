@@ -1,0 +1,32 @@
+{
+	"compilerOptions": {
+		"module": "CommonJS",
+		"target": "ES5",
+		"moduleResolution": "Node",
+		"lib": ["ESNext", "DOM"],
+		"removeComments": true,
+		"pretty": true,
+		"strictNullChecks": true,
+		"forceConsistentCasingInFileNames": true,
+		"allowUnreachableCode": false,
+		"alwaysStrict": true,
+		"noUnusedLocals": true,
+		"noImplicitAny": false,
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"experimentalDecorators": true,
+		"noEmitOnError": true,
+		"emitDecoratorMetadata": true,
+		"composite": true,
+		"outDir": "./dist"
+	},
+	"include": ["**/*.ts"],
+	"exclude": [
+		"**/dist",
+		"*.spec.ts",
+		"*.test.ts",
+		"**/__tests__/**",
+		"**/node_modules",
+		"node_modules"
+	]
+}

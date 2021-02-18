@@ -12,6 +12,7 @@ Released: Jan 2021
 - New APIs:
   - [`browser.scrollBy()`](../api/browser#scrollbyx-y-options)
   - [`browser.scrollTo()`](../api/browser#scrolltoposition-options)
+  - [`browser.getUrl()`](../api/browser#geturl)
 
 ## 1.3.6
 Released: 24 Sep 2020

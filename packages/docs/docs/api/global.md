@@ -46,7 +46,7 @@ step("Step 1", { waitTimeout: 300 }, async (browser: Browser) => {
 The `StepFunction` type represents a function to be called as a Test step.
 
 - `browser` [Browser][] the browser
-- `data` &lt;`T`> (Optional) a row of test data of type &lt;`T`>. Only available when the test is set up using [suite][].
+- `data` &lt;`T`> (Optional) a row of test data of type &lt;`T`>.
 
 **Example:**
 
@@ -98,9 +98,9 @@ export default () => {
 - fn [`StepFunction`][stepfunction]
 - returns: `void`
 
-### `suite`
+### ~~`suite`~~ DEPRECATED since version 2.0
 
-Defines a test suite of steps to run.
+~~Defines a test suite of steps to run.~~
 
 **Example:**
 
@@ -121,6 +121,6 @@ export default suite.withData((testData, step) => {
 
 [floodprocessenv]: #floodprocessenv
 [browser]: Browser
-[suite]: #suite
+[suite]: #suite-deprecated-since-version-20
 [stepfunction]: #stepfunction
 [stepoptions]: #stepoptions

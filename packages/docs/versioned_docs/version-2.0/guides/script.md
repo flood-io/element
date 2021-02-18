@@ -15,7 +15,7 @@ You first need to import the step creator from the Element package:
 import { step } from '@flood/element'
 ```
 
-Each test must export a defualt suite, which is what Element will use to detect the steps to run:
+Each test must export a default suite, which is what Element will use to detect the steps to run:
 
 ```ts title="my-test.perf.ts"
 import { step } from "@flood/element";

@@ -3,6 +3,30 @@ id: changelog
 title: Changelog
 ---
 
+## 2.0.0
+Released: Feb 2021
+
+### New features
+- Renovate the CLI to be more professional and user-friendly, for a better developer experience.
+- Replace Puppeteer core with Microsoft's Playwright.
+- Support running tests on different browsers including Chromium, Chrome, Firefox, and Webkit with [browser](../guides/test-settings#browser) setting or [`--browser`][cli-run] CLI flag.
+- Support running tests with a custom version of Microsoft Edge, Google Chrome or any Chromium-based browsers by *executablePath* property in [browserLaunchOptions](../guides/test-settings#browserlaunchoptions) setting or [`--executablePath`][cli-run] CLI flag.
+- Support [simulating multiple users on the local machine](../guides/test-settings#stages), with the ability to ramp up or down.
+- Generate an HTML report of the final test results with [`--export`][cli-run] CLI flag.
+- New APIs:
+  - [`browser.drag()`](../api/browser#dragsourceelement-targetelement)
+  - [`browser.getCookies()`](../api/browser#getcookiesfilterby)
+  - [`ElementHandle.drag()`](../api/element-handle#dragtargetelement)
+
+### Enhancements
+- Add the ability to show screenshot on the terminal output *(only for iTerms2 on MacOS)* with `--show-screenshot` option [when running test scripts locally](../guides/cli#run-a-test-script-locally).
+- Re-organize priorities order to get test setting values [when running test scripts](../guides/cli#run-a-test-script-locally).
+
+### Deprecated
+- [`--chrome`](../guides/cli#run-a-test-script-locally) CLI flag
+- [`chromeVersion`](../guides/test-settings#chromeversion-deprecated-since-version-20) setting in Test Settings
+- [`suite`](../api/env#suite-deprecated-since-version-20)
+
 ## 1.5.0
 Released: Jan 2021
 
@@ -14,6 +38,7 @@ Released: Jan 2021
   - [`browser.scrollBy()`](../api/browser#scrollbyx-y-options)
   - [`browser.scrollTo()`](../api/browser#scrolltoposition-options)
   - [`browser.getMimeType()`](../api/browser#getmimetypefilepath)
+  - [`browser.getUrl()`](../api/browser#geturl)
 
 ## 1.3.6
 Released: 24 Sep 2020
@@ -75,3 +100,4 @@ Released: Aug 2020
 - Setting `screenshotOnFailure():true` does not create a screenshot on failure (GitHub issue [#87](https://github.com/flood-io/element/issues/87))
 - Getting error `responded with status code 401. Element expected a status code 200-299 or 300-399` (GitHub issue [#146](https://github.com/flood-io/element/issues/146))
 
+[cli-run]: ../guides/cli#run-a-test-script-locally

@@ -104,17 +104,11 @@ export default class WebpackCompiler implements ITestScript {
 		return new TestScriptError(error.message, stack, callSite, unmappedStack, error)
 	}
 
-	// maybeLiftError?(error: Error): Error {}
-
 	// filterAndUnMapStack?(stack: string | Error | undefined): string[] {}
 
 	public get vmScript(): VMScript {
 		if (!this.vmScriptCache) {
-			this.vmScriptCache = new VMScript(
-				// wrapCodeInModuleWrapper(this.source),
-				this.source,
-				this.sandboxesFilename,
-			)
+			this.vmScriptCache = new VMScript(this.source, this.sandboxesFilename)
 		}
 
 		return this.vmScriptCache

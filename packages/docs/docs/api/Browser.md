@@ -63,6 +63,9 @@ Clear browser cache.
 
 - returns: [Promise<`any`>][promise]
 
+**Note:**
+This is only applicable for chromium-based browsers. Firefox and Webkit are not supported.
+
 ### `clearBrowserCookies()`
 
 Clear browser cookies.

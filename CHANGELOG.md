@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.39](https://github.com/flood-io/element/compare/v2.0.0-canary.38...v2.0.0-canary.39) (2021-02-19)
+
+
+### Bug Fixes
+
+* bring page.bringToFront() back because Playwright has supported ([3fb1741](https://github.com/flood-io/element/commit/3fb174184c5e0c4d57d211cbe1487e2d202a8395))
+* fix paths of @flood/element-report ([305e829](https://github.com/flood-io/element/commit/305e8299333e20cfc1126d07efea9d8c174214a7))
+* remove redundant code base on suggest of reviewer ([7f6aad1](https://github.com/flood-io/element/commit/7f6aad1f28d3e8671a5ce1a6704194ffcde0e54e))
+* remove redundant comment ([5261242](https://github.com/flood-io/element/commit/5261242805ec602a30d5538de1460d55c03a0a08))
+* remove skip because Playwright's bug has been fixed ([9816ee5](https://github.com/flood-io/element/commit/9816ee5679950dea3d182a1076819b5476f7b691))
+
+
+
+
+
 # [2.0.0-canary.38](https://github.com/flood-io/element/compare/v2.0.0-canary.37...v2.0.0-canary.38) (2021-02-17)
 
 **Note:** Version bump only for package flood-element

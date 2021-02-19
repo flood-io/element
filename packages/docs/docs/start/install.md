@@ -45,17 +45,12 @@ element --version
   </TabItem>
   <TabItem value="npm">
 
-<<<<<<< HEAD
-```bash title="yarn"
-yarn global add element-cli
-=======
 ```bash title="npm"
 # Install
 npm -g install element-cli
 
 # Verify installation
 element --version
->>>>>>> canary
 ```
 
   </TabItem>
@@ -118,16 +113,11 @@ element --version
   <TabItem value="yarn">
 
 ```bash title="yarn"
-<<<<<<< HEAD
-yarn global add element-cli
-=======
 # Install
 yarn global add element-cli@beta
 
 # Verify installation
 element --version
->>>>>>> canary
-```
 
   </TabItem>
   <TabItem value="npm">
@@ -158,15 +148,11 @@ If you want to install a specific version of Element to use in a local project, 
   <TabItem value="yarn">
 
 ```bash title="yarn"
-<<<<<<< HEAD
-yarn global add element-cli
-=======
 # Install Element version 1.3.8
 yarn add element-cli@1.5.1
 
 # Verify installation
 element --version
->>>>>>> canary
 ```
 
   </TabItem>

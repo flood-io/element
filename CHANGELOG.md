@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.0-canary.41](https://github.com/flood-io/element/compare/v2.0.0-canary.40...v2.0.0-canary.41) (2021-02-19)
+
+**Note:** Version bump only for package flood-element
+
 ## [2.0.0-canary.40](https://github.com/flood-io/element/compare/v2.0.0-canary.39...v2.0.0-canary.40) (2021-02-19)
 
 **Note:** Version bump only for package flood-element
@@ -27,7 +31,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 -   cannot create html report ([4ad1465](https://github.com/flood-io/element/commit/4ad1465edbeb87b179941249b4ed0a1eb659d92e))
 
-# [2.0.0-canary.36](https://github.com/flood-io/element/compare/v2.0.0-canary.35...v2.0.0-canary.36) (2021-02-05)
+## [2.0.0-canary.36](https://github.com/flood-io/element/compare/v2.0.0-canary.35...v2.0.0-canary.36) (2021-02-05)
 
 **Note:** Version bump only for package flood-element
 

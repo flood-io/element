@@ -204,7 +204,7 @@ export function normalizeElementOptions(
 
 	const reporter = verboseBool ? new VerboseReporter(spinnies) : new BaseReporter(spinnies)
 
-	const opts: ElementOptions = {
+	let opts: ElementOptions = {
 		testScript: file,
 		strictCompilation: args.strict ?? false,
 		reporter: reporter,
@@ -221,7 +221,7 @@ export function normalizeElementOptions(
 		export: args.export,
 		executablePath: args.executablePath ?? '',
 		downloadsPath: args.downloadsPath ?? '',
-		showScreenshot: args.showScreenshot,
+		showScreenshot: args.showScreenshot ?? false,
 	}
 
 	opts.testSettings = { ...testSettings }
@@ -246,13 +246,7 @@ export function normalizeElementOptions(
 		const { loopCount, duration } = runArgs
 		if (loopCount !== undefined) opts.testSettingOverrides.loopCount = loopCount
 		if (duration !== undefined) opts.testSettingOverrides.duration = duration
-		opts.headless = runArgs.headless ?? opts.headless
-		opts.devtools = runArgs.devtools ?? opts.devtools
-		opts.sandbox = runArgs.sandbox ?? opts.sandbox
-		opts.export = runArgs.export ?? opts.export
-		opts.browser = runArgs.browser ?? opts.browser
-		opts.executablePath = runArgs.executablePath ?? opts.executablePath
-		opts.downloadsPath = runArgs.downloadsPath ?? opts.downloadsPath
+		opts = { ...opts, ...runArgs }
 	}
 
 	opts.testSettingOverrides = setupDelayOverrides(args, opts.testSettingOverrides)

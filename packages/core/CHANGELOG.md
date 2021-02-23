@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.0-canary.42](https://github.com/flood-io/element/compare/v2.0.0-canary.41...v2.0.0-canary.42) (2021-02-23)
+
+### Bug Fixes
+
+-   can not show term-img when folder has the config file ([6874a73](https://github.com/flood-io/element/commit/6874a734253d7caf2cfa84ddf870eb9d28ebee0e))
+
 ## [2.0.0-canary.41](https://github.com/flood-io/element/compare/v2.0.0-canary.40...v2.0.0-canary.41) (2021-02-19)
 
 **Note:** Version bump only for package @flood/element-core

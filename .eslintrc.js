@@ -17,4 +17,9 @@ module.exports = {
 		'@typescript-eslint/explicit-function-return-type': 'off',
 		'import/no-cycle': 'warn',
 	},
+	'import/resolver': {
+		node: {
+			paths: ['.'],
+		},
+	},
 }

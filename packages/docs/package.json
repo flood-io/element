@@ -17,6 +17,14 @@
 		"react": "^17.0.1",
 		"react-dom": "^17.0.1"
 	},
+	"devDependencies": {
+		"typescript": "^4.2.2",
+		"@docusaurus/module-type-aliases": "^2.0.0-alpha.70",
+		"@types/react": "^17.0.2",
+		"@types/react-router-dom": "^5.1.7",
+		"@types/react-helmet": "^6.1.0",
+		"@tsconfig/docusaurus": "^1.0.2"
+	},
 	"browserslist": {
 		"production": [
 			">0.2%",

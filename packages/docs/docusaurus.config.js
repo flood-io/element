@@ -45,6 +45,12 @@ module.exports = {
 						})),
 					],
 				},
+				{
+					label: 'Recorder',
+					to: 'recorder/docs/',
+					position: 'left',
+					activeBaseRegex: 'recorder',
+				},
 				{ href: 'https://www.flood.io/blog', label: 'Blog', position: 'left' },
 				{
 					href: 'https://github.com/flood-io/element',
@@ -129,6 +135,19 @@ module.exports = {
 			copyright: `Element is sponsored by Tricentis and maintained by the <a href="https://flood.io/" target="_blank">Flood</a> load testing team.<br />Copyright © ${new Date().getFullYear()} <a href="https://tricentis.com/" target="_blank">Tricentis Corp</a>. All Rights Reserved. Licensed under the Apache-2 licence.`,
 		},
 	},
+	plugins: [
+		[
+			'@docusaurus/plugin-content-docs',
+			{
+				id: 'recorder',
+				path: 'recorder',
+				routeBasePath: 'recorder/docs',
+				sidebarPath: require.resolve('./sidebarsRecorder.js'),
+				include: ['**/*.md', '**/*.mdx'],
+				disableVersioning: false,
+			},
+		],
+	],
 	presets: [
 		[
 			'@docusaurus/preset-classic',

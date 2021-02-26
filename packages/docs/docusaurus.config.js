@@ -140,7 +140,7 @@ module.exports = {
 			'@docusaurus/plugin-content-docs',
 			{
 				id: 'recorder',
-				path: 'recorder',
+				path: 'recorderDocs',
 				routeBasePath: 'recorder/docs',
 				sidebarPath: require.resolve('./sidebarsRecorder.js'),
 				include: ['**/*.md', '**/*.mdx'],

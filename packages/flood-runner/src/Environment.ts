@@ -2,7 +2,7 @@ import { newMetricIdentifierFromObject } from './MetricIdentifier'
 import { GridConfig } from './GridConfig'
 import { WorkRoot, FloodProcessEnv } from '@flood/element-api'
 import findRoot from 'find-root'
-import { join, extname, basename } from 'path'
+import { join } from 'path'
 import { ensureDirSync } from 'fs-extra'
 import { devDefaults } from './defaults'
 import { ProcessEnv } from './types'
@@ -60,7 +60,6 @@ export function initFromEnvironment(
 
 	const workRoot = new WorkRoot(root, {
 		'test-data': testDataRoot,
-		'test-script': basename(testScript, extname(testScript)),
 	})
 
 	const metricIdentifier = newMetricIdentifierFromObject({

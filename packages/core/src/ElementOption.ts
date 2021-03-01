@@ -153,10 +153,9 @@ function setupDelayOverrides(
 	return testSettingOverrides
 }
 
-function initRunEnv(root: string, testDataRoot: string, testScript: string) {
+function initRunEnv(root: string, testDataRoot: string) {
 	const workRoot = new WorkRoot(root, {
 		'test-data': testDataRoot,
-		'test-script': basename(testScript, extname(testScript)),
 	})
 
 	return {
@@ -212,7 +211,7 @@ export function normalizeElementOptions(
 		headless: args.headless ?? true,
 		devtools: args.devtools ?? false,
 		sandbox: args.sandbox ?? true,
-		runEnv: initRunEnv(workRootPath, testDataPath, file),
+		runEnv: initRunEnv(workRootPath, testDataPath),
 		testSettings: {},
 		testSettingOverrides: {},
 		persistentRunner: false,

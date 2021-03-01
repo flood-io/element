@@ -39,6 +39,7 @@ import { Keyboard } from '../page/Keyboard'
 import { getFrames } from '../utils/frames'
 import { DeviceDescriptor } from '../page/Device'
 import chalk from 'chalk'
+import KSUID from 'ksuid'
 import { Point } from '../page/Point'
 import { isAnElementHandle, isLocator, isPoint } from '../utils/CheckInstance'
 
@@ -543,7 +544,7 @@ export class Browser<T> implements BrowserInterface {
 	}
 
 	public async saveScreenshot(fn: (path: string) => Promise<boolean>): Promise<void> {
-		const fileId = `${this.workRoot.getSubRoot('test-script')}_${this.screenshots.length + 1}`
+		const fileId = KSUID.randomSync().string
 		const path = this.workRoot.join('screenshots', `${fileId}.jpg`)
 
 		if (await fn(path)) {

@@ -43,7 +43,7 @@ export interface RuntimeEnvironment {
 	workRoot: WorkRoot
 }
 
-export type SpecialSubRoot = 'test-data' | 'test-script'
+export type SpecialSubRoot = 'test-data'
 export type SubRoot = 'objects' | 'screenshots' | 'files' | 'results' | 'network' | 'traces'
 export type WorkRootKind = SubRoot | SpecialSubRoot
 export interface WorkRoot {

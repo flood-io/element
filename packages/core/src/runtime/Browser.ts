@@ -382,15 +382,9 @@ export class Browser<T> implements BrowserInterface {
 	@addCallbacks()
 	public async clearBrowserCache(): Promise<any> {
 		if (this.browser === 'chromium') {
-			const context = (await this.page.context()) as ChromiumBrowserContext
+			const context = this.page.context() as ChromiumBrowserContext
 			const client = await context.newCDPSession(this.page)
 			await client.send('Network.clearBrowserCache')
-		} else {
-			/**
-			 * NOTES
-			 * need to implement clear cache for firefox and safari
-			 */
-			console.log('Not Implemented')
 		}
 	}
 

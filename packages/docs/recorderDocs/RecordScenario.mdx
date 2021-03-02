@@ -1,0 +1,152 @@
+---
+id: record
+title: Record your first test
+---
+import useBaseUrl from '@docusaurus/useBaseUrl'
+
+## Start recording
+
+Once launched, click `REC` button to start recording. The first action - `NAVIGATE` to the page - is created to get you started. Then just interact with the page and each of your actions will be recorded in the Recorder.
+
+<img src={useBaseUrl('docs_img/rec-some-actions.png')} alt="record-some-actions" width="600"/>
+
+To pause or resume recording, click `REC` button again.
+
+## Organize your test
+
+A test scenario may be divided into many `steps`. Each step contains a set of `actions`. An action is basically an interaction you made on the page.
+
+When you start recording, *Step 1* is automatically created and contains all of your interactions with the page. You can add more steps while recording so that your interactions are grouped into steps.
+
+To add a new step, click `Add` > `Step`, then continue interact with the page. The actions recorded from here will belong to this step.
+
+<img src={useBaseUrl('docs_img/rec-add-step.png')} alt="add step" width="250"/>
+
+To rename or delete a step, hover on a step and click `Rename step` or `Delete step`.
+
+## Modify your test
+
+### Edit an action
+
+During recording, if you'd like to make adjustment on a recorded action, hover on the action, then click `...` icon > `Edit action`. Edit action screen will appear.
+
+<img src={useBaseUrl('docs_img/rec-edit-action.png')} alt="edit action" width="250"/>
+
+Depending on the action you're editing, you will be presented with different fields to edit, including:
+
+* **Action type**
+
+  * Allows you to switch between applicable action types (eg: change from `CLICK` to `DBCLICK`).
+
+  * Applicable for all actions, only editable in some actions. [See more][actions].
+
+  <img src={useBaseUrl('docs_img/rec-edit-action-type.png')} alt="edit action type" width="250"/>
+
+* **Action name**
+
+  * Auto-generated based on the *Action type* and its *Target element* and will be automatically re-generated if these fields get updated.
+
+  * You can manually update the field, but it won't be automatically re-generated in the future.
+
+  * Applicable and editable for all actions.
+
+  <img src={useBaseUrl('docs_img/rec-edit-action-name.png')} alt="edit action name" width="250"/>
+
+* **Target element**
+
+  * Allows you to change the target element of the action.
+    * To change the target element, click `Change`, then hover on the page. There will be a purple box indicating the element you're about to choose. Click on the element to select.
+    * You can also change the target element by manually enter the new selector to the field.
+
+  * Supports switching between `CSS` and `XPATH` selector. By default, elements are selected using `CSS` selector. You can change this in the [Recorder settings][recorder-settings].
+
+  * Only applicable for some actions, editable. [See more][actions].
+
+  <img src={useBaseUrl('docs_img/rec-edit-target-element.png')} alt="edit target element" width="600"/>
+
+* **Action-specific value fields**
+
+  * An action may have or may not have value fields. Each of the actions with values has a different set of value fields applicable for that particular action. For example, CLICK action doesn't have a value, TYPE action has 'Value to type', while RESIZE action has 'Viewport width' and 'Viewport height'. [See more][actions].
+
+  * You can use [variables][variables] to make up a value. Just type a double curly brackets `{{` anywhere in the field and select a variable from the suggestion list.
+
+  <img src={useBaseUrl('docs_img/rec-edit-value.png')} alt="edit value" width="250"/>
+
+Note that while you're editing an action, the Recorder will not record your actions on the page. Once done editing, click `Done` to save the changes or `Cancel` to discard, then continue recording.
+
+For `NAVIGATE` action, you can directly edit the URL in the Recording screen.
+
+### Insert actions
+
+To insert some actions before or after a recorded action:
+
+1. Hover on the action, then click `...` icon > `Move cursor before` or `Move cursor after`. The red line (aka. the cursor) will be moved to the corresponding position.
+
+ <img src={useBaseUrl('docs_img/rec-action-context-menu.png')} alt="action context menu" width="250"/>
+
+2. Continue interact with the page to record actions at the current cursor position.
+
+### Duplicate an action
+
+If you'd like to add another action that is quite similar to an action, you may want to duplicate the action and edit from there.
+
+To duplicate an action, hover on the action, then click `...` icon > `Duplicate action`. A duplicate action will be created right after this action.
+
+ <img src={useBaseUrl('docs_img/rec-action-context-menu.png')} alt="action context menu" width="250"/>
+
+### Undo - Redo - Delete actions
+
+* To undo or redo recorded actions by clicking the icons on the top-left of the Recorder.
+
+* To delete an action, hover on the action, then click `x` icon.
+
+* To delete all recorded action, click the icon on the top-right of the Recorder.
+
+<img src={useBaseUrl('docs_img/rec-undo-delete.png')} alt="undo-delete actions" width="250"/>
+
+### Add wait
+
+`Wait` is essentially a pause before executing the next action. By default, there are already implicit waits configured at [`waitUntil` setting][test-settings]. You can also add additional explicit waits to suit your needs.
+
+There are two ways to add a wait:
+
+1. Hover on an action, then click `...` icon > `Add wait` to add a wait after this action.
+
+ <img src={useBaseUrl('docs_img/rec-action-context-menu.png')} alt="action context menu" width="250"/>
+
+or
+
+2. Click `Add` > `Wait action` to add a wait at the cursor position.
+
+ <img src={useBaseUrl('docs_img/rec-add-menu.png')} alt="add menu" width="250"/>
+
+A `WAIT` action will be added and you can edit the duration to wait.
+
+<img src={useBaseUrl('docs_img/rec-add-wait.png')} alt="add wait" width="250"/>
+
+### Add take screenshot
+
+Capture the screenshot of the page after an action is executed might be helpful in some situations, especially, after an [assertion][assert].
+
+There are two ways to add a take-screenshot action:
+
+1. Hover on an action, then click `...` icon > `Take screenshot` to add a take-screenshot action after this action.
+
+ <img src={useBaseUrl('docs_img/rec-action-context-menu.png')} alt="action context menu" width="250"/>
+
+or
+
+2. Click `Add` > `Screenshot action` to add a take-screenshot action at the cursor position.
+
+ <img src={useBaseUrl('docs_img/rec-add-menu.png')} alt="add menu" width="250"/>
+
+---
+
+Now you know how to record and modify a basic test scenario. To learn how to make more advanced test scenarios, navigate to our guides on the left column.
+
+
+[variables]: ./variables
+[actions]: ./actions
+[recorder-settings]: ./settings#recorder-settings
+[test-settings]: ./settings#test-settings
+[assert]: ./assert

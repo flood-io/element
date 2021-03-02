@@ -1,5 +1,11 @@
 module.exports = {
-	recorder: {
-		'Getting Started': ['overview'],
-	},
+	recorder: [
+		'getStarted',
+		'record',
+		'assert',
+		'variables',
+		'export',
+		'settings',
+		'actions'
+	],
 }

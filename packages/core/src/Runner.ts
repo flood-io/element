@@ -105,7 +105,6 @@ export class Runner {
 
 	async runTestScript(testScript: EvaluatedScript, client: PlaywrightClient): Promise<void> {
 		if (!this.running) return
-
 		let testToCancel: Test | undefined
 		const reportTableData: number[][] = []
 
@@ -121,14 +120,28 @@ export class Runner {
 			testToCancel = test
 
 			const { settings } = test
+			const { name, description, browser } = settings
 
-			if (settings.name) {
+			if (name) {
 				console.info(`
 *************************************************************
-* Loaded test plan: ${settings.name}
-* ${settings.description}
+* Loaded test plan: ${name}
+* ${description}
 *************************************************************
 				`)
+			}
+
+			if (browser === 'firefox' || browser === 'webkit') {
+				const customConsole = global.console as CustomConsole
+				customConsole.setGroupDepth(2)
+				console.warn(
+					`${chalk.yellow('> WARNING')} Running with ${browser
+						.substring(0, 1)
+						.toUpperCase()
+						.concat(
+							browser.substring(1),
+						)}. The following APIs are not applicable: browser.clearBrowserCache()\n`,
+				)
 			}
 
 			await test.beforeRun()

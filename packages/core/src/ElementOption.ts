@@ -53,7 +53,7 @@ export interface ElementRunArguments {
 	'fail-status-code': number
 	configFile: string
 	verbose?: boolean
-	browser: BrowserType
+	browser?: BrowserType
 	export?: boolean
 	showScreenshot?: boolean
 	notExistingFiles: string[]
@@ -81,7 +81,7 @@ export interface ElementOptions {
 	persistentRunner: boolean
 	testCommander?: TestCommander
 	failStatusCode: number
-	browser: BrowserType
+	browser?: BrowserType
 	export?: boolean
 	executablePath?: string
 	downloadsPath?: string

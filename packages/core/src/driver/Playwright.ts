@@ -82,7 +82,7 @@ export async function launchBrowserServer(
 		...passedOptions,
 	}
 
-	if (!options.sandbox) {
+	if (!options.sandbox && ['chrome', 'chromium'].includes(options.browser)) {
 		options.args.push('--no-sandbox')
 	}
 
@@ -90,7 +90,9 @@ export async function launchBrowserServer(
 		console.dir(options)
 	}
 
-	options.args.push('--auth-server-whitelist="hostname/domain"')
+	if (options.browser !== 'webkit') {
+		options.args.push('--auth-server-whitelist="hostname/domain"')
+	}
 
 	let browserType = options.browser || 'chromium'
 	// can not run multiple users on chrome, need to switch back to chromium
@@ -131,7 +133,8 @@ export async function launch(
 		options.args.push('--auth-server-whitelist="hostname/domain"')
 	}
 
-	if (!options.sandbox) {
+	//just keep this option for chrome/chromium
+	if (!options.sandbox && ['chrome', 'chromium'].includes(options.browser)) {
 		options.args.push('--no-sandbox')
 	}
 

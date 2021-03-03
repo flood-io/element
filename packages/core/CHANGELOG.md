@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-canary.46](https://github.com/flood-io/element/compare/v2.0.0-canary.45...v2.0.0-canary.46) (2021-03-03)
+
+
+### Features
+
+* show warning of inapplicable functionality for firefox and webkit ([d5672d0](https://github.com/flood-io/element/commit/d5672d060d7f17cb7d463cdd3ec0b9d9acc02168))
+
+
+
+
+
 # [2.0.0-canary.45](https://github.com/flood-io/element/compare/v2.0.0-canary.44...v2.0.0-canary.45) (2021-03-03)
 
 **Note:** Version bump only for package @flood/element-core

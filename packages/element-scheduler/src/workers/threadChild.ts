@@ -20,13 +20,11 @@ import {
 } from '@flood/element-core'
 import { MultipleUsersReporter, WorkerReport } from '@flood/element-report'
 import ms from 'ms'
-import { extname, basename } from 'path'
 import { SchedulerSetting } from '../Scheduler'
 
-function environment(root: string, testData: string, testScript: string): RuntimeEnvironment {
+function environment(root: string, testData: string): RuntimeEnvironment {
 	const workRoot = new WorkRoot(root, {
 		'test-data': testData,
-		'test-script': basename(testScript, extname(testScript)),
 	})
 
 	return {
@@ -58,7 +56,7 @@ async function execMethod(method: string, args: Array<any>) {
 			const childSettings: SchedulerSetting = JSON.parse(settings)
 			const reporter = new MultipleUsersReporter()
 			reporter.setWorker(new WorkerReport(workerId, workerName))
-			const env = environment(rootEnv, testData, testScript)
+			const env = environment(rootEnv, testData)
 
 			const testScriptFactory = async (): Promise<EvaluatedScript> => {
 				return new EvaluatedScript(

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0](https://github.com/flood-io/element/compare/v2.0.0-canary.48...v2.0.0) (2021-03-04)
+
+
+### Bug Fixes
+
+* fix codacy ([e1d1c5b](https://github.com/flood-io/element/commit/e1d1c5b36500a772cbe5a7c8c9978e1887a9ec67))
+
+
+
+
+
 ## [2.0.0-canary.48](https://github.com/flood-io/element/compare/v2.0.0-canary.47...v2.0.0-canary.48) (2021-03-04)
 
 **Note:** Version bump only for package @flood/element-report

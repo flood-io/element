@@ -15,7 +15,7 @@ module.exports = {
 	paths: {
 		workRoot: '.',
 		testDataRoot: '.',
-		testPathMatch: ['./*.ts'],
+		testPathMatch: ['./*.perf*.ts'],
 	},
 	flood: {
 		hosted: false,

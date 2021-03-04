@@ -14,7 +14,6 @@ Element Recorder supports different common methods for assertion including:
 
 * **Cookie assertion:** asserts if a cookie value of the page matches the expected value
 
-
 ## Add an assertion
 
 To add an assertion, on Recording screen, click `Add` > `Assertion`.
@@ -26,7 +25,6 @@ The "Add Assertion" screen will appear with three assertion options.
 <img src={useBaseUrl('docs_img/rec-add-assertion.png')} alt="add assertion" width="250"/>
 
 Then select `Element`, `Page URL`, or `Cookie` to add a corresponding assertion. See details in the sections below.
-
 
 ### Element assertion
 
@@ -55,7 +53,7 @@ After selecting to assert `Element`, you will be prompted to select an element o
 
 * **Assertion type**
 
-  Allows you to select how the attribute or property above will be asserted against the expected value. A set of string and number comparison operators help you to form any assertion conditions. You can even use regular expression (`matches regex`) for intricate assertions.
+  Allows you to select how the attribute or property above will be asserted against the expected value. A set of string and number comparison operators help you form any assertion conditions. You can even use regular expression (`matches regex`) for intricate assertions.
 
   <img src={useBaseUrl('docs_img/rec-assertion-type.png')} alt="assertion types" width="250"/>
 
@@ -65,8 +63,7 @@ After selecting to assert `Element`, you will be prompted to select an element o
 
   * You can change the expected value to suit your test.
 
-  * You can use [variables][variables] to make up a value. Just type a double curly brackets `{{` anywhere in the field and select a variable from the suggestion list.
-
+  * You can use [variables][variables] to make up a value.
 
 ### Page URL assertion
 
@@ -96,8 +93,6 @@ After selecting to assert `Page URL`, you will see "PageURL assertion" screen wh
 * **Expected value**
 
   Same as "Expected value" in [Element assertion](#element-assertion).
-
-
 
 ### Cookie assertion
 
@@ -133,7 +128,6 @@ After selecting to assert `Cookie`, you will see "Cookie assertion" screen where
 
   Same as "Expected value" in [Element assertion](#element-assertion).
 
-
 ## Edit an assertion
 
 To edit an assertion, hover on the `ASSERT` action, then click `...` icon > `Edit assertion`.
@@ -143,4 +137,4 @@ To edit an assertion, hover on the `ASSERT` action, then click `...` icon > `Edi
 To delete an assertion, hover on the `ASSERT` action, then click `x` icon.
 
 [recorder-settings]: ./settings#recorder-settings
-[variables]: ./variables
+[variables]: ./variables#use-variables

@@ -4,13 +4,13 @@ title: Work with variables
 ---
 import useBaseUrl from '@docusaurus/useBaseUrl'
 
-Variables are used to store information to be referenced and manipulated in test scripts. You can declare variables, and then use their values in actions or [assertions][assert].
+Variables are used to store information to be referenced and manipulated in test scripts. You can declare variables, and then use their values in [actions][edit-action] and [assertions][assert].
 
 Element Recorder supports two types of variables:
 
 * **Manual variables:** Ordinary variables that you will manually assign values to.
 
-* **Variables from element property:** Variables whose values are extracted from element's properties. This is helpful when you don't want to "hard-code" a value for a variable but rather keep it dynamic by obtaining the value of an element's property every time the page loads.
+* **Variables from element property:** Variables whose values are extracted from element's properties. This is helpful when you don't want to "hard-code" a value for a variable but rather keep it dynamic by obtaining the value from an element's property every time the page loads.
 
 You can also define the scope of the variables created as *global* or *step-scoped*.
 
@@ -18,18 +18,15 @@ You can also define the scope of the variables created as *global* or *step-scop
 
 * **Step-scoped variables:** declared in a [step][step] and can only be used within that step.
 
-
-
 ## Add a variable
 
-To add a variable, on Recording screen, click `Variable`.
+To add a variable, on Recording screen, click `Variables`.
 
 <img src={useBaseUrl('docs_img/rec-variable.png')} alt="variable menu" width="250"/>
 
 "Variables management" will appear. Click `Add variable`, then select `Manually` or `From element property` to add corresponding variable. See details in the sections below.
 
 <img src={useBaseUrl('docs_img/rec-variable-add.png')} alt="add variable" width="250"/>
-
 
 ### Manually
 
@@ -60,7 +57,6 @@ Once you've entered all the details, click `Done`. There will be a variable crea
 If you selected `Step-scoped variable` above, then a `CREATE` action will also be added to the Recording screen at the cursor.
 
 <img src={useBaseUrl('docs_img/rec-variable-added-recording.png')} alt="manual variable added in recording screen" width="250"/>
-
 
 ### From element property
 
@@ -93,7 +89,6 @@ After selecting to add a variable `From element property`, you will be prompted 
   For example, if you'd like to extract only the number part from the string *"Get up to 59% Off New Arrivals"* below for your variable `percentOff`, enter the regex "\d+".
 
   <img src={useBaseUrl('docs_img/rec-variable-regex.png')} alt="regex" width="600"/>
-  
 
 * **Temporary value:**
 
@@ -103,25 +98,65 @@ Once you've entered all the details, click `Done`. There will be a variable crea
 
 <img src={useBaseUrl('docs_img/rec-variable-added-2.png')} alt="manual variable added 2" width="250"/>
 
+A `CREATE` action will also be added to the Recording screen at the cursor.
+
+<img src={useBaseUrl('docs_img/rec-variable-added-recording-2.png')} alt="manual variable added in recording screen" width="250"/>
+
 :::info NOTE
 
   * Variables created from element properties are always step-scoped and will be accessible only within the standing step.
   
-  * Since the value of a variable created from an element property can be different every time the page loads, its value appears as `Dynamic value` instead of a set-in-stone value.
+  * Since values of variables created from element properties can be different every time the page loads, their value appear as `Dynamic value` instead of set-in-stone values.
 
 :::
 
 ## Edit a variable
 
+There are two ways to edit a variable.
 
+1. On Recording screen, hover on the `CREATE` action, then click `...` icon > `Edit variable`.
+
+2. On "Variables management" screen, hover on the variable, then click `...` icon > `Edit variable`.
 
 ## Delete a variable
 
+There are two ways to delete a variable.
 
+1. On Recording screen, hover on the `CREATE` action, then click `x` icon.
+
+2. On "Variables management" screen, hover on the variable, then click `x` icon.
+
+:::info NOTE
+
+You can only delete a variable if it is not in used in any actions or assertions. If you'd like to delete a variable that is in used in some actions, you will need to remove the variable usages from those actions first.
+
+:::
 
 ## Use variables
 
+After creating variables, you can use them as values in [actions][edit-action] and [assertions][assert].
 
+For example, to use variable in `Expected value` of an assertion:
+
+1. Click on the field.
+
+  <img src={useBaseUrl('docs_img/rec-variable-use-1.png')} alt="use variable 1" width="250"/>
+
+2. Type double curly brackets `{{`. The list of declared variables that are applicable for this assertion (scope-wise) will appear.
+
+  <img src={useBaseUrl('docs_img/rec-variable-use-2.png')} alt="use variable 2" width="250"/>
+
+3. Select a variable from the list or continue typing to filter the list further.
+
+  <img src={useBaseUrl('docs_img/rec-variable-use-3.png')} alt="use variable 3" width="250"/>
+
+  In this example, the current value of variable `h2_innerText` is *"Step 2"*. That's why you see *"Temporary value: Step 2"* below the field.
+
+You can also combine string values with one or more variables to form a concatenated value. For example, *"{{username}} has a {{percentOff}}% discount code"*.
+
+<img src={useBaseUrl('docs_img/rec-variable-use-concatenate.png')} alt="use variable concatenate" width="250"/>
 
 [assert]: ./assert
 [step]: ./record#organize-your-test
+[edit-action]: ./record#edit-an-action
+[recorder-settings]: ./settings#recorder-settings

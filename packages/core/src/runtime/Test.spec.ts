@@ -1,15 +1,15 @@
 import { serve } from '../../tests/support/fixture-server'
 import testRunEnv from '../../tests/support/test-run-env'
-import { launchPuppeteer, testPuppeteer } from '../../tests/support/launch-browser'
+import { launchPlaywright, testPlaywright } from '../../tests/support/launch-browser'
 import Test from './Test'
 import { EvaluatedScript } from './EvaluatedScript'
 import { join } from 'path'
-import { EventEmitterReporter } from '../reporter/EventEmitter'
-import { ConcreteTestSettings, normalizeSettings, TestSettings } from './Settings'
+import { EventEmitterReporter } from '@flood/element-report'
+import { ConcreteTestSettings, normalizeSettings } from './Settings'
 import { readFileSync, writeFileSync } from 'fs-extra'
 import { tmpdir } from 'os'
 
-let puppeteer: testPuppeteer
+let playwright: testPlaywright
 let testReporter: EventEmitterReporter = new EventEmitterReporter()
 const runEnv = testRunEnv()
 
@@ -25,8 +25,7 @@ const setupTest = async (scriptName: string) => {
 	writeFileSync(tmpFile, testScriptFile)
 
 	const script = await EvaluatedScript.mustCompileFile(tmpFile, runEnv)
-
-	const test = new Test(puppeteer, script, testReporter, {})
+	const test = new Test(playwright, script, testReporter, {}, {})
 
 	await test.beforeRun()
 	return test
@@ -35,31 +34,31 @@ const setupTest = async (scriptName: string) => {
 describe('Test', () => {
 	jest.setTimeout(30e3)
 	beforeEach(async () => {
-		puppeteer = await launchPuppeteer()
+		playwright = await launchPlaywright()
 		testReporter = new EventEmitterReporter()
 	})
 
 	afterEach(async () => {
-		await puppeteer.close()
+		await playwright.close()
 	})
 
 	test('extracts settings during evaluation', async () => {
 		const test = await setupTest('test-with-export.ts')
-		const defaultSettings: Required<TestSettings> = {
+		const defaultSettings: ConcreteTestSettings = {
 			actionDelay: '500ms',
 			stepDelay: '5s',
 			clearCache: false,
-			device: 'Chrome Desktop Large',
-			chromeVersion: 'puppeteer',
-			ignoreHTTPSErrors: false,
-			userAgent:
-				'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36',
+			device: null,
+			browser: 'chromium',
+			browserLaunchOptions: {},
+			ignoreHTTPSError: false,
+			userAgent: '',
 			clearCookies: true,
 			duration: -1,
-			loopCount: Infinity,
+			loopCount: -1,
 			name: 'Example Test',
 			description: 'This is an example test',
-			screenshotOnFailure: true,
+			screenshotOnFailure: false,
 			waitTimeout: '30s',
 			responseTimeMeasurement: 'step',
 			consoleFilter: [],
@@ -69,8 +68,10 @@ describe('Test', () => {
 			disableCache: false,
 			extraHTTPHeaders: {},
 			launchArgs: [],
-			viewport: null,
+			viewport: { width: 1440, height: 900 },
 			tries: 0,
+			stages: [],
+			showScreenshot: false,
 		}
 		expect(test.settings).toEqual(normalizeSettings(defaultSettings))
 	})

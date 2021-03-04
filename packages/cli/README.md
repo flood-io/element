@@ -6,24 +6,21 @@ Install Element CLI on your own machine to quickly iterate the development of yo
 Once you're satisfied, upload it to [Tricentis Flood](https://flood.io) use it to generate 1000s of users of load in a full-scale load test.
 
 -   [Flood Element CLI](#flood-element-cli)
-
--   [Installation](#installation)
-
--   [Getting started](#getting-started)
-    -   [`element run <file>`](#element-run-file)
-    -   [`element plan <file> [options]`](#element-plan-file-options)
-    -   [`element init [dir] [options]`](#element-init-dir-options)
-    -   [`element generate <file>`](#element-generate-file)
-    -   [`element generate config [file-name]`](#element-generate-config-file-name)
-    -   [`element run`](#element-run)
-    -   [`element run --config-file [path-to-config-file]`](#element-run---config-file-path-to-config-file)
-
--   [Run an Element script on Flood](#run-an-element-script-on-flood)
-    -   [`element flood authenticate <flood-api-token>`](#element-flood-authenticate-flood-api-token)
-    -   [`element flood project ls`](#element-flood-project-ls)
-    -   [`element flood use 'project-name'`](#element-flood-use-project-name)
-    -   [`element flood project`](#element-flood-project)
-    -   [`element flood run <path-to-script> [options]`](#element-flood-run-path-to-script-options)
+    \- [Installation](#installation)
+    \- [Getting started](#getting-started)
+    \- [`element run <file>`](#element-run-file)
+    \- [`element plan <file> [options]`](#element-plan-file-options)
+    \- [`element init [dir] [options]`](#element-init-dir-options)
+    \- [`element generate <file>`](#element-generate-file)
+    \- [`element generate config [file-name]`](#element-generate-config-file-name)
+    \- [`element run`](#element-run)
+    \- [`element run --config-file [path-to-config-file]`](#element-run---config-file-path-to-config-file)
+    \- [Run an Element script on Flood](#run-an-element-script-on-flood)
+    \- [`element flood authenticate <flood-api-token>`](#element-flood-authenticate-flood-api-token)
+    \- [`element flood project ls`](#element-flood-project-ls)
+    \- [`element flood use 'project-name'`](#element-flood-use-project-name)
+    \- [`element flood project`](#element-flood-project)
+    \- [`element flood run <path-to-script> [options]`](#element-flood-run-path-to-script-options)
 
 ## Installation
 
@@ -33,7 +30,7 @@ The easiest way to install on MacOS is via [homebrew](https://brew.sh):
 brew install flood-io/taps/element
 ```
 
-**via npm or yarn**
+### via npm or yarn
 
 If you're installing as an npm package, please first ensure you have the most recent version of node installed.
 
@@ -73,6 +70,14 @@ Note that if your script loads CSV or JSON test data, the file is assumed to be 
 
 `--watch` runs the test script against a single instance of the browser, so combining with `--no-headless` or `--devtools` shows the browser as the script runs, then leaves it open for you to inspect.
 
+#### `--browser`
+
+Specify the browser type used to run the test, using either `'chromium'` (default), `'firefox'` or `'webkit'`
+
+#### `--executable-path`
+
+Path to the installation folder of a custom Chromium-based browser, used to run the test. If set, Element will ignore the browser settings, and use this custom browser instead.
+
 #### `--no-headless` / `--devtools`
 
 While developing your script, it can be handy to watch the script as it works through the actions you've defined.
@@ -103,16 +108,6 @@ Set the number of iterations to run your test for. Since `element run` is usuall
 
 Setting a higher `--loop-count` could be useful for things like testing test data supply or generation.
 
-#### `--chrome <custom-chrome-path>`
-
-Set the version of chrome to use. By default, `element run` uses the version of Chromium bundled with Puppeteer.
-
--   `--chrome` with no arguments will be equivalent to `'puppeteer'` (i.e. use the version of Chromium bundled with Puppeteer). Change it to `'stable'` to use the Chrome version installed on your system.
--   `--chrome /path/to/chrome` will use Chrome at the given path.
-
-Note that when running as a load test on [Tricentis Flood](https://flood.io), the versions of Chrome are recent but fixed to particular versions and may not match the custom version you select with this flag.
-Using the puppeteer-bundled version is a safe choice unless you need to test features which Chromium doesn't support such as DRM video playback.
-
 #### `--no-sandbox`
 
 Switch off the chrome sandbox. This is useful for some linux configurations which lack kernel support for the Chrome sandbox.
@@ -129,7 +124,7 @@ Specifically, this flag turns on the `strictNullChecks` and `noImplicitAny` Type
 
 #### `--work-root`
 
-Specify a custom work root. (Default: a directory named after your test script, and at the same location)
+Specify a custom work root to save the test results. (Default: a directory named after your test script, under /tmp/element-results of your project folder)
 
 #### `--test-data-root`
 
@@ -138,6 +133,7 @@ Specify a custom path to find test data files. (Default: the same directory as t
 ### `element plan <file> [options]`
 
 Output the test script plan without executing it.
+
 **Options**
 
 -   `--json` (boolean) Output the test plan as JSON format. Defaults to `false`.
@@ -145,6 +141,7 @@ Output the test script plan without executing it.
 ### `element init [dir] [options]`
 
 Init a test script and a minimal environment to get you started with Flood Element.
+
 **Positionals**
 
 -   `[dir]` (string) the directory to initialize with an Element test script. Defaults to the current directory.
@@ -163,7 +160,6 @@ Generate a config file from a template.
 Flood Element supports using a config file across tests within a project. The default config file name (if not specified) is element.config.js, with the content as below.
 
 ```js
-
 module.exports = {
 	options: {
 		headless: true,
@@ -238,9 +234,9 @@ This command would be useful in case you forgot the Flood project that is being 
 
 ### `element flood run <path-to-script> [options]`
 
-Launch a flood from CLI with a test script 
+Launch a flood from CLI with a test script
 
-#### Options
+**Options**
 
 -   `--hosted`: indicates you're going to run a flood on hosted grid. Ignore this option if you want to run an on-demand test.
 -   `--vu`: number of virtual users to simulate. Default to `500` if not specified

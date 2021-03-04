@@ -24,11 +24,14 @@ element init [dir] [options]
 ```
 
 Init a test script, a default configuration file and a minimal environment to get you started with Flood Element.
+
 **Positionals**
+
 - `[dir]` (string) the directory to initialize with an Element test script. Defaults to the current directory.
 
 **Options**
-- `--skip-install` (boolean) Skip yarn/npm install. Defaults to `false`.
+
+- `--skip-install` (boolean) Skip yarn/npm install. Defaults to `false`. 
 
 ### Generate a basic test script from a template
 
@@ -36,12 +39,24 @@ Init a test script, a default configuration file and a minimal environment to ge
 element generate <file>
 ```
 
+**Positionals**
+
+- `file` (string) the test script name to generate. Specify a file name with a `.ts` extension (TypeScript), for example, `my-test-script.ts`.
+
+You should make sure that `package.json` file in the project root folder has the attribute `name` before running this command.
+
 ### Output the test script plan without executing it
 
 ```shell
 element plan <file> [options]
 ```
+
+**Positionals**
+
+- `file` (string) the test script (or path to the test script) to output the plan from. Specify a test script written in TypeScript with a `.ts` extension.
+
 **Options**
+
 - `--json` (boolean) Output the test plan as JSON format. Defaults to `false`.
 
 ### Run a test script locally
@@ -50,11 +65,11 @@ element plan <file> [options]
 element run <file> [options]
 ```
 
-Positionals:
+**Positionals**
 
-**file:** the test script (or path to the test script) to run. Specifies a test script written in TypeScript with a `.ts` extension.
+- `file` (string) the test script (or path to the test script) to run. Specify a test script written in TypeScript with a `.ts` extension.
 
-**options:**
+**Options:**
 
 - Browser:
 
@@ -73,18 +88,15 @@ Positionals:
     Specify a number to set a different delay.
   - `--step-delay` Override stepDelay test script setting `[number]`
   - `--action-delay` Override actionDelay test script setting `[number]`
-  - `--loop-count` Override the loopCount setting in the test script. This
-    is normally overridden to 1 when running via the cli.
-    `[number][default: 1]`
+  - `--loop-count` Override the loopCount setting in the test script `[number]`
   - ~~`--strict` Compile the script in strict mode. This can be helpful
     in diagnosing problems.~~ `DEPRECATED`
-	- `--fail-status-code` Specify an exit code when the test fails. Defaults to 1.
-	- `--config-file` Specify the path to a config file to run the test with. If a path is not passed, defaults to `element.config.js`. This flag only works when [running a test with a config file](cli.md#run-a-test-locally-with-the-default-config-file)
+  - `--fail-status-code` Specify an exit code when the test fails. Defaults to 1. `[number]`
+  - `--config-file` Specify the path to a config file to run the test with. If a path is not specified, defaults to `element.config.js`. This flag only works when [running a test with a config file](cli#run-a-test-locally-with-the-default-config-file)
 
 - Paths:
 
-  - `--work-root` Specify a custom work root. (Default: a directory named
-    after your test script, and at the same location)
+  - `--work-root` Specify a custom work root to save the test results. (Default: a directory named after your test script, under /tmp/element-results of your project folder)
   - `--test-data-root` Specify a custom path to find test data files. (Default: the
     same directory as the test script)
 

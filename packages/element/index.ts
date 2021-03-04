@@ -70,6 +70,7 @@ export {
 	TestSettings,
 	setup,
 	DEFAULT_SETTINGS,
+	BrowserType,
 	ConsoleMethod,
 	ResponseTiming,
 } from '@flood/element-core'
@@ -89,17 +90,6 @@ export { ENV } from '@flood/element-core'
  * @docPage Browser
  */
 export { Browser, Browser as Driver, Locatable, NullableLocatable } from '@flood/element-core'
-
-/**
- * @docPage Browser
- */
-export {
-	ClickOptions,
-	ScreenshotOptions,
-	NavigationOptions,
-	BoundingBox,
-	LoadEvent,
-} from 'puppeteer'
 
 /**
  * @docPage DSL

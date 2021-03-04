@@ -145,7 +145,12 @@ export class Until {
 	 * Creates a condition which will wait until the element's text content does not contain the target text.
 	 */
 	static elementTextDoesNotContain(selectorOrLocator: NullableLocatable, text: string): Condition {
-		return new ElementTextNotMatchCondition('elementTextContains', selectorOrLocator, text, true)
+		return new ElementTextNotMatchCondition(
+			'elementTextDoesNotContain',
+			selectorOrLocator,
+			text,
+			true,
+		)
 	}
 
 	/**
@@ -192,7 +197,7 @@ export class Until {
 	 * Creates a condition which waits until the page title does not contain the expected text.
 	 */
 	static titleDoesNotContain(title: string): Condition {
-		return new TitleNotMatchCondition('titleContains', title, true)
+		return new TitleNotMatchCondition('titleDoesNotContain', title, true)
 	}
 
 	/**
@@ -206,7 +211,7 @@ export class Until {
 	 * Creates a condition which waits until the page title does not match the expected text.
 	 */
 	static titleIsNot(title: string): Condition {
-		return new TitleNotMatchCondition('titleIs', title, false)
+		return new TitleNotMatchCondition('titleIsNot', title, false)
 	}
 
 	/**
@@ -220,7 +225,7 @@ export class Until {
 	 * Creates a condition which waits until the page title doesn not match the title `RegExp`.
 	 */
 	static titleDoesNotMatch(title: RegExp): Condition {
-		return new TitleNotMatchCondition('titleMatches', `${title}`, false)
+		return new TitleNotMatchCondition('titleDoesNotMatch', `${title}`, false)
 	}
 
 	/**
@@ -234,7 +239,7 @@ export class Until {
 	 * Creates a condition which waits until the page URL does not contain the expected path.
 	 */
 	static urlDoesNotContain(url: string): Condition {
-		return new URLNotMatchCondition('urlContains', url, true)
+		return new URLNotMatchCondition('urlDoesNotContain', url, true)
 	}
 
 	/**
@@ -261,7 +266,7 @@ export class Until {
 	/**
 	 * Creates a condition which waits until the page URL does not match the supplied `RegExp`.
 	 */
-	static urlDoesNotMatch(url: string): Condition {
+	static urlDoesNotMatch(url: RegExp): Condition {
 		return new URLNotMatchCondition('urlDoesNotMatch', url.toString(), false)
 	}
 }

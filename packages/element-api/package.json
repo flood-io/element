@@ -1,6 +1,6 @@
 {
 	"name": "@flood/element-api",
-	"version": "1.5.0",
+	"version": "2.0.0-canary.48",
 	"description": "Internal API definitions for Element",
 	"main": "./dist/index.js",
 	"types": "./dist/index.ts.d",
@@ -9,7 +9,8 @@
 		"build": "tsc -b"
 	},
 	"dependencies": {
-		"@flood/element-core": "1.5.0"
+		"@flood/element-core": "2.0.0-canary.48",
+		"@flood/element-report": "2.0.0-canary.48"
 	},
 	"devDependencies": {
 		"@types/node": "12.7.4"

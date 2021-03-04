@@ -6,15 +6,8 @@ import { Step } from '../Step'
 import { StructuredError } from '../../utils/StructuredError'
 import { ResponseTiming } from '../Settings'
 import NetworkRecorder from '../../network/Recorder'
-import { expect } from '../../utils/Expect'
+import { expect } from '@flood/element-report'
 const debug = debugFactory('element:grid:timing')
-
-// TODO re-enable when browser_performance decoupled
-// import { CompoundMeasurement } from '../../Reporter'
-// const measurementKeysForDOM = {
-// 'first-contentful-paint': 'first_contentful_paint',
-// 'first-paint': 'first_paint',
-// }
 
 export class TimingObserver extends NetworkRecordingTestObserver {
 	private passed = 0
@@ -34,7 +27,7 @@ export class TimingObserver extends NetworkRecordingTestObserver {
 		return this.next.after(test)
 	}
 
-	async beforeStep(test: Test, step: Step) {
+	async beforeStep(test: Test, step: Step): Promise<void> {
 		debug('beforeStep')
 		this.timing.reset()
 		this.passed = 0
@@ -53,7 +46,7 @@ export class TimingObserver extends NetworkRecordingTestObserver {
 		debug(`Before step: ${name}`)
 	}
 
-	async afterStep(test: Test, step: Step) {
+	async afterStep(test: Test, step: Step): Promise<void> {
 		this.timing.end('step')
 		this.timing.start('afterStep')
 
@@ -73,7 +66,7 @@ export class TimingObserver extends NetworkRecordingTestObserver {
 		return this.next.onStepPassed(test, step)
 	}
 
-	async onStepError(test: Test, step: Step, err: StructuredError<any>) {
+	async onStepError(test: Test, step: Step, err: StructuredError<any>): Promise<void> {
 		this.failed++
 		return this.next.onStepError(test, step, err)
 	}
@@ -95,9 +88,14 @@ export class TimingObserver extends NetworkRecordingTestObserver {
 		})
 	}
 
-	async onStepSkipped(test: Test, step: Step) {
+	async onStepSkipped(test: Test, step: Step): Promise<void> {
 		debug(`Skipped step: ${step.name}`)
 		return this.next.onStepSkipped(test, step)
+	}
+
+	async onStepUnexecuted(test: Test, step: Step): Promise<void> {
+		debug(`Skipped step: ${step.name}`)
+		return this.next.onStepUnexecuted(test, step)
 	}
 
 	private async reportResult(test: Test, step: Step): Promise<void> {
@@ -127,52 +125,28 @@ export class TimingObserver extends NetworkRecordingTestObserver {
 
 			test.reporter.responseCode = responseCode
 
-			// console.log(`Report: Document Response Time: ${documentResponseTime}ms`)
-			// console.log(`Report: Document Latency: ${documentLatency}ms`)
-
-			// NOTE all browser_performance metrics will be decoupled
-			// TODO decouple
-			// const browser = test.runningBrowser
-			// let tti = await browser.interactionTiming()
-			// let performanceTiming = await browser.performanceTiming()
-
-			// let browserPerformanceTiming: CompoundMeasurement = {
-			// time_to_first_interactive: tti,
-			// dom_interactive: performanceTiming.domInteractive - performanceTiming.navigationStart,
-			// dom_complete: performanceTiming.domComplete - performanceTiming.navigationStart,
-			// }
-
-			// let paintTimingEntries = await browser.paintTiming()
-			// paintTimingEntries.forEach(entry => {
-			// if (measurementKeysForDOM[entry.name]) {
-			// browserPerformanceTiming[measurementKeysForDOM[entry.name]] = Math.round(entry.startTime)
-			// }
-			// })
-
-			// reporter.addCompoundMeasurement('browser_performance', browserPerformanceTiming, name)
-
 			reporter.addMeasurement('throughput', networkRecorder.networkThroughput(), name)
 			reporter.addMeasurement('response_time', documentResponseTime, name)
 			reporter.addMeasurement('latency', documentLatency, name)
 		}
 
 		reporter.addMeasurement('transaction_rate', 1, name)
-		// reporter.addMeasurement('concurrency', 1, name) //TODO see whether concurrency changes in go grid work with this
 		reporter.addMeasurement('passed', this.passed, name)
 		reporter.addMeasurement('failed', this.failed, name)
 
 		await reporter.flushMeasurements()
 	}
 
-	async getMeasurementTime(responseTiming: ResponseTiming): Promise<number> {
+	async getMeasurementTime(responseTiming: ResponseTiming, fromNow?: boolean): Promise<number> {
 		await this.syncNetworkRecorder()
 		const { networkRecorder } = this.ctx
-		return this.getResponseTimeMeasurement(responseTiming, networkRecorder)
+		return this.getResponseTimeMeasurement(responseTiming, networkRecorder, fromNow)
 	}
 
 	getResponseTimeMeasurement(
 		responseTimeMeasurement: ResponseTiming,
 		networkRecorder: NetworkRecorder,
+		fromNow?: boolean,
 	): number {
 		switch (responseTimeMeasurement) {
 			case 'page':
@@ -180,7 +154,7 @@ export class TimingObserver extends NetworkRecordingTestObserver {
 			case 'network':
 				return networkRecorder.meanResponseTime()
 			case 'step': {
-				const value = this.timing.getDurationWithoutThinkTimeForSegment('step')
+				const value = this.timing.getDurationWithoutThinkTimeForSegment('step', fromNow)
 				const thinkTime = this.timing.getThinkTimeForSegment('step')
 				debug(`Step Timing: thinking=${thinkTime} ms, interaction: ${value} ms`)
 				return value

@@ -3,7 +3,7 @@ id: changelog
 title: Changelog
 ---
 
-## 1.5
+## 1.5.0
 Released: Jan 2021
 
 ### New features
@@ -12,6 +12,7 @@ Released: Jan 2021
 - New APIs:
   - [`browser.scrollBy()`](../api/browser#scrollbyx-y-options)
   - [`browser.scrollTo()`](../api/browser#scrolltoposition-options)
+  - [`browser.getUrl()`](../api/browser#geturl)
 
 ## 1.3.6
 Released: 24 Sep 2020

@@ -1,27 +1,27 @@
 import { serve } from '../../../tests/support/fixture-server'
-import { launchPuppeteer, testPuppeteer } from '../../../tests/support/launch-browser'
+import { launchPlaywright, testPlaywright } from '../../../tests/support/launch-browser'
 import { VisibleTextLocator } from './VisibleTextLocator'
 import { BaseLocator } from '../Locator'
 
-let puppeteer: testPuppeteer
+let playwright: testPlaywright
 
 describe('VisibleTextLocator', () => {
 	beforeAll(async () => {
-		puppeteer = await launchPuppeteer()
+		playwright = await launchPlaywright()
 	})
 
 	afterAll(async () => {
-		await puppeteer.close()
+		await playwright.close()
 	})
 
 	beforeEach(async () => {
 		const url = await serve('wait.html')
-		await puppeteer.page.goto(url, { waitUntil: 'domcontentloaded' })
+		await playwright.page.goto(url, { waitUntil: 'domcontentloaded' })
 	})
 
 	test('evaluates', async () => {
 		const loc = new BaseLocator(new VisibleTextLocator('foo', false), 'By.visibleText')
-		const ctx = await puppeteer.page.mainFrame().executionContext()
+		const ctx = await playwright.page
 
 		const maybeElement = await loc.find(ctx)
 
@@ -31,7 +31,7 @@ describe('VisibleTextLocator', () => {
 
 	test('escapes target text correctly', async () => {
 		const loc = new BaseLocator(new VisibleTextLocator("foon't", false), 'By.visibleText')
-		const ctx = await puppeteer.page.mainFrame().executionContext()
+		const ctx = await playwright.page
 
 		let maybeElement: unknown
 

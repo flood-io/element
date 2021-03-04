@@ -1,21 +1,23 @@
-import { runCommandLine, ElementOptions, TestObserver } from '@flood/element-api'
-import { Context } from '@flood/element-core'
+import { runSingleTestScript, ElementOptions, TestObserver } from '@flood/element-api'
+import { Context, TimingObserver } from '@flood/element-core'
 import { TracingObserver } from './test-observers/Tracing'
 import { initConfig } from './initConfig'
 import { startConcurrencyTicker } from './tickerInterval'
 import { initInfluxReporter } from './initInfluxReporter'
 
 export async function run(file: string): Promise<void> {
-	const gridConfig = initConfig()
+	const gridConfig = initConfig(file)
 	const influxReporter = initInfluxReporter(gridConfig)
 
 	const testObserverFactory = (innerObserver: TestObserver) => {
 		const testObserverContext = new Context()
-		return new TracingObserver(testObserverContext, innerObserver)
+		return new TimingObserver(
+			testObserverContext,
+			new TracingObserver(testObserverContext, innerObserver),
+		)
 	}
 
 	const opts: ElementOptions = {
-		logger: gridConfig.logger,
 		testScript: file,
 		strictCompilation: false, // TODO make this configurable
 		reporter: influxReporter,
@@ -23,11 +25,12 @@ export async function run(file: string): Promise<void> {
 		verbose: false,
 		headless: true,
 		devtools: false,
-		chromeVersion: undefined, // allow user to specify in the script, default to puppeteer bundled
 		sandbox: false,
+		testSettings: {},
 		testSettingOverrides: {},
 		testObserverFactory,
 		persistentRunner: false,
+		failStatusCode: 1,
 	}
 
 	if (gridConfig.testDuration !== undefined) {
@@ -38,7 +41,8 @@ export async function run(file: string): Promise<void> {
 		opts.testSettingOverrides.loopCount = gridConfig.testIterations
 	}
 
-	startConcurrencyTicker(influxReporter, gridConfig.logger)
+	startConcurrencyTicker(influxReporter)
 
-	return runCommandLine(opts)
+	await runSingleTestScript(opts)
+	return
 }

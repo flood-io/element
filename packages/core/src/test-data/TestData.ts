@@ -1,4 +1,4 @@
-import { Option } from '../utils/Option'
+import { Option } from '@flood/element-report'
 import { Feeder, FeedFilterFunction } from './Feeder'
 import { FileType, Loader, NullLoader } from './Loader'
 
@@ -76,10 +76,7 @@ export class TestDataSource<T> {
 
 	private static _instance: TestDataSource<any>
 	public static getInstance(): TestDataSource<any> {
-		if (!this._instance) {
-			this._instance = new TestDataSource<any>(new NullLoader())
-		}
-		return this._instance
+		return this._instance || (this._instance = new TestDataSource<any>(new NullLoader()))
 	}
 
 	public addLoader(loader: Loader<T>): TestDataSource<T> {

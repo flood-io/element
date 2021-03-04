@@ -3,32 +3,283 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [1.5.1](https://github.com/flood-io/element/compare/v1.5.0...v1.5.1) (2021-01-22)
+## [2.0.0-canary.48](https://github.com/flood-io/element/compare/v2.0.0-canary.47...v2.0.0-canary.48) (2021-03-04)
 
+**Note:** Version bump only for package @flood/element-cli
 
-### Bug Fixes
-
-* add empty lines ([e341efe](https://github.com/flood-io/element/commit/e341efe50594ba2cc7faa2e4d67d30095b7f9813))
-
-
-
-
-
-# [1.5.0](https://github.com/flood-io/element/compare/v1.4.0-beta.6...v1.5.0) (2021-01-22)
-
+## [2.0.0-canary.47](https://github.com/flood-io/element/compare/v2.0.0-canary.46...v2.0.0-canary.47) (2021-03-04)
 
 ### Bug Fixes
 
-* fix codacy ([2cf3b36](https://github.com/flood-io/element/commit/2cf3b36da27e527f78fc0b9e55c8fea5aa2b90ec))
+-   add unique suffix (.perf.ts) to testPathMatch of config template ([e63030c](https://github.com/flood-io/element/commit/e63030c0677ca33a7d9403a0dbb30eef081faf33))
 
+## [2.0.0-canary.46](https://github.com/flood-io/element/compare/v2.0.0-canary.45...v2.0.0-canary.46) (2021-03-03)
+
+**Note:** Version bump only for package @flood/element-cli
+
+## [2.0.0-canary.45](https://github.com/flood-io/element/compare/v2.0.0-canary.44...v2.0.0-canary.45) (2021-03-03)
+
+**Note:** Version bump only for package @flood/element-cli
+
+## [2.0.0-canary.44](https://github.com/flood-io/element/compare/v2.0.0-canary.43...v2.0.0-canary.44) (2021-03-03)
+
+**Note:** Version bump only for package @flood/element-cli
+
+## [2.0.0-canary.43](https://github.com/flood-io/element/compare/v2.0.0-canary.42...v2.0.0-canary.43) (2021-03-01)
+
+**Note:** Version bump only for package @flood/element-cli
+
+## [2.0.0-canary.42](https://github.com/flood-io/element/compare/v2.0.0-canary.41...v2.0.0-canary.42) (2021-02-23)
+
+**Note:** Version bump only for package @flood/element-cli
+
+## [2.0.0-canary.41](https://github.com/flood-io/element/compare/v2.0.0-canary.40...v2.0.0-canary.41) (2021-02-19)
+
+**Note:** Version bump only for package @flood/element-cli
+
+## [2.0.0-canary.40](https://github.com/flood-io/element/compare/v2.0.0-canary.39...v2.0.0-canary.40) (2021-02-19)
+
+**Note:** Version bump only for package @flood/element-cli
+
+## [2.0.0-canary.39](https://github.com/flood-io/element/compare/v2.0.0-canary.38...v2.0.0-canary.39) (2021-02-19)
+
+**Note:** Version bump only for package @flood/element-cli
+
+## [2.0.0-canary.38](https://github.com/flood-io/element/compare/v2.0.0-canary.37...v2.0.0-canary.38) (2021-02-17)
+
+**Note:** Version bump only for package @flood/element-cli
+
+## [2.0.0-canary.37](https://github.com/flood-io/element/compare/v2.0.0-canary.36...v2.0.0-canary.37) (2021-02-08)
+
+### Bug Fixes
+
+-   cannot create html report ([4ad1465](https://github.com/flood-io/element/commit/4ad1465edbeb87b179941249b4ed0a1eb659d92e))
+
+## [2.0.0-canary.36](https://github.com/flood-io/element/compare/v2.0.0-canary.35...v2.0.0-canary.36) (2021-02-05)
+
+**Note:** Version bump only for package @flood/element-cli
+
+## [2.0.0-canary.35](https://github.com/flood-io/element/compare/v2.0.0-canary.34...v2.0.0-canary.35) (2021-02-03)
+
+**Note:** Version bump only for package @flood/element-cli
+
+## [2.0.0-canary.34](https://github.com/flood-io/element/compare/v2.0.0-canary.33...v2.0.0-canary.34) (2021-02-03)
+
+**Note:** Version bump only for package @flood/element-cli
+
+## [2.0.0-canary.33](https://github.com/flood-io/element/compare/v2.0.0-canary.32...v2.0.0-canary.33) (2021-02-02)
+
+**Note:** Version bump only for package @flood/element-cli
+
+## [2.0.0-canary.32](https://github.com/flood-io/element/compare/v2.0.0-canary.31...v2.0.0-canary.32) (2021-02-01)
+
+### Bug Fixes
+
+-   remove redundant `--` ([f1821b6](https://github.com/flood-io/element/commit/f1821b60657cddd4566ec55a6e7a974fd355a30b))
+
+## [2.0.0-canary.31](https://github.com/flood-io/element/compare/v2.0.0-canary.30...v2.0.0-canary.31) (2021-02-01)
+
+**Note:** Version bump only for package @flood/element-cli
+
+## [2.0.0-canary.30](https://github.com/flood-io/element/compare/v2.0.0-canary.29...v2.0.0-canary.30) (2021-01-30)
+
+**Note:** Version bump only for package @flood/element-cli
+
+## [2.0.0-canary.29](https://github.com/flood-io/element/compare/v2.0.0-canary.28...v2.0.0-canary.29) (2021-01-28)
+
+**Note:** Version bump only for package @flood/element-cli
+
+## [2.0.0-canary.28](https://github.com/flood-io/element/compare/v2.0.0-canary.27...v2.0.0-canary.28) (2021-01-28)
+
+**Note:** Version bump only for package @flood/element-cli
+
+## [2.0.0-canary.27](https://github.com/flood-io/element/compare/v2.0.0-canary.26...v2.0.0-canary.27) (2021-01-27)
+
+**Note:** Version bump only for package @flood/element-cli
+
+## [2.0.0-canary.26](https://github.com/flood-io/element/compare/v2.0.0-canary.25...v2.0.0-canary.26) (2021-01-27)
+
+**Note:** Version bump only for package @flood/element-cli
+
+## [2.0.0-canary.25](https://github.com/flood-io/element/compare/v2.0.0-canary.24...v2.0.0-canary.25) (2021-01-26)
+
+### Bug Fixes
+
+-   error reported by codacy ([59cf4cc](https://github.com/flood-io/element/commit/59cf4cc2bc3512358c71883e12c5e0cd8ac03981))
 
 ### Features
 
-* update version of each packages ([017830f](https://github.com/flood-io/element/commit/017830fa5c1922e481ebd59f7519dd63b2b2ec18))
+-   toggle error on step name click ([eab6cf8](https://github.com/flood-io/element/commit/eab6cf89e65fb5ea9de08967f7d6164945e68eda))
 
+## [2.0.0-canary.24](https://github.com/flood-io/element/compare/v2.0.0-canary.23...v2.0.0-canary.24) (2021-01-22)
 
+**Note:** Version bump only for package @flood/element-cli
 
+## [2.0.0-canary.23](https://github.com/flood-io/element/compare/v2.0.0-canary.22...v2.0.0-canary.23) (2021-01-22)
 
+**Note:** Version bump only for package @flood/element-cli
+
+## [2.0.0-canary.22](https://github.com/flood-io/element/compare/v2.0.0-canary.21...v2.0.0-canary.22) (2021-01-21)
+
+**Note:** Version bump only for package @flood/element-cli
+
+## [2.0.0-canary.21](https://github.com/flood-io/element/compare/v2.0.0-canary.20...v2.0.0-canary.21) (2021-01-21)
+
+**Note:** Version bump only for package @flood/element-cli
+
+## [2.0.0-canary.20](https://github.com/flood-io/element/compare/v2.0.0-canary.19...v2.0.0-canary.20) (2021-01-12)
+
+### Bug Fixes
+
+-   update message of test script template ([ab31c32](https://github.com/flood-io/element/commit/ab31c32cb93e6f95452574d571f8a82380b3e60f))
+
+## [2.0.0-canary.19](https://github.com/flood-io/element/compare/v2.0.0-canary.18...v2.0.0-canary.19) (2021-01-11)
+
+### Bug Fixes
+
+-   remove highlightElement api because playwright does not support yet ([3aeee26](https://github.com/flood-io/element/commit/3aeee26f0c9cdbe650611ece644d762ec3945377))
+
+### Features
+
+-   add hooks to template ([ff17558](https://github.com/flood-io/element/commit/ff175585203103fc734c30b6f62faaa47e9821a5))
+
+## [2.0.0-canary.18](https://github.com/flood-io/element/compare/v2.0.0-canary.17...v2.0.0-canary.18) (2021-01-08)
+
+**Note:** Version bump only for package @flood/element-cli
+
+## [2.0.0-canary.17](https://github.com/flood-io/element/compare/v2.0.0-canary.16...v2.0.0-canary.17) (2021-01-07)
+
+### Bug Fixes
+
+-   errors reported by codacy ([1a41918](https://github.com/flood-io/element/commit/1a41918b5cf89cd3e9ac2a81db26ac70d533589a))
+-   errors reported by codacy ([3246406](https://github.com/flood-io/element/commit/32464067b05fa39378570a63bdbfb6827049204d))
+-   errors reported by codacy ([6586df6](https://github.com/flood-io/element/commit/6586df62d008164950ae5d9e05aa060ca4741e37))
+-   errors reported by codacy ([bb52432](https://github.com/flood-io/element/commit/bb524322c3c7ff2d2f84c312f7dabd3d61612f3c))
+-   errors reported by codacy ([4cc2269](https://github.com/flood-io/element/commit/4cc22693975672c555d2ff1d960dbd78b4f273ab))
+-   report table ([3e042dd](https://github.com/flood-io/element/commit/3e042ddc858f6921ef6ce112ea9e49da3da3e5fb))
+
+### Features
+
+-   allow filtering steps by result ([29fd092](https://github.com/flood-io/element/commit/29fd092a8897a6f46d89f67ac4bd46ef12ceeec9))
+-   view summary in number or percentage ([7d00010](https://github.com/flood-io/element/commit/7d0001070f834a2e1709cf1c34145d62632cfdea))
+
+## [2.0.0-canary.16](https://github.com/flood-io/element/compare/v2.0.0-canary.15...v2.0.0-canary.16) (2021-01-07)
+
+**Note:** Version bump only for package @flood/element-cli
+
+## [2.0.0-canary.15](https://github.com/flood-io/element/compare/v2.0.0-canary.14...v2.0.0-canary.15) (2021-01-06)
+
+### Features
+
+-   show screenshot on terminal (iTerm) ([8fa8c88](https://github.com/flood-io/element/commit/8fa8c88e6f86477a1adc95b2de4ed710d70d7531))
+
+## [2.0.0-canary.14](https://github.com/flood-io/element/compare/v2.0.0-canary.13...v2.0.0-canary.14) (2021-01-04)
+
+### Features
+
+-   check browserType when running scripts ([abc5def](https://github.com/flood-io/element/commit/abc5def870668ede1b605944a8bd76e2ed3b6bf6))
+-   expose executablePath and downloadsPath ([3c1ae86](https://github.com/flood-io/element/commit/3c1ae8604c25f6192138f6bd8c7192a442eb7c7b))
+-   handle when user give incorrect browser type ([b3c9a37](https://github.com/flood-io/element/commit/b3c9a37b679d50e92399a5ad60d97291ce2c6fd0))
+-   remove 2 deprecated CLI flags and add 3 new ([a9cc706](https://github.com/flood-io/element/commit/a9cc706454ff828fb72e1bbed48fa2f49aaf6019))
+
+## [2.0.0-canary.13](https://github.com/flood-io/element/compare/v2.0.0-canary.12...v2.0.0-canary.13) (2020-12-28)
+
+### Bug Fixes
+
+-   can run a single test script without the config file ([a042306](https://github.com/flood-io/element/commit/a042306ff512621438c535f6a58089885e42cec8))
+
+### Features
+
+-   apply the early return pattern ([89e917a](https://github.com/flood-io/element/commit/89e917a76fc8fed9b4df22be8440d1964053472a))
+-   refactor code ([47d872d](https://github.com/flood-io/element/commit/47d872dbc42963668394dcbf98e7427ee39009da))
+
+## [2.0.0-canary.12](https://github.com/flood-io/element/compare/v2.0.0-canary.11...v2.0.0-canary.12) (2020-12-23)
+
+### Bug Fixes
+
+-   handle when user specifies both fast-forward and slow-mo are true ([0869892](https://github.com/flood-io/element/commit/08698926bb6d88813e9571b0af540901c3a964f2))
+
+### Features
+
+-   handle launchOptionOverrides ([2351512](https://github.com/flood-io/element/commit/235151262a945d5650300fa7b0d4e4a258b5f836))
+-   re-organize priority of settings (CLI > Test Scripts > Config) ([f3eb374](https://github.com/flood-io/element/commit/f3eb37431aa70015a8f7148d3f6feabef6a7eef2))
+-   refactor code and handle when run with verbose mode ([46e2eca](https://github.com/flood-io/element/commit/46e2eca5fa029bcd5f48ae8c594c0beab3b2d31c))
+-   resolve comment on github ([c1c29d8](https://github.com/flood-io/element/commit/c1c29d88deb8a1dc897965d2d40029f0752896b0))
+-   update args from run single and multiple files ([7ac0c48](https://github.com/flood-io/element/commit/7ac0c48298322223523d1ecfcae578b96991b2ea))
+-   update element.config.js template ([aef6b92](https://github.com/flood-io/element/commit/aef6b92039bf9d37be0a5904a9482e3593735f69))
+
+## [2.0.0-canary.11](https://github.com/flood-io/element/compare/v2.0.0-canary.10...v2.0.0-canary.11) (2020-12-15)
+
+**Note:** Version bump only for package @flood/element-cli
+
+## [2.0.0-canary.10](https://github.com/flood-io/element/compare/v2.0.0-canary.9...v2.0.0-canary.10) (2020-12-03)
+
+**Note:** Version bump only for package @flood/element-cli
+
+## [2.0.0-canary.9](https://github.com/flood-io/element/compare/v2.0.0-canary.8...v2.0.0-canary.9) (2020-12-02)
+
+**Note:** Version bump only for package @flood/element-cli
+
+## [2.0.0-canary.8](https://github.com/flood-io/element/compare/v2.0.0-canary.7...v2.0.0-canary.8) (2020-11-27)
+
+**Note:** Version bump only for package @flood/element-cli
+
+## [2.0.0-canary.7](https://github.com/flood-io/element/compare/v2.0.0-canary.6...v2.0.0-canary.7) (2020-11-26)
+
+### Bug Fixes
+
+-   clean code ([7e68f77](https://github.com/flood-io/element/commit/7e68f777aa2ae57a7a1e431158eeb081aa06300a))
+-   time unit consistency and improvement ([f39d713](https://github.com/flood-io/element/commit/f39d7139714f90d6f28c50889073102b39b35ca2))
+
+## [2.0.0-canary.6](https://github.com/flood-io/element/compare/v2.0.0-canary.4...v2.0.0-canary.6) (2020-11-24)
+
+**Note:** Version bump only for package @flood/element-cli
+
+## [2.0.0-canary.5](https://github.com/flood-io/element/compare/v2.0.0-canary.4...v2.0.0-canary.5) (2020-11-23)
+
+**Note:** Version bump only for package @flood/element-cli
+
+## [2.0.0-canary.4](https://github.com/flood-io/element/compare/v2.0.0-canary.3...v2.0.0-canary.4) (2020-11-19)
+
+**Note:** Version bump only for package @flood/element-cli
+
+## [2.0.0-canary.3](https://github.com/flood-io/element/compare/v2.0.0-canary.2...v2.0.0-canary.3) (2020-11-19)
+
+**Note:** Version bump only for package @flood/element-cli
+
+## [2.0.0-canary.2](https://github.com/flood-io/element/compare/v2.0.0-canary.1...v2.0.0-canary.2) (2020-11-16)
+
+### Bug Fixes
+
+-   fail to export HTML report ([bdcbd13](https://github.com/flood-io/element/commit/bdcbd13109f54e4134cceb9936ae1ae743ca8fd4))
+
+## [2.0.0-canary.1](https://github.com/flood-io/element/compare/v2.0.0-canary.0...v2.0.0-canary.1) (2020-11-12)
+
+**Note:** Version bump only for package @flood/element-cli
+
+## [2.0.0-canary.0](https://github.com/flood-io/element/compare/v2.0.0-beta.24...v2.0.0-canary.0) (2020-11-12)
+
+**Note:** Version bump only for package @flood/element-cli
+
+## [2.0.0-beta.24](https://github.com/flood-io/element/compare/v2.0.0-beta.23...v2.0.0-beta.24) (2020-11-09)
+
+**Note:** Version bump only for package @flood/element-cli
+
+### Bug Fixes
+
+-   add empty lines ([e341efe](https://github.com/flood-io/element/commit/e341efe50594ba2cc7faa2e4d67d30095b7f9813))
+
+## [1.5.1](https://github.com/flood-io/element/compare/v1.5.0...v1.5.1) (2021-01-22)
+
+## [1.5.0](https://github.com/flood-io/element/compare/v1.4.0-beta.6...v1.5.0) (2021-01-22)
+
+### Bug Fixes
+
+-   fix codacy ([2cf3b36](https://github.com/flood-io/element/commit/2cf3b36da27e527f78fc0b9e55c8fea5aa2b90ec))
+
+### Features
+
+-   update version of each packages ([017830f](https://github.com/flood-io/element/commit/017830fa5c1922e481ebd59f7519dd63b2b2ec18))
 
 ## [1.4.0-beta.6](https://github.com/flood-io/element/compare/v1.4.0-beta.5...v1.4.0-beta.6) (2020-12-04)
 

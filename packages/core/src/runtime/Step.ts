@@ -1,6 +1,6 @@
 import { ElementPresence, DEFAULT_WAIT_TIMEOUT_MILLISECONDS } from './Settings'
 import ms from 'ms'
-import { Browser } from './IBrowser'
+import { Browser } from '../interface/IBrowser'
 
 /**
  * Declares each step in your test. This must go within your main test expression.
@@ -98,7 +98,7 @@ export interface StepExtended extends StepBase {
 }
 
 export type StepDefinition = (name: string, fn: TestFn) => Promise<any>
-export type TestFn = (this: void, browser: Browser, data?: unknown) => Promise<any>
+export type TestFn = (this: void, browser: Browser, data?: any) => Promise<any>
 export type ConditionFn = (this: void, browser: Browser) => boolean | Promise<boolean>
 export type StepOptions = {
 	pending?: boolean
@@ -181,6 +181,15 @@ export type Step = {
 	name: string
 	options: Partial<StepOptions>
 	fn: TestFn
+	subTitle?: string
+	duration?: number
+	prop?: {
+		recoveryTries?: number
+		skipped?: boolean
+		unexecuted?: boolean
+		passed?: boolean
+		error?: string
+	}
 }
 
 /**
@@ -190,6 +199,7 @@ export function normalizeStepOptions(stepOpts: StepOptions): StepOptions {
 	if (!stepOpts.waitTimeout) return stepOpts
 
 	let convertedWaitTimeout = DEFAULT_WAIT_TIMEOUT_MILLISECONDS
+
 	if (typeof stepOpts.waitTimeout === 'string') {
 		convertedWaitTimeout = ms(stepOpts.waitTimeout)
 	} else {
@@ -201,6 +211,7 @@ export function normalizeStepOptions(stepOpts: StepOptions): StepOptions {
 			convertedWaitTimeout *= 1e3
 		}
 	}
+
 	stepOpts.waitTimeout = convertedWaitTimeout
 	return stepOpts
 }

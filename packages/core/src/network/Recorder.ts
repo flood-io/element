@@ -1,10 +1,30 @@
 import { sum, mean } from 'd3-array'
-import { ResourceType, Page as PuppeteerPage, PageEventObj } from 'puppeteer'
-import { Entry, RawResponse, EntryRequest, Page, EntryResponse } from './Protocol'
+import { Page as PlaywrightPage, ChromiumBrowserContext } from 'playwright'
+import { Entry, RawResponse, EntryRequest, Page, EntryResponse, ResourceType } from './Protocol'
 import { AsyncQueue } from '../utils/AsyncQueue'
 import { Manager } from './Manager'
 import debugFactory from 'debug'
 const debug = debugFactory('element:network:recorder')
+
+export type PageEvents =
+	| 'load'
+	| 'close'
+	| 'console'
+	| 'crash'
+	| 'dialog'
+	| 'domcontentloaded'
+	| 'download'
+	| 'filechooser'
+	| 'frameattached'
+	| 'framedetached'
+	| 'framenavigated'
+	| 'pageerror'
+	| 'popup'
+	| 'request'
+	| 'requestfailed'
+	| 'requestfinished'
+	| 'response'
+	| 'worker'
 
 function round(value: number): number {
 	return Math.round(value * 1000) / 1000
@@ -18,15 +38,13 @@ function justNumber(value: number | undefined, defaultValue: number): number {
 	}
 }
 
-type PageEvents = keyof PageEventObj
-
 export default class Recorder {
 	public entries: Entry[]
 	private pages: Page[]
 	public pendingTaskQueue: AsyncQueue<any>
 	public manager: Manager
 
-	constructor(public page: PuppeteerPage) {
+	constructor(public page: PlaywrightPage) {
 		this.reset()
 		this.pendingTaskQueue = new AsyncQueue()
 		this.manager = new Manager(page)
@@ -43,22 +61,21 @@ export default class Recorder {
 		}
 	}
 
-	public async sync() {
+	public async sync(): Promise<void> {
 		debug('Recorder.sync() (pendingTaskQueue.chain)')
 		await this.pendingTaskQueue.chain
 	}
 
-	public async recordRequest(payload: any) {
+	public async recordRequest(payload: any): Promise<void> {
 		debug('Recorder.recordRequest(%o)', payload)
-
-		// const pageRef = this.nextPageId
-		const pageRef = payload.frameId
-		const timestamp = payload.wallTime * 1e3
-		const basetime = timestamp - payload.timestamp * 1e3
 
 		if (payload.request.url.startsWith('data:')) {
 			return
 		}
+
+		const pageRef = payload.frameId
+		const timestamp = payload.wallTime * 1e3
+		const basetime = timestamp - payload.timestamp * 1e3
 
 		const entry = new Entry({
 			type: payload.type,
@@ -90,7 +107,7 @@ export default class Recorder {
 		}
 	}
 
-	public async recordResponse(payload: RawResponse) {
+	public async recordResponse(payload: RawResponse): Promise<void> {
 		const entry = this.getEntryForRequestId(payload.requestId)
 		if (!entry) return
 
@@ -135,10 +152,6 @@ export default class Recorder {
 		entry.response.httpVersion = payload.response.protocol
 		entry.response.status = payload.response.status
 		entry.response.statusText = payload.response.statusText
-
-		if (entry.type === 'Document') {
-			// console.log('Document response', this.responseTimeForType('Document'))
-		}
 	}
 
 	public async recordResponseCompleted({
@@ -149,7 +162,7 @@ export default class Recorder {
 		requestId: string
 		encodedDataLength: number
 		timestamp: number
-	}) {
+	}): Promise<void> {
 		debug(`Recorder.recordResponseCompleted: ${requestId}`)
 		const entry = this.getEntryForRequestId(requestId)
 		if (!entry) {
@@ -160,14 +173,6 @@ export default class Recorder {
 
 		entry.response.bodySize = encodedDataLength
 		entry.response.timestamp = epoch + timestamp * 1e3
-
-		if (entry.type === 'Document') {
-			// console.log(entry.frameId, entry.loaderId)
-			// const responseBody = await this.getResponseData(entry.requestId)
-			// const text = responseBody.toString('utf8')
-			// entry.response.content.text = text
-			// entry.response.content.size = responseBody.byteLength
-		}
 	}
 
 	/**
@@ -238,70 +243,73 @@ export default class Recorder {
 		return justNumber(mean(this.entries.map(({ request }) => request.duration)), 0)
 	}
 
-	public responseTimeForType(type: string) {
+	public responseTimeForType(type: string): number {
 		const entries = this.entriesForType(type).filter(({ request }) => request.duration > 0)
-		return round(sum(entries.map(({ request, response }) => request.duration)))
+		return round(sum(entries.map(({ request }) => request.duration)))
 	}
 
-	public latencyForType(type: string) {
+	public latencyForType(type: string): number {
 		const entries = this.entriesForType(type).filter(({ request }) => request.latency > 0)
-		return round(sum(entries.map(({ request, response }) => request.latency)))
+		return round(sum(entries.map(({ request }) => request.latency)) / entries.length)
 	}
 
-	public timeToFirstByteForType(type: string) {
+	public timeToFirstByteForType(type: string): number {
 		const entries = this.entriesForType(type).filter(({ request }) => request.ttfb > 0)
-		return round(sum(entries.map(({ request, response }) => request.ttfb)))
+		return round(sum(entries.map(({ request }) => request.ttfb)))
 	}
 
-	public reset() {
+	public reset(): void {
 		debug('Recorder.reset()')
 		this.entries = []
 		this.pages = []
 	}
 
-	public addPendingTask(promise: Promise<any>) {
+	public addPendingTask(promise: Promise<any>): void {
 		this.pendingTaskQueue.add(promise)
 	}
 
-	public recordDOMContentLoadedEvent() {}
+	public recordDOMContentLoadedEvent(): void {}
 
+	public async attachEvents(): Promise<void> {
+		await this.manager.attachEvents()
+	}
 	/**
 	 * Attaches an event to the Pupeteer page or internal client
 	 *
-	 * @param {(puppeteer.PageEvents | string)} pageEvent
+	 * @param {(playwright.PageEvents)} pageEvent
 	 * @param {(event: any) => void} handler
 	 */
-	public attachEvent(pageEvent: string | PageEvents, handler: (event: any) => void): void {
+	public async attachEvent(pageEvent: any, handler: (event?: any) => void): Promise<void> {
 		if (pageEvent.includes('.')) {
-			;(this.page as any)['_client'].on(pageEvent, handler)
+			try {
+				const browserContext = (await this.page.context()) as ChromiumBrowserContext
+				const client = await browserContext.newCDPSession(this.page)
+				await client.send('Network.enable')
+				client.on(pageEvent, handler)
+			} catch (err) {
+				debug(err)
+			}
 		} else {
-			this.page.on(pageEvent as PageEvents, handler)
+			this.page.on(pageEvent, handler)
 		}
 	}
 
-	private recordPageResponse(payload: Page) {
+	private recordPageResponse(payload: Page): void {
 		this.pages.push(payload)
 	}
 
-	private getEntryForRequestId(requestId: string) {
+	private getEntryForRequestId(requestId: string): Entry | undefined {
 		return this.entries.find(entry => entry.requestId === requestId)
 	}
 
-	private async privateClientSend(method: string, ...args: any[]): Promise<any> {
-		// const promise = this.page['_client'].send(method, ...args)
-		const client = await this.page['target']().createCDPSession()
+	private async privateClientSend(method: any, ...args: any[]): Promise<any> {
+		const client = await (this.page.context() as ChromiumBrowserContext).newCDPSession(this.page)
 		return client.send(method, ...args)
-
-		// this.page.target
-		// this.addPendingTask(promise)
-		// return promise
 	}
 
 	public async getResponseData(requestId: string): Promise<Buffer> {
 		debug(`Recorder.getResponseData: ${requestId}`)
 		try {
-			// console.log(`Network.getResponseBody(${requestId})`)
-
 			const response = await this.privateClientSend('Network.getResponseBody', {
 				requestId,
 			})

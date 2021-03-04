@@ -1,6 +1,6 @@
 {
 	"name": "@flood/element-core",
-	"version": "1.5.0",
+	"version": "2.0.0-canary.48",
 	"description": "Flood Element is a browser based load generation tool for easily testing modern web application performance",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -8,11 +8,9 @@
 		"prebuild": "rm -rf ./dist",
 		"build": "tsc -b",
 		"test": "jest",
-		"doc": "yarn typedoc && yarn typedoc:puppeteer && ts-node --project ./tsconfig.doc.json ./scripts/docs/docs.ts",
 		"doc:watch": "node --trace-warnings $(npm bin)/nodemon --ext ts --exec ts-node -- --project ./tsconfig.doc.json ./scripts/docs/docs.ts",
 		"doc:once": "ts-node --project ./tsconfig.doc.json ./scripts/docs/docs.ts",
-		"typedoc": "typedoc --tsconfig ./tsconfig.doc.json --json docs.json ./index.ts",
-		"typedoc:puppeteer": "typedoc --json puppeteer-1.6-docs.json --includeDeclarations ../../node_modules/@types/puppeteer/index.d.ts"
+		"typedoc": "typedoc --tsconfig ./tsconfig.doc.json --json docs.json ./index.ts"
 	},
 	"repository": {
 		"type": "git",
@@ -20,7 +18,7 @@
 	},
 	"keywords": [
 		"load",
-		"puppeteer",
+		"playwright",
 		"chrome",
 		"browser",
 		"testing"
@@ -32,13 +30,13 @@
 	},
 	"homepage": "https://github.com/flood-io/element#readme",
 	"dependencies": {
-		"@flood/element-compiler": "1.5.0",
+		"@flood/element-compiler": "2.0.0-canary.48",
+		"@flood/element-report": "2.0.0-canary.48",
 		"@types/faker": "^4.1.9",
 		"@types/node": "12.7.4",
-		"@types/puppeteer": "^5.4.0",
 		"assert": "^1.4.1",
 		"comment-parser": "^0.5.0",
-		"csv-parse": "^4.12.0",
+		"csv": "^5.3.2",
 		"d3-array": "^1.2.0",
 		"diff": "^3.3.0",
 		"faker": "^4.1.0",
@@ -48,10 +46,12 @@
 		"ksuid": "^1.2.0",
 		"micromatch": "^4.0.2",
 		"ms": "^2.1.2",
-		"puppeteer": "^5.5.0",
+		"os-name": "^4.0.0",
+		"playwright": "^1.8.0",
 		"recast": "^0.13.0",
 		"sanitize-filename": "^1.6.1",
 		"source-map": "^0.7.0",
+		"spinnies": "^0.5.1",
 		"strftime": "^0.10.0",
 		"term-img": "^2.1.0",
 		"typedoc": "^0.15.0",

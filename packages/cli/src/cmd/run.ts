@@ -1,259 +1,141 @@
+import { ElementConfig } from '@flood/element-core/src/ElementOption'
 import { Argv, Arguments, CommandModule } from 'yargs'
 import { checkFile } from './common'
 import {
-	WorkRoot,
-	FloodProcessEnv,
-	TestCommander,
-	TestSettings,
-	runCommandLine,
+	ElementRunArguments,
+	runCommandLine as runSingleUser,
+	normalizeElementOptions,
 	ElementOptions,
-	DEFAULT_ACTION_DELAY,
-	DEFAULT_STEP_DELAY,
-	DEFAULT_STEP_DELAY_FAST_FORWARD,
-	DEFAULT_ACTION_DELAY_FAST_FORWARD,
-	DEFAULT_STEP_DELAY_SLOW_MO,
-	DEFAULT_ACTION_DELAY_SLOW_MO,
+	checkBrowserType,
 } from '@flood/element-core'
-import { watch } from 'chokidar'
-import { EventEmitter } from 'events'
-import { extname, basename, join, dirname, resolve } from 'path'
-import sanitize from 'sanitize-filename'
-import createLogger from '.././utils/Logger'
-import { ConsoleReporter } from '.././utils/ConsoleReporter'
+import { runCommandLine as runMultipleUser } from '@flood/element-scheduler'
 import chalk from 'chalk'
-import ms from 'ms'
+import { EventEmitter } from 'events'
+import { ReportCache } from '@flood/element-report'
+import { getFilesPattern, readConfigFile } from '../utils/run'
+import YoEnv from 'yeoman-environment'
+import ReportGenerator from '../generator/test-report'
+import sanitize from 'sanitize-filename'
+import { resolve, dirname, basename, extname, join } from 'path'
+import { compileReport } from '../utils/compile'
 
-import { getFilesPattern, readConfigFile } from '../utils/compile'
+interface RunCommonArguments extends Arguments, ElementRunArguments {}
 
-interface RunCommonArguments extends Arguments {
-	file: string
-	chrome?: string
-	strict?: boolean
-	headless?: boolean
-	devtools?: boolean
-	sandbox?: boolean
-	loopCount?: number
-	stepDelay?: string | number
-	actionDelay?: string | number
-	fastForward?: boolean
-	slowMo?: boolean
-	watch?: boolean
-	'work-root'?: string
-	'test-data-root'?: string
-	'fail-status-code': number
-	configFile: string
-}
+async function getArgsFromConfig(args: RunCommonArguments): Promise<RunCommonArguments> {
+	const { file, configFile, _, $0, mu } = args
+	const fileErr = checkFile(configFile, 'Configuration file')
+	let testFiles: string[]
+	let notExistingFiles: string[]
 
-function isNumber(value: string): boolean {
-	const numberPattern = /^[0-9]+$/
-	return numberPattern.test(value)
-}
+	if (fileErr) {
+		if (!file) throw fileErr
+		return { ...args, testFiles: [file], notExistingFiles: [] }
+	}
 
-function setupDelayOverrides(
-	args: RunCommonArguments,
-	testSettingOverrides: TestSettings,
-): TestSettings {
-	if (testSettingOverrides == null) testSettingOverrides = {}
-	let { actionDelay, stepDelay } = args
+	const configFileFromArgs: ElementConfig = await readConfigFile(configFile)
+	const { options, paths, testSettings } = configFileFromArgs
 
-	if (actionDelay) {
-		//received from the terminal so the value is always string, it is necessary to check the user wants to enter the string or number
-		if (!isNumber(actionDelay as string)) actionDelay = ms(actionDelay as string)
-		else {
-			if (actionDelay < 0) actionDelay = DEFAULT_ACTION_DELAY
-			else if (actionDelay < 1e3) actionDelay = (actionDelay as number) * 1e3
+	if (file) {
+		testFiles = [file]
+		notExistingFiles = []
+	} else {
+		if (!paths.testPathMatch || !paths.testPathMatch.length) {
+			throw Error('Found no test scripts matching testPathMatch pattern')
 		}
-		testSettingOverrides.actionDelay = actionDelay
+		const filesPattern = getFilesPattern(paths.testPathMatch)
+		testFiles = filesPattern.files.sort()
+		notExistingFiles = filesPattern.notExistingFiles.sort()
 	}
-
-	if (stepDelay) {
-		//received from the terminal so the value is always string, it is necessary to check the user wants to enter the string or number
-		if (!isNumber(stepDelay as string)) stepDelay = ms(stepDelay as string)
-		else {
-			if (stepDelay < 0) stepDelay = DEFAULT_STEP_DELAY
-			else if (stepDelay < 1e3) stepDelay = (stepDelay as number) * 1e3
-		}
-		testSettingOverrides.stepDelay = stepDelay
-	}
-
-	if (args.fastForward) {
-		testSettingOverrides.stepDelay = DEFAULT_STEP_DELAY_FAST_FORWARD
-		testSettingOverrides.actionDelay = DEFAULT_ACTION_DELAY_FAST_FORWARD
-	} else if (args.slowMo) {
-		testSettingOverrides.stepDelay = DEFAULT_STEP_DELAY_SLOW_MO
-		testSettingOverrides.actionDelay = DEFAULT_ACTION_DELAY_SLOW_MO
-	}
-	return testSettingOverrides
-}
-
-function getWorkRootPath(file: string, root?: string): string {
-	const ext = extname(file)
-	const bare = basename(file, ext)
-
-	if (root == null) {
-		root = join(dirname(file), 'tmp', 'element-results', bare)
-	}
-
-	const dateString = sanitize(new Date().toISOString())
-
-	return resolve(root, dateString)
-}
-
-function getTestDataPath(file: string, root?: string): string {
-	root = root || dirname(file)
-
-	// return root
-	return resolve(root)
-}
-
-function initRunEnv(root: string, testDataRoot: string) {
-	const workRoot = new WorkRoot(root, {
-		'test-data': testDataRoot,
-	})
 
 	return {
-		workRoot,
-		stepEnv(): FloodProcessEnv {
-			return {
-				BROWSER_ID: 0,
-				FLOOD_GRID_REGION: 'local',
-				FLOOD_GRID_SQEUENCE_ID: 0,
-				FLOOD_GRID_SEQUENCE_ID: 0,
-				FLOOD_GRID_INDEX: 0,
-				FLOOD_GRID_NODE_SEQUENCE_ID: 0,
-				FLOOD_NODE_INDEX: 0,
-				FLOOD_SEQUENCE_ID: 0,
-				FLOOD_PROJECT_ID: 0,
-				SEQUENCE: 0,
-				FLOOD_LOAD_TEST: false,
-			}
+		...options,
+		testSettings,
+		testFiles,
+		notExistingFiles,
+		runArgs: {
+			...args,
 		},
+		_,
+		$0,
+		file,
+		'fail-status-code': args['fail-status-code'],
+		configFile,
+		mu,
 	}
-}
-
-function makeTestCommander(file: string): TestCommander {
-	const commander = new EventEmitter()
-	// TODO make this more reliable on linux
-	const watcher = watch(file, { persistent: true })
-	watcher.on('change', path => {
-		if (resolve(path) === resolve(file)) {
-			commander.emit('rerun-test')
-		}
-	})
-	return commander
-}
-
-async function runTestScript(args: RunCommonArguments): Promise<void> {
-	const { file, verbose } = args
-	const workRootPath = getWorkRootPath(file, args['work-root'])
-	const testDataPath = getTestDataPath(file, args['test-data-root'])
-
-	const verboseBool = !!verbose
-
-	const logLevel = verboseBool ? 'debug' : 'info'
-
-	const logger = createLogger(logLevel, true)
-	const reporter = new ConsoleReporter(logger, verboseBool)
-
-	logger.info(`workRootPath: ${workRootPath}`)
-	logger.info(`testDataPath: ${testDataPath}`)
-
-	const opts: ElementOptions = {
-		logger: logger,
-		testScript: file,
-		strictCompilation: args.strict ?? false,
-		reporter: reporter,
-		verbose: verboseBool,
-		headless: args.headless ?? true,
-		devtools: args.devtools ?? false,
-		chromeVersion: args.chrome,
-		sandbox: args.sandbox ?? true,
-
-		runEnv: initRunEnv(workRootPath, testDataPath),
-		testSettingOverrides: {},
-		persistentRunner: false,
-	}
-
-	if (args.loopCount) {
-		opts.testSettingOverrides.loopCount = args.loopCount
-	}
-	opts.testSettingOverrides = setupDelayOverrides(args, opts.testSettingOverrides)
-
-	if (args.watch) {
-		opts.persistentRunner = true
-		opts.testCommander = makeTestCommander(file)
-	}
-
-	await runCommandLine(opts)
-}
-
-async function runTestScriptWithConfiguration(args: RunCommonArguments): Promise<void> {
-	const fileErr = checkFile(args.configFile, 'Configuration file')
-	if (fileErr) throw fileErr
-	const { options, paths } = await readConfigFile(args.configFile)
-
-	if (!paths.testPathMatch || !paths.testPathMatch.length) {
-		throw Error('Found no test scripts matching testPathMatch pattern')
-	}
-
-	const files: string[] = getFilesPattern(paths.testPathMatch)
-	console.info(
-		'The following test scripts that matched the testPathMatch pattern are going to be executed:',
-	)
-
-	for (const file of files.sort()) {
-		const arg: RunCommonArguments = {
-			...options,
-			...paths,
-			file,
-		}
-		try {
-			await runTestScript(arg)
-			// eslint-disable-next-line no-empty
-		} catch {}
-	}
-	console.info('Test running with the config file has finished')
 }
 
 const cmd: CommandModule = {
 	command: 'run [file] [options]',
-	describe: 'Run a test script (or multiple test scripts with configuration) locally',
+	describe: 'Run [a test script| test scripts with configuration] locally',
 
 	async handler(args: RunCommonArguments): Promise<void> {
-		if (args.file) {
-			try {
-				await runTestScript(args)
-			} catch (err) {
-				console.log('Element exited with error')
-				console.error(err)
-				process.exit(args['fail-status-code'])
+		const { file, mu, configFile } = args
+		if (mu) {
+			if (!file) {
+				console.log(
+					chalk.redBright(
+						`The mode 'running the test with multiple test scripts' does not support running with multiple users`,
+					),
+				)
+				process.exit(0)
 			}
-		} else {
-			await runTestScriptWithConfiguration(args)
+			const myEmitter = new EventEmitter()
+			const cache = new ReportCache(myEmitter)
+			const opts: ElementOptions = normalizeElementOptions(args, cache)
+			await runMultipleUser(opts)
+			process.exit(0)
 		}
-		process.exit(0)
+		const configurationArgs = await getArgsFromConfig(args)
+		if (configurationArgs.fastForward && configurationArgs.slowMo) {
+			console.error(chalk.redBright(`Arguments fast-forward and slow-mo are mutually exclusive`))
+			process.exit(0)
+		}
+
+		if (configurationArgs.browser || configurationArgs.runArgs?.browser) {
+			const browser = configurationArgs.browser ?? configurationArgs.runArgs?.browser
+			checkBrowserType(browser)
+		}
+
+		const result = await runSingleUser(configurationArgs)
+
+		if (args.export) {
+			try {
+				await compileReport()
+			} catch (error) {
+				console.log(error)
+			}
+			let root: string
+			if (file) {
+				const fileName = basename(file, extname(file))
+				root = join(dirname(file), 'reports', fileName)
+			} else {
+				root = join(dirname(configFile), 'reports')
+			}
+
+			const dateString = sanitize(new Date().toISOString())
+			const reportPath = resolve(root, dateString)
+			const env = YoEnv.createEnv()
+
+			env.registerStub(ReportGenerator as any, 'report-generator')
+			env.run(
+				['report-generator'],
+				{
+					data: JSON.stringify(result, null, '\t'),
+					dir: reportPath,
+					force: true,
+				},
+				() => {
+					console.log(`Your report has been saved in ${reportPath}`)
+				},
+			)
+		}
 	},
 	builder(yargs: Argv): Argv {
 		return yargs
-			.option('chrome', {
-				group: 'Browser:',
-				describe:
-					'Specify which version of Google Chrome to use. Default: use the puppeteer bundled version. stable: ',
-				coerce: chrome => {
-					// [not specified] => undefined => use test script value
-					// --chrome => override to 'stable'
-					// --chrome string => override to <string>
-					let chromeVersion: string | undefined
-					if (typeof chrome === 'boolean') {
-						if (chrome) {
-							chromeVersion = 'stable'
-						}
-					} else {
-						chromeVersion = chrome
-					}
-
-					return chromeVersion
-				},
+			.option('browser', {
+				group: 'Browser',
+				type: 'string',
+				describe: `Sets the browser type used to run the test, using one of the 3 bundled browsers: 'chromium', 'firefox' and 'webkit'.`,
 			})
 			.option('no-headless', {
 				group: 'Browser:',
@@ -299,24 +181,30 @@ const cmd: CommandModule = {
 			})
 			.option('loop-count', {
 				group: 'Running the test script:',
-				describe:
-					'Override the loopCount setting in the test script. This is normally overridden to 1 when running via the cli.',
+				describe: 'Override the loopCount setting in the test script',
 				type: 'number',
-			})
-			.option('strict', {
-				group: 'Running the test script:',
-				describe:
-					'[DEPRECATED] Compile the script in strict mode. This can be helpful in diagnosing problems.',
 			})
 			.option('work-root', {
 				group: 'Paths:',
 				describe:
-					'Specify a custom work root. (Default: a directory named after your test script, and at the same location)',
+					'Specify a custom work root to save the test results. (Default: a directory named after your test script, under /tmp/element-results of your project folder)',
 			})
 			.option('test-data-root', {
 				group: 'Paths:',
 				describe:
 					'Specify a custom path to find test data files. (Default: the same directory as the test script)',
+			})
+			.option('executable-path', {
+				group: 'Paths',
+				type: 'string',
+				describe:
+					'Path to the installation folder of a custom browser based on Chromium. If set, Element will ignore the browser setting and use this custom browser instead.',
+			})
+			.option('downloads-path', {
+				group: 'Paths',
+				type: 'string',
+				describe:
+					'If specified, accepted downloads are downloaded into this directory. Otherwise, a temporary directory is created and is deleted when browser is closed.',
 			})
 			.option('verbose', {
 				describe: 'Verbose mode',
@@ -327,7 +215,7 @@ const cmd: CommandModule = {
 				default: 1,
 			})
 			.positional('file', {
-				describe: 'The test script to run',
+				describe: 'the test script to run',
 				coerce: file => {
 					const fileErr = checkFile(file as string)
 					if (fileErr) throw fileErr
@@ -335,9 +223,22 @@ const cmd: CommandModule = {
 				},
 			})
 			.option('config-file', {
-				describe: 'Run multiple test scripts sequentially with a configuration file',
+				describe: 'Run test scripts with configuration',
 				type: 'string',
 				default: 'element.config.js',
+			})
+			.option('mu', {
+				describe: 'Run test scripts with multiple users',
+				type: 'boolean',
+				default: false,
+			})
+			.option('export', {
+				describe: 'Export a HTML report after the test finished running',
+				type: 'boolean',
+			})
+			.option('show-screenshot', {
+				describe: 'show screenshot in the terminal (iTerm 2 only)',
+				type: 'boolean',
 			})
 			.fail((msg, err) => {
 				if (err) console.error(chalk.redBright(err.message))

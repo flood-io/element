@@ -63,6 +63,9 @@ Clear browser cache.
 
 - returns: [Promise<`any`>][promise]
 
+**Note:**
+This is only applicable for chromium-based browsers. Firefox and Webkit are not supported.
+
 ### `clearBrowserCookies()`
 
 Clear browser cookies.
@@ -101,6 +104,16 @@ currently outside the viewport it will first scroll to that element.
 
 - locatable [`NullableLocatable`][nullablelocatable]
 - options? [`ClickOptions`][clickoptions] (Optional)
+- returns: [Promise<`void`>][promise]
+
+### `drag(sourceElement, targetElement)`
+
+Drags the source element to the target element
+
+**Parameters**
+
+- sourceElement [`ElementHandle`][elementhandle]
+- targetElement [`ElementHandle`][elementhandle]
 - returns: [Promise<`void`>][promise]
 
 ### `emulateDevice(deviceName)`
@@ -148,6 +161,41 @@ Makes the element located by the first argument the receiver of future input.
 - locator [`NullableLocatable`][nullablelocatable] The [Locator][] to use to find an element to send focus to.
 - returns: [Promise<`void`>][promise]
 
+### `getCookies([filterBy])`
+
+Gets cookies by URL(s) and/or by cookie name(s). If no URLs and cookie names are specified, this method returns all cookies. If URLs and/or cookie names are specified, only cookies that affect those URLs and/or match those names are returned.
+
+**Parameters**
+
+- filterBy? `FilterBy` (Optional)
+  - url? `string | string[] | undefined` List of URLs (Optional)
+  - name? `string | string[] | undefined` List of cookie names (Optional)
+- returns: [Promise<Cookie[]>][promise]
+  - name `string`
+  - value `string`
+  - domain `string`
+  - path `string`
+  - expires `number` Unix time in seconds.
+  - httpOnly `boolean`
+  - secure `boolean`
+  - sameSite `"Strict"|"Lax"|"None"`
+
+:::info Note
+- If you pass `https` URL(s) to the method, only cookies that have `secure: true` will be returned.
+- If you pass `http` URL(s) to the method, only cookies that have `secure: false` will be returned.
+:::
+
+**Example:**
+``` ts title="my-test.perf.ts"
+	step('Start', async browser => {
+		await browser.visit('https://challenge.flood.io')
+		const cookies = await browser.getCookies({names: 'largest_order'})
+		for (const cookie of cookies) {
+		  console.log(JSON.stringify(cookie))
+		}
+	  })
+```
+
 ### `getMimeType(filePath)`
 
 Returns the Media (MIME) Type of a file
@@ -155,6 +203,13 @@ Returns the Media (MIME) Type of a file
 **Parameters**
 - filePath `string` path to a file
 - returns: `string` media type of the file
+
+### `getUrl()`
+
+Returns the URL of the current page
+
+**Parameters**
+- returns: `string` URL of the current page
 
 ### `highlightElement(element)`
 

@@ -1,7 +1,7 @@
 import { step, TestSettings, By } from '@flood/element'
 
 export const settings: TestSettings = {
-	loopCount: -1,
+	loopCount: 1,
 	waitUntil: 'visible',
 	clearCache: false,
 	clearCookies: false,
@@ -18,7 +18,7 @@ const URL = 'https://testscroll.hongla.dev/'
 
 export default () => {
 	step('[01] -  Test Scroll with Target is Point and ScrollDirection', async browser => {
-		await browser.visit(URL)
+		await browser.visit(URL, {waitUntil: 'load'})
 		await browser.wait(2)
 
 		console.info('[INFO]: ScrollTo with param is ScrollDirection bottom')
@@ -47,7 +47,7 @@ export default () => {
 		await browser.wait(2)
 
 		console.info('[INFO]: ScrollTo with param is ElementHandle')
-		const paragraph = await browser.findElement(By.css('p'))
+		const paragraph = await browser.findElement('p')
 		await browser.scrollTo(paragraph, { behavior: 'smooth', block: 'nearest' })
 		await browser.wait(2)
 

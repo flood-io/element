@@ -1,0 +1,27 @@
+.with-show-more {
+  .button {
+    color: #757575;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+
+  .show-more-section {
+    font-size: 0;
+  }
+
+  .trigger {
+    display: none;
+  }
+
+  .trigger ~ .wrapper .button::before {
+    content: '... Show more';
+  }
+
+  .trigger:checked ~ .wrapper .button::before {
+    content: 'Show less';
+  }
+
+  .trigger:checked ~ .wrapper .show-more-section {
+    font-size: inherit;
+  }
+}

@@ -1,51 +1,75 @@
 {
-	"compilerOptions": {
-		"module": "CommonJS",
-		"target": "ES2016",
-		"moduleResolution": "Node",
-		"lib": ["ESNext", "DOM"],
-		"removeComments": true,
-		"pretty": true,
-		"strictNullChecks": true,
-		"forceConsistentCasingInFileNames": true,
-		"allowUnreachableCode": false,
-		"alwaysStrict": true,
-		"noUnusedLocals": true,
-		"noImplicitAny": false,
-		"allowSyntheticDefaultImports": true,
-		"esModuleInterop": true,
-		"experimentalDecorators": true,
-		"noEmitOnError": true,
-		"emitDecoratorMetadata": true,
-		"composite": true,
-		"declaration": true,
-		"declarationMap": true,
-		"outDir": "./dist",
-		"baseUrl": "./",
-		"paths": {
-			"@flood/element-compiler": ["packages/compiler/src/index.ts"],
-			"@flood/element-core": ["packages/core/index.ts"],
-			"@flood/element-cli": ["packages/cli/src/index.ts"],
-			"@flood/element-*": ["packages/*/src/index.ts"]
-		}
-	},
-	"typeAcquisition": { "enable": true },
-	"include": ["packages/*/**/*.ts", "packages/core/api.ts", "packages/core/index.ts"],
-	"exclude": [
-		"packages/core/lib",
-		"packages/core/examples",
-		"packages/core/src/**/*.test.ts",
-		"packages/core/src/**/*.spec.ts",
-		"packages/core/docs",
-		"packages/core/scripts",
-		"packages/core/tests",
-		"packages/core/src/runtime/Buffer.ts",
-		"packages/core/node_modules",
-		"packages/core/src/runtime/errors/ErrorClassification.ts",
-		"**/dist",
-		"*.spec.ts",
-		"*.test.ts",
-		"**/node_modules",
-		"node_modules"
-	]
+  "compilerOptions": {
+    "module": "CommonJS",
+    "target": "ES2016",
+    "moduleResolution": "Node",
+    "lib": [
+      "ESNext",
+      "DOM"
+    ],
+    "removeComments": true,
+    "pretty": true,
+    "strictNullChecks": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowUnreachableCode": false,
+    "alwaysStrict": true,
+    "noUnusedLocals": true,
+    "noImplicitAny": false,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "noEmitOnError": true,
+    "emitDecoratorMetadata": true,
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "paths": {
+      "@flood/element-compiler": [
+        "packages/compiler/src/index.ts"
+      ],
+      "@flood/element-core": [
+        "packages/core/index.ts"
+      ],
+      "@flood/element-cli": [
+        "packages/cli/src/index.ts"
+      ],
+      "@flood/element-scheduler": [
+        "packages/element-scheduler/src/index.ts"
+      ],
+      "@flood/element-report": [
+        "packages/report/index.ts"
+      ],
+      "@flood/element-*": [
+        "packages/*/src/index.ts"
+      ]
+    }
+  },
+  "typeAcquisition": {
+    "enable": true
+  },
+  "include": [
+    "packages/*/**/*.ts",
+    "packages/core/api.ts",
+    "packages/core/index.ts"
+  ],
+  "exclude": [
+    "packages/core/lib",
+    "packages/core/examples",
+    "packages/core/src/**/*.test.ts",
+    "packages/core/src/**/*.spec.ts",
+    "packages/core/docs",
+    "packages/core/scripts",
+    "packages/core/tests",
+    "packages/core/src/runtime/Buffer.ts",
+    "packages/core/node_modules",
+    "packages/core/src/runtime/errors/ErrorClassification.ts",
+    "**/dist",
+    "*.spec.ts",
+    "*.test.ts",
+    "**/__tests__/**",
+    "**/node_modules",
+    "node_modules"
+  ]
 }

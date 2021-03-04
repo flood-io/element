@@ -1,7 +1,6 @@
-import { step, TestSettings, TestData, Browser } from '@flood/element'
+import { step, TestSettings, TestData } from '@flood/element'
 
 export const settings: TestSettings = {
-	chromeVersion: 'stable',
 	loopCount: -1,
 	waitUntil: 'visible',
 	waitTimeout: '60s',
@@ -14,7 +13,7 @@ export const settings: TestSettings = {
 	stepDelay: '2s',
 }
 
-type Flooders = {
+type Flooder = {
 	name: string
 	email: string
 }
@@ -102,7 +101,7 @@ const solarSystemPart2: SolarSystemPlanet[] = [
 ]
 
 TestData.fromCSV<User>('./users.csv').as('users')
-TestData.fromJSON<Flooders>('./flooders*.json')
+TestData.fromJSON<Flooder>('./flooders*.json')
 	.as('flooders')
 	.shuffle()
 
@@ -120,39 +119,29 @@ const toEarthHour = (day: number): string => {
 }
 
 export default () => {
-	step(
-		'List all Test Data',
-		async (
-			browser: Browser,
-			data: {
-				users: User
-				flooders: Flooders
-				'Solar-System-Planets': SolarSystemPlanet
-			},
-		) => {
-			console.log('======================================================')
-			console.log(`FloodUsers:\n`)
-			console.log(data.users)
-			console.log('-----------------------------------------------------')
-			console.log(`Flooders:\n`)
-			console.log(data.flooders)
-			console.log('-----------------------------------------------------')
-			console.log(`Solar System Planet:\n`)
-			const planet = {
-				...data['Solar-System-Planets'],
-				diameter: `${data['Solar-System-Planets'].diameter} km`,
-				orbit:
-					data['Solar-System-Planets'].orbit <= 365
-						? `${data['Solar-System-Planets'].orbit} Earth days`
-						: `${toEarthYear(data['Solar-System-Planets'].orbit)} Earth years`,
-				day:
-					data['Solar-System-Planets'].day >= 1
-						? `${data['Solar-System-Planets'].day} Earth days`
-						: `${toEarthHour(data['Solar-System-Planets'].day)} Earth hours`,
-			}
-			console.log(planet)
-			console.log('======================================================')
-			await browser.wait(3)
-		},
-	)
+	step('List all Test Data', async (browser, data) => {
+		console.log('======================================================')
+		console.log(`FloodUsers:\n`)
+		console.info(JSON.stringify(data['users']))
+		console.log('______________________________________________________')
+		console.log(`Flooders:\n`)
+		console.info(JSON.stringify(data['flooders']))
+		console.log('______________________________________________________')
+		console.log(`Solar System Planet:\n`)
+		const planet = {
+			...data['Solar-System-Planets'],
+			diameter: `${data['Solar-System-Planets'].diameter} km`,
+			orbit:
+				data['Solar-System-Planets'].orbit <= 365
+					? `${data['Solar-System-Planets'].orbit} Earth days`
+					: `${toEarthYear(data['Solar-System-Planets'].orbit)} Earth years`,
+			day:
+				data['Solar-System-Planets'].day >= 1
+					? `${data['Solar-System-Planets'].day} Earth days`
+					: `${toEarthHour(data['Solar-System-Planets'].day)} Earth hours`,
+		}
+		console.info(JSON.stringify(planet))
+		console.log('======================================================')
+		await browser.wait(3)
+	})
 }

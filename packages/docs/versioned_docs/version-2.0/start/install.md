@@ -33,15 +33,7 @@ A list of the default versions of all tools run on [Flood](https://flood.io) is 
   ]
 }>
   <TabItem value="mac">
-  If you are on macOS and don't already have NodeJS installed, consider installing Element using homebrew.
-  This will install Element along with anything else it needs to run, such as NodeJS.
-Install using Homebrew:
-
-```bash title="brew"
-brew install floodio/taps/element
-```
-
-Or if you prefer using Yarn or NPM:
+Install using Yarn or NPM:
 
 ```bash title="yarn"
 yarn global add element-cli
@@ -54,7 +46,6 @@ npm -g install element-cli
 
   </TabItem>
   <TabItem value="win">
-Install using Yarn or NPM:
 
 ```bash title="yarn"
 yarn global add element-cli

@@ -55,10 +55,6 @@ html[data-theme='dark'] {
 	color: var(--ifm-color-primary-lightest) !important;
 }
 
-.main-wrapper {
-	overflow-x: hidden;
-}
-
 .navbar__recorder {
 	position: relative;
 	margin-right: 1.75rem;
@@ -73,9 +69,9 @@ html[data-theme='dark'] {
 	color: var(--ifm-badge-color-primary);
 	top: 0;
 	right: -1.75rem;
-	background-color: var(--ifm-badge-background-color);
-	width: 2.5rem;
-	height: 1.25rem;
+	background-color: var(--ifm-color-danger);
+	width: calc(2.5rem - 2px);
+	height: calc(1.25rem - 2px);
 	border-radius: 1rem;
 	font-size: 0.75rem;
 	line-height: 1.25rem;

@@ -21,7 +21,7 @@ Click on an element of the page.
 
 - **Action type:** Can be changed to `DBCLICK`
 
-- **Action-specic fields:**
+- **Action-specific fields:**
 
   - **Target element:** Element to click on. This can be changed to any visible elements on the page.
 
@@ -33,7 +33,7 @@ Click on an element of the page.
 
 - **Action type:** Can be changed to `CLICK`
 
-- **Action-specic fields:**
+- **Action-specific fields:**
 
   - **Target element:** Element to double click on. This can be changed to any visible elements on the page.
 
@@ -45,7 +45,7 @@ Drag and drop an element on the page.
 
 - **Action type:** Cannot be changed
 
-- **Action-specic fields:**
+- **Action-specific fields:**
 
   - **Target element:** Element to double click on. This can be changed to any visible elements on the page.
   - **Original coordinates:** `number` The "from" horizontal and vertical coordinate in pixel of the element (not editable).
@@ -57,8 +57,6 @@ Drag to select a string of text on the page.
 
 - **Editable:** No
 
-If you'd like to change the selected text, you'll need to drag-select the new text on the page and remove the old action.
-
 ### `HOVER`
 
 Hover on an element on the page.
@@ -69,7 +67,7 @@ To record a hover action, press and hold the right Shift, then hover on the targ
 
 - **Action type:** Can not be changed
 
-- **Action-specic fields:**
+- **Action-specific fields:**
 
   - **Target element:** Element to hover on. This can be changed to any visible elements on the page.
 
@@ -87,7 +85,7 @@ Press a single key or a key combination (eg: `Ctrl + C` on Windows or `Cmd + C` 
 
 - **Action type:** Cannot be changed
 
-- **Action-specic fields:**
+- **Action-specific fields:**
 
   - **Key(s) to press:** Click `Change` and press the new key or key combination to change.
 
@@ -99,20 +97,20 @@ Resize the viewport (or the browser windows).
 
 - **Action type:** Cannot be changed
 
-- **Action-specic fields:**
+- **Action-specific fields:**
 
   - **Viewport width:** `number` The width of the viewport in pixel after resizing.
   - **Viewport height:** `number` The height of the viewport in pixel after resizing.
 
 ### `SCROLL`
 
-Scroll the web page up or down to a coordinate.
+Scroll the web page up, down, left or right to a coordinate.
 
 - **Editable:** Yes
 
 - **Action type:** Can not be changed
 
-- **Action-specic fields:**
+- **Action-specific fields:**
 
   - **Horizontal distance to scroll:** `number` The horizontal coordinate in pixel to scroll to.
   - **Vertical distance to scroll:** `number` The vertical coordinate in pixel to scroll to.
@@ -125,7 +123,7 @@ Select an item in a dropdown list.
 
 - **Action type:** Can not be changed
 
-- **Action-specic fields:**
+- **Action-specific fields:**
 
   - **Target element:** The dropdown list to select an item from. This can be changed to any dropdown lists on the page.
   - **Selected value:** `string` or `number` Value of the item to select.
@@ -138,7 +136,7 @@ Type a string of text to a textbox or a text area.
 
 - **Action type:** Can not be changed
 
-- **Action-specic fields:**
+- **Action-specific fields:**
 
   - **Target element:** The text area to type into. This can be changed to any text areas on the page.
   - **Value to type:** `string`, `number` or `bool` String of text to type.

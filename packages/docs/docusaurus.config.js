@@ -1,3 +1,4 @@
+/** @type {import('@docusaurus/types').DocusaurusConfig} */
 const versions = require('./versions.json')
 
 module.exports = {

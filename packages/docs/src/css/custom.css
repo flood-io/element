@@ -16,6 +16,8 @@
 	--ifm-color-primary-light: #998dd9;
 	--ifm-color-primary-lighter: #c0b6f2;
 	--ifm-color-primary-lightest: #eae6ff;
+	--ifm-badge-background-color: #f2c94c;
+	--ifm-badge-color-primary: #fff;
 	--ifm-code-font-size: 95%;
 }
 
@@ -55,4 +57,26 @@ html[data-theme='dark'] {
 
 .main-wrapper {
 	overflow-x: hidden;
+}
+
+.navbar__recorder {
+	position: relative;
+	margin-right: 1.75rem;
+}
+
+.navbar__recorder::before {
+	content: 'New';
+	position: absolute;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--ifm-badge-color-primary);
+	top: 0;
+	right: -1.75rem;
+	background-color: var(--ifm-badge-background-color);
+	width: 2.5rem;
+	height: 1.25rem;
+	border-radius: 1rem;
+	font-size: 0.75rem;
+	line-height: 1.25rem;
 }

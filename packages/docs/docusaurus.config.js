@@ -50,6 +50,7 @@ module.exports = {
 					to: 'recorder/docs/',
 					position: 'left',
 					activeBaseRegex: 'recorder',
+					className: 'navbar__recorder',
 				},
 				{ href: 'https://www.flood.io/blog', label: 'Blog', position: 'left' },
 				{

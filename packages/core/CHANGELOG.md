@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.1](https://github.com/flood-io/element/compare/v2.0.0...v2.0.1) (2021-03-10)
+
+
+### Bug Fixes
+
+* fix tests typescript issues ([94e8c6e](https://github.com/flood-io/element/commit/94e8c6eaa87e85b9f8f180b7f84ce7ce0c2e551f))
+
+
+
+
+
 # [2.0.0](https://github.com/flood-io/element/compare/v2.0.0-canary.48...v2.0.0) (2021-03-04)
 
 

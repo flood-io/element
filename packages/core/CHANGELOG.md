@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.2](https://github.com/flood-io/element/compare/v2.0.1...v2.0.2) (2021-03-12)
+
+
+### Bug Fixes
+
+* throw error if failed to wait with condition ([06fabd8](https://github.com/flood-io/element/commit/06fabd88e002b8cd371baa2e339c8b300cfc5cf1))
+
+
+
+
+
 ## [2.0.1](https://github.com/flood-io/element/compare/v2.0.0...v2.0.1) (2021-03-10)
 
 

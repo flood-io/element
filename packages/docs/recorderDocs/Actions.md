@@ -5,13 +5,13 @@ title: Supported actions
 
 Actions are units that comprise a test scenario. There are two categories of actions:
 
-* **Browser interactions:** actions simulating user interactions and can be recorded by interacting with the browser.
+* **Browser interactions:** Actions that simulate user interactions and can be recorded by interacting with the browser.
 
-* **Programming actions:** actions to be used for programming purposes, cannot be recorded by interacting with the browser but added from Recorder menus.
+* **Programming actions:** Actions to be used for programming purposes and cannot be recorded by interacting with the browser but added from Recorder menus.
 
 ## Browser interactions
 
-*You should go through the general guide for [recording browser interactions][record-actions] and [editing actions][edit-actions] before reading further for specific details of each action.*
+*You should go through the general guide for [recording browser interactions][record-actions] and [editing actions][edit-actions] before reading further for specific details of each one.*
 
 ### `CLICK`
 
@@ -65,7 +65,7 @@ To record a hover action, press and hold the right Shift, then hover on the targ
 
 - **Editable:** Yes
 
-- **Action type:** Can not be changed
+- **Action type:** Cannot be changed
 
 - **Action-specific fields:**
 
@@ -108,7 +108,7 @@ Scroll the web page up, down, left or right to a coordinate.
 
 - **Editable:** Yes
 
-- **Action type:** Can not be changed
+- **Action type:** Cannot be changed
 
 - **Action-specific fields:**
 
@@ -121,7 +121,7 @@ Select an item in a dropdown list.
 
 - **Editable:** Yes
 
-- **Action type:** Can not be changed
+- **Action type:** Cannot be changed
 
 - **Action-specific fields:**
 
@@ -134,11 +134,11 @@ Type a string of text to a textbox or a text area.
 
 - **Editable:** Yes
 
-- **Action type:** Can not be changed
+- **Action type:** Cannot be changed
 
 - **Action-specific fields:**
 
-  - **Target element:** The text area to type into. This can be changed to any text areas on the page.
+  - **Target element:** The text area to type into. This can be changed to any text area on the page.
   - **Value to type:** `string`, `number` or `bool` String of text to type.
 
 ## Programming actions

@@ -20,17 +20,17 @@ You can also define the scope of the variables created as *global* or *step-scop
 
 ## Add a variable
 
-To add a variable, on Recording screen, click `Variables`.
+To add a variable, on the Recording screen, click `Variables`.
 
 <img src={useBaseUrl('docs_img/rec-variable.png')} alt="variable menu" width="250"/>
 
-"Variables management" screen will appear. Click `Add variable`, then select `Manually` or `From element property` to add corresponding variable. See details in the sections below.
+"Variables management" screen will appear. Click `Add variable`, then select `Manually` or `From element property` to add the corresponding variable. See details in the sections below.
 
 <img src={useBaseUrl('docs_img/rec-variable-add.png')} alt="add variable" width="250"/>
 
 ### Manually
 
-After selecting to add a variable `Manually`, you will see "Create new variable" screen where you can edit the variable details.
+After selecting to add a variable `Manually`, you will see the "Create new variable" screen where you can edit the variable details.
 
 <img src={useBaseUrl('docs_img/rec-variable-add-manually.png')} alt="add variable manually" width="250"/>
 
@@ -50,7 +50,7 @@ After selecting to add a variable `Manually`, you will see "Create new variable"
 
   Manually enter a value for the variable.
 
-Once you've entered all the details, click `Done`. There will be a variable created in "Variables management" screen.
+Once you've entered all the details, click `Done`. There will be a variable created in the "Variables management" screen.
 
 <img src={useBaseUrl('docs_img/rec-variable-added.png')} alt="manual variable added" width="250"/>
 
@@ -64,7 +64,7 @@ After selecting to add a variable `From element property`, you will be prompted 
 
 <img src={useBaseUrl('docs_img/rec-variable-add-from-element.png')} alt="add variable from element" width="250"/>
 
-"Create new variable" screen will appear and you can edit the variable details.
+The "Create new variable" screen will appear, and you can edit the variable details.
 
 <img src={useBaseUrl('docs_img/rec-variable-add-from-element-detail.png')} alt="add variable from element - details" width="250"/>
 
@@ -84,7 +84,7 @@ After selecting to add a variable `From element property`, you will be prompted 
 
 * **Regex to apply:**
 
-  Allows you to use regular expression to extract only a part of the property's value selected above.
+  Allows you to use a regular expression to extract only a part of the property's value selected above.
   
   For example, if you'd like to extract only the number part from the string *"Get up to 59% Off New Arrivals"* below for your variable `percentOff`, enter the regex "\d+".
 
@@ -94,7 +94,7 @@ After selecting to add a variable `From element property`, you will be prompted 
 
   Pre-populated with the current value extracted from the selected property (regex applied - if specified). Note that this can be different every time the page loads.
 
-Once you've entered all the details, click `Done`. There will be a variable created in "Variables management" screen.
+Once you've entered all the details, click `Done`. There will be a variable created in the "Variables management" screen.
 
 <img src={useBaseUrl('docs_img/rec-variable-added-2.png')} alt="manual variable added 2" width="250"/>
 
@@ -106,7 +106,7 @@ A `CREATE` action will also be added to the Recording screen at the cursor.
 
   * Variables created from element properties are always step-scoped and will be accessible only within the standing step.
   
-  * Since values of variables created from element properties can be different every time the page loads, their value appear as `Dynamic value` instead of set-in-stone values.
+  * Since values of variables created from element properties can be different every time the page loads, their values appear as `Dynamic value` instead of set-in-stone values.
 
 :::
 
@@ -114,21 +114,21 @@ A `CREATE` action will also be added to the Recording screen at the cursor.
 
 There are two ways to edit a variable.
 
-1. On Recording screen, hover on the `CREATE` action, then click `...` icon > `Edit variable`.
+1. On the Recording screen, hover on the `CREATE` action, then click the `...` icon > `Edit variable`.
 
-2. On "Variables management" screen, hover on the variable, then click `...` icon > `Edit variable`.
+2. On "Variables management" screen, hover on the variable, then click the `...` icon > `Edit variable`.
 
 ## Delete a variable
 
 There are two ways to delete a variable.
 
-1. On Recording screen, hover on the `CREATE` action, then click `x` icon.
+1. On the Recording screen, hover on the `CREATE` action, then click the `x` icon.
 
-2. On "Variables management" screen, hover on the variable, then click `x` icon.
+2. On the "Variables management" screen, hover on the variable, then click the `x` icon.
 
 :::info NOTE
 
-You can only delete a variable if it is not in used in any actions or assertions. If you'd like to delete a variable that is in used in some actions, you will need to remove the variable usages from those actions first.
+You can only delete a variable if it is not used in any actions or assertions. If you'd like to delete a variable that is used in some actions, you will need to remove the variable usages from those actions first.
 
 :::
 
@@ -136,7 +136,7 @@ You can only delete a variable if it is not in used in any actions or assertions
 
 After creating variables, you can use them as values in [actions][edit-action] and [assertions][assert].
 
-For example, to use variable in `Expected value` of an assertion:
+For example, to use variables in `Expected value` of an assertion:
 
 1. Click on the field.
 

@@ -88,7 +88,7 @@ export class CustomConsole extends Console {
 		}
 	}
 
-	groupEnd() {
+	groupEnd(): void {
 		if (this._groupDepth > 0) {
 			this._groupDepth -= 2
 		}
@@ -125,7 +125,7 @@ export class CustomConsole extends Console {
 		this._log('warn', format(firstArg, ...args))
 	}
 
-	getBuffer() {
+	getBuffer(): null {
 		return null
 	}
 }

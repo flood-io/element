@@ -11,7 +11,7 @@ export class Context {
 
 	private attached = false
 
-	public async attachTest(test: Test) {
+	public async attachTest(test: Test): Promise<void> {
 		if (this.attached) return
 		this.attached = true
 		await this.attachToPage(
@@ -23,14 +23,14 @@ export class Context {
 
 	// TODO deliberately detach from network recorder & observer
 
-	public async attachToPage(reporter: IReporter, page: Page, consoleFilters: ConsoleMethod[]) {
+	public async attachToPage(reporter: IReporter, page: Page, consoleFilters: ConsoleMethod[]): Promise<void> {
 		this.networkRecorder = new NetworkRecorder(page)
 		await this.networkRecorder.attachEvents()
 		this.observer = new NetworkObserver(reporter, this.networkRecorder, consoleFilters)
 		await this.observer.attachToNetworkRecorder()
 	}
 
-	public async syncNetworkRecorder() {
+	public async syncNetworkRecorder(): Promise<void> {
 		await this.networkRecorder.sync()
 	}
 }

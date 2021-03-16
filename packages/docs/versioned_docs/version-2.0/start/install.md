@@ -14,6 +14,14 @@ We use the Yarn package manager throughout these docs, however, each command is 
 
 :::
 
+:::info Flood Support
+Element 2.0 is not enabled by default on [Flood](https://flood.io) and is in Preview mode. Please [contact support](https://flood.io/support) if you would like to enable its use on your account.
+
+The current default version of Element run on [Flood](https://flood.io) is version 1.5.1, please visit [the documentation for Element 1.5.1](https://element.flood.io/docs/1.5/) if the Element 2.0 Preview has not been enabled on your account.
+
+A list of the default versions of all tools run on [Flood](https://flood.io) is available within the [Default tool versions](https://guides.flood.io/scripting-and-tools/default-tool-versions) guide.
+:::
+
 
 <Tabs
   groupId="operating-systems"
@@ -25,15 +33,7 @@ We use the Yarn package manager throughout these docs, however, each command is 
   ]
 }>
   <TabItem value="mac">
-  If you are on macOS and don't already have NodeJS installed, consider installing Element using homebrew.
-  This will install Element along with anything else it needs to run, such as NodeJS.
-Install using Homebrew:
-
-```bash title="brew"
-brew install floodio/taps/element
-```
-
-Or if you prefer using Yarn or NPM:
+Install using Yarn or NPM:
 
 ```bash title="yarn"
 yarn global add element-cli
@@ -46,7 +46,6 @@ npm -g install element-cli
 
   </TabItem>
   <TabItem value="win">
-Install using Yarn or NPM:
 
 ```bash title="yarn"
 yarn global add element-cli

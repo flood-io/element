@@ -39,7 +39,7 @@ export default class WebpackCompiler implements ITestScript {
 		return this
 	}
 
-	public get scriptRoot() {
+	public get scriptRoot(): string {
 		return dirname(this.sourceFile)
 	}
 
@@ -51,15 +51,15 @@ export default class WebpackCompiler implements ITestScript {
 		return readFileSync(this.sourceFile, { encoding: 'utf8' })
 	}
 
-	get sandboxesFilename() {
+	get sandboxesFilename(): string {
 		return this.sourceFile
 	}
 
-	get source() {
+	get source(): string {
 		return this.result?.content ?? ''
 	}
 
-	get sourceMap() {
+	get sourceMap(): string {
 		return this.result?.sourceMap ?? ''
 	}
 
@@ -112,7 +112,7 @@ export default class WebpackCompiler implements ITestScript {
 
 	private parsedCommentsMemo: { [index: string]: string; name: string; description: string }
 
-	private parsedComments(key: string) {
+	private parsedComments(key: string): string {
 		if (!this.parsedCommentsMemo) {
 			const comments = parseComments(this.originalSource)
 			let description = '',

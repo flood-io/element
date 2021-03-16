@@ -27,7 +27,7 @@ export class TimingObserver extends NetworkRecordingTestObserver {
 		return this.next.after(test)
 	}
 
-	async beforeStep(test: Test, step: Step) {
+	async beforeStep(test: Test, step: Step): Promise<void> {
 		debug('beforeStep')
 		this.timing.reset()
 		this.passed = 0
@@ -46,7 +46,7 @@ export class TimingObserver extends NetworkRecordingTestObserver {
 		debug(`Before step: ${name}`)
 	}
 
-	async afterStep(test: Test, step: Step) {
+	async afterStep(test: Test, step: Step): Promise<void> {
 		this.timing.end('step')
 		this.timing.start('afterStep')
 
@@ -66,7 +66,7 @@ export class TimingObserver extends NetworkRecordingTestObserver {
 		return this.next.onStepPassed(test, step)
 	}
 
-	async onStepError(test: Test, step: Step, err: StructuredError<any>) {
+	async onStepError(test: Test, step: Step, err: StructuredError<any>): Promise<void> {
 		this.failed++
 		return this.next.onStepError(test, step, err)
 	}
@@ -88,12 +88,12 @@ export class TimingObserver extends NetworkRecordingTestObserver {
 		})
 	}
 
-	async onStepSkipped(test: Test, step: Step) {
+	async onStepSkipped(test: Test, step: Step): Promise<void> {
 		debug(`Skipped step: ${step.name}`)
 		return this.next.onStepSkipped(test, step)
 	}
 
-	async onStepUnexecuted(test: Test, step: Step) {
+	async onStepUnexecuted(test: Test, step: Step): Promise<void> {
 		debug(`Skipped step: ${step.name}`)
 		return this.next.onStepUnexecuted(test, step)
 	}

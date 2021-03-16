@@ -55,7 +55,7 @@ export class ElementResult {
 		this.summarizeResult()
 	}
 
-	addScriptWithError(script: ScriptWithError) {
+	addScriptWithError(script: ScriptWithError): void {
 		this._result.scriptsWithError.push(script)
 	}
 

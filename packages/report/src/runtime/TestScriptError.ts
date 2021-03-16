@@ -100,7 +100,7 @@ export class TestScriptError extends Error {
 	callSiteString(): string {
 		return callSiteToString(this.callSite)
 	}
-	toJSON() {
+	toJSON(): { message: string; stack: string } {
 		const { message, stackWhenThrown: stack } = this
 		return {
 			message,

@@ -26,7 +26,7 @@ describe('VisibleTextLocator', () => {
 		const maybeElement = await loc.find(ctx)
 
 		expect(maybeElement).not.toBeNull()
-		expect(await maybeElement.text()).toBe('foo')
+		expect(await maybeElement?.text()).toBe('foo')
 	})
 
 	test('escapes target text correctly', async () => {

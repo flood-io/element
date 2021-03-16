@@ -32,11 +32,12 @@ First, make sure you have installed the [latest version of NodeJS](https://nodej
     {label: 'NPM', value: 'npm'},
   ]
 }>
-  <TabItem value="yarn">
+
+<TabItem value="yarn">
 
 ```bash title="yarn"
 # Install
-yarn global add element-cli
+yarn global add element-cli@1.5.1
 
 # Verify installation
 element --version
@@ -47,7 +48,7 @@ element --version
 
 ```bash title="npm"
 # Install
-npm -g install element-cli
+npm -g install element-cli@1.5.1
 
 # Verify installation
 element --version

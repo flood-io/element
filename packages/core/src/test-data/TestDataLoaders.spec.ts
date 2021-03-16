@@ -46,7 +46,7 @@ describe('TestDataLoaders', () => {
 	})
 
 	test('can load multiple csv and json file', async () => {
-		let data: TestDataSource<any> = null
+		let data: TestDataSource<any>
 		const userCSV = 'user'
 		const orderCSV = 'order'
 		const userJSON = 'userJSON'
@@ -92,7 +92,7 @@ describe('TestDataLoaders', () => {
 	})
 
 	test('can combine 2 JSON/CSV/FromData with the same structure', async () => {
-		let data: TestDataSource<any> = null
+		let data: TestDataSource<any>
 		const userKey = 'user'
 		//2 JSON
 		data = loaders.fromJSON<JSONRow>('users_same.json').as(userKey)
@@ -150,7 +150,7 @@ describe('TestDataLoaders', () => {
 	})
 
 	test('can load data file with pattern', async () => {
-		let data: TestDataSource<any> = null
+		let data: TestDataSource<any>
 		//CSV pattern
 		data = loaders.fromCSV<JSONRow>('users*.csv')
 		await data.load()
@@ -178,7 +178,7 @@ describe('TestDataLoaders', () => {
 	})
 
 	test('Should throw an error if load multiple method with the same alias', async () => {
-		let data: TestDataSource<any> = null
+		let data: TestDataSource<any>
 		data = loaders.fromCSV<JSONRow>('users.csv').as('user')
 		data = loaders.fromJSON<JSONRow>('users.json').as('user')
 		await data.load().catch(err => {
@@ -190,7 +190,7 @@ describe('TestDataLoaders', () => {
 	})
 
 	test('Should throw an error if load multiple file with the same method, same alias but different structure', async () => {
-		let data: TestDataSource<any> = null
+		let data: TestDataSource<any>
 		data = loaders.fromCSV<JSONRow>('users.csv').as('user')
 		data = loaders.fromCSV<JSONRow>('diff_users.csv').as('user')
 		await data.load().catch(err => {
@@ -211,7 +211,7 @@ describe('TestDataLoaders', () => {
 	})
 
 	test('Should throw an error if load multiple method included `fromData` but does not define alias for this', async () => {
-		let data: TestDataSource<any> = null
+		let data: TestDataSource<any>
 		data = loaders.fromCSV<JSONRow>('users.csv').as('userCSV')
 		data = loaders.fromJSON<JSONRow>('users.json').as('userJSON')
 		data = loaders.fromData<any>([

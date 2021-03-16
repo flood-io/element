@@ -15,11 +15,11 @@
   </a>
 </p>
 
----
+* * *
 
 Flood Element is a browser based load generation tool built on top of Puppeteer. It provides an easy to use set of commands for automating most user interfaces, including mouse actions such as click and drag, keyboard key press actions, and working with inputs, buttons, and menus.
 
-# CLI
+## CLI
 
 ## `element run <file.ts> [options]`
 
@@ -27,28 +27,28 @@ Run a test script locally.
 
 **Browser:**
 
-- `--browser` Specify the browser type used to run the test, using either `'chromium'` (default), `'firefox'` or `'webkit'`.
-- `--executable-path` path to the installation folder of a custom Chromium-based browser, used to run the test. If set, Element will ignore the browser settings, and use this custom browser instead.
-- `--chrome` Specify which version of Google Chrome to use. `DEPRECATED`
-- `--no-headless` Run in non-headless mode so that you can see what the browser is doing as it runs the test
-- `--devtools` Run in non-headless mode and also open devtools
-- `--no-sandbox` Disable the chrome sandbox - advanced option, mostly necessary on linux
+-   `--browser` Specify the browser type used to run the test, using either `'chromium'` (default), `'firefox'` or `'webkit'`.
+-   `--executable-path` path to the installation folder of a custom Chromium-based browser, used to run the test. If set, Element will ignore the browser settings, and use this custom browser instead.
+-   `--chrome` Specify which version of Google Chrome to use. `DEPRECATED`
+-   `--no-headless` Run in non-headless mode so that you can see what the browser is doing as it runs the test
+-   `--devtools` Run in non-headless mode and also open devtools
+-   `--no-sandbox` Disable the chrome sandbox - advanced option, mostly necessary on linux
 
 **Running the test script:**
 
-- `--watch` Watch `<file>` and rerun the test when it changes.
-- `--fast-forward`, `--ff` Run the script in fast-forward: override the `actionDelay` and `stepDelay` settings to 1 second in the test script Specify a number to set a different delay.
-- `--slow-mo` Run the script in slow-motion: Increase the actionDelay and stepDelay settings in the test script to 10 seconds. Specify a number to set a different delay.
-- `--step-delay` Override stepDelay test script setting
-- `--action-delay` Override actionDelay test script setting
-- `--loop-count` Override the loopCount setting in the test script.
-- `--strict` Compile the script in strict mode. This can be helpful in diagnosing problems.
+-   `--watch` Watch `<file>` and rerun the test when it changes.
+-   `--fast-forward`, `--ff` Run the script in fast-forward: override the `actionDelay` and `stepDelay` settings to 1 second in the test script Specify a number to set a different delay.
+-   `--slow-mo` Run the script in slow-motion: Increase the actionDelay and stepDelay settings in the test script to 10 seconds. Specify a number to set a different delay.
+-   `--step-delay` Override stepDelay test script setting
+-   `--action-delay` Override actionDelay test script setting
+-   `--loop-count` Override the loopCount setting in the test script.
+-   `--strict` Compile the script in strict mode. This can be helpful in diagnosing problems.
 
 **Paths:**
 
-- `--work-root` Specify a custom work root to save the test results. (Default: a directory named after your test script, under /tmp/element-results of your project folder)
-- `--test-data-root` Specify a custom path to find test data files. (Default: the same directory as the test script)
+-   `--work-root` Specify a custom work root to save the test results. (Default: a directory named after your test script, under /tmp/element-results of your project folder)
+-   `--test-data-root` Specify a custom path to find test data files. (Default: the same directory as the test script)
 
 **Positionals:**
 
-- file the test script to run
+-   file the test script to run

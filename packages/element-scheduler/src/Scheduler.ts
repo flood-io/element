@@ -125,7 +125,7 @@ export class Scheduler {
 		console.log(table.toString())
 	}
 
-	public async run(testScript: string) {
+	public async run(testScript: string): Promise<void> {
 		const stages = this.settings.stages
 		assertIsValidateStages(stages)
 
@@ -314,7 +314,7 @@ export class Scheduler {
 		await plan.ticker(onTicker, onEndStage, onNewStage)
 	}
 
-	stop = async () => {
+	stop = async (): Promise<void> => {
 		await this.browserServer.kill()
 		process.exit(0)
 	}

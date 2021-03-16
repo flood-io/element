@@ -52,12 +52,12 @@ export class Looper {
 		return !this.cancelled && (hasLoopsLeft || hasInfiniteLoops)
 	}
 
-	restartLoop() {
+	restartLoop(): void {
 		this.isRestart = true
 		this.iteration -= 1
 	}
 
-	restartLoopDone() {
+	restartLoopDone(): void {
 		this.isRestart = false
 	}
 

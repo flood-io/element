@@ -53,7 +53,7 @@ export interface ElementRunArguments {
 	'fail-status-code': number
 	configFile: string
 	verbose?: boolean
-	browser: BrowserType
+	browser?: BrowserType
 	export?: boolean
 	showScreenshot?: boolean
 	notExistingFiles: string[]
@@ -81,7 +81,7 @@ export interface ElementOptions {
 	persistentRunner: boolean
 	testCommander?: TestCommander
 	failStatusCode: number
-	browser: BrowserType
+	browser?: BrowserType
 	export?: boolean
 	executablePath?: string
 	downloadsPath?: string
@@ -153,10 +153,9 @@ function setupDelayOverrides(
 	return testSettingOverrides
 }
 
-function initRunEnv(root: string, testDataRoot: string, testScript: string) {
+function initRunEnv(root: string, testDataRoot: string) {
 	const workRoot = new WorkRoot(root, {
 		'test-data': testDataRoot,
-		'test-script': basename(testScript, extname(testScript)),
 	})
 
 	return {
@@ -212,7 +211,7 @@ export function normalizeElementOptions(
 		headless: args.headless ?? true,
 		devtools: args.devtools ?? false,
 		sandbox: args.sandbox ?? true,
-		runEnv: initRunEnv(workRootPath, testDataPath, file),
+		runEnv: initRunEnv(workRootPath, testDataPath),
 		testSettings: {},
 		testSettingOverrides: {},
 		persistentRunner: false,

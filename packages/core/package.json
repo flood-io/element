@@ -1,6 +1,6 @@
 {
 	"name": "@flood/element-core",
-	"version": "2.0.0-canary.42",
+	"version": "2.0.2",
 	"description": "Flood Element is a browser based load generation tool for easily testing modern web application performance",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -30,11 +30,10 @@
 	},
 	"homepage": "https://github.com/flood-io/element#readme",
 	"dependencies": {
-		"@flood/element-compiler": "2.0.0-canary.42",
-		"@flood/element-report": "2.0.0-canary.42",
+		"@flood/element-compiler": "2.0.0",
+		"@flood/element-report": "2.0.0",
 		"@types/faker": "^4.1.9",
 		"@types/node": "12.7.4",
-		"@types/puppeteer": "^2.0.1",
 		"assert": "^1.4.1",
 		"comment-parser": "^0.5.0",
 		"csv": "^5.3.2",
@@ -70,11 +69,18 @@
 		"@types/mkdirp": "^0.5.2",
 		"@types/prettier": "^1.13.2",
 		"@types/sanitize-filename": "^1.1.28",
+		"@types/test-listen": "^1.1.0",
 		"express": "^4.16.1",
+		"front-matter": "^4.0.2",
 		"glob": "^7.1.2",
+		"lodash.camelcase": "^4.3.0",
 		"lodash.upperfirst": "^4.3.1",
+		"markdown-table": "^2.0.0",
 		"morgan": "^1.9.1",
-		"run-script-os": "^1.0.3"
+		"nodemon": "^2.0.7",
+		"run-script-os": "^1.0.3",
+		"test-listen": "^1.1.0",
+		"typedoc": "^0.20.25"
 	},
 	"resolutions": {
 		"@types/node": "12.7.4"

@@ -195,6 +195,7 @@ Gets cookies by URL(s) and/or by cookie name(s). If no URLs and cookie names are
 		}
 	  })
 ```
+
 ### `getMimeType(filePath)`
 
 Returns the Media (MIME) Type of a file

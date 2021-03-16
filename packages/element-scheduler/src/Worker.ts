@@ -63,7 +63,7 @@ export class Worker implements WorkerInterface {
 		this.connection = new WorkerConnection(this.worker)
 	}
 
-	private initializeWorkerThread() {
+	private initializeWorkerThread(): void {
 		const isTS = __filename.endsWith('.ts')
 		const workerFile = isTS
 			? join(__dirname, './workers/worker-import.js')
@@ -127,7 +127,7 @@ export class Worker implements WorkerInterface {
 		}
 	}
 
-	private onMessage = async (response: ParentMessage) => {
+	private onMessage = async (response: ParentMessage): Promise<void> => {
 		const [type] = response
 
 		switch (type) {
@@ -166,7 +166,7 @@ export class Worker implements WorkerInterface {
 		}
 	}
 
-	private onExit = (exitCode: number) => {
+	private onExit = (exitCode: number): void => {
 		debug(`exit code: ${exitCode}`)
 		this.resolveExitPromise()
 	}
@@ -215,7 +215,7 @@ export class Worker implements WorkerInterface {
 		return this.stderr || null
 	}
 
-	shutdown() {
+	shutdown(): void {
 		if (this.fakeStream) {
 			this.fakeStream.end()
 			this.fakeStream = null

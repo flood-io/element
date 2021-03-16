@@ -469,7 +469,7 @@ export default class Test implements ITest {
 		browser: Browser<Step>,
 		command: string,
 		args: string,
-	) {
+	): Promise<void> {
 		if (this.hookMode) {
 			await testObserver.afterHookAction(this, command, args)
 		} else {

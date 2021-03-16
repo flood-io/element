@@ -12,14 +12,14 @@ export class ThreadConnection<RxT, TxT> {
 		messagePort.on('close', this.dispose.bind(this))
 	}
 
-	public async reply(id: number, message: MessageReply) {
+	public async reply(id: number, message: MessageReply): Promise<void> {
 		if (this.openReplies.has(id)) {
 			this.messagePort.postMessage([id, message])
 			this.openReplies.delete(id)
 		}
 	}
 
-	public dispose() {
+	public dispose(): void {
 		this.onClose()
 	}
 
@@ -29,7 +29,7 @@ export class ThreadConnection<RxT, TxT> {
 		this.reply(id, [Messages.REPLY, replyMessage])
 	}
 
-	private onClose() {
+	private onClose(): void {
 		if (this.closed) return
 		this.closed = true
 		this.messagePort.removeAllListeners()

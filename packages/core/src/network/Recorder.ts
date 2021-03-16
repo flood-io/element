@@ -61,12 +61,12 @@ export default class Recorder {
 		}
 	}
 
-	public async sync() {
+	public async sync(): Promise<void> {
 		debug('Recorder.sync() (pendingTaskQueue.chain)')
 		await this.pendingTaskQueue.chain
 	}
 
-	public async recordRequest(payload: any) {
+	public async recordRequest(payload: any): Promise<void> {
 		debug('Recorder.recordRequest(%o)', payload)
 
 		if (payload.request.url.startsWith('data:')) {
@@ -107,7 +107,7 @@ export default class Recorder {
 		}
 	}
 
-	public async recordResponse(payload: RawResponse) {
+	public async recordResponse(payload: RawResponse): Promise<void> {
 		const entry = this.getEntryForRequestId(payload.requestId)
 		if (!entry) return
 
@@ -162,7 +162,7 @@ export default class Recorder {
 		requestId: string
 		encodedDataLength: number
 		timestamp: number
-	}) {
+	}): Promise<void> {
 		debug(`Recorder.recordResponseCompleted: ${requestId}`)
 		const entry = this.getEntryForRequestId(requestId)
 		if (!entry) {
@@ -243,34 +243,34 @@ export default class Recorder {
 		return justNumber(mean(this.entries.map(({ request }) => request.duration)), 0)
 	}
 
-	public responseTimeForType(type: string) {
+	public responseTimeForType(type: string): number {
 		const entries = this.entriesForType(type).filter(({ request }) => request.duration > 0)
 		return round(sum(entries.map(({ request }) => request.duration)))
 	}
 
-	public latencyForType(type: string) {
+	public latencyForType(type: string): number {
 		const entries = this.entriesForType(type).filter(({ request }) => request.latency > 0)
 		return round(sum(entries.map(({ request }) => request.latency)) / entries.length)
 	}
 
-	public timeToFirstByteForType(type: string) {
+	public timeToFirstByteForType(type: string): number {
 		const entries = this.entriesForType(type).filter(({ request }) => request.ttfb > 0)
 		return round(sum(entries.map(({ request }) => request.ttfb)))
 	}
 
-	public reset() {
+	public reset(): void {
 		debug('Recorder.reset()')
 		this.entries = []
 		this.pages = []
 	}
 
-	public addPendingTask(promise: Promise<any>) {
+	public addPendingTask(promise: Promise<any>): void {
 		this.pendingTaskQueue.add(promise)
 	}
 
-	public recordDOMContentLoadedEvent() {}
+	public recordDOMContentLoadedEvent(): void {}
 
-	public async attachEvents() {
+	public async attachEvents(): Promise<void> {
 		await this.manager.attachEvents()
 	}
 	/**
@@ -279,7 +279,7 @@ export default class Recorder {
 	 * @param {(playwright.PageEvents)} pageEvent
 	 * @param {(event: any) => void} handler
 	 */
-	public async attachEvent(pageEvent: any, handler: (event?: any) => void) {
+	public async attachEvent(pageEvent: any, handler: (event?: any) => void): Promise<void> {
 		if (pageEvent.includes('.')) {
 			try {
 				const browserContext = (await this.page.context()) as ChromiumBrowserContext
@@ -294,11 +294,11 @@ export default class Recorder {
 		}
 	}
 
-	private recordPageResponse(payload: Page) {
+	private recordPageResponse(payload: Page): void {
 		this.pages.push(payload)
 	}
 
-	private getEntryForRequestId(requestId: string) {
+	private getEntryForRequestId(requestId: string): Entry | undefined {
 		return this.entries.find(entry => entry.requestId === requestId)
 	}
 

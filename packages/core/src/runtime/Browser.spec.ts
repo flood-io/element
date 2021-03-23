@@ -82,7 +82,7 @@ describe('Browser', () => {
 		const el1 = await browser.switchTo().activeElement()
 		expect(el1).toBeDefined()
 		expect(el1).not.toBeNull()
-		expect(await el1.getId()).toBe('new_user_first_name')
+		expect(await el1?.getId()).toBe('new_user_first_name')
 	})
 
 	describe('Frame handling', () => {
@@ -318,7 +318,7 @@ describe('Browser', () => {
 			await browser.scrollTo(btn, { block: 'center', inline: 'start' })
 			const btnEl = await browser.findElement(btn)
 			const btnLocation = await btnEl.location()
-			const btnHeight = (await btnEl.element.boundingBox()).height
+			const btnHeight = (await btnEl?.element.boundingBox())!.height
 			expect(Math.round((docClientHeight - btnHeight) / 2)).toBe(btnLocation.y)
 			expect(btnLocation.x).toBe(0)
 

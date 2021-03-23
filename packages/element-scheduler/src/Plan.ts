@@ -32,7 +32,7 @@ export class Plan {
 		onTick: (timestamp: number, target: number, stageIterator: number) => Promise<void>,
 		onEndState: (forceStop?: boolean, sigint?: boolean) => Promise<void>,
 		onNewState: () => Promise<void>,
-	) {
+	): Promise<unknown> {
 		return new Promise(done => {
 			const planSteps: PlanStep[] = []
 			this.stages.forEach((stage, index) => {

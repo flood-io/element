@@ -1,18 +1,14 @@
 {
 	"lerna": "2.11.0",
 	"npmClient": "yarn",
-	"version": "2.0.0-canary.48",
+	"version": "2.0.2",
 	"useWorkspaces": true,
 	"command": {
 		"init": {
 			"exact": true
 		},
 		"publish": {
-			"conventionalCommits": true,
-			"ignoreChanges": [
-				"**/*.md",
-				"packages/docs/**"
-			]
+			"conventionalCommits": true
 		},
 		"version": {
 			"message": "chore(release): publish %s\n[skip ci]",
@@ -25,9 +21,6 @@
 		},
 		"bootstrap": {
 			"npmClient": "yarn"
-		},
-		"add": {
-			"exact": true
 		}
 	},
 	"ignoreChanges": [

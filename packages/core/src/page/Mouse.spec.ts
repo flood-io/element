@@ -23,6 +23,9 @@ const timeout = async (duration: number): Promise<any> =>
 
 const centerPoint = async (element: ElementHandle): Promise<[number, number]> => {
 	const box = await element.boundingBox()
+	if (box === null) {
+		throw new Error('element.boundingBox() returned null')
+	}
 	const { x, y, height, width } = box
 	const cx = (x + x + width) / 2
 	const cy = (y + y + height) / 2
@@ -61,6 +64,15 @@ describe('Mouse', () => {
 	test('can drag and drop', async () => {
 		const handleEl = await page.$('#draggable')
 		const targetEl = await page.$('#droppable')
+
+		if (handleEl === null) {
+			throw new Error('handleEl is null')
+		}
+
+		if (targetEl === null) {
+			throw new Error('targetEl is null')
+		}
+
 		const startingPoint = await centerPoint(handleEl)
 		const finishPoint = await centerPoint(targetEl)
 

@@ -24,7 +24,7 @@ export default class Observer {
 		private consoleFilters: ConsoleMethod[],
 	) {}
 
-	public async attachToNetworkRecorder() {
+	public async attachToNetworkRecorder(): Promise<void> {
 		if (this.attached) return
 		debug('attachToNetworkRecorder()')
 		this.attached = true
@@ -33,7 +33,7 @@ export default class Observer {
 		await this.attachPageEvents()
 	}
 
-	private async attachPageEvents() {
+	private async attachPageEvents(): Promise<void> {
 		await this.networkRecorder.attachEvent('frameattached', event => this.onFrameAttached(event))
 		await this.networkRecorder.attachEvent('domcontentloaded', event =>
 			this.onDOMContentLoaded(event),
@@ -71,19 +71,19 @@ export default class Observer {
 		})
 	}
 
-	private onRawNetworkRequestWillBeSent(payload: Event) {
+	private onRawNetworkRequestWillBeSent(payload: Event): void {
 		debug('onRawNetworkRequestWillBeSent', payload.requestId)
 		this.requests.add(payload.requestId)
 		this.networkRecorder.addPendingTask(this.networkRecorder.recordRequest(payload))
 	}
 
-	private onRawNetworkResponse(payload: RawResponse) {
+	private onRawNetworkResponse(payload: RawResponse): void {
 		debug('onRawNetworkResponse', payload.requestId)
 		if (this.requests.has(payload.requestId))
 			this.networkRecorder.addPendingTask(this.networkRecorder.recordResponse(payload))
 	}
 
-	private onRawNetworkLoadingFinished({ requestId, encodedDataLength, timestamp }: RequestEvent) {
+	private onRawNetworkLoadingFinished({ requestId, encodedDataLength, timestamp }: RequestEvent): void {
 		debug('onRawNetworkLoadingFinished', requestId)
 		if (!this.requests.has(requestId)) {
 			return
@@ -106,14 +106,14 @@ export default class Observer {
 		this.networkRecorder.addPendingTask(promise)
 	}
 
-	private async onRawNetworkLoadingFailed(event: Event) {
+	private async onRawNetworkLoadingFailed(event: Event): Promise<void> {
 		const { requestId } = event
 		debug('onRawNetworkLoadingFailed', requestId)
 		this.removePendingRequest(requestId)
 		this.failedRequests.push(requestId)
 	}
 
-	private removePendingRequest(requestId: string) {
+	private removePendingRequest(requestId: string): void {
 		this.requests.delete(requestId)
 	}
 

@@ -1,7 +1,7 @@
 import { ActionErrorData } from '../../runtime/errors/Types'
 import { StructuredError } from '../../utils/StructuredError'
 import { compileString } from '../../TestScript'
-import { ITestScript } from '../../ITestScript'
+import { ITestScript } from '../../interface/ITestScript'
 
 import { structuredErrorToDocumentedError } from './Documentation'
 
@@ -26,8 +26,8 @@ describe.skip('Documentation', () => {
 				)
 
 				const docErr = structuredErrorToDocumentedError(actionError, testScript)
-				expect(docErr.message).toContain('somekey on detached element')
-				expect(docErr.errorDoc).toContain('removed from the DOM')
+				expect(docErr?.message).toContain('somekey on detached element')
+				expect(docErr?.errorDoc).toContain('removed from the DOM')
 				// console.log(docErr)
 			})
 		})

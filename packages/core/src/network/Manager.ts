@@ -28,11 +28,11 @@ export class Manager {
 		return this.networkIdlePromise
 	}
 
-	public get pendingRequestCount() {
+	public get pendingRequestCount(): number {
 		return this.requestIdToRequest.size
 	}
 
-	private updateIdlePromise() {
+	private updateIdlePromise(): void {
 		if (this.pendingRequestCount <= 2 && this.lifecycleCompleteCallback) {
 			this.lifecycleCompleteCallback.apply(this)
 			this.networkIdlePromise = null
@@ -41,11 +41,11 @@ export class Manager {
 		}
 	}
 
-	private createTimeoutPromise() {
+	private createTimeoutPromise(): Promise<NodeJS.Timeout> {
 		return new Promise(fulfill => setTimeout(fulfill, this.timeout))
 	}
 
-	private createIdlePromise() {
+	private createIdlePromise(): void {
 		if (this.lifecycleCompleteCallback) return
 		if (this.networkIdlePromise) return
 
@@ -57,7 +57,7 @@ export class Manager {
 		this.updateIdlePromise()
 	}
 
-	public async attachEvents() {
+	public async attachEvents(): Promise<void> {
 		try {
 			const browserContext = (await this.page.context()) as ChromiumBrowserContext
 			const client = await browserContext.newCDPSession(this.page)
@@ -90,7 +90,7 @@ export class Manager {
 		resourceType: string,
 		requestPayload: any,
 		frameId: string,
-	) {
+	): void {
 		if (requestId) this.requestIdToRequest.set(requestId, null)
 	}
 
@@ -99,18 +99,18 @@ export class Manager {
 		this.updateIdlePromise()
 	}
 
-	private onResponseReceived() {
+	private onResponseReceived(): void {
 		this.updateIdlePromise()
 	}
 
-	private onLoadingFinished(event: any) {
+	private onLoadingFinished(event: any): void {
 		// const request = this.requestIdToRequest.get(event.requestId)
 		this.requestIdToRequest.delete(event.requestId)
 		this.updateIdlePromise()
 		// console.log(`Pending requests: ${this.pendingRequestCount}`)
 	}
 
-	private onLoadingFailed(event: RequestEvent) {
+	private onLoadingFailed(event: RequestEvent): void {
 		const request = this.requestIdToRequest.get(event.requestId)
 		// For certain requestIds we never receive requestWillBeSent event.
 		// @see https://crbug.com/750469

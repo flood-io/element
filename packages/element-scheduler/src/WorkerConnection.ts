@@ -38,7 +38,7 @@ export class WorkerConnection {
 		thread.once('exit', this.dispose.bind(this))
 	}
 
-	public async send(message: any) {
+	public async send(message: any): Promise<any> {
 		const id = this.rawSend(message)
 
 		return new Promise((resolve, reject) => {
@@ -46,7 +46,7 @@ export class WorkerConnection {
 		})
 	}
 
-	public dispose() {
+	public dispose(): void {
 		this.onClose()
 	}
 
@@ -77,7 +77,7 @@ export class WorkerConnection {
 		}
 	}
 
-	private onClose() {
+	private onClose(): void {
 		if (this.closed) return
 		this.closed = true
 		this.thread.removeAllListeners()

@@ -12,7 +12,7 @@ interface StackLine {
 // https://github.com/evanw/node-source-map-support
 export class SourceUnmapped {
 	// can't have async constructors, so:
-	public static async init(originalSource: string, originalFilename: string, sourceMap: string) {
+	public static async init(originalSource: string, originalFilename: string, sourceMap: string): Promise<SourceUnmapped> {
 		const sourceMapConsumer = await new SourceMapConsumer(sourceMap)
 
 		return new SourceUnmapped(originalSource, originalFilename, sourceMapConsumer)

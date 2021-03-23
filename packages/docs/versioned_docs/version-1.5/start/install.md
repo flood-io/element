@@ -32,7 +32,8 @@ First, make sure you have installed the [latest version of NodeJS](https://nodej
     {label: 'NPM', value: 'npm'},
   ]
 }>
-  <TabItem value="yarn">
+
+<TabItem value="yarn">
 
 ```bash title="yarn"
 # Install

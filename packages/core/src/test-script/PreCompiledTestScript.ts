@@ -73,7 +73,7 @@ export default class PreCompiledTestScript implements ITestScript {
 		return this
 	}
 
-	public get scriptRoot() {
+	public get scriptRoot(): string {
 		console.warn('Accessed preCompiledScript.scriptRoot. This property is deprecated.')
 		return '/'
 	}
@@ -82,15 +82,15 @@ export default class PreCompiledTestScript implements ITestScript {
 		return this.originalSource.includes('@flood/element')
 	}
 
-	get sandboxesFilename() {
+	get sandboxesFilename(): string {
 		return this.sourceFile
 	}
 
-	get source() {
+	get source(): string {
 		return this.originalSource
 	}
 
-	get sourceMap() {
+	get sourceMap(): string {
 		return loadSourceMap(this.originalSource)
 	}
 
@@ -141,7 +141,7 @@ export default class PreCompiledTestScript implements ITestScript {
 
 	private parsedCommentsMemo: { [index: string]: string; name: string; description: string }
 
-	private parsedComments(key: string) {
+	private parsedComments(key: string): string {
 		if (!this.parsedCommentsMemo) {
 			const comments = parseComments(this.originalSource)
 			let description = '',

@@ -96,7 +96,7 @@ export abstract class ElementCondition extends LocatorCondition {
 			const args2: any[] = args.slice(indexSep + 1, args.length)
 
 			const locatorFunc: EvaluateFn = () => null
-			const conditionFunc = (node: HTMLElement, ...args: any[]) => false
+			const conditionFunc = (node: HTMLElement, ...args: any[]): boolean => false
 
 			const [arg1, ...rest] = args1
 			const node: HTMLElement | null = locatorFunc(arg1, ...rest)
@@ -135,8 +135,8 @@ export abstract class ElementCondition extends LocatorCondition {
 		const args = Array.prototype.concat(this.locator.pageFuncArgs, argSeparator, this.pageFuncArgs)
 		debug('waitFor args', args)
 
-		await frame
-			.waitForFunction(
+		try {
+			await frame.waitForFunction(
 				args => {
 					const [fn, ...rest] = args
 					return eval(fn)(rest)
@@ -144,7 +144,10 @@ export abstract class ElementCondition extends LocatorCondition {
 				[compiledFunc, ...args],
 				options,
 			)
-			.catch(err => console.log(err))
+		} catch (err) {
+			console.log(err)
+			throw err
+		}
 		return true
 	}
 }

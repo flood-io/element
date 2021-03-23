@@ -66,10 +66,9 @@ export async function main(rootPath: string) {
 		.help('help')
 		.recommendCommands()
 		.showHelpOnFail(false, chalk('Specify {blue --help} for available options'))
-		.fail((msg, err) => {
+		.fail((_, err) => {
 			if (err) throw err // preserve stack
-			if (msg) console.error(chalk.redBright(msg))
-			process.exit(1)
+			argv.showHelp()
 		})
 		.example(
 			'element run ./examples/flood-challenge.ts',

@@ -13,7 +13,14 @@ import { prerelease, major, minor, patch } from 'semver'
 type Update = { latest: string }
 
 function brewUpdateMessage(version: string, distTag: string, update: Update): string | undefined {
-	const brew = commandExists('brew')
+	let brew = false
+	commandExists('brew', function(err, isBrewExists) {
+		if (err) {
+			console.error(err)
+		} else {
+			brew = !!isBrewExists
+		}
+	})
 	if (__dirname.includes('Cellar') && brew) {
 		let brewSpec: string
 		if (distTag === 'latest') {
@@ -33,9 +40,18 @@ function yarnUpdateMessage(
 	version: string,
 	distTag: string /* , update: Update */,
 ): string | undefined {
-	if (commandExists('yarn')) {
-		return chalk`Get it by running {greenBright yarn global upgrade element-cli@${distTag}}`
-	}
+	let result: string | undefined
+	commandExists('yarn', function(err, isYarnExists) {
+		if (err) {
+			console.error(err)
+			result = undefined
+		} else {
+			result = isYarnExists
+				? chalk`Get it by running {greenBright yarn global upgrade element-cli@${distTag}}`
+				: undefined
+		}
+	})
+	return result
 }
 
 // fallback

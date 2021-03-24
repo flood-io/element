@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.2-prerelease.0](https://github.com/flood-io/element/compare/v1.5.1...v1.5.2-prerelease.0) (2021-03-24)
+
+
+### Bug Fixes
+
+* fix version of packages [skip-ci] ([4ae8393](https://github.com/flood-io/element/commit/4ae8393046ae49670602f6c6f9ceb929e2cb3201))
+
+
+
+
+
 # [1.4.0-beta.6](https://github.com/flood-io/element/compare/v1.4.0-beta.5...v1.4.0-beta.6) (2020-12-04)
 
 **Note:** Version bump only for package element-docs

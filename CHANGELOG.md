@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.2-prerelease.0](https://github.com/flood-io/element/compare/v1.5.1...v1.5.2-prerelease.0) (2021-03-24)
+
+
+### Bug Fixes
+
+* add branch to allowBranch ([697f565](https://github.com/flood-io/element/commit/697f5650b778dc9332c97d1247e8e5a278b8ce8e))
+* fix version of packages [skip-ci] ([4ae8393](https://github.com/flood-io/element/commit/4ae8393046ae49670602f6c6f9ceb929e2cb3201))
+
+
+
+
+
 ## [1.5.1](https://github.com/flood-io/element/compare/v1.5.0...v1.5.1) (2021-01-22)
 
 

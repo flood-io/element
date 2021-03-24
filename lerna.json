@@ -12,12 +12,7 @@
 		},
 		"version": {
 			"message": "chore(release): publish %s\n[skip ci]",
-			"allowBranch": [
-				"master",
-				"beta",
-				"canary",
-				"feature/*"
-			]
+			"allowBranch": ["master", "beta", "canary", "stable_1.x", "feature/*"]
 		},
 		"bootstrap": {
 			"npmClient": "yarn"

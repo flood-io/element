@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.2-prerelease.1](https://github.com/flood-io/element/compare/v1.5.2-prerelease.0...v1.5.2-prerelease.1) (2021-03-25)
+
+
+### Bug Fixes
+
+* resolve unhandled rejection on Windows and Ubuntu ([c3e9bd9](https://github.com/flood-io/element/commit/c3e9bd9f823d1442c1d5b7304c81e34aade807d8))
+* use commandExistsSync instead of async commandExists ([a123d2d](https://github.com/flood-io/element/commit/a123d2d604309830235f49b332f0a572103125e5))
+
+
+
+
+
 ## [1.5.2-prerelease.0](https://github.com/flood-io/element/compare/v1.5.1...v1.5.2-prerelease.0) (2021-03-24)
 
 

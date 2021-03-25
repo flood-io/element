@@ -1,6 +1,6 @@
 {
 	"name": "element-docs",
-	"version": "1.5.2-prerelease.0",
+	"version": "1.5.2-prerelease.1",
 	"private": true,
 	"scripts": {
 		"start": "docusaurus start",

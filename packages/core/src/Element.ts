@@ -30,11 +30,7 @@ export async function runSingleTestScript(
 		showScreenshot,
 	} = opts
 
-	global.console = new CustomConsole(
-		process.stdout,
-		process.stderr,
-		spinnies ? spinnies : new Spinnies(),
-	)
+	global.console = new CustomConsole(process.stdout, process.stderr, spinnies || new Spinnies())
 
 	// TODO proper types for args
 	let runnerClass: { new (...args: any[]): IRunner }

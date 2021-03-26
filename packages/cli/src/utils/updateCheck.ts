@@ -1,19 +1,16 @@
-/* eslint-disable @typescript-eslint/triple-slash-reference */
-/// <reference path="../../ambient.d.ts" />
-
 import checkForUpdate from 'update-check'
-import commandExists from 'command-exists'
 import ms from 'ms'
 import chalk from 'chalk'
 import { error } from './error'
 import { info } from './info'
 import { Package } from 'normalize-package-data'
 import { prerelease, major, minor, patch } from 'semver'
+const commandExistsSync = require('command-exists').sync
 
 type Update = { latest: string }
 
 function brewUpdateMessage(version: string, distTag: string, update: Update): string | undefined {
-	const brew = commandExists('brew')
+	const brew = commandExistsSync('brew')
 	if (__dirname.includes('Cellar') && brew) {
 		let brewSpec: string
 		if (distTag === 'latest') {
@@ -33,7 +30,7 @@ function yarnUpdateMessage(
 	version: string,
 	distTag: string /* , update: Update */,
 ): string | undefined {
-	if (commandExists('yarn')) {
+	if (commandExistsSync('yarn')) {
 		return chalk`Get it by running {greenBright yarn global upgrade element-cli@${distTag}}`
 	}
 }

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.3](https://github.com/flood-io/element/compare/v2.0.2...v2.0.3) (2021-03-26)
+
+
+### Bug Fixes
+
+* use custom console when running on Flood ([5f9f7d1](https://github.com/flood-io/element/commit/5f9f7d147c862689fe995ba658dd92ab99ac3ae6))
+
+
+
+
+
 ## [2.0.2](https://github.com/flood-io/element/compare/v2.0.1...v2.0.2) (2021-03-12)
 
 

@@ -13,7 +13,10 @@ import { ElementResult } from './ElementResult'
 import { join } from 'path'
 import findRoot from 'find-root'
 
-export async function runSingleTestScript(opts: ElementOptions): Promise<IterationResult[]> {
+export async function runSingleTestScript(
+	opts: ElementOptions,
+	spinnies?: any,
+): Promise<IterationResult[]> {
 	const {
 		testScript,
 		clientFactory,
@@ -26,6 +29,8 @@ export async function runSingleTestScript(opts: ElementOptions): Promise<Iterati
 		downloadsPath,
 		showScreenshot,
 	} = opts
+
+	global.console = new CustomConsole(process.stdout, process.stderr, spinnies || new Spinnies())
 
 	// TODO proper types for args
 	let runnerClass: { new (...args: any[]): IRunner }
@@ -107,7 +112,7 @@ export async function runCommandLine(args: ElementRunArguments): Promise<TestRes
 		elementResult.addExecutionInfo(opts, isConfig)
 
 		try {
-			const iterationResult = await runSingleTestScript(opts)
+			const iterationResult = await runSingleTestScript(opts, spinnies)
 			elementResult.addTestScript(args.file, iterationResult)
 		} catch (err) {
 			elementResult.addScriptWithError({ name: args.file, error: err.message })

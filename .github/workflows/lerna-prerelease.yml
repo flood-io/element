@@ -1,4 +1,4 @@
-name: Lerna Publish Hotfix 1.x
+name: Lerna Publish Stable 1.x
 
 on:
   pull_request:
@@ -36,7 +36,7 @@ jobs:
           PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
       - name: 'Build all'
         run: yarn build
-      - name: 'Publish Hotfix 1.x to NPM'
-        run: yarn lerna publish prerelease --dist-tag prerelease --preid prerelease --yes --include-merged-tags --exact --force-publish
+      - name: 'Publish stable 1.x to NPM'
+        run: yarn lerna publish --conventional-graduate --yes --force-publish --exact
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

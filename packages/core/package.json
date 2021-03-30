@@ -1,6 +1,6 @@
 {
 	"name": "@flood/element-core",
-	"version": "1.5.2-prerelease.1",
+	"version": "1.5.2",
 	"description": "Flood Element is a browser based load generation tool for easily testing modern web application performance",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -32,7 +32,7 @@
 	},
 	"homepage": "https://github.com/flood-io/element#readme",
 	"dependencies": {
-		"@flood/element-compiler": "1.5.2-prerelease.1",
+		"@flood/element-compiler": "1.5.2",
 		"@types/faker": "^4.1.9",
 		"@types/node": "12.7.4",
 		"@types/puppeteer": "^5.4.0",

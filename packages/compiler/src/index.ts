@@ -4,6 +4,7 @@ import { resolve, dirname, join, basename } from 'path'
 import MemoryFileSystem from 'memory-fs'
 import WebpackBar from 'webpackbar'
 import findRoot from 'find-root'
+import chalk from 'chalk'
 import { CompilerOutput } from './types'
 
 export { CompilerOutput }
@@ -115,6 +116,16 @@ export class Compiler {
 		return new Promise((resolve, reject) => {
 			compiler.run((err, stats) => {
 				if (err || stats.hasErrors() || stats.hasWarnings()) {
+					const { errors } = stats.toJson()
+					if (errors && errors.length) {
+						errors.forEach(error => {
+							const first2Lines = error
+								.split('\n')
+								.splice(0, 2)
+								.join('\n')
+							console.error(chalk.red(`Error in: ${first2Lines}\n`))
+						})
+					}
 					reject(
 						new Error(
 							(err && err.message) ||

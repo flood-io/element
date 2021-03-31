@@ -56,6 +56,6 @@ describe('ObjectTrace', () => {
 		expect(obj.label).toEqual('Test Label')
 		expect(obj.objectTypes).toEqual(['screenshot', 'trace'])
 		expect(obj.objects[0]).toBe('tmp/data/flood/screenshots/screenshot.png')
-		expect(obj.objects[1]).toMatch(/network\/(\w+)\.json/)
+		expect(obj.objects[1]).toMatch(/network(\/|\\)(\w+)\.json/)
 	})
 })

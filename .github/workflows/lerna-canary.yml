@@ -37,6 +37,6 @@ jobs:
       - name: 'Build all'
         run: yarn build
       - name: 'Publish canary to NPM'
-        run: yarn lerna publish prerelease --dist-tag canary --preid canary --yes --include-merged-tags --exact --force-publish
+        run: yarn lerna publish --canary --conventional-prerelease --yes --dist-tag canary --preid canary --include-merged-tags --force-publish --exact --ignore-changes '**/*.md' 'packages/docs/**'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

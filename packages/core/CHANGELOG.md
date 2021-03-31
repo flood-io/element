@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.5-canary.0](https://github.com/flood-io/element/compare/v2.0.4...v2.0.5-canary.0) (2021-03-31)
+
+
+### Bug Fixes
+
+* add condition to compare with Windows path ([14e9ec6](https://github.com/flood-io/element/commit/14e9ec6191a5db797505ffe4012ed3b74900986f))
+
+
+
+
+
 ## [2.0.4](https://github.com/flood-io/element/compare/v2.0.2...v2.0.4) (2021-03-30)
 
 

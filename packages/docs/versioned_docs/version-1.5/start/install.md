@@ -36,8 +36,8 @@ First, make sure you have installed the [latest version of NodeJS](https://nodej
 <TabItem value="yarn">
 
 ```bash title="yarn"
-# Install
-yarn global add element-cli@1.5.1
+# Install latest version of Element v1
+yarn global add element-cli@v1
 
 # Verify installation
 element --version
@@ -47,8 +47,8 @@ element --version
   <TabItem value="npm">
 
 ```bash title="npm"
-# Install
-npm -g install element-cli@1.5.1
+# Install latest version of Element v1
+npm -g install element-cli@v1
 
 # Verify installation
 element --version
@@ -150,8 +150,8 @@ If you want to install a specific version of Element to use in a local project, 
   <TabItem value="yarn">
 
 ```bash title="yarn"
-# Install Element version 1.5.1
-yarn add element-cli@1.5.1
+# Install latest version of Element v1
+yarn add element-cli@v1
 
 # Verify installation
 element --version
@@ -161,8 +161,8 @@ element --version
   <TabItem value="npm">
 
 ```bash title="npm"
-# Install Element version 1.5.1
-npm install element-cli@1.5.1
+# Install latest version of Element v1
+npm install element-cli@v1
 
 # Verify installation
 element --version

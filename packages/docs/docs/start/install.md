@@ -126,6 +126,7 @@ yarn global add element-cli@beta
 
 # Verify installation
 element --version
+```
 
   </TabItem>
   <TabItem value="npm">

@@ -18,7 +18,7 @@ We suggest using the Yarn package manager for better performance, however, each 
 
 First, make sure you have installed the [latest version of NodeJS](https://nodejs.org) for your platform (MacOS, Windows or Linux).
 
-### Stable release
+### 1.0 release
 
 <a aria-label="NPM version" href="https://www.npmjs.com/package/element-cli/">
   <img alt="" src="https://img.shields.io/npm/v/element-cli.svg?style=for-the-badge&labelColor=000000&color=6554C0"/>
@@ -36,7 +36,7 @@ First, make sure you have installed the [latest version of NodeJS](https://nodej
 
 ```bash title="yarn"
 # Install
-yarn global add element-cli
+yarn global add element-cli@1.0
 
 # Verify installation
 element --version
@@ -47,7 +47,7 @@ element --version
 
 ```bash title="npm"
 # Install
-npm -g install element-cli
+npm -g install element-cli@1.0
 
 # Verify installation
 element --version
@@ -57,82 +57,6 @@ element --version
 </Tabs>
 
 This will install the latest stable version of Element CLI, together with other Element dependencies, globally on your machine.
-
-### Beta release
-
-<a aria-label="Beta NPM version" href="https://www.npmjs.com/package/element-cli/">
-  <img alt="" src="https://img.shields.io/npm/v/element-cli/beta.svg?style=for-the-badge&labelColor=000000"/>
-</a>
-
-<Tabs
-  groupId="beta"
-  defaultValue="yarn"
-  values={[
-    {label: 'Yarn', value: 'yarn'},
-    {label: 'NPM', value: 'npm'},
-  ]
-}>
-  <TabItem value="yarn">
-
-```bash title="yarn"
-# Install
-yarn global add element-cli@beta
-
-# Verify installation
-element --version
-```
-
-  </TabItem>
-  <TabItem value="npm">
-
-```bash title="npm"
-# Install
-npm -g install element-cli@beta
-
-# Verify installation
-element --version
-```
-
-  </TabItem>
-</Tabs>
-
-### Canary release
-
-<a aria-label="Canary NPM version" href="https://www.npmjs.com/package/element-cli/">
-  <img alt="" src="https://img.shields.io/npm/v/element-cli/canary.svg?style=for-the-badge&labelColor=000000"/>
-</a>
-
-<Tabs
-  groupId="canary"
-  defaultValue="yarn"
-  values={[
-    {label: 'Yarn', value: 'yarn'},
-    {label: 'NPM', value: 'npm'},
-  ]
-}>
-  <TabItem value="yarn">
-
-```bash title="yarn"
-# Install
-yarn global add element-cli@beta
-
-# Verify installation
-element --version
-```
-
-  </TabItem>
-  <TabItem value="npm">
-
-```bash title="npm"
-# Install
-npm -g install element-cli@beta
-
-# Verify installation
-element --version
-```
-
-  </TabItem>
-</Tabs>
 
 ## Local versioning
 
@@ -149,8 +73,8 @@ If you want to install a specific version of Element to use in a local project, 
   <TabItem value="yarn">
 
 ```bash title="yarn"
-# Install Element version 1.3.8
-yarn add element-cli@1.3.8
+# Install Element version 1.0.10
+yarn add element-cli@1.0.10
 
 # Verify installation
 element --version
@@ -160,8 +84,8 @@ element --version
   <TabItem value="npm">
 
 ```bash title="npm"
-# Install Element version 1.3.8
-npm install element-cli@1.3.8
+# Install Element version 1.0.10
+npm install element-cli@1.0.10
 
 # Verify installation
 element --version

@@ -39,7 +39,7 @@ module.exports = {
 							to: 'docs/',
 							activeBaseRegex: `docs/(?!${versions.join('|')}|next)`,
 						},
-						...versions.slice(1).map(version => ({
+						...versions.slice(1).map((version) => ({
 							label: version,
 							to: `docs/${version}/`,
 						})),

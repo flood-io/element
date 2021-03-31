@@ -1,10 +1,12 @@
-name: Lerna Publish Stable
+name: Lerna Publish Stable 1.x
 
 on:
   pull_request:
-    branches: [master]
+    branches: [stable_1.x]
     types: [closed]
-
+  push:
+    branches:
+      - stable_1.x
 jobs:
   publish_release:
     name: Publish release
@@ -34,7 +36,7 @@ jobs:
           PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
       - name: 'Build all'
         run: yarn build
-      - name: 'Publish stable to NPM'
-        run: yarn lerna publish --conventional-graduate --yes --dist-tag latest --force-publish --exact
+      - name: 'Publish stable 1.x to NPM'
+        run: yarn lerna publish --conventional-graduate --yes --dist-tag 1 --force-publish --exact
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

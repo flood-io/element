@@ -18,7 +18,7 @@ We suggest using the Yarn package manager for better performance, however, each 
 
 First, make sure you have installed the [latest version of NodeJS](https://nodejs.org) for your platform (MacOS, Windows or Linux).
 
-### Stable release
+### 1.5 release
 
 <a aria-label="NPM version" href="https://www.npmjs.com/package/element-cli/">
   <img alt="" src="https://img.shields.io/npm/v/element-cli.svg?style=for-the-badge&labelColor=000000&color=6554C0"/>
@@ -59,82 +59,6 @@ element --version
 
 This will install the latest stable version of Element CLI, together with other Element dependencies, globally on your machine.
 
-### Beta release
-
-<a aria-label="Beta NPM version" href="https://www.npmjs.com/package/element-cli/">
-  <img alt="" src="https://img.shields.io/npm/v/element-cli/beta.svg?style=for-the-badge&labelColor=000000"/>
-</a>
-
-<Tabs
-  groupId="beta"
-  defaultValue="yarn"
-  values={[
-    {label: 'Yarn', value: 'yarn'},
-    {label: 'NPM', value: 'npm'},
-  ]
-}>
-  <TabItem value="yarn">
-
-```bash title="yarn"
-# Install
-yarn global add element-cli@beta
-
-# Verify installation
-element --version
-```
-
-  </TabItem>
-  <TabItem value="npm">
-
-```bash title="npm"
-# Install
-npm -g install element-cli@beta
-
-# Verify installation
-element --version
-```
-
-  </TabItem>
-</Tabs>
-
-### Canary release
-
-<a aria-label="Canary NPM version" href="https://www.npmjs.com/package/element-cli/">
-  <img alt="" src="https://img.shields.io/npm/v/element-cli/canary.svg?style=for-the-badge&labelColor=000000"/>
-</a>
-
-<Tabs
-  groupId="canary"
-  defaultValue="yarn"
-  values={[
-    {label: 'Yarn', value: 'yarn'},
-    {label: 'NPM', value: 'npm'},
-  ]
-}>
-  <TabItem value="yarn">
-
-```bash title="yarn"
-# Install
-yarn global add element-cli@beta
-
-# Verify installation
-element --version
-```
-
-  </TabItem>
-  <TabItem value="npm">
-
-```bash title="npm"
-# Install
-npm -g install element-cli@beta
-
-# Verify installation
-element --version
-```
-
-  </TabItem>
-</Tabs>
-
 ## Local versioning
 
 If you want to install a specific version of Element to use in a local project, just `cd` to the project folder, then install by adding a `@version-tag`, and removing the `global` (or `-g` on NPM) keyword.
@@ -150,8 +74,8 @@ If you want to install a specific version of Element to use in a local project, 
   <TabItem value="yarn">
 
 ```bash title="yarn"
-# Install latest version of Element v1
-yarn add element-cli@v1
+# Install Element version 1.5.1
+yarn add element-cli@1.5.1
 
 # Verify installation
 element --version
@@ -161,8 +85,8 @@ element --version
   <TabItem value="npm">
 
 ```bash title="npm"
-# Install latest version of Element v1
-npm install element-cli@v1
+# Install Element version 1.5.1
+npm install element-cli@1.5.1
 
 # Verify installation
 element --version

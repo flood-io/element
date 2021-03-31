@@ -73,7 +73,7 @@ export const settings: TestSettings = {
 
 ~~`puppeteer` or `stable` (Optional)   Specifies a version of Google Chrome to run the test~~
 
-This setting is no longer supported since version 2.0. Instead, you can use [browser](#browser) setting or *executablePath* property in [browserLaunchOptions](#browserlaunchoptions) setting.
+This setting is no longer supported since version 2.0. Instead, you can use [browser](#browser) setting or *executablePath* property in [browserLaunchOptions](#browserlaunchoptions) setting to specify the target browser.
 
 ### clearCache
 
@@ -112,7 +112,7 @@ This setting can be useful for very noisy tests. When a method is filtered, it s
 ### extraHTTPHeaders
 
 `Object` (Optional) Specifies a set of extra HTTP headers to set before each test loop.  
- If this setting is undefined, the extra HTTP headers are left as-is between iterations.
+If this setting is undefined, the extra HTTP headers are left as-is between iterations.
 
 ```typescript
 export const settings: TestSettings = {

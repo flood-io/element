@@ -14,6 +14,14 @@ We suggest using the Yarn package manager for better performance, however, each 
 
 :::
 
+:::info Flood Support
+Element 2.0 is not enabled by default on [Flood](https://flood.io) and is in Preview mode. Please [contact support](https://flood.io/support) if you would like to enable its use on your account.
+
+The current default version of Element run on [Flood](https://flood.io) is version 1.5, please visit [the documentation for Element 1.5](https://element.flood.io/docs/1.5/) if the Element 2.0 Preview has not been enabled on your account.
+
+A list of the default versions of all tools run on [Flood](https://flood.io) is available within the [Default tool versions](https://guides.flood.io/scripting-and-tools/default-tool-versions) guide.
+:::
+
 ## Global installation
 
 First, make sure you have installed the [latest version of NodeJS](https://nodejs.org) for your platform (MacOS, Windows or Linux).
@@ -118,6 +126,7 @@ yarn global add element-cli@beta
 
 # Verify installation
 element --version
+```
 
   </TabItem>
   <TabItem value="npm">
@@ -148,7 +157,7 @@ If you want to install a specific version of Element to use in a local project, 
   <TabItem value="yarn">
 
 ```bash title="yarn"
-# Install Element version 1.3.8
+# Install Element version 1.5.1
 yarn add element-cli@1.5.1
 
 # Verify installation
@@ -159,7 +168,7 @@ element --version
   <TabItem value="npm">
 
 ```bash title="npm"
-# Install Element version 1.3.8
+# Install Element version 1.5.1
 npm install element-cli@1.5.1
 
 # Verify installation

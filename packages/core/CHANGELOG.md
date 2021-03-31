@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.3](https://github.com/flood-io/element/compare/v1.5.2...v1.5.3) (2021-03-31)
+
+
+### Bug Fixes
+
+* add condition to compare with Windows path ([8443758](https://github.com/flood-io/element/commit/84437582907598d038f9fd548d15ae1caaa07778))
+* guard against flaky test waiting for document load ([d274645](https://github.com/flood-io/element/commit/d2746450a43963452ffcad543502198c04ce0d99))
+
+
+
+
+
 ## [1.5.2](https://github.com/flood-io/element/compare/v1.5.2-prerelease.1...v1.5.2) (2021-03-30)
 
 **Note:** Version bump only for package @flood/element-core

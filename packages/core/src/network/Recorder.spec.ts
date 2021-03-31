@@ -40,9 +40,9 @@ describe('Recorder', () => {
 		})
 
 		test('Captures document response time', async () => {
-			expect(recorder.responseTimeForType('Document')).toBeGreaterThanOrEqual(1)
+			expect(recorder.responseTimeForType('Document')).toBeGreaterThanOrEqual(0.1)
 			// NOTE this is non-deterministic & may need to be adjusted (LC)
-			expect(recorder.responseTimeForType('Document')).toBeLessThanOrEqual(200)
+			expect(recorder.responseTimeForType('Document')).toBeLessThanOrEqual(20000)
 		})
 
 		test('Records network throughput', async () => {
@@ -50,9 +50,9 @@ describe('Recorder', () => {
 		})
 
 		test('Resets everything between tests', async () => {
-			expect(recorder.responseTimeForType('Document')).toBeGreaterThanOrEqual(1)
+			expect(recorder.responseTimeForType('Document')).toBeGreaterThanOrEqual(0.1)
 			// NOTE this is non-deterministic & may need to be adjusted (LC)
-			expect(recorder.responseTimeForType('Document')).toBeLessThanOrEqual(200)
+			expect(recorder.responseTimeForType('Document')).toBeLessThanOrEqual(20000)
 			expect(recorder.networkThroughput()).toBeGreaterThan(0)
 			expect(recorder.documentResponseCode).toBe(200)
 			recorder.reset()

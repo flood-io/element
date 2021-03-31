@@ -1,10 +1,12 @@
-name: Lerna Publish Stable
+name: Lerna Publish Canary
 
 on:
   pull_request:
-    branches: [master]
+    branches: [canary]
     types: [closed]
-
+  push:
+    branches:
+      - canary
 jobs:
   publish_release:
     name: Publish release
@@ -34,7 +36,7 @@ jobs:
           PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
       - name: 'Build all'
         run: yarn build
-      - name: 'Publish stable to NPM'
-        run: yarn lerna publish --conventional-graduate --yes --dist-tag latest --force-publish --exact
+      - name: 'Publish canary to NPM'
+        run: yarn lerna publish prerelease --yes --dist-tag canary --preid canary --include-merged-tags --exact --force-publish --ignore-changes '**/*.md' 'packages/docs/**'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -157,7 +157,7 @@ If you want to install a specific version of Element to use in a local project, 
   <TabItem value="yarn">
 
 ```bash title="yarn"
-# Install Element version 1.3.8
+# Install Element version 1.5.1
 yarn add element-cli@1.5.1
 
 # Verify installation
@@ -168,7 +168,7 @@ element --version
   <TabItem value="npm">
 
 ```bash title="npm"
-# Install Element version 1.3.8
+# Install Element version 1.5.1
 npm install element-cli@1.5.1
 
 # Verify installation

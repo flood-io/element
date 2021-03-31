@@ -37,6 +37,6 @@ jobs:
       - name: 'Build all'
         run: yarn build
       - name: 'Publish stable 1.x to NPM'
-        run: yarn lerna publish --conventional-graduate --yes --dist-tag 1 --force-publish --exact
+        run: yarn lerna publish --conventional-graduate --yes --dist-tag v1 --force-publish --exact
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

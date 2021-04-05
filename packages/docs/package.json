@@ -1,6 +1,6 @@
 {
 	"name": "element-docs",
-	"version": "2.0.5-beta.0",
+	"version": "2.0.5-canary.0",
 	"private": true,
 	"scripts": {
 		"start": "docusaurus start",

@@ -1,6 +1,6 @@
 {
 	"name": "flood-element",
-	"version": "2.0.5-canary.0",
+	"version": "2.0.5-canary.1",
 	"main": "index.js",
 	"repository": "git@github.com:flood-io/element.git",
 	"author": "Ivan Vanderbyl <ivanvanderbyl@gmail.com>",

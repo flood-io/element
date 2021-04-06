@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.5-canary.2](https://github.com/flood-io/element/compare/v2.0.5-beta.0...v2.0.5-canary.2) (2021-04-06)
+
+
+### Bug Fixes
+
+* correct packages's canary version ([00868d0](https://github.com/flood-io/element/commit/00868d062286393301f207d85295286548d28262))
+* fix version of canary packages ([7fff99c](https://github.com/flood-io/element/commit/7fff99c73c2bcd83062dd071ef3a491d63105a83))
+* remove typedoc from production dependencies ([edd2cad](https://github.com/flood-io/element/commit/edd2cadd7429941ab70d809b206d021f9245f4d6))
+
+
+
+
+
 ## [2.0.5-beta.0](https://github.com/flood-io/element/compare/v2.0.5-canary.1...v2.0.5-beta.0) (2021-03-31)
 
 **Note:** Version bump only for package @flood/element-core

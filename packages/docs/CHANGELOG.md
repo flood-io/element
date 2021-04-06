@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.5-canary.2](https://github.com/flood-io/element/compare/v2.0.5-beta.0...v2.0.5-canary.2) (2021-04-06)
+
+
+### Bug Fixes
+
+* correct packages's canary version ([00868d0](https://github.com/flood-io/element/commit/00868d062286393301f207d85295286548d28262))
+* fix version of canary packages ([7fff99c](https://github.com/flood-io/element/commit/7fff99c73c2bcd83062dd071ef3a491d63105a83))
+
+
+### Features
+
+* add badge for Element Recorder on Navbar ([cf96ee3](https://github.com/flood-io/element/commit/cf96ee3f971b9749de7b4f5407c47c47965c58a8))
+
+
+
+
+
 ## [2.0.5-beta.0](https://github.com/flood-io/element/compare/v2.0.5-canary.1...v2.0.5-beta.0) (2021-03-31)
 
 **Note:** Version bump only for package element-docs

@@ -54,7 +54,6 @@
 		"source-map": "^0.7.0",
 		"strftime": "^0.10.0",
 		"term-img": "^2.1.0",
-		"typedoc": "^0.15.0",
 		"vm2": "^3.9.1",
 		"winston": "^3.0.0"
 	},
@@ -73,7 +72,8 @@
 		"glob": "^7.1.2",
 		"lodash.upperfirst": "^4.3.1",
 		"morgan": "^1.9.1",
-		"run-script-os": "^1.0.3"
+		"run-script-os": "^1.0.3",
+		"typedoc": "^0.15.0"
 	},
 	"resolutions": {
 		"@types/node": "12.7.4"

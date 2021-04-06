@@ -43,7 +43,6 @@ Public API for Element testing functionality.
 We ship packages for each release in 3 formats:
 
 - NPM (@flood/element)
-- Homebrew (flood-io/taps/element)
 - GitHub (tagged archive of source code)
 
 Releases are published automatically and unceremoniously based upon commit history and branch name:

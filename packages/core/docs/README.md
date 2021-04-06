@@ -38,16 +38,6 @@ npm install -g @flood/element-cli
 element --version
 ```
 
-**On macOS:**
-
-If you are on macOS and don't already have NodeJS installed, consider installing `element` using homebrew.
-
-```bash
-brew install flood-io/taps/element
-```
-
-This will install `element` along with anything else it needs to run, such as NodeJS.
-
 ### 2. Initialize Your Project
 
 Using the `element` command, you can generate a new project or generate a test within your existing project.
@@ -96,10 +86,10 @@ Over the years, countless customers have mentioned that getting started with Loa
 
 ### What can I do with it?
 
-* Flood Element can be used to **apply load to any web accessible application** and measure how it performs as the load is ramped up.
-* **Measure performance regressions** after deploys by integrating it with your CI/CD pipeline.
-* Measure your application's response time from different regions as experienced by your customers.
-* Create **realistic load scenarios** which stress test your network infrastructure without developing complex protocol level load test scripts.
+- Flood Element can be used to **apply load to any web accessible application** and measure how it performs as the load is ramped up.
+- **Measure performance regressions** after deploys by integrating it with your CI/CD pipeline.
+- Measure your application's response time from different regions as experienced by your customers.
+- Create **realistic load scenarios** which stress test your network infrastructure without developing complex protocol level load test scripts.
 
 ## Repository Layout
 
@@ -112,9 +102,9 @@ When you run your script as a load test on [Flood](https://app.flood.io), this s
 
 ## Documentation
 
-* [Deep dive tutorial](./examples/scenario_1_wordpress.md)
-* [Browser API Documentation](./packages/element/docs/api/Browser.md)
-* [API Documentation](./SUMMARY.md)
+- [Deep dive tutorial](./examples/scenario_1_wordpress.md)
+- [Browser API Documentation](./packages/element/docs/api/Browser.md)
+- [API Documentation](./SUMMARY.md)
 
 ## Reporting Issues
 
@@ -122,6 +112,6 @@ If you encounter any issues with the `@flood/element` project or Flood Element p
 
 If you're encountering issues with Flood itself, please contact Flood Support from within the Flood Dashboard.
 
+[flood]: https://flood.io
+[browser]: ../../api/Browser.md#browser
 
-[Flood]: https://flood.io
-[Browser]: ../../api/Browser.md#browser

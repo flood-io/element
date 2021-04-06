@@ -9,7 +9,7 @@ const commandExistsSync = require('command-exists').sync
 
 type Update = { latest: string }
 
-function brewUpdateMessage(version: string, distTag: string, update: Update): string | undefined {
+function brewUpdateMessage(_version: string, distTag: string, update: Update): string | undefined {
 	const brew = commandExistsSync('brew')
 	if (__dirname.includes('Cellar') && brew) {
 		let brewSpec: string
@@ -27,7 +27,7 @@ function brewUpdateMessage(version: string, distTag: string, update: Update): st
 }
 
 function yarnUpdateMessage(
-	version: string,
+	_version: string,
 	distTag: string /* , update: Update */,
 ): string | undefined {
 	if (commandExistsSync('yarn')) {
@@ -36,7 +36,7 @@ function yarnUpdateMessage(
 }
 
 // fallback
-function npmUpdateMessage(version: string, distTag: string /* , update: Update */): string {
+function npmUpdateMessage(_version: string, distTag: string /* , update: Update */): string {
 	return chalk`Get it by running {greenBright npm -g update element-cli@${distTag}}`
 }
 
@@ -54,7 +54,7 @@ function printUpdateMessage(version: string, distTag: string, update: Update) {
 			brewUpdateMessage(version, distTag, update),
 			yarnUpdateMessage(version, distTag),
 			npmUpdateMessage(version, distTag),
-		].find(x => !!x) || 'unreachable'
+		].find((x) => !!x) || 'unreachable'
 
 	console.log(info(updateMsg))
 }

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.5-canary.4](https://github.com/flood-io/element/compare/v2.0.5-canary.3...v2.0.5-canary.4) (2021-04-07)
+
+
+### Bug Fixes
+
+* docs links to challenge with test data example script ([857dd61](https://github.com/flood-io/element/commit/857dd61372e99e263df63425621c2529b3862941))
+
+
+
+
+
 ## [2.0.5-canary.3](https://github.com/flood-io/element/compare/v2.0.5-canary.2...v2.0.5-canary.3) (2021-04-07)
 
 

@@ -32,17 +32,6 @@ npm install -g @flood/element-cli
 element --version
 ```
 
-**On macOS:**
-
-If you are on macOS and don't already have NodeJS installed, consider installing `element` using homebrew.
-
-```bash
-brew install flood-io/taps/element
-```
-
-This will install `element` along with anything else it needs to run, such as NodeJS.
-
-
 ## Getting help
 
 The Element CLI comes with built in help that details the commands and options available. Run:

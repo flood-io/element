@@ -9,18 +9,19 @@ jobs:
         os:
           - ubuntu-latest
           - windows-latest
-        node_version:
+        node-version:
           - '12.x'
           - '14.x'
-    name: Node ${{ matrix.node_version }} on ${{ matrix.os }}
+    name: Node ${{ matrix.node-version }} on ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
       - name: Setup node
         uses: actions/setup-node@v2
         with:
-          node-version: ${{ matrix.node_version }}
+          node-version: ${{ matrix.node-version }}
       - run: yarn install --ignore-optional
-      # - run: yarn lint
+      - run: yarn lint
       - run: yarn test
         env:
           CI: true

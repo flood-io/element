@@ -1,42 +1,36 @@
-name: Lerna Publish Stable 1.x
-
+name: Publish v1.x stable
 on:
   pull_request:
     branches: [stable_1.x]
     types: [closed]
-  push:
-    branches:
-      - stable_1.x
 jobs:
-  publish_release:
-    name: Publish release
+  release:
+    name: Release 1.x
     if: "!contains(github.event.head_commit.message, 'skip ci')"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.pull_request.main.ref }}
+      - name: Checkout repository
+        uses: actions/checkout@v2
       - run: git fetch --prune --unshallow
-
-      - uses: actions/setup-node@v1
+      - name: Setup node
+        uses: actions/setup-node@v2
         with:
           always-auth: true
           registry-url: 'https://registry.npmjs.org'
-          node-version: '12.x'
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
+          node-version: '14.x'
+          env:
+            NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Configure CI Git User
         run: |
-          git config --global user.email octobot@github.com
-          git config --global user.name GitHub Actions
-
-      - run: yarn install
+          git config --global user.email services@flood.io
+          git config --global user.name FloodBot
+      - name: Install dependencies
+        run: yarn install --ignore-optional
         env:
           PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
-      - name: 'Build all'
+      - name: Build all
         run: yarn build
-      - name: 'Publish stable 1.x to NPM'
-        run: yarn lerna publish --conventional-graduate --yes --dist-tag v1 --force-publish --exact
+      - name: Publish v1.x stable to npm
+        run: yarn lerna publish --conventional-graduate --yes --dist-tag v1 --exact --force-publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

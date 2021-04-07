@@ -156,7 +156,7 @@ module.exports = {
 			{
 				docs: {
 					sidebarPath: require.resolve('./sidebars.js'),
-					editUrl: 'https://github.com/flood-io/element/edit/master/packages/docs/',
+					editUrl: 'https://github.com/flood-io/element/edit/stable/packages/docs/',
 				},
 				blog: {
 					showReadingTime: true,

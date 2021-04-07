@@ -2,7 +2,7 @@ name: Lerna Publish Stable
 
 on:
   pull_request:
-    branches: [master]
+    branches: [stable]
     types: [closed]
 
 jobs:

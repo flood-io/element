@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.5-canary.5](https://github.com/flood-io/element/compare/v2.0.5-canary.4...v2.0.5-canary.5) (2021-04-07)
+
+
+### Bug Fixes
+
+* cleanup unused vars ([c763195](https://github.com/flood-io/element/commit/c7631954e1330236aeff46f0e8c1a05d1220dc76))
+* remove homebrew update message ([d870365](https://github.com/flood-io/element/commit/d87036595e65144a829debe587fa4b0688c8734c))
+* remove references to homebrew from the docs ([c2de57a](https://github.com/flood-io/element/commit/c2de57a01bad9038abab43d9ed3702b8db136d68))
+
+
+
+
+
 ## [2.0.5-canary.4](https://github.com/flood-io/element/compare/v2.0.5-canary.3...v2.0.5-canary.4) (2021-04-07)
 
 **Note:** Version bump only for package @flood/element-cli

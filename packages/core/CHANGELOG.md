@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.5-canary.5](https://github.com/flood-io/element/compare/v2.0.5-canary.4...v2.0.5-canary.5) (2021-04-07)
+
+
+### Bug Fixes
+
+* remove references to homebrew from the docs ([c2de57a](https://github.com/flood-io/element/commit/c2de57a01bad9038abab43d9ed3702b8db136d68))
+
+
+
+
+
 ## [2.0.5-canary.4](https://github.com/flood-io/element/compare/v2.0.5-canary.3...v2.0.5-canary.4) (2021-04-07)
 
 **Note:** Version bump only for package @flood/element-core

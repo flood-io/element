@@ -13,10 +13,9 @@
 		"version": {
 			"message": "chore(release): publish %s\n[skip ci]",
 			"allowBranch": [
-				"master",
+				"stable",
 				"beta",
-				"canary",
-				"feature/*"
+				"canary"
 			]
 		},
 		"bootstrap": {

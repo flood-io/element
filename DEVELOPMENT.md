@@ -40,20 +40,19 @@ Public API for Element testing functionality.
 
 ## Releasing
 
-We ship packages for each release in 3 formats:
+We ship packages for each release in 2 formats:
 
 - NPM (@flood/element)
 - GitHub (tagged archive of source code)
 
 Releases are published automatically and unceremoniously based upon commit history and branch name:
 
-- `feature/*` is the canary release branch.
-- `beta` is the beta release branch.
-- `master` is the stable release branch.
+- `feature/*` is where feature development happens. These branches are not published.
+- `canary` is the canary release branch. You will get the latest features, but expect it to be unstable.
+- `beta` is the beta release branch. Betas are ready for early-adopters to test, but could still contain bugs.
+- `stable` is the stable release branch.
 
-Each time a feature is merged in to `beta`, the commit history is analysed and if it contains changes which require bumping the version, it will be bumped accordingly by `lerna` and `conventional-release` and prereleased with a "beta" tag.
-
-In a similar way, each time `beta` is merged into `master`, the commit history is analysed and the version bumped as needed, this time without a beta tag.
+Each time a feature is merged in to `canary`, the commit history is analysed and if it contains changes which require bumping the version, it will be bumped accordingly by `lerna` and `conventional-release` and pre-released with a "canary" tag. In a similar way, each time `canary` is merged into `beta`, the commit history is analysed and the version bumped as needed, this time with a "beta" tag. Again, each time `beta` is merged into `stable`, the commit history is analysed and the version bumped as needed, this time with no pre-release tags.
 
 NPM releases are handled in CI automatically so that shipping releases isn't a big deal, it should be something we do regularly.
 

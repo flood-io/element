@@ -1,18 +1,19 @@
 # Versioning Element
 
-Element uses `lerna publish` to semamtically advance version numbers across all packages. This workflow is automated.
+Element uses `lerna publish` to semantically advance version numbers across all packages. This workflow is automated.
 
 Versions are based on branch:
 
-- `master`: stable releases e.g. `v1.1.0`, and tagged `latest` on NPM.
-- `beta`: next beta release e.g. `v1.1.0-beta.1` and tagged `beta` on NPM.
-- `feature/*`: any feature which will be merged into `beta`. This branch isn't published.
+- `stable`: stable releases e.g. `v1.1.0`, and tagged `latest` on NPM.
+- `beta`: beta releases e.g. `v1.1.0-beta.1` and tagged `beta` on NPM.
+- `canary`: canary releases e.g. `v1.1.0-canary.1` and tagged `canary` on NPM.
+- `feature/*`: any feature which will be merged into `canary`. These branches aren't published.
 
 Versioning pipeline:
 
 ```
            ┌────────────────┐                                         ┌────────────────┐
-master     │     v1.0.0     │─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─│     v1.1.0     │─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─▷
+stable     │     v1.0.0     │─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─│     v1.1.0     │─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─▷
            └────────────────┘                                         └────────────────┘
                     │                                                          ▲
                     │        ┌────────────────┐      ┌────────────────┐        │       ┌────────────────┐

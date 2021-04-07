@@ -161,4 +161,4 @@ Find more information in the API reference for [TestData], [TestDataFactory] and
 [TestData]: ../../api/TestData.md#testdata
 [TestDataFactory]: ../../api/TestData.md#testdatafactory
 [TestDataSource]: ../../api/TestData.md#testdatasource
-[Flood challenge with test data]: https://github.com/flood-io/element/blob/master/examples/flood-challenge.ts
+[Flood challenge with test data]: https://github.com/flood-io/element/blob/main/examples/flood-challenge.ts

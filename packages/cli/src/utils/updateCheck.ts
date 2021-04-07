@@ -4,7 +4,7 @@ import chalk from 'chalk'
 import { error } from './error'
 import { info } from './info'
 import { Package } from 'normalize-package-data'
-import { prerelease, major, minor, patch } from 'semver'
+import { prerelease } from 'semver'
 const commandExistsSync = require('command-exists').sync
 
 type Update = { latest: string }

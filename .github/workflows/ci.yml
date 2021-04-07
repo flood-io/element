@@ -20,6 +20,7 @@ jobs:
         with:
           node-version: ${{ matrix.node_version }}
       - run: yarn install --ignore-optional
+      # - run: yarn lint
       - run: yarn test
         env:
           CI: true

@@ -3,6 +3,8 @@ on:
   pull_request:
     branches: [beta]
     types: [closed]
+  push:
+    branches: [beta]
 jobs:
   release:
     name: Release beta

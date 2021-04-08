@@ -20,7 +20,7 @@ export class XPathLocator implements LocatorBuilder {
 				document,
 				null,
 				XPathResult.ORDERED_NODE_ITERATOR_TYPE,
-				null,
+				null
 			)
 
 			const elements: Node[] = []

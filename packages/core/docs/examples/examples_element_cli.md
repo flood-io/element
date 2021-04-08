@@ -48,7 +48,6 @@ For example, to learn more about the `run` command and the options you can pass 
 element run --help
 ```
 
-
 ## Initialize a new project
 
 Use the `init` command to initialize a new project. Your new project will include everything you need to get started, including TypeScript configuration, NodeJS dependencies, and a basic test script.
@@ -68,7 +67,6 @@ element init
 With your new project setup, you can start writing a test by editing the newly generated `test.ts` file.
 
 For more information on `element init`, run `element init --help`.
-
 
 ## Generate a new test file
 
@@ -112,7 +110,7 @@ Every time you save a change to `my-element-test.ts` the test will run again, sh
 
 Taking screenshots is a fantastic way of getting a glimpse of your page at important points during your test. However, while writing scripts the ability to view and interact with the entire page can be incredibly useful. In the same way DevTools are invaluable when building an application, with Element they can be just as helpful when writing test scripts.
 
-Passing the `--devtools` flag when running a script does two things: run in non-headless mode, and also open DevTools. A GUI instance of Chrome will be used to run your test (rather than headless, which is the default) allowing you to see the steps execute on the page as your script runs. Element also opens the DevTools, letting you view the console, select elements and debug the page. 
+Passing the `--devtools` flag when running a script does two things: run in non-headless mode, and also open DevTools. A GUI instance of Chrome will be used to run your test (rather than headless, which is the default) allowing you to see the steps execute on the page as your script runs. Element also opens the DevTools, letting you view the console, select elements and debug the page.
 
 ```bash
 element run my-element-test.ts --devtools
@@ -124,21 +122,12 @@ Running tests in this way is especially useful when used in conjunction with [Br
 >
 > To see test steps execute without opening DevTools, use the `--no-headless` option instead.
 
-
-[Flood]: https://flood.io
-
-[Flood]: https://flood.io
-
-[Flood]: https://flood.io
-
-[Flood]: https://flood.io
-
-[Flood]: https://flood.io
-
-[Flood]: https://flood.io
-
-[Flood]: https://flood.io
-
-[Flood]: https://flood.io
-
-[Flood]: https://flood.io
+[flood]: https://flood.io
+[flood]: https://flood.io
+[flood]: https://flood.io
+[flood]: https://flood.io
+[flood]: https://flood.io
+[flood]: https://flood.io
+[flood]: https://flood.io
+[flood]: https://flood.io
+[flood]: https://flood.io

@@ -17,7 +17,7 @@ export class FrameCondition extends Condition {
 	}
 
 	public async waitFor(frame: Frame, page: Page): Promise<Frame | Error> {
-		const waiterPromise = new Promise<Frame>(yeah => {
+		const waiterPromise = new Promise<Frame>((yeah) => {
 			const cleanup = () => {
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				page.removeListener('framenavigated', handler)
@@ -41,16 +41,16 @@ export class FrameCondition extends Condition {
 				}
 			} else {
 				throw new Error(
-					`Calling ableToSwitchFrame() with anything other than frame name or ID as a string is not yet supported.`,
+					`Calling ableToSwitchFrame() with anything other than frame name or ID as a string is not yet supported.`
 				)
 			}
 		})
 
 		return Promise.race<Frame | Error>([waiterPromise, this.createTimeoutPromise()]).then(
-			result => {
+			(result) => {
 				clearTimeout(this.maximumTimer)
 				return result
-			},
+			}
 		)
 	}
 
@@ -59,7 +59,7 @@ export class FrameCondition extends Condition {
 	private async createTimeoutPromise() {
 		const errorMessage = `Frame Wait Timeout Exceeded: ${this.timeout}ms exceeded`
 		return new Promise<Error>(
-			yeah => (this.maximumTimer = setTimeout(yeah, Number(this.timeout))),
+			(yeah) => (this.maximumTimer = setTimeout(yeah, Number(this.timeout)))
 		).then(() => new Error(errorMessage))
 	}
 }

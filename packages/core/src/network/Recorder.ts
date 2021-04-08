@@ -56,7 +56,7 @@ export default class Recorder {
 				version: '1.2',
 				creator: { name: 'Flood Chrome', version: '1.0.0' },
 				pages: this.pages,
-				entries: this.entries.map(e => e.toJSON()),
+				entries: this.entries.map((e) => e.toJSON()),
 			},
 		}
 	}
@@ -128,7 +128,7 @@ export default class Recorder {
 				([k, v]) => ({
 					name: k,
 					value: v.toString(),
-				}),
+				})
 			)
 		}
 
@@ -197,7 +197,7 @@ export default class Recorder {
 		const [page] = this.pages
 		if (page) {
 			const entries = this.entriesForPage(page)
-			const entry = entries.find(entry => String(entry.type) === 'Document')
+			const entry = entries.find((entry) => String(entry.type) === 'Document')
 			if (entry) return entry.response.status
 		}
 
@@ -211,7 +211,7 @@ export default class Recorder {
 			page = this.pages.find(({ id }) => id === page)
 		}
 
-		return this.entries.filter(entry => entry.pageref === page.id)
+		return this.entries.filter((entry) => entry.pageref === page.id)
 	}
 
 	/**
@@ -220,7 +220,7 @@ export default class Recorder {
 	 * @return {number}
 	 */
 	public networkThroughputByType(type: ResourceType): number {
-		const entries = this.entries.map(entry => entry.response.bodySize)
+		const entries = this.entries.map((entry) => entry.response.bodySize)
 		return sum(entries)
 	}
 
@@ -231,7 +231,7 @@ export default class Recorder {
 	 * @memberof NetworkRecorder
 	 */
 	public networkThroughput(): number {
-		const entries = this.entries.map(entry => entry.response.bodySize)
+		const entries = this.entries.map((entry) => entry.response.bodySize)
 		return round(sum(entries))
 	}
 
@@ -299,7 +299,7 @@ export default class Recorder {
 	}
 
 	private getEntryForRequestId(requestId: string): Entry | undefined {
-		return this.entries.find(entry => entry.requestId === requestId)
+		return this.entries.find((entry) => entry.requestId === requestId)
 	}
 
 	private async privateClientSend(method: any, ...args: any[]): Promise<any> {

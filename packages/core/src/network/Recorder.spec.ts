@@ -66,7 +66,7 @@ describe('Recorder', () => {
 					'Host',
 					'Upgrade-Insecure-Requests',
 					'User-Agent',
-				]),
+				])
 			)
 		})
 		test('records response headers for document', async () => {
@@ -82,7 +82,7 @@ describe('Recorder', () => {
 					'ETag',
 					'Last-Modified',
 					'X-Powered-By',
-				]),
+				])
 			)
 		})
 		test('records document time', async () => {

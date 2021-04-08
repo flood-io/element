@@ -31,7 +31,7 @@ export class URLNotMatchCondition extends Condition {
 				}
 			},
 			JSON.stringify([this.url, this.partial]),
-			{ timeout: 30e3 },
+			{ timeout: 30e3 }
 		)
 		return true
 	}

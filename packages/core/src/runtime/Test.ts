@@ -65,7 +65,7 @@ export default class Test implements ITest {
 		public reporter: IReporter = new EmptyReporter(),
 		settingsFromConfig: TestSettings,
 		settingsOverride: TestSettings,
-		public testObserverFactory: (t: TestObserver) => TestObserver = x => x,
+		public testObserverFactory: (t: TestObserver) => TestObserver = (x) => x
 	) {
 		this.script = script
 
@@ -118,14 +118,14 @@ export default class Test implements ITest {
 		await this.runWithCancellation(
 			iteration || 0,
 			new CancellationToken(),
-			new Looper(this.settings),
+			new Looper(this.settings)
 		)
 	}
 
 	public async runWithCancellation(
 		iteration: number,
 		cancelToken: CancellationToken,
-		looper: Looper,
+		looper: Looper
 	): Promise<void> {
 		console.assert(this.client, `client is not configured in Test`)
 		const ctx = new Context()
@@ -134,10 +134,10 @@ export default class Test implements ITest {
 				this.testObserverFactory(
 					new TimingObserver(
 						ctx,
-						new NetworkRecordingTestObserver(ctx, new InnerObserver(new NullTestObserver())),
-					),
-				),
-			),
+						new NetworkRecordingTestObserver(ctx, new InnerObserver(new NullTestObserver()))
+					)
+				)
+			)
 		)
 
 		await this.requestInterceptor.attach(this.client.page)
@@ -199,8 +199,8 @@ export default class Test implements ITest {
 							!invalidName.length
 								? 'Test data exhausted'
 								: `Test data '${invalidName.join(',')}' exhausted`
-						}, consider making it circular?`,
-					),
+						}, consider making it circular?`
+					)
 				)
 			} else {
 				debug(JSON.stringify(testDataRecord))
@@ -212,7 +212,7 @@ export default class Test implements ITest {
 				this.hook.beforeAll,
 				browser,
 				testDataRecord,
-				testObserver,
+				testObserver
 			)
 			if (!hookResult) {
 				stepIterator.stop()
@@ -225,7 +225,7 @@ export default class Test implements ITest {
 					this.hook.beforeEach,
 					browser,
 					testDataRecord,
-					testObserver,
+					testObserver
 				)
 				if (!hookResult) {
 					stepIterator.stop()
@@ -254,7 +254,7 @@ export default class Test implements ITest {
 						looper,
 						browser,
 						this.recoverySteps,
-						(this.settings.tries = 0),
+						(this.settings.tries = 0)
 					)
 					if (result) {
 						this.failed = false
@@ -268,7 +268,7 @@ export default class Test implements ITest {
 					this.hook.afterEach,
 					browser,
 					testDataRecord,
-					testObserver,
+					testObserver
 				)
 				if (!hookResult) {
 					stepIterator.stop()
@@ -385,7 +385,7 @@ export default class Test implements ITest {
 		testObserver: TestObserver,
 		browser: Browser<Step>,
 		step: Step,
-		testDataRecord: any,
+		testDataRecord: any
 	) {
 		let error: Error | null = null
 		step.subTitle = this.getStepSubtitle(step)
@@ -423,7 +423,7 @@ export default class Test implements ITest {
 			return new StructuredError<AssertionErrorData>(
 				error.message,
 				{ _kind: 'assertion' },
-				error,
+				error
 			).copyStackFromOriginalError()
 		} else if ((error as StructuredError<AnyErrorData>)._structured === 'yes') {
 			return error as StructuredError<AnyErrorData>
@@ -434,7 +434,7 @@ export default class Test implements ITest {
 	}
 
 	public get stepNames(): string[] {
-		return this.steps.map(s => s.name)
+		return this.steps.map((s) => s.name)
 	}
 
 	public async doStepDelay() {
@@ -442,7 +442,7 @@ export default class Test implements ITest {
 			return
 		}
 
-		await new Promise<void>(resolve => {
+		await new Promise<void>((resolve) => {
 			if (!this.settings.stepDelay) {
 				resolve()
 				return
@@ -455,7 +455,7 @@ export default class Test implements ITest {
 		testObserver: TestObserver,
 		browser: Browser<Step>,
 		command: string,
-		args: string,
+		args: string
 	): Promise<void> {
 		if (this.hookMode) {
 			await testObserver.beforeHookAction(this, command, args)
@@ -468,7 +468,7 @@ export default class Test implements ITest {
 		testObserver: TestObserver,
 		browser: Browser<Step>,
 		command: string,
-		args: string,
+		args: string
 	): Promise<void> {
 		if (this.hookMode) {
 			await testObserver.afterHookAction(this, command, args)
@@ -496,7 +496,7 @@ export default class Test implements ITest {
 		hooks: HookBase[],
 		browser: Browser<Step>,
 		testDataRecord: any,
-		testObserver: TestObserver,
+		testObserver: TestObserver
 	): Promise<boolean> {
 		this.hookMode = true
 		let currentHook: HookBase = hooks[0]
@@ -507,7 +507,7 @@ export default class Test implements ITest {
 				browser.settings = { ...this.settings }
 				browser.settings.waitTimeout = Math.max(
 					Number(browser.settings.waitTimeout),
-					Number(hook.waitTimeout),
+					Number(hook.waitTimeout)
 				)
 				const hookFn = hook.fn.bind(null, browser, testDataRecord)
 				await this.doHookFnWithTimeout(hookFn, Number(hook.waitTimeout))
@@ -552,7 +552,7 @@ export default class Test implements ITest {
 	}
 	private async finishedHookFuncObserver(
 		type: HookType,
-		testObserver: TestObserver,
+		testObserver: TestObserver
 	): Promise<void> {
 		switch (type) {
 			case HookType.beforeAll:

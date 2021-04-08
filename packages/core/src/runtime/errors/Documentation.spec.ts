@@ -22,7 +22,7 @@ describe.skip('Documentation', () => {
 						action: 'somekey',
 						kind: 'node-detached',
 					},
-					originalErr,
+					originalErr
 				)
 
 				const docErr = structuredErrorToDocumentedError(actionError, testScript)

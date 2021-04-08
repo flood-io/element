@@ -11,12 +11,12 @@ export class TargetLocator implements ITargetLocator {
 		private currentPage: Page,
 		private currentFrame: Frame,
 		private applyFrame: (frame: Frame | null) => void,
-		private applyPage: (page: number | Page) => void,
+		private applyPage: (page: number | Page) => void
 	) {}
 
 	public async activeElement(): Promise<ElementHandle | null> {
 		const jsHandle = await this.currentPage.evaluateHandle(
-			() => document.activeElement || document.body,
+			() => document.activeElement || document.body
 		)
 		if (!jsHandle) return null
 
@@ -30,13 +30,13 @@ export class TargetLocator implements ITargetLocator {
 		const frames = getFrames(this.currentPage.frames())
 		const frameElementName = await this.currentPage.evaluate((id: string) => {
 			// NOTE typescript lib.dom lacks proper index signature for frames: Window to work
-			const frame = Array.from(window.frames).find(frame => frame.frameElement.id === id)
+			const frame = Array.from(window.frames).find((frame) => frame.frameElement.id === id)
 
 			if (!frame) throw Error(`No frame found with id=${id}`)
 			return frame.name
 		}, id)
 
-		return frames.find(frame => frame.name() === frameElementName)
+		return frames.find((frame) => frame.name() === frameElementName)
 	}
 
 	/**
@@ -77,13 +77,13 @@ export class TargetLocator implements ITargetLocator {
 				return frame.name || frame.id
 			}, id)
 
-			nextFrame = frames.find(frame => frame.name() === frameElementName)
+			nextFrame = frames.find((frame) => frame.name() === frameElementName)
 			if (!nextFrame) throw new Error(`Could not match frame by name or id: '${frameElementName}'`)
 
 			this.applyFrame(nextFrame)
 		} else if (typeof id === 'string') {
 			// Assume id or name attr
-			nextFrame = frames.find(frame => frame.name() === id)
+			nextFrame = frames.find((frame) => frame.name() === id)
 			if (!nextFrame) {
 				nextFrame = await this.findFrameFromWindow(id)
 			}
@@ -94,14 +94,14 @@ export class TargetLocator implements ITargetLocator {
 			const tagName = await id.tagName()
 			if (!tagName || !['FRAME', 'WINDOW', 'IFRAME'].includes(tagName))
 				throw new Error(
-					`ElementHandle supplied to frame() must be a reference to a <frame>, window, or <iframe> element, got <${(tagName &&
-						tagName.toLowerCase()) ||
-						null}>`,
+					`ElementHandle supplied to frame() must be a reference to a <frame>, window, or <iframe> element, got <${
+						(tagName && tagName.toLowerCase()) || null
+					}>`
 				)
 			let name = await id.getProperty('name')
 			if (!name) name = await id.getProperty('id')
 
-			nextFrame = frames.find(frame => frame.name() === name)
+			nextFrame = frames.find((frame) => frame.name() === name)
 			if (!nextFrame) {
 				nextFrame = await this.findFrameFromWindow(name)
 			}

@@ -119,7 +119,7 @@ export class TimingObserver extends NetworkRecordingTestObserver {
 			const responseCode = String(networkRecorder.documentResponseCode || 0)
 			const documentResponseTime = this.getResponseTimeMeasurement(
 				test.settings.responseTimeMeasurement,
-				networkRecorder,
+				networkRecorder
 			)
 			const documentLatency = networkRecorder.latencyForType('Document')
 
@@ -146,7 +146,7 @@ export class TimingObserver extends NetworkRecordingTestObserver {
 	getResponseTimeMeasurement(
 		responseTimeMeasurement: ResponseTiming,
 		networkRecorder: NetworkRecorder,
-		fromNow?: boolean,
+		fromNow?: boolean
 	): number {
 		switch (responseTimeMeasurement) {
 			case 'page':

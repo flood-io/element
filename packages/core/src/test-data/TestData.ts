@@ -108,7 +108,7 @@ export class TestDataSource<T> {
 	public async load() {
 		const loaderCheck: { type: FileType; alias: string }[] = []
 		await Promise.all(
-			this.loaders.map(loader => {
+			this.loaders.map((loader) => {
 				if (loader.type() === FileType.NULL) return
 				loaderCheck.push({ type: loader.type(), alias: loader.loaderName })
 				const invalidLoader = loaderCheck.reduce((invalidMsg, lc) => {
@@ -129,10 +129,10 @@ export class TestDataSource<T> {
 					throw Error(invalidLoader)
 				}
 				return loader.load()
-			}),
+			})
 		)
 		const feeder = Feeder.getInstance()
-		this.loaders.map(loader => {
+		this.loaders.map((loader) => {
 			feeder.append(loader.lines, loader.loaderName, loader.type())
 		})
 	}
@@ -183,11 +183,11 @@ export class TestDataSource<T> {
 	}
 
 	public isLoaded(): boolean {
-		return this.loaders.every(loader => loader.isLoaded)
+		return this.loaders.every((loader) => loader.isLoaded)
 	}
 
 	public isSet(): boolean {
-		return this.loaders.every(loader => loader.isSet)
+		return this.loaders.every((loader) => loader.isSet)
 	}
 
 	public get multiple(): boolean {
@@ -243,8 +243,8 @@ export class TestDataSource<T> {
 	 */
 	public toString(): string {
 		if (this.isSet()) {
-			return [Feeder.getInstance().toString(), this.loaders.map(loader => loader.toString())]
-				.filter(x => x.length)
+			return [Feeder.getInstance().toString(), this.loaders.map((loader) => loader.toString())]
+				.filter((x) => x.length)
 				.join(', ')
 		} else {
 			return 'no test data'

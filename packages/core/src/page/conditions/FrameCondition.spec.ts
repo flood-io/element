@@ -27,7 +27,7 @@ describe('Condition', () => {
 			const frame = (await condition.waitFor(page.mainFrame(), page)) as Frame
 			expect(frame.name()).toBe('one')
 			expect(
-				await frame.$eval('body', body => (body.textContent ? body.textContent.trim() : '')),
+				await frame.$eval('body', (body) => (body.textContent ? body.textContent.trim() : ''))
 			).toBe('frame 1')
 		})
 
@@ -36,7 +36,7 @@ describe('Condition', () => {
 			const frame = (await condition.waitFor(page.mainFrame(), page)) as Frame
 			expect(frame.name()).toBe('one')
 			expect(
-				await frame.$eval('body', body => (body.textContent ? body.textContent.trim() : '')),
+				await frame.$eval('body', (body) => (body.textContent ? body.textContent.trim() : ''))
 			).toBe('frame 1')
 		})
 

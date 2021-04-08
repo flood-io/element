@@ -45,10 +45,10 @@ function wrapDescriptiveError(
 ) {
 	// errorInterpreters.push(interpretPuppeteerError)
 
-	return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+	return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
 		const originalFn = descriptor.value
 
-		descriptor.value = async function(...args: any[]) {
+		descriptor.value = async function (...args: any[]) {
 			// capture the stack trace at call-time
 			const calltimeError = new Error()
 			Error.captureStackTrace(calltimeError)
@@ -66,7 +66,7 @@ function wrapDescriptiveError(
 					e,
 					this,
 					propertyKey,
-					args,
+					args
 				)
 				// errorInterpreters.reduce((err, interp) => {
 				// return err ? err : interp(e, this, propertyKey, ...args)
@@ -75,7 +75,7 @@ function wrapDescriptiveError(
 				const sErr = StructuredError.liftWithSource(
 					newError,
 					'elementHandle',
-					`${this.toErrorString()}.${propertyKey}`,
+					`${this.toErrorString()}.${propertyKey}`
 				)
 				sErr.stack = calltimeStack
 
@@ -95,7 +95,7 @@ function domError(
 	target: ElementHandle,
 	key: string /* ,
 	callCtx: string,
-	options?: ClickOptions, */,
+	options?: ClickOptions, */
 ): StructuredError<ActionErrorData | EmptyErrorData> | undefined {
 	if (err.message.includes('Node is detached from document')) {
 		return new StructuredError<ActionErrorData>(
@@ -105,7 +105,7 @@ function domError(
 				action: key,
 				kind: 'node-detached',
 			},
-			err,
+			err
 		)
 	}
 }
@@ -226,7 +226,7 @@ export class ElementHandle implements IElementHandle, Locator {
 		if (tagName === 'SELECT') {
 			await this.element.evaluate(
 				(element: HTMLSelectElement) => (element.selectedIndex = -1),
-				this.element,
+				this.element
 			)
 		} else if (tagName === 'INPUT') {
 			await this.element.evaluate((element: HTMLInputElement) => (element.value = ''), this.element)
@@ -284,7 +284,7 @@ export class ElementHandle implements IElementHandle, Locator {
 	 */
 	@wrapDescriptiveError()
 	public async uploadFile(...names: string[]): Promise<void> {
-		return this.element.setInputFiles([...names.map(name => this.fs.testData(name))])
+		return this.element.setInputFiles([...names.map((name) => this.fs.testData(name))])
 	}
 
 	/**
@@ -292,7 +292,7 @@ export class ElementHandle implements IElementHandle, Locator {
 	 */
 	@wrapDescriptiveError()
 	public async takeScreenshot(options?: ScreenshotOptions): Promise<void> {
-		return this.fs.saveScreenshot(async path => {
+		return this.fs.saveScreenshot(async (path) => {
 			debug(`Saving screenshot to: ${path}`)
 
 			const handle = this.element.asElement()
@@ -417,7 +417,7 @@ export class ElementHandle implements IElementHandle, Locator {
 	public async text(): Promise<string> {
 		return this.element.evaluate(
 			(element: HTMLElement) => (element.textContent ? element.textContent.trim() : ''),
-			this.element,
+			this.element
 		)
 	}
 

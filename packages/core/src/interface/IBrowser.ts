@@ -222,7 +222,7 @@ export interface Browser {
 			 * Delay between key presses, in milliseconds.
 			 */
 			delay?: number
-		},
+		}
 	): Promise<void>
 
 	/**
@@ -320,7 +320,7 @@ export interface Browser {
 	scrollBy(
 		x: number | 'window.innerWidth',
 		y: number | 'window.innerHeight',
-		scrollOptions?: ScrollOptions,
+		scrollOptions?: ScrollOptions
 	): Promise<void>
 
 	/**
@@ -330,7 +330,7 @@ export interface Browser {
 	 */
 	scrollTo(
 		target: Locator | ElementHandle | Point | ScrollDirection,
-		scrollOptions?: ScrollIntoViewOptions,
+		scrollOptions?: ScrollIntoViewOptions
 	): Promise<void>
 
 	/**

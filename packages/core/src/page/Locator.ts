@@ -38,7 +38,7 @@ export class BaseLocator implements Locator {
 	async find(
 		page: Page,
 		node?: PlaywrightElementHandle,
-		frame?: Frame,
+		frame?: Frame
 	): Promise<IElementHandle | null> {
 		const args = [...this.pageFuncArgs]
 		if (node) args.push(node)
@@ -49,9 +49,9 @@ export class BaseLocator implements Locator {
 					const [fn, ...rest] = args
 					return eval(fn)(...rest)
 				},
-				[this.pageFunc.toString(), ...args],
+				[this.pageFunc.toString(), ...args]
 			)
-			.catch(err => {
+			.catch((err) => {
 				if (/Target closed/.test(err.message)) {
 					return null
 				}
@@ -70,7 +70,7 @@ export class BaseLocator implements Locator {
 	async findMany(
 		page: Page,
 		node?: PlaywrightElementHandle,
-		frame?: Frame,
+		frame?: Frame
 	): Promise<IElementHandle[]> {
 		const args = [...this.pageFuncArgs]
 		if (node) args.push(node)
@@ -80,9 +80,9 @@ export class BaseLocator implements Locator {
 					const [fn, ...rest] = args
 					return eval(fn)(...rest)
 				},
-				[this.pageFuncMany.toString(), ...args],
+				[this.pageFuncMany.toString(), ...args]
 			)
-			.catch(err => {
+			.catch((err) => {
 				if (/Target closed/.test(err.message)) {
 					return null
 				}
@@ -105,7 +105,7 @@ export class BaseLocator implements Locator {
 			const elementHandle = property.asElement()
 			if (elementHandle)
 				elements.push(
-					new ElementHandle(elementHandle, page, frame).initErrorString(thisErrorString),
+					new ElementHandle(elementHandle, page, frame).initErrorString(thisErrorString)
 				)
 		}
 
@@ -116,7 +116,7 @@ export class BaseLocator implements Locator {
 		frame: Frame,
 		waitFunc: EvaluateFn,
 		waitFuncArgs: any[],
-		options: any = {},
+		options: any = {}
 	): Promise<boolean> {
 		const timeout = options.timeout || 3000
 		const waitForVisible = !!options.visible
@@ -133,7 +133,7 @@ return predicate(${['element', ...tmpArgs].join(', ')})`
 			await frame.waitForFunction(
 				new Function(...tmpArgs, fn).toString(),
 				{ polling, timeout },
-				...waitFuncArgs,
+				...waitFuncArgs
 			)
 		} catch (err) {
 			console.error(err)

@@ -78,8 +78,8 @@ step.unless = (condition: ConditionFn, name: string, ...optionsOrFn: any[]) => {
 	const [options, fn] = extractOptionsAndCallback(optionsOrFn)
 	step(
 		name,
-		{ ...options, condition: b => Promise.resolve(condition(b)).then(result => !result) },
-		fn,
+		{ ...options, condition: (b) => Promise.resolve(condition(b)).then((result) => !result) },
+		fn
 	)
 }
 
@@ -88,7 +88,7 @@ const testScriptExport = () => {
 		// Browser.visit(...)
 	})
 
-	step.if(elementIsVisible('button.login'), 'Handle conditional login', async browser => {
+	step.if(elementIsVisible('button.login'), 'Handle conditional login', async (browser) => {
 		await browser.fill('username', 'test@user')
 		// More login steps here
 	})
@@ -100,7 +100,7 @@ const testScriptExport = () => {
 		'Unless thing is here',
 		async () => {
 			// Do conditional work here
-		},
+		}
 	)
 	step('Do something')
 }

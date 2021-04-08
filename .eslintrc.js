@@ -7,11 +7,10 @@ module.exports = {
 	},
 	root: true,
 	parser: '@typescript-eslint/parser',
-	plugins: ['@typescript-eslint', 'prettier', 'import'],
+	plugins: ['@typescript-eslint', 'import'],
 	extends: [
 		'eslint:recommended',
 		'plugin:@typescript-eslint/recommended',
-		'prettier/@typescript-eslint',
 		'plugin:import/warnings',
 		'plugin:import/errors',
 		'plugin:import/typescript',

@@ -27,7 +27,7 @@ export class VerboseReporter implements IReporter {
 	addCompoundMeasurement(
 		measurement: MeasurementKind,
 		value: CompoundMeasurement,
-		label: string,
+		label: string
 	): void {}
 
 	addTrace(traceData: TraceData, label: string): void {}
@@ -44,7 +44,7 @@ export class VerboseReporter implements IReporter {
 		subtitle?: string,
 		timing?: number,
 		errorMessage?: string,
-		args?: string,
+		args?: string
 	): void {
 		const stepName = 'Step ' + (subtitle ? `'${label}' (${subtitle})` : `'${label}'`)
 		const beforeRunStepMessage = chalk.whiteBright(`${stepName} is running ...`)
@@ -85,7 +85,7 @@ export class VerboseReporter implements IReporter {
 					stepName,
 					`${stepName} passed (${timing?.toLocaleString()}ms)`,
 					4,
-					'succeed',
+					'succeed'
 				)
 				break
 			case TestEvent.StepFailed:

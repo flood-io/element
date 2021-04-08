@@ -27,7 +27,7 @@ export class BaseReporter implements IReporter {
 	addCompoundMeasurement(
 		measurement: MeasurementKind,
 		value: CompoundMeasurement,
-		label: string,
+		label: string
 	): void {}
 
 	addTrace(traceData: TraceData, label: string): void {}
@@ -39,7 +39,7 @@ export class BaseReporter implements IReporter {
 		label: string,
 		subtitle?: string,
 		timing?: number,
-		errorMessage?: string,
+		errorMessage?: string
 	): void {
 		const stepName = 'Step ' + (subtitle ? `'${label}' (${subtitle})` : `'${label}'`)
 		const beforeRunStepMessage = chalk.whiteBright(`${stepName} is running ...`)
@@ -72,7 +72,7 @@ export class BaseReporter implements IReporter {
 					stepName,
 					chalk.red(`${stepName} failed (${timing?.toLocaleString()}ms)`),
 					4,
-					'fail',
+					'fail'
 				)
 				break
 			case TestEvent.StepSkipped:

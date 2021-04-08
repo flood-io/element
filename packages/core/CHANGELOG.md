@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.5-canary.8](https://github.com/flood-io/element/compare/v2.0.5-canary.7...v2.0.5-canary.8) (2021-04-08)
+
+**Note:** Version bump only for package @flood/element-core
+
+
+
+
+
 ## [2.0.5-canary.7](https://github.com/flood-io/element/compare/v2.0.5-canary.6...v2.0.5-canary.7) (2021-04-08)
 
 **Note:** Version bump only for package @flood/element-core

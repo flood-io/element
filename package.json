@@ -15,7 +15,7 @@
 		"build": "lerna run build --sort",
 		"test": "jest",
 		"lint": "echo \"TODO: linting\"",
-		"format": "prettier --write .; eslint --fix .",
+		"format": "eslint --fix .; prettier --write .",
 		"publish:pre": "lerna publish --force-publish=* --cd-version prerelease",
 		"dev": "ts-node -r tsconfig-paths/register ./packages/cli/bin/element.ts",
 		"elementctl": "ts-node -r tsconfig-paths/register ./packages/element-cli/bin/element.ts",

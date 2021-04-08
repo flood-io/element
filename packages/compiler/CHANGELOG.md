@@ -7,213 +7,122 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 **Note:** Version bump only for package @flood/element-compiler
 
-
-
-
-
 ## [2.0.5-canary.8](https://github.com/flood-io/element/compare/v2.0.5-canary.7...v2.0.5-canary.8) (2021-04-08)
 
 **Note:** Version bump only for package @flood/element-compiler
-
-
-
-
 
 ## [2.0.5-canary.7](https://github.com/flood-io/element/compare/v2.0.5-canary.6...v2.0.5-canary.7) (2021-04-08)
 
 **Note:** Version bump only for package @flood/element-compiler
 
-
-
-
-
 ## [2.0.5-canary.6](https://github.com/flood-io/element/compare/v2.0.5-canary.5...v2.0.5-canary.6) (2021-04-07)
 
 **Note:** Version bump only for package @flood/element-compiler
-
-
-
-
 
 ## [2.0.5-canary.5](https://github.com/flood-io/element/compare/v2.0.5-canary.4...v2.0.5-canary.5) (2021-04-07)
 
 **Note:** Version bump only for package @flood/element-compiler
 
-
-
-
-
 ## [2.0.5-canary.4](https://github.com/flood-io/element/compare/v2.0.5-canary.3...v2.0.5-canary.4) (2021-04-07)
 
 **Note:** Version bump only for package @flood/element-compiler
-
-
-
-
 
 ## [2.0.5-canary.3](https://github.com/flood-io/element/compare/v2.0.5-canary.2...v2.0.5-canary.3) (2021-04-07)
 
 **Note:** Version bump only for package @flood/element-compiler
 
-
-
-
-
 ## [2.0.5-canary.2](https://github.com/flood-io/element/compare/v2.0.5-beta.0...v2.0.5-canary.2) (2021-04-06)
-
 
 ### Bug Fixes
 
-* correct packages's canary version ([00868d0](https://github.com/flood-io/element/commit/00868d062286393301f207d85295286548d28262))
-* fix version of canary packages ([7fff99c](https://github.com/flood-io/element/commit/7fff99c73c2bcd83062dd071ef3a491d63105a83))
-
-
-
-
+- correct packages's canary version ([00868d0](https://github.com/flood-io/element/commit/00868d062286393301f207d85295286548d28262))
+- fix version of canary packages ([7fff99c](https://github.com/flood-io/element/commit/7fff99c73c2bcd83062dd071ef3a491d63105a83))
 
 ## [2.0.5-beta.0](https://github.com/flood-io/element/compare/v2.0.5-canary.1...v2.0.5-beta.0) (2021-03-31)
 
 **Note:** Version bump only for package @flood/element-compiler
 
-
-
-
-
 ## [2.0.5-canary.1](https://github.com/flood-io/element/compare/v2.0.5-canary.0...v2.0.5-canary.1) (2021-03-31)
-
 
 ### Bug Fixes
 
-* bump dependency patch versions ([24fdc30](https://github.com/flood-io/element/commit/24fdc30b1a89cc840c12d905b942abbc8dcc3dc2))
-
-
-
-
+- bump dependency patch versions ([24fdc30](https://github.com/flood-io/element/commit/24fdc30b1a89cc840c12d905b942abbc8dcc3dc2))
 
 ## [2.0.5-canary.0](https://github.com/flood-io/element/compare/v2.0.4...v2.0.5-canary.0) (2021-03-31)
 
 **Note:** Version bump only for package @flood/element-compiler
 
-
-
-
-
 ## [2.0.4](https://github.com/flood-io/element/compare/v2.0.2...v2.0.4) (2021-03-30)
-
 
 ### Bug Fixes
 
-* show the LOC have errors when complie any scripts have them ([ba3cb73](https://github.com/flood-io/element/commit/ba3cb7343110f2641f44137ed5e1569caa186a84))
-
-
-
-
+- show the LOC have errors when complie any scripts have them ([ba3cb73](https://github.com/flood-io/element/commit/ba3cb7343110f2641f44137ed5e1569caa186a84))
 
 # [2.0.0](https://github.com/flood-io/element/compare/v2.0.0-canary.48...v2.0.0) (2021-03-04)
 
-
 ### Bug Fixes
 
-* fix codacy ([e1d1c5b](https://github.com/flood-io/element/commit/e1d1c5b36500a772cbe5a7c8c9978e1887a9ec67))
-
-
+- fix codacy ([e1d1c5b](https://github.com/flood-io/element/commit/e1d1c5b36500a772cbe5a7c8c9978e1887a9ec67))
 
 # [1.5.0](https://github.com/flood-io/element/compare/v2.0.0-canary.23...v1.5.0) (2021-01-22)
 
-
 ### Bug Fixes
 
-* fix codacy ([2cf3b36](https://github.com/flood-io/element/commit/2cf3b36da27e527f78fc0b9e55c8fea5aa2b90ec))
-
+- fix codacy ([2cf3b36](https://github.com/flood-io/element/commit/2cf3b36da27e527f78fc0b9e55c8fea5aa2b90ec))
 
 ### Features
 
-* update version of each packages ([017830f](https://github.com/flood-io/element/commit/017830fa5c1922e481ebd59f7519dd63b2b2ec18))
-
-
+- update version of each packages ([017830f](https://github.com/flood-io/element/commit/017830fa5c1922e481ebd59f7519dd63b2b2ec18))
 
 # [1.4.0-beta.6](https://github.com/flood-io/element/compare/v1.4.0-beta.5...v1.4.0-beta.6) (2020-12-04)
 
-
-
 # [1.4.0-beta.5](https://github.com/flood-io/element/compare/v1.3.10-beta.0...v1.4.0-beta.5) (2020-12-04)
-
 
 ### Bug Fixes
 
-* fix CHANGELOG.md of each package ([6949219](https://github.com/flood-io/element/commit/694921922599c21394cbf3369852bdea75b85c38))
-* update correct version of each package ([e87e39b](https://github.com/flood-io/element/commit/e87e39b20ac06eb0197f1bd36c16eff46375e6bf))
-* using remark to beautify *.md file to pass codacy ([198fc3c](https://github.com/flood-io/element/commit/198fc3c873d914884dbafa5f492d3545cc5c3635))
-
-
+- fix CHANGELOG.md of each package ([6949219](https://github.com/flood-io/element/commit/694921922599c21394cbf3369852bdea75b85c38))
+- update correct version of each package ([e87e39b](https://github.com/flood-io/element/commit/e87e39b20ac06eb0197f1bd36c16eff46375e6bf))
+- using remark to beautify \*.md file to pass codacy ([198fc3c](https://github.com/flood-io/element/commit/198fc3c873d914884dbafa5f492d3545cc5c3635))
 
 ## [1.3.10-beta.0](https://github.com/flood-io/element/compare/v2.0.0-canary.10...v1.3.10-beta.0) (2020-12-04)
 
-
-
 # [1.4.0-beta.4](https://github.com/flood-io/element/compare/v2.0.0-canary.9...v1.4.0-beta.4) (2020-12-03)
-
-
 
 # [1.4.0-beta.3](https://github.com/flood-io/element/compare/v2.0.0-canary.6...v1.4.0-beta.3) (2020-11-25)
 
-
-
 # [1.4.0-beta.2](https://github.com/flood-io/element/compare/v1.4.0-beta.1...v1.4.0-beta.2) (2020-11-24)
-
 
 ### Bug Fixes
 
-* codacy resolved ([55d66e1](https://github.com/flood-io/element/commit/55d66e1bf8ecd5d03982a08b3211aecd3c0ea559))
-* make the changelog consistent to 1.4 ([4a366a9](https://github.com/flood-io/element/commit/4a366a913e601e324f9462d5eff448bafcfff1ab))
-
-
+- codacy resolved ([55d66e1](https://github.com/flood-io/element/commit/55d66e1bf8ecd5d03982a08b3211aecd3c0ea559))
+- make the changelog consistent to 1.4 ([4a366a9](https://github.com/flood-io/element/commit/4a366a913e601e324f9462d5eff448bafcfff1ab))
 
 # [1.4.0-beta.1](https://github.com/flood-io/element/compare/v2.0.0-canary.4...v1.4.0-beta.1) (2020-11-23)
 
-
 ### Features
 
-* change version to make it consitent ([79d3a60](https://github.com/flood-io/element/commit/79d3a607a580b230536260ed68b40c1c701aaa1f))
-* revert beta to 1.3.0-beta.28 ([5ff2220](https://github.com/flood-io/element/commit/5ff2220674ec1f89b31f2499f0d5f0aecc1c12af))
-
-
+- change version to make it consitent ([79d3a60](https://github.com/flood-io/element/commit/79d3a607a580b230536260ed68b40c1c701aaa1f))
+- revert beta to 1.3.0-beta.28 ([5ff2220](https://github.com/flood-io/element/commit/5ff2220674ec1f89b31f2499f0d5f0aecc1c12af))
 
 # [1.4.0-beta.0](https://github.com/flood-io/element/compare/v2.0.0-canary.2...v1.4.0-beta.0) (2020-11-16)
 
-
 ### Features
 
-* mirage from 2.0-beta to 1.3.9 ([4df1383](https://github.com/flood-io/element/commit/4df138314a2db5b0a6468e12609c3eaba4e643b6))
-
-
+- mirage from 2.0-beta to 1.3.9 ([4df1383](https://github.com/flood-io/element/commit/4df138314a2db5b0a6468e12609c3eaba4e643b6))
 
 ## [1.3.1](https://github.com/flood-io/element/compare/v2.0.0-beta.4...v1.3.1) (2020-09-04)
 
-
 ### Bug Fixes
 
-* bump 1.3.1 ([#262](https://github.com/flood-io/element/issues/262)) ([b63ed9a](https://github.com/flood-io/element/commit/b63ed9a0d27e1184e377e7f28852fb70a1895d73))
-
-
+- bump 1.3.1 ([#262](https://github.com/flood-io/element/issues/262)) ([b63ed9a](https://github.com/flood-io/element/commit/b63ed9a0d27e1184e377e7f28852fb70a1895d73))
 
 # [1.3.0](https://github.com/flood-io/element/compare/v1.3.0-beta.26...v1.3.0) (2020-08-29)
 
-
-
 ## [1.2.5](https://github.com/flood-io/element/compare/v1.2.4...v1.2.5) (2020-08-11)
-
-
 
 ## [1.2.4](https://github.com/flood-io/element/compare/v1.3.0-beta.18...v1.2.4) (2020-07-17)
 
-
-
 ## [1.2.3](https://github.com/flood-io/element/compare/v1.2.3-beta.2...v1.2.3) (2020-04-07)
-
-
-
-
 
 ## [2.0.0-canary.48](https://github.com/flood-io/element/compare/v2.0.0-canary.47...v2.0.0-canary.48) (2021-03-04)
 
@@ -367,7 +276,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Features
 
--   terminal output for multiple users ([75a9196](https://github.com/flood-io/element/commit/75a91966d827e6d5db6ede45a4a71104229e78ad))
+- terminal output for multiple users ([75a9196](https://github.com/flood-io/element/commit/75a91966d827e6d5db6ede45a4a71104229e78ad))
 
 ## [2.0.0-canary.10](https://github.com/flood-io/element/compare/v2.0.0-canary.9...v2.0.0-canary.10) (2020-12-03)
 
@@ -483,102 +392,102 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [2.0.0-beta.7](https://github.com/flood-io/element/compare/v2.0.0-beta.6...v2.0.0-beta.7) (2020-09-18)
 
--   [FLO-1768] feat: Support running multiple users locally (#225) ([a381662](https://github.com/flood-io/element/commit/a381662a5259ad9a137a33fed480242138b6cdea)), closes [#225](https://github.com/flood-io/element/issues/225)
+- [FLO-1768] feat: Support running multiple users locally (#225) ([a381662](https://github.com/flood-io/element/commit/a381662a5259ad9a137a33fed480242138b6cdea)), closes [#225](https://github.com/flood-io/element/issues/225)
 
 ### BREAKING CHANGES
 
--   change the core, replacing puppeteer by playwright
+- change the core, replacing puppeteer by playwright
 
--   fix: build
+- fix: build
 
--   chore: add element-schedular and element-worker
+- chore: add element-schedular and element-worker
 
--   chore: add element-schedular and element-worker
+- chore: add element-schedular and element-worker
 
--   chore: updated element-schedular
+- chore: updated element-schedular
 
--   chore: updated element-schedular
+- chore: updated element-schedular
 
--   chore: add worker id log running
+- chore: add worker id log running
 
--   chore: fix test
+- chore: fix test
 
--   chore: change package name
+- chore: change package name
 
--   chore: clean code
+- chore: clean code
 
--   chore: clean code
+- chore: clean code
 
--   chore: handle error for client error
+- chore: handle error for client error
 
--   chore: handle error for client error
+- chore: handle error for client error
 
--   chore: clean code + fix issue of synchronizing children
+- chore: clean code + fix issue of synchronizing children
 
--   chore: fix test
+- chore: fix test
 
--   chore: clean code
+- chore: clean code
 
--   chore: improve functionality
+- chore: improve functionality
 
--   chore: clean code
+- chore: clean code
 
--   chore: remove redundant files
+- chore: remove redundant files
 
--   chore: remove redundant files
+- chore: remove redundant files
 
--   chore: add example for multiple users
+- chore: add example for multiple users
 
--   chore: clean code
+- chore: clean code
 
--   chore: clean code
+- chore: clean code
 
--   chore: fix test
+- chore: fix test
 
--   chore: clean code
+- chore: clean code
 
--   chore: clean code
+- chore: clean code
 
--   chore: change name
+- chore: change name
 
--   chore: rename Callsite to CallSite
+- chore: rename Callsite to CallSite
 
--   chore: fix condition test name
+- chore: fix condition test name
 
--   chore: fix condition test name
+- chore: fix condition test name
 
--   Update launch.json
+- Update launch.json
 
--   chore: fix add eol-last
+- chore: fix add eol-last
 
--   chore: fix add eol-last
+- chore: fix add eol-last
 
--   chore: fix add eol-last
+- chore: fix add eol-last
 
--   chore: clean code
+- chore: clean code
 
--   chore: clean code
+- chore: clean code
 
--   chore: fix issue timing
+- chore: fix issue timing
 
--   chore: clean code
+- chore: clean code
 
--   chore: clean code
+- chore: clean code
 
--   Update tsconfig.json
-    add a new line for `tsconfig.json`
+- Update tsconfig.json
+  add a new line for `tsconfig.json`
 
--   chore: clean code after merge from beta
+- chore: clean code after merge from beta
 
 Co-authored-by: phile [phi@flood.io](mailto:phi@flood.io)
 
 ### Bug Fixes
 
--   fix codacy ([2cf3b36](https://github.com/flood-io/element/commit/2cf3b36da27e527f78fc0b9e55c8fea5aa2b90ec))
+- fix codacy ([2cf3b36](https://github.com/flood-io/element/commit/2cf3b36da27e527f78fc0b9e55c8fea5aa2b90ec))
 
 ### Features
 
--   update version of each packages ([017830f](https://github.com/flood-io/element/commit/017830fa5c1922e481ebd59f7519dd63b2b2ec18))
+- update version of each packages ([017830f](https://github.com/flood-io/element/commit/017830fa5c1922e481ebd59f7519dd63b2b2ec18))
 
 ## [1.5.0](https://github.com/flood-io/element/compare/v1.4.0-beta.6...v1.5.0) (2021-01-22)
 
@@ -590,9 +499,9 @@ Co-authored-by: phile [phi@flood.io](mailto:phi@flood.io)
 
 ### Bug Fixes
 
--   fix CHANGELOG.md of each package ([6949219](https://github.com/flood-io/element/commit/694921922599c21394cbf3369852bdea75b85c38))
--   update correct version of each package ([e87e39b](https://github.com/flood-io/element/commit/e87e39b20ac06eb0197f1bd36c16eff46375e6bf))
--   using remark to beautify \*.md file to pass codacy ([198fc3c](https://github.com/flood-io/element/commit/198fc3c873d914884dbafa5f492d3545cc5c3635))
+- fix CHANGELOG.md of each package ([6949219](https://github.com/flood-io/element/commit/694921922599c21394cbf3369852bdea75b85c38))
+- update correct version of each package ([e87e39b](https://github.com/flood-io/element/commit/e87e39b20ac06eb0197f1bd36c16eff46375e6bf))
+- using remark to beautify \*.md file to pass codacy ([198fc3c](https://github.com/flood-io/element/commit/198fc3c873d914884dbafa5f492d3545cc5c3635))
 
 ## [1.4.0-beta.4](https://github.com/flood-io/element/compare/v1.4.0-beta.3...v1.4.0-beta.4) (2020-12-03)
 
@@ -606,15 +515,15 @@ Co-authored-by: phile [phi@flood.io](mailto:phi@flood.io)
 
 ### Bug Fixes
 
--   codacy resolved ([55d66e1](https://github.com/flood-io/element/commit/55d66e1bf8ecd5d03982a08b3211aecd3c0ea559))
--   make the changelog consistent to 1.4 ([4a366a9](https://github.com/flood-io/element/commit/4a366a913e601e324f9462d5eff448bafcfff1ab))
+- codacy resolved ([55d66e1](https://github.com/flood-io/element/commit/55d66e1bf8ecd5d03982a08b3211aecd3c0ea559))
+- make the changelog consistent to 1.4 ([4a366a9](https://github.com/flood-io/element/commit/4a366a913e601e324f9462d5eff448bafcfff1ab))
 
 ## [1.4.0-beta.1](https://github.com/flood-io/element/compare/v1.4.0-beta.0...v1.4.0-beta.1) (2020-11-23)
 
 ### Features
 
--   change version to make it consitent ([79d3a60](https://github.com/flood-io/element/commit/79d3a607a580b230536260ed68b40c1c701aaa1f))
--   revert beta to 1.3.0-beta.28 ([5ff2220](https://github.com/flood-io/element/commit/5ff2220674ec1f89b31f2499f0d5f0aecc1c12af))
+- change version to make it consitent ([79d3a60](https://github.com/flood-io/element/commit/79d3a607a580b230536260ed68b40c1c701aaa1f))
+- revert beta to 1.3.0-beta.28 ([5ff2220](https://github.com/flood-io/element/commit/5ff2220674ec1f89b31f2499f0d5f0aecc1c12af))
 
 ## [1.3.1](https://github.com/flood-io/element/compare/v1.3.0-beta.28...v1.3.1) (2020-09-04)
 
@@ -622,7 +531,7 @@ Co-authored-by: phile [phi@flood.io](mailto:phi@flood.io)
 
 ### Bug Fixes
 
--   bump 1.3.1 ([#262](https://github.com/flood-io/element/issues/262)) ([b63ed9a](https://github.com/flood-io/element/commit/b63ed9a0d27e1184e377e7f28852fb70a1895d73))
+- bump 1.3.1 ([#262](https://github.com/flood-io/element/issues/262)) ([b63ed9a](https://github.com/flood-io/element/commit/b63ed9a0d27e1184e377e7f28852fb70a1895d73))
 
 ## [1.3.0](https://github.com/flood-io/element/compare/v1.3.0-beta.20...v1.3.0) (2020-08-29)
 
@@ -690,7 +599,7 @@ Co-authored-by: phile [phi@flood.io](mailto:phi@flood.io)
 
 ### Features
 
--   **example:** tesing release version bump to 1.1 ([5dbc19f](https://github.com/flood-io/element/commit/5dbc19fa8ac2dbaabe769786d69da95c8186718f))
+- **example:** tesing release version bump to 1.1 ([5dbc19f](https://github.com/flood-io/element/commit/5dbc19fa8ac2dbaabe769786d69da95c8186718f))
 
 ## [1.0.11-alpha.2](https://github.com/flood-io/element/compare/v1.0.10-beta.63...v1.0.11-alpha.2) (2020-04-01)
 
@@ -786,14 +695,14 @@ Co-authored-by: phile [phi@flood.io](mailto:phi@flood.io)
 
 ### Bug Fixes
 
--   include faker and assert in built package just for good measure ([e6119ab](https://github.com/flood-io/element/commit/e6119ab749b7645eb59f42af8c8afe220deb31fc))
+- include faker and assert in built package just for good measure ([e6119ab](https://github.com/flood-io/element/commit/e6119ab749b7645eb59f42af8c8afe220deb31fc))
 
 ## [1.0.10-beta.44](https://github.com/flood-io/element/compare/v1.0.10-beta.43...v1.0.10-beta.44) (2020-02-04)
 
 ### Bug Fixes
 
--   add core node_modules to resolver path ([0f89dd1](https://github.com/flood-io/element/commit/0f89dd124809b39e797bc3de785432a3039f5168))
--   **compiler:** exclude faker and assert from compiled script ([1556ba2](https://github.com/flood-io/element/commit/1556ba2288bc88d867a8054e0a6af59a27c9bd39))
+- add core node_modules to resolver path ([0f89dd1](https://github.com/flood-io/element/commit/0f89dd124809b39e797bc3de785432a3039f5168))
+- **compiler:** exclude faker and assert from compiled script ([1556ba2](https://github.com/flood-io/element/commit/1556ba2288bc88d867a8054e0a6af59a27c9bd39))
 
 ## [1.0.10-beta.43](https://github.com/flood-io/element/compare/v1.0.10-beta.42...v1.0.10-beta.43) (2020-01-30)
 
@@ -847,4 +756,4 @@ Co-authored-by: phile [phi@flood.io](mailto:phi@flood.io)
 
 ### Features
 
--   **compiler:** implements new webpack based script compiler ([#98](https://github.com/flood-io/element/issues/98)) ([3654578](https://github.com/flood-io/element/commit/3654578e44a0f2652721a14e2051c338b859b81b))
+- **compiler:** implements new webpack based script compiler ([#98](https://github.com/flood-io/element/issues/98)) ([3654578](https://github.com/flood-io/element/commit/3654578e44a0f2652721a14e2051c338b859b81b))

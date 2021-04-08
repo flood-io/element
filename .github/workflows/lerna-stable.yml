@@ -25,7 +25,7 @@ jobs:
           git config --global user.email services@flood.io
           git config --global user.name FloodBot
       - name: Install dependencies
-        run: yarn install --ignore-optional
+        run: yarn install
         env:
           PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
       - name: Build all

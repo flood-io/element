@@ -9,7 +9,7 @@ type NormalizedStage = {
 }
 
 function normalizeStages(stages: RampStage[]): NormalizedStage[] {
-	return stages.map(stage => {
+	return stages.map((stage) => {
 		const duration = parseDuration(stage.duration)
 		const { target } = stage
 		return { duration, target }
@@ -31,9 +31,9 @@ export class Plan {
 	public ticker(
 		onTick: (timestamp: number, target: number, stageIterator: number) => Promise<void>,
 		onEndState: (forceStop?: boolean, sigint?: boolean) => Promise<void>,
-		onNewState: () => Promise<void>,
+		onNewState: () => Promise<void>
 	): Promise<unknown> {
-		return new Promise(done => {
+		return new Promise((done) => {
 			const planSteps: PlanStep[] = []
 			this.stages.forEach((stage, index) => {
 				const { target, duration } = stage
@@ -59,7 +59,7 @@ export class Plan {
 
 	public get maxDuration(): number {
 		let total = 0
-		this.stages.forEach(stage => {
+		this.stages.forEach((stage) => {
 			total += stage.duration
 		})
 		return total
@@ -67,7 +67,7 @@ export class Plan {
 
 	public get maxUsers(): number {
 		let total = 0
-		this.stages.forEach(stage => {
+		this.stages.forEach((stage) => {
 			if (stage.target > total) total = stage.target
 		})
 		return total

@@ -33,7 +33,6 @@
 		"@flood/element-compiler": "2.0.5-canary.9",
 		"@flood/element-report": "2.0.5-canary.1",
 		"@types/faker": "^4.1.9",
-		"@types/node": "12.7.4",
 		"assert": "^1.4.1",
 		"comment-parser": "^0.5.0",
 		"csv": "^5.3.2",
@@ -67,6 +66,7 @@
 		"@types/knuth-shuffle": "^1.0.0",
 		"@types/micromatch": "^3.1.0",
 		"@types/mkdirp": "^0.5.2",
+		"@types/node": "^14.14.37",
 		"@types/sanitize-filename": "^1.1.28",
 		"@types/test-listen": "^1.1.0",
 		"express": "^4.16.1",
@@ -80,9 +80,6 @@
 		"run-script-os": "^1.0.3",
 		"test-listen": "^1.1.0",
 		"typedoc": "^0.20.25"
-	},
-	"resolutions": {
-		"@types/node": "12.7.4"
 	},
 	"gitHead": "e8bf1b41988d8a4c1c3b35943a349dd04d6ebfaf",
 	"publishConfig": {

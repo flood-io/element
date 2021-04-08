@@ -13,7 +13,7 @@
 		"@flood/element-report": "2.0.5-canary.1"
 	},
 	"devDependencies": {
-		"@types/node": "12.7.4"
+		"@types/node": "^14.14.37"
 	},
 	"author": "Ivan Vanderbyl <ivanvanderbyl@gmail.com>",
 	"homepage": "https://element.flood.io",

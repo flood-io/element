@@ -30,7 +30,7 @@ export default () => {
 		count += 1
 	})
 
-	step('Test: value of text box vs. result', async browser => {
+	step('Test: value of text box vs. result', async (browser) => {
 		// clear the value of text box first
 		assert.strictEqual(await textBox.getProperty('value'), 'press')
 		await browser.clear(textBox)
@@ -51,7 +51,7 @@ export default () => {
 		assert.strictEqual(await result.text(), 'You entered: B')
 	})
 
-	step('Test: dispose text box', async browser => {
+	step('Test: dispose text box', async (browser) => {
 		try {
 			await textBox.dispose()
 			await browser.focus(textBox)

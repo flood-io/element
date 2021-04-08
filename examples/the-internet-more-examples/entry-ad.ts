@@ -7,11 +7,11 @@ export const settings: TestSettings = {
 }
 
 export default () => {
-	beforeEach(async browser => {
+	beforeEach(async (browser) => {
 		await browser.visit('https://the-internet.herokuapp.com/entry_ad')
 	})
 
-	step.once('Size of the dialog', async browser => {
+	step.once('Size of the dialog', async (browser) => {
 		const dialog = await browser.findElement(By.id('modal'))
 		const dialogSize = await dialog.size()
 		const btnClose = await dialog.findElement('#modal > div.modal > div.modal-footer > p')
@@ -39,6 +39,6 @@ export default () => {
 				await reEnableLink.click()
 			}
 			count += 1
-		},
+		}
 	)
 }

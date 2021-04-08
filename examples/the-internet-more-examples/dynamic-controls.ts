@@ -7,14 +7,14 @@ export const settings: TestSettings = {
 }
 
 export default () => {
-	step('Step 1: Add/Remove', async browser => {
+	step('Step 1: Add/Remove', async (browser) => {
 		await browser.visit('https://the-internet.herokuapp.com')
 		await browser.wait(Until.titleMatches(/([A-Za-z]{3}) ([A-Za-z]{8})/))
 		await browser.click(By.linkText('Dynamic Controls'))
 		await browser.wait(
 			Until.urlMatches(
-				/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}[dynamic_controls]/,
-			),
+				/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}[dynamic_controls]/
+			)
 		)
 		const btnRemove = By.xpath('//*[@id="checkbox-example"]/button')
 		const message = By.id('message')
@@ -29,7 +29,7 @@ export default () => {
 		await checkbox.click()
 		assert.strictEqual(await checkbox.isSelected(), true, 'should be checked')
 	})
-	step('Step 2: Enable/Disable', async browser => {
+	step('Step 2: Enable/Disable', async (browser) => {
 		const input = await browser.findElement(By.attr('input', 'type', 'text'))
 		const btnEnable = await browser.findElement(By.xpath('//*[@id="input-example"]/button'))
 
@@ -43,7 +43,7 @@ export default () => {
 
 	// Bug: a loading indicator is created every time the Enable/Disable button is clicked
 	// Skipping the below step
-	step.skip({}, async browser => {
+	step.skip({}, async (browser) => {
 		const btnEnable = await browser.findElement(By.xpath('//*[@id="input-example"]/button'))
 		await btnEnable.click()
 		await browser.wait(Until.elementIsEnabled(btnEnable))

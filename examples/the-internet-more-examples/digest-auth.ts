@@ -6,7 +6,7 @@ export const settings: TestSettings = {
 }
 
 export default () => {
-	step(async browser => {
+	step(async (browser) => {
 		await browser.authenticate('admin', 'admin')
 		await browser.visit('https://the-internet.herokuapp.com/digest_auth')
 		const msg = await browser.findElement(By.tagName('p'))

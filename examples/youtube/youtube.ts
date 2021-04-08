@@ -1,7 +1,7 @@
 import { step, TestSettings, Until, By, Device } from '@flood/element'
 import * as assert from 'assert'
 
-var setUp = 1
+let setUp = 1
 
 export const settings: TestSettings = {
 	clearCache: true,
@@ -17,13 +17,13 @@ export const settings: TestSettings = {
  * @version 1.0
  */
 export default () => {
-	step('Test: Start', async browser => {
+	step('Test: Start', async (browser) => {
 		if (setUp == 1) {
 			console.log('Load video for the first time')
 			await browser.visit('https://www.youtube.com/watch?v=6fvhLrBrPQI')
 
-			let btnPlay = await browser.findElement(
-				By.xpath('//button[@class="ytp-large-play-button ytp-button"]'),
+			const btnPlay = await browser.findElement(
+				By.xpath('//button[@class="ytp-large-play-button ytp-button"]')
 			)
 			btnPlay.click()
 

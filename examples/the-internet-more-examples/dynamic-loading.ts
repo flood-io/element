@@ -12,7 +12,7 @@ export const settings: TestSettings = {
 }
 
 export default () => {
-	step('Test: 01 - Dynamic loading page', async browser => {
+	step('Test: 01 - Dynamic loading page', async (browser) => {
 		await browser.visit('https://the-internet.herokuapp.com/dynamic_loading/1')
 		await browser.wait(Until.elementLocated(By.partialVisibleText('Example 1')))
 		await browser.click(By.css('#start > button'))

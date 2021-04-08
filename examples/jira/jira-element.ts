@@ -16,72 +16,74 @@ export const settings: TestSettings = {
  * Version: 1.0
  */
 export default () => {
-	step('JIRA: Navigate to Sign-in', async browser => {
+	step('JIRA: Navigate to Sign-in', async (browser) => {
 		await browser.visit('http://flood-demo.atlassian.net', { waitUntil: 'load' })
 
-		let pageTextVerify = By.visibleText('Log in to your account')
+		const pageTextVerify = By.visibleText('Log in to your account')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 
 		await browser.takeScreenshot()
 	})
 
-	step('JIRA: Username Sign-in', async browser => {
+	step('JIRA: Username Sign-in', async (browser) => {
 		// Fill in text field - billing First Name
 		await browser.type(By.css('#username'), 'j.rizio@tricentis.com')
 
-		let btnContinue = await browser.findElement(By.css('#login-submit > span > span'))
+		const btnContinue = await browser.findElement(By.css('#login-submit > span > span'))
 		await btnContinue.click()
 
 		await browser.takeScreenshot()
 	})
 
-	step('JIRA: Login', async browser => {
+	step('JIRA: Login', async (browser) => {
 		// Fill in text field - password
 		await browser.type(By.css('#password'), 'PwWt46GEkiLk')
 
-		let btnLogin = await browser.findElement(By.css('#login-submit > span > span > span'))
+		const btnLogin = await browser.findElement(By.css('#login-submit > span > span > span'))
 		await btnLogin.click()
 
-		let pageTextVerify = By.visibleText('Welcome to Jira')
+		const pageTextVerify = By.visibleText('Welcome to Jira')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 
 		await browser.takeScreenshot()
 	})
 
-	step('JIRA: Click Projects', async browser => {
-		let btnProjects = await browser.findElement(By.xpath("//a[contains(@href, 'BrowseProjects')]"))
+	step('JIRA: Click Projects', async (browser) => {
+		const btnProjects = await browser.findElement(
+			By.xpath("//a[contains(@href, 'BrowseProjects')]")
+		)
 		await btnProjects.click()
 
-		let pageTextVerify = By.visibleText('Projects')
+		const pageTextVerify = By.visibleText('Projects')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 
 		await browser.takeScreenshot()
 	})
 
-	step('JIRA: Click jira-load-test project', async browser => {
-		let btnProjects = await browser.findElement(By.visibleText('jira-load-test'))
+	step('JIRA: Click jira-load-test project', async (browser) => {
+		const btnProjects = await browser.findElement(By.visibleText('jira-load-test'))
 		await btnProjects.click()
 
-		let pageTextVerify = By.visibleText('Kanban board')
+		const pageTextVerify = By.visibleText('Kanban board')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 
 		await browser.takeScreenshot()
 	})
 
-	step('JIRA: Create Issue - Enter Details', async browser => {
-		let btnCreate = await browser.findElement(
-			By.xpath("//span[contains(@aria-label, 'Create (c)')]"),
+	step('JIRA: Create Issue - Enter Details', async (browser) => {
+		const btnCreate = await browser.findElement(
+			By.xpath("//span[contains(@aria-label, 'Create (c)')]")
 		)
 		await btnCreate.click()
 
-		let pageTextVerify = By.visibleText('Create issue')
+		const pageTextVerify = By.visibleText('Create issue')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 
 		await browser.takeScreenshot()
 
 		//#issuetype-field = BUG
-		let selIssueType = await browser.findElement(
-			By.xpath("//input[contains(@id, 'issuetype-field')]"),
+		const selIssueType = await browser.findElement(
+			By.xpath("//input[contains(@id, 'issuetype-field')]")
 		)
 		await selIssueType.focus()
 
@@ -94,7 +96,7 @@ export default () => {
 		//#description
 		await browser.type(
 			By.css('#description'),
-			'There is a bug in the application and this is the description',
+			'There is a bug in the application and this is the description'
 		)
 
 		//#priority-field
@@ -111,12 +113,12 @@ export default () => {
 		await browser.type(By.css('#environment'), 'Production')
 	})
 
-	step('JIRA: Create Issue', async browser => {
+	step('JIRA: Create Issue', async (browser) => {
 		//#create-issue-submit
-		let btnCreate = await browser.findElement(By.css('#create-issue-submit'))
+		const btnCreate = await browser.findElement(By.css('#create-issue-submit'))
 		await btnCreate.click()
 
-		let pageTextVerify = By.visibleText('Kanban board')
+		const pageTextVerify = By.visibleText('Kanban board')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 
 		await browser.takeScreenshot()

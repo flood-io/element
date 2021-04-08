@@ -101,14 +101,10 @@ const solarSystemPart2: SolarSystemPlanet[] = [
 ]
 
 TestData.fromCSV<User>('./users.csv').as('users')
-TestData.fromJSON<Flooder>('./flooders*.json')
-	.as('flooders')
-	.shuffle()
+TestData.fromJSON<Flooder>('./flooders*.json').as('flooders').shuffle()
 
 TestData.fromData<SolarSystemPlanet>(solarSystemPart1).as('Solar-System-Planets')
-TestData.fromData<SolarSystemPlanet>(solarSystemPart2)
-	.shuffle()
-	.as('Solar-System-Planets')
+TestData.fromData<SolarSystemPlanet>(solarSystemPart2).shuffle().as('Solar-System-Planets')
 
 const toEarthYear = (day: number): string => {
 	return (day / 365).toFixed(1).toString()

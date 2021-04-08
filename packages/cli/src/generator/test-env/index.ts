@@ -100,13 +100,9 @@ export default class TestEnv extends Generator {
 			prettier: {
 				semi: false,
 				singleQuote: true,
-				trailingComma: 'all',
-				printWidth: 100,
 				useTabs: true,
-				tabWidth: 2,
-				bracketSpacing: true,
+				printWidth: 100,
 				jsxBracketSameLine: true,
-				arrowParens: 'avoid',
 			},
 
 			dependencies: {

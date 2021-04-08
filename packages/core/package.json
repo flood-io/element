@@ -67,7 +67,6 @@
 		"@types/knuth-shuffle": "^1.0.0",
 		"@types/micromatch": "^3.1.0",
 		"@types/mkdirp": "^0.5.2",
-		"@types/prettier": "^1.13.2",
 		"@types/sanitize-filename": "^1.1.28",
 		"@types/test-listen": "^1.1.0",
 		"express": "^4.16.1",

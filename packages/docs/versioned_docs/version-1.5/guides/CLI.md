@@ -31,7 +31,7 @@ Init a test script, a default configuration file and a minimal environment to ge
 
 **Options**
 
-- `--skip-install` (boolean) Skip yarn/npm install. Defaults to `false`. 
+- `--skip-install` (boolean) Skip yarn/npm install. Defaults to `false`.
 
 ### Generate a basic test script from a template
 

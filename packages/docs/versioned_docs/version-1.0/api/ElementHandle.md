@@ -17,16 +17,16 @@ All methods on this class are asynchronous and must be used with `await` to wait
 ## Usage
 
 ```ts title="my-test.perf.ts"
-step("Finding elements", async (b) => {
-  // Get a collection of handles to all h1,h2, and h3 nodes
-  let titles = await b.findElements(By.css("h1,h2,h3"));
+step('Finding elements', async (b) => {
+	// Get a collection of handles to all h1,h2, and h3 nodes
+	let titles = await b.findElements(By.css('h1,h2,h3'))
 
-  for (let el of titles) {
-    // Fetch the text content from each
-    // Equiv of el.textContent.trim()
-    console.log(await el.text());
-  }
-});
+	for (let el of titles) {
+		// Fetch the text content from each
+		// Equiv of el.textContent.trim()
+		console.log(await el.text())
+	}
+})
 ```
 
 ## Methods
@@ -213,7 +213,6 @@ Sends a series of key presses to the element to simulate a user typing on the ke
 
 - text `string`
 - returns: [`Promise<void>`][promise]
-
 
 [promise]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
 [clickoptions]: mouse.md#clickoptions

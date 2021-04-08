@@ -13,8 +13,8 @@ The simplest way to provide data to your test is right from the script itself:
 
 ```typescript
 TestData.fromData([
-  { username: 'bob.smith', id: 1 },
-  { username: 'arthur.dent', id: 42 },
+	{ username: 'bob.smith', id: 1 },
+	{ username: 'arthur.dent', id: 42 },
 ])
 ```
 
@@ -22,16 +22,15 @@ You may then use the data in your steps:
 
 ```typescript
 step('Step 1', async (browser: Browser, row: any) => {
-  await browser.visit(`http://examplecorp.com/users/${row.id}.html`)
-  
-  await browser.wait(Until.elementIsVisible(By.partialVisibleText(String(row.id))))
+	await browser.visit(`http://examplecorp.com/users/${row.id}.html`)
+
+	await browser.wait(Until.elementIsVisible(By.partialVisibleText(String(row.id))))
 })
 ```
 
 ## Loading data from external files
 
 For larger or more complicated data sets, you may load data from CSV or JSON files.
-
 
 ### Loading data from a CSV file
 
@@ -90,29 +89,28 @@ Its possible to define test data using the `any` type (as in the examples above)
 import { step, TestData, Browser } from '@flood/element'
 
 interface UserData {
-  username: string
-  reportCount: number
+	username: string
+	reportCount: number
 }
 
 // Define test data.
 // Only data implementing the UserData interface is allowed
-TestData.fromData<UserData>([
-  { username: 'bob', reportCount: 1 },
-])
+TestData.fromData<UserData>([{ username: 'bob', reportCount: 1 }])
 // example invalid data:
 // { username: null }
 // { username: 'fred', reportCount: 'none' }
 
 step('Step 1 - reports', async (browser: Browser, data: UserData) => {
-  await browser.visit(`http://examplecorp.com/users/${data.username}.html`)
-  
-  const reports = await browser.findElements(By.css('#reports > li'))
-  
-  assert.equal(reports.length, data.reportCount, 'all user reports found')
+	await browser.visit(`http://examplecorp.com/users/${data.username}.html`)
+
+	const reports = await browser.findElements(By.css('#reports > li'))
+
+	assert.equal(reports.length, data.reportCount, 'all user reports found')
 })
 ```
 
 ### manual assertion
+
 A hidden problem with the type checking approach is that it's not possible to automatically type check data loaded in from a CSV or JSON at runtime (The techinal reason is that [TypeScript]'s type annotations are not available at runtime - they're said to be "erased" once compiled)
 
 When loading in data from a file, we can still validate it by using `assert`. (Note that in this example we're still using type annotations to make the coding experience better)
@@ -132,12 +130,12 @@ TestData.fromCSV<UserData>('users.csv')
 step('Step 1 - reports', async (browser: Browser, data: UserData) => {
   // check that data.username is 'truthy'
   assert.ok(data.username, 'data.username is set')
-  
-  // check that data.reportCount is defined. 
+
+  // check that data.reportCount is defined.
   // Here we check that row.reportCount  !== undefined because the number 0 is considered to be 'falsy'
   // in javascript
   assert.notEqual(data.reportCount, undefined, 'data.reportCount is set')
-  
+
   ...
 })
 ```
@@ -154,11 +152,12 @@ Its important to understand this when validating data, since for example a value
 
 Find more information in the API reference for [TestData], [TestDataFactory] and [TestDataSource], or check out the [Flood challenge with test data] example script.
 
-[TypeScript]: https://www.typescriptlang.org/
+[typescript]: https://www.typescriptlang.org/
+
 <!-- suffix -->
 
-[TypeScript]: https://www.typescriptlang.org/
-[TestData]: ../api/TestData.md#testdata
-[TestDataFactory]: ../api/TestData.md#testdatafactory
-[TestDataSource]: ../api/TestData.md#testdatasource
-[Flood challenge with test data]: https://github.com/flood-io/element/blob/stable/examples/flood-challenge.ts
+[typescript]: https://www.typescriptlang.org/
+[testdata]: ../api/TestData.md#testdata
+[testdatafactory]: ../api/TestData.md#testdatafactory
+[testdatasource]: ../api/TestData.md#testdatasource
+[flood challenge with test data]: https://github.com/flood-io/element/blob/stable/examples/flood-challenge.ts

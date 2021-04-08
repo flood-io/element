@@ -2,13 +2,14 @@
 id: record
 title: Record your first test
 ---
+
 import useBaseUrl from '@docusaurus/useBaseUrl'
 
 ## Start recording
 
 Once launched, click the `REC` button to start recording. The first action - `NAVIGATE` to the page - is created to get you started. Then just interact with the page, and each of your actions will be recorded in the Recorder.
 
-<img src={useBaseUrl('docs_img/rec-some-actions.png')} alt="record-some-actions" width="600"/>
+<img src={useBaseUrl('docs_img/rec-some-actions.png')} alt="record-some-actions" width="600" />
 
 To pause or resume recording, click the `REC` button again.
 
@@ -16,11 +17,11 @@ To pause or resume recording, click the `REC` button again.
 
 A test scenario may be divided into many `steps`. Each step contains a set of `actions`. An action is basically an interaction you made on the page.
 
-When you start recording, *Step 1* is automatically created and contains all of your interactions with the page. You can add more steps while recording so that your interactions are grouped into steps.
+When you start recording, _Step 1_ is automatically created and contains all of your interactions with the page. You can add more steps while recording so that your interactions are grouped into steps.
 
 To add a new step, click `Add` > `Step`, then continue to interact with the page. The actions recorded from here will belong to this step.
 
-<img src={useBaseUrl('docs_img/rec-add-step.png')} alt="add step" width="250"/>
+<img src={useBaseUrl('docs_img/rec-add-step.png')} alt="add step" width="250" />
 
 To rename or delete a step, hover on a step and click `Rename step` or `Delete step`.
 
@@ -30,48 +31,53 @@ To rename or delete a step, hover on a step and click `Rename step` or `Delete s
 
 During recording, if you'd like to make an adjustment on a recorded action, hover on the action, then click the `...` icon > `Edit action`. Edit action screen will appear.
 
-<img src={useBaseUrl('docs_img/rec-edit-action.png')} alt="edit action" width="250"/>
+<img src={useBaseUrl('docs_img/rec-edit-action.png')} alt="edit action" width="250" />
 
 Depending on the action you're editing, you will be presented with different fields to edit, including:
 
-* **Action type**
+- **Action type**
 
-  * Allows you to switch between applicable action types (e.g., change from `CLICK` to `DBCLICK`).
+  - Allows you to switch between applicable action types (e.g., change from `CLICK` to `DBCLICK`).
 
-  * Applicable for all actions, only editable in some actions. [See more][actions].
+  - Applicable for all actions, only editable in some actions. [See more][actions].
 
-  <img src={useBaseUrl('docs_img/rec-edit-action-type.png')} alt="edit action type" width="250"/>
+  <img src={useBaseUrl('docs_img/rec-edit-action-type.png')} alt="edit action type" width="250" />
 
-* **Action name**
+- **Action name**
 
-  * Auto-generated based on the *Action type* and its *Target element* and will be automatically re-generated if these fields get updated.
+  - Auto-generated based on the _Action type_ and its _Target element_ and will be automatically re-generated if these fields get updated.
 
-  * You can manually update the field, but it won't be automatically re-generated in the future.
+  - You can manually update the field, but it won't be automatically re-generated in the future.
 
-  * Applicable and editable for all actions.
+  - Applicable and editable for all actions.
 
-  <img src={useBaseUrl('docs_img/rec-edit-action-name.png')} alt="edit action name" width="250"/>
+  <img src={useBaseUrl('docs_img/rec-edit-action-name.png')} alt="edit action name" width="250" />
 
-* **Action-specific fields**
+- **Action-specific fields**
 
-  * **Target element**
+  - **Target element**
 
-    * Allows you to change the target element of the action.
-    * To change the target element, click `Change`, then hover on the page. There will be a purple box indicating the element you're about to choose. Click on the element to select.
-    * You can also change the target element by manually enter the new selector into the field.
+    - Allows you to change the target element of the action.
+    - To change the target element, click `Change`, then hover on the page. There will be a purple box indicating the element you're about to choose. Click on the element to select.
+    - You can also change the target element by manually enter the new selector into the field.
 
-    * Supports switching between `CSS` and `XPATH` selector. By default, elements are selected using the `CSS` selector. You can change this in the [Recorder settings][recorder-settings-xpath].
+    - Supports switching between `CSS` and `XPATH` selector. By default, elements are selected using the `CSS` selector. You can change this in the [Recorder settings][recorder-settings-xpath].
 
-    * Not applicable for some actions, editable. [See more][actions].
+    - Not applicable for some actions, editable. [See more][actions].
 
-    <img src={useBaseUrl('docs_img/rec-edit-target-element.png')} alt="edit target element" width="600"/>
+    <img
+    	src={useBaseUrl('docs_img/rec-edit-target-element.png')}
+    	alt="edit target element"
+    	width="600"
+    />
 
-  * **Value fields** 
-    * An action may have or may not have value fields. Each of the actions with values has a different set of value fields applicable for that particular action. For example, the CLICK action doesn't have a value, the TYPE action has 'Value to type', while the RESIZE action has 'Viewport width' and 'Viewport height'. [See more][actions].
+  - **Value fields**
 
-    * You can use [variables][variables] to make up a value.
+    - An action may have or may not have value fields. Each of the actions with values has a different set of value fields applicable for that particular action. For example, the CLICK action doesn't have a value, the TYPE action has 'Value to type', while the RESIZE action has 'Viewport width' and 'Viewport height'. [See more][actions].
 
-    <img src={useBaseUrl('docs_img/rec-edit-value.png')} alt="edit value" width="250"/>
+    - You can use [variables][variables] to make up a value.
+
+    <img src={useBaseUrl('docs_img/rec-edit-value.png')} alt="edit value" width="250" />
 
 Note that while you're editing an action, the Recorder will not record your actions on the page. Once done editing, click `Done` to save the changes or `Cancel` to discard, then continue recording.
 
@@ -83,7 +89,13 @@ To insert some actions before or after a recorded action:
 
 1. Hover on the action, then click the `...` icon > `Move cursor before` or `Move cursor after`. The red line (aka the cursor) will be moved to the corresponding position.
 
- <img src={useBaseUrl('docs_img/rec-action-context-menu.png')} alt="action context menu" width="250"/>
+{' '}
+
+<img
+	src={useBaseUrl('docs_img/rec-action-context-menu.png')}
+	alt="action context menu"
+	width="250"
+/>
 
 2. Continue to interact with the page to record actions at the current cursor position.
 
@@ -93,7 +105,13 @@ If you'd like to add another action similar to an existing action, you may want 
 
 To duplicate an action, hover on the action, then click the `...` icon > `Duplicate action`. A duplicate action will be created right after this action.
 
- <img src={useBaseUrl('docs_img/rec-action-context-menu.png')} alt="action context menu" width="250"/>
+{' '}
+
+<img
+	src={useBaseUrl('docs_img/rec-action-context-menu.png')}
+	alt="action context menu"
+	width="250"
+/>
 
 ### Move an action
 
@@ -101,13 +119,13 @@ You can move a recorded action up/down or to another step by drag-and-drop the a
 
 ### Undo - Redo - Delete actions
 
-* To undo or redo recorded actions by clicking the icons on the top-left of the Recorder.
+- To undo or redo recorded actions by clicking the icons on the top-left of the Recorder.
 
-* To delete an action, hover on the action, then click the `x` icon.
+- To delete an action, hover on the action, then click the `x` icon.
 
-* To delete all recorded action, click the icon on the top-right of the Recorder.
+- To delete all recorded action, click the icon on the top-right of the Recorder.
 
-<img src={useBaseUrl('docs_img/rec-undo-delete.png')} alt="undo-delete actions" width="250"/>
+<img src={useBaseUrl('docs_img/rec-undo-delete.png')} alt="undo-delete actions" width="250" />
 
 ### Add take screenshot
 
@@ -117,13 +135,21 @@ There are two ways to add a take-screenshot action:
 
 1. Hover on an action, then click `...` icon > `Take screenshot` to add a take-screenshot action after this action.
 
- <img src={useBaseUrl('docs_img/rec-action-context-menu.png')} alt="action context menu" width="250"/>
+{' '}
+
+<img
+	src={useBaseUrl('docs_img/rec-action-context-menu.png')}
+	alt="action context menu"
+	width="250"
+/>
 
 or
 
 2. Click `Add` > `Screenshot action` to add a take-screenshot action at the cursor position.
 
- <img src={useBaseUrl('docs_img/rec-add-menu.png')} alt="add menu" width="250"/>
+{' '}
+
+<img src={useBaseUrl('docs_img/rec-add-menu.png')} alt="add menu" width="250" />
 
 ### Add wait
 
@@ -133,17 +159,25 @@ There are two ways to add a wait:
 
 1. Hover on an action, then click the `...` icon > `Add wait` to add a wait after this action.
 
- <img src={useBaseUrl('docs_img/rec-action-context-menu.png')} alt="action context menu" width="250"/>
+{' '}
+
+<img
+	src={useBaseUrl('docs_img/rec-action-context-menu.png')}
+	alt="action context menu"
+	width="250"
+/>
 
 or
 
 2. Click `Add` > `Wait action` to add a wait at the cursor position.
 
- <img src={useBaseUrl('docs_img/rec-add-menu.png')} alt="add menu" width="250"/>
+{' '}
+
+<img src={useBaseUrl('docs_img/rec-add-menu.png')} alt="add menu" width="250" />
 
 A `WAIT` action will be added, and you can edit the duration to wait.
 
-<img src={useBaseUrl('docs_img/rec-add-wait.png')} alt="add wait" width="250"/>
+<img src={useBaseUrl('docs_img/rec-add-wait.png')} alt="add wait" width="250" />
 
 :::info
 

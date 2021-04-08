@@ -32,7 +32,6 @@ The target frame may be specified as:
 - string name of the frame to wait for matching the frame's `name` or `id` attribute.
 - locator which may be used to first locate a FRAME or IFRAME on the current page before attempting to switch to it.
 
-
 **Example:**
 
 ```typescript
@@ -55,10 +54,10 @@ the returned promise will be fulfilled with the handle for the opened alert.
 **Example:**
 
 ```typescript
-step("Handle alert", async (browser) => {
-  let dialog = await browser.wait(Until.alertIsPresent());
-  await dialog.accept();
-});
+step('Handle alert', async (browser) => {
+	let dialog = await browser.wait(Until.alertIsPresent())
+	await dialog.accept()
+})
 ```
 
 **Parameters**
@@ -72,12 +71,12 @@ Creates a condition that will wait for the given element to be disabled
 **Example:**
 
 ```typescript
-step("Element state", async (browser) => {
-  let btnLocator = By.css("button.submit");
-  await browser.wait(Until.elementIsDisabled(btnLocator));
-  let element = await browser.findElement(btnLocator);
-  // element disabled attribute should be true
-});
+step('Element state', async (browser) => {
+	let btnLocator = By.css('button.submit')
+	await browser.wait(Until.elementIsDisabled(btnLocator))
+	let element = await browser.findElement(btnLocator)
+	// element disabled attribute should be true
+})
 ```
 
 **Parameters**
@@ -119,17 +118,16 @@ Creates a condition that will wait for the given element to become invisible.
 Example:
 
 ```typescript
-step("Step 1", async (browser) => {
-  await browser.click(By.css(".hide-panel"));
-  await browser.wait(Until.elementIsNotVisible(By.id("btn")));
-});
+step('Step 1', async (browser) => {
+	await browser.click(By.css('.hide-panel'))
+	await browser.wait(Until.elementIsNotVisible(By.id('btn')))
+})
 ```
 
 **Parameters**
 
 - selectorOrLocator [`NullableLocatable`][nullablelocatable] A [Locatable][] to use to find the element.
 - returns: [`Condition`][condition]
-
 
 ### `Until.elementIsVisible(selectorOrLocator)`
 
@@ -138,9 +136,9 @@ Creates a condition that will wait for the given element to become visible.
 Example:
 
 ```typescript
-step("Step 1", async (browser) => {
-  await browser.wait(Until.elementIsVisible(By.partialLinkText("Start")));
-});
+step('Step 1', async (browser) => {
+	await browser.wait(Until.elementIsVisible(By.partialLinkText('Start')))
+})
 ```
 
 **Parameters**
@@ -226,7 +224,6 @@ Creates a condition which will wait until the element's text no longer matches t
 - selectorOrLocator [`NullableLocatable`][nullablelocatable]
 - regex [`RegExp`][regexp]
 - returns: [`Condition`][condition]
-
 
 ### `Until.titleContains(title)`
 

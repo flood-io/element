@@ -2,6 +2,7 @@
 id: constants
 title: Constants
 ---
+
 ## `Device`
 
 Chrome DevTools Device Emulation
@@ -61,6 +62,7 @@ Chrome DevTools Device Emulation
 | `nokiaLumia_520Landscape`     | "Nokia Lumia 520 landscape"     |         |
 | `nokiaN9`                     | "Nokia N9"                      |         |
 | `nokiaN9Landscape`            | "Nokia N9 landscape"            |         |
+
 ## `MouseButtons`
 
 | Member   | Default Value | Comment |
@@ -68,7 +70,9 @@ Chrome DevTools Device Emulation
 | `LEFT`   | "left"        |         |
 | `MIDDLE` | "middle"      |         |
 | `RIGHT`  | "right"       |         |
+
 ## `Key`
+
 Lists all available keyboard control keys which can be used when using [sendKeys](Browser.md#sendkeyskeys) or [sendKeyCombinations](Browser.md#sendkeycombinationskeys).
 
 | Name          | Default Value    | Comment |

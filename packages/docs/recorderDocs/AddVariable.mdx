@@ -2,111 +2,136 @@
 id: variables
 title: Work with variables
 ---
+
 import useBaseUrl from '@docusaurus/useBaseUrl'
 
 Variables are used to store information to be referenced and manipulated in test scripts. You can declare variables, and then use their values in [actions][edit-action] and [assertions][assert].
 
 Element Recorder supports two types of variables:
 
-* **Manual variables:** Ordinary variables that you will manually assign values to.
+- **Manual variables:** Ordinary variables that you will manually assign values to.
 
-* **Variables from element property:** Variables whose values are extracted from element's properties. This is helpful when you don't want to "hard-code" a value for a variable but rather keep it dynamic by obtaining the value from an element's property every time the page loads.
+- **Variables from element property:** Variables whose values are extracted from element's properties. This is helpful when you don't want to "hard-code" a value for a variable but rather keep it dynamic by obtaining the value from an element's property every time the page loads.
 
-You can also define the scope of the variables created as *global* or *step-scoped*.
+You can also define the scope of the variables created as _global_ or _step-scoped_.
 
-* **Global variables:** declared at the beginning of the script and can be used across the whole test script.
+- **Global variables:** declared at the beginning of the script and can be used across the whole test script.
 
-* **Step-scoped variables:** declared in a [step][step] and can only be used within that step.
+- **Step-scoped variables:** declared in a [step][step] and can only be used within that step.
 
 ## Add a variable
 
 To add a variable, on the Recording screen, click `Variables`.
 
-<img src={useBaseUrl('docs_img/rec-variable.png')} alt="variable menu" width="250"/>
+<img src={useBaseUrl('docs_img/rec-variable.png')} alt="variable menu" width="250" />
 
 "Variables management" screen will appear. Click `Add variable`, then select `Manually` or `From element property` to add the corresponding variable. See details in the sections below.
 
-<img src={useBaseUrl('docs_img/rec-variable-add.png')} alt="add variable" width="250"/>
+<img src={useBaseUrl('docs_img/rec-variable-add.png')} alt="add variable" width="250" />
 
 ### Manually
 
 After selecting to add a variable `Manually`, you will see the "Create new variable" screen where you can edit the variable details.
 
-<img src={useBaseUrl('docs_img/rec-variable-add-manually.png')} alt="add variable manually" width="250"/>
+<img
+	src={useBaseUrl('docs_img/rec-variable-add-manually.png')}
+	alt="add variable manually"
+	width="250"
+/>
 
-* **Variable name**
+- **Variable name**
 
-  Enter a name for the variable which starts with a letter and contains no special characters other than underscore _.
+  Enter a name for the variable which starts with a letter and contains no special characters other than underscore \_.
 
-* **Step-scoped variable**
+- **Step-scoped variable**
 
   By default, variables created manually can be accessed anywhere in the test script. If selected, this variable will be accessible only within the standing step.
 
-* **Data type**
+- **Data type**
 
   Allows you to select a data type. Supports `string`, `number`, and `bool`.
 
-* **Value**
+- **Value**
 
   Manually enter a value for the variable.
 
 Once you've entered all the details, click `Done`. There will be a variable created in the "Variables management" screen.
 
-<img src={useBaseUrl('docs_img/rec-variable-added.png')} alt="manual variable added" width="250"/>
+<img src={useBaseUrl('docs_img/rec-variable-added.png')} alt="manual variable added" width="250" />
 
 If you selected `Step-scoped variable` above, then a `CREATE` action will also be added to the Recording screen at the cursor.
 
-<img src={useBaseUrl('docs_img/rec-variable-added-recording.png')} alt="manual variable added in recording screen" width="250"/>
+<img
+	src={useBaseUrl('docs_img/rec-variable-added-recording.png')}
+	alt="manual variable added in recording screen"
+	width="250"
+/>
 
 ### From element property
 
 After selecting to add a variable `From element property`, you will be prompted to select an element on the page. When you hover on the page, there will be a purple box indicating the element you're about to choose. Click on the element to select.
 
-<img src={useBaseUrl('docs_img/rec-variable-add-from-element.png')} alt="add variable from element" width="250"/>
+<img
+	src={useBaseUrl('docs_img/rec-variable-add-from-element.png')}
+	alt="add variable from element"
+	width="250"
+/>
 
 The "Create new variable" screen will appear, and you can edit the variable details.
 
-<img src={useBaseUrl('docs_img/rec-variable-add-from-element-detail.png')} alt="add variable from element - details" width="250"/>
+<img
+	src={useBaseUrl('docs_img/rec-variable-add-from-element-detail.png')}
+	alt="add variable from element - details"
+	width="250"
+/>
 
-* **Variable name**
+- **Variable name**
 
-  Enter a name for the variable which starts with a letter and contains no special characters other than underscore _.
+  Enter a name for the variable which starts with a letter and contains no special characters other than underscore \_.
 
-* **Selected element**
+- **Selected element**
 
-  * Supports switching between `CSS` and `XPATH` selector. By default, elements are selected using `CSS` selector. You can change this in the [Recorder settings][recorder-settings].
+  - Supports switching between `CSS` and `XPATH` selector. By default, elements are selected using `CSS` selector. You can change this in the [Recorder settings][recorder-settings].
 
-  * If you'd like to change the element to assert, click `Change` and select another element on the page.
+  - If you'd like to change the element to assert, click `Change` and select another element on the page.
 
-* **Attribute/property to extract value**
+- **Attribute/property to extract value**
 
   Allows you to select an attribute or property of the target element to assert. `innerText` is selected by default.
 
-* **Regex to apply:**
+- **Regex to apply:**
 
   Allows you to use a regular expression to extract only a part of the property's value selected above.
-  
-  For example, if you'd like to extract only the number part from the string *"Get up to 59% Off New Arrivals"* below for your variable `percentOff`, enter the regex "\d+".
 
-  <img src={useBaseUrl('docs_img/rec-variable-regex.png')} alt="regex" width="600"/>
+  For example, if you'd like to extract only the number part from the string _"Get up to 59% Off New Arrivals"_ below for your variable `percentOff`, enter the regex "\d+".
 
-* **Temporary value:**
+  <img src={useBaseUrl('docs_img/rec-variable-regex.png')} alt="regex" width="600" />
+
+- **Temporary value:**
 
   Pre-populated with the current value extracted from the selected property (regex applied - if specified). Note that this can be different every time the page loads.
 
 Once you've entered all the details, click `Done`. There will be a variable created in the "Variables management" screen.
 
-<img src={useBaseUrl('docs_img/rec-variable-added-2.png')} alt="manual variable added 2" width="250"/>
+<img
+	src={useBaseUrl('docs_img/rec-variable-added-2.png')}
+	alt="manual variable added 2"
+	width="250"
+/>
 
 A `CREATE` action will also be added to the Recording screen at the cursor.
 
-<img src={useBaseUrl('docs_img/rec-variable-added-recording-2.png')} alt="manual variable added in recording screen" width="250"/>
+<img
+	src={useBaseUrl('docs_img/rec-variable-added-recording-2.png')}
+	alt="manual variable added in recording screen"
+	width="250"
+/>
 
 :::info NOTE
 
-  * Variables created from element properties are always step-scoped and will be accessible only within the standing step.
-  
-  * Since values of variables created from element properties can be different every time the page loads, their values appear as `Dynamic value` instead of set-in-stone values.
+- Variables created from element properties are always step-scoped and will be accessible only within the standing step.
+
+- Since values of variables created from element properties can be different every time the page loads, their values appear as `Dynamic value` instead of set-in-stone values.
 
 :::
 
@@ -140,21 +165,31 @@ For example, to use variables in `Expected value` of an assertion:
 
 1. Click on the field.
 
-  <img src={useBaseUrl('docs_img/rec-variable-use-1.png')} alt="use variable 1" width="250"/>
+{' '}
+
+<img src={useBaseUrl('docs_img/rec-variable-use-1.png')} alt="use variable 1" width="250" />
 
 2. Type double curly brackets `{{`. The list of declared variables that are applicable for this assertion (scope-wise) will appear.
 
-  <img src={useBaseUrl('docs_img/rec-variable-use-2.png')} alt="use variable 2" width="250"/>
+{' '}
+
+<img src={useBaseUrl('docs_img/rec-variable-use-2.png')} alt="use variable 2" width="250" />
 
 3. Select a variable from the list or continue typing to filter the list further.
 
-  <img src={useBaseUrl('docs_img/rec-variable-use-3.png')} alt="use variable 3" width="250"/>
+{' '}
 
-  In this example, the current value of variable `h2_innerText` is *"Step 2"*. That's why you see *"Temporary value: Step 2"* below the field.
+<img src={useBaseUrl('docs_img/rec-variable-use-3.png')} alt="use variable 3" width="250" />
 
-You can also combine string values with one or more variables to form a concatenated value. For example, *"{{username}} has a {{percentOff}}% discount code"*.
+In this example, the current value of variable `h2_innerText` is _"Step 2"_. That's why you see _"Temporary value: Step 2"_ below the field.
 
-<img src={useBaseUrl('docs_img/rec-variable-use-concatenate.png')} alt="use variable concatenate" width="250"/>
+You can also combine string values with one or more variables to form a concatenated value. For example, _"{{username}} has a {{percentOff}}% discount code"_.
+
+<img
+	src={useBaseUrl('docs_img/rec-variable-use-concatenate.png')}
+	alt="use variable concatenate"
+	width="250"
+/>
 
 [assert]: ./assert
 [step]: ./record#organize-your-test

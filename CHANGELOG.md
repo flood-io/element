@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.5-canary.7](https://github.com/flood-io/element/compare/v2.0.5-canary.6...v2.0.5-canary.7) (2021-04-08)
+
+
+### Bug Fixes
+
+* cleanup workflows ([cb8eea3](https://github.com/flood-io/element/commit/cb8eea3ac0be2c6404e70ad6951803e8d931019e))
+* fix workflow yaml key intenting ([b49d4a5](https://github.com/flood-io/element/commit/b49d4a574aa8ca6cf02900228892170b623c1ee3))
+* install all dependencies ([2a83a60](https://github.com/flood-io/element/commit/2a83a60de569d1c2e369cd0ae6b76546d9629efb))
+* run publish on push ([8aed161](https://github.com/flood-io/element/commit/8aed1611555a9d631da2e53a9a91f3f578d94003))
+* update README ([214c5fc](https://github.com/flood-io/element/commit/214c5fc60d2b9f202a4f49a5bf2ea6f513d7b144))
+* update versioning pipeline diagram ([2159fac](https://github.com/flood-io/element/commit/2159fac3870a20f53350b9e0ad637cd1dff0b8b7))
+
+
+
+
+
 ## [2.0.5-canary.6](https://github.com/flood-io/element/compare/v2.0.5-canary.5...v2.0.5-canary.6) (2021-04-07)
 
 **Note:** Version bump only for package flood-element

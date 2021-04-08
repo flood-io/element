@@ -18,8 +18,8 @@ jobs:
           always-auth: true
           registry-url: 'https://registry.npmjs.org'
           node-version: '14.x'
-          env:
-            NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Configure CI Git User
         run: |
           git config --global user.email services@flood.io

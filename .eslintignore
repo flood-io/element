@@ -1,5 +1,9 @@
+!.eslintrc.js
+.git
+.yarn
 assets
 coverage
 dist
 extern
 node_modules
+tmp

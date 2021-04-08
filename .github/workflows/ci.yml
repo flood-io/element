@@ -1,34 +1,27 @@
 name: Tests
-
 on: [push]
-
 jobs:
-  test_linux:
+  test:
     if: "!contains(github.event.head_commit.message, 'skip ci')"
-    runs-on: ubuntu-latest
-
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node-version: [12.x, 14.x]
-
+        os:
+          - ubuntu-latest
+          - windows-latest
+        node-version:
+          - '12.x'
+          - '14.x'
+    name: Node ${{ matrix.node-version }} on ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v1
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Setup node
+        uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
       - run: yarn install --ignore-optional
-      - run: yarn test
-        env:
-          CI: true
-  test_windows:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 12
-      - run: yarn install
+      - run: yarn lint
       - run: yarn test
         env:
           CI: true

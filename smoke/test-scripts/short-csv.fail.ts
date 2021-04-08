@@ -23,7 +23,7 @@ export const settings: TestSettings = {
 }
 
 type Row = { grid: string; gridFriendly: string }
-let data = TestData.fromCSV<Row>('data.csv').shuffle()
+const data = TestData.fromCSV<Row>('data.csv').shuffle()
 
 /**
  * dogfooder

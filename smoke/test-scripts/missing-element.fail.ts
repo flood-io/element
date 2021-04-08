@@ -18,10 +18,10 @@ export default () => {
 	step('Flood Challenge: Start', async (browser: Browser) => {
 		await browser.visit('https://challenge.flood.io')
 
-		let locator = By.css('#doesnt-exist')
+		const locator = By.css('#doesnt-exist')
 		await browser.wait(Until.elementIsVisible(locator))
 
-		let element = await browser.findElement(locator)
+		const element = await browser.findElement(locator)
 		await element.click({ button: MouseButtons.LEFT })
 	})
 }

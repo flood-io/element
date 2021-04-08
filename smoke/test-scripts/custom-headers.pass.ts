@@ -16,7 +16,7 @@ export const settings: TestSettings = {
 }
 
 export default async () => {
-	step('1. Start', async browser => {
+	step('1. Start', async (browser) => {
 		console.log('before visit')
 		const now = new Date().getTime() / 1000
 		await browser.visit(`https://flooded.io/headers?bust=${now}`)

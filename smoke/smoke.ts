@@ -4,7 +4,7 @@ import { sync as globSync } from 'glob'
 import chalk from 'chalk'
 
 process.env.DEBUG = 'element-cli:console-reporter'
-let only: string | undefined = process.env.SMOKE_ONLY
+const only: string | undefined = process.env.SMOKE_ONLY
 
 const elementRoot = dirname(process.cwd())
 
@@ -40,11 +40,11 @@ async function runTest(testScript: string, expectPass: boolean): Promise<boolean
 			stdio: ['inherit', 'pipe', 'pipe'],
 			env: process.env,
 			cwd: elementRoot,
-		},
+		}
 	)
 
 	let passed = true
-	const scanner = data => {
+	const scanner = (data) => {
 		process.stdout.write(data)
 		if (detectError(data)) {
 			passed = false
@@ -72,7 +72,7 @@ async function runTest(testScript: string, expectPass: boolean): Promise<boolean
 		console.error(
 			chalk`expected to {blue ${expectPass ? 'pass' : 'fail'}} but instead {red ${
 				passed ? 'passed' : 'failed'
-			}}`,
+			}}`
 		)
 	}
 
@@ -91,8 +91,8 @@ async function runAll(): Promise<number> {
 	if (only !== undefined) {
 		const mustOnly: string = only
 		// DEBUG filter
-		passTests = passTests.filter(x => x.includes(mustOnly))
-		failTests = failTests.filter(x => x.includes(mustOnly))
+		passTests = passTests.filter((x) => x.includes(mustOnly))
+		failTests = failTests.filter((x) => x.includes(mustOnly))
 	}
 
 	const unexpected: { test: string; expectPass: boolean }[] = []
@@ -123,5 +123,5 @@ async function runAll(): Promise<number> {
 }
 
 runAll()
-	.then(code => process.exit(code))
+	.then((code) => process.exit(code))
 	.catch(() => process.exit(1))

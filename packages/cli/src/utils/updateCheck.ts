@@ -11,7 +11,7 @@ type Update = { latest: string }
 
 function yarnUpdateMessage(
 	_version: string,
-	distTag: string /* , update: Update */,
+	distTag: string /* , update: Update */
 ): string | undefined {
 	if (commandExistsSync('yarn')) {
 		return chalk`Get it by running {greenBright yarn global upgrade element-cli@${distTag}}`
@@ -28,8 +28,8 @@ function printUpdateMessage(version: string, distTag: string, update: Update) {
 
 	console.log(
 		info(
-			chalk`{bgRed UPDATE AVAILABLE} The latest ${releaseChannel} version of element-cli is ${update?.latest}`,
-		),
+			chalk`{bgRed UPDATE AVAILABLE} The latest ${releaseChannel} version of element-cli is ${update?.latest}`
+		)
 	)
 
 	const updateMsg =

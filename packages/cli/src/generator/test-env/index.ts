@@ -71,8 +71,11 @@ export default class TestEnv extends Generator {
 			url: this.answers.url,
 		})
 		this.fs.copyTpl(this.templatePath('gitignore'), this.destinationPath('.gitignore'), {})
-		this.fs.copyTpl(this.templatePath('element.config.js'), this.destinationPath('element.config.js'), {})
-
+		this.fs.copyTpl(
+			this.templatePath('element.config.js'),
+			this.destinationPath('element.config.js'),
+			{}
+		)
 	}
 
 	installing() {

@@ -9,12 +9,12 @@ export const settings: TestSettings = {
 }
 
 export default () => {
-	beforeAll(async browser => {
+	beforeAll(async (browser) => {
 		// Run this hook before running the first step
 		await browser.wait('500ms')
 	})
 
-	afterAll(async browser => {
+	afterAll(async (browser) => {
 		// Run this hook after running the last step
 		await browser.wait('500ms')
 	})
@@ -23,14 +23,14 @@ export default () => {
 	// beforeEach(async browser => {})
 	// afterEach(async browser => {})
 
-	step('Start', async browser => {
+	step('Start', async (browser) => {
 		// visit instructs the browser to launch, open a page, and navigate to <%= url %>
 		await browser.visit('<%= url %>')
 		await browser.takeScreenshot()
 	})
 
 	// browser keyword can be shorthanded as anything that is descriptive to you.
-	step('Step 2 find first heading', async browser => {
+	step('Step 2 find first heading', async (browser) => {
 		// Note the use of await here, this is the async/await pattern https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Async_await
 		// and is required everytime you talk to the browser
 		const firstHeading = await browser.findElement(By.css('h1,h2,h3,p'))

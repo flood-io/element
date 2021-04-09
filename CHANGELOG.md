@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.5-canary.10](https://github.com/flood-io/element/compare/v2.0.5-canary.9...v2.0.5-canary.10) (2021-04-09)
+
+### Bug Fixes
+
+- configure eslint and prettier ignore files ([fcc659a](https://github.com/flood-io/element/commit/fcc659a02426eb2b4f20093ef5e089152e6366d1))
+- fix build ([6ccd387](https://github.com/flood-io/element/commit/6ccd38728a38358969b54e94872d973427b5533e))
+- ignore build directories ([e180b79](https://github.com/flood-io/element/commit/e180b79b9e4fb44e539eb334f09a7574c5889ca5))
+- move npmignore to root ([9a07d91](https://github.com/flood-io/element/commit/9a07d91931fc85bd9e9cb6c03b300514336608ec))
+- run eslint before prettier ([59c2c1b](https://github.com/flood-io/element/commit/59c2c1b75d8d05f506e66678c5cbdda8040303a5))
+- run prettier on GitHub templates ([f921f75](https://github.com/flood-io/element/commit/f921f75341cf28fbbb69814b4f4664c59252bb51))
+- run prettier on VSCode config files ([ef6eb90](https://github.com/flood-io/element/commit/ef6eb900647dc7190cc6998992db0ca6dc3673b9))
+- update eslint and prettier ignore config ([320062c](https://github.com/flood-io/element/commit/320062cbfa298a9b5451c9f9ad4dd49e83619875))
+
 ## [2.0.5-canary.9](https://github.com/flood-io/element/compare/v2.0.5-canary.8...v2.0.5-canary.9) (2021-04-08)
 
 **Note:** Version bump only for package flood-element

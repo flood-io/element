@@ -9,7 +9,7 @@ export default () => {
 		ignoreHTTPSErrors: true,
 	})
 
-	step({ waitUntil: 'visible' }, async browser => {
+	step({ waitUntil: 'visible' }, async (browser) => {
 		await browser.visit('https://expired.badssl.com/')
 		const header = await browser.findElement(By.partialVisibleText('expired.'))
 		assert.strictEqual(await header.tagName(), 'H1')

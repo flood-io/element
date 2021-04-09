@@ -2,27 +2,28 @@
 id: assert
 title: Work with assertions
 ---
+
 import useBaseUrl from '@docusaurus/useBaseUrl'
 
 An assertion is a validation step that determines whether the automated test scenario is passed or failed, or, in other words, to check if the actual and expected result are equal to each other.
 
 Element Recorder supports different common methods for assertions, including:
 
-* **Element assertion:** asserts if an element's attribute or property (e.g., innerText) matches the expected value.
+- **Element assertion:** asserts if an element's attribute or property (e.g., innerText) matches the expected value.
 
-* **Page URL assertion:** asserts if a page URL's property (e.g., pathname) matches the expected value.
+- **Page URL assertion:** asserts if a page URL's property (e.g., pathname) matches the expected value.
 
-* **Cookie assertion:** asserts if a cookie value of the page matches the expected value
+- **Cookie assertion:** asserts if a cookie value of the page matches the expected value
 
 ## Add an assertion
 
 To add an assertion, on Recording screen, click `Add` > `Assertion`.
 
-<img src={useBaseUrl('docs_img/rec-add-menu.png')} alt="add menu" width="250"/>
+<img src={useBaseUrl('docs_img/rec-add-menu.png')} alt="add menu" width="250" />
 
 The "Add Assertion" screen will appear with three assertion options.
 
-<img src={useBaseUrl('docs_img/rec-add-assertion.png')} alt="add assertion" width="250"/>
+<img src={useBaseUrl('docs_img/rec-add-assertion.png')} alt="add assertion" width="250" />
 
 Then select `Element`, `Page URL`, or `Cookie` to add a corresponding assertion. See details in the sections below.
 
@@ -30,67 +31,79 @@ Then select `Element`, `Page URL`, or `Cookie` to add a corresponding assertion.
 
 After selecting to assert `Element`, you will be prompted to select an element on the page. When you hover on the page, there will be a purple box indicating the element you're about to choose. Click on the element to select.
 
-<img src={useBaseUrl('docs_img/rec-assert-element-select.png')} alt="add element assertion - select element" width="600"/>
+<img
+	src={useBaseUrl('docs_img/rec-assert-element-select.png')}
+	alt="add element assertion - select element"
+	width="600"
+/>
 
 "Element assertion" screen will appear, and you can edit the assertion details.
 
-<img src={useBaseUrl('docs_img/rec-assert-element-details.png')} alt="add element assertion - edit details" width="250"/>
+<img
+	src={useBaseUrl('docs_img/rec-assert-element-details.png')}
+	alt="add element assertion - edit details"
+	width="250"
+/>
 
-* **Action name**
+- **Action name**
 
-  * Auto-generated based on the *Target element* and *Attribute/property to assert* and will be automatically re-generated if these fields get updated.
-  * You can manually update the action name, but it won't be automatically re-generated in the future.
+  - Auto-generated based on the _Target element_ and _Attribute/property to assert_ and will be automatically re-generated if these fields get updated.
+  - You can manually update the action name, but it won't be automatically re-generated in the future.
 
-* **Target element**
+- **Target element**
 
-  * Supports switching between `CSS` and `XPATH` selector. By default, elements are selected using the `CSS` selector. You can change this in the [Recorder settings][recorder-settings].
+  - Supports switching between `CSS` and `XPATH` selector. By default, elements are selected using the `CSS` selector. You can change this in the [Recorder settings][recorder-settings].
 
-  * If you'd like to change the element to assert, click the `Change element` button on the top.
+  - If you'd like to change the element to assert, click the `Change element` button on the top.
 
-* **Attribute/property to assert**
+- **Attribute/property to assert**
 
   Allows you to select an attribute or property of the target element to assert. `innerText` is selected by default.
 
-* **Assertion type**
+- **Assertion type**
 
   Allows you to select how the attribute or property above will be asserted against the expected value. A set of string and number comparison operators help you form any assertion conditions. You can even use a regular expression (`matches regex`) for intricate assertions.
 
-  <img src={useBaseUrl('docs_img/rec-assertion-type.png')} alt="assertion types" width="250"/>
+  <img src={useBaseUrl('docs_img/rec-assertion-type.png')} alt="assertion types" width="250" />
 
-* **Expected value**
+- **Expected value**
 
-  * Pre-populated with the current value of the selected attribute/property of the target element. It will be automatically re-generated if you change *Target element* or *Attribute/property to assert*.
+  - Pre-populated with the current value of the selected attribute/property of the target element. It will be automatically re-generated if you change _Target element_ or _Attribute/property to assert_.
 
-  * You can change the expected value to suit your test.
+  - You can change the expected value to suit your test.
 
-  * You can use [variables][variables] to make up a value.
+  - You can use [variables][variables] to make up a value.
 
 ### Page URL assertion
 
 After selecting to assert `Page URL`, you will see "PageURL assertion" screen where you can edit the assertion details.
 
-<img src={useBaseUrl('docs_img/rec-assert-pageurl.png')} alt="assert page url" width="270"/>
+<img src={useBaseUrl('docs_img/rec-assert-pageurl.png')} alt="assert page url" width="270" />
 
-* **Action name**
+- **Action name**
 
-  * Auto-generated based on the *Atribute to assert* and will be automatically re-generated if this field gets updated.
-  * You can manually update the action name, but it won't be automatically re-generated in the future.
+  - Auto-generated based on the _Atribute to assert_ and will be automatically re-generated if this field gets updated.
+  - You can manually update the action name, but it won't be automatically re-generated in the future.
 
-* **Current page URL**
+- **Current page URL**
 
   Pre-populated with the current page's URL whose attribute is used in the assertion (not editable).
 
-* **Attribute to assert**
+- **Attribute to assert**
 
   Allows you to select an attribute of the page URL to assert. `pathname` is selected by default.
 
-  <img src={useBaseUrl('docs_img/rec-assertion-pageurl-attribute.png')} alt="page url attribute" width="250"/>
+  <img
+  	src={useBaseUrl('docs_img/rec-assertion-pageurl-attribute.png')}
+  	alt="page url attribute"
+  	width="250"
+  />
 
-* **Assertion type**
+- **Assertion type**
 
   Same as "Assertion type" in [Element assertion](#element-assertion).
 
-* **Expected value**
+- **Expected value**
 
   Same as "Expected value" in [Element assertion](#element-assertion).
 
@@ -98,33 +111,36 @@ After selecting to assert `Page URL`, you will see "PageURL assertion" screen wh
 
 After selecting to assert `Cookie`, you will see "Cookie assertion" screen where you can edit the assertion details.
 
-<img src={useBaseUrl('docs_img/rec-assert-cookie.png')} alt="assert cookie" width="250"/>
+<img src={useBaseUrl('docs_img/rec-assert-cookie.png')} alt="assert cookie" width="250" />
 
-* **Action name**
+- **Action name**
 
-  * Auto-generated based on the *Cookie to assert* and will be automatically re-generated if this field gets updated.
-  * You can manually update the action name, but it won't be automatically re-generated in the future.
+  - Auto-generated based on the _Cookie to assert_ and will be automatically re-generated if this field gets updated.
+  - You can manually update the action name, but it won't be automatically re-generated in the future.
 
-* **Cookie to assert**
+- **Cookie to assert**
 
   Allows you to select a cookie available on the current page to assert.
 
-* **Cookie domain**
+- **Cookie domain**
 
   Displays the domain in which this cookie is applicable (not editable).
 
-
-* **Attribute to assert**
+- **Attribute to assert**
 
   Allows you to select an attribute of the selected cookie to assert. `value` is selected by default.
 
-  <img src={useBaseUrl('docs_img/rec-assert-cookie-attribute.png')} alt="cookie attribute to assert" width="250"/>
+  <img
+  	src={useBaseUrl('docs_img/rec-assert-cookie-attribute.png')}
+  	alt="cookie attribute to assert"
+  	width="250"
+  />
 
-* **Assertion type**
+- **Assertion type**
 
   Same as "Assertion type" in [Element assertion](#element-assertion).
 
-* **Expected value**
+- **Expected value**
 
   Same as "Expected value" in [Element assertion](#element-assertion).
 

@@ -1,5 +1,4 @@
-import { Diagnostic, DiagnosticCategory } from 'typescript'
-import ts from 'typescript'
+import ts, { Diagnostic, DiagnosticCategory } from 'typescript'
 
 // because https://github.com/Microsoft/TypeScript/issues/13042
 type diagnosticCategory = 'warnings' | 'errors' | 'messages'
@@ -24,7 +23,7 @@ export class CategorisedDiagnostics {
 
 	constructor(
 		private formatHost: ts.FormatDiagnosticsHost,
-		private filenameMapper: FilenameMapper,
+		private filenameMapper: FilenameMapper
 	) {
 		this.diagnostics = { errors: [], warnings: [], messages: [] }
 	}
@@ -50,7 +49,7 @@ export class CategorisedDiagnostics {
 	}
 
 	formattedForCategory(kind: diagnosticCategory): string {
-		const diagnostics = this.forCategory(kind).map(d => {
+		const diagnostics = this.forCategory(kind).map((d) => {
 			if (d.file) {
 				d.file.fileName = this.filenameMapper(d.file.fileName)
 			}
@@ -65,7 +64,7 @@ export class CategorisedDiagnostics {
 	}
 
 	format(kind: diagnosticCategory): string[] {
-		return this.forCategory(kind).map(d => this.formatDiagnostic(d))
+		return this.forCategory(kind).map((d) => this.formatDiagnostic(d))
 	}
 
 	formatDiagnostic(diagnostic: Diagnostic): string {

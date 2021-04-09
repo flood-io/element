@@ -5,7 +5,7 @@
 	"private": true,
 	"dependencies": {
 		"@types/glob": "^5.0.35",
-		"@types/node": "12.7.4",
+		"@types/node": "^14.14.37",
 		"chalk": "^2.4.1",
 		"glob": "^7.1.3"
 	},

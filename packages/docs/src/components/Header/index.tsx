@@ -18,10 +18,9 @@ const Header = () => {
 						<Link
 							className={classnames(
 								'button button--outline button--primary button--lg',
-								styles.getStarted,
+								styles.getStarted
 							)}
-							to={useBaseUrl('docs/')}
-						>
+							to={useBaseUrl('docs/')}>
 							Get Started
 						</Link>
 					</div>

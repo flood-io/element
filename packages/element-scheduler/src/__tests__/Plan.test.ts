@@ -31,7 +31,7 @@ describe('Plan', () => {
 				handler([ts, target, total])
 			},
 			async () => {},
-			async () => {},
+			async () => {}
 		)
 
 		expect(handler).toHaveBeenCalledTimes(2)

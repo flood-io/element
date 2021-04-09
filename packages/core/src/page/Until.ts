@@ -149,7 +149,7 @@ export class Until {
 			'elementTextDoesNotContain',
 			selectorOrLocator,
 			text,
-			true,
+			true
 		)
 	}
 
@@ -167,7 +167,7 @@ export class Until {
 		return new ElementTextNotMatchCondition(
 			'elementTextDoesNotMatch',
 			selectorOrLocator,
-			regex.toString(),
+			regex.toString()
 		)
 	}
 

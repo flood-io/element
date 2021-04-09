@@ -82,7 +82,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 	// TestScriptErrorMapper implementation
 	public static async mustCompileFile(
 		path: string,
-		runEnv: RuntimeEnvironment,
+		runEnv: RuntimeEnvironment
 	): Promise<EvaluatedScript> {
 		if (!(await exists(path))) {
 			throw new Error(`unable to compile script: no script found at path ${path}`)
@@ -113,10 +113,10 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 
 		// hack because the vm2 typings don't include their EventEmitteryness
 		const eevm = (this.vm as any) as EventEmitter
-		;['log', 'info', 'error', 'dir', 'trace'].forEach(key =>
+		;['log', 'info', 'error', 'dir', 'trace'].forEach((key) =>
 			eevm.on(`console.${key}`, (message, ...args) =>
-				reporter.testScriptConsole(key, message, ...args),
-			),
+				reporter.testScriptConsole(key, message, ...args)
+			)
 		)
 	}
 
@@ -234,7 +234,7 @@ export class EvaluatedScript implements TestScriptErrorMapper, EvaluatedScriptLi
 				{
 					...option,
 					predicate: (browser: Browser) =>
-						Promise.resolve(conditionFn(browser)).then(result => !result),
+						Promise.resolve(conditionFn(browser)).then((result) => !result),
 				},
 				fn,
 			])

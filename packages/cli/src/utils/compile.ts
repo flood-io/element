@@ -24,7 +24,7 @@ export function getFilesPattern(pattern: string[]): string[] {
 	const files: string[] = []
 	try {
 		files.push(
-			...(pattern.reduce((arr: string[], item: string) => arr.concat(glob.sync(item)), []) as []),
+			...(pattern.reduce((arr: string[], item: string) => arr.concat(glob.sync(item)), []) as [])
 		)
 		if (!pattern.length) {
 			throw Error('Found no test scripts matching testPathMatch pattern')

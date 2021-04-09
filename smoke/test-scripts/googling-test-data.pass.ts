@@ -31,7 +31,7 @@ export default async () => {
 		await browser.visit('http://www.google.com/ncr')
 
 		console.log('finding elt')
-		let searchInput = await browser.findElement(By.nameAttr('q'))
+		const searchInput = await browser.findElement(By.nameAttr('q'))
 
 		console.log('highlighting')
 		await browser.highlightElement(searchInput)
@@ -45,7 +45,7 @@ export default async () => {
 	})
 
 	step('click first result', async (browser: Browser, data: any) => {
-		let firstResultLink = await browser.findElement(By.attr('a', 'href', data.href))
+		const firstResultLink = await browser.findElement(By.attr('a', 'href', data.href))
 		await firstResultLink.click()
 		await browser.waitForNavigation()
 		await browser.takeScreenshot()

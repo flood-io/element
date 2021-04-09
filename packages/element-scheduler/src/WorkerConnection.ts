@@ -17,12 +17,12 @@ export type MessageError<T = unknown> = [
 	string, // constructor
 	string, // message
 	string, // stack
-	T, // extra
+	T // extra
 ]
 
 export type MessageReply<T = unknown> = [
 	Messages.REPLY, // type
-	T, // args
+	T // args
 ]
 
 export type WorkerMessage = MessageError | MessageReply

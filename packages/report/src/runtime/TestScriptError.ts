@@ -40,7 +40,7 @@ export class TestScriptError extends Error {
 		originalStack: string,
 		public callSite: CallSite | undefined,
 		public unmappedStack: string[],
-		public originalError: Error,
+		public originalError: Error
 	) {
 		super(message)
 		this.stackWhenThrown = this.stack || ''

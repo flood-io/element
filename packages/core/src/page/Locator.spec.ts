@@ -25,7 +25,7 @@ describe('Locator', () => {
 	beforeAll(async () => {
 		playwright = await launchPlaywright()
 		page = playwright.page
-		page.on('console', msg => console.log(`>> console.${msg.type()}: ${msg.text()}`))
+		page.on('console', (msg) => console.log(`>> console.${msg.type()}: ${msg.text()}`))
 	})
 
 	afterAll(async () => {

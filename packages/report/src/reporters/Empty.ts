@@ -13,7 +13,7 @@ export class EmptyReporter implements IReporter {
 	addCompoundMeasurement(
 		measurement: MeasurementKind,
 		value: CompoundMeasurement,
-		label: string,
+		label: string
 	): void {}
 
 	addTrace(traceData: TraceData, label: string): void {}

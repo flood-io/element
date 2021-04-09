@@ -134,8 +134,7 @@ const Main = () => {
 		<main>
 			<Section
 				title="Features"
-				description="Flood Element is the best way to get started with load testing."
-			>
+				description="Flood Element is the best way to get started with load testing.">
 				{features.map((props, idx) => (
 					<FeatureBlock key={idx} {...props} />
 				))}
@@ -143,8 +142,7 @@ const Main = () => {
 
 			<Section
 				title="Test Smarter"
-				description="Load testing at the browser level opens up huge opportunities for testing modern web applications which would be extremely difficult to achieve reliably with existing network level load testing tools."
-			>
+				description="Load testing at the browser level opens up huge opportunities for testing modern web applications which would be extremely difficult to achieve reliably with existing network level load testing tools.">
 				{pros.map((props, idx) => (
 					<FeatureBlock key={idx} {...props} />
 				))}
@@ -152,8 +150,7 @@ const Main = () => {
 
 			<Section
 				title="Browser vs. Protocol"
-				description="Load testing has barely kept pace with the rate of innovation on the web as a platform over the last 20 years. We set out to change this with Flood Element."
-			>
+				description="Load testing has barely kept pace with the rate of innovation on the web as a platform over the last 20 years. We set out to change this with Flood Element.">
 				<ComparisonTable />
 			</Section>
 		</main>

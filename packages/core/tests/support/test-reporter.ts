@@ -10,7 +10,7 @@ export default class TestReporter implements IReporter {
 	public traces: TraceData[] = []
 
 	public stepName: string
-	public responseCode: string = '200'
+	public responseCode = '200'
 
 	reset(stepName: string): void {
 		this.stepName = stepName

@@ -1,6 +1,7 @@
 ---
 title: ''
 ---
+
 # `Device`
 
 Chrome DevTools Device Emulation
@@ -60,6 +61,7 @@ Chrome DevTools Device Emulation
 | `nokiaLumia_520Landscape`     | "Nokia Lumia 520 landscape"     |         |
 | `nokiaN9`                     | "Nokia N9"                      |         |
 | `nokiaN9Landscape`            | "Nokia N9 landscape"            |         |
+
 # `MouseButtons`
 
 | Member   | Default Value | Comment |
@@ -67,7 +69,9 @@ Chrome DevTools Device Emulation
 | `LEFT`   | "left"        |         |
 | `MIDDLE` | "middle"      |         |
 | `RIGHT`  | "right"       |         |
+
 # `Key`
+
 Lists all available keyboard control keys which can be used when sending a key press combination.
 
 | Name          | Default Value    | Comment |
@@ -109,7 +113,7 @@ Lists all available keyboard control keys which can be used when sending a key p
 | `LEFT`        | "ArrowLeft"      |         |
 | `META`        | "MetaLeft"       |         |
 | `MULTIPLY`    | "NumpadMultiply" |         |
-| `NULL`        |  null            |         |
+| `NULL`        | null             |         |
 | `NUMPAD0`     | "Numpad0"        |         |
 | `NUMPAD1`     | "Numpad1"        |         |
 | `NUMPAD2`     | "Numpad2"        |         |
@@ -126,7 +130,7 @@ Lists all available keyboard control keys which can be used when sending a key p
 | `RETURN`      | "Enter"          |         |
 | `RIGHT`       | "ArrowRight"     |         |
 | `SEMICOLON`   | "Semicolon"      |         |
-| `SEPARATOR`   |  null            |         |
+| `SEPARATOR`   | null             |         |
 | `SHIFT`       | "ShiftLeft"      |         |
 | `SPACE`       | "Space"          |         |
 | `SUBTRACT`    | "NumpadSubtract" |         |

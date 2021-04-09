@@ -1,33 +1,29 @@
 {
-  "name": "read-csv",
-  "version": "1.0.0",
-  "description": "Flood Element test script",
-  "private": true,
-  "prettier": {
-    "semi": false,
-    "singleQuote": true,
-    "trailingComma": "all",
-    "printWidth": 100,
-    "useTabs": true,
-    "tabWidth": 2,
-    "bracketSpacing": true,
-    "jsxBracketSameLine": true,
-    "arrowParens": "avoid"
-  },
-  "dependencies": {
-    "@flood/element": "^1.3.0-beta.19",
-    "@flood/element-cli": "^1.3.0-beta.19",
-    "assert": "*",
-    "faker": "*",
-    "prettier": "*"
-  },
-  "devDependencies": {
-    "@types/faker": "*",
-    "@types/assert": "*"
-  },
-  "element": {
-    "testMatch": [
-      "**/*.perf.[tj]s"
-    ]
-  }
+	"name": "read-csv",
+	"version": "1.0.0",
+	"description": "Flood Element test script",
+	"private": true,
+	"prettier": {
+		"semi": false,
+		"singleQuote": true,
+		"useTabs": true,
+		"printWidth": 100,
+		"jsxBracketSameLine": true
+	},
+	"dependencies": {
+		"@flood/element": "^1.3.0-beta.19",
+		"@flood/element-cli": "^1.3.0-beta.19",
+		"assert": "*",
+		"faker": "*",
+		"prettier": "*"
+	},
+	"devDependencies": {
+		"@types/faker": "*",
+		"@types/assert": "*"
+	},
+	"element": {
+		"testMatch": [
+			"**/*.perf.[tj]s"
+		]
+	}
 }

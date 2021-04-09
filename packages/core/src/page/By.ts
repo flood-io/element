@@ -115,7 +115,7 @@ export class By {
 	public static attr(tagName: string, attrName: string, attrValue: string): Locator {
 		return this.css(
 			`${escapeCss(tagName).toLowerCase()}[${escapeCss(attrName)}="${escapeCss(attrValue)}"]`,
-			`By.attr('${tagName}','${attrName}','${attrValue}')`,
+			`By.attr('${tagName}','${attrName}','${attrValue}')`
 		)
 	}
 

@@ -42,14 +42,14 @@ export class Manager {
 	}
 
 	private createTimeoutPromise(): Promise<NodeJS.Timeout> {
-		return new Promise(fulfill => setTimeout(fulfill, this.timeout))
+		return new Promise((fulfill) => setTimeout(fulfill, this.timeout))
 	}
 
 	private createIdlePromise(): void {
 		if (this.lifecycleCompleteCallback) return
 		if (this.networkIdlePromise) return
 
-		const lifecycleCompletePromise = new Promise(fulfill => {
+		const lifecycleCompletePromise = new Promise((fulfill) => {
 			this.lifecycleCompleteCallback = fulfill
 		})
 
@@ -80,7 +80,7 @@ export class Manager {
 			event.request.url,
 			event.type,
 			event.request,
-			event.frameId,
+			event.frameId
 		)
 	}
 
@@ -89,7 +89,7 @@ export class Manager {
 		url: string,
 		resourceType: string,
 		requestPayload: any,
-		frameId: string,
+		frameId: string
 	): void {
 		if (requestId) this.requestIdToRequest.set(requestId, null)
 	}

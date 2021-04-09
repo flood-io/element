@@ -74,8 +74,8 @@ const cmd: CommandModule = {
 			if (!file) {
 				console.log(
 					chalk.redBright(
-						`The mode 'running the test with multiple test scripts' does not support running with multiple users`,
-					),
+						`The mode 'running the test with multiple test scripts' does not support running with multiple users`
+					)
 				)
 				process.exit(0)
 			}
@@ -126,7 +126,7 @@ const cmd: CommandModule = {
 				},
 				() => {
 					console.log(`Your report has been saved in ${reportPath}`)
-				},
+				}
 			)
 		}
 	},
@@ -216,7 +216,7 @@ const cmd: CommandModule = {
 			})
 			.positional('file', {
 				describe: 'the test script to run',
-				coerce: file => {
+				coerce: (file) => {
 					const fileErr = checkFile(file as string)
 					if (fileErr) throw fileErr
 					return file

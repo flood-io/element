@@ -23,7 +23,7 @@ const cmd: CommandModule = {
 			: await import('../../generator/flood/regions-select')
 		const env = YoEnv.createEnv()
 
-		env.on('error', err => {
+		env.on('error', (err) => {
 			console.error(chalk.redBright(err))
 			process.exit(1)
 		})

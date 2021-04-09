@@ -5,13 +5,13 @@ title: Supported actions
 
 Actions are units that comprise a test scenario. There are two categories of actions:
 
-* **Browser interactions:** Actions that simulate user interactions and can be recorded by interacting with the browser.
+- **Browser interactions:** Actions that simulate user interactions and can be recorded by interacting with the browser.
 
-* **Programming actions:** Actions to be used for programming purposes and cannot be recorded by interacting with the browser but added from Recorder menus.
+- **Programming actions:** Actions to be used for programming purposes and cannot be recorded by interacting with the browser but added from Recorder menus.
 
 ## Browser interactions
 
-*You should go through the general guide for [recording browser interactions][record-actions] and [editing actions][edit-actions] before reading further for specific details of each one.*
+_You should go through the general guide for [recording browser interactions][record-actions] and [editing actions][edit-actions] before reading further for specific details of each one._
 
 ### `CLICK`
 

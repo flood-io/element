@@ -33,7 +33,7 @@ export default class LifecycleObserver implements TestObserver {
 		const testObserver: TestObserver = this.next
 		const timing = await (testObserver as TimingObserver).getMeasurementTime(
 			test.settings.responseTimeMeasurement,
-			true,
+			true
 		)
 		step.duration = timing
 		await testObserver.onStepPassed(test, step)
@@ -44,7 +44,7 @@ export default class LifecycleObserver implements TestObserver {
 		const testObserver: TestObserver = this.next
 		const timing = await (testObserver as TimingObserver).getMeasurementTime(
 			test.settings.responseTimeMeasurement,
-			true,
+			true
 		)
 		step.duration = timing
 		await testObserver.onStepError(test, step, error)
@@ -53,7 +53,7 @@ export default class LifecycleObserver implements TestObserver {
 			step.name,
 			step.subTitle,
 			timing,
-			error?.message,
+			error?.message
 		)
 	}
 
@@ -71,7 +71,7 @@ export default class LifecycleObserver implements TestObserver {
 		const testObserver: TestObserver = this.next
 		await testObserver.afterStep(test, step)
 		const timing = await (testObserver as TimingObserver).getMeasurementTime(
-			test.settings.responseTimeMeasurement,
+			test.settings.responseTimeMeasurement
 		)
 		test.reporter.testLifecycle(TestEvent.AfterStep, step.name, step.subTitle, timing)
 	}

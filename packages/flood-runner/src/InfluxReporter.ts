@@ -107,12 +107,12 @@ export default class InfluxReporter implements IReporter {
 						console.error(`REPORTER.socket.send() ERROR: ${err.message}`)
 					} else {
 						console.debug(
-							`REPORTER.socket.send() wrote ${bytes} bytes to ${this.options.influxHost}:${this.options.influxPort}`,
+							`REPORTER.socket.send() wrote ${bytes} bytes to ${this.options.influxHost}:${this.options.influxPort}`
 						)
 						console.debug(message.toString())
 					}
 					yeah()
-				},
+				}
 			)
 		})
 	}
@@ -136,7 +136,7 @@ export default class InfluxReporter implements IReporter {
 	private pushMeasurement(
 		measurement: string,
 		value: string | number | CompoundMeasurement,
-		label: string,
+		label: string
 	) {
 		const measurements = this.measurements[measurement] || (this.measurements[measurement] = [])
 		measurements.push({ value, label })
@@ -145,7 +145,7 @@ export default class InfluxReporter implements IReporter {
 	addMeasurement(measurement: MeasurementKind, value: string | number, label?: string): void {
 		label = expect(
 			label || this.stepName,
-			`Label must be present when writing measurement: ${measurement}`,
+			`Label must be present when writing measurement: ${measurement}`
 		)
 
 		this.pushMeasurement(measurement, value, label)
@@ -154,11 +154,11 @@ export default class InfluxReporter implements IReporter {
 	addCompoundMeasurement(
 		measurement: MeasurementKind,
 		value: CompoundMeasurement,
-		label: string,
+		label: string
 	): void {
 		label = expect(
 			label || this.stepName,
-			`Label must be present when writing compound measurement: ${measurement}`,
+			`Label must be present when writing compound measurement: ${measurement}`
 		)
 
 		this.pushMeasurement(measurement, value, label)
@@ -177,11 +177,11 @@ export default class InfluxReporter implements IReporter {
 
 			if (!['trace', 'object'].includes(measurement)) {
 				printedResults.push(
-					`${measurement}: [${values.map(m => JSON.stringify(m.value)).join(', ')}]`,
+					`${measurement}: [${values.map((m) => JSON.stringify(m.value)).join(', ')}]`
 				)
 			}
 
-			values.forEach(reading => {
+			values.forEach((reading) => {
 				const point = this.newPoint(measurement, reading.label)
 
 				const { value } = reading
@@ -229,7 +229,7 @@ export default class InfluxReporter implements IReporter {
 	// TODO should we add more detail here?
 	testScriptError(message: string, error: TestScriptError): void {
 		console.error(`=!=> ${message} in ${this.stepName}: ${error.name}: ${error.message}`)
-		error.unmappedStack.forEach(line => console.error(`    ${line}`))
+		error.unmappedStack.forEach((line) => console.error(`    ${line}`))
 	}
 
 	testStepError(error: TestScriptError): void {

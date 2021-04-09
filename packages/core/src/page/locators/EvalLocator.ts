@@ -4,7 +4,7 @@ export class EvalLocator implements LocatorBuilder {
 	constructor(
 		public pageFunc: EvaluateFn<string | undefined>,
 		public pageFuncMany: EvaluateFn<string | undefined>,
-		public pageFuncArgs: string[],
+		public pageFuncArgs: string[]
 	) {}
 
 	toString() {

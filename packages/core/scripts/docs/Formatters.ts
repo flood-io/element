@@ -15,7 +15,7 @@ export class ParamTypeFormatter {
 }
 
 export function typeToString(input: ParamType): string | never {
-	let { type } = input
+	const { type } = input
 
 	switch (input.type) {
 		case 'intrinsic':
@@ -30,7 +30,7 @@ export function typeToString(input: ParamType): string | never {
 			return reflectedDeclarationToAny(input.declaration).toString()
 		case 'reference':
 			if (input.name === 'Promise') {
-				let formattedArgs = (input.typeArguments || []).map(typeToString)
+				const formattedArgs = (input.typeArguments || []).map(typeToString)
 				return `[Promise]&lt;${formattedArgs.join(' | ')}&gt;`
 			} else {
 				return `[${input.name}]`
@@ -61,12 +61,12 @@ type ReflectedDeclaration = {
 }
 
 function reflectedDeclarationToAny(
-	declaration: ReflectedDeclaration | Variable | CallSignature,
+	declaration: ReflectedDeclaration | Variable | CallSignature
 ): any {
 	switch (declaration.kindString) {
 		case 'Type literal':
 			if (declaration.children) {
-				let children = declaration.children.map(reflectedDeclarationToAny).reduce((memo, obj) => {
+				const children = declaration.children.map(reflectedDeclarationToAny).reduce((memo, obj) => {
 					memo = { ...obj, ...memo }
 					return memo
 				}, {})
@@ -74,9 +74,9 @@ function reflectedDeclarationToAny(
 			}
 			break
 		case 'Variable':
-			let { name, type } = declaration
-			let formattedType = typeToString(type)
-			let obj = {}
+			const { name, type } = declaration
+			const formattedType = typeToString(type)
+			const obj = {}
 			obj[name] = formattedType
 			return obj
 	}

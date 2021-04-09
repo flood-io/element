@@ -2,6 +2,7 @@
 id: export
 title: Export and save a test script
 ---
+
 import useBaseUrl from '@docusaurus/useBaseUrl'
 
 When you're done recording a scenario, you can export it as an [Element][element] test script to refine with an editor later or save it to [Flood][flood] to initiate a load test.
@@ -12,7 +13,7 @@ Currently, the Recorder does not support saving the recorded scenario itself for
 
 To export a test script, on the Recording screen, click `Export` at the bottom.
 
-<img src={useBaseUrl('docs_img/rec-export.png')} alt="export" width="250"/>
+<img src={useBaseUrl('docs_img/rec-export.png')} alt="export" width="250" />
 
 The recorded scenario, along with other [test settings][test-settings], will be exported as an Element test script (a `.ts` file) and downloaded to your machine.
 
@@ -24,19 +25,27 @@ To save a test script to Flood to initiate a test:
 
 1. On the Recording screen, click `Save to Flood` at the bottom.
 
-  <img src={useBaseUrl('docs_img/rec-save-to-flood.png')} alt="save to Flood" width="250"/>
+{' '}
+
+<img src={useBaseUrl('docs_img/rec-save-to-flood.png')} alt="save to Flood" width="250" />
 
 2. The Flood upload configuration page will be opened in a new tab and will prompt you to log in to [Flood][flood] first if you're not logged in.
 
-  <img src={useBaseUrl('docs_img/rec-flood-select-project.png')} alt="select a flood project" width="600"/>
+{' '}
 
-  On this page, you can configure the script uploading as below.
+<img
+	src={useBaseUrl('docs_img/rec-flood-select-project.png')}
+	alt="select a flood project"
+	width="600"
+/>
 
-   * Select a Flood project to upload the script to.
-  
-   * Select "Create a new stream" or "Modify an existing stream". If you select "Modify an existing stream", you'll need to select a stream to add this script to.
+On this page, you can configure the script uploading as below.
 
-   * Edit the name of the generated script (.ts).
+- Select a Flood project to upload the script to.
+
+- Select "Create a new stream" or "Modify an existing stream". If you select "Modify an existing stream", you'll need to select a stream to add this script to.
+
+- Edit the name of the generated script (.ts).
 
 3. Click `Continue` to proceed to Flood test design and launch page. Here you can [design your test][design-test] and [launch your test on Flood][launch-test] with the uploaded script.
 

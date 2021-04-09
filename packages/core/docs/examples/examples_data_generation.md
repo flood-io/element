@@ -51,7 +51,7 @@ import { internet } from 'faker'
 
 // Generate different types of names and related data
 const randEmail = internet.email() // returns 'Timmy_Pacocha@gmail.com'
-const randEmailProvider = internet.email('joe','smith','protonmail.com') // returns 'joe.smith@protonmail.com'
+const randEmailProvider = internet.email('joe', 'smith', 'protonmail.com') // returns 'joe.smith@protonmail.com'
 ```
 
 ## Using fake data in tests
@@ -60,11 +60,11 @@ The easiest way to use Faker data in your test is to generate and use it inline 
 
 ```typescript
 step('Write a comment', async (browser: Browser) => {
-  await browser.visit('https://example.com/comments', { waitUntil: 'networkidle2' })
-  await browser.type(By.css('[name="name"]'), faker.name.findName())
-  await browser.type(By.css('[name="comment"]'), faker.lorem.sentences())
-  await browser.click(By.css('[type="submit"]'))
-  await browser.takeScreenshot()
+	await browser.visit('https://example.com/comments', { waitUntil: 'networkidle2' })
+	await browser.type(By.css('[name="name"]'), faker.name.findName())
+	await browser.type(By.css('[name="comment"]'), faker.lorem.sentences())
+	await browser.click(By.css('[type="submit"]'))
+	await browser.takeScreenshot()
 })
 ```
 
@@ -75,15 +75,16 @@ This works the same as loading a pre-populated CSV or JSON file, but with the po
 import { name, internet } from 'faker'
 
 interface UserData {
-  name: string
-  email: string
+	name: string
+	email: string
 }
 
 // build a fake User
-const userFactory = () => <UserData>({
-  name: name.findName(),
-  email: internet.email(),
-})
+const userFactory = () =>
+	<UserData>{
+		name: name.findName(),
+		email: internet.email(),
+	}
 
 // create an Array of 5 fake users
 const data = Array.from({ length: 5 }, userFactory)
@@ -114,4 +115,4 @@ If you have static test data available as CSV or JSON files, consider using Floo
 
 <!-- suffix -->
 
-[TestData]: ../../api/TestData.md#testdata
+[testdata]: ../../api/TestData.md#testdata

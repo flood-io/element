@@ -31,9 +31,9 @@ export const settings: TestSettings = {
  * Version: 1.0
  */
 export default () => {
-	step('Browse Orders Demo App: Home', async browser => {
+	step('Browse Orders Demo App: Home', async (browser) => {
 		await browser.visit(
-			'https://sapui5.hana.ondemand.com/test-resources/sap/m/demokit/orderbrowser/webapp/test/mockServer.html',
+			'https://sapui5.hana.ondemand.com/test-resources/sap/m/demokit/orderbrowser/webapp/test/mockServer.html'
 		)
 
 		const pageTextVerify = By.visibleText('Orders')
@@ -42,10 +42,10 @@ export default () => {
 		await browser.takeScreenshot()
 	})
 
-	step('Browse Orders Demo App: Choose Order', async browser => {
-		let obj_itm_Order = By.xpath("//span[contains(text(),'Order 7991')]")
+	step('Browse Orders Demo App: Choose Order', async (browser) => {
+		const obj_itm_Order = By.xpath("//span[contains(text(),'Order 7991')]")
 		await browser.wait(Until.elementIsVisible(obj_itm_Order))
-		let element1 = await browser.findElement(obj_itm_Order)
+		const element1 = await browser.findElement(obj_itm_Order)
 		await element1.click()
 
 		const pageTextVerify = By.visibleText('Shipping Address')
@@ -54,12 +54,12 @@ export default () => {
 		await browser.takeScreenshot()
 	})
 
-	step('Browse Orders Demo App: Processor Info', async browser => {
-		let obj_itm_ProcessorInfo = By.css(
-			'#container-orderbrowser---detail--iconTabFilterProcessor-icon',
+	step('Browse Orders Demo App: Processor Info', async (browser) => {
+		const obj_itm_ProcessorInfo = By.css(
+			'#container-orderbrowser---detail--iconTabFilterProcessor-icon'
 		)
 		await browser.wait(Until.elementIsVisible(obj_itm_ProcessorInfo))
-		let element1 = await browser.findElement(obj_itm_ProcessorInfo)
+		const element1 = await browser.findElement(obj_itm_ProcessorInfo)
 		await element1.click()
 
 		const pageTextVerify = By.visibleText('Processor Information')

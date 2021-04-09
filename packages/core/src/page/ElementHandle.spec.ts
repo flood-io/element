@@ -174,7 +174,7 @@ describe('ElementHandle', () => {
 				return !element.disabled
 			},
 			'#btn',
-			{ timeout: 5e3 },
+			{ timeout: 5e3 }
 		)
 
 		expect(await element.isEnabled()).toBe(true)
@@ -209,8 +209,8 @@ describe('ElementHandle', () => {
 		expect(elementsList2.length).toBe(0)
 
 		const displayedElements = await Promise.all(
-			elementsList1.map(e => e.isDisplayed()),
-		).then(result => elementsList1.filter((element, index) => result[index]))
+			elementsList1.map((e) => e.isDisplayed())
+		).then((result) => elementsList1.filter((element, index) => result[index]))
 
 		expect(displayedElements.length).toBe(43)
 	})

@@ -19,7 +19,7 @@ type JSONRow = { user: number; username: string }
 describe('TestDataLoaders', () => {
 	test('can load CSV data', async () => {
 		const data = loaders.fromCSV<Row>('users.csv')
-		data.circular().filter(line => line.user === '1')
+		data.circular().filter((line) => line.user === '1')
 		await data.load()
 		expect(data.size).toBe(2)
 
@@ -33,7 +33,7 @@ describe('TestDataLoaders', () => {
 	test('can load JSON data', async () => {
 		const data = loaders.fromJSON<JSONRow>('users.json')
 
-		data.circular().filter(line => line.user === 1)
+		data.circular().filter((line) => line.user === 1)
 		await data.load()
 		expect(data.size).toBe(3)
 
@@ -181,9 +181,9 @@ describe('TestDataLoaders', () => {
 		let data: TestDataSource<any>
 		data = loaders.fromCSV<JSONRow>('users.csv').as('user')
 		data = loaders.fromJSON<JSONRow>('users.json').as('user')
-		await data.load().catch(err => {
+		await data.load().catch((err) => {
 			expect(err.message).toEqual(
-				'Data files imported using different methods cannot have the same alias',
+				'Data files imported using different methods cannot have the same alias'
 			)
 		})
 		data.clear()
@@ -193,18 +193,18 @@ describe('TestDataLoaders', () => {
 		let data: TestDataSource<any>
 		data = loaders.fromCSV<JSONRow>('users.csv').as('user')
 		data = loaders.fromCSV<JSONRow>('diff_users.csv').as('user')
-		await data.load().catch(err => {
+		await data.load().catch((err) => {
 			expect(err.message).toEqual(
-				'Data files that have different data structures cannot have the same alias',
+				'Data files that have different data structures cannot have the same alias'
 			)
 		})
 		data.clear()
 
 		data = loaders.fromJSON<JSONRow>('users.json').as('user')
 		data = loaders.fromJSON<JSONRow>('diff_users.json').as('user')
-		await data.load().catch(err => {
+		await data.load().catch((err) => {
 			expect(err.message).toEqual(
-				'Data files that have different data structures cannot have the same alias',
+				'Data files that have different data structures cannot have the same alias'
 			)
 		})
 		data.clear()
@@ -220,9 +220,9 @@ describe('TestDataLoaders', () => {
 				name: 'test1@gmail.com',
 			},
 		])
-		await data.load().catch(err => {
+		await data.load().catch((err) => {
 			expect(err.message).toEqual(
-				'Alias name of the data imported using fromData() must be specified by using as()',
+				'Alias name of the data imported using fromData() must be specified by using as()'
 			)
 		})
 		data.clear()

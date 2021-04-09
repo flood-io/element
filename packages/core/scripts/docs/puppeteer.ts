@@ -6,7 +6,7 @@ export function parsePuppeteer(): any {
 	try {
 		const puppeteerDoc = require(puppeteerPath)
 		const puppeteerTypes = puppeteerDoc.children.find(
-			({ name }: any) => name === '"@types/puppeteer/index.d"',
+			({ name }: any) => name === '"@types/puppeteer/index.d"'
 		).children
 
 		// puppeteerTypes.forEach(t => debug('puppeteer.%s', t.name))

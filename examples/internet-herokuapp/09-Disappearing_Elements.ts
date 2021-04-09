@@ -23,24 +23,24 @@ export const settings: TestSettings = {
 const URL = 'https://the-internet.herokuapp.com'
 
 export default () => {
-	step('Test: 01 - Homepage', async browser => {
+	step('Test: 01 - Homepage', async (browser) => {
 		await browser.visit(URL)
 		await browser.wait(Until.elementIsVisible(By.css('#content > h1')))
-		let pageTextVerify = By.visibleText('Welcome to the-internet')
+		const pageTextVerify = By.visibleText('Welcome to the-internet')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 	})
 
-	step('Test: 02 - Disappearing Elements', async browser => {
+	step('Test: 02 - Disappearing Elements', async (browser) => {
 		await browser.visit(URL + '/disappearing_elements')
 		await browser.wait(Until.elementIsVisible(By.css('#content > div')))
 	})
 
-	step('Test: 03 - Gallery is Displayed', async browser => {
-		let Gallery = await browser.maybeFindElement(
-			By.css('#content > div > ul > li:nth-child(5) > a'),
+	step('Test: 03 - Gallery is Displayed', async (browser) => {
+		const Gallery = await browser.maybeFindElement(
+			By.css('#content > div > ul > li:nth-child(5) > a')
 		)
 		if (Gallery != null) {
-			let isDisplayed = await Gallery.isDisplayed()
+			const isDisplayed = await Gallery.isDisplayed()
 			if (isDisplayed) {
 				await Gallery.click()
 			}

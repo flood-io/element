@@ -31,9 +31,9 @@ export const settings: TestSettings = {
  * Version: 1.0
  */
 export default () => {
-	step('Walkthrough Demo App: Home', async browser => {
+	step('Walkthrough Demo App: Home', async (browser) => {
 		await browser.visit(
-			'https://sapui5.hana.ondemand.com/test-resources/sap/m/demokit/tutorial/walkthrough/38/webapp/test/mockServer.html',
+			'https://sapui5.hana.ondemand.com/test-resources/sap/m/demokit/tutorial/walkthrough/38/webapp/test/mockServer.html'
 		)
 
 		const pageTextVerify = By.visibleText('Hello World')
@@ -42,43 +42,43 @@ export default () => {
 		await browser.takeScreenshot()
 	})
 
-	step('Walkthrough Demo App: Click Open Dialog', async browser => {
+	step('Walkthrough Demo App: Click Open Dialog', async (browser) => {
 		//tpress the say hello with dialog button
-		let obj_bdo_SayHello = By.xpath("//bdi[contains(text(),'Say Hello With Dialog')]")
+		const obj_bdo_SayHello = By.xpath("//bdi[contains(text(),'Say Hello With Dialog')]")
 		await browser.wait(Until.elementIsVisible(obj_bdo_SayHello))
-		let element1 = await browser.findElement(obj_bdo_SayHello)
+		const element1 = await browser.findElement(obj_bdo_SayHello)
 		await element1.click()
 
 		const pageTextVerify = By.visibleText('Hello World')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 
-		let obj_bdi_ok = By.xpath("//bdi[contains(text(),'Ok')]")
+		const obj_bdi_ok = By.xpath("//bdi[contains(text(),'Ok')]")
 		await browser.wait(Until.elementIsVisible(obj_bdi_ok))
-		let element2 = await browser.findElement(obj_bdi_ok)
+		const element2 = await browser.findElement(obj_bdi_ok)
 		await element2.click()
 
 		await browser.takeScreenshot()
 	})
 
-	step('Walkthrough Demo App: Select Worklist', async browser => {
+	step('Walkthrough Demo App: Select Worklist', async (browser) => {
 		const page = browser.page
 
-		let obj_txt_SayHello = By.css('#__input0-inner')
+		const obj_txt_SayHello = By.css('#__input0-inner')
 		await browser.wait(Until.elementIsVisible(obj_txt_SayHello))
 		await page.focus('#__input0-inner')
 		await page.keyboard.press('End')
 		page.type('#__input0-inner', ' Flood Element 123', { delay: 200 }) // Types slower, like a user
 
-		let obj_lbl_CustomText = By.xpath("//div[contains(text(),'World Flood Element 123')]")
+		const obj_lbl_CustomText = By.xpath("//div[contains(text(),'World Flood Element 123')]")
 		await browser.wait(Until.elementIsVisible(obj_lbl_CustomText))
 
 		await browser.takeScreenshot()
 	})
 
-	step('Walkthrough Demo App: Select Invoice Item', async browser => {
-		let obj_span_milk = By.xpath("//span[contains(text(),'Canned Beans')]")
+	step('Walkthrough Demo App: Select Invoice Item', async (browser) => {
+		const obj_span_milk = By.xpath("//span[contains(text(),'Canned Beans')]")
 		await browser.wait(Until.elementIsVisible(obj_span_milk))
-		let element1 = await browser.findElement(obj_span_milk)
+		const element1 = await browser.findElement(obj_span_milk)
 		await element1.click()
 
 		//Please rate this product

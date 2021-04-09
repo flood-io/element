@@ -11,7 +11,7 @@ export function reportRunTest(reportTableData: number[][]): any {
 			'Unexecuted',
 		],
 	]
-	const rowData = reportTableData.map(item => {
+	const rowData = reportTableData.map((item) => {
 		const [iteration, passedNo, failedNo, skippedNo, unexecutedNo] = item
 		return [
 			iteration,

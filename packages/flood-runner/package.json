@@ -1,6 +1,6 @@
 {
 	"name": "@flood/element-flood-runner",
-	"version": "2.0.5-canary.10",
+	"version": "2.0.5-canary.11",
 	"description": "Flood runner for Element",
 	"author": "Ivan Vanderbyl <ivanvanderbyl@gmail.com>",
 	"homepage": "https://github.com/flood-io/element#readme",
@@ -22,7 +22,7 @@
 		"url": "https://github.com/flood-io/element/issues"
 	},
 	"dependencies": {
-		"@flood/element-core": "2.0.5-canary.10",
+		"@flood/element-core": "2.0.5-canary.11",
 		"@flood/element-report": "2.0.5-canary.1",
 		"@flood/node-influx": "^5.0.9",
 		"find-root": "^1.1.0",

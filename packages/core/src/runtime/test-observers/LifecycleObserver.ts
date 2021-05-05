@@ -42,10 +42,13 @@ export default class LifecycleObserver implements TestObserver {
 
 	async onStepError(test: Test, step: Step, error: StructuredError<any>): Promise<void> {
 		const testObserver: TestObserver = this.next
-		const timing = await (testObserver as TimingObserver).getMeasurementTime(
-			test.settings.responseTimeMeasurement,
-			true
-		)
+		let timing = 0
+		if (testObserver instanceof TimingObserver) {
+			timing = await (testObserver as TimingObserver).getMeasurementTime(
+				test.settings.responseTimeMeasurement,
+				true
+			)
+		}
 		step.duration = timing
 		await testObserver.onStepError(test, step, error)
 		test.reporter.testLifecycle(

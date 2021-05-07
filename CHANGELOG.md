@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.5-canary.12](https://github.com/flood-io/element/compare/v2.0.5-canary.11...v2.0.5-canary.12) (2021-05-07)
+
+### Bug Fixes
+
+- bringing across the bugfix from [#319](https://github.com/flood-io/element/issues/319) ([63c5cc8](https://github.com/flood-io/element/commit/63c5cc8c8d53dd5fa8b115187508095c641d82f4))
+- timing observer checks need to be used in more places ([8cb23c7](https://github.com/flood-io/element/commit/8cb23c70d32e8c1fdef1d1a68dd7e180ceff6422))
+
 ## [2.0.5-canary.11](https://github.com/flood-io/element/compare/v2.0.5-canary.10...v2.0.5-canary.11) (2021-05-05)
 
 **Note:** Version bump only for package flood-element

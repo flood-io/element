@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.5-canary.13](https://github.com/flood-io/element/compare/v2.0.5-canary.12...v2.0.5-canary.13) (2021-05-07)
+
+### Bug Fixes
+
+- don't publish on push ([632c47f](https://github.com/flood-io/element/commit/632c47f8aaac9cad08babf8fa750fb12b8308d11))
+
 ## [2.0.5-canary.12](https://github.com/flood-io/element/compare/v2.0.5-canary.11...v2.0.5-canary.12) (2021-05-07)
 
 ### Bug Fixes

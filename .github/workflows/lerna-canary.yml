@@ -3,8 +3,6 @@ on:
   pull_request:
     branches: [canary]
     types: [closed]
-  push:
-    branches: [canary]
 jobs:
   release:
     name: Release canary

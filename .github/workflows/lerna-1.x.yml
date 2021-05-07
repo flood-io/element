@@ -3,8 +3,6 @@ on:
   pull_request:
     branches: [stable_1.x]
     types: [closed]
-  push:
-    branches: [stable_1.x]
 jobs:
   release:
     name: Release 1.x

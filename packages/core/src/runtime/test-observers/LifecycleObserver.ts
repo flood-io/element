@@ -31,10 +31,13 @@ export default class LifecycleObserver implements TestObserver {
 
 	async onStepPassed(test: Test, step: Step): Promise<void> {
 		const testObserver: TestObserver = this.next
-		const timing = await (testObserver as TimingObserver).getMeasurementTime(
-			test.settings.responseTimeMeasurement,
-			true
-		)
+		let timing = 0
+		if (testObserver instanceof TimingObserver) {
+			timing = await (testObserver as TimingObserver).getMeasurementTime(
+				test.settings.responseTimeMeasurement,
+				true
+			)
+		}
 		step.duration = timing
 		await testObserver.onStepPassed(test, step)
 		test.reporter.testLifecycle(TestEvent.StepSucceeded, step.name, step.subTitle, timing)
@@ -42,10 +45,13 @@ export default class LifecycleObserver implements TestObserver {
 
 	async onStepError(test: Test, step: Step, error: StructuredError<any>): Promise<void> {
 		const testObserver: TestObserver = this.next
-		const timing = await (testObserver as TimingObserver).getMeasurementTime(
-			test.settings.responseTimeMeasurement,
-			true
-		)
+		let timing = 0
+		if (testObserver instanceof TimingObserver) {
+			timing = await (testObserver as TimingObserver).getMeasurementTime(
+				test.settings.responseTimeMeasurement,
+				true
+			)
+		}
 		step.duration = timing
 		await testObserver.onStepError(test, step, error)
 		test.reporter.testLifecycle(
@@ -70,9 +76,12 @@ export default class LifecycleObserver implements TestObserver {
 	async afterStep(test: Test, step: Step): Promise<void> {
 		const testObserver: TestObserver = this.next
 		await testObserver.afterStep(test, step)
-		const timing = await (testObserver as TimingObserver).getMeasurementTime(
-			test.settings.responseTimeMeasurement
-		)
+		let timing = 0
+		if (testObserver instanceof TimingObserver) {
+			timing = await (testObserver as TimingObserver).getMeasurementTime(
+				test.settings.responseTimeMeasurement
+			)
+		}
 		test.reporter.testLifecycle(TestEvent.AfterStep, step.name, step.subTitle, timing)
 	}
 

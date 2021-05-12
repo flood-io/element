@@ -15,7 +15,8 @@
 			"allowBranch": ["stable", "beta", "canary"]
 		},
 		"bootstrap": {
-			"npmClient": "yarn"
+			"npmClient": "yarn",
+			"useWorkspaces": true
 		}
 	},
 	"ignoreChanges": [

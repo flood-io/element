@@ -6,7 +6,8 @@ import { VMScript } from 'vm2'
 import parseComments from 'comment-parser'
 
 const INLINE_SOURCE_MAP_REGEX = /^data:application\/json[^,]+base64,/
-const SOURCE_MAP_REGEX = /(?:\/\/[@#][ \t]+sourceMappingURL=([^\s'"]+?)[ \t]*$)|(?:\/\*[@#][ \t]+sourceMappingURL=([^*]+?)[ \t]*(?:\*\/)[ \t]*$)/
+const SOURCE_MAP_REGEX =
+	/(?:\/\/[@#][ \t]+sourceMappingURL=([^\s'"]+?)[ \t]*$)|(?:\/\*[@#][ \t]+sourceMappingURL=([^*]+?)[ \t]*(?:\*\/)[ \t]*$)/
 
 function isInlineMap(url: string): boolean {
 	return INLINE_SOURCE_MAP_REGEX.test(url)

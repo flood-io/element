@@ -22,7 +22,7 @@
 		"@flood/element-scheduler": "2.0.5-canary.16",
 		"@types/find-root": "^1.1.2",
 		"boxen": "^3.0",
-		"chalk": "^2.4.1",
+		"chalk": "^4.1.1",
 		"chokidar": "^3.4.2",
 		"command-exists": "^1.2.9",
 		"css-loader": "^3.4.2",
@@ -47,7 +47,6 @@
 	},
 	"devDependencies": {
 		"@types/boxen": "^3.0.1",
-		"@types/chalk": "^2.2.0",
 		"@types/command-exists": "^1.2.0",
 		"@types/find-root": "^1.1.1",
 		"@types/mini-css-extract-plugin": "^1.2.2",

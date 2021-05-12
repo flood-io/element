@@ -30,7 +30,7 @@ export class TargetLocator implements ITargetLocator {
 		const frames = getFrames(this.currentPage.frames())
 		const frameElementName = await this.currentPage.evaluate((id: string) => {
 			// NOTE typescript lib.dom lacks proper index signature for frames: Window to work
-			const frame = Array.from(window.frames).find((frame) => frame.frameElement.id === id)
+			const frame = Array.from(window.frames).find((frame) => frame?.frameElement?.id === id)
 
 			if (!frame) throw Error(`No frame found with id=${id}`)
 			return frame.name
@@ -57,7 +57,7 @@ export class TargetLocator implements ITargetLocator {
 	 *
 	 * @param id number | string | ElementHandle
 	 */
-	public async frame(id: number | string | IElementHandle) {
+	public async frame(id: number | string | IElementHandle): Promise<void> {
 		if (id === null) {
 			this.defaultContent()
 			return
@@ -121,7 +121,7 @@ export class TargetLocator implements ITargetLocator {
 	 *
 	 * @param page number | Page
 	 */
-	public async page(page: number | Page) {
+	public async page(page: number | Page): Promise<void> {
 		await this.applyPage(page)
 	}
 }

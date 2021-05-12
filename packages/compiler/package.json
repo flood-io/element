@@ -30,6 +30,7 @@
 		"@types/webpackbar": "^2.6.0"
 	},
 	"dependencies": {
+		"@babel/preset-typescript": "^7.13.0",
 		"@types/find-root": "^1.1.2",
 		"find-root": "^1.1.0",
 		"memory-fs": "^0.5.0",

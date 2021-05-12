@@ -61,7 +61,6 @@ export class Browser<T> implements BrowserInterface {
 		public afterFunc: (browser: Browser<T>, name: string) => Promise<void> = async () => undefined,
 		private activeFrame?: Frame | null
 	) {
-		this.beforeFunc && this.afterFunc
 		this.screenshots = []
 
 		this.newPageCallback = (resolve) => {
@@ -117,11 +116,11 @@ export class Browser<T> implements BrowserInterface {
 		return getFrames(this.page.frames())
 	}
 
-	public get mouse() {
+	public get mouse(): Mouse {
 		return new Mouse(this.page)
 	}
 
-	public get keyboard() {
+	public get keyboard(): Keyboard {
 		return new Keyboard(this.page)
 	}
 
@@ -531,7 +530,7 @@ export class Browser<T> implements BrowserInterface {
 		}
 	}
 
-	public fetchScreenshots() {
+	public fetchScreenshots(): string[] {
 		const screenshots = [...this.screenshots]
 		this.screenshots = []
 		return screenshots

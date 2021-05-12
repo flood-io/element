@@ -15,7 +15,7 @@ interface Event extends RequestEvent {
 }
 
 export class Manager {
-	private lifecycleCompleteCallback: (() => void) | null
+	private lifecycleCompleteCallback: ((value: unknown) => void) | null
 	private networkIdlePromise: Promise<any> | null
 	public timeout = 10e3
 
@@ -86,10 +86,10 @@ export class Manager {
 
 	private handleRequestStart(
 		requestId: string,
-		url: string,
-		resourceType: string,
-		requestPayload: any,
-		frameId: string
+		_url: string,
+		_resourceType: string,
+		_requestPayload: any,
+		_frameId: string
 	): void {
 		if (requestId) this.requestIdToRequest.set(requestId, null)
 	}

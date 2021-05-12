@@ -29,7 +29,7 @@ describe('Condition', () => {
 				return new Promise((yeah) => {
 					setTimeout(() => {
 						document.title = 'another title'
-						yeah()
+						yeah(true)
 					}, 100)
 				})
 			})
@@ -45,7 +45,7 @@ describe('Condition', () => {
 				return new Promise((yeah) => {
 					setTimeout(() => {
 						document.title = 'another title again'
-						yeah()
+						yeah(true)
 					}, 100)
 				})
 			})
@@ -61,7 +61,7 @@ describe('Condition', () => {
 				return new Promise((yeah) => {
 					setTimeout(() => {
 						document.title = 'another title again'
-						yeah()
+						yeah(true)
 					}, 100)
 				})
 			})
@@ -77,7 +77,7 @@ describe('Condition', () => {
 				return new Promise((yeah) => {
 					setTimeout(() => {
 						document.title = 'another title again'
-						yeah()
+						yeah(true)
 					}, 100)
 				})
 			})
@@ -93,7 +93,7 @@ describe('Condition', () => {
 				return new Promise((yeah) => {
 					setTimeout(() => {
 						document.title = 'another title again'
-						yeah()
+						yeah(true)
 					}, 100)
 				})
 			})

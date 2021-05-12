@@ -23,7 +23,7 @@
 	},
 	"dependencies": {
 		"@flood/element-core": "2.0.5-canary.15",
-		"@flood/element-report": "2.0.5-canary.1",
+		"@flood/element-report": "2.0.5-canary.15",
 		"@flood/node-influx": "^5.0.9",
 		"find-root": "^1.1.0",
 		"winston": "^3.2.1"

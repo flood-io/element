@@ -55,7 +55,7 @@
 		"strftime": "^0.10.0",
 		"term-img": "^2.1.0",
 		"vm2": "^3.9.2",
-		"winston": "^3.0.0"
+		"winston": "^3.3.3"
 	},
 	"devDependencies": {
 		"@types/d3-array": "^1.2.1",

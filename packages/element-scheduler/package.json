@@ -31,7 +31,7 @@
 		"logform": "^2.1.2",
 		"merge-stream": "^2.0.0",
 		"parse-duration": "^0.1.2",
-		"winston": "^3.0.0"
+		"winston": "^3.3.3"
 	},
 	"devDependencies": {
 		"@types/merge-stream": "^1.1.2"

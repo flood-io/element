@@ -26,6 +26,6 @@
 		"@flood/element-report": "2.0.5-canary.16",
 		"@flood/node-influx": "^5.0.9",
 		"find-root": "^1.1.0",
-		"winston": "^3.2.1"
+		"winston": "^3.3.3"
 	}
 }

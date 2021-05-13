@@ -65,7 +65,6 @@
 		"@types/fs-extra": "^8.0.0",
 		"@types/knuth-shuffle": "^1.0.0",
 		"@types/micromatch": "^4.0.1",
-		"@types/mkdirp": "^0.5.2",
 		"@types/node": "^14.14.37",
 		"@types/sanitize-filename": "^1.1.28",
 		"@types/test-listen": "^1.1.0",

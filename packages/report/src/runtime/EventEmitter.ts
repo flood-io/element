@@ -90,7 +90,7 @@ export class EventEmitterReporter extends EventEmitter implements IReporter {
 		this.emit('testInternalError', { message, step: this.stepName, error })
 	}
 
-	testScriptConsole(method: string, message?: any, ...args: any[]): void {
+	testScriptConsole(method: string, message?: string, ...args: any[]): void {
 		if (message !== undefined) {
 			args.unshift(message)
 		}

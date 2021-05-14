@@ -265,8 +265,8 @@ Scroll the document to the specified position.
 
 - position can be any of these types:
 
-  - [`ElementHandle`](ElementHandle.md)
-  - [`Locator`](Locators.md)
+  - [`ElementHandle`](ElementHandle)
+  - [`Locator`](Locators)
   - `Point`: an array of `x`(number) and `y`(number) co-ordinate
   - `String`: 'top', 'bottom', 'left' or 'right'
 
@@ -498,13 +498,13 @@ Is an Object with the following properties:
 **Note:**
 
 1. If you use `behaviour: 'smooth'`, it may take the browser some time to scroll. Therefore, consider adding a wait after the scroll action to avoid unexpected error.
-2. `block` and `inline` only work with `browser.scrollTo()`, with [`ElementHandle`](ElementHandle.md) or [`Locator`](Locators.md) as the 1st parameter.
+2. `block` and `inline` only work with `browser.scrollTo()`, with [`ElementHandle`](ElementHandle) or [`Locator`](Locators) as the 1st parameter.
 
 [step]: ../guides/script
 [promise]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
 [nullablelocatable]: #nullablelocatable
 [locatable]: #locatable
-[clickoptions]: mouse.md#clickoptions
+[clickoptions]: mouse#clickoptions
 [device]: Constants
 [elementhandle]: ElementHandle
 [locator]: Locators

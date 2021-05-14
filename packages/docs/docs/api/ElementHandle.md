@@ -233,7 +233,7 @@ Sets the value of the file input. The name of a file you uploaded with this scri
 - returns: [`Promise<void>`][promise]
 
 [promise]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
-[clickoptions]: mouse.md#clickoptions
+[clickoptions]: mouse#clickoptions
 [locator]: Locators
 [elementhandle]: ElementHandle
-[screenshotoptions]: browser.md#screenshotoptions
+[screenshotoptions]: browser#screenshotoptions

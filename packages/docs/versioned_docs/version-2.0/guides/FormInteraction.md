@@ -85,5 +85,5 @@ For more information on the available actions, see [Browser] and [ElementHandle]
 
 <!-- suffix -->
 
-[browser]: ../../api/Browser.md#browser
-[elementhandle]: ../../api/ElementHandle.md#elementhandle
+[browser]: ../../api/Browser#browser
+[elementhandle]: ../../api/ElementHandle#elementhandle

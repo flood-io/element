@@ -18,7 +18,7 @@ export class CustomConsole extends Console {
 		this._spinnies = spinnies
 	}
 
-	private _log(type: LogType, message: string): void {
+	private _log(_type: LogType, message: string): void {
 		this._spinnies.add(`${message}_${new Date().valueOf()}`, {
 			text: message,
 			status: 'non-spinnable',
@@ -26,7 +26,7 @@ export class CustomConsole extends Console {
 		})
 	}
 
-	private _logError(type: LogType, message: string): void {
+	private _logError(_type: LogType, message: string): void {
 		this._spinnies.add(`${message}_${new Date().valueOf()}`, {
 			text: message,
 			status: 'non-spinnable',

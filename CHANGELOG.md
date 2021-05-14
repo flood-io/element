@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.5-canary.17](https://github.com/flood-io/element/compare/v2.0.5-canary.16...v2.0.5-canary.17) (2021-05-14)
+
+### Bug Fixes
+
+- add node 12 back to the node version matrix ([aad2dda](https://github.com/flood-io/element/commit/aad2dda33a2e5bd797a1391dceb0207d8300cc9f))
+- do a full build on CI ([86facaa](https://github.com/flood-io/element/commit/86facaac164b7146ba1768512de9f4d1ef277063))
+- ensure lerna uses workspaces ([c2c1488](https://github.com/flood-io/element/commit/c2c1488eddf179e037260c1e0061483969e6b6bd))
+- inter-page doc links ([cc2857f](https://github.com/flood-io/element/commit/cc2857f2bebb0983a574adec9aa8f3b4e67f1cd5))
+- stop running CI on node 12 ([cfb660e](https://github.com/flood-io/element/commit/cfb660ea30b15297b96c36995be636d9d38acc10))
+- typescript and lint errors after upgrades ([e100bdc](https://github.com/flood-io/element/commit/e100bdc440e28f3adfc76bfcc99a52ff298e035f))
+- update test/build workflow step names ([c942df5](https://github.com/flood-io/element/commit/c942df5d87c083076e52aeba8c3502665ee94448))
+
+### Reverts
+
+- Revert "chore: small bumps in core package" ([0b30b9a](https://github.com/flood-io/element/commit/0b30b9ac0e64df8ce3835fb08934ea7d76c11efb))
+
 ## [2.0.5-canary.16](https://github.com/flood-io/element/compare/v2.0.5-canary.15...v2.0.5-canary.16) (2021-05-12)
 
 ### Bug Fixes

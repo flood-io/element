@@ -33,7 +33,6 @@ jobs:
           - ubuntu-latest
           - windows-latest
         node-version:
-          - '12.x'
           - '14.x'
     name: Node ${{ matrix.node-version }} on ${{ matrix.os }}
     steps:

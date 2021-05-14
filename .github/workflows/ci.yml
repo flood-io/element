@@ -9,6 +9,7 @@ jobs:
         os:
           - ubuntu-latest
         node-version:
+          - '12.x'
           - '14.x'
     name: Build on Node ${{ matrix.node-version }} on ${{ matrix.os }}
     steps:
@@ -33,6 +34,7 @@ jobs:
           - ubuntu-latest
           - windows-latest
         node-version:
+          - '12.x'
           - '14.x'
     name: Test on Node ${{ matrix.node-version }} on ${{ matrix.os }}
     steps:

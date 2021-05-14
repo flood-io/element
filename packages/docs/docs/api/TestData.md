@@ -202,6 +202,6 @@ Loads data from a JSON ffile
 - filename `string` the JSON to load.
 - returns: [`TestDataSource`][testdatasource]
 
-[testdatafactory]: TestData.md#testdatafactory
-[feeder]: TestData.md#feeder
-[testdatasource]: TestData.md#testdatasource
+[testdatafactory]: TestData#testdatafactory
+[feeder]: TestData#feeder
+[testdatasource]: TestData#testdatasource

@@ -86,7 +86,7 @@ export default () => {
 
 You'll notice that each takes two arguments: a title, which is the name of the step when reporting the results, and a function or expression which contains the actual actions, which we call the step handler.
 
-The step handler receives two arguments: the Browser instance, and the Data instance — if you're using [test data](test-data.md). You can name these variables however you like, but we typically use either `browser` or `b`.
+The step handler receives two arguments: the Browser instance, and the Data instance — if you're using [test data](../api/test-data). You can name these variables however you like, but we typically use either `browser` or `b`.
 
 ## Running an Element script locally
 

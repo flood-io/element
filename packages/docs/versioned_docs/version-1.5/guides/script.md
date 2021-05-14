@@ -64,7 +64,7 @@ export default () => {
 
 You'll notice that we pulled the `browser` from the first argument received by the callback function. You also have access to the current `row` of test data if you've specified a test data service.
 
-The browser exposes every action avaialable to you at a top level for interacting with the page. See the [Browser API](api/Browser.md) page for a complete list.
+The browser exposes every action avaialable to you at a top level for interacting with the page. See the [Browser API](api/Browser) page for a complete list.
 
 ## Handling failure
 

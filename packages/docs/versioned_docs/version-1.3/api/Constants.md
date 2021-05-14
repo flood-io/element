@@ -73,7 +73,7 @@ Chrome DevTools Device Emulation
 
 ## `Key`
 
-Lists all available keyboard control keys which can be used when using [sendKeys](Browser.md#sendkeyskeys) or [sendKeyCombinations](Browser.md#sendkeycombinationskeys).
+Lists all available keyboard control keys which can be used when using [sendKeys](Browser#sendkeyskeys) or [sendKeyCombinations](Browser#sendkeycombinationskeys).
 
 | Name          | Default Value    | Comment |
 | ------------- | ---------------- | ------- |

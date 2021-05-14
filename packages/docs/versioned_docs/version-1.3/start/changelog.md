@@ -36,31 +36,31 @@ Released: Aug 2020
 
 - Extended Step Types:
 
-  - [`step.if()`](../guides/script.md#stepif)
-  - [`step.unless()`](../guides/script.md#stepunless)
-  - [`step.while()`](../guides/script.md#stepwhile)
-  - [`step.repeat()`](../guides/script.md#steprepeat)
-  - [`step.once()`](../guides/script.md#steponce)
-  - [`step.skip()`](../guides/script.md#stepskip)
-  - [`step.recovery()`](../guides/script.md#steprecovery)
+  - [`step.if()`](../guides/script#stepif)
+  - [`step.unless()`](../guides/script#stepunless)
+  - [`step.while()`](../guides/script#stepwhile)
+  - [`step.repeat()`](../guides/script#steprepeat)
+  - [`step.once()`](../guides/script#steponce)
+  - [`step.skip()`](../guides/script#stepskip)
+  - [`step.recovery()`](../guides/script#steprecovery)
 
 - Hooks for setup and teardown
 
-  - [`beforeAll()`](../guides/hook.md#beforeAll)
-  - [`beforeEach()`](../guides/hook.md#beforeEach)
-  - [`afterEach()`](../guides/hook.md#afterEach)
-  - [`afterAll()`](../guides/hook.md#afterAll)
+  - [`beforeAll()`](../guides/hook#beforeAll)
+  - [`beforeEach()`](../guides/hook#beforeEach)
+  - [`afterEach()`](../guides/hook#afterEach)
+  - [`afterAll()`](../guides/hook#afterAll)
 
-- Support sending key combinations [(`browser.sendKeyCombinations()`)](../api/Browser.md#sendkeycombinationskeys)
-- Support authentication with Flood and [lauching a flood directly from Element CLI](../guides/CLI.md#run-an-element-script-on-flood)
-- New command to [generate a config file](../guides/CLI.md#generate-a-config-file-from-a-template) and [run a test from a config file](../guides/CLI.md#run-a-test-locally-with-the-default-config-file)
-- Ability to set a Fail Status Code (ExitCode) if a test fails [when running locally](../guides/CLI.md#run-a-test-script-locally)
+- Support sending key combinations [(`browser.sendKeyCombinations()`)](../api/Browser#sendkeycombinationskeys)
+- Support authentication with Flood and [lauching a flood directly from Element CLI](../guides/CLI#run-an-element-script-on-flood)
+- New command to [generate a config file](../guides/CLI#generate-a-config-file-from-a-template) and [run a test from a config file](../guides/CLI#run-a-test-locally-with-the-default-config-file)
+- Ability to set a Fail Status Code (ExitCode) if a test fails [when running locally](../guides/CLI#run-a-test-script-locally)
 
 ### Enhancements
 
 - Handle multiple tabs/windows (GitHub issue [#47](https://github.com/flood-io/element/issues/47))
 - Refactor code and fix dependencies life cycle issue (GitHub issue [#176](https://github.com/flood-io/element/issues/176))
-- Add [`Until.elementTextDoesNotMatch()`](../api/Waiters.md)
+- Add [`Until.elementTextDoesNotMatch()`](../api/Waiters)
 - Support importing script helper from other node modules (GitHub issue [#71](https://github.com/flood-io/element/issues/71))
 - Make process.env reflect environment variables present when running `element run` (GitHub issue [#104](https://github.com/flood-io/element/issues/104))
 

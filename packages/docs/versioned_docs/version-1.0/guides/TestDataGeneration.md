@@ -67,7 +67,7 @@ step('Write a comment', async (browser: Browser) => {
 })
 ```
 
-Flood Element's [TestData](./examples_test_data.md) facility makes it simple to use Faker data across multiple steps. You can also generate a large number of fake records to use when running multiple iterations of a test script.
+Flood Element's [TestData](TestData) facility makes it simple to use Faker data across multiple steps. You can also generate a large number of fake records to use when running multiple iterations of a test script.
 This works the same as loading a pre-populated CSV or JSON file, but with the power of randomised values.
 
 ```typescript
@@ -110,4 +110,4 @@ step('Step 1', async (browser: Browser, user: UserData) => {
 
 For more information about what Faker can do for you, please consult the [Faker API Documentation](https://github.com/Marak/faker.js#api)
 
-If you have static test data available as CSV or JSON files, consider using Flood Element's [TestData](TestData.md) facility.
+If you have static test data available as CSV or JSON files, consider using Flood Element's [TestData](TestData) facility.

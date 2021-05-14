@@ -218,4 +218,4 @@ Sends a series of key presses to the element to simulate a user typing on the ke
 [clickoptions]: mouse.md#clickoptions
 [locator]: Locators
 [elementhandle]: ElementHandle
-[screenshotoptions]: browser.md#screenshotoptions
+[screenshotoptions]: Browser#screenshotoptions

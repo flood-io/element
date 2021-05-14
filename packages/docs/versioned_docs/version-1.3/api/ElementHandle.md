@@ -224,7 +224,7 @@ Sets the value of the file input. Names of the file(s) you uploaded with this sc
 - returns: [`Promise<void>`][promise]
 
 [promise]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
-[clickoptions]: mouse.md#clickoptions
+[clickoptions]: mouse#clickoptions
 [locator]: Locators
 [elementhandle]: ElementHandle
-[screenshotoptions]: browser.md#screenshotoptions
+[screenshotoptions]: browser#screenshotoptions

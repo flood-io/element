@@ -10,7 +10,7 @@ jobs:
           - ubuntu-latest
         node-version:
           - '14.x'
-    name: Node ${{ matrix.node-version }} on ${{ matrix.os }}
+    name: Build on Node ${{ matrix.node-version }} on ${{ matrix.os }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -34,7 +34,7 @@ jobs:
           - windows-latest
         node-version:
           - '14.x'
-    name: Node ${{ matrix.node-version }} on ${{ matrix.os }}
+    name: Test on Node ${{ matrix.node-version }} on ${{ matrix.os }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2

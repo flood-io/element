@@ -97,7 +97,7 @@ export default class InfluxReporter implements IReporter {
 
 		const message = Buffer.from(payload)
 
-		await new Promise((yeah, nah) => {
+		await new Promise((yeah, _nah) => {
 			this.socket.send(
 				message,
 				Number(this.options.influxPort),
@@ -111,7 +111,7 @@ export default class InfluxReporter implements IReporter {
 						)
 						console.debug(message.toString())
 					}
-					yeah()
+					yeah(true)
 				}
 			)
 		})

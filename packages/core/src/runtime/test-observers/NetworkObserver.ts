@@ -2,7 +2,9 @@ import NetworkRecorder from '../../network/Recorder'
 import { RawResponse } from '../../network/Protocol'
 import { IReporter } from '@flood/element-report'
 import { ConsoleMethod } from '../Settings'
-const debug = require('debug')('element:runtime:observer')
+import debugImport from 'debug'
+
+const debug = debugImport('element:runtime:observer')
 
 interface Event {
 	requestId: string
@@ -103,7 +105,7 @@ export default class Observer {
 					timestamp,
 				})
 				.then(
-					() => yeah(),
+					() => yeah(true),
 					(err) => nah(err)
 				)
 		})

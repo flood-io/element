@@ -42,9 +42,11 @@ type StepOptions = {
 type TestFn = (this: void, browser: Browser) => Promise<any>
 type ConditionFn = (this: void, browser: Browser) => boolean | Promise<boolean>
 
-const elementIsVisible = (selector: string) => async (browser: Browser): Promise<boolean> => {
-	return browser.wait(selector).then(() => true)
-}
+const elementIsVisible =
+	(selector: string) =>
+	async (browser: Browser): Promise<boolean> => {
+		return browser.wait(selector).then(() => true)
+	}
 
 function extractOptionsAndCallback(args: any[]): [Partial<StepOptions>, TestFn] {
 	if (args.length === 0) return [{ pending: true }, () => Promise.resolve()]

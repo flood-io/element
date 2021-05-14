@@ -19,13 +19,5 @@
 			"useWorkspaces": true
 		}
 	},
-	"ignoreChanges": [
-		"assets",
-		"coverage",
-		"examples",
-		"scripts",
-		"smoke",
-		"**/*.md",
-		"packages/docs/**"
-	]
+	"ignoreChanges": ["assets", "coverage", "examples", "scripts", "**/*.md", "packages/docs/**"]
 }

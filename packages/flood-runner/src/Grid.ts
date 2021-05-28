@@ -1,5 +1,5 @@
 import { runSingleTestScript, ElementOptions, TestObserver } from '@flood/element-api'
-import { Context } from '@flood/element-core'
+import { Context, TimingObserver } from '@flood/element-core'
 import { TracingObserver } from './test-observers/Tracing'
 import { initConfig } from './initConfig'
 import { startConcurrencyTicker } from './tickerInterval'
@@ -11,7 +11,10 @@ export async function run(file: string): Promise<void> {
 
 	const testObserverFactory = (innerObserver: TestObserver) => {
 		const testObserverContext = new Context()
-		return new TracingObserver(testObserverContext, innerObserver)
+		return new TimingObserver(
+			testObserverContext,
+			new TracingObserver(testObserverContext, innerObserver)
+		)
 	}
 
 	const opts: ElementOptions = {

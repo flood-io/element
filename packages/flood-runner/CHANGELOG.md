@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.5-canary.18](https://github.com/flood-io/element/compare/v2.0.5-canary.17...v2.0.5-canary.18) (2021-05-28)
+
+### Bug Fixes
+
+- revert the timing observer to tracing observer change for flood-runner ([6b5b610](https://github.com/flood-io/element/commit/6b5b61015f3afb04aff81d25671a70fca805ee3d))
+
 ## [2.0.5-canary.17](https://github.com/flood-io/element/compare/v2.0.5-canary.16...v2.0.5-canary.17) (2021-05-14)
 
 ### Bug Fixes

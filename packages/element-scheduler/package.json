@@ -1,6 +1,6 @@
 {
 	"name": "@flood/element-scheduler",
-	"version": "2.0.5-canary.18",
+	"version": "2.0.5-canary.19",
 	"description": "Handles scheduling ramp and users during a test",
 	"author": "Ivan Vanderbyl <ivanvanderbyl@gmail.com>",
 	"contributors": [
@@ -26,7 +26,7 @@
 		"url": "https://github.com/flood-io/element/issues"
 	},
 	"dependencies": {
-		"@flood/element-core": "2.0.5-canary.18",
+		"@flood/element-core": "2.0.5-canary.19",
 		"cli-table3": "^0.6.0",
 		"logform": "^2.1.2",
 		"merge-stream": "^2.0.0",

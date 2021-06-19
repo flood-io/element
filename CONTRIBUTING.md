@@ -15,7 +15,7 @@ Please note that this project is released with a [Contributor Code of Conduct][c
 1. [Fork][fork] and clone the repository
 2. Create a new branch: `git checkout -b my-branch-name`
 3. Make your change, add tests, and make sure the tests still pass
-4. Push to your fork and [submit a pull request][https://help.github.com/en/articles/creating-a-pull-request]
+4. Push to your fork and [submit a pull request](https://help.github.com/en/articles/creating-a-pull-request)
 5. Pat your self on the back and wait for your pull request to be reviewed and merged.
 
 Here are a few things you can do that will increase the likelihood of your pull request being accepted:

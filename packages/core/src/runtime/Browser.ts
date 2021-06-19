@@ -59,19 +59,18 @@ export class Browser<T> implements BrowserInterface {
 		public settings: ConcreteTestSettings,
 		public beforeFunc: (browser: Browser<T>, name: string) => Promise<void> = async () => undefined,
 		public afterFunc: (browser: Browser<T>, name: string) => Promise<void> = async () => undefined,
-		private activeFrame?: Frame | null,
+		private activeFrame?: Frame | null
 	) {
-		this.beforeFunc && this.afterFunc
 		this.screenshots = []
 
-		this.newPageCallback = resolve => {
-			this.client.page.context().on('page', async newPage => {
+		this.newPageCallback = (resolve) => {
+			this.client.page.context().on('page', async (newPage) => {
 				this.client.page = newPage
 				resolve(newPage)
 			})
 		}
 
-		this.newPagePromise = new Promise(resolve => {
+		this.newPagePromise = new Promise((resolve) => {
 			this.newPageCallback(resolve)
 		})
 	}
@@ -117,11 +116,11 @@ export class Browser<T> implements BrowserInterface {
 		return getFrames(this.page.frames())
 	}
 
-	public get mouse() {
+	public get mouse(): Mouse {
 		return new Mouse(this.page)
 	}
 
-	public get keyboard() {
+	public get keyboard(): Keyboard {
 		return new Keyboard(this.page)
 	}
 
@@ -191,7 +190,7 @@ export class Browser<T> implements BrowserInterface {
 						kind: 'net',
 						subKind: 'not-resolved',
 					},
-					e,
+					e
 				)
 			}
 			if (e.message.includes('Navigation Timeout Exceeded')) {
@@ -203,7 +202,7 @@ export class Browser<T> implements BrowserInterface {
 						kind: 'net',
 						subKind: 'navigation-timeout',
 					},
-					e,
+					e
 				)
 			}
 			throw finalErr
@@ -229,7 +228,7 @@ export class Browser<T> implements BrowserInterface {
 	@addCallbacks()
 	public async doubleClick(
 		selectorOrLocator: NullableLocatable,
-		options?: ClickOptions,
+		options?: ClickOptions
 	): Promise<void> {
 		const element = await this.findElementWithoutDecorator(selectorOrLocator)
 		return element.click({ clickCount: 2, ...options })
@@ -252,9 +251,9 @@ export class Browser<T> implements BrowserInterface {
 				for (const option of options) option.selected = values.includes(option.value)
 				element.dispatchEvent(new Event('input', { bubbles: true }))
 				element.dispatchEvent(new Event('change', { bubbles: true }))
-				return options.filter(option => option.selected).map(option => option.value)
+				return options.filter((option) => option.selected).map((option) => option.value)
 			},
-			[element.element, values],
+			[element.element, values]
 		)
 	}
 
@@ -276,9 +275,9 @@ export class Browser<T> implements BrowserInterface {
 
 				element.dispatchEvent(new Event('input', { bubbles: true }))
 				element.dispatchEvent(new Event('change', { bubbles: true }))
-				return options.filter(option => option.selected).map(option => option.value)
+				return options.filter((option) => option.selected).map((option) => option.value)
 			},
-			[element.element, index],
+			[element.element, index]
 		)
 	}
 
@@ -301,9 +300,9 @@ export class Browser<T> implements BrowserInterface {
 
 				element.dispatchEvent(new Event('input', { bubbles: true }))
 				element.dispatchEvent(new Event('change', { bubbles: true }))
-				return options.filter(option => option.selected).map(option => option.value)
+				return options.filter((option) => option.selected).map((option) => option.value)
 			},
-			[element.element, text],
+			[element.element, text]
 		)
 	}
 
@@ -322,7 +321,7 @@ export class Browser<T> implements BrowserInterface {
 	public async type(
 		locatable: NullableLocatable,
 		text: string,
-		options?: { delay: number },
+		options?: { delay: number }
 	): Promise<void> {
 		const element = await this.findElementWithoutDecorator(locatable)
 
@@ -420,7 +419,7 @@ export class Browser<T> implements BrowserInterface {
 	 */
 	@addCallbacks()
 	public async takeScreenshot(options?: ScreenshotOptions): Promise<void> {
-		await this.saveScreenshot(async path => {
+		await this.saveScreenshot(async (path) => {
 			await this.page.screenshot({ path, ...options })
 			if (!this.multipleUser) {
 				console.log(chalk.grey(`Screenshot saved in ${path}`))
@@ -461,7 +460,7 @@ export class Browser<T> implements BrowserInterface {
 	public async findElements(locatable: NullableLocatable): Promise<ElementHandle[]> {
 		const locator = locatableToLocator(locatable, 'browser.findElements(locatable)')
 		const elements = await locator.findMany(this.page, undefined, this.target)
-		elements.forEach(element => element.bindBrowser(this))
+		elements.forEach((element) => element.bindBrowser(this))
 		return elements
 	}
 
@@ -472,10 +471,10 @@ export class Browser<T> implements BrowserInterface {
 		return new TargetLocator(
 			this.page,
 			this.target,
-			frame => {
+			(frame) => {
 				this.activeFrame = frame
 			},
-			page => this.switchPage(page),
+			(page) => this.switchPage(page)
 		)
 	}
 
@@ -493,7 +492,7 @@ export class Browser<T> implements BrowserInterface {
 	 */
 	public async paintTiming(): Promise<PerformanceEntry[]> {
 		const data = await this.page.evaluate(() =>
-			JSON.stringify(window.performance.getEntriesByType('paint')),
+			JSON.stringify(window.performance.getEntriesByType('paint'))
 		)
 		return JSON.parse(data.toString())
 	}
@@ -531,7 +530,7 @@ export class Browser<T> implements BrowserInterface {
 		}
 	}
 
-	public fetchScreenshots() {
+	public fetchScreenshots(): string[] {
 		const screenshots = [...this.screenshots]
 		this.screenshots = []
 		return screenshots
@@ -559,7 +558,7 @@ export class Browser<T> implements BrowserInterface {
 		const newPage = await this.newPagePromise
 
 		// wait for another page to be opened
-		this.newPagePromise = new Promise(resolve => {
+		this.newPagePromise = new Promise((resolve) => {
 			this.newPageCallback(resolve)
 		})
 
@@ -576,8 +575,8 @@ export class Browser<T> implements BrowserInterface {
 		const names = filterBy?.names
 		let cookies = await this.page.context().cookies(urls)
 		if (names) {
-			cookies = cookies.filter(cookie =>
-				typeof names === 'string' ? cookie.name === names : names.includes(cookie.name),
+			cookies = cookies.filter((cookie) =>
+				typeof names === 'string' ? cookie.name === names : names.includes(cookie.name)
 			)
 		}
 		return cookies
@@ -595,7 +594,7 @@ export class Browser<T> implements BrowserInterface {
 	public async scrollBy(
 		x: number | 'window.innerWidth',
 		y: number | 'window.innerHeight',
-		scrollOptions?: ScrollOptions,
+		scrollOptions?: ScrollOptions
 	): Promise<void> {
 		const behavior = scrollOptions?.behavior ?? 'auto'
 
@@ -605,13 +604,13 @@ export class Browser<T> implements BrowserInterface {
 
 		if (x !== 'window.innerWidth' && typeof x !== 'number') {
 			throw new Error(
-				'The input x that you want to scroll by must be "window.innerWidth" or a number.',
+				'The input x that you want to scroll by must be "window.innerWidth" or a number.'
 			)
 		}
 
 		if (y !== 'window.innerHeight' && typeof y !== 'number') {
 			throw new Error(
-				'The input y that you want to scroll by must be "window.innerHeight" or a number.',
+				'The input y that you want to scroll by must be "window.innerHeight" or a number.'
 			)
 		}
 
@@ -623,14 +622,14 @@ export class Browser<T> implements BrowserInterface {
 					behavior,
 				})
 			},
-			{ x, y, behavior },
+			{ x, y, behavior }
 		)
 	}
 
 	@addCallbacks()
 	public async scrollTo(
 		target: Locator | ElementHandle | Point | ScrollDirection,
-		scrollOptions?: ScrollIntoViewOptions,
+		scrollOptions?: ScrollIntoViewOptions
 	): Promise<void> {
 		const behavior = scrollOptions?.behavior ?? 'auto'
 
@@ -662,7 +661,7 @@ export class Browser<T> implements BrowserInterface {
 					const element = elementNode as HTMLElement
 					element.scrollIntoView(scrollOptions)
 				},
-				{ behavior, block, inline },
+				{ behavior, block, inline }
 			)
 			return
 		}
@@ -689,12 +688,12 @@ export class Browser<T> implements BrowserInterface {
 					break
 				default:
 					throw new Error(
-						'The input target is not a Locator or an ElementHandle or a Point or a Scroll Direction.',
+						'The input target is not a Locator or an ElementHandle or a Point or a Scroll Direction.'
 					)
 			}
 		} else {
 			throw new Error(
-				'The input target is not a Locator or an ElementHandle or a Point or a Scroll Direction.',
+				'The input target is not a Locator or an ElementHandle or a Point or a Scroll Direction.'
 			)
 		}
 
@@ -702,7 +701,7 @@ export class Browser<T> implements BrowserInterface {
 			({ top, left, behavior }) => {
 				window.scrollTo({ top, left, behavior })
 			},
-			{ top, left, behavior },
+			{ top, left, behavior }
 		)
 	}
 
@@ -729,16 +728,16 @@ export class Browser<T> implements BrowserInterface {
 	}
 
 	private async waitWithoutDecorator(
-		timeoutOrCondition: Condition | number | string,
+		timeoutOrCondition: Condition | number | string
 	): Promise<any> {
 		if (typeof timeoutOrCondition === 'string') {
-			await new Promise(yeah => setTimeout(yeah, ms(timeoutOrCondition)))
+			await new Promise((yeah) => setTimeout(yeah, ms(timeoutOrCondition)))
 			return true
 		} else if (typeof timeoutOrCondition === 'number') {
 			let convertedTimeout = timeoutOrCondition
 			if (convertedTimeout < 0) convertedTimeout = DEFAULT_WAIT_TIMEOUT_MILLISECONDS
 			else if (convertedTimeout < 1e3) convertedTimeout *= 1e3
-			await new Promise(yeah => setTimeout(yeah, convertedTimeout))
+			await new Promise((yeah) => setTimeout(yeah, convertedTimeout))
 			return true
 		}
 
@@ -760,7 +759,7 @@ export class Browser<T> implements BrowserInterface {
 					kind: 'wait-timeout',
 					action: 'wait',
 				},
-				err,
+				err
 			)
 		}
 	}

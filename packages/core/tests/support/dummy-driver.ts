@@ -48,7 +48,7 @@ export default class DummyDriver extends EventEmitter implements Browser {
 	}
 
 	async performanceTiming(): Promise<PerformanceTiming> {
-		let epoch = new Date().valueOf()
+		const epoch = new Date().valueOf()
 
 		return {
 			responseStart: epoch + 1e3,

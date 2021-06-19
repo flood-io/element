@@ -29,7 +29,7 @@ export class TracingObserver extends NetworkRecordingTestObserver {
 
 	async afterStep(test: Test, step: Step) {
 		const screenshots = await test.fetchScreenshots()
-		screenshots.forEach(file => this.trace.addScreenshot(file))
+		screenshots.forEach((file) => this.trace.addScreenshot(file))
 
 		await this.addNetworkTrace(test, step, this.ctx.networkRecorder)
 

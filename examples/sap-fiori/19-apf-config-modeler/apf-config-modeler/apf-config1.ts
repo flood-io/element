@@ -31,9 +31,9 @@ export const settings: TestSettings = {
  * Version: 1.0
  */
 export default () => {
-	step('APF Config Modeler Demo App: Home', async browser => {
+	step('APF Config Modeler Demo App: Home', async (browser) => {
 		await browser.visit(
-			'https://sapui5.hana.ondemand.com/test-resources/sap/apf/newDemokit/modeler/index.html',
+			'https://sapui5.hana.ondemand.com/test-resources/sap/apf/newDemokit/modeler/index.html'
 		)
 
 		const pageTextVerify = By.visibleText('APF Demo Kit Application')
@@ -42,11 +42,11 @@ export default () => {
 		await browser.takeScreenshot()
 	})
 
-	step('APF Config Modeler Demo App: Select Application', async browser => {
+	step('APF Config Modeler Demo App: Select Application', async (browser) => {
 		//Select first result called 'Revenue'
-		let obj_span_APFDemoKitApp = By.xpath("//span[contains(text(),'APF Demo Kit Application')]")
+		const obj_span_APFDemoKitApp = By.xpath("//span[contains(text(),'APF Demo Kit Application')]")
 		await browser.wait(Until.elementIsVisible(obj_span_APFDemoKitApp))
-		let element1 = await browser.findElement(obj_span_APFDemoKitApp)
+		const element1 = await browser.findElement(obj_span_APFDemoKitApp)
 		await element1.click()
 
 		const pageTextVerify = By.visibleText('Configuration Object of Application')
@@ -55,11 +55,11 @@ export default () => {
 		await browser.takeScreenshot()
 	})
 
-	step('APF Config Modeler Demo App: Select Tree Item', async browser => {
+	step('APF Config Modeler Demo App: Select Tree Item', async (browser) => {
 		//APF Standard Demo
-		let obj_span_TreeAPFStandardDemo = By.xpath("//span[contains(text(),'APF Standard Demo')]")
+		const obj_span_TreeAPFStandardDemo = By.xpath("//span[contains(text(),'APF Standard Demo')]")
 		await browser.wait(Until.elementIsVisible(obj_span_TreeAPFStandardDemo))
-		let element1 = await browser.findElement(obj_span_TreeAPFStandardDemo)
+		const element1 = await browser.findElement(obj_span_TreeAPFStandardDemo)
 		await element1.click()
 
 		const pageTextVerify = By.visibleText('Configuration Data')
@@ -68,19 +68,19 @@ export default () => {
 		await browser.takeScreenshot()
 	})
 
-	step('APF Config Modeler Demo App: Select Currency Filter', async browser => {
+	step('APF Config Modeler Demo App: Select Currency Filter', async (browser) => {
 		//Choose Filter
-		let obj_span_Filters = By.xpath("//span[contains(text(),'Filters')]")
+		const obj_span_Filters = By.xpath("//span[contains(text(),'Filters')]")
 		await browser.wait(Until.elementIsVisible(obj_span_Filters))
-		let element1 = await browser.findElement(obj_span_Filters)
+		const element1 = await browser.findElement(obj_span_Filters)
 		await element1.click()
 
 		await browser.wait('2s')
 
 		//Choose Currency Filter
-		let obj_span_CurrencyFilter = By.xpath("//span[contains(text(),'Currency')]")
+		const obj_span_CurrencyFilter = By.xpath("//span[contains(text(),'Currency')]")
 		await browser.wait(Until.elementIsVisible(obj_span_CurrencyFilter))
-		let element2 = await browser.findElement(obj_span_CurrencyFilter)
+		const element2 = await browser.findElement(obj_span_CurrencyFilter)
 		await element2.click()
 
 		const pageTextVerify = By.visibleText('Basic Data')
@@ -89,13 +89,13 @@ export default () => {
 		await browser.takeScreenshot()
 	})
 
-	step('APF Config Modeler Demo App: Change Filter Name', async browser => {
+	step('APF Config Modeler Demo App: Change Filter Name', async (browser) => {
 		const page = browser.page
 
 		//Choose Filter
-		let obj_span_Filters = By.xpath("//span[contains(text(),'Filters')]")
+		const obj_span_Filters = By.xpath("//span[contains(text(),'Filters')]")
 		await browser.wait(Until.elementIsVisible(obj_span_Filters))
-		let element1 = await browser.findElement(obj_span_Filters)
+		const element1 = await browser.findElement(obj_span_Filters)
 		await element1.click()
 
 		//enter new filter name

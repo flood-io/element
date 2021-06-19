@@ -9,9 +9,9 @@ import { StepActionArgs } from '../../utils/StepActionArgs'
  */
 export function addCallbacks() {
 	const errorInterpreters = []
-	return function(_target: Browser, propertyKey: string, descriptor: PropertyDescriptor) {
+	return function (_target: Browser, propertyKey: string, descriptor: PropertyDescriptor) {
 		const originalFn = descriptor.value
-		descriptor.value = async function(...args: any[]) {
+		descriptor.value = async function (...args: any[]) {
 			let ret
 
 			const browser = this as Browser
@@ -32,7 +32,7 @@ export function addCallbacks() {
 					e,
 					browser,
 					propertyKey,
-					args,
+					args
 				)
 				const sErr = StructuredError.liftWithSource(newError, 'browser', `browser.${propertyKey}`)
 				sErr.stack = calltimeStack

@@ -65,7 +65,7 @@ async function execMethod(method: string, args: Array<any>) {
 						showCompilerProgress: false,
 						stricterTypeChecking: false,
 						traceResolution: false,
-					}),
+					})
 				)
 			}
 
@@ -104,7 +104,7 @@ const messageListener = async (request: ChildMessage) => {
 
 		case ChildMessages.CALL: {
 			const call = request as ChildMessageCall
-			await execMethod(call[1], call[2]).catch(err => {
+			await execMethod(call[1], call[2]).catch((err) => {
 				if (parentPort) {
 					parentPort.postMessage([
 						ParentMessages.CLIENT_ERROR,

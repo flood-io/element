@@ -23,31 +23,31 @@ export const settings: TestSettings = {
 const URL = 'https://the-internet.herokuapp.com'
 
 export default () => {
-	step('Test: 01 - Homepage', async browser => {
+	step('Test: 01 - Homepage', async (browser) => {
 		await browser.visit(URL)
 		await browser.wait(Until.elementIsVisible(By.css('#content > h1')))
-		let pageTextVerify = By.visibleText('Welcome to the-internet')
+		const pageTextVerify = By.visibleText('Welcome to the-internet')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 	})
 
-	step('Test: 02 - Add/Remove Elements', async browser => {
+	step('Test: 02 - Add/Remove Elements', async (browser) => {
 		await browser.visit(URL + '/add_remove_elements/')
-		let pageTextVerify = By.visibleText('Add/Remove Elements')
+		const pageTextVerify = By.visibleText('Add/Remove Elements')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 	})
 
-	step('Test: 03 - Add a new Element', async browser => {
-		let AddButton = await browser.findElement(By.css('#content > div > button'))
+	step('Test: 03 - Add a new Element', async (browser) => {
+		const AddButton = await browser.findElement(By.css('#content > div > button'))
 		await AddButton.click()
-		let NewButton = By.css('#elements > button:nth-child(1)')
+		const NewButton = By.css('#elements > button:nth-child(1)')
 		await browser.wait(Until.elementIsVisible(NewButton))
 	})
 
-	step('Test: 04 - Remove Element', async browser => {
-		let RemoveButton = await browser.findElement(By.css('#elements > button:nth-child(1)'))
+	step('Test: 04 - Remove Element', async (browser) => {
+		const RemoveButton = await browser.findElement(By.css('#elements > button:nth-child(1)'))
 		await RemoveButton.click()
-		let NewButton = By.css('#elements > button:nth-child(1)')
-		let Removed = await browser.maybeFindElement(NewButton)
+		const NewButton = By.css('#elements > button:nth-child(1)')
+		const Removed = await browser.maybeFindElement(NewButton)
 		if (Removed != null) {
 			console.error('The Button was not removed')
 		} else {

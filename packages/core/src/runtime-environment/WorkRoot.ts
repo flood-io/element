@@ -27,7 +27,7 @@ export default class WorkRoot implements IWorkRoot {
 	}
 
 	ensureExistsSync(): void {
-		this.subRoots.forEach(r => mkdirpSync(join(this.root, r)))
+		this.subRoots.forEach((r) => mkdirpSync(join(this.root, r)))
 	}
 
 	// handles special cases

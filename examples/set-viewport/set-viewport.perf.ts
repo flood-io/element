@@ -10,7 +10,7 @@ export const settings: TestSettings = {
 }
 
 export default () => {
-	step('Start', async browser => {
+	step('Start', async (browser) => {
 		// await browser.setViewport({ width: 800, height: 600 })
 		// visit instructs the browser to launch, open a page, and navigate to https://amazon.com
 		await browser.visit('https://amazon.com')
@@ -18,7 +18,7 @@ export default () => {
 	})
 
 	// browser keyword can be shorthanded as "b" or anything that is descriptive to you.
-	step('Step 2 find first heading', async b => {
+	step('Step 2 find first heading', async (b) => {
 		// Note the use of await here, this is the async/await pattern https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Async_await
 		// and is required everytime you talk to the browser
 		const firstHeading = await b.findElement(By.css('h1,h2,h3,p'))

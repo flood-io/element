@@ -31,10 +31,10 @@ export const settings: TestSettings = {
  * Version: 1.0
  */
 export default () => {
-	step('Worklist Demo App: Home', async browser => {
+	step('Worklist Demo App: Home', async (browser) => {
 		//Navigate to the Quickstart Demo Application
 		await browser.visit(
-			'https://sapui5.hana.ondemand.com/test-resources/sap/m/demokit/worklist/webapp/test/mockServer.html',
+			'https://sapui5.hana.ondemand.com/test-resources/sap/m/demokit/worklist/webapp/test/mockServer.html'
 		)
 
 		//Verify that we are on the correct page by checking that '<Objects>' text is shown on the page
@@ -45,11 +45,11 @@ export default () => {
 		await browser.takeScreenshot()
 	})
 
-	step('Worklist Demo App: Search Worklist', async browser => {
+	step('Worklist Demo App: Search Worklist', async (browser) => {
 		const page = browser.page
 
 		//Search the worklist and type in 'Object 19'
-		let obj_txt_SearchAnalysisType = By.xpath("//input[contains(@placeholder, 'Search')]")
+		const obj_txt_SearchAnalysisType = By.xpath("//input[contains(@placeholder, 'Search')]")
 		await browser.wait(Until.elementIsVisible(obj_txt_SearchAnalysisType))
 		await browser.type(obj_txt_SearchAnalysisType, 'Object 19')
 
@@ -64,11 +64,11 @@ export default () => {
 		await browser.takeScreenshot()
 	})
 
-	step('Worklist Demo App: Select Worklist', async browser => {
+	step('Worklist Demo App: Select Worklist', async (browser) => {
 		//Select worklist item 'Object 19'
-		let obj_span_WorklistItem = By.xpath("//span[contains(text(),'Object 19')]")
+		const obj_span_WorklistItem = By.xpath("//span[contains(text(),'Object 19')]")
 		await browser.wait(Until.elementIsVisible(obj_span_WorklistItem))
-		let element1 = await browser.findElement(obj_span_WorklistItem)
+		const element1 = await browser.findElement(obj_span_WorklistItem)
 		await element1.click()
 
 		//Verify that we are on the correct page by checking that '560.00' text is shown on the page

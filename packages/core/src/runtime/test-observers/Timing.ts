@@ -33,7 +33,7 @@ export class Timing {
 	getThinkTimeForSegment(segmentName: TimingSegmentName): number {
 		const { thinkTime } = expect(
 			this.segments.get(segmentName),
-			`No timing started for ${segmentName}`,
+			`No timing started for ${segmentName}`
 		)
 		return thinkTime
 	}

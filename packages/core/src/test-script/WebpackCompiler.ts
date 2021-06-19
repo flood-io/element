@@ -21,7 +21,7 @@ export default class WebpackCompiler implements ITestScript {
 
 	constructor(
 		public sourceFile: string,
-		private _options: TestScriptOptions = TestScriptDefaultOptions,
+		private _options: TestScriptOptions = TestScriptDefaultOptions
 	) {}
 
 	public async compile(): Promise<this> {
@@ -33,7 +33,7 @@ export default class WebpackCompiler implements ITestScript {
 			// this.originalSource,
 			output.content,
 			this.sourceFile,
-			this.sourceMap,
+			this.sourceMap
 		)
 
 		return this
@@ -82,13 +82,13 @@ export default class WebpackCompiler implements ITestScript {
 
 	public isScriptError(error: Error): boolean {
 		const stack = error.stack || ''
-		return stack.split('\n').filter(s => s.includes(this.sourceFile)).length > 0
+		return stack.split('\n').filter((s) => s.includes(this.sourceFile)).length > 0
 	}
 
 	liftError?(error: Error): TestScriptError {
 		const stack = error.stack || ''
 
-		const filteredStack = stack.split('\n').filter(s => s.includes(this.sourceFile))
+		const filteredStack = stack.split('\n').filter((s) => s.includes(this.sourceFile))
 		let callSite: CallSite | undefined
 		let unmappedStack: string[] = []
 

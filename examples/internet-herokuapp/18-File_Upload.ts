@@ -23,27 +23,27 @@ export const settings: TestSettings = {
 const URL = 'https://the-internet.herokuapp.com'
 
 export default () => {
-	step('Test: 01 - Homepage', async browser => {
+	step('Test: 01 - Homepage', async (browser) => {
 		await browser.visit(URL)
 		await browser.wait(Until.elementIsVisible(By.css('#content > h1')))
-		let pageTextVerify = By.visibleText('Welcome to the-internet')
+		const pageTextVerify = By.visibleText('Welcome to the-internet')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 	})
 
-	step('Test: 02 - File Upload', async browser => {
+	step('Test: 02 - File Upload', async (browser) => {
 		await browser.visit(URL + '/upload')
 		await browser.wait(Until.elementIsVisible(By.css('#content > div > h3')))
-		let pageTextVerify = By.visibleText('File Upload')
+		const pageTextVerify = By.visibleText('File Upload')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 	})
 
-	step('Test: 03 - Choose File', async browser => {
-		let fileInput = await browser.findElement('input[type="file"]')
+	step('Test: 03 - Choose File', async (browser) => {
+		const fileInput = await browser.findElement('input[type="file"]')
 		await fileInput.uploadFile('test.ts')
 	})
 
-	step('Test: 03 - Choose File', async browser => {
-		let Submit = await browser.findElement(By.css('#file-submit'))
+	step('Test: 03 - Choose File', async (browser) => {
+		const Submit = await browser.findElement(By.css('#file-submit'))
 		await Submit.click()
 	})
 }

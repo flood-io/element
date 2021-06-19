@@ -6,7 +6,7 @@ hide_title: true
 
 # `TargetLocator`
 
-The target locator is accessed through [`browser.switchTo()`](Browser.md#switchto) and enables you to switch frames, tabs, or browser windows. As well as access the `activeElement` or an alert box.
+The target locator is accessed through [`browser.switchTo()`](Browser#switchto) and enables you to switch frames, tabs, or browser windows. As well as access the `activeElement` or an alert box.
 
 ## Methods
 

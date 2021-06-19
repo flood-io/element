@@ -21,31 +21,34 @@ export const settings: TestSettings = {
 const URL = 'https://flood.io'
 
 export default () => {
-	step('Test: Go to flood.io and use Until.titleContains and Until.urlContains', async browser => {
-		await browser.visit(URL)
+	step(
+		'Test: Go to flood.io and use Until.titleContains and Until.urlContains',
+		async (browser) => {
+			await browser.visit(URL)
 
-		await browser.wait(Until.titleContains('Flood'))
-		const floodTitle = await browser.title()
-		assert(
-			floodTitle === 'Scalable software starts here - Flood',
-			'The title of Flood page should be correct',
-		)
-		const whyFloodEl = await browser.findElement(By.visibleText('Why Flood?'))
-		await whyFloodEl.click()
+			await browser.wait(Until.titleContains('Flood'))
+			const floodTitle = await browser.title()
+			assert(
+				floodTitle === 'Scalable software starts here - Flood',
+				'The title of Flood page should be correct'
+			)
+			const whyFloodEl = await browser.findElement(By.visibleText('Why Flood?'))
+			await whyFloodEl.click()
 
-		await browser.wait(Until.urlContains('what-is'))
-		await browser.wait(Until.elementIsVisible(By.css('h1.headline-2')))
-		const headingEl = await browser.findElement(By.tagName('h1'))
-		const headingText = await headingEl.text()
-		assert(
-			headingText === 'Flood is an easy to use load testing platform',
-			'The heading should be correct',
-		)
-	})
+			await browser.wait(Until.urlContains('what-is'))
+			await browser.wait(Until.elementIsVisible(By.css('h1.headline-2')))
+			const headingEl = await browser.findElement(By.tagName('h1'))
+			const headingText = await headingEl.text()
+			assert(
+				headingText === 'Flood is an easy to use load testing platform',
+				'The heading should be correct'
+			)
+		}
+	)
 
 	step(
 		'Test: Go to Pricing and check Title, URL by Until.titleDoesNotContain, Until.urlDoesNotContain',
-		async browser => {
+		async (browser) => {
 			await browser.visit(`${URL}/pricing`)
 
 			await browser.wait(Until.titleDoesNotContain('What is Flood'))
@@ -65,8 +68,8 @@ export default () => {
 			assert.strictEqual(
 				headingText,
 				'Ready to get started?',
-				'The heading of Flood sign up page should be correct',
+				'The heading of Flood sign up page should be correct'
 			)
-		},
+		}
 	)
 }

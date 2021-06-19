@@ -19,7 +19,7 @@ export class Looper {
 
 		this.loopCount = settings.loopCount
 		this.cancelled = !running
-		this.done = new Promise(resolve => (this.doneResolve = resolve))
+		this.done = new Promise((resolve) => (this.doneResolve = resolve))
 	}
 
 	stop() {

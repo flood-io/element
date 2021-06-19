@@ -40,12 +40,12 @@ export default class TestBuffer {
 			return str
 		}
 
-		let variableMatches = str.match(variableReplacementGroup)
-		let expressionMatches = str.match(expressionReplacementGroup)
+		const variableMatches = str.match(variableReplacementGroup)
+		const expressionMatches = str.match(expressionReplacementGroup)
 		if (variableMatches) {
 			variableMatches
-				.map(x => x.match(/[\w\.]+/))
-				.forEach(match => {
+				.map((x) => x.match(/[\w\.]+/))
+				.forEach((match) => {
 					if (this.has(match[0])) {
 						Array(this.get(match[0])).forEach((r: string) => {
 							newStr = newStr.replace(match.input, r)
@@ -55,10 +55,10 @@ export default class TestBuffer {
 		}
 
 		if (expressionMatches) {
-			let matches = expressionMatches.map(x => x.match(/([\w\.]+)(\((\d+)\))/))
-			matches.forEach(match => {
+			const matches = expressionMatches.map((x) => x.match(/([\w\.]+)(\((\d+)\))/))
+			matches.forEach((match) => {
 				if (match[1] === 'RANDOM_HEX') {
-					let length = Number(match[3])
+					const length = Number(match[3])
 					newStr = newStr.replace(match.input, this.randomString(length))
 				}
 			})
@@ -87,7 +87,7 @@ export default class TestBuffer {
 
 	public maxValue(data: string[]): string {
 		console.assert(Array.isArray(data), 'Value passed to max() must be an array')
-		let value = max(data.map(Number))
+		const value = max(data.map(Number))
 		return value ? value.toString() : null
 	}
 

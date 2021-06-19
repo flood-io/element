@@ -4,31 +4,14 @@ import chalk from 'chalk'
 import { error } from './error'
 import { info } from './info'
 import { Package } from 'normalize-package-data'
-import { prerelease, major, minor, patch } from 'semver'
+import { prerelease } from 'semver'
 const commandExistsSync = require('command-exists').sync
 
 type Update = { latest: string }
 
-function brewUpdateMessage(version: string, distTag: string, update: Update): string | undefined {
-	const brew = commandExistsSync('brew')
-	if (__dirname.includes('Cellar') && brew) {
-		let brewSpec: string
-		if (distTag === 'latest') {
-			brewSpec = 'element'
-		} else {
-			const { latest } = update
-			const semVerMajor = major(latest)
-			const semVerMinor = minor(latest)
-			const semVerPatch = patch(latest)
-			brewSpec = `element@${semVerMajor}.${semVerMinor}.${semVerPatch}-${distTag}`
-		}
-		return chalk`Get it by running {greenBright brew upgrade ${brewSpec}}`
-	}
-}
-
 function yarnUpdateMessage(
-	version: string,
-	distTag: string /* , update: Update */,
+	_version: string,
+	distTag: string /* , update: Update */
 ): string | undefined {
 	if (commandExistsSync('yarn')) {
 		return chalk`Get it by running {greenBright yarn global upgrade element-cli@${distTag}}`
@@ -36,7 +19,7 @@ function yarnUpdateMessage(
 }
 
 // fallback
-function npmUpdateMessage(version: string, distTag: string /* , update: Update */): string {
+function npmUpdateMessage(_version: string, distTag: string /* , update: Update */): string {
 	return chalk`Get it by running {greenBright npm -g update element-cli@${distTag}}`
 }
 
@@ -45,16 +28,13 @@ function printUpdateMessage(version: string, distTag: string, update: Update) {
 
 	console.log(
 		info(
-			chalk`{bgRed UPDATE AVAILABLE} The latest ${releaseChannel} version of element-cli is ${update?.latest}`,
-		),
+			chalk`{bgRed UPDATE AVAILABLE} The latest ${releaseChannel} version of element-cli is ${update?.latest}`
+		)
 	)
 
 	const updateMsg =
-		[
-			brewUpdateMessage(version, distTag, update),
-			yarnUpdateMessage(version, distTag),
-			npmUpdateMessage(version, distTag),
-		].find(x => !!x) || 'unreachable'
+		[yarnUpdateMessage(version, distTag), npmUpdateMessage(version, distTag)].find((x) => !!x) ||
+		'unreachable'
 
 	console.log(info(updateMsg))
 }

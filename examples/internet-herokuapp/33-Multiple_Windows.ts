@@ -21,25 +21,25 @@ export const settings: TestSettings = {
 const URL = 'https://the-internet.herokuapp.com'
 
 export default () => {
-	step('Test: 01 - Homepage', async browser => {
+	step('Test: 01 - Homepage', async (browser) => {
 		await browser.visit(URL)
 		await browser.wait(Until.elementIsVisible(By.css('#content > h1')))
-		let pageTextVerify = By.visibleText('Welcome to the-internet')
+		const pageTextVerify = By.visibleText('Welcome to the-internet')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 	})
 
-	step('Test: 02 - Multiple Windows', async browser => {
+	step('Test: 02 - Multiple Windows', async (browser) => {
 		await browser.visit(URL + '/windows')
 		await browser.wait(Until.elementIsVisible(By.css('#content > div > h3')))
-		let pageTextVerify = By.visibleText('Opening a new window')
+		const pageTextVerify = By.visibleText('Opening a new window')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 	})
 
-	step('Test: 03 - Open a new Tab', async browser => {
-		let linkHref = await browser.findElement(By.css('#content > div > a'))
+	step('Test: 03 - Open a new Tab', async (browser) => {
+		const linkHref = await browser.findElement(By.css('#content > div > a'))
 		await linkHref.click()
 		await browser.waitForNewPage()
-		let pageTextVerify = By.visibleText('New Window')
+		const pageTextVerify = By.visibleText('New Window')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 		const pages = await browser.pages
 		assert.strictEqual(pages.length, 2, 'There should be 2 windows')

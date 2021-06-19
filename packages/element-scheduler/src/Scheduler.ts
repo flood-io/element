@@ -81,12 +81,12 @@ export class Scheduler {
 		})
 
 		const getRowSpan = (dataTable: TableData[]): number => {
-			const userCount = dataTable.filter(row => `${row.worker.iteration}` === '1').length
+			const userCount = dataTable.filter((row) => `${row.worker.iteration}` === '1').length
 			return dataTable.length / userCount
 		}
 
 		dataTable.sort((a, b) =>
-			a.worker.name > b.worker.name ? 1 : a.worker.name < b.worker.name ? -1 : 0,
+			a.worker.name > b.worker.name ? 1 : a.worker.name < b.worker.name ? -1 : 0
 		)
 		const rowSpans: { rowSpan: number; id: string }[] = []
 		for (const row of dataTable) {
@@ -101,7 +101,7 @@ export class Scheduler {
 				skipped = '0',
 				unexecuted = '0',
 			} = row
-			const hasGroup = rowSpans.some(row => row.id === worker.id)
+			const hasGroup = rowSpans.some((row) => row.id === worker.id)
 			const data = [
 				chalk.white(`${worker.iteration}`),
 				chalk.blue(responseTime),
@@ -151,7 +151,7 @@ export class Scheduler {
 		const onTicker = async (
 			timestamp: number,
 			target: number,
-			stageIterator: number,
+			stageIterator: number
 		): Promise<void> => {
 			if (stageIterator > 0) {
 				console.log('\n========================================\n')
@@ -162,7 +162,7 @@ export class Scheduler {
 			}
 
 			console.log(
-				`Run ${target} user${target > 1 || target === 0 ? 's' : ''} | Duration ${timestamp}ms`,
+				`Run ${target} user${target > 1 || target === 0 ? 's' : ''} | Duration ${timestamp}ms`
 			)
 
 			let doneWorkers = 0
@@ -177,7 +177,7 @@ export class Scheduler {
 				err: Error | null,
 				worker: WorkerInterface,
 				iterator: number,
-				next: any,
+				next: any
 			): void => {
 				worker.shutdown()
 				if (err) {
@@ -205,7 +205,7 @@ export class Scheduler {
 			const onWorkerReport = (worker: WorkerInterface, data: string[]): void => {
 				const { workerName, workerId } = worker
 				const [msg, type] = data
-				const userAlias = sortedUsers.find(user => user.id === workerId)
+				const userAlias = sortedUsers.find((user) => user.id === workerId)
 				let order = `User ${sortedUsers.length + 1}`
 				if (!userAlias) {
 					sortedUsers.push({
@@ -228,7 +228,7 @@ export class Scheduler {
 				if (type === 'measurement') {
 					const { name, value, iteration } = JSON.parse(msg)
 					const row = dataTable.filter(
-						row => row.worker.id === workerId && row.worker.iteration === iteration,
+						(row) => row.worker.id === workerId && row.worker.iteration === iteration
 					)
 					row[0][name] = value
 					return
@@ -246,13 +246,13 @@ export class Scheduler {
 				}
 			}
 
-			return new Promise(next => {
+			return new Promise((next) => {
 				pool.sendEachTarget(
 					target,
 					[ChildMessages.CALL, ActionConst.RUN, [testScript, stageIterator]],
 					onWorkerStart,
 					(err, result, iterator) => onWorkerEnd(err, result as WorkerInterface, iterator, next),
-					onWorkerReport,
+					onWorkerReport
 				)
 			})
 		}
@@ -269,7 +269,7 @@ export class Scheduler {
 						: `Duration reached, user ${workerName} has been stopped`
 					text = `${msg[0]}${SEPARATOR}${msg[1]}${SEPARATOR}${msg3}`
 					this.spinnies.fail(workerId, { text })
-					const done = dataTable.filter(row => row.worker.id === workerId)
+					const done = dataTable.filter((row) => row.worker.id === workerId)
 					for (let idx = 1; idx <= iterationCount - done.length; idx++) {
 						const lastWorker = done[done.length - 1].worker
 						dataTable.push({
@@ -302,7 +302,7 @@ export class Scheduler {
 		})
 
 		const onNewStage = async (): Promise<void> => {
-			return new Promise(resolve => {
+			return new Promise((resolve) => {
 				for (let i = 0; i < workingWorkers.length; i++) {
 					pool.addWorker(workingWorkers[i].workerName)
 				}

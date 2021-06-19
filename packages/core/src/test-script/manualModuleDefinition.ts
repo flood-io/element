@@ -9,17 +9,17 @@ import { readFileSync } from 'fs'
 
 // TODO try to use typescript's resolution support
 export function manualModuleDefinition(name: string): ts.ResolvedModule {
-	let options: CompilerOptions = {
+	const options: CompilerOptions = {
 		esModuleInterop: true,
 		allowSyntheticDefaultImports: true,
 		moduleResolution: ModuleResolutionKind.NodeJs,
 		lib: ['esnext', 'dom'],
 	}
 
-	let host = createCompilerHost(options)
-	let resolver = nodeModuleNameResolver(name, __filename, options, host)
+	const host = createCompilerHost(options)
+	const resolver = nodeModuleNameResolver(name, __filename, options, host)
 
-	let result = resolver.resolvedModule!
+	const result = resolver.resolvedModule!
 	return result
 
 	// // const modulePath = (require.resolve.paths(name) || []).map(p => resolve(p, name)).find(existsSync)

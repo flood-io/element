@@ -2,7 +2,9 @@ import NetworkRecorder from '../../network/Recorder'
 import { RawResponse } from '../../network/Protocol'
 import { IReporter } from '@flood/element-report'
 import { ConsoleMethod } from '../Settings'
-const debug = require('debug')('element:runtime:observer')
+import debugImport from 'debug'
+
+const debug = debugImport('element:runtime:observer')
 
 interface Event {
 	requestId: string
@@ -21,7 +23,7 @@ export default class Observer {
 	constructor(
 		private reporter: IReporter,
 		public networkRecorder: NetworkRecorder,
-		private consoleFilters: ConsoleMethod[],
+		private consoleFilters: ConsoleMethod[]
 	) {}
 
 	public async attachToNetworkRecorder(): Promise<void> {
@@ -34,36 +36,36 @@ export default class Observer {
 	}
 
 	private async attachPageEvents(): Promise<void> {
-		await this.networkRecorder.attachEvent('frameattached', event => this.onFrameAttached(event))
-		await this.networkRecorder.attachEvent('domcontentloaded', event =>
-			this.onDOMContentLoaded(event),
+		await this.networkRecorder.attachEvent('frameattached', (event) => this.onFrameAttached(event))
+		await this.networkRecorder.attachEvent('domcontentloaded', (event) =>
+			this.onDOMContentLoaded(event)
 		)
 
-		await this.networkRecorder.attachEvent('framenavigated', event => this.onNavigate(event))
-		await this.networkRecorder.attachEvent('Page.frameStartedLoading', event =>
-			this.onFrameStartedLoading(event),
+		await this.networkRecorder.attachEvent('framenavigated', (event) => this.onNavigate(event))
+		await this.networkRecorder.attachEvent('Page.frameStartedLoading', (event) =>
+			this.onFrameStartedLoading(event)
 		)
-		await this.networkRecorder.attachEvent('Page.frameStoppedLoading', event =>
-			this.onFrameStoppedLoading(event),
+		await this.networkRecorder.attachEvent('Page.frameStoppedLoading', (event) =>
+			this.onFrameStoppedLoading(event)
 		)
-		await this.networkRecorder.attachEvent('Page.frameClearedScheduledNavigation', event =>
-			this.onFrameClearedScheduledNavigation(event),
-		)
-
-		await this.networkRecorder.attachEvent('Network.requestWillBeSent', event =>
-			this.onRawNetworkRequestWillBeSent(event),
-		)
-		await this.networkRecorder.attachEvent('Network.responseReceived', event =>
-			this.onRawNetworkResponse(event),
-		)
-		await this.networkRecorder.attachEvent('Network.loadingFinished', event =>
-			this.onRawNetworkLoadingFinished(event),
-		)
-		await this.networkRecorder.attachEvent('Network.loadingFailed', event =>
-			this.onRawNetworkLoadingFailed(event),
+		await this.networkRecorder.attachEvent('Page.frameClearedScheduledNavigation', (event) =>
+			this.onFrameClearedScheduledNavigation(event)
 		)
 
-		await this.networkRecorder.attachEvent('console', msg => {
+		await this.networkRecorder.attachEvent('Network.requestWillBeSent', (event) =>
+			this.onRawNetworkRequestWillBeSent(event)
+		)
+		await this.networkRecorder.attachEvent('Network.responseReceived', (event) =>
+			this.onRawNetworkResponse(event)
+		)
+		await this.networkRecorder.attachEvent('Network.loadingFinished', (event) =>
+			this.onRawNetworkLoadingFinished(event)
+		)
+		await this.networkRecorder.attachEvent('Network.loadingFailed', (event) =>
+			this.onRawNetworkLoadingFailed(event)
+		)
+
+		await this.networkRecorder.attachEvent('console', (msg) => {
 			const msgType = msg.type() === 'warning' ? 'warn' : msg.type()
 			if (this.consoleFilters.length === 0 || !this.consoleFilters.includes(msgType)) {
 				this.reporter.testScriptConsole(msg.type(), msg.text())
@@ -83,7 +85,11 @@ export default class Observer {
 			this.networkRecorder.addPendingTask(this.networkRecorder.recordResponse(payload))
 	}
 
-	private onRawNetworkLoadingFinished({ requestId, encodedDataLength, timestamp }: RequestEvent): void {
+	private onRawNetworkLoadingFinished({
+		requestId,
+		encodedDataLength,
+		timestamp,
+	}: RequestEvent): void {
 		debug('onRawNetworkLoadingFinished', requestId)
 		if (!this.requests.has(requestId)) {
 			return
@@ -99,8 +105,8 @@ export default class Observer {
 					timestamp,
 				})
 				.then(
-					() => yeah(),
-					err => nah(err),
+					() => yeah(true),
+					(err) => nah(err)
 				)
 		})
 		this.networkRecorder.addPendingTask(promise)

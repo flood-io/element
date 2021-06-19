@@ -10,19 +10,19 @@ export default class Interceptor {
 	async attach(page: Page) {
 		if (this.blockedDomains.length) {
 			this.enableInterceptor = true
-			page.on('request', request => this.requestBlocker(page, request))
+			page.on('request', (request) => this.requestBlocker(page, request))
 
 			debug(
 				`Attched network request interceptor with blocked domains: "${this.blockedDomains.join(
-					',',
-				)}"`,
+					','
+				)}"`
 			)
 		}
 	}
 
 	async detach(page: Page) {
 		this.enableInterceptor = false
-		page.off('request', request => this.requestBlocker(page, request))
+		page.off('request', (request) => this.requestBlocker(page, request))
 	}
 
 	private requestBlocker = (page: Page, interceptedRequest: Request) => {
@@ -33,11 +33,11 @@ export default class Interceptor {
 			const matchee = domain.includes(':') ? url.host : url.hostname
 			if (isMatch(matchee, domain) && this.enableInterceptor) {
 				const regex = new RegExp(domain.replace(/\*/g, ''), 'g')
-				page.route(regex, route => {
+				page.route(regex, (route) => {
 					return route.abort()
 				})
 			} else {
-				page.route(domain, route => {
+				page.route(domain, (route) => {
 					return route.continue()
 				})
 			}

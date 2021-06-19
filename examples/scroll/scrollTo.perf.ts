@@ -17,8 +17,8 @@ export const settings: TestSettings = {
 const URL = 'https://testscroll.hongla.dev/'
 
 export default () => {
-	step('[01] -  Test Scroll with Target is Point and ScrollDirection', async browser => {
-		await browser.visit(URL, {waitUntil: 'load'})
+	step('[01] -  Test Scroll with Target is Point and ScrollDirection', async (browser) => {
+		await browser.visit(URL, { waitUntil: 'load' })
 		await browser.wait(2)
 
 		console.info('[INFO]: ScrollTo with param is ScrollDirection bottom')

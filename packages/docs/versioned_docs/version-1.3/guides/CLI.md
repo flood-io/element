@@ -71,11 +71,11 @@ element run <file> [options]
 
 **Options:**
 
-  - `--chrome` Specify which version of Google Chrome to use. Default: use
-    the puppeteer bundled version. Change it to `'stable'` to use the Chrome version installed on your system, or provide a path to use Chrome at the given path.
-  - `--no-headless` Run in non-headless mode so that you can see what the browser is doing as it runs the test.
-  - `--devtools` Run in non-headless mode and also open devtools
-  - `--no-sandbox` Disable the chrome sandbox - advanced option, mostly necessary on linux.
+- `--chrome` Specify which version of Google Chrome to use. Default: use
+  the puppeteer bundled version. Change it to `'stable'` to use the Chrome version installed on your system, or provide a path to use Chrome at the given path.
+- `--no-headless` Run in non-headless mode so that you can see what the browser is doing as it runs the test.
+- `--devtools` Run in non-headless mode and also open devtools
+- `--no-sandbox` Disable the chrome sandbox - advanced option, mostly necessary on linux.
 
 - Running the test script:
 

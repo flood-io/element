@@ -23,28 +23,28 @@ export const settings: TestSettings = {
 const URL = 'https://the-internet.herokuapp.com'
 
 export default () => {
-	step('Test: 01 - Homepage', async browser => {
+	step('Test: 01 - Homepage', async (browser) => {
 		await browser.visit(URL)
 		await browser.wait(Until.elementIsVisible(By.css('#content > h1')))
-		let pageTextVerify = By.visibleText('Welcome to the-internet')
+		const pageTextVerify = By.visibleText('Welcome to the-internet')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 	})
 
-	step('Test: 02 - Checkboxes', async browser => {
+	step('Test: 02 - Checkboxes', async (browser) => {
 		await browser.visit(URL + '/checkboxes')
 		await browser.wait(Until.elementIsVisible(By.css('#content > div')))
 	})
 
-	step('Test: 03 - Uncheck box', async browser => {
-		let Checkbox = await browser.findElement(
-			By.css('#checkboxes > input[type=checkbox]:nth-child(1)'),
+	step('Test: 03 - Uncheck box', async (browser) => {
+		const Checkbox = await browser.findElement(
+			By.css('#checkboxes > input[type=checkbox]:nth-child(1)')
 		)
 		await Checkbox.click()
 	})
 
-	step('Test: 04 - Check box', async browser => {
-		let Checkbox = await browser.findElement(
-			By.css('#checkboxes > input[type=checkbox]:nth-child(1)'),
+	step('Test: 04 - Check box', async (browser) => {
+		const Checkbox = await browser.findElement(
+			By.css('#checkboxes > input[type=checkbox]:nth-child(1)')
 		)
 		await Checkbox.click()
 	})

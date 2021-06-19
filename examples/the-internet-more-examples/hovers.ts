@@ -14,19 +14,19 @@ export const settings: TestSettings = {
 const URL = 'https://the-internet.herokuapp.com/hovers'
 
 export default () => {
-	step('Test: 01 - Hovers page', async browser => {
+	step('Test: 01 - Hovers page', async (browser) => {
 		await browser.visit(URL)
 		await Until.titleIsNot('Wrong title')
 		await Until.urlIsNot('Wrong url')
-		let locator = By.attr('a', 'target', '_blank')
+		const locator = By.attr('a', 'target', '_blank')
 		await browser.wait(Until.elementLocated(locator))
 		await Until.elementTextContains(locator, 'Elemental Selenium')
 	})
 
-	step('Test: 02 - Image', async browser => {
-		let image = await browser.findElement(By.css('#content > div > div:nth-child(3) > img'))
-		let src = await image.getProperty('src')
-		let imageLocation = await image.centerPoint()
+	step('Test: 02 - Image', async (browser) => {
+		const image = await browser.findElement(By.css('#content > div > div:nth-child(3) > img'))
+		const src = await image.getProperty('src')
+		const imageLocation = await image.centerPoint()
 
 		console.log(src)
 		await browser.mouse.click(image, { delay: 150 })

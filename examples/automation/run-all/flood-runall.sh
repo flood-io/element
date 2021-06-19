@@ -17,7 +17,7 @@ set -e  # exit script if any command returnes a non-zero exit code.
 FLOOD_PROJECT="default"  # "the-internet-dev01"
 GITHUB_REPO_URL="https://github.com/flood-io/element/trunk/examples/sap-fiori"
 
-#TYPESCRIPT_URL="https://raw.githubusercontent.com/flood-io/element/master/examples/internet-herokuapp/14-Dynamic_Loading.ts"
+#TYPESCRIPT_URL="https://raw.githubusercontent.com/flood-io/element/stable/examples/internet-herokuapp/14-Dynamic_Loading.ts"
 FLOOD_REGION="us-west-1"
 FLOOD_INST_TYPE="m5.xlarge"
 FLOOD_SLEEP_SECS="10"

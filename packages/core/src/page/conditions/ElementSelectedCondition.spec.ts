@@ -11,7 +11,7 @@ describe('Condition', () => {
 	beforeAll(async () => {
 		playwright = await launchPlaywright()
 		page = playwright.page
-		page.on('console', msg => console.log(`>> console.${msg.type()}: ${msg.text()}`))
+		page.on('console', (msg) => console.log(`>> console.${msg.type()}: ${msg.text()}`))
 	})
 
 	afterAll(async () => {
@@ -35,7 +35,7 @@ describe('Condition', () => {
 
 		test('waits Until.elementIsNotSelected', async () => {
 			const condition = Until.elementIsNotSelected(
-				By.css('select#new_user_country option[value="2"]'),
+				By.css('select#new_user_country option[value="2"]')
 			)
 			page.selectOption('select#new_user_country', '3')
 			const found = await condition.waitFor(page.mainFrame(), undefined)

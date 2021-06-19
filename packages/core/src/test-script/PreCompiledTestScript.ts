@@ -6,7 +6,8 @@ import { VMScript } from 'vm2'
 import parseComments from 'comment-parser'
 
 const INLINE_SOURCE_MAP_REGEX = /^data:application\/json[^,]+base64,/
-const SOURCE_MAP_REGEX = /(?:\/\/[@#][ \t]+sourceMappingURL=([^\s'"]+?)[ \t]*$)|(?:\/\*[@#][ \t]+sourceMappingURL=([^*]+?)[ \t]*(?:\*\/)[ \t]*$)/
+const SOURCE_MAP_REGEX =
+	/(?:\/\/[@#][ \t]+sourceMappingURL=([^\s'"]+?)[ \t]*$)|(?:\/\*[@#][ \t]+sourceMappingURL=([^*]+?)[ \t]*(?:\*\/)[ \t]*$)/
 
 function isInlineMap(url: string): boolean {
 	return INLINE_SOURCE_MAP_REGEX.test(url)
@@ -60,7 +61,7 @@ export default class PreCompiledTestScript implements ITestScript {
 
 	constructor(private originalSource: string, private sourceFile: string) {
 		SourceUnmapped.init(originalSource, this.sourceFile, this.sourceMap).then(
-			sourceUnmapped => (this.sourceUnmapped = sourceUnmapped),
+			(sourceUnmapped) => (this.sourceUnmapped = sourceUnmapped)
 		)
 	}
 
@@ -113,13 +114,13 @@ export default class PreCompiledTestScript implements ITestScript {
 
 	public isScriptError(error: Error): boolean {
 		const stack = error.stack || ''
-		return stack.split('\n').filter(s => s.includes(this.sourceFile)).length > 0
+		return stack.split('\n').filter((s) => s.includes(this.sourceFile)).length > 0
 	}
 
 	liftError?(error: Error): TestScriptError {
 		const stack = error.stack || ''
 
-		const filteredStack = stack.split('\n').filter(s => s.includes(this.sourceFile))
+		const filteredStack = stack.split('\n').filter((s) => s.includes(this.sourceFile))
 		let callSite: CallSite | undefined
 		let unmappedStack: string[] = []
 

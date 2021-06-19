@@ -46,13 +46,13 @@ export interface IReporter {
 		measurement: MeasurementKind,
 		value: string | number,
 		label?: string,
-		errorMessage?: string,
+		errorMessage?: string
 	): void
 
 	addCompoundMeasurement(
 		measurement: MeasurementKind,
 		value: CompoundMeasurement,
-		label: string,
+		label: string
 	): void
 
 	/**
@@ -77,7 +77,7 @@ export interface IReporter {
 		subtitle?: string,
 		timing?: number,
 		errorMessage?: string,
-		arg?: string,
+		arg?: string
 	): void
 
 	testAssertionError(err: TestScriptError): void

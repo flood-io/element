@@ -18,7 +18,7 @@ export const settings: TestSettings = {
 const URL = 'https://the-internet.herokuapp.com/'
 
 export default () => {
-	beforeEach(async browser => {
+	beforeEach(async (browser) => {
 		await browser.visit(`${URL}/redirector`)
 
 		const pageTextVerified = By.css('#content h3')
@@ -27,11 +27,11 @@ export default () => {
 		assert.strictEqual(
 			await (await browser.findElement(pageTextVerified)).text(),
 			'Redirection',
-			'The title should be correct',
+			'The title should be correct'
 		)
 	})
 
-	step('Find redirect link and click into it', async browser => {
+	step('Find redirect link and click into it', async (browser) => {
 		const redirectLink = await browser.findElement(By.linkText('here'))
 
 		// ElementHandle.takeScreenshot(withOptions)
@@ -59,7 +59,7 @@ export default () => {
 			const elements = document.getElementsByTagName('li')
 			const result: string[] = []
 
-			Array.from(elements).forEach(element => {
+			Array.from(elements).forEach((element) => {
 				result.push(element.textContent)
 			})
 
@@ -69,11 +69,11 @@ export default () => {
 		assert.strictEqual(
 			statusCodeList.length,
 			4,
-			'The standard status code list should have 4 codes',
+			'The standard status code list should have 4 codes'
 		)
 
 		const expectedStatusCodeList = ['200', '301', '404', '500']
-		statusCodeList.forEach(code => {
+		statusCodeList.forEach((code) => {
 			assert(expectedStatusCodeList.includes(code), 'Each standard status code should be correct')
 		})
 	})

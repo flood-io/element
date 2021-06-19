@@ -42,7 +42,7 @@ export class ReportCache {
 	}
 
 	findMessageInCache(subMessage: string): OutputCache | undefined {
-		return this._cache.find(output => output.message.includes(subMessage))
+		return this._cache.find((output) => output.message.includes(subMessage))
 	}
 
 	getLatestMessageInCache(): OutputCache {

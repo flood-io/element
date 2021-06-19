@@ -9,9 +9,9 @@ const isLocatable = (arg: Locatable | any): arg is Locatable => {
  * Applies a wait to the following finder by applying the same locatable
  */
 export function autoWaitUntil<T>() {
-	return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+	return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
 		const originalFn = descriptor.value
-		descriptor.value = async function(...args: any[]) {
+		descriptor.value = async function (...args: any[]) {
 			const locator = args.find(isLocatable)
 			const { waitUntil } = this.settings
 

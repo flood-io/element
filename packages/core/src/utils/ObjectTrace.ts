@@ -47,7 +47,7 @@ export class ObjectTrace {
 		public errors: ErrorLike[] = [],
 		public assertions: Assertion[] = [],
 		public screenshots: string[] = [],
-		public networkTraces: string[] = [],
+		public networkTraces: string[] = []
 	) {}
 
 	public addError(error: ErrorLike) {
@@ -59,11 +59,11 @@ export class ObjectTrace {
 	}
 
 	public async addNetworkTrace(trace: NetworkTraceData): Promise<void> {
-		const fileId = await KSUID.random().then(id => id.string)
+		const fileId = await KSUID.random().then((id) => id.string)
 		const filePath = this.workRoot.join('network', `${fileId}.json`)
 		this.networkTraces.push(filePath)
 
-		return writeFileAsync(filePath, JSON.stringify(trace)).catch(err => {
+		return writeFileAsync(filePath, JSON.stringify(trace)).catch((err) => {
 			console.error(`Object Trace writing ERROR: ${err.message}`)
 		})
 	}
@@ -91,12 +91,12 @@ export class ObjectTrace {
 
 		const objectTypes: string[] = []
 		const objects: string[] = []
-		screenshots.forEach(screenshot => {
+		screenshots.forEach((screenshot) => {
 			objects.push(screenshot)
 			objectTypes.push('screenshot')
 		})
 
-		networkTraces.forEach(trace => {
+		networkTraces.forEach((trace) => {
 			objects.push(trace)
 			objectTypes.push('trace')
 		})

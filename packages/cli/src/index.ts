@@ -18,7 +18,7 @@ export const handleUnexpected = (err: Error) => {
 	debug('handling unexpected error')
 	console.error(error(`An unexpected error occurred!\n  ${err.stack} ${err.stack}`))
 	console.error(
-		'this is a bug, please report it here https://github.com/flood-io/element/issues/new?template=bug_report.md',
+		'this is a bug, please report it here https://github.com/flood-io/element/issues/new?template=bug_report.md'
 	)
 	process.exit(1)
 }
@@ -72,7 +72,7 @@ export async function main(rootPath: string) {
 		})
 		.example(
 			'element run ./examples/flood-challenge.ts',
-			'Run the Flood Challenge example script in your local browser',
+			'Run the Flood Challenge example script in your local browser'
 		)
 		.epilogue(`For more documentation on Element, see https://element.flood.io`).argv
 

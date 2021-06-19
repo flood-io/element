@@ -69,7 +69,7 @@ export abstract class Loader<T> {
 				throw Error('Found no test scripts matching testPathMatch pattern')
 			}
 			this.requestedFilename = this.filePaths
-				.map(file => basename(file, extname(file)).replace(/\*/gi, ''))
+				.map((file) => basename(file, extname(file)).replace(/\*/gi, ''))
 				.join(',')
 		} else {
 			this.requestedFilename = basename(this.filePath)
@@ -215,7 +215,7 @@ export class CSVLoader<T> extends Loader<T> {
 
 		if (this.lines.length === 0) {
 			throw new Error(
-				`CSV file '${this.requestedFilename}' loaded but contains no rows of data.\nNote that the first row of a CSV file is used as the header to name columns.\nFor details see https://github.com/flood-io/element/blob/master/packages/element/docs/examples/examples_test_data.md#csv-column-names`,
+				`CSV file '${this.requestedFilename}' loaded but contains no rows of data.\nNote that the first row of a CSV file is used as the header to name columns.\nFor details see https://github.com/flood-io/element/blob/main/packages/element/docs/examples/examples_test_data.md#csv-column-names`
 			)
 		}
 

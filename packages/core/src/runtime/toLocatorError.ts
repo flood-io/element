@@ -6,7 +6,7 @@ import { StructuredError } from '../utils/StructuredError'
 
 export function toLocatorError(
 	locatable: NullableLocatable,
-	callContext: string,
+	callContext: string
 ): StructuredError<LocatorErrorData> {
 	let locatorString: string
 	if (locatable == null) {
@@ -25,7 +25,7 @@ export function toLocatorError(
 		},
 		undefined,
 		'browser',
-		callContext,
+		callContext
 	)
 }
 export function locatableToLocator(el: NullableLocatable, callCtx: string): Locator | never {

@@ -23,21 +23,21 @@ export const settings: TestSettings = {
 const URL = 'https://the-internet.herokuapp.com'
 
 export default () => {
-	step('Test: 01 - Homepage', async browser => {
+	step('Test: 01 - Homepage', async (browser) => {
 		await browser.visit(URL)
 		await browser.wait(Until.elementIsVisible(By.css('#content > h1')))
-		let pageTextVerify = By.visibleText('Welcome to the-internet')
+		const pageTextVerify = By.visibleText('Welcome to the-internet')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 	})
 
-	step('Test: 02 - Secure File Download', async browser => {
+	step('Test: 02 - Secure File Download', async (browser) => {
 		await browser.visit('http://admin:admin@the-internet.herokuapp.com/download_secure')
-		let pageTextVerify = By.visibleText('Secure File Downloader')
+		const pageTextVerify = By.visibleText('Secure File Downloader')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 	})
 
-	step('Test: 03 - Secure File Downloader', async browser => {
-		let File = await browser.findElement(By.css('#content > div > a'))
+	step('Test: 03 - Secure File Downloader', async (browser) => {
+		const File = await browser.findElement(By.css('#content > div > a'))
 		await File.click()
 	})
 }

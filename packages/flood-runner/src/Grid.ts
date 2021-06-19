@@ -13,7 +13,7 @@ export async function run(file: string): Promise<void> {
 		const testObserverContext = new Context()
 		return new TimingObserver(
 			testObserverContext,
-			new TracingObserver(testObserverContext, innerObserver),
+			new TracingObserver(testObserverContext, innerObserver)
 		)
 	}
 

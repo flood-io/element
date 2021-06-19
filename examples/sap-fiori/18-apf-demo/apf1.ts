@@ -31,9 +31,9 @@ export const settings: TestSettings = {
  * Version: 1.0
  */
 export default () => {
-	step('APF demo app: Home', async browser => {
+	step('APF demo app: Home', async (browser) => {
 		await browser.visit(
-			'https://sapui5.hana.ondemand.com/test-resources/sap/apf/newDemokit/runtime/index.html',
+			'https://sapui5.hana.ondemand.com/test-resources/sap/apf/newDemokit/runtime/index.html'
 		)
 
 		const pageTextVerify = By.visibleText('APF Standard Demo')
@@ -42,11 +42,11 @@ export default () => {
 		await browser.takeScreenshot()
 	})
 
-	step('APF demo app: Add Analysis Step', async browser => {
+	step('APF demo app: Add Analysis Step', async (browser) => {
 		//obj_btn_AddAnalysisStep
-		let obj_btn_AddAnalysisStep = By.css('#__jsview5--idAddAnalysisStepButton-BDI-content')
+		const obj_btn_AddAnalysisStep = By.css('#__jsview5--idAddAnalysisStepButton-BDI-content')
 		await browser.wait(Until.elementIsVisible(obj_btn_AddAnalysisStep))
-		let element1 = await browser.findElement(obj_btn_AddAnalysisStep)
+		const element1 = await browser.findElement(obj_btn_AddAnalysisStep)
 		await element1.click()
 
 		const pageTextVerify = By.visibleText('Category')
@@ -55,34 +55,34 @@ export default () => {
 		await browser.takeScreenshot()
 	})
 
-	step('APF demo app: Search and Select Analysis Type', async browser => {
+	step('APF demo app: Search and Select Analysis Type', async (browser) => {
 		//__field5-I
-		let obj_txt_SearchAnalysisType = By.xpath("//input[contains(@placeholder, 'Search')]")
+		const obj_txt_SearchAnalysisType = By.xpath("//input[contains(@placeholder, 'Search')]")
 		await browser.wait(Until.elementIsVisible(obj_txt_SearchAnalysisType))
 		await browser.type(obj_txt_SearchAnalysisType, 'Revenue')
 
 		//Select first result called 'Revenue'
-		let obj_div_RevenueItem = By.xpath("//div[contains(text(),'Revenue')]")
+		const obj_div_RevenueItem = By.xpath("//div[contains(text(),'Revenue')]")
 		await browser.wait(Until.elementIsVisible(obj_div_RevenueItem))
-		let element1 = await browser.findElement(obj_div_RevenueItem)
+		const element1 = await browser.findElement(obj_div_RevenueItem)
 		await element1.click()
 
 		//Select another result called
-		let obj_div_RevenueOverTime = By.xpath("//div[contains(text(),'Revenue over Time')]")
+		const obj_div_RevenueOverTime = By.xpath("//div[contains(text(),'Revenue over Time')]")
 		await browser.wait(Until.elementIsVisible(obj_div_RevenueOverTime))
-		let element2 = await browser.findElement(obj_div_RevenueOverTime)
+		const element2 = await browser.findElement(obj_div_RevenueOverTime)
 		await element2.click()
 
 		//Select Line Chart with Time Axis item
-		let obj_div_LineChartItem = By.xpath("//div[contains(text(),'Line Chart with Time Axis')]")
+		const obj_div_LineChartItem = By.xpath("//div[contains(text(),'Line Chart with Time Axis')]")
 		await browser.wait(Until.elementIsVisible(obj_div_LineChartItem))
-		let element3 = await browser.findElement(obj_div_LineChartItem)
+		const element3 = await browser.findElement(obj_div_LineChartItem)
 		await element3.click()
 
 		await browser.takeScreenshot()
 	})
 
-	step('APF demo app: Verify Graph Added', async browser => {
+	step('APF demo app: Verify Graph Added', async (browser) => {
 		const pageTextVerify = By.visibleText('Revenue over Time')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 

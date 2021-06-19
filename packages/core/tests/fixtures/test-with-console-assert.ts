@@ -12,10 +12,10 @@ export const settings: TestSettings = {
  *
  * This is an example test
  */
-export default function() {
-	step('console.assert', async driver => {
+export default function () {
+	step('console.assert', async (driver) => {
 		await driver.visit('<URL>')
-		let link = await driver.findElement(By.linkText('show bar'))
+		const link = await driver.findElement(By.linkText('show bar'))
 		await link.click()
 		await driver.wait(Until.elementIsVisible('#foo'))
 		console.assert((await link.text()) === 'foobarlink', 'Expected link text to be foobarlink')

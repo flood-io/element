@@ -31,10 +31,10 @@ export const settings: TestSettings = {
  * Version: 1.0
  */
 export default () => {
-	step('Sales Orders Demo App: Home', async browser => {
+	step('Sales Orders Demo App: Home', async (browser) => {
 		//Navigate to the Basic Template Demo Application
 		await browser.visit(
-			'https://sapui5.hana.ondemand.com/test-resources/sap/m/demokit/basicTemplate/webapp/index.html',
+			'https://sapui5.hana.ondemand.com/test-resources/sap/m/demokit/basicTemplate/webapp/index.html'
 		)
 
 		//Verify that we are on the correct page by checking that 'Basic Template' text is shown on the page

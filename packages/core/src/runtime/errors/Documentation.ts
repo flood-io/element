@@ -19,7 +19,7 @@ function liftWithDoc(
 	error: Error,
 	message: string,
 	doc: string,
-	callContext?: string,
+	callContext?: string
 ): TestScriptError | undefined {
 	// TODO get callContext from og error if it exists
 	return script.liftError?.(DocumentedError.documented(error, message, doc, callContext))
@@ -39,7 +39,7 @@ function assertionError(err: StructuredError<AssertionErrorData>): DocumentedErr
 	operator: {blue ${assertionErr.operator}}
 	expected: {green ${assertionErr.expected}}
 	actual  : {red ${assertionErr.actual}}
-			`,
+			`
 	)
 }
 
@@ -63,7 +63,7 @@ function puppeteerError(err: StructuredError<PuppeteerErrorData>): DocumentedErr
 	// instead try:
 	await browser.wait(Until.titleContains('example corp'))
 	console.log('page title:', await browser.title())
-				`,
+				`
 		)
 	}
 	if (kind === 'evaluation-timeout') {
@@ -84,14 +84,14 @@ function puppeteerError(err: StructuredError<PuppeteerErrorData>): DocumentedErr
 
 	This error is low level and should be made more informative. If you see it, please let us know:
 	${documentationNeeded}
-				`,
+				`
 		)
 	}
 
 	return DocumentedError.documented(
 		err,
 		`An unknown puppeteer error occurred: ${err.message} (kind: ${kind})`,
-		documentationNeeded,
+		documentationNeeded
 	)
 }
 
@@ -104,7 +104,7 @@ function netError(err: StructuredError<NetworkErrorData>): DocumentedError {
 			`Unable to resolve DNS for ${url}`,
 			`Element tried to load The URL ${url} but it didn't resolve in DNS. This may be due to
 	- a transient networking issue.
-	- misconfiguration of DNS, either locally or on your site.`,
+	- misconfiguration of DNS, either locally or on your site.`
 		)
 	}
 
@@ -117,7 +117,7 @@ function netError(err: StructuredError<NetworkErrorData>): DocumentedError {
 	- a transient networking issue.
 	- a transient error or logical problem in the web app being visited.
 	- attempting to visit a non-existent page.
-	- attempting to visit a page protected by authentication.`,
+	- attempting to visit a page protected by authentication.`
 		)
 	}
 
@@ -125,14 +125,14 @@ function netError(err: StructuredError<NetworkErrorData>): DocumentedError {
 		return DocumentedError.documented(
 			err,
 			`Unable to visit ${url}`,
-			`Element tried to visit The URL ${url} but it responded with status code ${err.data.code}. Element expected a response code 200-299 or 300-399.`,
+			`Element tried to visit The URL ${url} but it responded with status code ${err.data.code}. Element expected a response code 200-299 or 300-399.`
 		)
 	}
 
 	return DocumentedError.documented(
 		err,
 		`An unknown net error occurred: ${err.message} (kind: ${kind} / subKind: ${subKind})`,
-		documentationNeeded,
+		documentationNeeded
 	)
 }
 
@@ -150,7 +150,7 @@ function actionError(err: StructuredError<ActionErrorData>): DocumentedError {
 	- very slow page scripts
 	- intermittent on-page script problems, such as network disruptions.
 	- DOM Elements missing
-				`,
+				`
 		)
 	}
 
@@ -168,14 +168,14 @@ function actionError(err: StructuredError<ActionErrorData>): DocumentedError {
 	let locator = By.css('.button')
 	await browser.wait(Until.elementIsVisible(locator))
 	await browser.click(locator, \{ button: MouseButtons.LEFT \})
-				`,
+				`
 		)
 	}
 
 	return DocumentedError.documented(
 		err,
 		`An unknown action error occurred: ${err.message} (kind: ${kind})`,
-		documentationNeeded,
+		documentationNeeded
 	)
 }
 
@@ -188,20 +188,20 @@ function locatorError(err: StructuredError<LocatorErrorData>): DocumentedError {
 			chalk`The test script tried to locate an element using {blue ${locator}} but it couldn't be found on the page.
 
 	Consider running your test script with --devtools to explore the page and determine the correct selector.
-	`,
+	`
 		)
 	}
 
 	return DocumentedError.documented(
 		err,
 		`An unknown locator error occurred: ${err.message} (kind: ${kind})`,
-		documentationNeeded,
+		documentationNeeded
 	)
 }
 
 export function structuredErrorToDocumentedError(
 	sErr: StructuredError<AnyErrorData>,
-	script: TestScriptErrorMapper,
+	script: TestScriptErrorMapper
 ): TestScriptError | undefined {
 	debug('ERROR to map %O', sErr)
 

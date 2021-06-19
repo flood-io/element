@@ -22,7 +22,7 @@ const URL =
 	'https://mdn.mozillademos.org/en-US/docs/Web/API/Element/dblclick_event$samples/Examples'
 
 export default () => {
-	step('Test: Double Click Event', async browser => {
+	step('Test: Double Click Event', async (browser) => {
 		await browser.visit(URL)
 		const pageTextVerify = By.visibleText('My Card')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
@@ -31,7 +31,7 @@ export default () => {
 		const asideLargeClass = await asideEl.getAttribute('class')
 		assert(
 			asideLargeClass.toLowerCase() === 'large',
-			'The aside element should have large class after be dblclicked',
+			'The aside element should have large class after be dblclicked'
 		)
 		await browser.wait(3)
 		await browser.takeScreenshot()

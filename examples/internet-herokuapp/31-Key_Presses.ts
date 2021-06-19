@@ -23,20 +23,20 @@ export const settings: TestSettings = {
 const URL = 'https://the-internet.herokuapp.com'
 
 export default () => {
-	step('Test: 01 - Homepage', async browser => {
+	step('Test: 01 - Homepage', async (browser) => {
 		await browser.visit(URL)
 		await browser.wait(Until.elementIsVisible(By.css('#content > h1')))
-		let pageTextVerify = By.visibleText('Welcome to the-internet')
+		const pageTextVerify = By.visibleText('Welcome to the-internet')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 	})
 
-	step('Test: 02 - Key Presses', async browser => {
+	step('Test: 02 - Key Presses', async (browser) => {
 		await browser.visit(URL + '/key_presses')
-		let pageTextVerify = By.visibleText('Key Presses')
+		const pageTextVerify = By.visibleText('Key Presses')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 	})
 
-	step('Test: 03 - Keys', async browser => {
+	step('Test: 03 - Keys', async (browser) => {
 		await browser.press(Key.SPACE)
 		await browser.press(Key.PAGE_DOWN)
 		await browser.sendKeys(Key.PAGE_UP)

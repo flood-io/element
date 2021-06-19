@@ -23,20 +23,20 @@ export const settings: TestSettings = {
 const URL = 'https://the-internet.herokuapp.com'
 
 export default () => {
-	step('Test: 01 - Homepage', async browser => {
+	step('Test: 01 - Homepage', async (browser) => {
 		await browser.visit(URL)
 		await browser.wait(Until.elementIsVisible(By.css('#content > h1')))
-		let pageTextVerify = By.visibleText('Welcome to the-internet')
+		const pageTextVerify = By.visibleText('Welcome to the-internet')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 	})
 
-	step('Test: 02 - Dropdown', async browser => {
+	step('Test: 02 - Dropdown', async (browser) => {
 		await browser.visit(URL + '/dropdown')
 		await browser.wait(Until.elementIsVisible(By.css('#content > div')))
 	})
 
-	step('Test: 03 - Dropdown selection', async browser => {
-		let Dropdown = By.css('#dropdown')
+	step('Test: 03 - Dropdown selection', async (browser) => {
+		const Dropdown = By.css('#dropdown')
 		await browser.wait(Until.elementIsVisible(Dropdown))
 		await browser.selectByIndex(Dropdown, '1')
 	})

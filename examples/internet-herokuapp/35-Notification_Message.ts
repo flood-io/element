@@ -23,39 +23,39 @@ export const settings: TestSettings = {
 const URL = 'https://the-internet.herokuapp.com'
 
 export default () => {
-	step('Test: 01 - Homepage', async browser => {
+	step('Test: 01 - Homepage', async (browser) => {
 		await browser.visit(URL)
 		await browser.wait(Until.elementIsVisible(By.css('#content > h1')))
-		let pageTextVerify = By.visibleText('Welcome to the-internet')
+		const pageTextVerify = By.visibleText('Welcome to the-internet')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 	})
 
-	step('Test: 02 - Notification Messages', async browser => {
+	step('Test: 02 - Notification Messages', async (browser) => {
 		await browser.visit(URL + '/notification_message_rendered')
-		let pageTextVerify = By.visibleText('Notification')
+		const pageTextVerify = By.visibleText('Notification')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 	})
 
-	step('Test: 03 - Load new Message', async browser => {
-		let NewMesg = await browser.findElement(By.css('#content > div > p > a'))
+	step('Test: 03 - Load new Message', async (browser) => {
+		const NewMesg = await browser.findElement(By.css('#content > div > p > a'))
 		await NewMesg.click()
 	})
 
-	step('Test: 04 - New Message', async browser => {
-		let Flash = await browser.findElement(By.css('#flash'))
+	step('Test: 04 - New Message', async (browser) => {
+		const Flash = await browser.findElement(By.css('#flash'))
 		const Text = await Flash.text()
 		console.log('The Flash message says: ' + Text)
 
-		let NewMesg = await browser.findElement(By.css('#content > div > p > a'))
+		const NewMesg = await browser.findElement(By.css('#content > div > p > a'))
 		await NewMesg.click()
 	})
 
-	step('Test: 05 - New Message', async browser => {
-		let Flash = await browser.findElement(By.css('#flash'))
+	step('Test: 05 - New Message', async (browser) => {
+		const Flash = await browser.findElement(By.css('#flash'))
 		const Text = await Flash.text()
 		console.log('The Flash message says: ' + Text)
 
-		let NewMesg = await browser.findElement(By.css('#content > div > p > a'))
+		const NewMesg = await browser.findElement(By.css('#content > div > p > a'))
 		await NewMesg.click()
 	})
 }

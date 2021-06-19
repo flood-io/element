@@ -16,13 +16,13 @@ export const settings: TestSettings = {
 const URL = 'https://the-internet.herokuapp.com'
 
 export default () => {
-	step('Test: Go to the Data Tables page', async browser => {
+	step('Test: Go to the Data Tables page', async (browser) => {
 		await browser.visit(`${URL}/tables`)
 		// Until.titleIs example
 		await browser.wait(Until.titleIs('The Internet'))
 	})
 
-	step('Test: findElements example', async browser => {
+	step('Test: findElements example', async (browser) => {
 		// ElementHandle.findElements(locator: Locator) example
 		const tables = await browser.findElements(By.css('.tablesorter'))
 		const table1Id = await tables[0].getProperty('id')
@@ -31,7 +31,7 @@ export default () => {
 		assert(table2Id === 'table2', 'The id of table 2 must be correct')
 	})
 
-	step('Test: Do some sort action with tablesorter', async browser => {
+	step('Test: Do some sort action with tablesorter', async (browser) => {
 		const table = By.id('table2')
 		const tableEl = await browser.findElement(table)
 		const headers = await tableEl.findElements(By.css('.header'))
@@ -57,7 +57,7 @@ export default () => {
 					.getElementById('table2')
 					.getElementsByTagName('tbody')[0]
 					.getElementsByClassName('last-name')[0]
-			}),
+			})
 		)
 
 		// Until.elementTextDoesNotMatch example

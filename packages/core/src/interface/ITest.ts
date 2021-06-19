@@ -26,26 +26,26 @@ export interface ITest {
 	runWithCancellation(
 		iteration: number,
 		cancelToken: CancellationToken,
-		looper: Looper,
+		looper: Looper
 	): Promise<void>
 	runStep(
 		testObserver: TestObserver,
 		browser: Browser<Step>,
 		step: Step,
-		testDataRecord: any,
+		testDataRecord: any
 	): Promise<void>
 	doStepDelay(): Promise<void>
 	willRunCommand(
 		testObserver: TestObserver,
 		browser: Browser<Step>,
 		command: string,
-		args: string,
+		args: string
 	): Promise<void>
 	didRunCommand(
 		testObserver: TestObserver,
 		browser: Browser<Step>,
 		command: string,
-		args: string,
+		args: string
 	): Promise<void>
 	takeScreenshot(options?: ScreenshotOptions): Promise<void>
 	fetchScreenshots(): Promise<string[]>

@@ -103,7 +103,9 @@ export class Compiler {
 		const configFile = 'tsconfig.json'
 		const root = findRoot(__dirname)
 		const paths = [resolve(dirname(this.sourceFile)), resolve(root, 'compiler-home')]
-		const localConfig = paths.map(path => join(path, configFile)).find(path => sys.fileExists(path))
+		const localConfig = paths
+			.map((path) => join(path, configFile))
+			.find((path) => sys.fileExists(path))
 		return localConfig || configFile
 	}
 
@@ -118,11 +120,8 @@ export class Compiler {
 				if (err || stats.hasErrors() || stats.hasWarnings()) {
 					const { errors } = stats.toJson()
 					if (errors && errors.length) {
-						errors.forEach(error => {
-							const first2Lines = error
-								.split('\n')
-								.splice(0, 2)
-								.join('\n')
+						errors.forEach((error) => {
+							const first2Lines = error.split('\n').splice(0, 2).join('\n')
 							console.error(chalk.red(`Error in: ${first2Lines}\n`))
 						})
 					}
@@ -132,8 +131,8 @@ export class Compiler {
 								stats.toString({
 									errorDetails: true,
 									warnings: true,
-								}),
-						),
+								})
+						)
 					)
 				} else {
 					const content = this.externalDebs

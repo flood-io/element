@@ -8,8 +8,8 @@ import path from 'path'
 const join = path.join
 
 export class TestScriptHost {
-	sandboxedBasenameTypescript: string = 'element-test.ts'
-	sandboxedBasenameJavascript: string = 'element-test.js'
+	sandboxedBasenameTypescript = 'element-test.ts'
+	sandboxedBasenameJavascript = 'element-test.js'
 	root: string
 
 	private internalModuleResolutions: Map<string, ResolvedModule>
@@ -63,10 +63,10 @@ export class TestScriptHost {
 	}
 
 	get indexModuleFile() {
-		let indexDeclarationsFile = this.typesPath
-		let indexTypescriptFile = this.mainPath
+		const indexDeclarationsFile = this.typesPath
+		const indexTypescriptFile = this.mainPath
 
-		let index = indexTypescriptFile || indexDeclarationsFile
+		const index = indexTypescriptFile || indexDeclarationsFile
 		if (index == null) throw new Error('unable to find index.ts or index.d.ts')
 
 		return index

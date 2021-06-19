@@ -98,7 +98,7 @@ export class WorkerPool {
 	}
 
 	sendEach(request: ChildMessage, onStart: OnStart, onEnd: OnEnd): void {
-		this.workers.forEach(worker => {
+		this.workers.forEach((worker) => {
 			worker.send(request, onStart, onEnd)
 		})
 	}
@@ -108,7 +108,7 @@ export class WorkerPool {
 		request: ChildMessage,
 		onStart: OnStart,
 		onEnd: OnEnd,
-		onReport?: OnReport,
+		onReport?: OnReport
 	): void {
 		for (let i = 0; i < target; i++) {
 			this.workers[i].send(request, onStart, onEnd, onReport)
@@ -120,26 +120,26 @@ export class WorkerPool {
 	}
 
 	async waitForExit(): Promise<void> {
-		await Promise.all(this.workers.map(worker => worker.waitForExit()))
+		await Promise.all(this.workers.map((worker) => worker.waitForExit()))
 	}
 
 	async waitForLoaded(): Promise<void> {
-		await Promise.all(this.workers.map(worker => worker.waitForLoaded()))
+		await Promise.all(this.workers.map((worker) => worker.waitForLoaded()))
 	}
 
 	async end(): Promise<PoolExitResult> {
-		const workerExitPromises = this.workers.map(async worker => this.endWorker(worker))
+		const workerExitPromises = this.workers.map(async (worker) => this.endWorker(worker))
 
 		const workerExits = await Promise.all(workerExitPromises)
 		return workerExits.reduce<PoolExitResult>(
 			(result, forceExited) => ({
 				forceExited: result.forceExited || forceExited,
 			}),
-			{ forceExited: false },
+			{ forceExited: false }
 		)
 	}
 
 	private getWorkerById(id: string): WorkerInterface {
-		return this.workers.filter(worker => worker.workerId === id)[0]
+		return this.workers.filter((worker) => worker.workerId === id)[0]
 	}
 }

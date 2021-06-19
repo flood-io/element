@@ -17,7 +17,7 @@ export default class RegionsSelect extends Generator {
 	get _selectedRegionIds(): string[] {
 		const { availableRegions, answers } = this
 		return answers.regions.map(
-			name => Object.keys(availableRegions)[Object.values(availableRegions).indexOf(name)],
+			(name) => Object.keys(availableRegions)[Object.values(availableRegions).indexOf(name)]
 		)
 	}
 

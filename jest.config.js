@@ -7,7 +7,6 @@ const { defaults: tsjPreset } = require('ts-jest/presets')
 const { pathsToModuleNameMapper } = require('ts-jest/utils')
 const { compilerOptions } = require('./tsconfig')
 
-
 module.exports = {
 	maxConcurrency: 10,
 	maxWorkers: cpuCount,
@@ -90,9 +89,9 @@ module.exports = {
 		'@flood/element-cli': '<rootDir>/packages/cli/src/index.ts',
 		'@flood/element-core': '<rootDir>/packages/core/src/index.ts',
 		'@flood/element-scheduler': '<rootDir>/packages/element-scheduler/src/index.ts',
-		'@flood/element-report': '<rootDir>/packages/report/index.ts'
+		'@flood/element-report': '<rootDir>/packages/report/index.ts',
 	},
-	
+
 	// An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
 	// modulePathIgnorePatterns: [],
 
@@ -185,7 +184,7 @@ module.exports = {
 
 	// A map from regular expressions to paths to transformers
 	transform: {
-		...tsjPreset.transform
+		...tsjPreset.transform,
 	},
 
 	// An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation

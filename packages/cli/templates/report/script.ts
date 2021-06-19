@@ -100,7 +100,7 @@ function renderIterationResult(iteration: IterationResult, index: number): strin
 		return getPercentString(result / totalSteps)
 	}
 
-	iteration.stepResults.forEach(function(step) {
+	iteration.stepResults.forEach(function (step) {
 		result[step.status]++
 	})
 
@@ -143,7 +143,7 @@ function renderIterationResult(iteration: IterationResult, index: number): strin
 
 function renderScriptWithError(scripts: ScriptWithError[]): string {
 	return scripts
-		.map(script => {
+		.map((script) => {
 			return `
         <tr class="unexecuted-script">
           <td class="script-with-error">${script.name}</td>
@@ -157,7 +157,7 @@ function renderScriptWithError(scripts: ScriptWithError[]): string {
 
 function renderExecutedScripts(scripts: TestScriptResult[]): string {
 	return scripts
-		.map(script => {
+		.map((script) => {
 			const iterations = script.iterationResults
 
 			return `
@@ -188,7 +188,7 @@ function renderSummaryHeader(): string {
 
 function renderSummaryData(
 	scripts: TestScriptResult[],
-	scriptWithError: ScriptWithError[],
+	scriptWithError: ScriptWithError[]
 ): string {
 	return `
     ${renderExecutedScripts(scripts)}
@@ -198,7 +198,7 @@ function renderSummaryData(
 
 export function toggleSummaryView(
 	executedScrips: TestScriptResult[],
-	unexecutedScript: ScriptWithError[],
+	unexecutedScript: ScriptWithError[]
 ): void {
 	const summaryTable = document.getElementById('table-summary')
 
@@ -214,7 +214,7 @@ export function toggleSummaryView(
 
 export function renderSummary(
 	executedScrips: TestScriptResult[],
-	unexecutedScript: ScriptWithError[],
+	unexecutedScript: ScriptWithError[]
 ): void {
 	document.writeln(`
     <table id="table-summary" class="table">
@@ -271,7 +271,7 @@ function renderDetailData(iterations: IterationResult[]): string {
 	return `
     ${iterations
 			.map((iteration, index) => {
-				const steps = iteration.stepResults.filter(step => filter[step.status])
+				const steps = iteration.stepResults.filter((step) => filter[step.status])
 
 				if (steps.length === 0) {
 					return '<tr><td colspan=3>No steps match the filter<td></tr>'
@@ -291,7 +291,7 @@ function renderDetailData(iterations: IterationResult[]): string {
         </tr>
         ${steps
 					.slice(1)
-					.map(step => {
+					.map((step) => {
 						return `<tr>${renderStepDetail(step)}</tr>`
 					})
 					.join('')}
@@ -318,7 +318,7 @@ function renderDetail(script: TestScriptResult): void {
 function onStepClick(scripts: TestScriptResult[], cellId: string): void {
 	const [scriptIndex, iterationIndex, stepIndex] = cellId
 		.split('-')
-		.map(index => Number.parseInt(index))
+		.map((index) => Number.parseInt(index))
 	const step = scripts[scriptIndex].iterationResults[iterationIndex].stepResults[stepIndex]
 
 	step.showError = !step.showError
@@ -336,16 +336,16 @@ function onStepClick(scripts: TestScriptResult[], cellId: string): void {
 	}
 
 	const failedSteps = scripts
-		.map(script =>
+		.map((script) =>
 			script.iterationResults
-				.map(iteration => iteration.stepResults.filter(step => step.status === 'failed'))
-				.flat(),
+				.map((iteration) => iteration.stepResults.filter((step) => step.status === 'failed'))
+				.flat()
 		)
 		.flat()
 
 	const errorToggle = document.getElementById('error-toggle')
 
-	if (failedSteps.every(step => step.showError)) {
+	if (failedSteps.every((step) => step.showError)) {
 		errorToggle?.setAttribute('checked', 'true')
 	} else {
 		errorToggle?.removeAttribute('checked')
@@ -356,7 +356,7 @@ export function renderScriptsDetail(scripts: TestScriptResult[]): void {
 	scripts.forEach((script, scriptIndex) => {
 		script.iterationResults.forEach((iteration, iterationIndex) => {
 			iteration.stepResults.forEach(
-				(step, stepIndex) => (step.tableCellId = `${scriptIndex}-${iterationIndex}-${stepIndex}`),
+				(step, stepIndex) => (step.tableCellId = `${scriptIndex}-${iterationIndex}-${stepIndex}`)
 			)
 		})
 		document.writeln(`<div id=${script.name} class="script-detail"></div>`)
@@ -364,25 +364,25 @@ export function renderScriptsDetail(scripts: TestScriptResult[]): void {
 	})
 
 	const stepNameCells = document.getElementsByClassName('step-name')
-	Array.from(stepNameCells).forEach(cell =>
-		cell.addEventListener('click', () => onStepClick(scripts, cell.id)),
+	Array.from(stepNameCells).forEach((cell) =>
+		cell.addEventListener('click', () => onStepClick(scripts, cell.id))
 	)
 }
 
 export function filterDetail(scripts: TestScriptResult[], filterKey: keyof typeof filter): void {
 	filter[filterKey] = !filter[filterKey]
-	scripts.forEach(script => renderDetail(script))
+	scripts.forEach((script) => renderDetail(script))
 
 	const stepNameCells = document.getElementsByClassName('step-name')
-	Array.from(stepNameCells).forEach(cell =>
-		cell.addEventListener('click', () => onStepClick(scripts, cell.id)),
+	Array.from(stepNameCells).forEach((cell) =>
+		cell.addEventListener('click', () => onStepClick(scripts, cell.id))
 	)
 }
 
 function toggleScriptError(scripts: TestScriptResult[], showError: boolean): void {
-	scripts.forEach(script => {
-		script.iterationResults.forEach(iteration => {
-			iteration.stepResults.forEach(step => {
+	scripts.forEach((script) => {
+		script.iterationResults.forEach((iteration) => {
+			iteration.stepResults.forEach((step) => {
 				if (step.status === 'failed') step.showError = showError
 			})
 		})
@@ -391,13 +391,13 @@ function toggleScriptError(scripts: TestScriptResult[], showError: boolean): voi
 
 export function toggleAllErrors(
 	event: { target: { checked: boolean } },
-	scripts: TestScriptResult[],
+	scripts: TestScriptResult[]
 ): void {
 	toggleScriptError(scripts, event.target.checked)
-	scripts.forEach(script => renderDetail(script))
+	scripts.forEach((script) => renderDetail(script))
 
 	const stepNameCells = document.getElementsByClassName('step-name')
-	Array.from(stepNameCells).forEach(cell =>
-		cell.addEventListener('click', () => onStepClick(scripts, cell.id)),
+	Array.from(stepNameCells).forEach((cell) =>
+		cell.addEventListener('click', () => onStepClick(scripts, cell.id))
 	)
 }

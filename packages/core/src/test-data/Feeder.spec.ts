@@ -26,7 +26,7 @@ describe('Feeder', () => {
 		feeder
 			.circular(false)
 			.filter((line, index, instanceID) => line.user === instanceID)
-			.filter(line => !!line.username)
+			.filter((line) => !!line.username)
 			.filter(Boolean)
 			.append(lines, '', FileType.CSV)
 

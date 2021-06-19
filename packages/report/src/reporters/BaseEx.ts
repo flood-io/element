@@ -10,7 +10,7 @@ export class MultipleUsersReporter extends BaseReporter {
 	addMeasurement(measurement: string, value: string | number): void {
 		this.sendReport(
 			JSON.stringify({ name: measurement, value, iteration: this.worker.iteration }),
-			'measurement',
+			'measurement'
 		)
 	}
 
@@ -29,7 +29,7 @@ export class MultipleUsersReporter extends BaseReporter {
 		label: string,
 		subtitle?: string,
 		timing?: number,
-		errorMessage?: string,
+		errorMessage?: string
 	): void {
 		const stepName = 'Step ' + (subtitle ? `'${label}' (${subtitle})` : `'${label}'`)
 		switch (stage) {
@@ -48,7 +48,7 @@ export class MultipleUsersReporter extends BaseReporter {
 			case TestEvent.StepFailed:
 				this.sendReport(
 					`${stepName} failed (${timing?.toLocaleString()}ms) -> ${chalk.red(errorMessage || '')}`,
-					'action',
+					'action'
 				)
 				break
 		}

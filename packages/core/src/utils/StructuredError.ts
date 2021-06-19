@@ -19,7 +19,7 @@ export class StructuredError<T> extends Error {
 		data: T,
 		originalError?: Error,
 		source?: string,
-		callContext?: string,
+		callContext?: string
 	) {
 		super(message)
 		Object.setPrototypeOf(this, StructuredError.prototype)
@@ -42,7 +42,7 @@ export class StructuredError<T> extends Error {
 	static liftWithSource<TT>(
 		err: Error,
 		source: string,
-		callContext: string,
+		callContext: string
 	): StructuredError<TT | EmptyErrorData> {
 		if ((err as StructuredError<TT>)._structured === 'yes') {
 			;(err as StructuredError<TT>).callContext = callContext
@@ -54,7 +54,7 @@ export class StructuredError<T> extends Error {
 				{ _kind: 'empty' } as EmptyErrorData,
 				err,
 				source,
-				callContext,
+				callContext
 			)
 		}
 	}
@@ -75,7 +75,7 @@ export class StructuredError<T> extends Error {
 		err: Error,
 		data: TT,
 		source?: string,
-		kind?: string,
+		kind?: string
 	): StructuredError<TT> {
 		const serr = new StructuredError<TT>(err.message, data, err)
 		if (source) serr.source = source

@@ -1,4 +1,4 @@
-;(function() {
+;(function () {
 	var NEW_LINE = '\n'
 	var TAB = '\t'
 
@@ -47,22 +47,22 @@
 			screenshotOnFailure: true,
 		}
 
-		this.addLibrary = function(libraryName) {
+		this.addLibrary = function (libraryName) {
 			map.set(libraryName, true)
 		}
 
 		// generate import statement from the map
-		this.generate = function() {
+		this.generate = function () {
 			var header = []
 
 			//output import libraries
 			header.push(
-				'import { ' + Object.values(importLibraries).join(',') + " } from '@flood/element'\n",
+				'import { ' + Object.values(importLibraries).join(',') + " } from '@flood/element'\n"
 			)
 
 			//output Element test settings
 			header.push('export const settings: TestSettings = {')
-			var test_settings = Object.keys(defaultTestSettings).map(function(key) {
+			var test_settings = Object.keys(defaultTestSettings).map(function (key) {
 				header.push(TAB + key + ': ' + defaultTestSettings[key] + ',')
 			})
 			header.push('}')
@@ -96,7 +96,7 @@
 			},
 		]
 		var self = this
-		var isPropertySupported = function(propertyName) {
+		var isPropertySupported = function (propertyName) {
 			for (var i = 0; i < self.supportedProperties.length; i++) {
 				if (self.supportedProperties[i].name === propertyName) {
 					return true
@@ -107,7 +107,7 @@
 
 		var headerGenerator = new HeaderGenerator()
 
-		var tabIndent = function(num) {
+		var tabIndent = function (num) {
 			var ret = []
 			if (num > 0)
 				for (var i = 1; i <= num; i++) {
@@ -117,13 +117,13 @@
 		}
 
 		// generate setup script
-		var generateSetupScript = function(session, options) {
+		var generateSetupScript = function (session, options) {
 			appInfo = session.appInfo
 			setupScript = ''
 			return setupScript
 		}
 
-		var generateScriptAction = function(frames, action, waitTime, options, cb) {
+		var generateScriptAction = function (frames, action, waitTime, options, cb) {
 			if (action == undefined || action == null) {
 				result = {
 					success: false,
@@ -229,7 +229,7 @@
 			return result
 		}
 
-		this.generateScripts = function(session, options, cb) {
+		this.generateScripts = function (session, options, cb) {
 			if (session == null || session.actions == null || session.actions.length === 0) {
 				result = {
 					success: false,
@@ -254,13 +254,13 @@
 			template = template.replace(SETUP_SCRIPT_MARKER, setupScript)
 			template = template.replace(
 				DO_ACTION_ON_LATEST_WINDOW_MARKER,
-				alwaysExecuteActionInLatestWindow,
+				alwaysExecuteActionInLatestWindow
 			)
 
 			// replace BROWSER_URL_MARKER marker with the url of first action
 			template = template.replace(
 				BROWSER_URL_MARKER,
-				session.actions[0].actionMetadata.browserUrl || '<Enter URL>',
+				session.actions[0].actionMetadata.browserUrl || '<Enter URL>'
 			)
 			template = template.replace(CLASS_NAME_MARKER, options.className)
 			// this will contain body script
@@ -304,7 +304,7 @@
 					}
 				}
 				//~calculate frame
-				generateScriptAction(actionFrames, action, 0, options, function(result) {
+				generateScriptAction(actionFrames, action, 0, options, function (result) {
 					/*
           before obtaining the generated script for current action,
           we need to decide whether or not to switch to a frame if the action has been taken inside it
@@ -320,7 +320,7 @@
 						// obtain the generated script for the current action
 						if (true == options.generateDescriptionAsComment)
 							bodyScript.push(
-								tabIndent(2) + '/*' + action.description.replace(/\n/gi, '\\n') + '*/',
+								tabIndent(2) + '/*' + action.description.replace(/\n/gi, '\\n') + '*/'
 							)
 						bodyScript.push(tabIndent(2) + result.script)
 						//bodyScript.push(tabIndent(2) + "Thread.sleep(5000);");
@@ -354,7 +354,7 @@
 		}
 	}
 
-	window.getAutomationScriptGenerator = function() {
+	window.getAutomationScriptGenerator = function () {
 		var generator = new FloodElementGenerator()
 		return {
 			generateScripts: generator.generateScripts,

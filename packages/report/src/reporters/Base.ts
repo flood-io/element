@@ -20,17 +20,17 @@ export class BaseReporter implements IReporter {
 		this.report = new ReportUtils(spinnies)
 	}
 
-	reset(step: string): void {}
+	reset(_step: string): void {}
 
-	addMeasurement(measurement: string, value: string | number): void {}
+	addMeasurement(_measurement: string, _value: string | number): void {}
 
 	addCompoundMeasurement(
-		measurement: MeasurementKind,
-		value: CompoundMeasurement,
-		label: string,
+		_measurement: MeasurementKind,
+		_value: CompoundMeasurement,
+		_label: string
 	): void {}
 
-	addTrace(traceData: TraceData, label: string): void {}
+	addTrace(_traceData: TraceData, _label: string): void {}
 
 	async flushMeasurements(): Promise<void> {}
 
@@ -39,7 +39,7 @@ export class BaseReporter implements IReporter {
 		label: string,
 		subtitle?: string,
 		timing?: number,
-		errorMessage?: string,
+		errorMessage?: string
 	): void {
 		const stepName = 'Step ' + (subtitle ? `'${label}' (${subtitle})` : `'${label}'`)
 		const beforeRunStepMessage = chalk.whiteBright(`${stepName} is running ...`)
@@ -72,7 +72,7 @@ export class BaseReporter implements IReporter {
 					stepName,
 					chalk.red(`${stepName} failed (${timing?.toLocaleString()}ms)`),
 					4,
-					'fail',
+					'fail'
 				)
 				break
 			case TestEvent.StepSkipped:
@@ -87,7 +87,7 @@ export class BaseReporter implements IReporter {
 		}
 	}
 
-	testInternalError(message: string, err: Error): void {
+	testInternalError(_message: string, err: Error): void {
 		console.error('flood-element error:\n' + err)
 	}
 	testAssertionError(err: TestScriptError): void {
@@ -100,7 +100,7 @@ export class BaseReporter implements IReporter {
 		}
 	}
 
-	testScriptConsole(method: string, message?: any, ...optionalParams: any[]): void {
+	testScriptConsole(method: string, message?: string, ...optionalParams: any[]): void {
 		debug('testScriptConsole', method, message)
 		const logMessage = `${message} ${optionalParams.join(' ')}`
 		switch (method) {

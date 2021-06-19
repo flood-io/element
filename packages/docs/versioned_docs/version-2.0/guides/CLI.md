@@ -85,14 +85,14 @@ element run <file> [options]
   - `--watch` Watch `<file>` and rerun the test when it changes.
   - `--fast-forward`, `--ff` Run the script in fast-forward: override the actionDelay and stepDelay settings to 1 second in the test script. Specify a number to set a different delay.
   - `--slow-mo` Run the script in slow-motion: Increase the actionDelay
-        and stepDelay settings in the test script to 10 seconds.
-        Specify a number to set a different delay.
+    and stepDelay settings in the test script to 10 seconds.
+    Specify a number to set a different delay.
   - `--verbose` Verbose mode - display details of all commands/actions to the terminal.
   - `--step-delay` Override stepDelay test script setting `[number]`
   - `--action-delay` Override actionDelay test script setting `[number]`
   - `--loop-count` Override the loopCount setting in the test script `[number]`
   - ~~`--strict` Compile the script in strict mode. This can be helpful
-        in diagnosing problems.~~ `DEPRECATED`
+    in diagnosing problems.~~ `DEPRECATED`
   - `--fail-status-code` Specify an exit code when the test fails. Defaults to 1. `[number]`
   - `--config-file` Specify the path to a config file to run the test with. If a path is not specified, defaults to `element.config.js`. This flag only works when [running a test with a config file](cli#run-a-test-locally-with-the-default-config-file)
 
@@ -100,7 +100,7 @@ element run <file> [options]
 
   - `--work-root` Specify a custom work root to save the test results. (Default: a directory named after your test script, under /tmp/element-results of your project folder)
   - `--test-data-root` Specify a custom path to find test data files. (Default: the
-        same directory as the test script)
+    same directory as the test script)
 
 - Other options:
   - `--export` Generate an HTML report and a JSON data file for the test results. The report(s) will be located in a directory named after your test script under [your project folder]/reports.
@@ -109,6 +109,7 @@ element run <file> [options]
 
 :::info PRIORITY OF SETTING VALUES
 When you run a test, either with [multiple test scripts](cli#run-a-test-locally-with-the-default-config-file) or [a single test script](cli#run-a-test-script-locally), Element will get the setting values based on this priority order:
+
 - CLI flags used in the command _'element run'_
 - [Test settings](test-settings) specified in the test script itself
 - Config file (default: _'element.config.js'_)
@@ -175,7 +176,7 @@ module.exports = {
 		viewport: { width: 1440, height: 900 },
 		waitTimeout: '30s',
 		waitUntil: false,
-	}
+	},
 }
 ```
 
@@ -241,10 +242,10 @@ This command would be useful in case you forgot the Flood project that is being 
 element flood run <path-to-script> --hosted --vu <number> --duration <minutes> --rampup <minutes>
 ```
 
--   `--hosted`: indicates you're going to run a flood on hosted grid
--   `--vu`: number of virtual users to simulate. Default to `500` if not specified
--   `--duration`: length of the test, measured in minutes. Default to `15` minutes if not specified.
--   `--rampup`: the amount of time it will take to reach the defined number of `vu`, measured in minutes. Default to `0` if not specified.
+- `--hosted`: indicates you're going to run a flood on hosted grid
+- `--vu`: number of virtual users to simulate. Default to `500` if not specified
+- `--duration`: length of the test, measured in minutes. Default to `15` minutes if not specified.
+- `--rampup`: the amount of time it will take to reach the defined number of `vu`, measured in minutes. Default to `0` if not specified.
 
 ### Launch a flood using on-demand grid
 

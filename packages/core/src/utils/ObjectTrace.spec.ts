@@ -16,10 +16,7 @@ describe('ObjectTrace', () => {
 		})
 
 		const err = new Error('This is an Error')
-		err.stack = (err.stack || '')
-			.split('\n')
-			.slice(0, 1)
-			.join('\n')
+		err.stack = (err.stack || '').split('\n').slice(0, 1).join('\n')
 		objectTrace.addError(err)
 
 		expect(objectTrace.isEmpty).toBe(false)

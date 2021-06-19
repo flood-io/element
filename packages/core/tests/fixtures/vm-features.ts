@@ -17,18 +17,18 @@ export default () => {
 	})
 
 	// First step
-	step('Step 1', { waitTimeout: '60s' }, async driver => {
+	step('Step 1', { waitTimeout: '60s' }, async (driver) => {
 		await driver.click('#element1')
 		await driver.click('#element2')
 		await driver.click('#element3')
 	})
 
-	step('Step 2', async driver => {
+	step('Step 2', async (driver) => {
 		await driver.click('fail')
 		await driver.click('promise-fail')
 	})
 
-	step('Step 3', async driver => {
+	step('Step 3', async (driver) => {
 		await driver.click('element')
 		await driver.click('wait')
 	})

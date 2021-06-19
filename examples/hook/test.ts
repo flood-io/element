@@ -12,10 +12,10 @@ export const settings: TestSettings = {
 	loopCount: 1,
 }
 export default () => {
-	beforeAll(async browser => {
+	beforeAll(async (browser) => {
 		console.log('The first BeforeAll function is running ....')
 	})
-	beforeAll(async browser => {
+	beforeAll(async (browser) => {
 		console.log('The first BeforeAll function is running ....')
 	}, 150)
 
@@ -26,15 +26,15 @@ export default () => {
 		console.log('The first BeforeEach function is running ....')
 	}, 150)
 
-	step('Step: first', async browser => {
+	step('Step: first', async (browser) => {
 		console.log('The first step is running ...')
 	})
 
-	step('Step: second', async browser => {
+	step('Step: second', async (browser) => {
 		console.log('The second step is running ...')
 	})
 
-	step('Step', { waitTimeout: 150 }, async browser => {
+	step('Step', { waitTimeout: 150 }, async (browser) => {
 		console.log('The second step is running with option ...')
 	})
 
@@ -51,7 +51,7 @@ export default () => {
 	afterAll(async () => {
 		console.log('The AfterAll function is running ....')
 	}, 150)
-	step.recovery(async browser => {
+	step.recovery(async (browser) => {
 		console.log('Recovery step 1 done, retry step 1')
 		return RecoverWith.RETRY
 	})

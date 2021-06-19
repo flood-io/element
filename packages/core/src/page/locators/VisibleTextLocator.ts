@@ -16,7 +16,7 @@ export class VisibleTextLocator implements LocatorBuilder {
 				document,
 				null,
 				XPathResult.ORDERED_NODE_ITERATOR_TYPE,
-				null,
+				null
 			)
 
 			let node = iterator.iterateNext()
@@ -49,12 +49,12 @@ export class VisibleTextLocator implements LocatorBuilder {
 				return !!(rect.top || rect.bottom || rect.width || rect.height)
 			}
 			return elements
-				.filter(link => {
+				.filter((link) => {
 					if (!link.textContent) return false
 					const text = link.textContent.trim()
 					return (partial && text.indexOf(targetText) !== -1) || text === targetText
 				})
-				.filter(node => {
+				.filter((node) => {
 					const style = window.getComputedStyle(node)
 					const isVisible = style && style.visibility !== 'hidden' && hasVisibleBoundingBox(node)
 					return isVisible

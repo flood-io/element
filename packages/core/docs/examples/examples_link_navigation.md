@@ -30,7 +30,7 @@ await linkProceedToCheckout.click()
 
 ## Using XPath
 
-Sometimes visible text or CSS selectors aren't specific enough to find the element you need. In these cases, consider using 
+Sometimes visible text or CSS selectors aren't specific enough to find the element you need. In these cases, consider using
 XPath to help locate a link or button object as in this example:
 
 ```typescript

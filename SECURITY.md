@@ -15,5 +15,5 @@ currently being supported with security updates.
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in the code of Element or a way it can be used, please report it to security@flood.io. 
+If you discover a security vulnerability in the code of Element or a way it can be used, please report it to security@flood.io.
 We will provide instructions for securely disclosing details of the vulnerability to our team and we will keep you informed as the issue is resolved.

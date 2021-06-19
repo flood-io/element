@@ -23,19 +23,19 @@ export const settings: TestSettings = {
 const URL = 'https://the-internet.herokuapp.com'
 
 export default () => {
-	step('Test: 01 - Homepage', async browser => {
+	step('Test: 01 - Homepage', async (browser) => {
 		await browser.visit(URL)
 		await browser.wait(Until.elementIsVisible(By.css('#content > h1')))
-		let pageTextVerify = By.visibleText('Welcome to the-internet')
+		const pageTextVerify = By.visibleText('Welcome to the-internet')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 	})
 
-	step('Test: 02 - Nested Frames', async browser => {
+	step('Test: 02 - Nested Frames', async (browser) => {
 		await browser.visit(URL + '/nested_frames')
 	})
 
-	step('Test: 03 - Frames', async browser => {
-		let ArrayFrames = await browser.findElements(By.tagName('frame'))
+	step('Test: 03 - Frames', async (browser) => {
+		const ArrayFrames = await browser.findElements(By.tagName('frame'))
 		assert(ArrayFrames.length > 0, 'expected to find some Frames')
 		await browser.switchTo().frame('frame-top')
 		await browser.switchTo().defaultContent()

@@ -31,10 +31,10 @@ export const settings: TestSettings = {
  * Version: 1.0
  */
 export default () => {
-	step('Manage Products Demo App: Home', async browser => {
+	step('Manage Products Demo App: Home', async (browser) => {
 		//Navigate to the Manage Products Demo Application
 		await browser.visit(
-			'https://sapui5.hana.ondemand.com/test-resources/sap/m/demokit/tutorial/worklist/07/webapp/test/mockServer.html',
+			'https://sapui5.hana.ondemand.com/test-resources/sap/m/demokit/tutorial/worklist/07/webapp/test/mockServer.html'
 		)
 
 		//Verify that we are on the correct page by checking that 'Products' text is shown on the page
@@ -45,11 +45,11 @@ export default () => {
 		await browser.takeScreenshot()
 	})
 
-	step('Manage Products Demo App: Select Checkbox', async browser => {
+	step('Manage Products Demo App: Select Checkbox', async (browser) => {
 		//tick checkbox
-		let obj_chkbox_Item = By.xpath("//div[contains(@data-sap-ui, 'clone1')]")
+		const obj_chkbox_Item = By.xpath("//div[contains(@data-sap-ui, 'clone1')]")
 		await browser.wait(Until.elementIsVisible(obj_chkbox_Item))
-		let element1 = await browser.findElement(obj_chkbox_Item)
+		const element1 = await browser.findElement(obj_chkbox_Item)
 		await element1.click()
 
 		const pageTextVerify = By.visibleText('Aniseed Syrup')
@@ -58,11 +58,11 @@ export default () => {
 		await browser.takeScreenshot()
 	})
 
-	step('Manage Products Demo App: Select Worklist', async browser => {
+	step('Manage Products Demo App: Select Worklist', async (browser) => {
 		//Select worklist
-		let obj_span_Item = By.xpath("//span[contains(text(),'Aniseed Syrup')]")
+		const obj_span_Item = By.xpath("//span[contains(text(),'Aniseed Syrup')]")
 		await browser.wait(Until.elementIsVisible(obj_span_Item))
-		let element1 = await browser.findElement(obj_span_Item)
+		const element1 = await browser.findElement(obj_span_Item)
 		await element1.click()
 
 		const pageTextVerify = By.visibleText('707 Oxford Rd.')

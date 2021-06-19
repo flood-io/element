@@ -23,53 +23,53 @@ export const settings: TestSettings = {
 const URL = 'https://the-internet.herokuapp.com'
 
 export default () => {
-	step('Test: 01 - Homepage', async browser => {
+	step('Test: 01 - Homepage', async (browser) => {
 		await browser.visit(URL)
 		await browser.wait(Until.elementIsVisible(By.css('#content > h1')))
-		let pageTextVerify = By.visibleText('Welcome to the-internet')
+		const pageTextVerify = By.visibleText('Welcome to the-internet')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 	})
 
-	step('Test: 02 - Form Authentication', async browser => {
+	step('Test: 02 - Form Authentication', async (browser) => {
 		await browser.visit(URL + '/login')
-		let pageTextVerify = By.visibleText('Login Page')
+		const pageTextVerify = By.visibleText('Login Page')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 	})
 
-	step('Test: 03 - Enter credentials', async browser => {
-		let Username = By.css('#username')
+	step('Test: 03 - Enter credentials', async (browser) => {
+		const Username = By.css('#username')
 		await browser.wait(Until.elementIsVisible(Username))
-		let UsernameBox = await browser.findElement(Username)
+		const UsernameBox = await browser.findElement(Username)
 		await UsernameBox.click()
 		await browser.type(UsernameBox, 'tomsmith')
 
-		let Password = By.css('#password')
+		const Password = By.css('#password')
 		await browser.wait(Until.elementIsVisible(Password))
-		let PasswordBox = await browser.findElement(Password)
+		const PasswordBox = await browser.findElement(Password)
 		await PasswordBox.click()
 		await browser.type(PasswordBox, 'SuperSecretPassword!')
 
-		let Login = By.css('#login > button > i')
+		const Login = By.css('#login > button > i')
 		await browser.wait(Until.elementIsVisible(Login))
-		let LoginButton = await browser.findElement(Login)
+		const LoginButton = await browser.findElement(Login)
 		await LoginButton.click()
 	})
 
-	step('Test: 04 - Landing Page', async browser => {
-		let pageTextVerify = By.visibleText('Secure Area')
+	step('Test: 04 - Landing Page', async (browser) => {
+		const pageTextVerify = By.visibleText('Secure Area')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 
-		let Logout = By.css('#content > div > a')
+		const Logout = By.css('#content > div > a')
 		await browser.wait(Until.elementIsVisible(Logout))
-		let LogoutButton = await browser.findElement(Logout)
+		const LogoutButton = await browser.findElement(Logout)
 		await LogoutButton.click()
 	})
 
-	step('Test: 05 - Login Page', async browser => {
-		let pageTextVerify = By.visibleText('Login Page')
+	step('Test: 05 - Login Page', async (browser) => {
+		const pageTextVerify = By.visibleText('Login Page')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 
-		let Username = By.css('#username')
+		const Username = By.css('#username')
 		await browser.wait(Until.elementIsVisible(Username))
 	})
 }

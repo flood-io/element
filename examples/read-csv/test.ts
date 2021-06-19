@@ -8,7 +8,7 @@ interface Data {
 	webSite: string
 }
 
-TestData.fromCSV<Data>('data.csv').filter(line => line.due === '$50.00')
+TestData.fromCSV<Data>('data.csv').filter((line) => line.due === '$50.00')
 
 export default () => {
 	let totalDue = 0

@@ -5,7 +5,7 @@ export default class MetricIdentifier {
 		public gridID: number,
 		public nodeID: number,
 		public projectID: number,
-		public region: string,
+		public region: string
 	) {}
 
 	get isValid(): boolean {
@@ -60,6 +60,6 @@ export function newMetricIdentifierFromObject(obj: any): MetricIdentifier {
 		obj.gridID,
 		obj.nodeID,
 		obj.projectID,
-		obj.region,
+		obj.region
 	)
 }

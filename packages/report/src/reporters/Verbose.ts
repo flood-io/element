@@ -20,17 +20,17 @@ export class VerboseReporter implements IReporter {
 		this.report = new ReportUtils(spinnies)
 	}
 
-	reset(step: string): void {}
+	reset(_step: string): void {}
 
-	addMeasurement(measurement: string, value: string | number, label?: string): void {}
+	addMeasurement(_measurement: string, _value: string | number, _label?: string): void {}
 
 	addCompoundMeasurement(
-		measurement: MeasurementKind,
-		value: CompoundMeasurement,
-		label: string,
+		_measurement: MeasurementKind,
+		_value: CompoundMeasurement,
+		_label: string
 	): void {}
 
-	addTrace(traceData: TraceData, label: string): void {}
+	addTrace(_traceData: TraceData, _label: string): void {}
 
 	async flushMeasurements(): Promise<void> {}
 
@@ -44,7 +44,7 @@ export class VerboseReporter implements IReporter {
 		subtitle?: string,
 		timing?: number,
 		errorMessage?: string,
-		args?: string,
+		args?: string
 	): void {
 		const stepName = 'Step ' + (subtitle ? `'${label}' (${subtitle})` : `'${label}'`)
 		const beforeRunStepMessage = chalk.whiteBright(`${stepName} is running ...`)
@@ -85,7 +85,7 @@ export class VerboseReporter implements IReporter {
 					stepName,
 					`${stepName} passed (${timing?.toLocaleString()}ms)`,
 					4,
-					'succeed',
+					'succeed'
 				)
 				break
 			case TestEvent.StepFailed:
@@ -103,7 +103,7 @@ export class VerboseReporter implements IReporter {
 		}
 	}
 
-	testInternalError(message: string, err: Error): void {
+	testInternalError(_message: string, err: Error): void {
 		console.error('flood-element error:\n' + err)
 	}
 	testAssertionError(err: TestScriptError): void {
@@ -116,7 +116,7 @@ export class VerboseReporter implements IReporter {
 		}
 	}
 
-	testScriptConsole(method: string, message?: any, ...optionalParams: any[]): void {
+	testScriptConsole(method: string, message?: string, ...optionalParams: any[]): void {
 		debug('testScriptConsole', method, message)
 		const logMessage = `${message} ${optionalParams.join(' ')}`
 		switch (method) {

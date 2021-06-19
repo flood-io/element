@@ -9,9 +9,9 @@ Some initial script parameters need to be stated at the very start of the script
 
 ### 1. Imports
 
-```ts  title="my-test.perf.ts"
-import { step, TestSettings, Until, By } from "@flood/element";
-import assert from "assert";
+```ts title="my-test.perf.ts"
+import { step, TestSettings, Until, By } from '@flood/element'
+import assert from 'assert'
 ```
 
 The initial import statement allows you to add classes relating to test steps, test settings, and By functions etc. that are needed by the script to carry out actions against objects you have defined. For basic tests the included classes above should suffice. You will need to review these if you require further functionality from other classes that are not listed above.
@@ -22,19 +22,19 @@ The importing of the assert class is useful if you would like to use assertions 
 
 ### 2. Global test settings
 
-```ts  title="my-test.perf.ts"
-import { TestSettings } from "@flood/element";
+```ts title="my-test.perf.ts"
+import { TestSettings } from '@flood/element'
 
 export const settings: TestSettings = {
-  loopCount: -1,
-  description: "The Flood Store - Detailed Tutorial",
-  screenshotOnFailure: true,
-  disableCache: true,
-  clearCache: true,
-  clearCookies: true,
-  actionDelay: 1.5,
-  stepDelay: 2.5,
-};
+	loopCount: -1,
+	description: 'The Flood Store - Detailed Tutorial',
+	screenshotOnFailure: true,
+	disableCache: true,
+	clearCache: true,
+	clearCookies: true,
+	actionDelay: 1.5,
+	stepDelay: 2.5,
+}
 ```
 
 This export block allows you to specify constants related to typical Test Settings used in all load tests:
@@ -52,13 +52,13 @@ This export block allows you to specify constants related to typical Test Settin
 The `export default()` function is the main area housing all the steps for your business process.
 
 ```ts title="my-test.perf.ts"
-import { step } from "@flood/element";
+import { step } from '@flood/element'
 
 export default () => {
-  step("Login", async (browser) => {
-    // ... add actions here
-  });
-};
+	step('Login', async (browser) => {
+		// ... add actions here
+	})
+}
 ```
 
 ## Creating a step and navigating to a webpage
@@ -70,23 +70,23 @@ Scripts in Element are broken up into steps. Each step is equivalent to a transa
 For example, it wouldn't be very useful to write a script that navigates to a site, logs in, purchases an item, and logs out _all within one step_, because it would be difficult to tell which part of that whole process needs performance tuning. It could be that logging in takes up 90% of the time-- you'd never know. To prevent this, it's good practice to separate the actions you want to measure into steps.
 
 ```ts title="my-test.perf.ts"
-import { step, By, Until } from "@flood/element";
+import { step, By, Until } from '@flood/element'
 
 export default () => {
-  step("Login", async (browser) => {
-    await browser.visit("https://challenge.flood.io");
-    await browser.wait(Until.elementIsVisible(By.id("username")));
-  });
+	step('Login', async (browser) => {
+		await browser.visit('https://challenge.flood.io')
+		await browser.wait(Until.elementIsVisible(By.id('username')))
+	})
 
-  step("A second step", async (b) => {});
+	step('A second step', async (b) => {})
 
-  step("A third step", async (b) => {});
-};
+	step('A third step', async (b) => {})
+}
 ```
 
 You'll notice that each takes two arguments: a title, which is the name of the step when reporting the results, and a function or expression which contains the actual actions, which we call the step handler.
 
-The step handler receives two arguments: the Browser instance, and the Data instance — if you're using [test data](test-data.md). You can name these variables however you like, but we typically use either `browser` or `b`.
+The step handler receives two arguments: the Browser instance, and the Data instance — if you're using [test data](test-data). You can name these variables however you like, but we typically use either `browser` or `b`.
 
 ## Running an Element script locally
 
@@ -98,4 +98,4 @@ element run my-test.perf.ts --no-headless
 
 ---
 
-Now you're all set up with your first basic test. To learn how to make more advanced test scripts, navigate to our guides on the left column. 
+Now you're all set up with your first basic test. To learn how to make more advanced test scripts, navigate to our guides on the left column.

@@ -1,0 +1,100 @@
+---
+id: settings
+title: Settings and configurations
+---
+
+import useBaseUrl from '@docusaurus/useBaseUrl'
+
+## Test Settings
+
+Element Recorder allows you to configure some essential Element Test Settings such as wait timing, timeouts, and much more. These settings will be exported along with the recorded scenario to the test script and control how Element behaves during a test run.
+
+To configure Test Settings:
+
+1. Click on the `Settings` button to open the "Test Settings" screen.
+
+{' '}
+
+<img src={useBaseUrl('docs_img/rec-test-settings.png')} alt="open test settings" width="250" />
+
+2. On the "Test Settings" screen, you can adjust the available test settings.
+
+{' '}
+
+<img src={useBaseUrl('docs_img/rec-test-settings-details.png')} alt="test settings" width="250" />
+
+3. Once done, click `Back` at the bottom to go back to the Recording screen. Your changes are autosaved.
+
+To learn more about the function of each setting, see [Element Test Settings][element-test-settings].
+
+## Recorder Settings
+
+Recorder Settings is where you control how the Recorder works, such as `HOVER` actions, `WAIT` actions, default selector, and more.
+
+To configure Recorder Settings:
+
+1. Click on the vertical three dots icon to open the "Recorder Settings" screen.
+
+{' '}
+
+<img
+	src={useBaseUrl('docs_img/rec-recorder-settings.png')}
+	alt="open recorder settings"
+	width="250"
+/>
+
+2. On the "Recorder Settings" screen, you can adjust the available test settings.
+
+{' '}
+
+<img
+	src={useBaseUrl('docs_img/rec-recorder-settings-details.png')}
+	alt="recorder settings"
+	width="250"
+/>
+
+3. Once done, click `Back` at the bottom to go back to the Recording screen. Your changes are autosaved.
+
+### Setting details
+
+#### Record hover actions (hold Right Shift)
+
+Turned on by default - enables recording `HOVER` actions by holding the right Shift when hovering on an element.
+
+If turned off, `HOVER` actions cannot be recorded.
+
+#### Auto-add new step after each action
+
+Turned off by default.
+
+If turned on, a new step will be added after each recorded action, and each step will contain only one action.
+
+#### Use XPath selector by default
+
+Turned off by default - uses `CSS` as default selector for target elements in actions.
+
+If turned on, uses `XPATH` as the default selector for target elements in actions.
+
+#### Default position after recording starts
+
+Sets the default position of the Recorder pop-up after clicking the `REC` button to start recording.
+
+- `Keep current`: (default) The Recorder pop-up will stay at the current position.
+
+- `Bottom-right`: The Recorder will fly to the bottom-right of the screen.
+
+- `Minimized`: The Recorder will stay at the current position and be minimized.
+
+#### Auto add wait after each action
+
+Turned off by default.
+
+If turned on, automatically adds a `WAIT` action of the defined duration after each recorded action.
+
+#### Auto add wait after each step
+
+Turned off by default.
+
+If turned on, automatically adds a `WAIT` action of the defined duration after each added step.
+
+[element-test-settings]: https://element.flood.io/docs/guides/test-settings

@@ -11,7 +11,7 @@ let playwright: testPlaywright
 const workRoot = testWorkRoot()
 
 const getCurrentPosition = async (
-	browser: Browser<any>,
+	browser: Browser<any>
 ): Promise<{ top: number; left: number }> => {
 	return await browser.evaluate(() => ({
 		top: document.documentElement.scrollTop || document.body.scrollTop,
@@ -24,8 +24,8 @@ describe('Browser', () => {
 	beforeAll(async () => {
 		playwright = await launchPlaywright()
 
-		playwright.page.on('console', msg =>
-			console.log(`>> remote console.${msg.type()}: ${msg.text()}`),
+		playwright.page.on('console', (msg) =>
+			console.log(`>> remote console.${msg.type()}: ${msg.text()}`)
 		)
 	})
 
@@ -46,7 +46,7 @@ describe('Browser', () => {
 			},
 			async (_browser, actionName) => {
 				afterSpy(actionName)
-			},
+			}
 		)
 		const url = await serve('forms_with_input_elements.html')
 		await browser.visit(url)
@@ -60,14 +60,14 @@ describe('Browser', () => {
 			workRoot,
 			playwright,
 			{ ...DEFAULT_SETTINGS },
-			async name => {},
-			async name => {},
+			async (name) => {},
+			async (name) => {}
 		)
 		const url = await serve('forms_with_input_elements.html')
 		await browser.visit(url)
 
 		return expect(browser.click('.notanelement')).rejects.toEqual(
-			new Error(`No element was found on the page using '.notanelement'`),
+			new Error(`No element was found on the page using '.notanelement'`)
 		)
 	})
 
@@ -97,7 +97,7 @@ describe('Browser', () => {
 		test('can list all frames', async () => {
 			const frames = browser.frames
 			expect(frames).toHaveLength(3)
-			expect(frames.map(f => f.name())).toEqual(['', 'frame1', 'frame2'])
+			expect(frames.map((f) => f.name())).toEqual(['', 'frame1', 'frame2'])
 		})
 
 		test('can switch frame by index', async () => {
@@ -270,8 +270,8 @@ describe('Browser', () => {
 					document.body.offsetHeight,
 					document.documentElement.offsetHeight,
 					document.body.clientHeight,
-					document.documentElement.clientHeight,
-				),
+					document.documentElement.clientHeight
+				)
 			)
 
 			docScrollWidth = await browser.evaluate(() =>
@@ -281,8 +281,8 @@ describe('Browser', () => {
 					document.body.offsetWidth,
 					document.documentElement.offsetWidth,
 					document.body.clientWidth,
-					document.documentElement.clientWidth,
-				),
+					document.documentElement.clientWidth
+				)
 			)
 
 			docClientHeight = await browser.evaluate(() => document.documentElement.clientHeight)

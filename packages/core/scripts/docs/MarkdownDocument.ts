@@ -14,12 +14,12 @@ const bookDir = join(root, 'docs')
 const apiDir = join(bookDir, 'api')
 
 function findReferences(text: string): string[] {
-	let r = /\[(\w+)\]/gi
-	let allRefs: string[] = []
+	const r = /\[(\w+)\]/gi
+	const allRefs: string[] = []
 
 	let matches
 	while ((matches = r.exec(text)) !== null) {
-		let [, ref] = matches
+		const [, ref] = matches
 		allRefs.push(ref)
 	}
 
@@ -44,7 +44,7 @@ export class MarkdownDocument {
 		public lines: string[] = [],
 		public referencesNeeded: string[] = [],
 		public enableReferences = true,
-		public frontMatter: FrontMatter = { title: '' },
+		public frontMatter: FrontMatter = { title: '' }
 	) {}
 
 	static nullDoc(): MarkdownDocument {
@@ -54,10 +54,10 @@ export class MarkdownDocument {
 	}
 
 	static fromFile(path: string) {
-		let doc = new MarkdownDocument(path)
-		let content = readFileSync(path).toString('utf8')
+		const doc = new MarkdownDocument(path)
+		const content = readFileSync(path).toString('utf8')
 
-		let matter = frontMatter<FrontMatter>(content)
+		const matter = frontMatter<FrontMatter>(content)
 		doc.frontMatter = matter.attributes
 
 		doc.addLines(matter.body.split('\n'))
@@ -80,7 +80,7 @@ export class MarkdownDocument {
 		}
 	}
 
-	public writeLine(text: string = '') {
+	public writeLine(text = '') {
 		this.extractReferences(text)
 		this.writeLineRaw(text)
 	}
@@ -96,25 +96,25 @@ export class MarkdownDocument {
 		this.referencesNeeded = this.referencesNeeded.concat(findReferences(text))
 	}
 
-	public writeHeading(text: string, depth: number = 1) {
+	public writeHeading(text: string, depth = 1) {
 		this.writeLine(`${'#'.repeat(depth)} ${text}`)
 	}
 
-	public writeBullet(text: string, depth: number = 1) {
-		let b = ` `.repeat(depth)
+	public writeBullet(text: string, depth = 1) {
+		const b = ` `.repeat(depth)
 		this.writeLine(`${b}* ${text}`)
 	}
 
 	public writeParameterLine(
 		name: string,
 		type: ParamType,
-		desc: string = '',
+		desc = '',
 		isOptional = false,
-		defaultValue: any = undefined,
+		defaultValue: any = undefined
 	) {
 		debug('writeParameterLine %s %O', name, type)
-		let formattedType = typeToString(type)
-		let t = `&lt;${formattedType}&gt;`
+		const formattedType = typeToString(type)
+		const t = `&lt;${formattedType}&gt;`
 
 		if (name.startsWith('returns')) {
 			this.writeLine(`* ${name} ${t} ${desc}`)
@@ -131,7 +131,7 @@ export class MarkdownDocument {
 	}
 
 	public writeComment(comment: Comment) {
-		let { shortText, text } = comment || { shortText: null, text: null }
+		const { shortText, text } = comment || { shortText: null, text: null }
 		if (shortText) {
 			this.writeLine(shortText)
 			this.writeLine()
@@ -147,11 +147,11 @@ export class MarkdownDocument {
 
 	public applyReferences(references: RefsMap) {
 		if (!this.enableReferences) return
-		let refs: RefsMap = new Map()
+		const refs: RefsMap = new Map()
 
 		debug('applyReferences', this.path, this.referencesNeeded)
 
-		this.referencesNeeded.forEach(name => {
+		this.referencesNeeded.forEach((name) => {
 			// debug('applyReferences -> ', name)
 			let link: string
 			const ref = references.get(name)
@@ -176,18 +176,18 @@ export class MarkdownDocument {
 	}
 
 	public writeTable(rows: string[][]) {
-		let md = table(rows)
+		const md = table(rows)
 		this.writeLineRaw(md)
 	}
 
 	public writeTableHeader(...cols: string[]) {
-		let str = cols.map(col => `| ${col} `).join('')
+		const str = cols.map((col) => `| ${col} `).join('')
 		this.writeLineRaw(str)
 		this.writeLineRaw('-'.repeat(str.length))
 	}
 
 	public writeTableRow(...cols: string[]) {
-		let str = cols.map(col => `| ${col} `).join('')
+		const str = cols.map((col) => `| ${col} `).join('')
 		this.writeLineRaw(str)
 	}
 
@@ -205,7 +205,7 @@ export class MarkdownDocument {
 	toString() {
 		let { frontMatter, lines } = this
 		if (Object.keys(frontMatter).length) {
-			let matter = `---\n${yaml.safeDump(frontMatter)}---`
+			const matter = `---\n${yaml.safeDump(frontMatter)}---`
 			lines = [matter, ...lines]
 		}
 		return lines.join(`\n`)

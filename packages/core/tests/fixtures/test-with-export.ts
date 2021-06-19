@@ -5,7 +5,7 @@ import { step, setup, By, Until } from '@flood/element'
  *
  * This is an example test
  */
-export default function() {
+export default function () {
 	setup({
 		loopCount: -1,
 		actionDelay: '0.5s',
@@ -18,9 +18,9 @@ export default function() {
 		})
 	})
 
-	step('Test Step', async driver => {
+	step('Test Step', async (driver) => {
 		await driver.visit('<URL>')
-		let link = await driver.findElement(By.linkText('show bar'))
+		const link = await driver.findElement(By.linkText('show bar'))
 		await link.click()
 		await driver.wait(Until.elementIsVisible('#foo'))
 	})

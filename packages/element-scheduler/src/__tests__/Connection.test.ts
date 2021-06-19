@@ -27,7 +27,7 @@ describe('Connection', () => {
 	test('it can send a message over a port', async () => {
 		const port1 = new FakeMessagePort()
 
-		new ThreadConnection<string, string>(port1, async message => message)
+		new ThreadConnection<string, string>(port1, async (message) => message)
 
 		const wc = new WorkerConnection(port1)
 		const response = await wc.send('Hello World')

@@ -23,29 +23,29 @@ export const settings: TestSettings = {
 const URL = 'https://the-internet.herokuapp.com'
 
 export default () => {
-	step('Test: 01 - Homepage', async browser => {
+	step('Test: 01 - Homepage', async (browser) => {
 		await browser.visit(URL)
 		await browser.wait(Until.elementIsVisible(By.css('#content > h1')))
-		let pageTextVerify = By.visibleText('Welcome to the-internet')
+		const pageTextVerify = By.visibleText('Welcome to the-internet')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 	})
 
-	step('Test: 02 - Forgot Password', async browser => {
+	step('Test: 02 - Forgot Password', async (browser) => {
 		await browser.visit(URL + '/forgot_password')
-		let pageTextVerify = By.visibleText('Forgot Password')
+		const pageTextVerify = By.visibleText('Forgot Password')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 	})
 
-	step('Test: 03 - Enter email', async browser => {
-		let Email = By.css('#email')
+	step('Test: 03 - Enter email', async (browser) => {
+		const Email = By.css('#email')
 		await browser.wait(Until.elementIsVisible(Email))
-		let EmailBox = await browser.findElement(Email)
+		const EmailBox = await browser.findElement(Email)
 		await EmailBox.click()
 		await browser.type(EmailBox, 'antonio@flood.io')
 
-		let Retrieve = By.css('#form_submit')
+		const Retrieve = By.css('#form_submit')
 		await browser.wait(Until.elementIsVisible(Retrieve))
-		let RetrieveButton = await browser.findElement(Retrieve)
+		const RetrieveButton = await browser.findElement(Retrieve)
 		await RetrieveButton.click()
 	})
 }

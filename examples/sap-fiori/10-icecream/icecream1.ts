@@ -31,9 +31,9 @@ export const settings: TestSettings = {
  * Version: 1.0
  */
 export default () => {
-	step('Icecream Demo App: Home', async browser => {
+	step('Icecream Demo App: Home', async (browser) => {
 		await browser.visit(
-			'https://sapui5.hana.ondemand.com/test-resources/sap/suite/ui/commons/demokit/icecream/webapp/index.html',
+			'https://sapui5.hana.ondemand.com/test-resources/sap/suite/ui/commons/demokit/icecream/webapp/index.html'
 		)
 
 		const pageTextVerify = By.visibleText('Ice Cream Machine')
@@ -42,10 +42,10 @@ export default () => {
 		await browser.takeScreenshot()
 	})
 
-	step('Icecream Demo App: Click Tile', async browser => {
-		let obj_btn_ProductionProcess = By.xpath("//div[contains(@aria-label, 'Production Process')]")
+	step('Icecream Demo App: Click Tile', async (browser) => {
+		const obj_btn_ProductionProcess = By.xpath("//div[contains(@aria-label, 'Production Process')]")
 		await browser.wait(Until.elementIsVisible(obj_btn_ProductionProcess))
-		let element1 = await browser.findElement(obj_btn_ProductionProcess)
+		const element1 = await browser.findElement(obj_btn_ProductionProcess)
 		await element1.click()
 
 		const pageTextVerify = By.visibleText('Key Figures for 2017')
@@ -54,7 +54,7 @@ export default () => {
 		await browser.takeScreenshot()
 	})
 
-	step('Icecream Demo App: Click Raw Material node with Mouse Coords', async browser => {
+	step('Icecream Demo App: Click Raw Material node with Mouse Coords', async (browser) => {
 		const pageTextVerify = By.visibleText('Key Figures for 2017')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 

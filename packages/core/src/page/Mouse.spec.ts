@@ -19,7 +19,7 @@ const getDropReports = async () => {
 }
 
 const timeout = async (duration: number): Promise<any> =>
-	new Promise(yeah => setTimeout(yeah, duration))
+	new Promise((yeah) => setTimeout(yeah, duration))
 
 const centerPoint = async (element: ElementHandle): Promise<[number, number]> => {
 	const box = await element.boundingBox()

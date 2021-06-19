@@ -16,7 +16,7 @@ export default class GridsSelect extends Generator {
 
 	get _selectedGridIds(): string[] {
 		const { runningGrids, answers } = this
-		return runningGrids.filter(grid => answers.grids.includes(grid.name)).map(grid => grid.uuid)
+		return runningGrids.filter((grid) => answers.grids.includes(grid.name)).map((grid) => grid.uuid)
 	}
 
 	get _vuh(): number {
@@ -42,7 +42,7 @@ export default class GridsSelect extends Generator {
 
 		if (this.runningGrids.length === 0) {
 			console.log(
-				"There're no running grids. Please go to https://app.flood.io to launch a grid first",
+				"There're no running grids. Please go to https://app.flood.io to launch a grid first"
 			)
 			return
 		}
@@ -52,7 +52,7 @@ export default class GridsSelect extends Generator {
 				type: 'checkbox',
 				name: 'regions',
 				message: 'Select the grids you want to launch this flood on',
-				choices: this.runningGrids.map(grid => grid.name),
+				choices: this.runningGrids.map((grid) => grid.name),
 			})
 		).regions
 

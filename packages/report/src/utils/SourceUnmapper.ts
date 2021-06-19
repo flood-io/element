@@ -12,7 +12,11 @@ interface StackLine {
 // https://github.com/evanw/node-source-map-support
 export class SourceUnmapper {
 	// can't have async constructors, so:
-	public static async init(originalSource: string, originalFilename: string, sourceMap: string): Promise<SourceUnmapper> {
+	public static async init(
+		originalSource: string,
+		originalFilename: string,
+		sourceMap: string
+	): Promise<SourceUnmapper> {
 		const sourceMapConsumer = await new SourceMapConsumer(sourceMap)
 
 		return new SourceUnmapper(originalSource, originalFilename, sourceMapConsumer)
@@ -21,7 +25,7 @@ export class SourceUnmapper {
 	constructor(
 		private originalSource: string,
 		private originalFilename: string,
-		private sourceMapConsumer: SourceMapConsumer,
+		private sourceMapConsumer: SourceMapConsumer
 	) {}
 
 	public unMapNodeStackLine(stackLine: string): string {
@@ -52,19 +56,19 @@ export class SourceUnmapper {
 
 	public unMapStack(stack: string[]): StackLine[] {
 		return this.parseStack(stack)
-			.map(s => this.originalPositionFor(s))
+			.map((s) => this.originalPositionFor(s))
 			.filter((x): x is StackLine => x !== undefined)
 	}
 
 	// XXX Error.prepareStackTrace
 	public parseStack(stack: string[]): StackLine[] {
 		return stack
-			.map(s => /\s+at ([^(]+) \((.*?):(\d+):(\d+)\)/.exec(s))
+			.map((s) => /\s+at ([^(]+) \((.*?):(\d+):(\d+)\)/.exec(s))
 			.filter((x): x is RegExpExecArray => x !== null)
-			.filter(x => {
+			.filter((x) => {
 				return x && x[1] && x[2] && x[3] && x[4]
 			})
-			.map(match => ({ at: match[1], file: match[2], line: +match[3], column: +match[4] }))
+			.map((match) => ({ at: match[1], file: match[2], line: +match[3], column: +match[4] }))
 	}
 
 	public originalPositionFor(pos: StackLine): StackLine | undefined {

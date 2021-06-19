@@ -23,22 +23,22 @@ export const settings: TestSettings = {
 const URL = 'https://the-internet.herokuapp.com'
 
 export default () => {
-	step('Test: 01 - Homepage', async browser => {
+	step('Test: 01 - Homepage', async (browser) => {
 		await browser.visit(URL)
 		await browser.wait(Until.elementIsVisible(By.css('#content > h1')))
-		let pageTextVerify = By.visibleText('Welcome to the-internet')
+		const pageTextVerify = By.visibleText('Welcome to the-internet')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 	})
 
-	step('Test: 02 - Dynamic Content', async browser => {
+	step('Test: 02 - Dynamic Content', async (browser) => {
 		await browser.visit(URL + '/dynamic_content')
 		await browser.wait(Until.elementIsVisible(By.css('#content > div > h3')))
-		let pageTextVerify = By.visibleText('Dynamic Content')
+		const pageTextVerify = By.visibleText('Dynamic Content')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 	})
 
-	step('Test: 03 - Dynamic Content - Dynamic Parameter', async browser => {
-		let linkDyn = await browser.findElement(By.css('#content > div > p:nth-child(3) > a'))
+	step('Test: 03 - Dynamic Content - Dynamic Parameter', async (browser) => {
+		const linkDyn = await browser.findElement(By.css('#content > div > p:nth-child(3) > a'))
 		await linkDyn.click()
 		await browser.wait(Until.elementIsVisible(By.css('#content > div > h3')))
 	})

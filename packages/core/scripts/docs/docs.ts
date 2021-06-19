@@ -26,12 +26,12 @@ debug('indexMap', indexMap)
 debug('indexExports', indexExports)
 
 function commentFromNode(node) {
-	let { comment: { shortText, text } = { shortText: null, text: null } } = node
-	return [shortText, text].filter(t => t && t.length).join('\n\n')
+	const { comment: { shortText, text } = { shortText: null, text: null } } = node
+	return [shortText, text].filter((t) => t && t.length).join('\n\n')
 }
 function isNodeInternal(node) {
 	if (node && node.comment && node.comment.tags) {
-		return node.comment.tags.find(t => t.tag === 'internal')
+		return node.comment.tags.find((t) => t.tag === 'internal')
 	} else if (node && node.signatures) {
 		return node.signatures.some(isNodeInternal)
 	}
@@ -39,7 +39,7 @@ function isNodeInternal(node) {
 }
 function isNodeOpaque(node) {
 	if (node && node.comment && node.comment.tags) {
-		return node.comment.tags.find(t => t.tag === 'docopaque')
+		return node.comment.tags.find((t) => t.tag === 'docopaque')
 	}
 	return false
 }
@@ -137,10 +137,10 @@ class DocsParser {
 	 */
 	process() {
 		console.log('processing')
-		this.docsJSON.children.forEach(child => this.processTopLevelNode(child))
+		this.docsJSON.children.forEach((child) => this.processTopLevelNode(child))
 
 		const ctx = new parseCtx('puppeteer', this)
-		this.puppeteerJSON.forEach(child => this.processNode(ctx, child)) //, this.puppeteerJSON)
+		this.puppeteerJSON.forEach((child) => this.processNode(ctx, child)) //, this.puppeteerJSON)
 
 		console.log('creating summary')
 		this.createSummary()
@@ -262,9 +262,9 @@ class DocsParser {
 	}
 
 	public applyReferencesToHandWrittenDocs() {
-		let files = glob.sync('docs/**/*.md')
-		files.forEach(path => {
-			let doc = MarkdownDocument.fromFile(path)
+		const files = glob.sync('docs/**/*.md')
+		files.forEach((path) => {
+			const doc = MarkdownDocument.fromFile(path)
 			doc.applyReferences(this.references)
 			createFileSync(path)
 			writeFileSync(path, doc.toString())
@@ -274,14 +274,14 @@ class DocsParser {
 	public writeDocsToFiles() {
 		debug('writeDocsToFiles()')
 		this.applyReferencesToHandWrittenDocs()
-		let contents: Map<string, string[]> = new Map()
+		const contents: Map<string, string[]> = new Map()
 		// debug('docs', this.docs)
 		this.docs.forEach((doc, path) => {
 			if (!doc.shouldWrite) return
 
 			// docs.forEach(doc => {
 			doc.applyReferences(this.references)
-			let absPath = join(bookDir, path)
+			const absPath = join(bookDir, path)
 			if (!contents.has(absPath)) contents.set(absPath, [])
 
 			const content = contents.get(absPath)
@@ -317,12 +317,12 @@ class DocsParser {
 		doc.writeBullet('[Quick Start](README.md)')
 
 		// Adds everything in the examples directory
-		let examples = glob.sync('docs/examples/**/*.md')
-		examples.forEach(file => {
-			let content = readFileSync(file).toString('utf8')
-			let { title } = frontMatter<FrontMatter>(content).attributes
+		const examples = glob.sync('docs/examples/**/*.md')
+		examples.forEach((file) => {
+			const content = readFileSync(file).toString('utf8')
+			const { title } = frontMatter<FrontMatter>(content).attributes
 			if (title) {
-				let relativePath = relative(bookDir, file)
+				const relativePath = relative(bookDir, file)
 				doc.writeBullet(`[${title}](${relativePath})`)
 			}
 		})
@@ -344,7 +344,7 @@ class DocsParser {
 		this.summaryParts
 			.sort()
 			// .sort((a, b) => a.toLowerCase() - b.toLowerCase())
-			.forEach(m => {
+			.forEach((m) => {
 				doc.writeBullet(m, 2)
 			})
 
@@ -364,25 +364,25 @@ class DocsParser {
 
 		if (prefix) name = `${prefix}.${name}`
 
-		let params: any[] = []
-		parameters.forEach(p => {
-			let {
+		const params: any[] = []
+		parameters.forEach((p) => {
+			const {
 				name,
 				type,
 				flags: { isOptional = false },
 				defaultValue,
 			} = p
-			let desc = commentFromNode(p)
+			const desc = commentFromNode(p)
 			params.push({ name, desc, type, isOptional, defaultValue })
 		})
 
-		let required = params
-			.filter(p => !p.isOptional)
-			.map(p => p.name)
+		const required = params
+			.filter((p) => !p.isOptional)
+			.map((p) => p.name)
 			.join(`, `)
-		let optional = params
-			.filter(p => p.isOptional)
-			.map(p => p.name)
+		const optional = params
+			.filter((p) => p.isOptional)
+			.map((p) => p.name)
 			.join(`, `)
 
 		name = `\`${name}(${required}${optional.length ? `[, ${optional}]` : ''})\``
@@ -401,18 +401,18 @@ class DocsParser {
 			isOptional: boolean
 			defaultValue: any
 		}[],
-		returnType?: any,
+		returnType?: any
 	) {
 		doc.writeHeading(`${name}`, 4)
 
-		params.forEach(param => {
+		params.forEach((param) => {
 			if (param.name && param.type)
 				doc.writeParameterLine(
 					param.name,
 					param.type,
 					param.desc,
 					param.isOptional,
-					param.defaultValue,
+					param.defaultValue
 				)
 		})
 
@@ -425,10 +425,10 @@ class DocsParser {
 	private processFunction(ctx, node) {
 		const doc = ctx.docForKey(node.name)
 
-		node.signatures.forEach(sig => {
+		node.signatures.forEach((sig) => {
 			this.addReference(
 				sig.name,
-				doc,
+				doc
 				// '', // TODO
 				// `${join(bookDir, filePathForNameAndType('Function', node.name))}#${generateAnchor(
 				// sig.name,
@@ -515,7 +515,7 @@ class DocsParser {
 		}
 
 		const modCtx = ctx.forMod(node.name)
-		node.children.forEach(node => this.processNode(modCtx, node))
+		node.children.forEach((node) => this.processNode(modCtx, node))
 	}
 
 	private processClass(ctx, node) {
@@ -532,19 +532,19 @@ class DocsParser {
 
 		if (!children) children = []
 
-		const methods = children.filter(node => node.kindString === 'Method')
+		const methods = children.filter((node) => node.kindString === 'Method')
 		if (methods.length) {
 			doc.writeHeading('methods', 4)
-			methods.forEach(node => this.processClass_Method(doc, name, node))
+			methods.forEach((node) => this.processClass_Method(doc, name, node))
 		}
 
-		const properties = children.filter(node => node.kindString === 'Property')
+		const properties = children.filter((node) => node.kindString === 'Property')
 		if (properties.length) {
 			doc.writeHeading('properties', 4)
-			properties.forEach(node => this.processClass_Property(doc, name, node))
+			properties.forEach((node) => this.processClass_Property(doc, name, node))
 		}
 
-		let members = children.filter(node => node.kindString === 'Enumeration member')
+		const members = children.filter((node) => node.kindString === 'Enumeration member')
 		if (members.length) {
 			this.processObject(doc, name, members, 'Member')
 			// doc.writeTableHeader('Member', 'Default Value', 'Comment')
@@ -557,10 +557,10 @@ class DocsParser {
 	private processClass_Method(doc, parent, node) {
 		if (isNodeInternal(node)) return
 
-		node.signatures.forEach(sig => {
+		node.signatures.forEach((sig) => {
 			this.processCallSignature(doc, sig, parent)
 			if (doc.filePath) {
-				let name = `${camelcase(parent)}.${sig.name}`
+				const name = `${camelcase(parent)}.${sig.name}`
 				this.addReference(name, doc)
 			}
 		})
@@ -570,7 +570,7 @@ class DocsParser {
 		debug('processClass_Property', parent, node.name, node)
 		if (isNodeInternal(node)) return
 
-		let { name, flags, type } = node
+		const { name, flags, type } = node
 		let comment = commentFromNode(node)
 
 		// comment rendered as part of an unordered list, so indent
@@ -582,9 +582,9 @@ class DocsParser {
 	private processObject(doc, parent, members, thing = 'Name') {
 		doc.writeTable([
 			[thing, 'Default Value', 'Comment'],
-			...members.map(node => {
-				let { name, defaultValue } = node
-				let comment = commentFromNode(node)
+			...members.map((node) => {
+				const { name, defaultValue } = node
+				const comment = commentFromNode(node)
 				return [`\`${name}\``, defaultValue ? defaultValue : '', comment ? comment : '']
 			}),
 		])
@@ -595,18 +595,16 @@ class DocsParser {
 		let readme = readFileSync(readmeFile, 'utf8')
 
 		const linkRe = /\[([^\]]+)?\]\(([^)]+)\)/g
-		readme = searchAndReplace(
-			readme,
-			linkRe,
-			(text: string | null, url: string): string | undefined => {
-				if (!url.startsWith('http') && !url.startsWith('#') && !isAbsolute(url)) {
-					const full = resolve(repoRoot, url)
-					url = relative(bookDir, full)
-					return `[${text}](./${url})`
-				}
-				return
-			},
-		)
+		readme = searchAndReplace(readme, linkRe, (text: string | null, url: string):
+			| string
+			| undefined => {
+			if (!url.startsWith('http') && !url.startsWith('#') && !isAbsolute(url)) {
+				const full = resolve(repoRoot, url)
+				url = relative(bookDir, full)
+				return `[${text}](./${url})`
+			}
+			return
+		})
 
 		writeFileSync(readmeFile, readme, 'utf8')
 	}
@@ -615,7 +613,7 @@ class DocsParser {
 function searchAndReplace(
 	input: string,
 	re: RegExp,
-	transformer: (...matches: string[]) => string | undefined,
+	transformer: (...matches: string[]) => string | undefined
 ): string {
 	let match
 	while ((match = re.exec(input)) !== null) {

@@ -33,11 +33,11 @@ const cmd: CommandModule = {
 			.usage('usage: compile [file]')
 			.option('file', {
 				describe: 'entry file to run the test',
-				coerce: file => validateFile(file),
+				coerce: (file) => validateFile(file),
 			})
 			.option('config-file', {
 				describe: 'compile the test script in the config file',
-				coerce: file => validateFile(file),
+				coerce: (file) => validateFile(file),
 			})
 	},
 }

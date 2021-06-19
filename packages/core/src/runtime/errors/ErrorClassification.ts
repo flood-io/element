@@ -13,7 +13,7 @@ type ClassifiedError<T> = T & ErrorClassification
 
 export function classifyError<T extends ErrorClassification>(
 	error: Error,
-	testScript?: ITestScript,
+	testScript?: ITestScript
 ): ClassifiedError<T> {
 	debug('input %O', error)
 	debug('error.name %s', error.name)

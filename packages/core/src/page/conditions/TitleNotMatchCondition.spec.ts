@@ -26,10 +26,10 @@ describe('Condition', () => {
 			const condition = Until.titleIsNot('wait test')
 
 			await page.evaluate(() => {
-				return new Promise(yeah => {
+				return new Promise((yeah) => {
 					setTimeout(() => {
 						document.title = 'another title'
-						yeah()
+						yeah(true)
 					}, 100)
 				})
 			})
@@ -42,10 +42,10 @@ describe('Condition', () => {
 			const condition = Until.titleDoesNotContain('wait test')
 
 			await page.evaluate(() => {
-				return new Promise(yeah => {
+				return new Promise((yeah) => {
 					setTimeout(() => {
 						document.title = 'another title again'
-						yeah()
+						yeah(true)
 					}, 100)
 				})
 			})
@@ -58,10 +58,10 @@ describe('Condition', () => {
 			const condition = Until.titleDoesNotMatch(/^wait/)
 
 			await page.evaluate(() => {
-				return new Promise(yeah => {
+				return new Promise((yeah) => {
 					setTimeout(() => {
 						document.title = 'another title again'
-						yeah()
+						yeah(true)
 					}, 100)
 				})
 			})
@@ -74,10 +74,10 @@ describe('Condition', () => {
 			const condition = Until.titleDoesNotMatch(/test$/)
 
 			await page.evaluate(() => {
-				return new Promise(yeah => {
+				return new Promise((yeah) => {
 					setTimeout(() => {
 						document.title = 'another title again'
-						yeah()
+						yeah(true)
 					}, 100)
 				})
 			})
@@ -90,10 +90,10 @@ describe('Condition', () => {
 			const condition = Until.titleDoesNotMatch(/^wait test$/)
 
 			await page.evaluate(() => {
-				return new Promise(yeah => {
+				return new Promise((yeah) => {
 					setTimeout(() => {
 						document.title = 'another title again'
-						yeah()
+						yeah(true)
 					}, 100)
 				})
 			})

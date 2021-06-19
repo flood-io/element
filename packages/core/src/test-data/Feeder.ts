@@ -42,7 +42,7 @@ export class Feeder<T> {
 
 		const { filters = [], circular = true, shuffle = false } = loader
 		const newLines = lines.filter((line, index) =>
-			filters.every(func => func(line, index, instanceID)),
+			filters.every((func) => func(line, index, instanceID))
 		)
 
 		function validStructure(srcOne: any, srcTwo: any): boolean {
@@ -65,7 +65,7 @@ export class Feeder<T> {
 			})
 		}
 
-		const source = this.dataSource.filter(source => source.name === loaderName)
+		const source = this.dataSource.filter((source) => source.name === loaderName)
 		if (source.length > 0) {
 			if (source[0].type === type && !validStructure(source[0].lines, newLines)) {
 				throw Error('Data files that have different data structures cannot have the same alias')
@@ -89,7 +89,7 @@ export class Feeder<T> {
 	}
 
 	private loaderBy(loaderName: string): LoaderConfig | undefined {
-		return this.dataConfig.find(config => config.loaderName === loaderName)
+		return this.dataConfig.find((config) => config.loaderName === loaderName)
 	}
 
 	private config(loaderName: string): LoaderConfig {
@@ -170,7 +170,7 @@ export class Feeder<T> {
 	}
 
 	public reset(): void {
-		this.dataSource.forEach(source => {
+		this.dataSource.forEach((source) => {
 			source.pointer = 0
 		})
 	}
@@ -198,7 +198,7 @@ export class Feeder<T> {
 	}
 
 	public get isStart(): boolean {
-		return this.dataSource.filter(source => source.pointer > 0).length === 0
+		return this.dataSource.filter((source) => source.pointer > 0).length === 0
 	}
 
 	public get isEmpty(): boolean {

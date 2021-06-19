@@ -8,7 +8,7 @@ export const settings: TestSettings = {
 }
 
 export default () => {
-	step('Visit homepage', async b => {
+	step('Visit homepage', async (b) => {
 		await b.visit('https://google.com')
 	})
 }

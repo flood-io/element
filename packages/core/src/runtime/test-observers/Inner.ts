@@ -12,7 +12,7 @@ export default class InnerObserver extends NoOpTestObserver {
 		const actionDelay = test.settings.actionDelay ?? 0
 
 		if (actionDelay > 0 && command !== 'wait') {
-			await new Promise(resolve => {
+			await new Promise((resolve) => {
 				setTimeout(resolve, Number(actionDelay) || DEFAULT_ACTION_WAIT_MILLISECONDS)
 			})
 		}

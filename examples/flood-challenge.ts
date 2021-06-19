@@ -22,10 +22,10 @@ export default () => {
 
 		await browser.wait(0.5)
 
-		let locator = By.css('#new_challenger > input.btn.btn-xl.btn-default')
+		const locator = By.css('#new_challenger > input.btn.btn-xl.btn-default')
 		await browser.wait(Until.elementIsVisible(locator))
 
-		let element = await browser.findElement(locator)
+		const element = await browser.findElement(locator)
 		await element.click()
 	})
 
@@ -34,7 +34,7 @@ export default () => {
 		await browser.wait(Until.elementIsVisible(By.id('challenger_age')))
 
 		await browser.selectByValue(By.id('challenger_age'), '28')
-		let select = await browser.findElement(By.id('challenger_age'))
+		const select = await browser.findElement(By.id('challenger_age'))
 		await select.takeScreenshot()
 
 		await browser.click(By.css('input.btn'), { button: 'left', clickCount: 1, delay: 0.5 })
@@ -42,14 +42,16 @@ export default () => {
 
 	step('Flood Challenge: Step 2', async (browser: Browser) => {
 		await browser.wait(Until.elementIsVisible('table tbody tr td:first-of-type label'))
-		let orderElements = await browser.findElements(By.css('table tbody tr td:first-of-type label'))
+		const orderElements = await browser.findElements(
+			By.css('table tbody tr td:first-of-type label')
+		)
 
 		assert(orderElements.length > 0, 'expected to find orders on this page')
 
-		let orderIDs = await Promise.all(orderElements.map(element => element.text()))
+		const orderIDs = await Promise.all(orderElements.map((element) => element.text()))
 
 		// Find largest number by sorting and picking the first item
-		let largestOrder = orderIDs
+		const largestOrder = orderIDs
 			.map(Number)
 			.sort((a, b) => a - b)
 			.reverse()[0]
@@ -70,8 +72,8 @@ export default () => {
 
 	step('Flood Challenge: Step 4', async (browser: Browser) => {
 		await browser.wait(Until.elementTextMatches('span.token', /\d+/))
-		let element = await browser.findElement('span.token')
-		let token = await element.text()
+		const element = await browser.findElement('span.token')
+		const token = await element.text()
 		await browser.type(By.id('challenger_one_time_token'), token)
 
 		await browser.takeScreenshot()
@@ -80,8 +82,8 @@ export default () => {
 
 	step('Flood Challenge: Step 5', async (browser: Browser) => {
 		await browser.wait(Until.elementIsVisible('h2'))
-		let element = await browser.findElement('h2')
-		let completionText = await element.text()
+		const element = await browser.findElement('h2')
+		const completionText = await element.text()
 		assert.strictEqual(completionText, "You're Done!")
 	})
 }

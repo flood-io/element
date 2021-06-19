@@ -1,108 +1,77 @@
 {
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "type": "node",
-      "name": "vscode-jest-tests",
-      "request": "launch",
-      "args": [
-        "--runInBand"
-      ],
-      "cwd": "${workspaceFolder}",
-      "console": "internalConsole",
-      "internalConsoleOptions": "openOnFirstSessionStart",
-      "disableOptimisticBPs": true,
-      "program": "${workspaceFolder}/node_modules/jest/bin/jest"
-    },
-    {
-      "name": "cli run ./example",
-      "type": "node",
-      "request": "launch",
-      "args": [
-        "${workspaceFolder}/packages/cli/bin/element.ts",
-        "run",
-        "./examples/condition/condition.ts",
-        "--debug"
-      ],
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
-      "runtimeArgs": [
-        "--nolazy",
-        "-r",
-        "ts-node/register",
-        "-r",
-        "tsconfig-paths/register"
-      ],
-      "sourceMaps": true,
-      "cwd": "${workspaceRoot}",
-      "console": "internalConsole",
-      "protocol": "inspector"
-    },
-    {
-      "name": "cli agent start",
-      "type": "node",
-      "request": "launch",
-      "args": [
-        "${workspaceFolder}/packages/cli/bin/element.ts",
-        "agent",
-        "start",
-        "./examples/auto-wait/test.ts",
-        "--debug"
-      ],
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
-      "runtimeArgs": [
-        "--nolazy",
-        "-r",
-        "ts-node/register",
-        "-r",
-        "tsconfig-paths/register"
-      ],
-      "sourceMaps": true,
-      "cwd": "${workspaceRoot}",
-      "console": "internalConsole",
-      "protocol": "inspector",
-      "env": {
-        "NODE_ENV": "production",
-        "FLOOD_DATA_ROOT": "./tmp/data/flood",
-        "FLOOD_OBJECTS_PATH": "./tmp/data/flood/objects",
-        "FLOOD_SUMP_HOST": "172.17.0.2",
-        "THREAD_ID": "1",
-        "FLOOD_SEQUENCE_ID": "1",
-        "FLOOD_ACCOUNT_ID": "1",
-        "FLOOD_PROJECT_ID": "1",
-        "FLOOD_GRID_REGION": "local",
-        "FLOOD_GRID_SEQUENCE_ID": "1",
-        "FLOOD_GRID_SQEUENCE_ID": "1",
-        "FLOOD_GRID_NODE_SEQUENCE_ID": "1"
-      }
-    },
-    {
-      "name": "cli init",
-      "type": "node",
-      "request": "launch",
-      "args": [
-        "${workspaceFolder}/packages/cli/index.ts",
-        "init",
-        "./tmp/test-init",
-        "--debug"
-      ],
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
-      "runtimeArgs": [
-        "--nolazy",
-        "-r",
-        "ts-node/register",
-        "-r",
-        "tsconfig-paths/register"
-      ],
-      "sourceMaps": true,
-      "cwd": "${workspaceRoot}",
-      "console": "internalConsole",
-      "protocol": "inspector"
-    }
-  ]
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"type": "node",
+			"name": "vscode-jest-tests",
+			"request": "launch",
+			"args": ["--runInBand"],
+			"cwd": "${workspaceFolder}",
+			"console": "internalConsole",
+			"internalConsoleOptions": "openOnFirstSessionStart",
+			"disableOptimisticBPs": true,
+			"program": "${workspaceFolder}/node_modules/jest/bin/jest"
+		},
+		{
+			"name": "cli run ./example",
+			"type": "node",
+			"request": "launch",
+			"args": [
+				"${workspaceFolder}/packages/cli/bin/element.ts",
+				"run",
+				"./examples/condition/condition.ts",
+				"--debug"
+			],
+			"skipFiles": ["<node_internals>/**"],
+			"runtimeArgs": ["--nolazy", "-r", "ts-node/register", "-r", "tsconfig-paths/register"],
+			"sourceMaps": true,
+			"cwd": "${workspaceRoot}",
+			"console": "internalConsole",
+			"protocol": "inspector"
+		},
+		{
+			"name": "cli agent start",
+			"type": "node",
+			"request": "launch",
+			"args": [
+				"${workspaceFolder}/packages/cli/bin/element.ts",
+				"agent",
+				"start",
+				"./examples/auto-wait/test.ts",
+				"--debug"
+			],
+			"skipFiles": ["<node_internals>/**"],
+			"runtimeArgs": ["--nolazy", "-r", "ts-node/register", "-r", "tsconfig-paths/register"],
+			"sourceMaps": true,
+			"cwd": "${workspaceRoot}",
+			"console": "internalConsole",
+			"protocol": "inspector",
+			"env": {
+				"NODE_ENV": "production",
+				"FLOOD_DATA_ROOT": "./tmp/data/flood",
+				"FLOOD_OBJECTS_PATH": "./tmp/data/flood/objects",
+				"FLOOD_SUMP_HOST": "172.17.0.2",
+				"THREAD_ID": "1",
+				"FLOOD_SEQUENCE_ID": "1",
+				"FLOOD_ACCOUNT_ID": "1",
+				"FLOOD_PROJECT_ID": "1",
+				"FLOOD_GRID_REGION": "local",
+				"FLOOD_GRID_SEQUENCE_ID": "1",
+				"FLOOD_GRID_SQEUENCE_ID": "1",
+				"FLOOD_GRID_NODE_SEQUENCE_ID": "1"
+			}
+		},
+		{
+			"name": "cli init",
+			"type": "node",
+			"request": "launch",
+			"args": ["${workspaceFolder}/packages/cli/index.ts", "init", "./tmp/test-init", "--debug"],
+			"skipFiles": ["<node_internals>/**"],
+			"runtimeArgs": ["--nolazy", "-r", "ts-node/register", "-r", "tsconfig-paths/register"],
+			"sourceMaps": true,
+			"cwd": "${workspaceRoot}",
+			"console": "internalConsole",
+			"protocol": "inspector"
+		}
+	]
 }

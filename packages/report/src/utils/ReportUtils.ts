@@ -25,9 +25,9 @@ export class ReportUtils {
 		id: string,
 		text?: string,
 		indent?: number,
-		method: 'succeed' | 'fail' = 'succeed',
+		method: 'succeed' | 'fail' = 'succeed'
 	): void {
-		const report = this.store.filter(item => item.id === id && item.status === 'running')
+		const report = this.store.filter((item) => item.id === id && item.status === 'running')
 		if (report.length) {
 			this.spinnies?.[method](report[0].alias, { text, indent })
 			report[0].status = 'stopped'

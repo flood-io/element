@@ -6,13 +6,9 @@
 	"prettier": {
 		"semi": false,
 		"singleQuote": true,
-		"trailingComma": "all",
-		"printWidth": 100,
 		"useTabs": true,
-		"tabWidth": 2,
-		"bracketSpacing": true,
-		"jsxBracketSameLine": true,
-		"arrowParens": "avoid"
+		"printWidth": 100,
+		"jsxBracketSameLine": true
 	},
 	"dependencies": {
 		"@flood/element": "../../packages/element",

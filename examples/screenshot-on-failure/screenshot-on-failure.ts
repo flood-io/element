@@ -6,7 +6,7 @@ export const settings: TestSettings = {
 }
 
 export default () => {
-	step('1. Start', async browser => {
+	step('1. Start', async (browser) => {
 		await browser.visit('https://challenge.flood.io')
 		await browser.click(By.css('#foo')) // the selector doesn't exist - will cause error
 	})

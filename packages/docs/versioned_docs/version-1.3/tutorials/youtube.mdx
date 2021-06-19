@@ -27,7 +27,7 @@ export const settings: TestSettings = {
 }
 
 export default () => {
-	step('Test: Start', async browser => {
+	step('Test: Start', async (browser) => {
 		await browser.visit('https://www.youtube.com/watch?v=6fvhLrBrPQI')
 		await browser.takeScreenshot()
 	})
@@ -49,11 +49,11 @@ Oops! It looks like our script does navigate to the page, but it doesn’t play 
 We’ll need to add some lines to click the play button after visiting the page but before we take the screenshot, so that we can verify later whether or not the play button was clicked.
 
 ```typescript
-step('Test: Start', async browser => {
+step('Test: Start', async (browser) => {
 	await browser.visit('https://www.youtube.com/watch?v=6fvhLrBrPQI')
 
 	let btnPlay = await browser.findElement(
-		By.xpath('//button[@class="ytp-large-play-button ytp-button"]'),
+		By.xpath('//button[@class="ytp-large-play-button ytp-button"]')
 	)
 	btnPlay.click()
 
@@ -71,13 +71,13 @@ To make sure that the video is really playing, we’ll need to take a screenshot
 var setUp = 1
 
 export default () => {
-	step('Test: Start', async browser => {
+	step('Test: Start', async (browser) => {
 		if (setUp == 1) {
 			console.log('Load video for the first time')
 			await browser.visit('https://www.youtube.com/watch?v=6fvhLrBrPQI')
 
 			let btnPlay = await browser.findElement(
-				By.xpath('//button[@class="ytp-large-play-button ytp-button"]'),
+				By.xpath('//button[@class="ytp-large-play-button ytp-button"]')
 			)
 			btnPlay.click()
 

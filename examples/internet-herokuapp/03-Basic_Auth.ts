@@ -23,16 +23,16 @@ export const settings: TestSettings = {
 const URL = 'https://the-internet.herokuapp.com'
 
 export default () => {
-	step('Test: 01 - Homepage', async browser => {
+	step('Test: 01 - Homepage', async (browser) => {
 		await browser.visit(URL)
 		await browser.wait(Until.elementIsVisible(By.css('#content > h1')))
-		let pageTextVerify = By.visibleText('Welcome to the-internet')
+		const pageTextVerify = By.visibleText('Welcome to the-internet')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 	})
 
-	step('Test: 02 - Basic Auth', async browser => {
+	step('Test: 02 - Basic Auth', async (browser) => {
 		await browser.visit('http://admin:admin@the-internet.herokuapp.com/basic_auth')
-		let pageTextVerify = By.visibleText('Congratulations! You must have the proper credentials')
+		const pageTextVerify = By.visibleText('Congratulations! You must have the proper credentials')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 	})
 }

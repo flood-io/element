@@ -24,14 +24,12 @@ The first step we will use contains the step to tell Flood Element to visit the 
 ![The Flood Store - Homepage](https://raw.githubusercontent.com/flood-io/flood-chrome-docs/master/examples/images/step-1-homepage.png)
 
 ```typescript
-step("The Flood Store: Home", async (browser) => {
-  await browser.visit("https://wordpress.loadtest.io");
+step('The Flood Store: Home', async (browser) => {
+	await browser.visit('https://wordpress.loadtest.io')
 
-  let pageTextVerify = By.visibleText(
-    "Welcome to the Flood IO Merchandise Store."
-  );
-  await browser.wait(Until.elementIsVisible(pageTextVerify));
-});
+	let pageTextVerify = By.visibleText('Welcome to the Flood IO Merchandise Store.')
+	await browser.wait(Until.elementIsVisible(pageTextVerify))
+})
 ```
 
 Every step should be named appropriately to tell us what functionality is taking place (and how long it takes) within the step contents. So for this step we are timing how long the target URL takes to load from a user's perspective and also the verification that we are on the correct page.
@@ -55,13 +53,13 @@ For this step we want to navigate to a particular clothing type - called a 'Hood
 This type of page interaction is very simple and powerful for normal text based links - we use the following step to achieve this as well as another page text verification to ensure we are on the expected page.
 
 ```typescript
-step("The Flood Store: Click Hoodies", async (browser) => {
-  let lnkHoodies = await browser.findElement(By.partialLinkText("Hoodies"));
-  await lnkHoodies.click();
+step('The Flood Store: Click Hoodies', async (browser) => {
+	let lnkHoodies = await browser.findElement(By.partialLinkText('Hoodies'))
+	await lnkHoodies.click()
 
-  let pageTextVerify = By.visibleText("Hoodie with Logo");
-  await browser.wait(Until.elementIsVisible(pageTextVerify));
-});
+	let pageTextVerify = By.visibleText('Hoodie with Logo')
+	await browser.wait(Until.elementIsVisible(pageTextVerify))
+})
 ```
 
 This step represents the actual click and subsequent page load of the user interaction of your end user clicking on the 'Hoodies' link and waiting for the next page to load.
@@ -81,12 +79,10 @@ As you can see the link is fairly ugly as it contains a carriage return and a nu
 XPath notation is a popular way of identifying objects that you would like to interact with. Flood Element fully supports XPath definitions which can be very helpful and an alternate way of object interaction.
 
 ```typescript
-step("The Flood Store: Add To Cart", async (browser: Driver) => {
-  let addHoodieToCart = await browser.findElement(
-    By.xpath("//a[@data-product_id=39]")
-  );
-  await addHoodieToCart.click();
-});
+step('The Flood Store: Add To Cart', async (browser: Driver) => {
+	let addHoodieToCart = await browser.findElement(By.xpath('//a[@data-product_id=39]'))
+	await addHoodieToCart.click()
+})
 ```
 
 Once we have clicked on the 'Hoodies' link, we are taken to the Hoodies sub-page, which shows the user every single 'Hoodie' clothing type available to be purchased. Each product on a shopping site usually has a uniquely identifying code tied to it that we can use to select that item for completing our business process.
@@ -100,7 +96,7 @@ For the sake of this simple script, we know the hoodie we want to add to the car
 So using the above step XPath example we can use the following XPath expression:
 
 ```typescript
-"//a[@data-product_id=39]";
+'//a[@data-product_id=39]'
 ```
 
 So we are able to narrow down from the entire page what exact object we wish to interact with. We start by looking at the entire document object model (denoted by the //), all links on the page (denoted by the 'a' html tag), any links that have the data-product_id parameter, and lastly only the link that has the data-product_id parameter equal to the value 39.
@@ -110,17 +106,17 @@ Flood Element now knows exactly what object it needs to select.
 After Flood Element adds this item to the cart, we can navigate to the Cart page where we should see the item we just added.
 
 ```typescript
-step("The Flood Store: View Cart", async (browser: Driver) => {
-  await browser.visit("https://wordpress.loadtest.io/cart");
+step('The Flood Store: View Cart', async (browser: Driver) => {
+	await browser.visit('https://wordpress.loadtest.io/cart')
 
-  let pageTextVerify1 = By.visibleText("Free shipping");
-  await browser.wait(Until.elementIsVisible(pageTextVerify1));
+	let pageTextVerify1 = By.visibleText('Free shipping')
+	await browser.wait(Until.elementIsVisible(pageTextVerify1))
 
-  let pageTextVerify2 = By.visibleText("Hoodie with Logo");
-  await browser.wait(Until.elementIsVisible(pageTextVerify2));
+	let pageTextVerify2 = By.visibleText('Hoodie with Logo')
+	await browser.wait(Until.elementIsVisible(pageTextVerify2))
 
-  await browser.takeScreenshot();
-});
+	await browser.takeScreenshot()
+})
 ```
 
 So we just use another 'browser.visit' step to go to the actual Cart page and verify firstly that the page is present and secondly that the item 'Hoodie with Logo' is listed as an item.
@@ -144,18 +140,16 @@ b. Click on the ellipsis link (...) and click Copy > Copy selector.
 This will copy the exact CSS selector path that can be used in your step as follows:
 
 ```typescript
-step("The Flood Store: Proceed to Checkout", async (browser) => {
-  let lnkProceedToCheckout = By.css(
-    "#post-14 > div > div > div > div > div > a"
-  );
-  await browser.wait(Until.elementIsVisible(lnkProceedToCheckout));
-  let element = await browser.findElement(lnkProceedToCheckout);
-  await element.focus();
-  await element.click();
+step('The Flood Store: Proceed to Checkout', async (browser) => {
+	let lnkProceedToCheckout = By.css('#post-14 > div > div > div > div > div > a')
+	await browser.wait(Until.elementIsVisible(lnkProceedToCheckout))
+	let element = await browser.findElement(lnkProceedToCheckout)
+	await element.focus()
+	await element.click()
 
-  let pageTextVerify = By.visibleText("Returning customer?");
-  await browser.wait(Until.elementIsVisible(pageTextVerify));
-});
+	let pageTextVerify = By.visibleText('Returning customer?')
+	await browser.wait(Until.elementIsVisible(pageTextVerify))
+})
 ```
 
 In this case our Selector produced: '#post-14 > div > div > div > div > div > a' which is what can be used in the By.css step above.
@@ -165,17 +159,17 @@ In this case our Selector produced: '#post-14 > div > div > div > div > div > a'
 Filling out a form with a number of text entry fields can be very easily achieved with Flood Element. All we need to do is to find out the CSS or unique input ID of the field we would like to enter text into and include it in a step as follows:
 
 ```typescript
-step("The Flood Store: Checkout Data Entry", async (browser) => {
-  //let billingFirstName = await browser.findElement(By.id('billing_first_name'))
+step('The Flood Store: Checkout Data Entry', async (browser) => {
+	//let billingFirstName = await browser.findElement(By.id('billing_first_name'))
 
-  // Fill in text field - billing First Name
-  await browser.type(By.id("billing_first_name"), "Jason");
+	// Fill in text field - billing First Name
+	await browser.type(By.id('billing_first_name'), 'Jason')
 
-  // Fill in text field - billing First Name
-  await browser.type(By.id("billing_last_name"), "Rizio");
+	// Fill in text field - billing First Name
+	await browser.type(By.id('billing_last_name'), 'Rizio')
 
-  //...
-});
+	//...
+})
 ```
 
 As you can see, a simple line of code per field containing the text string needing to be entered is all that is required to fill out a form.
@@ -185,20 +179,18 @@ As you can see, a simple line of code per field containing the text string needi
 We have now almost completed the full item purchase business process. All that is left is to click the place order button using the following step:
 
 ```typescript
-step("The Flood Store: Place Order", async (browser) => {
-  let btnPlaceOrder = By.id("place_order");
-  await browser.wait(Until.elementIsVisible(btnPlaceOrder));
-  let element = await browser.findElement(btnPlaceOrder);
-  await element.focus();
-  await element.click();
+step('The Flood Store: Place Order', async (browser) => {
+	let btnPlaceOrder = By.id('place_order')
+	await browser.wait(Until.elementIsVisible(btnPlaceOrder))
+	let element = await browser.findElement(btnPlaceOrder)
+	await element.focus()
+	await element.click()
 
-  let pageTextVerify = By.visibleText(
-    "Thank you. Your order has been received."
-  );
-  await browser.wait(Until.elementIsVisible(pageTextVerify));
+	let pageTextVerify = By.visibleText('Thank you. Your order has been received.')
+	await browser.wait(Until.elementIsVisible(pageTextVerify))
 
-  await browser.takeScreenshot();
-});
+	await browser.takeScreenshot()
+})
 ```
 
 When an object has a unique id, it makes our scripting very easy to describe the object. Here the button has an id called 'place_order' which is all we need to use in order to interact with the object successfully.

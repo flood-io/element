@@ -64,14 +64,14 @@ Declares each step in your test. This must go within your main test expression.
 
 ```typescript
 export default () => {
-  step("Step 1", async (browser: Browser) => {
-    await browser.visit("https://example.com");
-  });
+	step('Step 1', async (browser: Browser) => {
+		await browser.visit('https://example.com')
+	})
 
-  step("Step 2", async (browser: Browser) => {});
+	step('Step 2', async (browser: Browser) => {})
 
-  step("Step 3", async (browser: Browser) => {});
-};
+	step('Step 3', async (browser: Browser) => {})
+}
 ```
 
 **Parameters**

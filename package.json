@@ -1,6 +1,6 @@
 {
 	"name": "flood-element",
-	"version": "2.0.0",
+	"version": "2.0.5-canary.1",
 	"main": "index.js",
 	"repository": "git@github.com:flood-io/element.git",
 	"author": "Ivan Vanderbyl <ivanvanderbyl@gmail.com>",
@@ -8,40 +8,41 @@
 	"private": true,
 	"dependencies": {
 		"lerna": "^3.20.2",
-		"ts-jest": "^26.5.4"
+		"ts-jest": "^26.5.6"
 	},
 	"scripts": {
-		"build:watch": "lerna run build:watch  --sort --parallel",
+		"build:watch": "lerna run build:watch --sort --parallel",
 		"build": "lerna run build --sort",
 		"test": "jest",
-		"publish:brew": "cd ./scripts/publish-brew-tap && yarn && ts-node --project ./tsconfig.json -- ./index.ts",
-		"publish:pre": "lerna publish --force-publish=* --cd-version prerelease && yarn publish:brew",
+		"lint": "echo \"TODO: linting\"",
+		"format": "prettier --write .; eslint --fix .",
+		"publish:pre": "lerna publish --force-publish=* --cd-version prerelease",
 		"dev": "ts-node -r tsconfig-paths/register ./packages/cli/bin/element.ts",
 		"elementctl": "ts-node -r tsconfig-paths/register ./packages/element-cli/bin/element.ts",
 		"dev:docs": "cd ./packages/docs/ && yarn start",
-		"docs:version": "cd ./packages/docs/ && docusaurus docs:version"
+		"docs:version": "cd ./packages/docs/ && docusaurus docs:version",
+		"prepare": "husky install"
 	},
 	"devDependencies": {
-		"@commitlint/cli": "^8.1.0",
-		"@commitlint/config-conventional": "^8.1.0",
-		"@types/jest": "^24.0.25",
-		"@types/node": "12.7.4",
-		"@typescript-eslint/eslint-plugin": "^2.15.0",
-		"@typescript-eslint/parser": "^2.15.0",
-		"eslint": "^6.8.0",
-		"eslint-config-prettier": "^6.9.0",
-		"eslint-plugin-import": "^2.19.1",
-		"eslint-plugin-prettier": "^3.1.2",
-		"husky": "^3.0.5",
-		"jest": "^25.2.2",
-		"prettier": "^1.19.1",
-		"ts-node": "^8.8.1",
+		"@commitlint/cli": "^12.1.4",
+		"@commitlint/config-conventional": "^12.1.4",
+		"@types/jest": "^26.0.23",
+		"@types/node": "^15.0.3",
+		"@typescript-eslint/eslint-plugin": "^4.23.0",
+		"@typescript-eslint/parser": "^4.23.0",
+		"eslint": "^7.26.0",
+		"eslint-config-prettier": "^8.3.0",
+		"eslint-plugin-import": "^2.22.1",
+		"husky": "^6.0.0",
+		"jest": "^26.6.3",
+		"lint-staged": "^11.0.0",
+		"prettier": "^2.3.0",
+		"ts-node": "^9.1.1",
 		"tsconfig-paths": "^3.9.0",
-		"typescript": "^3.8.3",
+		"typescript": "^4.2.4",
 		"webpack": "^4.41.5"
 	},
 	"resolutions": {
-		"@types/node": "12.7.4",
 		"**/terser-webpack-plugin": "^1.4.3"
 	},
 	"workspaces": [
@@ -49,15 +50,5 @@
 	],
 	"nohoist": [
 		"packages/docs/**"
-	],
-	"commitlint": {
-		"extends": [
-			"@commitlint/config-conventional"
-		]
-	},
-	"husky": {
-		"hooks": {
-			"commit-msg": "commitlint -e $HUSKY_GIT_PARAMS"
-		}
-	}
+	]
 }

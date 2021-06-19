@@ -20,7 +20,7 @@ describe('EvaluatedScript', () => {
 	beforeAll(async () => {
 		jest.setTimeout(30e3)
 		vmFeaturesTestScript = await mustCompileFile(
-			join(__dirname, '../../tests/fixtures/vm-features.ts'),
+			join(__dirname, '../../tests/fixtures/vm-features.ts')
 		)
 	})
 
@@ -33,7 +33,7 @@ describe('EvaluatedScript', () => {
 			expect(settings.duration).toBe('30s')
 			expect(settings.userAgent).toBe('I AM ROBOT')
 
-			expect(steps.map(step => step.name)).toEqual(['Step 1', 'Step 2', 'Step 3'])
+			expect(steps.map((step) => step.name)).toEqual(['Step 1', 'Step 2', 'Step 3'])
 		})
 
 		test('allows overriding settings per step', async () => {

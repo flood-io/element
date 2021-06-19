@@ -36,7 +36,7 @@ import * as assert from 'assert'
 }
 ```
 
-The initial import statement allows you to add classes relating to test steps, test settings, and By functions etc. that are needed by the script to carry out actions against objects you have defined. For basic tests the above included classes shoudl suffice.  You will need to review these if you require further functionality from other classes that are not listed above.
+The initial import statement allows you to add classes relating to test steps, test settings, and By functions etc. that are needed by the script to carry out actions against objects you have defined. For basic tests the above included classes shoudl suffice. You will need to review these if you require further functionality from other classes that are not listed above.
 
 The importing of the assert class is useful if you would like to use assertions to capture and verify strings/integers or any data retrieved from objects during test execution. This can also be reported in the console.
 
@@ -57,19 +57,19 @@ export const settings: TestSettings = {
 
 This export block allows you to specify constants related to typical Test Settings used in all load tests:
 
-* loopCount: Used to specify how many iterations (or loops) you would like each user to run. If commented out or not included - the test will run forever.
+- loopCount: Used to specify how many iterations (or loops) you would like each user to run. If commented out or not included - the test will run forever.
 
-* description: A simple description sentence describing the aim of the test scenario.
+- description: A simple description sentence describing the aim of the test scenario.
 
-* screenshotOnFailure: A screenshot of the current page will automatically be generated when Flood Element detects a failure has occurred. These are viewable in the captured results for each Flood.
+- screenshotOnFailure: A screenshot of the current page will automatically be generated when Flood Element detects a failure has occurred. These are viewable in the captured results for each Flood.
 
-* disableCache / clearCache: No caching is done if this is set to true.
+- disableCache / clearCache: No caching is done if this is set to true.
 
-* clearCookies: Any cookies detected will be cleared for each iteration if this is set to true.
+- clearCookies: Any cookies detected will be cleared for each iteration if this is set to true.
 
-* actionDelay: the amount of time in seconds that the Flood Element replay engine will wait in between actions contained within a step.
+- actionDelay: the amount of time in seconds that the Flood Element replay engine will wait in between actions contained within a step.
 
-* stepDelay: the amount of time in seconds that the Flood Element replay engine will wait in between steps.
+- stepDelay: the amount of time in seconds that the Flood Element replay engine will wait in between steps.
 
 c. **export default() => { ... }**
 
@@ -82,14 +82,12 @@ The first step we will use contains the step to tell Flood Element to visit the 
 ![The Flood Store - Homepage](https://raw.githubusercontent.com/flood-io/flood-chrome-docs/master/examples/images/step-1-homepage.png)
 
 ```typescript
-	step('The Flood Store: Home', async browser => {
+step('The Flood Store: Home', async (browser) => {
+	await browser.visit('https://wordpress.loadtest.io')
 
-		await browser.visit('https://wordpress.loadtest.io')
-
-		let pageTextVerify = By.visibleText('Welcome to the Flood IO Merchandise Store.')
-		await browser.wait(Until.elementIsVisible(pageTextVerify))
-
-	})
+	let pageTextVerify = By.visibleText('Welcome to the Flood IO Merchandise Store.')
+	await browser.wait(Until.elementIsVisible(pageTextVerify))
+})
 ```
 
 Every step should be named appropriately to tell us what functionality is taking place (and how long does it take) within the step contents. So for this step we are timing how long the target URL takes to load from a user's perspective and also the verification that we are on the correct page.
@@ -113,7 +111,7 @@ For this step we want to navigate to a particular clothing type - called a 'Hood
 This type of page interaction is very simple and powerful for normal text based links - we use the following step to achieve this as well as another page text verification to ensure we are on the expected page.
 
 ```typescript
-step('The Flood Store: Click Hoodies', async browser => {
+step('The Flood Store: Click Hoodies', async (browser) => {
 	let lnkHoodies = await browser.findElement(By.partialLinkText('Hoodies'))
 	await lnkHoodies.click()
 
@@ -140,9 +138,7 @@ XPath notation is a popular way of identifying objects that you would like to in
 
 ```typescript
 step('The Flood Store: Add To Cart', async (browser: Driver) => {
-	let addHoodieToCart = await browser.findElement(
-		By.xpath('//a[@data-product_id=39]'),
-	)
+	let addHoodieToCart = await browser.findElement(By.xpath('//a[@data-product_id=39]'))
 	await addHoodieToCart.click()
 })
 ```
@@ -202,18 +198,16 @@ b. Click on the ellipsis link (...) and click Copy > Copy selector.
 This will copy the exact CSS selector path that can be used in your step as follows:
 
 ```typescript
-	step('The Flood Store: Proceed to Checkout', async browser => {
+step('The Flood Store: Proceed to Checkout', async (browser) => {
+	let lnkProceedToCheckout = By.css('#post-14 > div > div > div > div > div > a')
+	await browser.wait(Until.elementIsVisible(lnkProceedToCheckout))
+	let element = await browser.findElement(lnkProceedToCheckout)
+	await element.focus()
+	await element.click()
 
-		let lnkProceedToCheckout = By.css('#post-14 > div > div > div > div > div > a')
-		await browser.wait(Until.elementIsVisible(lnkProceedToCheckout))
-		let element = await browser.findElement(lnkProceedToCheckout)
-		await element.focus()
-		await element.click()
-
-		let pageTextVerify = By.visibleText('Returning customer?')
-		await browser.wait(Until.elementIsVisible(pageTextVerify))
-
-	})
+	let pageTextVerify = By.visibleText('Returning customer?')
+	await browser.wait(Until.elementIsVisible(pageTextVerify))
+})
 ```
 
 In this case our Selector produced: '#post-14 > div > div > div > div > div > a' which is what can be used in the By.css step above.
@@ -223,19 +217,17 @@ In this case our Selector produced: '#post-14 > div > div > div > div > div > a'
 Filling out a form with a number of text entry fields can be very easily achieved with Flood Element. All we need to do is to find out the CSS or unique input ID of the field we would like to enter text into and include it in a step as follows:
 
 ```typescript
-	step('The Flood Store: Checkout Data Entry', async browser => {
+step('The Flood Store: Checkout Data Entry', async (browser) => {
+	//let billingFirstName = await browser.findElement(By.id('billing_first_name'))
 
-	    //let billingFirstName = await browser.findElement(By.id('billing_first_name'))
+	// Fill in text field - billing First Name
+	await browser.type(By.id('billing_first_name'), 'Jason')
 
-	   	// Fill in text field - billing First Name
-		await browser.type(By.id('billing_first_name'), 'Jason')
+	// Fill in text field - billing First Name
+	await browser.type(By.id('billing_last_name'), 'Rizio')
 
-	   	// Fill in text field - billing First Name
-		await browser.type(By.id('billing_last_name'), 'Rizio')
-
-		//...	
-
-	})
+	//...
+})
 ```
 
 As you can see, a simple line of code per field containing the text string needing to be entered is all that is required to fill out a form.
@@ -245,20 +237,18 @@ As you can see, a simple line of code per field containing the text string needi
 We have now almost completed the full item purchase business process. All that is left is to click the place order button using the following step:
 
 ```typescript
-	step('The Flood Store: Place Order', async browser => {
+step('The Flood Store: Place Order', async (browser) => {
+	let btnPlaceOrder = By.id('place_order')
+	await browser.wait(Until.elementIsVisible(btnPlaceOrder))
+	let element = await browser.findElement(btnPlaceOrder)
+	await element.focus()
+	await element.click()
 
-		let btnPlaceOrder = By.id('place_order')
-		await browser.wait(Until.elementIsVisible(btnPlaceOrder))
-		let element = await browser.findElement(btnPlaceOrder)
-		await element.focus()
-		await element.click()	
+	let pageTextVerify = By.visibleText('Thank you. Your order has been received.')
+	await browser.wait(Until.elementIsVisible(pageTextVerify))
 
-		let pageTextVerify = By.visibleText('Thank you. Your order has been received.')
-		await browser.wait(Until.elementIsVisible(pageTextVerify))
-
-		await browser.takeScreenshot()
-
-	})	
+	await browser.takeScreenshot()
+})
 ```
 
 When an object has a unique id, it makes our scripting very easy to describe the object. Here the button has an id called 'place_order' which is all we need to use in order to interact with the object successfully.

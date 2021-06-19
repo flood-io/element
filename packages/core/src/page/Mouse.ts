@@ -55,7 +55,7 @@ export default class Mouse {
 	public async click(
 		x: number | Point | ElementHandle,
 		y?: number | ClickOptions,
-		options?: ClickOptions,
+		options?: ClickOptions
 	): Promise<void> {
 		if (isElementHandle(x) && typeof y !== 'number') {
 			const coords = await x.centerPoint()

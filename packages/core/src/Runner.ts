@@ -30,7 +30,7 @@ export interface IRunner {
 }
 
 function delay(t: number, v?: any) {
-	return new Promise(function(resolve) {
+	return new Promise(function (resolve) {
 		setTimeout(resolve.bind(null, v), t)
 	})
 }
@@ -49,7 +49,7 @@ export class Runner {
 		private settingsFromConfig: TestSettings,
 		private testSettingOverrides: TestSettings,
 		private launchOptionOverrides: Partial<ConcreteLaunchOptions>,
-		private testObserverFactory: (t: TestObserver) => TestObserver = x => x,
+		private testObserverFactory: (t: TestObserver) => TestObserver = (x) => x
 	) {
 		if (reporter.sendReport) this.sendReport = reporter.sendReport
 	}
@@ -115,7 +115,7 @@ export class Runner {
 				this.reporter,
 				this.settingsFromConfig,
 				this.testSettingOverrides,
-				this.testObserverFactory,
+				this.testObserverFactory
 			)
 			testToCancel = test
 
@@ -139,8 +139,8 @@ export class Runner {
 						.substring(0, 1)
 						.toUpperCase()
 						.concat(
-							browser.substring(1),
-						)}. The following APIs are not applicable: browser.clearBrowserCache()\n`,
+							browser.substring(1)
+						)}. The following APIs are not applicable: browser.clearBrowserCache()\n`
 				)
 			}
 
@@ -171,7 +171,7 @@ export class Runner {
 						this.reporter.report?.startAnimation(
 							iterationName,
 							`${iterationName} ${numOfIteration}`,
-							2,
+							2
 						)
 					} else {
 						this.sendReport(
@@ -179,7 +179,7 @@ export class Runner {
 								iterationMsg: `${iterationName} ${numOfIteration}`,
 								iteration,
 							}),
-							'iteration',
+							'iteration'
 						)
 					}
 				}
@@ -192,7 +192,7 @@ export class Runner {
 						this.reporter.report?.endAnimation(
 							iterationName,
 							chalk.whiteBright(`${iterationName} ${numOfIteration}`),
-							2,
+							2
 						)
 					}
 					if (!this.looper.isRestart) {
@@ -246,7 +246,7 @@ export class Runner {
 		}
 		this.summaryIteration.push(iterationResult)
 
-		stepResult.forEach(step => {
+		stepResult.forEach((step) => {
 			switch (step.status) {
 				case Status.PASSED:
 					passedNo += 1
@@ -262,7 +262,7 @@ export class Runner {
 					if (this.reporter.worker) {
 						this.sendReport(
 							JSON.stringify({ name: 'skipped', value: skippedNo, iteration }),
-							'measurement',
+							'measurement'
 						)
 					}
 
@@ -273,7 +273,7 @@ export class Runner {
 					if (this.reporter.worker) {
 						this.sendReport(
 							JSON.stringify({ name: 'unexecuted', value: unexecutedNo, iteration }),
-							'measurement',
+							'measurement'
 						)
 					}
 					break
@@ -305,7 +305,7 @@ export class PersistentRunner extends Runner {
 		testSettings: TestSettings,
 		testSettingOverrides: TestSettings,
 		launchOptionOverrides: Partial<ConcreteLaunchOptions>,
-		testObserverFactory: (t: TestObserver) => TestObserver = x => x,
+		testObserverFactory: (t: TestObserver) => TestObserver = (x) => x
 	) {
 		super(
 			clientFactory,
@@ -314,7 +314,7 @@ export class PersistentRunner extends Runner {
 			testSettings,
 			testSettingOverrides,
 			launchOptionOverrides,
-			testObserverFactory,
+			testObserverFactory
 		)
 
 		if (this.testCommander !== undefined) {

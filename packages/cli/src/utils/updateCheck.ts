@@ -86,9 +86,9 @@ export async function updateCheck(pkg: Package) {
 			distTag,
 		})
 
-		if (update) {
-			printUpdateMessage(pkg.version, distTag, update)
-		}
+		// if (update) {
+		// 	printUpdateMessage(pkg.version, distTag, update)
+		// }
 	} catch (err) {
 		console.error(error(`Checking for updates failed`))
 

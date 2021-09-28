@@ -5,7 +5,7 @@ import checkForUpdate from 'update-check'
 import ms from 'ms'
 import chalk from 'chalk'
 import { error } from './error'
-import { info } from './info'
+// import { info } from './info'
 import { Package } from 'normalize-package-data'
 import { prerelease, major, minor, patch } from 'semver'
 const commandExistsSync = require('command-exists').sync

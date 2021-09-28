@@ -46,12 +46,12 @@ function npmUpdateMessage(version: string, distTag: string /* , update: Update *
 function printUpdateMessage(version: string, distTag: string, update: Update) {
 	const releaseChannel = distTag === 'latest' ? 'stable' : distTag
 
-	console.log(
-		info(
-			chalk`{bgRed UPDATE AVAILABLE} The latest ${releaseChannel} version of element-cli is ${update?.latest}`,
-		),
-	)
+	// @ts-ignore
+	const releaseMsg = chalk`{bgRed UPDATE AVAILABLE} The latest ${releaseChannel} version of element-cli is ${update?.latest}`
 
+	// console.log(info(releaseMsg))
+
+	// @ts-ignore
 	const updateMsg =
 		[
 			brewUpdateMessage(version, distTag, update),
@@ -59,7 +59,7 @@ function printUpdateMessage(version: string, distTag: string, update: Update) {
 			npmUpdateMessage(version, distTag),
 		].find(x => !!x) || 'unreachable'
 
-	console.log(info(updateMsg))
+	// console.log(info(updateMsg))
 }
 
 export async function updateCheck(pkg: Package) {

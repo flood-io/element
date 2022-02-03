@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.5-canary.20](https://github.com/flood-io/element/compare/v2.0.5-canary.19...v2.0.5-canary.20) (2022-02-03)
+
+### Bug Fixes
+
+- guard against negative response time measurements ([5b84002](https://github.com/flood-io/element/commit/5b84002bcd36e60a5c315240472418c6f0b2dd68))
+
 ## [2.0.5-canary.19](https://github.com/flood-io/element/compare/v2.0.5-canary.18...v2.0.5-canary.19) (2021-06-18)
 
 **Note:** Version bump only for package @flood/element-core

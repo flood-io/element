@@ -1,6 +1,6 @@
 {
 	"name": "@flood/element-compiler",
-	"version": "2.0.5-canary.19",
+	"version": "2.0.5-canary.20",
 	"description": "Element internal script compiler",
 	"author": "Ivan Vanderbyl <ivanvanderbyl@gmail.com>",
 	"homepage": "https://github.com/flood-io/element#readme",

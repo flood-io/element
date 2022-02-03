@@ -126,7 +126,9 @@ export class TimingObserver extends NetworkRecordingTestObserver {
 			test.reporter.responseCode = responseCode
 
 			reporter.addMeasurement('throughput', networkRecorder.networkThroughput(), name)
-			reporter.addMeasurement('response_time', documentResponseTime, name)
+			if (documentResponseTime >= 0) {
+				reporter.addMeasurement('response_time', documentResponseTime, name)
+			}
 			reporter.addMeasurement('latency', documentLatency, name)
 		}
 

@@ -152,7 +152,9 @@ export class TimingObserver extends NetworkRecordingTestObserver {
 			// reporter.addCompoundMeasurement('browser_performance', browserPerformanceTiming, name)
 
 			reporter.addMeasurement('throughput', networkRecorder.networkThroughput(), name)
-			reporter.addMeasurement('response_time', documentResponseTime, name)
+			if (documentResponseTime >= 0) {
+				reporter.addMeasurement('response_time', documentResponseTime, name)
+			}
 			reporter.addMeasurement('latency', documentLatency, name)
 		}
 

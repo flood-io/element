@@ -40,7 +40,7 @@ const num = (v?: string, defaultValue?: number): number | undefined => {
 
 export function initFromEnvironment(
 	env: ProcessEnv = process.env,
-	testScript = '',
+	testScript = ''
 ): Partial<GridConfig> {
 	let root: string
 	let testDataRoot: string

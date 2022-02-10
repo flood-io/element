@@ -17,13 +17,17 @@ export class Context {
 		await this.attachToPage(
 			test.reporter,
 			test.client.page,
-			test.settings.consoleFilter as ConsoleMethod[],
+			test.settings.consoleFilter as ConsoleMethod[]
 		)
 	}
 
 	// TODO deliberately detach from network recorder & observer
 
-	public async attachToPage(reporter: IReporter, page: Page, consoleFilters: ConsoleMethod[]): Promise<void> {
+	public async attachToPage(
+		reporter: IReporter,
+		page: Page,
+		consoleFilters: ConsoleMethod[]
+	): Promise<void> {
 		this.networkRecorder = new NetworkRecorder(page)
 		await this.networkRecorder.attachEvents()
 		this.observer = new NetworkObserver(reporter, this.networkRecorder, consoleFilters)

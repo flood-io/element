@@ -75,7 +75,7 @@ export class PlaywrightClient implements PlaywrightClientLike {
 }
 
 export async function launchBrowserServer(
-	passedOptions: Partial<ConcreteLaunchOptions> = {},
+	passedOptions: Partial<ConcreteLaunchOptions> = {}
 ): Promise<BrowserServer> {
 	const options: ConcreteLaunchOptions = {
 		...defaultLaunchOptions,
@@ -119,7 +119,7 @@ export async function connectWS(wsEndpoint: string, type?: BrowserType): Promise
 
 export async function launch(
 	passedOptions: Partial<ConcreteLaunchOptions> = {},
-	pageSettings: ConcreteTestSettings,
+	pageSettings: ConcreteTestSettings
 ): Promise<PlaywrightClient> {
 	const options: ConcreteLaunchOptions = {
 		...defaultLaunchOptions,
@@ -154,7 +154,7 @@ export async function launch(
 		}
 	}
 
-	const browser = await playwright[browserType].launch(options).catch(err => {
+	const browser = await playwright[browserType].launch(options).catch((err) => {
 		console.log(chalk.redBright(err.message))
 		return browser
 	})

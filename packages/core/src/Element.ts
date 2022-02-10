@@ -15,7 +15,7 @@ import findRoot from 'find-root'
 
 export async function runSingleTestScript(
 	opts: ElementOptions,
-	spinnies?: any,
+	spinnies?: any
 ): Promise<IterationResult[]> {
 	const {
 		testScript,
@@ -65,7 +65,7 @@ export async function runSingleTestScript(
 		opts.testSettings,
 		opts.testSettingOverrides,
 		launchOptionOverrides,
-		opts.testObserverFactory,
+		opts.testObserverFactory
 	)
 
 	process.on('SIGINT', async () => {
@@ -97,13 +97,13 @@ export async function runCommandLine(args: ElementRunArguments): Promise<TestRes
 		fileTitle: string,
 		args: ElementRunArguments,
 		elementResult: ElementResult,
-		isConfig: boolean,
+		isConfig: boolean
 	) => {
 		// eslint-disable-next-line @typescript-eslint/no-var-requires
 		const pkg = require(join(findRoot(__dirname), 'package.json'))
 		spinnies.add('Running', {
 			text: chalk(
-				`Running ${fileTitle} with\n- Element v${pkg.version}\n- Node ${process.version}`,
+				`Running ${fileTitle} with\n- Element v${pkg.version}\n- Node ${process.version}`
 			),
 			status: 'non-spinnable',
 			indent: 0,
@@ -123,8 +123,8 @@ export async function runCommandLine(args: ElementRunArguments): Promise<TestRes
 		if (args.runArgs && !args.runArgs.file) {
 			console.log(
 				chalk.grey(
-					'The following test scripts that matched the testPathMatch pattern are going to be executed:',
-				),
+					'The following test scripts that matched the testPathMatch pattern are going to be executed:'
+				)
 			)
 		}
 		let order = 0
@@ -136,7 +136,7 @@ export async function runCommandLine(args: ElementRunArguments): Promise<TestRes
 			}
 			if (order >= 1) {
 				console.log(
-					chalk.grey('------------------------------------------------------------------'),
+					chalk.grey('------------------------------------------------------------------')
 				)
 			}
 			order++
@@ -148,8 +148,8 @@ export async function runCommandLine(args: ElementRunArguments): Promise<TestRes
 	}
 
 	if (args.notExistingFiles) {
-		args.notExistingFiles.forEach(name =>
-			elementResult.addScriptWithError({ name, error: "Test script(s) couldn't be found" }),
+		args.notExistingFiles.forEach((name) =>
+			elementResult.addScriptWithError({ name, error: "Test script(s) couldn't be found" })
 		)
 	}
 

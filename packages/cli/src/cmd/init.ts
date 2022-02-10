@@ -24,8 +24,8 @@ const cmd: CommandModule = {
 
 			console.log(
 				chalk`{grey New Element project initialized}\nRun ${runCmd(`cd ${args.dir}`)} and ${runCmd(
-					`element run ${tsConfig.files[0]}`,
-				)}`,
+					`element run ${tsConfig.files[0]}`
+				)}`
 			)
 		})
 	},

@@ -1,7 +1,7 @@
 {
 	"lerna": "2.11.0",
 	"npmClient": "yarn",
-	"version": "2.0.5-beta.0",
+	"version": "2.0.5-canary.20",
 	"useWorkspaces": true,
 	"command": {
 		"init": {
@@ -12,24 +12,12 @@
 		},
 		"version": {
 			"message": "chore(release): publish %s\n[skip ci]",
-			"allowBranch": [
-				"master",
-				"beta",
-				"canary",
-				"feature/*"
-			]
+			"allowBranch": ["stable", "beta", "canary"]
 		},
 		"bootstrap": {
-			"npmClient": "yarn"
+			"npmClient": "yarn",
+			"useWorkspaces": true
 		}
 	},
-	"ignoreChanges": [
-		"assets",
-		"coverage",
-		"examples",
-		"scripts",
-		"smoke",
-		"**/*.md",
-		"packages/docs/**"
-	]
+	"ignoreChanges": ["assets", "coverage", "examples", "scripts", "**/*.md", "packages/docs/**"]
 }

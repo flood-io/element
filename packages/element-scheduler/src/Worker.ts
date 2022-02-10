@@ -51,11 +51,11 @@ export class Worker implements WorkerInterface {
 	constructor(public options: WorkerOptions) {
 		this.fakeStream = new PassThrough()
 
-		this.exitPromise = new Promise(resolve => {
+		this.exitPromise = new Promise((resolve) => {
 			this.resolveExitPromise = resolve
 		})
 
-		this.loadPromise = new Promise(resolve => {
+		this.loadPromise = new Promise((resolve) => {
 			this.resolveLoadPromise = resolve
 		})
 
@@ -107,7 +107,7 @@ export class Worker implements WorkerInterface {
 
 		this.worker.on('message', this.onMessage)
 		this.worker.on('exit', this.onExit)
-		this.worker.on('error', err => console.error(err))
+		this.worker.on('error', (err) => console.error(err))
 		this.worker.on('online', () => {})
 
 		this.worker.postMessage([ChildMessages.INITIALIZE, false])
@@ -188,7 +188,7 @@ export class Worker implements WorkerInterface {
 		request: ChildMessage,
 		onProcessStart: OnStart,
 		onProcessEnd: OnEnd,
-		onProcessReport: OnReport,
+		onProcessReport: OnReport
 	): void {
 		onProcessStart(this)
 		this.onProcessEnd = (...args) => onProcessEnd(...args)

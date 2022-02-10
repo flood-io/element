@@ -33,14 +33,14 @@ First, make sure you have installed the [latest version of NodeJS](https://nodej
 </a>
 
 <Tabs
-  groupId="stable"
-  defaultValue="yarn"
-  values={[
-    {label: 'Yarn', value: 'yarn'},
-    {label: 'NPM', value: 'npm'},
-  ]
+groupId="stable"
+defaultValue="yarn"
+values={[
+{label: 'Yarn', value: 'yarn'},
+{label: 'NPM', value: 'npm'},
+]
 }>
-  <TabItem value="yarn">
+<TabItem value="yarn">
 
 ```bash title="yarn"
 # Install
@@ -73,14 +73,14 @@ This will install the latest stable version of Element CLI, together with other 
 </a>
 
 <Tabs
-  groupId="beta"
-  defaultValue="yarn"
-  values={[
-    {label: 'Yarn', value: 'yarn'},
-    {label: 'NPM', value: 'npm'},
-  ]
+groupId="beta"
+defaultValue="yarn"
+values={[
+{label: 'Yarn', value: 'yarn'},
+{label: 'NPM', value: 'npm'},
+]
 }>
-  <TabItem value="yarn">
+<TabItem value="yarn">
 
 ```bash title="yarn"
 # Install
@@ -111,14 +111,14 @@ element --version
 </a>
 
 <Tabs
-  groupId="canary"
-  defaultValue="yarn"
-  values={[
-    {label: 'Yarn', value: 'yarn'},
-    {label: 'NPM', value: 'npm'},
-  ]
+groupId="canary"
+defaultValue="yarn"
+values={[
+{label: 'Yarn', value: 'yarn'},
+{label: 'NPM', value: 'npm'},
+]
 }>
-  <TabItem value="yarn">
+<TabItem value="yarn">
 
 ```bash title="yarn"
 # Install
@@ -147,14 +147,14 @@ element --version
 If you want to install a specific version of Element to use in a local project, just `cd` to the project folder, then install by adding a `@version-tag`, and removing the `global` (or `-g` on NPM) keyword.
 
 <Tabs
-  groupId="specific-version"
-  defaultValue="yarn"
-  values={[
-    {label: 'Yarn', value: 'yarn'},
-    {label: 'NPM', value: 'npm'},
-  ]
+groupId="specific-version"
+defaultValue="yarn"
+values={[
+{label: 'Yarn', value: 'yarn'},
+{label: 'NPM', value: 'npm'},
+]
 }>
-  <TabItem value="yarn">
+<TabItem value="yarn">
 
 ```bash title="yarn"
 # Install Element version 1.5.1
@@ -205,4 +205,4 @@ element run --help
 
 In the next section, we'll talk about how to create your first Element project.
 
-[NodeJS]: https://nodejs.org
+[nodejs]: https://nodejs.org

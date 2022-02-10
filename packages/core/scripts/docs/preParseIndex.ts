@@ -13,9 +13,9 @@ export function preParseIndex(fileName: string) {
 		fileName,
 		readFileSync(fileName, 'utf8'),
 		ts.ScriptTarget.ES2015,
-		/* setParentNodes */ true,
+		/* setParentNodes */ true
 	)
-	ts.forEachChild(s, node => {
+	ts.forEachChild(s, (node) => {
 		switch (node.kind) {
 			case ts.SyntaxKind.ExportDeclaration:
 				getExport(ctx, node)
@@ -80,7 +80,7 @@ function getExport(ctx, node) {
 
 	// if (!indexMap[srcFile]) indexMap[srcFile] = []
 
-	node.exportClause.elements.forEach(exportDef => {
+	node.exportClause.elements.forEach((exportDef) => {
 		const name = exportDef.name.escapedText
 		addIndex(ctx, name, srcFile, docTags)
 	})
@@ -89,7 +89,7 @@ function getExport(ctx, node) {
 function getVariableExport(ctx, node) {
 	const docTags = getDocTags(node)
 
-	node.declarationList.declarations.forEach(decl => {
+	node.declarationList.declarations.forEach((decl) => {
 		const name = decl.name.escapedText
 		if (name === undefined) return
 

@@ -103,7 +103,7 @@ export async function fetchProjects(apiToken?: string): Promise<Project[]> {
 	const errors = res.errors || res.error
 	if (errors) throw new Error(errors)
 
-	return res._embedded.projects.map(project => {
+	return res._embedded.projects.map((project) => {
 		return {
 			id: project.id,
 			name: project.name,
@@ -113,7 +113,7 @@ export async function fetchProjects(apiToken?: string): Promise<Project[]> {
 
 export async function fetchProject(idOrName: string, apiToken?: string): Promise<Project> {
 	const projects = await fetchProjects(apiToken)
-	const project = projects.find(p => p.id === idOrName || p.name === idOrName)
+	const project = projects.find((p) => p.id === idOrName || p.name === idOrName)
 	if (!project) {
 		throw `No project found with id or name "${idOrName}". Please check and try again`
 	}
@@ -132,7 +132,7 @@ export async function getHostedGrids(): Promise<Grid[]> {
 	if (errors) throw new Error(errors)
 
 	const grids: Grid[] = res._embedded.grids
-	return grids.filter(grid => grid.infrastructure === 'hosted')
+	return grids.filter((grid) => grid.infrastructure === 'hosted')
 }
 
 export function countVUH(options: LaunchOptions, gridCount: number) {
@@ -180,12 +180,12 @@ async function getConfigFromEnv(): Promise<Config> {
 
 export async function launchOnDemand(
 	options: LaunchOptions,
-	selectedRegions: string[],
+	selectedRegions: string[]
 ): Promise<string> {
 	const config = await getConfigFromEnv()
 	const body = createFormData(config, options)
 
-	selectedRegions.forEach(id => {
+	selectedRegions.forEach((id) => {
 		body.append('flood[grids][][infrastructure]', 'demand')
 		body.append('flood[grids][][instance_quantity]', 1)
 		body.append('flood[grids][][instance_type]', 'm5.xlarge')
@@ -211,12 +211,12 @@ export async function launchOnDemand(
 
 export async function launchHosted(
 	options: LaunchOptions,
-	selectedGrid: string[],
+	selectedGrid: string[]
 ): Promise<string> {
 	const config = await getConfigFromEnv()
 	const body = createFormData(config, options)
 
-	selectedGrid.forEach(uuid => {
+	selectedGrid.forEach((uuid) => {
 		body.append('flood[grids][][uuid]', uuid)
 	})
 

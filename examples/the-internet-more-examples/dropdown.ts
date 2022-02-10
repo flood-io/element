@@ -16,14 +16,14 @@ export const settings: TestSettings = {
 const URL = 'https://the-internet.herokuapp.com'
 
 export default () => {
-	beforeAll(async browser => {
+	beforeAll(async (browser) => {
 		await browser.visit(`${URL}/dropdown`)
 
 		const pageTextVerified = By.css('#content h3')
 		await browser.wait(Until.elementIsVisible(pageTextVerified))
 	})
 
-	step('Set browser viewport and select an option within a <select> tag', async browser => {
+	step('Set browser viewport and select an option within a <select> tag', async (browser) => {
 		// Set viewport for browser
 		await browser.setViewport({ width: 1366, height: 768 })
 		const dropdown = await browser.findElement(By.id('dropdown'))

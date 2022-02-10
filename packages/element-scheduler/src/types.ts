@@ -31,18 +31,18 @@ export type ChildMessageInitialize = [
 	boolean, // processed
 	string, // file
 	Array<unknown> | undefined, // setupArgs
-	MessagePort | undefined, // MessagePort
+	MessagePort | undefined // MessagePort
 ]
 
 export type ChildMessageCall = [
 	typeof ChildMessages.CALL, // type
 	string, // method
-	Array<unknown>, // args
+	Array<unknown> // args
 ]
 
 export type ChildMessageEnd = [
 	typeof ChildMessages.END, // type
-	boolean, // processed
+	boolean // processed
 ]
 
 export type ChildMessage = ChildMessageInitialize | ChildMessageCall | ChildMessageEnd
@@ -50,13 +50,13 @@ export type ChildMessage = ChildMessageInitialize | ChildMessageCall | ChildMess
 export type ParentMessageOk = [
 	typeof ParentMessages.OK, // type
 	string, // result
-	unknown[], // data
+	unknown[] // data
 ]
 
 export type ParentMessagePageCall = [
 	typeof ParentMessages.PAGE_CALL, // type
 	string, // message
-	unknown[], // args
+	unknown[] // args
 ]
 
 export type ParentMessageError = [
@@ -64,7 +64,7 @@ export type ParentMessageError = [
 	string, // constructor
 	string, // message
 	string, // stack
-	unknown, // extra
+	unknown // extra
 ]
 
 export type ParentMessage = ParentMessageOk | ParentMessageError | ParentMessagePageCall
@@ -74,7 +74,7 @@ export interface WorkerInterface {
 		request: ChildMessage,
 		onProcessStart: OnStart,
 		onProcessEnd: OnEnd,
-		onPrecessReport?: OnReport,
+		onPrecessReport?: OnReport
 	): void
 	waitForExit(): Promise<void>
 	waitForLoaded(): Promise<void>

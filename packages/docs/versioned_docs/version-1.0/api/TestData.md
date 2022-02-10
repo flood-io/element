@@ -11,24 +11,22 @@ hide_title: true
 **Example**
 
 ```typescript title="my-test.perf.ts"
-import { TestData } from "@flood/element";
+import { TestData } from '@flood/element'
 
 // Specify the shape of each record in your CSV data set
 interface Row {
-  username: string;
-  userID: number;
+	username: string
+	userID: number
 }
 // Instruct Element to load users.csv and shuffle each row and loop back to the start after exhausting all rows.
-TestData.fromCSV<Row>("users.csv")
-  .shuffle()
-  .circular();
+TestData.fromCSV<Row>('users.csv').shuffle().circular()
 
 export default () => {
-  step("A step with data", (browser, row) => {
-    // row is a Row
-    console.log(row.username, row.userID);
-  });
-};
+	step('A step with data', (browser, row) => {
+		// row is a Row
+		console.log(row.username, row.userID)
+	})
+}
 ```
 
 # `Feeder`
@@ -109,25 +107,25 @@ TestDataSource is the instance returned by [TestDataFactory's][testdatafactory] 
 Call TestDataSource's methods to configure your data source:
 
 ```typescript
-import { step, Browser, TestData, TestSettings } from "@flood/element";
+import { step, Browser, TestData, TestSettings } from '@flood/element'
 export const settings: TestSettings = {
-  loopCount: -1,
-};
+	loopCount: -1,
+}
 
 interface Row {
-  username: string;
-  userID: number;
+	username: string
+	userID: number
 }
-TestData.fromCSV<Row>("users.csv")
-  .circular(false) // Switch off circular data iteration.
-  // By default, when the end of the data is reached, it wraps to the beginning.
-  .shuffle(); // Shuffle the data
+TestData.fromCSV<Row>('users.csv')
+	.circular(false) // Switch off circular data iteration.
+	// By default, when the end of the data is reached, it wraps to the beginning.
+	.shuffle() // Shuffle the data
 
 export default () => {
-  step("Step 1", (browser: Browser, row: Row) => {
-    // for each loop, a different line from user.csv will be available as `row`
-  });
-};
+	step('Step 1', (browser: Browser, row: Row) => {
+		// for each loop, a different line from user.csv will be available as `row`
+	})
+}
 ```
 
 ## Methods
@@ -150,10 +148,8 @@ Filters can be chained, and will be run in order only if the previous ffilter pa
 Example:
 
 ```typescript
-type Row = { browser: string; email: string };
-TestData.fromCSV("users.csv").filter(
-  (line, index, browserID) => line.browser === browserID
-);
+type Row = { browser: string; email: string }
+TestData.fromCSV('users.csv').filter((line, index, browserID) => line.browser === browserID)
 ```
 
 **Parameters**

@@ -23,22 +23,22 @@ export const settings: TestSettings = {
 const URL = 'https://the-internet.herokuapp.com'
 
 export default () => {
-	step('Test: 01 - Homepage', async browser => {
+	step('Test: 01 - Homepage', async (browser) => {
 		await browser.visit(URL)
 		await browser.wait(Until.elementIsVisible(By.css('#content > h1')))
-		let pageTextVerify = By.visibleText('Welcome to the-internet')
+		const pageTextVerify = By.visibleText('Welcome to the-internet')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 	})
 
-	step('Test: 02 - WYSIWYG Editor', async browser => {
+	step('Test: 02 - WYSIWYG Editor', async (browser) => {
 		await browser.visit(URL + '/tinymce')
 		await browser.wait(Until.elementIsVisible(By.css('#content > div > h3')))
-		let pageTextVerify = By.visibleText('WYSIWYG Editor')
+		const pageTextVerify = By.visibleText('WYSIWYG Editor')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 	})
 
-	step('Test: 03 - Editor', async browser => {
-		let Box = await browser.findElement(By.tagName('body'))
+	step('Test: 03 - Editor', async (browser) => {
+		const Box = await browser.findElement(By.tagName('body'))
 		await Box.click()
 		await Box.sendKeys('   !Flood rules!')
 	})

@@ -71,8 +71,11 @@ export default class TestEnv extends Generator {
 			url: this.answers.url,
 		})
 		this.fs.copyTpl(this.templatePath('gitignore'), this.destinationPath('.gitignore'), {})
-		this.fs.copyTpl(this.templatePath('element.config.js'), this.destinationPath('element.config.js'), {})
-
+		this.fs.copyTpl(
+			this.templatePath('element.config.js'),
+			this.destinationPath('element.config.js'),
+			{}
+		)
 	}
 
 	installing() {
@@ -100,13 +103,9 @@ export default class TestEnv extends Generator {
 			prettier: {
 				semi: false,
 				singleQuote: true,
-				trailingComma: 'all',
-				printWidth: 100,
 				useTabs: true,
-				tabWidth: 2,
-				bracketSpacing: true,
+				printWidth: 100,
 				jsxBracketSameLine: true,
-				arrowParens: 'avoid',
 			},
 
 			dependencies: {

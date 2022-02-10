@@ -64,7 +64,7 @@ export default () => {
 
 You'll notice that we pulled the `browser` from the first argument received by the callback function. You also have access to the current `row` of test data if you've specified a test data service.
 
-The browser exposes every action avaialable to you at a top level for interacting with the page. See the [Browser API](api/Browser.md) page for a complete list.
+The browser exposes every action avaialable to you at a top level for interacting with the page. See the [Browser API](api/Browser) page for a complete list.
 
 ## Handling failure
 
@@ -100,18 +100,19 @@ export default () => {
 A local recovery step is executed in response to a failure in a particular step only, and it does not apply to failures in other steps. A local recovery step takes precedence over a global recovery step. Note that the 1st parameter to pass to the recovery step should be the exact name of the step to which you want to add recovery.
 
 ```ts title="my-test.perf.ts"
-import { step } from '@flood/element';
+import { step } from '@flood/element'
 
 export default () => {
-  step('Step 1', async (browser) => {
-   await browser.visit('https://google.com')
-  })
+	step('Step 1', async (browser) => {
+		await browser.visit('https://google.com')
+	})
 
-  step.recovery('Step 1', async browser => { // 'Step 1' indicates this is the recovery step for Step 1 above
-    let alertCloser = await browser.findElement(By.id('close'))
-    if (alertCloser!=null) await alertCloser.click()
-  })
-};
+	step.recovery('Step 1', async (browser) => {
+		// 'Step 1' indicates this is the recovery step for Step 1 above
+		let alertCloser = await browser.findElement(By.id('close'))
+		if (alertCloser != null) await alertCloser.click()
+	})
+}
 ```
 
 **Recovery instructions**
@@ -134,7 +135,7 @@ export default () => {
 		let alertCloser = await browser.findElement(By.id('close'))
 		if (alertCloser != null) await alertCloser.click()
 
-		return RecoverWith.RETRY // retry 'Step 1' up to 2 times 
+		return RecoverWith.RETRY // retry 'Step 1' up to 2 times
 	})
 }
 ```
@@ -233,7 +234,6 @@ export default () => {
 ## Run a step once
 
 Run a step only once in the whole test regardless of the number of iterations. This can be used to create setup and teardown steps. For example, you can run an authentication step at the start of the test and a logout step at the end.
-
 
 ### step.once()
 

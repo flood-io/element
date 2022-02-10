@@ -81,7 +81,7 @@ export const StepActionArgs = (args: any[]): string => {
 				if (isElementTextCondition(arg)) {
 					content = `${getErrorString(arg.locator)}, ${handleRegExpOrString(
 						description,
-						arg.pageFuncArgs[0],
+						arg.pageFuncArgs[0]
 					)}`
 				}
 

@@ -125,7 +125,7 @@ function getTestDataPath(file: string, root?: string): string {
 
 function setupDelayOverrides(
 	args: ElementRunArguments,
-	testSettingOverrides: TestSettings,
+	testSettingOverrides: TestSettings
 ): TestSettings {
 	if (testSettingOverrides == null) testSettingOverrides = {}
 	const actionDelay = args.runArgs?.actionDelay ?? args.actionDelay
@@ -182,7 +182,7 @@ function makeTestCommander(file: string): TestCommander {
 	const commander = new EventEmitter()
 	// TODO make this more reliable on linux
 	const watcher = watch(file, { persistent: true })
-	watcher.on('change', path => {
+	watcher.on('change', (path) => {
 		if (resolve(path) === resolve(file)) {
 			commander.emit('rerun-test')
 		}
@@ -192,7 +192,7 @@ function makeTestCommander(file: string): TestCommander {
 
 export function normalizeElementOptions(
 	args: ElementRunArguments,
-	spinnies?: Spinnies,
+	spinnies?: Spinnies
 ): ElementOptions {
 	const { file, verbose, runArgs, testSettings } = args
 	const workRootPath = getWorkRootPath(file, args['work-root'])

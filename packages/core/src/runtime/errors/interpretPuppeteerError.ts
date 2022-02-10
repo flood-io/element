@@ -5,7 +5,7 @@ export default function interpretPuppeteerError(
 	error: Error,
 	target: any,
 	key: string,
-	callCtx: string,
+	callCtx: string
 ): StructuredError<PuppeteerErrorData> | undefined {
 	if (error.message.includes('Execution context was destroyed')) {
 		return new StructuredError<PuppeteerErrorData>(
@@ -14,7 +14,7 @@ export default function interpretPuppeteerError(
 				_kind: 'puppeteer',
 				kind: 'execution-context-destroyed',
 			},
-			error,
+			error
 		)
 	} else if (
 		error.name === 'TimeoutError' &&
@@ -26,7 +26,7 @@ export default function interpretPuppeteerError(
 				_kind: 'puppeteer',
 				kind: 'evaluation-timeout',
 			},
-			error,
+			error
 		)
 	}
 }

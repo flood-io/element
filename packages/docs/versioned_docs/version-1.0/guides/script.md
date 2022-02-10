@@ -12,7 +12,7 @@ During execution, the timing of each step can be measured so that you can profil
 You first need to import the step creator from the Element package:
 
 ```ts title="my-test.perf.ts"
-import { step } from "@flood/element";
+import { step } from '@flood/element'
 ```
 
 Each test must export a defualt suite, which is what Element will use to detect the steps to run:
@@ -64,14 +64,13 @@ export default () => {
 
 You'll notice that we pulled the `browser` from the first argument received by the callback function. You also have access to the current `row` of test data if you've specified a test data service.
 
-The browser exposes every action avaialable to you at a top level for interacting with the page. See the [Browser API](api/Browser.md) page for a complete list.
+The browser exposes every action avaialable to you at a top level for interacting with the page. See the [Browser API](api/Browser) page for a complete list.
 
 ## Handling failure
 
 A test step can fail for a number of reasons, most commonly though it will be because the state of the page wasn't as you expected it to be, which might in turn be because the application is overloaded, an error message is shown, or the inventory of stock you're testing against is exhausted.
 
 Handling failures is part of building a robust performance test suite. Because Element scripts are JavaScript, you can use any error handling you typically would in JS, including `try/catch` or `.catch(...)`. However, keep in mind that using `try/catch` will include the catch time in the total time because Element isn't aware of the time you're spending on this step.
-
 
 ```diff title="my-test.perf.ts"
 import { step } from "@flood/element";
@@ -88,6 +87,3 @@ export default () => {
 })
 };
 ```
-
-
-

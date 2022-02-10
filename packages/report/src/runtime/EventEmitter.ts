@@ -21,7 +21,7 @@ export declare interface EventEmitterReporter {
 	on(event: 'measurement', listener: (measurement: Measurement) => void): this
 	on(
 		event: 'trace',
-		listener: (label: string, responseCode: string, trace: TraceData) => void,
+		listener: (label: string, responseCode: string, trace: TraceData) => void
 	): this
 	on(event: 'testLifecycle', listener: (record: TestLifecycle) => void): this
 	on(event: 'testStepError', listener: (err: TestStepError) => void): this
@@ -40,7 +40,7 @@ export class EventEmitterReporter extends EventEmitter implements IReporter {
 	addMeasurement(measurement: string, value: string | number, label?: string): void {
 		label = expect(
 			label || this.stepName,
-			`Label must be present when writing "${measurement}" measurement`,
+			`Label must be present when writing "${measurement}" measurement`
 		)
 		this.emit('measurement', {
 			measurement,
@@ -53,11 +53,11 @@ export class EventEmitterReporter extends EventEmitter implements IReporter {
 	addCompoundMeasurement(
 		measurement: MeasurementKind,
 		value: CompoundMeasurement,
-		label: string,
+		label: string
 	): void {
 		label = expect(
 			label || this.stepName,
-			`Label must be present when writing ${measurement} measurement`,
+			`Label must be present when writing ${measurement} measurement`
 		)
 		this.emit('compoundMeasurement', {
 			measurement,
@@ -90,7 +90,7 @@ export class EventEmitterReporter extends EventEmitter implements IReporter {
 		this.emit('testInternalError', { message, step: this.stepName, error })
 	}
 
-	testScriptConsole(method: string, message?: any, ...args: any[]): void {
+	testScriptConsole(method: string, message?: string, ...args: any[]): void {
 		if (message !== undefined) {
 			args.unshift(message)
 		}

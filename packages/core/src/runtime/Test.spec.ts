@@ -79,7 +79,7 @@ describe('Test', () => {
 	test('parses steps', async () => {
 		const test = await setupTest('test-with-export.ts')
 
-		expect(test.steps.map(step => step.name)).toEqual(['Invalid Step', 'Test Step'])
+		expect(test.steps.map((step) => step.name)).toEqual(['Invalid Step', 'Test Step'])
 	})
 
 	test('runs steps', async () => {

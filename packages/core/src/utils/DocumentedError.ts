@@ -21,7 +21,7 @@ export class DocumentedError extends Error {
 		err: Error,
 		message: string,
 		doc: string,
-		callContext?: string,
+		callContext?: string
 	): DocumentedError {
 		if (callContext === undefined && (err as MaybeHasCallContext).callContext !== undefined) {
 			callContext = (err as MaybeHasCallContext).callContext
@@ -50,7 +50,7 @@ export class DocumentedError extends Error {
 			message || err.message,
 			'Documentation needed! Please report this at https://github.com/flood-io/element/issues so that we can improve Element!',
 			callContext,
-			err,
+			err
 		)
 	}
 }

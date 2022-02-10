@@ -16,52 +16,52 @@ export const settings: TestSettings = {
  * Version: 1.0
  */
 export default () => {
-	step('The Flood Store: Home', async browser => {
+	step('The Flood Store: Home', async (browser) => {
 		await browser.visit('https://wordpress.loadtest.io')
 
-		let pageTextVerify = By.visibleText('Welcome to the Flood IO Merchandise Store.')
+		const pageTextVerify = By.visibleText('Welcome to the Flood IO Merchandise Store.')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 
 		await browser.takeScreenshot()
 	})
 
-	step('The Flood Store: Click Hoodies', async browser => {
-		let lnkHoodies = await browser.findElement(By.partialLinkText('Hoodies'))
+	step('The Flood Store: Click Hoodies', async (browser) => {
+		const lnkHoodies = await browser.findElement(By.partialLinkText('Hoodies'))
 		await lnkHoodies.click()
 
-		let pageTextVerify = By.visibleText('Hoodie with Logo')
+		const pageTextVerify = By.visibleText('Hoodie with Logo')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 	})
 
-	step('The Flood Store: Add To Cart', async browser => {
-		let addHoodieToCart = await browser.findElement(By.xpath('//a[@data-product_id=39]'))
+	step('The Flood Store: Add To Cart', async (browser) => {
+		const addHoodieToCart = await browser.findElement(By.xpath('//a[@data-product_id=39]'))
 		await addHoodieToCart.click()
 	})
 
-	step('The Flood Store: View Cart', async browser => {
+	step('The Flood Store: View Cart', async (browser) => {
 		await browser.visit('https://wordpress.loadtest.io/cart')
 
-		let pageTextVerify1 = By.visibleText('Free shipping')
+		const pageTextVerify1 = By.visibleText('Free shipping')
 		await browser.wait(Until.elementIsVisible(pageTextVerify1))
 
-		let pageTextVerify2 = By.visibleText('Hoodie with Logo')
+		const pageTextVerify2 = By.visibleText('Hoodie with Logo')
 		await browser.wait(Until.elementIsVisible(pageTextVerify2))
 
 		//await browser.takeScreenshot()
 	})
 
-	step('The Flood Store: Proceed to Checkout', async browser => {
-		let lnkProceedToCheckout = By.css('#post-14 > div > div > div > div > div > a')
+	step('The Flood Store: Proceed to Checkout', async (browser) => {
+		const lnkProceedToCheckout = By.css('#post-14 > div > div > div > div > div > a')
 		await browser.wait(Until.elementIsVisible(lnkProceedToCheckout))
-		let element = await browser.findElement(lnkProceedToCheckout)
+		const element = await browser.findElement(lnkProceedToCheckout)
 		await element.focus()
 		await element.click()
 
-		let pageTextVerify = By.visibleText('Returning customer?')
+		const pageTextVerify = By.visibleText('Returning customer?')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 	})
 
-	step('The Flood Store: Checkout Data Entry', async browser => {
+	step('The Flood Store: Checkout Data Entry', async (browser) => {
 		//let billingFirstName = await browser.findElement(By.id('billing_first_name'))
 
 		// Fill in text field - billing First Name
@@ -71,7 +71,7 @@ export default () => {
 		await browser.type(By.id('billing_last_name'), 'Rizioz')
 
 		// Select from searchable dropdown - billing Country
-		let element = await browser.findElement(By.id('billing_country'))
+		const element = await browser.findElement(By.id('billing_country'))
 		await element.focus()
 		await element.click()
 		await browser.type(By.xpath('/html/body/span/span/span[1]/input'), 'Australia')
@@ -84,7 +84,7 @@ export default () => {
 		await browser.type(By.id('billing_city'), 'Melbourne')
 
 		// Select from searchable dropdown - billing State
-		let element_state = await browser.findElement(By.id('billing_state'))
+		const element_state = await browser.findElement(By.id('billing_state'))
 		await element_state.focus()
 		await element_state.click()
 		await browser.type(By.xpath('/html/body/span/span/span[1]/input'), 'Victoria')
@@ -102,15 +102,15 @@ export default () => {
 		await browser.takeScreenshot()
 	})
 
-	step('The Flood Store: Place Order', async browser => {
-		let btnPlaceOrder = By.xpath('//button[contains(@name, "woocommerce_checkout_place_order")]')
+	step('The Flood Store: Place Order', async (browser) => {
+		const btnPlaceOrder = By.xpath('//button[contains(@name, "woocommerce_checkout_place_order")]')
 		await browser.wait(Until.elementIsVisible(btnPlaceOrder))
-		let element = await browser.findElement(btnPlaceOrder)
+		const element = await browser.findElement(btnPlaceOrder)
 		await element.focus()
 		await element.click()
 
 		//let pageTextVerify = By.visibleText('Thank you. Your order has been received.')
-		let pageTextVerify = By.visibleText('Order received')
+		const pageTextVerify = By.visibleText('Order received')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 
 		await browser.takeScreenshot()

@@ -1,6 +1,6 @@
 {
 	"name": "@flood/element-report",
-	"version": "2.0.5-beta.0",
+	"version": "2.0.5-canary.20",
 	"description": "Report for Element",
 	"author": "Ivan Vanderbyl <ivanvanderbyl@gmail.com>",
 	"homepage": "https://github.com/flood-io/element#readme",
@@ -22,14 +22,14 @@
 		"url": "https://github.com/flood-io/element/issues"
 	},
 	"dependencies": {
-		"ansi-escapes": "^4.3.2",
+		"ansi-escapes": "^5.0.0",
 		"assert": "^2.0.0",
 		"callsites": "^3.1.0",
-		"chalk": "^4.1.0",
-		"debug": "^4.1.1",
-		"glob": "^7.1.6",
+		"chalk": "^4.1.1",
+		"debug": "^4.3.1",
+		"glob": "^7.1.7",
 		"source-map": "^0.7.3",
-		"table": "^5.4.6",
-		"winston": "^3.0.0"
+		"table": "^6.7.0",
+		"winston": "^3.3.3"
 	}
 }

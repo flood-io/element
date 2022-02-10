@@ -20,27 +20,27 @@ export const settings: TestSettings = {
 
 const URL = 'https://the-internet.herokuapp.com'
 
-const goToFramesPage = async browser => {
+const goToFramesPage = async (browser) => {
 	await browser.visit(`${URL}/frames`)
 	const pageTextVerify: Locator = By.visibleText('Frames')
 	await browser.wait(Until.elementIsVisible(pageTextVerify))
 }
 
 export default () => {
-	step('Test: Go to the homepage', async browser => {
+	step('Test: Go to the homepage', async (browser) => {
 		await browser.visit(URL)
 		await browser.wait(Until.elementIsVisible(By.css('#content > h1')))
 		const pageTextVerify = By.visibleText('Welcome to the-internet')
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 	})
 
-	step('Test: Go to Frames page', async browser => {
+	step('Test: Go to Frames page', async (browser) => {
 		await goToFramesPage(browser)
 	})
 
 	step(
 		'Test: Go to Nested Frame, use Until.ableToSwitchToFrame and find Element with By.nameAttr',
-		async browser => {
+		async (browser) => {
 			const nestedFrameEl = await browser.findElement(By.partialLinkText('Nested Frames'))
 			await nestedFrameEl.click()
 
@@ -54,7 +54,7 @@ export default () => {
 			const activeElTagName = await activeEl.tagName()
 			assert(
 				activeElTagName.toLowerCase() === 'frameset',
-				'The active element tagname should be frameset',
+				'The active element tagname should be frameset'
 			)
 
 			// Example of TargetLocator.frame(ElementHandle)
@@ -73,10 +73,10 @@ export default () => {
 			const rightText = await rightBody.text()
 
 			assert(rightText === 'RIGHT', 'The inner text of the right frame should be RIGHT')
-		},
+		}
 	)
 
-	step('Test: Element Handle API', async browser => {
+	step('Test: Element Handle API', async (browser) => {
 		await browser.switchTo().defaultContent()
 		await browser.visit(`${URL}/login`)
 		const pageTextVerify = By.css('#content h2')

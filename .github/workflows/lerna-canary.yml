@@ -1,42 +1,36 @@
-name: Lerna Publish Canary
-
+name: Publish canary
 on:
   pull_request:
     branches: [canary]
     types: [closed]
-  push:
-    branches:
-      - canary
 jobs:
-  publish_release:
-    name: Publish release
+  release:
+    name: Release canary
     if: "!contains(github.event.head_commit.message, 'skip ci')"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.pull_request.main.ref }}
+      - name: Checkout repository
+        uses: actions/checkout@v2
       - run: git fetch --prune --unshallow
-
-      - uses: actions/setup-node@v1
+      - name: Setup node
+        uses: actions/setup-node@v2
         with:
           always-auth: true
           registry-url: 'https://registry.npmjs.org'
-          node-version: '12.x'
+          node-version: '14.x'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
       - name: Configure CI Git User
         run: |
-          git config --global user.email octobot@github.com
-          git config --global user.name GitHub Actions
-
-      - run: yarn install
+          git config --global user.email services@flood.io
+          git config --global user.name FloodBot
+      - name: Install dependencies
+        run: yarn install
         env:
           PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
-      - name: 'Build all'
+      - name: Build all
         run: yarn build
-      - name: 'Publish canary to NPM'
+      - name: Publish canary to npm
         run: yarn lerna publish prerelease --yes --dist-tag canary --preid canary --include-merged-tags --exact --force-publish --ignore-changes '**/*.md' 'packages/docs/**'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

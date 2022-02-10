@@ -12,7 +12,7 @@ describe('Condition', () => {
 	beforeEach(async () => {
 		playwright = await launchPlaywright()
 		page = playwright.page
-		page.on('console', msg => console.log(`>> console.${msg.type()}: ${msg.text()}`))
+		page.on('console', (msg) => console.log(`>> console.${msg.type()}: ${msg.text()}`))
 
 		await page.goto(await serve('wait.html'), { waitUntil: 'networkidle' })
 	})
@@ -44,7 +44,7 @@ describe('Condition', () => {
 			expect(btn).not.toBeNull()
 			if (!btn) throw new Error('#btn was null')
 
-			expect(await btn.evaluate(el => el.hasAttribute('disabled'), btn)).toBe(false)
+			expect(await btn.evaluate((el) => el.hasAttribute('disabled'), btn)).toBe(false)
 
 			const condition = Until.elementIsDisabled(By.css('#btn'))
 

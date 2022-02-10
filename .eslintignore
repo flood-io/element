@@ -1,6 +1,10 @@
-node_modules
-dist
+!.eslintrc.js
+.git
+.yarn
+assets
+build
 coverage
-tests
-examples
-smoke
+dist
+extern
+node_modules
+tmp

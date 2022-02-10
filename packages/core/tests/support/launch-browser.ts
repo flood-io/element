@@ -3,7 +3,7 @@ export { PlaywrightClientLike as testPlaywright }
 import { DEFAULT_SETTINGS } from '../../src/runtime/Settings'
 
 export async function launchPlaywright(): Promise<PlaywrightClientLike> {
-	let opts = {
+	const opts = {
 		sandbox: true,
 	}
 

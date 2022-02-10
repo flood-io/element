@@ -31,10 +31,10 @@ export const settings: TestSettings = {
  * Version: 1.0
  */
 export default () => {
-	step('Key User Adaptation Demo App: Home', async browser => {
+	step('Key User Adaptation Demo App: Home', async (browser) => {
 		//navigate to demo app page
 		await browser.visit(
-			'https://sapui5.hana.ondemand.com/test-resources/sap/ui/demoapps/demokit/rta/freestyle/test/flpSandbox.html#masterDetail-display&/product/HT-1000',
+			'https://sapui5.hana.ondemand.com/test-resources/sap/ui/demoapps/demokit/rta/freestyle/test/flpSandbox.html#masterDetail-display&/product/HT-1000'
 		)
 
 		//verify that we are on the correct page and also do a page text check
@@ -45,16 +45,16 @@ export default () => {
 		await browser.takeScreenshot()
 	})
 
-	step('Key User Adaptation Demo App: Click Item 1', async browser => {
+	step('Key User Adaptation Demo App: Click Item 1', async (browser) => {
 		//Select the ITelO Vault item
-		let obj_item_ITelOVault = By.xpath("//span[contains(text(),'ITelO Vault')]")
+		const obj_item_ITelOVault = By.xpath("//span[contains(text(),'ITelO Vault')]")
 		await browser.wait(Until.elementIsVisible(obj_item_ITelOVault))
-		let element1 = await browser.findElement(obj_item_ITelOVault)
+		const element1 = await browser.findElement(obj_item_ITelOVault)
 		await element1.click()
 
 		//verify that we are on the correct page and also do a page text check
 		const pageTextVerify = By.visibleText(
-			'Digital Organizer with State-of-the-Art Storage Encryption',
+			'Digital Organizer with State-of-the-Art Storage Encryption'
 		)
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 
@@ -62,16 +62,16 @@ export default () => {
 		await browser.takeScreenshot()
 	})
 
-	step('Key User Adaptation Demo App: Click Item 2', async browser => {
+	step('Key User Adaptation Demo App: Click Item 2', async (browser) => {
 		//Select the Comfort Easy item
 		obj_item_ComfortEasy = By.xpath("//span[contains(text(),'Comfort Easy')]")
 		await browser.wait(Until.elementIsVisible(obj_item_ComfortEasy))
-		let element1 = await browser.findElement(obj_item_ComfortEasy)
+		const element1 = await browser.findElement(obj_item_ComfortEasy)
 		await element1.click()
 
 		//verify that we are on the correct page and also do a page text check
 		const pageTextVerify = By.visibleText(
-			'32 GB Digital Assistant with high-resolution color screen',
+			'32 GB Digital Assistant with high-resolution color screen'
 		)
 		await browser.wait(Until.elementIsVisible(pageTextVerify))
 

@@ -27,7 +27,7 @@ export class TitleNotMatchCondition extends Condition {
 				}
 			},
 			JSON.stringify([this.expectedTitle, this.partial]),
-			{ timeout: 30e3 },
+			{ timeout: 30e3 }
 		)
 		return true
 	}

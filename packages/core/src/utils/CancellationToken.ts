@@ -23,7 +23,7 @@ export class CancellationToken {
 		this.onCancelled.push(() => (this.isCancellationRequested = true))
 
 		// expose a promise to the outside
-		this.promise = new Promise(resolve => this.onCancelled.push(resolve))
+		this.promise = new Promise((resolve) => this.onCancelled.push(resolve))
 
 		// let the user add handlers
 		defineUserCancels((f: K) => {
@@ -32,6 +32,6 @@ export class CancellationToken {
 		})
 	}
 	cancel() {
-		this.onCancelled.forEach(x => x())
+		this.onCancelled.forEach((x) => x())
 	}
 }

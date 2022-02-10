@@ -15,7 +15,7 @@ interface Event extends RequestEvent {
 }
 
 export class Manager {
-	private lifecycleCompleteCallback: (() => void) | null
+	private lifecycleCompleteCallback: ((value: unknown) => void) | null
 	private networkIdlePromise: Promise<any> | null
 	public timeout = 10e3
 
@@ -42,14 +42,14 @@ export class Manager {
 	}
 
 	private createTimeoutPromise(): Promise<NodeJS.Timeout> {
-		return new Promise(fulfill => setTimeout(fulfill, this.timeout))
+		return new Promise((fulfill) => setTimeout(fulfill, this.timeout))
 	}
 
 	private createIdlePromise(): void {
 		if (this.lifecycleCompleteCallback) return
 		if (this.networkIdlePromise) return
 
-		const lifecycleCompletePromise = new Promise(fulfill => {
+		const lifecycleCompletePromise = new Promise((fulfill) => {
 			this.lifecycleCompleteCallback = fulfill
 		})
 
@@ -80,16 +80,16 @@ export class Manager {
 			event.request.url,
 			event.type,
 			event.request,
-			event.frameId,
+			event.frameId
 		)
 	}
 
 	private handleRequestStart(
 		requestId: string,
-		url: string,
-		resourceType: string,
-		requestPayload: any,
-		frameId: string,
+		_url: string,
+		_resourceType: string,
+		_requestPayload: any,
+		_frameId: string
 	): void {
 		if (requestId) this.requestIdToRequest.set(requestId, null)
 	}

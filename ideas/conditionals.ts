@@ -42,9 +42,11 @@ type StepOptions = {
 type TestFn = (this: void, browser: Browser) => Promise<any>
 type ConditionFn = (this: void, browser: Browser) => boolean | Promise<boolean>
 
-const elementIsVisible = (selector: string) => async (browser: Browser): Promise<boolean> => {
-	return browser.wait(selector).then(() => true)
-}
+const elementIsVisible =
+	(selector: string) =>
+	async (browser: Browser): Promise<boolean> => {
+		return browser.wait(selector).then(() => true)
+	}
 
 function extractOptionsAndCallback(args: any[]): [Partial<StepOptions>, TestFn] {
 	if (args.length === 0) return [{ pending: true }, () => Promise.resolve()]
@@ -78,8 +80,8 @@ step.unless = (condition: ConditionFn, name: string, ...optionsOrFn: any[]) => {
 	const [options, fn] = extractOptionsAndCallback(optionsOrFn)
 	step(
 		name,
-		{ ...options, condition: b => Promise.resolve(condition(b)).then(result => !result) },
-		fn,
+		{ ...options, condition: (b) => Promise.resolve(condition(b)).then((result) => !result) },
+		fn
 	)
 }
 
@@ -88,7 +90,7 @@ const testScriptExport = () => {
 		// Browser.visit(...)
 	})
 
-	step.if(elementIsVisible('button.login'), 'Handle conditional login', async browser => {
+	step.if(elementIsVisible('button.login'), 'Handle conditional login', async (browser) => {
 		await browser.fill('username', 'test@user')
 		// More login steps here
 	})
@@ -100,7 +102,7 @@ const testScriptExport = () => {
 		'Unless thing is here',
 		async () => {
 			// Do conditional work here
-		},
+		}
 	)
 	step('Do something')
 }

@@ -26,10 +26,10 @@ describe('Condition', () => {
 			const condition = Until.titleIs('another title')
 
 			await page.evaluate(() => {
-				return new Promise(yeah => {
+				return new Promise((yeah) => {
 					setTimeout(() => {
 						document.title = 'another title'
-						yeah()
+						yeah(true)
 					}, 100)
 				})
 			})
@@ -42,10 +42,10 @@ describe('Condition', () => {
 			const condition = Until.titleContains('another title')
 
 			await page.evaluate(() => {
-				return new Promise(yeah => {
+				return new Promise((yeah) => {
 					setTimeout(() => {
 						document.title = 'another title again'
-						yeah()
+						yeah(true)
 					}, 100)
 				})
 			})
@@ -58,10 +58,10 @@ describe('Condition', () => {
 			const condition = Until.titleMatches(/^another/)
 
 			await page.evaluate(() => {
-				return new Promise(yeah => {
+				return new Promise((yeah) => {
 					setTimeout(() => {
 						document.title = 'another title again'
-						yeah()
+						yeah(true)
 					}, 100)
 				})
 			})

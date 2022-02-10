@@ -4,14 +4,13 @@ import { resolve, dirname } from 'path'
 import { CompilerStats } from '../CompilerStats'
 
 export class BabelTransformer {
+	constructor(private sourceFile: string) {}
 
-  constructor(private sourceFile:string){}
+	process() {
+		return this.babelCompiler()
+	}
 
-  process() {
-    return this.babelCompiler()
-  }
-
-  private async babelCompiler(): Promise<CompilerOutput> {
+	private async babelCompiler(): Promise<CompilerOutput> {
 		const result = await transformFileAsync(resolve(this.sourceFile), {
 			comments: false,
 			highlightCode: true,

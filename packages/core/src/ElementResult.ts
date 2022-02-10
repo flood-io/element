@@ -45,7 +45,7 @@ export class ElementResult {
 
 	addTestScript(file: string, iterationResults: IterationResult[]): void {
 		let duration = 0
-		iterationResults.forEach(item => (duration += item.duration ?? 0))
+		iterationResults.forEach((item) => (duration += item.duration ?? 0))
 		const testScript: TestScriptResult = {
 			name: file,
 			iterationResults,
@@ -61,7 +61,7 @@ export class ElementResult {
 
 	summarizeResult(): void {
 		let duration = 0
-		this._result.testScripts.forEach(item => (duration += item.duration ?? 0))
+		this._result.testScripts.forEach((item) => (duration += item.duration ?? 0))
 		this._result.executionInfo.duration = duration
 	}
 

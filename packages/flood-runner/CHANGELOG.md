@@ -3,195 +3,204 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [2.0.5-beta.0](https://github.com/flood-io/element/compare/v2.0.5-canary.1...v2.0.5-beta.0) (2021-03-31)
+## [2.0.5-canary.20](https://github.com/flood-io/element/compare/v2.0.5-canary.19...v2.0.5-canary.20) (2022-02-03)
 
 **Note:** Version bump only for package @flood/element-flood-runner
 
+## [2.0.5-canary.19](https://github.com/flood-io/element/compare/v2.0.5-canary.18...v2.0.5-canary.19) (2021-06-18)
 
+**Note:** Version bump only for package @flood/element-flood-runner
 
+## [2.0.5-canary.18](https://github.com/flood-io/element/compare/v2.0.5-canary.17...v2.0.5-canary.18) (2021-05-28)
 
+### Bug Fixes
+
+- revert the timing observer to tracing observer change for flood-runner ([6b5b610](https://github.com/flood-io/element/commit/6b5b61015f3afb04aff81d25671a70fca805ee3d))
+
+## [2.0.5-canary.17](https://github.com/flood-io/element/compare/v2.0.5-canary.16...v2.0.5-canary.17) (2021-05-14)
+
+### Bug Fixes
+
+- typescript and lint errors after upgrades ([e100bdc](https://github.com/flood-io/element/commit/e100bdc440e28f3adfc76bfcc99a52ff298e035f))
+
+## [2.0.5-canary.16](https://github.com/flood-io/element/compare/v2.0.5-canary.15...v2.0.5-canary.16) (2021-05-12)
+
+### Bug Fixes
+
+- try this to bring reporter deps in sync ([ffe0f2b](https://github.com/flood-io/element/commit/ffe0f2bcb891ef4b1e87744f3720fee7986f3df1))
+
+## [2.0.5-canary.15](https://github.com/flood-io/element/compare/v2.0.5-canary.14...v2.0.5-canary.15) (2021-05-07)
+
+**Note:** Version bump only for package @flood/element-flood-runner
+
+## [2.0.5-canary.14](https://github.com/flood-io/element/compare/v2.0.5-canary.13...v2.0.5-canary.14) (2021-05-07)
+
+**Note:** Version bump only for package @flood/element-flood-runner
+
+## [2.0.5-canary.13](https://github.com/flood-io/element/compare/v2.0.5-canary.12...v2.0.5-canary.13) (2021-05-07)
+
+**Note:** Version bump only for package @flood/element-flood-runner
+
+## [2.0.5-canary.12](https://github.com/flood-io/element/compare/v2.0.5-canary.11...v2.0.5-canary.12) (2021-05-07)
+
+### Bug Fixes
+
+- bringing across the bugfix from [#319](https://github.com/flood-io/element/issues/319) ([63c5cc8](https://github.com/flood-io/element/commit/63c5cc8c8d53dd5fa8b115187508095c641d82f4))
+
+## [2.0.5-canary.11](https://github.com/flood-io/element/compare/v2.0.5-canary.10...v2.0.5-canary.11) (2021-05-05)
+
+**Note:** Version bump only for package @flood/element-flood-runner
+
+## [2.0.5-canary.10](https://github.com/flood-io/element/compare/v2.0.5-canary.9...v2.0.5-canary.10) (2021-04-09)
+
+**Note:** Version bump only for package @flood/element-flood-runner
+
+## [2.0.5-canary.9](https://github.com/flood-io/element/compare/v2.0.5-canary.8...v2.0.5-canary.9) (2021-04-08)
+
+**Note:** Version bump only for package @flood/element-flood-runner
+
+## [2.0.5-canary.8](https://github.com/flood-io/element/compare/v2.0.5-canary.7...v2.0.5-canary.8) (2021-04-08)
+
+**Note:** Version bump only for package @flood/element-flood-runner
+
+## [2.0.5-canary.7](https://github.com/flood-io/element/compare/v2.0.5-canary.6...v2.0.5-canary.7) (2021-04-08)
+
+**Note:** Version bump only for package @flood/element-flood-runner
+
+## [2.0.5-canary.6](https://github.com/flood-io/element/compare/v2.0.5-canary.5...v2.0.5-canary.6) (2021-04-07)
+
+**Note:** Version bump only for package @flood/element-flood-runner
+
+## [2.0.5-canary.5](https://github.com/flood-io/element/compare/v2.0.5-canary.4...v2.0.5-canary.5) (2021-04-07)
+
+**Note:** Version bump only for package @flood/element-flood-runner
+
+## [2.0.5-canary.4](https://github.com/flood-io/element/compare/v2.0.5-canary.3...v2.0.5-canary.4) (2021-04-07)
+
+**Note:** Version bump only for package @flood/element-flood-runner
+
+## [2.0.5-canary.3](https://github.com/flood-io/element/compare/v2.0.5-canary.2...v2.0.5-canary.3) (2021-04-07)
+
+**Note:** Version bump only for package @flood/element-flood-runner
+
+## [2.0.5-canary.2](https://github.com/flood-io/element/compare/v2.0.5-beta.0...v2.0.5-canary.2) (2021-04-06)
+
+### Bug Fixes
+
+- correct packages's canary version ([00868d0](https://github.com/flood-io/element/commit/00868d062286393301f207d85295286548d28262))
+- fix version of canary packages ([7fff99c](https://github.com/flood-io/element/commit/7fff99c73c2bcd83062dd071ef3a491d63105a83))
+
+## [2.0.5-beta.0](https://github.com/flood-io/element/compare/v2.0.5-canary.1...v2.0.5-beta.0) (2021-03-31)
+
+**Note:** Version bump only for package @flood/element-flood-runner
 
 ## [2.0.5-canary.1](https://github.com/flood-io/element/compare/v2.0.5-canary.0...v2.0.5-canary.1) (2021-03-31)
 
 **Note:** Version bump only for package @flood/element-flood-runner
 
-
-
-
-
 ## [2.0.5-canary.0](https://github.com/flood-io/element/compare/v2.0.4...v2.0.5-canary.0) (2021-03-31)
 
 **Note:** Version bump only for package @flood/element-flood-runner
-
-
-
-
 
 ## [2.0.4](https://github.com/flood-io/element/compare/v2.0.2...v2.0.4) (2021-03-30)
 
 **Note:** Version bump only for package @flood/element-flood-runner
 
-
-
-
-
 ## [2.0.3](https://github.com/flood-io/element/compare/v2.0.2...v2.0.3) (2021-03-30)
 
 **Note:** Version bump only for package @flood/element-flood-runner
-
-
-
-
 
 ## [2.0.2](https://github.com/flood-io/element/compare/v2.0.1...v2.0.2) (2021-03-12)
 
 **Note:** Version bump only for package @flood/element-flood-runner
 
-
-
-
-
 ## [2.0.1](https://github.com/flood-io/element/compare/v2.0.0...v2.0.1) (2021-03-10)
 
 **Note:** Version bump only for package @flood/element-flood-runner
 
-
-
-
-
 # [2.0.0](https://github.com/flood-io/element/compare/v2.0.0-canary.48...v2.0.0) (2021-03-04)
-
 
 ### Bug Fixes
 
-* fix codacy ([e1d1c5b](https://github.com/flood-io/element/commit/e1d1c5b36500a772cbe5a7c8c9978e1887a9ec67))
-* flood-runner default to run in production env (base on Nick commit) ([522483e](https://github.com/flood-io/element/commit/522483e51bc9a5837d120865fc195f76793d8d7f))
-
-
+- fix codacy ([e1d1c5b](https://github.com/flood-io/element/commit/e1d1c5b36500a772cbe5a7c8c9978e1887a9ec67))
+- flood-runner default to run in production env (base on Nick commit) ([522483e](https://github.com/flood-io/element/commit/522483e51bc9a5837d120865fc195f76793d8d7f))
 
 # [1.5.0](https://github.com/flood-io/element/compare/v2.0.0-canary.23...v1.5.0) (2021-01-22)
 
-
 ### Bug Fixes
 
-* fix codacy ([2cf3b36](https://github.com/flood-io/element/commit/2cf3b36da27e527f78fc0b9e55c8fea5aa2b90ec))
-* flood-runner default to run in production env ([e35be40](https://github.com/flood-io/element/commit/e35be40f4ac01ccf38d3b7b7b94133f4ea414b74))
-
+- fix codacy ([2cf3b36](https://github.com/flood-io/element/commit/2cf3b36da27e527f78fc0b9e55c8fea5aa2b90ec))
+- flood-runner default to run in production env ([e35be40](https://github.com/flood-io/element/commit/e35be40f4ac01ccf38d3b7b7b94133f4ea414b74))
 
 ### Features
 
-* update version of each packages ([017830f](https://github.com/flood-io/element/commit/017830fa5c1922e481ebd59f7519dd63b2b2ec18))
-
-
+- update version of each packages ([017830f](https://github.com/flood-io/element/commit/017830fa5c1922e481ebd59f7519dd63b2b2ec18))
 
 # [1.4.0-beta.6](https://github.com/flood-io/element/compare/v1.4.0-beta.5...v1.4.0-beta.6) (2020-12-04)
 
-
-
 # [1.4.0-beta.5](https://github.com/flood-io/element/compare/v1.3.10-beta.0...v1.4.0-beta.5) (2020-12-04)
-
 
 ### Bug Fixes
 
-* fix CHANGELOG.md of each package ([6949219](https://github.com/flood-io/element/commit/694921922599c21394cbf3369852bdea75b85c38))
-* update correct version of each package ([e87e39b](https://github.com/flood-io/element/commit/e87e39b20ac06eb0197f1bd36c16eff46375e6bf))
-* using remark to beautify *.md file to pass codacy ([198fc3c](https://github.com/flood-io/element/commit/198fc3c873d914884dbafa5f492d3545cc5c3635))
-
-
+- fix CHANGELOG.md of each package ([6949219](https://github.com/flood-io/element/commit/694921922599c21394cbf3369852bdea75b85c38))
+- update correct version of each package ([e87e39b](https://github.com/flood-io/element/commit/e87e39b20ac06eb0197f1bd36c16eff46375e6bf))
+- using remark to beautify \*.md file to pass codacy ([198fc3c](https://github.com/flood-io/element/commit/198fc3c873d914884dbafa5f492d3545cc5c3635))
 
 ## [1.3.10-beta.0](https://github.com/flood-io/element/compare/v2.0.0-canary.10...v1.3.10-beta.0) (2020-12-04)
 
-
-
 # [1.4.0-beta.4](https://github.com/flood-io/element/compare/v2.0.0-canary.9...v1.4.0-beta.4) (2020-12-03)
-
-
 
 # [1.4.0-beta.3](https://github.com/flood-io/element/compare/v2.0.0-canary.6...v1.4.0-beta.3) (2020-11-25)
 
-
-
 # [1.4.0-beta.2](https://github.com/flood-io/element/compare/v1.4.0-beta.1...v1.4.0-beta.2) (2020-11-24)
-
 
 ### Bug Fixes
 
-* codacy resolved ([55d66e1](https://github.com/flood-io/element/commit/55d66e1bf8ecd5d03982a08b3211aecd3c0ea559))
-* make the changelog consistent to 1.4 ([4a366a9](https://github.com/flood-io/element/commit/4a366a913e601e324f9462d5eff448bafcfff1ab))
-
-
+- codacy resolved ([55d66e1](https://github.com/flood-io/element/commit/55d66e1bf8ecd5d03982a08b3211aecd3c0ea559))
+- make the changelog consistent to 1.4 ([4a366a9](https://github.com/flood-io/element/commit/4a366a913e601e324f9462d5eff448bafcfff1ab))
 
 # [1.4.0-beta.1](https://github.com/flood-io/element/compare/v2.0.0-canary.4...v1.4.0-beta.1) (2020-11-23)
 
-
 ### Features
 
-* change version to make it consitent ([79d3a60](https://github.com/flood-io/element/commit/79d3a607a580b230536260ed68b40c1c701aaa1f))
-* revert beta to 1.3.0-beta.28 ([5ff2220](https://github.com/flood-io/element/commit/5ff2220674ec1f89b31f2499f0d5f0aecc1c12af))
-
-
+- change version to make it consitent ([79d3a60](https://github.com/flood-io/element/commit/79d3a607a580b230536260ed68b40c1c701aaa1f))
+- revert beta to 1.3.0-beta.28 ([5ff2220](https://github.com/flood-io/element/commit/5ff2220674ec1f89b31f2499f0d5f0aecc1c12af))
 
 # [1.4.0-beta.0](https://github.com/flood-io/element/compare/v2.0.0-canary.2...v1.4.0-beta.0) (2020-11-16)
 
-
 ### Features
 
-* mirage from 2.0-beta to 1.3.9 ([4df1383](https://github.com/flood-io/element/commit/4df138314a2db5b0a6468e12609c3eaba4e643b6))
-
-
+- mirage from 2.0-beta to 1.3.9 ([4df1383](https://github.com/flood-io/element/commit/4df138314a2db5b0a6468e12609c3eaba4e643b6))
 
 ## [1.3.9](https://github.com/flood-io/element/compare/v2.0.0-beta.20...v1.3.9) (2020-11-02)
 
-
 ### Bug Fixes
 
-* transaction count ([35aab3f](https://github.com/flood-io/element/commit/35aab3f383bba751ee6c086dc29b8b256bd7a924))
-
-
+- transaction count ([35aab3f](https://github.com/flood-io/element/commit/35aab3f383bba751ee6c086dc29b8b256bd7a924))
 
 ## [1.3.8](https://github.com/flood-io/element/compare/v1.3.7...v1.3.8) (2020-09-24)
 
-
-
 ## [1.3.7](https://github.com/flood-io/element/compare/v1.3.6...v1.3.7) (2020-09-24)
-
-
 
 ## [1.3.6](https://github.com/flood-io/element/compare/v2.0.0-beta.12...v1.3.6) (2020-09-24)
 
-
 ### Bug Fixes
 
-* handle fail exit code when running on local only ([6915605](https://github.com/flood-io/element/commit/69156058db7b28b2c18fb7928ddeeb8ed0366c7f))
-
-
+- handle fail exit code when running on local only ([6915605](https://github.com/flood-io/element/commit/69156058db7b28b2c18fb7928ddeeb8ed0366c7f))
 
 ## [1.3.5](https://github.com/flood-io/element/compare/v2.0.0-beta.11...v1.3.5) (2020-09-22)
 
-
-
 ## [1.3.3](https://github.com/flood-io/element/compare/v1.3.2...v1.3.3) (2020-09-16)
-
-
 
 ## [1.3.2](https://github.com/flood-io/element/compare/v2.0.0-beta.5...v1.3.2) (2020-09-09)
 
-
-
 ## [1.3.1](https://github.com/flood-io/element/compare/v2.0.0-beta.4...v1.3.1) (2020-09-04)
-
 
 ### Bug Fixes
 
-* bump 1.3.1 ([#262](https://github.com/flood-io/element/issues/262)) ([b63ed9a](https://github.com/flood-io/element/commit/b63ed9a0d27e1184e377e7f28852fb70a1895d73))
-
-
+- bump 1.3.1 ([#262](https://github.com/flood-io/element/issues/262)) ([b63ed9a](https://github.com/flood-io/element/commit/b63ed9a0d27e1184e377e7f28852fb70a1895d73))
 
 # [1.3.0](https://github.com/flood-io/element/compare/v1.3.0-beta.26...v1.3.0) (2020-08-29)
-
-
-
-
 
 ## [2.0.0-canary.48](https://github.com/flood-io/element/compare/v2.0.0-canary.47...v2.0.0-canary.48) (2021-03-04)
 
@@ -329,7 +338,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Features
 
--   show screenshot on terminal (iTerm) ([8fa8c88](https://github.com/flood-io/element/commit/8fa8c88e6f86477a1adc95b2de4ed710d70d7531))
+- show screenshot on terminal (iTerm) ([8fa8c88](https://github.com/flood-io/element/commit/8fa8c88e6f86477a1adc95b2de4ed710d70d7531))
 
 ## [2.0.0-canary.14](https://github.com/flood-io/element/compare/v2.0.0-canary.13...v2.0.0-canary.14) (2021-01-04)
 
@@ -343,18 +352,18 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Features
 
--   handle launchOptionOverrides ([2351512](https://github.com/flood-io/element/commit/235151262a945d5650300fa7b0d4e4a258b5f836))
--   re-organize priority of settings (CLI > Test Scripts > Config) ([f3eb374](https://github.com/flood-io/element/commit/f3eb37431aa70015a8f7148d3f6feabef6a7eef2))
+- handle launchOptionOverrides ([2351512](https://github.com/flood-io/element/commit/235151262a945d5650300fa7b0d4e4a258b5f836))
+- re-organize priority of settings (CLI > Test Scripts > Config) ([f3eb374](https://github.com/flood-io/element/commit/f3eb37431aa70015a8f7148d3f6feabef6a7eef2))
 
 ## [2.0.0-canary.11](https://github.com/flood-io/element/compare/v2.0.0-canary.10...v2.0.0-canary.11) (2020-12-15)
 
 ### Bug Fixes
 
--   clean code ([987863d](https://github.com/flood-io/element/commit/987863d6553dd1bd3bb1a182c5a6b1e93cb784f2))
+- clean code ([987863d](https://github.com/flood-io/element/commit/987863d6553dd1bd3bb1a182c5a6b1e93cb784f2))
 
 ### Features
 
--   terminal output for multiple users ([75a9196](https://github.com/flood-io/element/commit/75a91966d827e6d5db6ede45a4a71104229e78ad))
+- terminal output for multiple users ([75a9196](https://github.com/flood-io/element/commit/75a91966d827e6d5db6ede45a4a71104229e78ad))
 
 ## [2.0.0-canary.10](https://github.com/flood-io/element/compare/v2.0.0-canary.9...v2.0.0-canary.10) (2020-12-03)
 
@@ -388,8 +397,8 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
--   support adding browserLaunchOptions in TestSetting ([171c3a9](https://github.com/flood-io/element/commit/171c3a913a1693ebe26104d620582e9ef9f2a873))
--   support adding browserLaunchOptions in TestSetting ([73de72b](https://github.com/flood-io/element/commit/73de72bf02b264429ed77c7fc89942f7f2c6e5bb))
+- support adding browserLaunchOptions in TestSetting ([171c3a9](https://github.com/flood-io/element/commit/171c3a913a1693ebe26104d620582e9ef9f2a873))
+- support adding browserLaunchOptions in TestSetting ([73de72b](https://github.com/flood-io/element/commit/73de72bf02b264429ed77c7fc89942f7f2c6e5bb))
 
 ## [2.0.0-canary.2](https://github.com/flood-io/element/compare/v2.0.0-canary.1...v2.0.0-canary.2) (2020-11-16)
 
@@ -447,12 +456,12 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
--   fix codacy ([2cf3b36](https://github.com/flood-io/element/commit/2cf3b36da27e527f78fc0b9e55c8fea5aa2b90ec))
--   flood-runner default to run in production env ([e35be40](https://github.com/flood-io/element/commit/e35be40f4ac01ccf38d3b7b7b94133f4ea414b74))
+- fix codacy ([2cf3b36](https://github.com/flood-io/element/commit/2cf3b36da27e527f78fc0b9e55c8fea5aa2b90ec))
+- flood-runner default to run in production env ([e35be40](https://github.com/flood-io/element/commit/e35be40f4ac01ccf38d3b7b7b94133f4ea414b74))
 
 ### Features
 
--   update version of each packages ([017830f](https://github.com/flood-io/element/commit/017830fa5c1922e481ebd59f7519dd63b2b2ec18))
+- update version of each packages ([017830f](https://github.com/flood-io/element/commit/017830fa5c1922e481ebd59f7519dd63b2b2ec18))
 
 ## [1.5.0](https://github.com/flood-io/element/compare/v1.4.0-beta.6...v1.5.0) (2021-01-22)
 
@@ -464,9 +473,9 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
--   fix CHANGELOG.md of each package ([6949219](https://github.com/flood-io/element/commit/694921922599c21394cbf3369852bdea75b85c38))
--   update correct version of each package ([e87e39b](https://github.com/flood-io/element/commit/e87e39b20ac06eb0197f1bd36c16eff46375e6bf))
--   using remark to beautify \*.md file to pass codacy ([198fc3c](https://github.com/flood-io/element/commit/198fc3c873d914884dbafa5f492d3545cc5c3635))
+- fix CHANGELOG.md of each package ([6949219](https://github.com/flood-io/element/commit/694921922599c21394cbf3369852bdea75b85c38))
+- update correct version of each package ([e87e39b](https://github.com/flood-io/element/commit/e87e39b20ac06eb0197f1bd36c16eff46375e6bf))
+- using remark to beautify \*.md file to pass codacy ([198fc3c](https://github.com/flood-io/element/commit/198fc3c873d914884dbafa5f492d3545cc5c3635))
 
 ## [1.4.0-beta.4](https://github.com/flood-io/element/compare/v1.4.0-beta.3...v1.4.0-beta.4) (2020-12-03)
 
@@ -480,21 +489,21 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
--   codacy resolved ([55d66e1](https://github.com/flood-io/element/commit/55d66e1bf8ecd5d03982a08b3211aecd3c0ea559))
--   make the changelog consistent to 1.4 ([4a366a9](https://github.com/flood-io/element/commit/4a366a913e601e324f9462d5eff448bafcfff1ab))
+- codacy resolved ([55d66e1](https://github.com/flood-io/element/commit/55d66e1bf8ecd5d03982a08b3211aecd3c0ea559))
+- make the changelog consistent to 1.4 ([4a366a9](https://github.com/flood-io/element/commit/4a366a913e601e324f9462d5eff448bafcfff1ab))
 
 ## [1.4.0-beta.1](https://github.com/flood-io/element/compare/v1.4.0-beta.0...v1.4.0-beta.1) (2020-11-23)
 
 ### Features
 
--   change version to make it consitent ([79d3a60](https://github.com/flood-io/element/commit/79d3a607a580b230536260ed68b40c1c701aaa1f))
--   revert beta to 1.3.0-beta.28 ([5ff2220](https://github.com/flood-io/element/commit/5ff2220674ec1f89b31f2499f0d5f0aecc1c12af))
+- change version to make it consitent ([79d3a60](https://github.com/flood-io/element/commit/79d3a607a580b230536260ed68b40c1c701aaa1f))
+- revert beta to 1.3.0-beta.28 ([5ff2220](https://github.com/flood-io/element/commit/5ff2220674ec1f89b31f2499f0d5f0aecc1c12af))
 
 ## [1.3.9](https://github.com/flood-io/element/compare/v1.3.8...v1.3.9) (2020-11-02)
 
 ### Bug Fixes
 
--   transaction count ([35aab3f](https://github.com/flood-io/element/commit/35aab3f383bba751ee6c086dc29b8b256bd7a924))
+- transaction count ([35aab3f](https://github.com/flood-io/element/commit/35aab3f383bba751ee6c086dc29b8b256bd7a924))
 
 ## [1.3.8](https://github.com/flood-io/element/compare/v1.3.7...v1.3.8) (2020-09-24)
 
@@ -508,7 +517,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
--   handle fail exit code when running on local only ([6915605](https://github.com/flood-io/element/commit/69156058db7b28b2c18fb7928ddeeb8ed0366c7f))
+- handle fail exit code when running on local only ([6915605](https://github.com/flood-io/element/commit/69156058db7b28b2c18fb7928ddeeb8ed0366c7f))
 
 ## [1.3.5](https://github.com/flood-io/element/compare/v1.3.4...v1.3.5) (2020-09-22)
 
@@ -526,7 +535,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
--   bump 1.3.1 ([#262](https://github.com/flood-io/element/issues/262)) ([b63ed9a](https://github.com/flood-io/element/commit/b63ed9a0d27e1184e377e7f28852fb70a1895d73))
+- bump 1.3.1 ([#262](https://github.com/flood-io/element/issues/262)) ([b63ed9a](https://github.com/flood-io/element/commit/b63ed9a0d27e1184e377e7f28852fb70a1895d73))
 
 ## [1.3.0](https://github.com/flood-io/element/compare/v1.3.0-beta.20...v1.3.0) (2020-08-29)
 
@@ -560,7 +569,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
--   change incorrect versions to the latest ([#229](https://github.com/flood-io/element/issues/229)) ([f6fc29a](https://github.com/flood-io/element/commit/f6fc29aeedc2f0955c13a48868b2f5065b537e87))
+- change incorrect versions to the latest ([#229](https://github.com/flood-io/element/issues/229)) ([f6fc29a](https://github.com/flood-io/element/commit/f6fc29aeedc2f0955c13a48868b2f5065b537e87))
 
 # [1.3.0-beta.4](https://github.com/flood-io/element/compare/v1.3.0-beta.3...v1.3.0-beta.4) (2020-05-20)
 
@@ -578,7 +587,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
--   remove double join on flood/flood directory ([e184708](https://github.com/flood-io/element/commit/e1847087214f4277a92b8983323e1de5dd4c0eca))
+- remove double join on flood/flood directory ([e184708](https://github.com/flood-io/element/commit/e1847087214f4277a92b8983323e1de5dd4c0eca))
 
 ## [1.2.1](https://github.com/flood-io/element/compare/v1.2.1-feat.0...v1.2.1) (2020-04-01)
 
@@ -644,7 +653,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Features
 
--   **example:** tesing release version bump to 1.1 ([5dbc19f](https://github.com/flood-io/element/commit/5dbc19fa8ac2dbaabe769786d69da95c8186718f))
+- **example:** tesing release version bump to 1.1 ([5dbc19f](https://github.com/flood-io/element/commit/5dbc19fa8ac2dbaabe769786d69da95c8186718f))
 
 ## 1.0.11-feat.4 (2020-04-01)
 
@@ -748,21 +757,21 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
--   concurrency hacks paths ([e306f44](https://github.com/flood-io/element/commit/e306f4497807607d6acda7bf7c3b13032d0f31ff))
+- concurrency hacks paths ([e306f44](https://github.com/flood-io/element/commit/e306f4497807607d6acda7bf7c3b13032d0f31ff))
 
 ## [1.0.10-beta.47](https://github.com/flood-io/element/compare/v1.0.10-beta.46...v1.0.10-beta.47) (2020-03-02)
 
 ### Bug Fixes
 
--   use FLOOD_FILES_PATH and FLOOD_DATA_ROOT ([29f8565](https://github.com/flood-io/element/commit/29f85655d7a07f327699a83339b3bc371fada20b))
+- use FLOOD_FILES_PATH and FLOOD_DATA_ROOT ([29f8565](https://github.com/flood-io/element/commit/29f85655d7a07f327699a83339b3bc371fada20b))
 
 ## [1.0.10-beta.46](https://github.com/flood-io/element/compare/v1.0.10-beta.45...v1.0.10-beta.46) (2020-03-02)
 
 ### Bug Fixes
 
--   concurrency lock path ([493abb6](https://github.com/flood-io/element/commit/493abb6f247eb54f12da57c937fc3aa32aba857c))
--   implement agent start command ([e31a6ef](https://github.com/flood-io/element/commit/e31a6ef170215a96e84a67d5315668049293dfea))
+- concurrency lock path ([493abb6](https://github.com/flood-io/element/commit/493abb6f247eb54f12da57c937fc3aa32aba857c))
+- implement agent start command ([e31a6ef](https://github.com/flood-io/element/commit/e31a6ef170215a96e84a67d5315668049293dfea))
 
 ### Features
 
--   adds native flood runner support ([0e7d151](https://github.com/flood-io/element/commit/0e7d15110250b1b13d5c94c981f7317e58d9ea2a))
+- adds native flood runner support ([0e7d151](https://github.com/flood-io/element/commit/0e7d15110250b1b13d5c94c981f7317e58d9ea2a))

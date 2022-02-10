@@ -5,40 +5,36 @@ A tool for developing Flood Element test scripts.
 Install Element CLI on your own machine to quickly iterate the development of your Browser Level User test script.
 Once you're satisfied, upload it to [Tricentis Flood](https://flood.io) use it to generate 1000s of users of load in a full-scale load test.
 
--   [Flood Element CLI](#flood-element-cli)
-    \- [Installation](#installation)
-    \- [Getting started](#getting-started)
-    \- [`element run <file>`](#element-run-file)
-    \- [`element plan <file> [options]`](#element-plan-file-options)
-    \- [`element init [dir] [options]`](#element-init-dir-options)
-    \- [`element generate <file>`](#element-generate-file)
-    \- [`element generate config [file-name]`](#element-generate-config-file-name)
-    \- [`element run`](#element-run)
-    \- [`element run --config-file [path-to-config-file]`](#element-run---config-file-path-to-config-file)
-    \- [Run an Element script on Flood](#run-an-element-script-on-flood)
-    \- [`element flood authenticate <flood-api-token>`](#element-flood-authenticate-flood-api-token)
-    \- [`element flood project ls`](#element-flood-project-ls)
-    \- [`element flood use 'project-name'`](#element-flood-use-project-name)
-    \- [`element flood project`](#element-flood-project)
-    \- [`element flood run <path-to-script> [options]`](#element-flood-run-path-to-script-options)
+- [Flood Element CLI](#flood-element-cli)
+  \- [Installation](#installation)
+  \- [Getting started](#getting-started)
+  \- [`element run <file>`](#element-run-file)
+  \- [`element plan <file> [options]`](#element-plan-file-options)
+  \- [`element init [dir] [options]`](#element-init-dir-options)
+  \- [`element generate <file>`](#element-generate-file)
+  \- [`element generate config [file-name]`](#element-generate-config-file-name)
+  \- [`element run`](#element-run)
+  \- [`element run --config-file [path-to-config-file]`](#element-run---config-file-path-to-config-file)
+  \- [Run an Element script on Flood](#run-an-element-script-on-flood)
+  \- [`element flood authenticate <flood-api-token>`](#element-flood-authenticate-flood-api-token)
+  \- [`element flood project ls`](#element-flood-project-ls)
+  \- [`element flood use 'project-name'`](#element-flood-use-project-name)
+  \- [`element flood project`](#element-flood-project)
+  \- [`element flood run <path-to-script> [options]`](#element-flood-run-path-to-script-options)
 
 ## Installation
 
-The easiest way to install on MacOS is via [homebrew](https://brew.sh):
+First, make sure you have installed the [latest version of NodeJS](https://nodejs.org) for your platform.
 
-```shell
-brew install flood-io/taps/element
-```
-
-### via npm or yarn
-
-If you're installing as an npm package, please first ensure you have the most recent version of node installed.
-
-```shell
-# npm:
-npm install -g @flood/element-cli
-# yarn
+```bash
+# Using yarn
 yarn global add @flood/element-cli
+
+# Using npm
+npm install -g @flood/element-cli
+
+# Verify install
+element --version
 ```
 
 ## Getting started
@@ -136,7 +132,7 @@ Output the test script plan without executing it.
 
 **Options**
 
--   `--json` (boolean) Output the test plan as JSON format. Defaults to `false`.
+- `--json` (boolean) Output the test plan as JSON format. Defaults to `false`.
 
 ### `element init [dir] [options]`
 
@@ -144,11 +140,11 @@ Init a test script and a minimal environment to get you started with Flood Eleme
 
 **Positionals**
 
--   `[dir]` (string) the directory to initialize with an Element test script. Defaults to the current directory.
+- `[dir]` (string) the directory to initialize with an Element test script. Defaults to the current directory.
 
 **Options**
 
--   `--skip-install` (boolean) Skip yarn/npm install. Defaults to `false`.
+- `--skip-install` (boolean) Skip yarn/npm install. Defaults to `false`.
 
 ### `element generate <file>`
 
@@ -238,10 +234,10 @@ Launch a flood from CLI with a test script
 
 **Options**
 
--   `--hosted`: indicates you're going to run a flood on hosted grid. Ignore this option if you want to run an on-demand test.
--   `--vu`: number of virtual users to simulate. Default to `500` if not specified
--   `--duration`: length of the test, measured in minutes. Default to `15` minutes if not specified.
--   `--rampup`: the amount of time it will take to reach the defined number of `vu`, measured in minutes. Default to `0` if not specified.
+- `--hosted`: indicates you're going to run a flood on hosted grid. Ignore this option if you want to run an on-demand test.
+- `--vu`: number of virtual users to simulate. Default to `500` if not specified
+- `--duration`: length of the test, measured in minutes. Default to `15` minutes if not specified.
+- `--rampup`: the amount of time it will take to reach the defined number of `vu`, measured in minutes. Default to `0` if not specified.
 
 > **_NOTE:_**
 > After running the command `element run flood`, you will be asked to select regions (to run on-demand test), or grids (to run a test on a hosted grid). To navigate among the options, use the Up/Down arrow key. To select an option, press the Space bar. You can select multiple options if you want.

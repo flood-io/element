@@ -15,12 +15,12 @@ If you're coming from Puppeteer, think of the Browser as a wrapper around the Pu
 You don't need to create a browser instance because it is passed into each step for your, and reset after each test loop.
 
 ```ts title="my-test.perf.ts"
-import { step } from "@flood/element";
+import { step } from '@flood/element'
 export default () => {
-  step("Start", async (browser) => {
-    await browser.visit("https://challenge.flood.io");
-  });
-};
+	step('Start', async (browser) => {
+		await browser.visit('https://challenge.flood.io')
+	})
+}
 ```
 
 ## Methods
@@ -82,9 +82,9 @@ currently outside the viewport it will first scroll to that element.
 **Example:**
 
 ```ts title="my-test.perf.ts"
-step("Start", async (browser) => {
-  await browser.click(By.partialLinkText("Start"));
-});
+step('Start', async (browser) => {
+	await browser.click(By.partialLinkText('Start'))
+})
 ```
 
 In this example we're constructing a [Locatable][] using the `By.partialLinkText()` Locator, which will match the first `<a>` tag which contains the text "Start".
@@ -181,19 +181,21 @@ Gets cookies by URL(s) and/or by cookie name(s). If no URLs and cookie names are
   - sameSite `"Strict"|"Lax"|"None"`
 
 :::info Note
+
 - If you pass `https` URL(s) to the method, only cookies that have `secure: true` will be returned.
 - If you pass `http` URL(s) to the method, only cookies that have `secure: false` will be returned.
-:::
+  :::
 
 **Example:**
-``` ts title="my-test.perf.ts"
-	step('Start', async browser => {
-		await browser.visit('https://challenge.flood.io')
-		const cookies = await browser.getCookies({names: 'largest_order'})
-		for (const cookie of cookies) {
-		  console.log(JSON.stringify(cookie))
-		}
-	  })
+
+```ts title="my-test.perf.ts"
+step('Start', async (browser) => {
+	await browser.visit('https://challenge.flood.io')
+	const cookies = await browser.getCookies({ names: 'largest_order' })
+	for (const cookie of cookies) {
+		console.log(JSON.stringify(cookie))
+	}
+})
 ```
 
 ### `getMimeType(filePath)`
@@ -201,6 +203,7 @@ Gets cookies by URL(s) and/or by cookie name(s). If no URLs and cookie names are
 Returns the Media (MIME) Type of a file
 
 **Parameters**
+
 - filePath `string` path to a file
 - returns: `string` media type of the file
 
@@ -209,6 +212,7 @@ Returns the Media (MIME) Type of a file
 Returns the URL of the current page
 
 **Parameters**
+
 - returns: `string` URL of the current page
 
 ### `highlightElement(element)`
@@ -261,8 +265,8 @@ Scroll the document to the specified position.
 
 - position can be any of these types:
 
-  - [`ElementHandle`](ElementHandle.md)
-  - [`Locator`](Locators.md)
+  - [`ElementHandle`](ElementHandle)
+  - [`Locator`](Locators)
   - `Point`: an array of `x`(number) and `y`(number) co-ordinate
   - `String`: 'top', 'bottom', 'left' or 'right'
 
@@ -308,8 +312,8 @@ This allows sendKeys to simulate a user typing control keys such as `Key.ENTER`.
 **Example:**
 
 ```ts title="my-test.perf.ts"
-await browser.click("#input_address");
-await browser.sendKeys("Hello, World!", Key.ENTER);
+await browser.click('#input_address')
+await browser.sendKeys('Hello, World!', Key.ENTER)
 ```
 
 **Parameters**
@@ -318,6 +322,7 @@ await browser.sendKeys("Hello, World!", Key.ENTER);
 - returns: [Promise<`void`>][promise]
 
 ### `sendKeyCombinations(...keys)`
+
 This will simulate the act of pressing a combination of [keys][] on the keyboard at the same time. Use commas to separate individual keys.
 
 :::info SOME COMBINATIONS MAY NOT WORK ON MACOS
@@ -327,7 +332,7 @@ On MacOS, some combinations are emulated by the Operating System, instead of the
 **Example:**
 
 ```ts title="my-test.perf.ts"
-await browser.sendKeyCombinations(Key.SHIFT, 'KeyA');
+await browser.sendKeyCombinations(Key.SHIFT, 'KeyA')
 ```
 
 ### `setUserAgent(userAgent)`
@@ -371,9 +376,9 @@ Types a string into an `<input>` control, key press by key press. Use this to fi
 **Example:**
 
 ```ts title="my-test.perf.ts"
-step("Step 1", async (browser) => {
-  await browser.type(By.css("#email"), "user@example.com");
-});
+step('Step 1', async (browser) => {
+	await browser.type(By.css('#email'), 'user@example.com')
+})
 ```
 
 **Parameters**
@@ -392,9 +397,9 @@ a new Browser tab for this page to load into.
 **Example:**
 
 ```ts title="my-test.perf.ts"
-step("Start", async (browser) => {
-  await browser.visit("https://example.com");
-});
+step('Start', async (browser) => {
+	await browser.visit('https://example.com')
+})
 ```
 
 **Parameters**
@@ -412,9 +417,9 @@ Check out [Until][] for a rich set of wait [Conditions][condition].
 **Example:**
 
 ```ts title="my-test.perf.ts"
-step("Start", async (browser) => {
-  await browser.wait(Until.elementIsVisible(By.css("h1.title")));
-});
+step('Start', async (browser) => {
+	await browser.wait(Until.elementIsVisible(By.css('h1.title')))
+})
 ```
 
 You can use either a numeric value in seconds to wait for a specific time,
@@ -432,49 +437,56 @@ or a [Condition][], for more flexible conditions.
 - returns: [Promise<`any`>][promise]
 
 # `Locatable`
+
 Locatable represents anything able to be located, either a string selector or a <[Locator]>. <[Locator]>s are generally created using <[By]> methods.
 
 ```typescript
-[Locator] | [ElementHandle] | string
+;[Locator] | [ElementHandle] | string
 ```
+
 # `NullableLocatable`
+
 NullableLocatable represents a <[Locatable]> which could also be null.
 
 Note that most Element location API methods accept a NullableLocatable but will throw an <[Error]> if its actually <[null]>.
 
 ```typescript
-[Locatable] | null
+;[Locatable] | null
 ```
 
 # `NavigationOptions`
+
 An object which might have the following properties
 
 **Properties**
-* `timeout` &lt;number&gt; (Optional) Maximum navigation time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout. 
-* `waitUntil` &lt;string | array&gt; (Optional) When to consider navigation succeeded, defaults to load. Given an array of event strings, navigation is considered to be successful after all events have been fired. Events can be either:
-  * `"load"` - consider navigation to be finished when the load event is fired.
-  * `"domcontentloaded"` - consider navigation to be finished when the DOMContentLoaded event is fired.
-  * `"networkidle0"` - consider navigation to be finished when there are no more than 0 network connections for at least 500 ms.
-  * `"networkidle2"` - consider navigation to be finished when there are no more than 2 network connections for at least 500 ms.
 
+- `timeout` &lt;number&gt; (Optional) Maximum navigation time in milliseconds, defaults to 30 seconds, pass 0 to disable timeout.
+- `waitUntil` &lt;string | array&gt; (Optional) When to consider navigation succeeded, defaults to load. Given an array of event strings, navigation is considered to be successful after all events have been fired. Events can be either:
+  - `"load"` - consider navigation to be finished when the load event is fired.
+  - `"domcontentloaded"` - consider navigation to be finished when the DOMContentLoaded event is fired.
+  - `"networkidle0"` - consider navigation to be finished when there are no more than 0 network connections for at least 500 ms.
+  - `"networkidle2"` - consider navigation to be finished when there are no more than 2 network connections for at least 500 ms.
 
 # `ScreenshotOptions`
+
 Defines the screenshot options.
 
 **Properties**
-* `clip` &lt;Object&gt; (Optional) An object which specifies clipping region of the page. Should have the following fields:
-  * `x` &lt;number&gt; The x-coordinate of top-left corner of clipping area.
-  * `y` &lt;number&gt; The y-coordinate of top-left corner of clipping area.
-  * `height` &lt;number&gt; The height of clipping area.
-  * `width` &lt;number&gt; The width of clipping area.  
-* `encoding` &lt;string&gt; (Optional) The encoding of the image, can be either `"base64"` or `"binary"`. Defaults to `binary`.
-* `fullPage` &lt;boolean&gt; (Optional) When true, takes a screenshot of the full scrollable page. Defaults to false. 
-* `omitBackground` &lt;boolean&gt; (Optional) Hides default white background and allows capturing screenshots with transparency. Defaults to `false`. 
-* `path` &lt;string&gt; (Optional) The file path to save the image to. The screenshot type will be inferred from file extension.  
+
+- `clip` &lt;Object&gt; (Optional) An object which specifies clipping region of the page. Should have the following fields:
+  - `x` &lt;number&gt; The x-coordinate of top-left corner of clipping area.
+  - `y` &lt;number&gt; The y-coordinate of top-left corner of clipping area.
+  - `height` &lt;number&gt; The height of clipping area.
+  - `width` &lt;number&gt; The width of clipping area.
+- `encoding` &lt;string&gt; (Optional) The encoding of the image, can be either `"base64"` or `"binary"`. Defaults to `binary`.
+- `fullPage` &lt;boolean&gt; (Optional) When true, takes a screenshot of the full scrollable page. Defaults to false.
+- `omitBackground` &lt;boolean&gt; (Optional) Hides default white background and allows capturing screenshots with transparency. Defaults to `false`.
+- `path` &lt;string&gt; (Optional) The file path to save the image to. The screenshot type will be inferred from file extension.  
   If `path` is a relative path, then it is resolved relative to current working directory.  
-  If no path is provided, the image won't be saved to the disk.  
-* `quality` &lt;number&gt; (Optional) The quality of the image, between 0-100. Not applicable to `png` images.
-* `type` &lt;string&gt;  (Optional) Specify screenshot type, can be either `"jpeg"` or `"png"`. Defaults to `png`.
+  If no path is provided, the image won't be saved to the disk.
+- `quality` &lt;number&gt; (Optional) The quality of the image, between 0-100. Not applicable to `png` images.
+- `type` &lt;string&gt; (Optional) Specify screenshot type, can be either `"jpeg"` or `"png"`. Defaults to `png`.
+
 # ScrollOptions
 
 Is an Object with the following properties:
@@ -486,13 +498,13 @@ Is an Object with the following properties:
 **Note:**
 
 1. If you use `behaviour: 'smooth'`, it may take the browser some time to scroll. Therefore, consider adding a wait after the scroll action to avoid unexpected error.
-2. `block` and `inline` only work with `browser.scrollTo()`, with [`ElementHandle`](ElementHandle.md) or [`Locator`](Locators.md) as the 1st parameter.
+2. `block` and `inline` only work with `browser.scrollTo()`, with [`ElementHandle`](ElementHandle) or [`Locator`](Locators) as the 1st parameter.
 
 [step]: ../guides/script
 [promise]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
 [nullablelocatable]: #nullablelocatable
 [locatable]: #locatable
-[clickoptions]: mouse.md#clickoptions
+[clickoptions]: mouse#clickoptions
 [device]: Constants
 [elementhandle]: ElementHandle
 [locator]: Locators

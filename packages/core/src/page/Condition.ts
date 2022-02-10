@@ -114,15 +114,9 @@ export abstract class ElementCondition extends LocatorCondition {
 		recast.visit(fnAST, {
 			visitVariableDeclaration(path: any) {
 				if (path.node.declarations[0].id.name === 'locatorFunc') {
-					path
-						.get('declarations', 0)
-						.get('init')
-						.replace(locatorFuncAST)
+					path.get('declarations', 0).get('init').replace(locatorFuncAST)
 				} else if (path.node.declarations[0].id.name === 'conditionFunc') {
-					path
-						.get('declarations', 0)
-						.get('init')
-						.replace(conditionFuncAST)
+					path.get('declarations', 0).get('init').replace(conditionFuncAST)
 				}
 
 				this.traverse(path)
@@ -137,12 +131,12 @@ export abstract class ElementCondition extends LocatorCondition {
 
 		try {
 			await frame.waitForFunction(
-				args => {
+				(args) => {
 					const [fn, ...rest] = args
 					return eval(fn)(rest)
 				},
 				[compiledFunc, ...args],
-				options,
+				options
 			)
 		} catch (err) {
 			console.log(err)

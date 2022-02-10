@@ -18,7 +18,7 @@ Locates an element where the attribute matches the value.
 **Example:**
 
 ```typescript
-By.attr("name", "frame-name");
+By.attr('name', 'frame-name')
 ```
 
 **Parameters**

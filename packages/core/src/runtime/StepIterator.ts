@@ -114,7 +114,7 @@ export default class StepIterator {
 		looper: Looper,
 		browser: BrowserInterface,
 		recoverySteps: StepRecoveryObject,
-		tries: number,
+		tries: number
 	): Promise<boolean> {
 		let stepRecover = recoverySteps[step.name]
 		if (!stepRecover) {

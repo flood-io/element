@@ -20,7 +20,7 @@ export const settings: TestSettings = {
 }
 
 export default () => {
-	step('Test', async browser => {
+	step('Test', async (browser) => {
 		await browser.visit('https://google.com', { waitUntil: 'domcontentloaded' })
 		await browser.wait(5)
 	})

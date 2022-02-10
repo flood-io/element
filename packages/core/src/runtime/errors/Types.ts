@@ -64,7 +64,7 @@ export function interpretError<T, U extends ErrorData>(
 	inputError: Error,
 	target: T,
 	propertyKey: string,
-	args: any[],
+	args: any[]
 ): StructuredError<U> | Error {
 	for (const interp of interpreters) {
 		const outputErr = interp(inputError, target, propertyKey, ...args)
@@ -76,7 +76,7 @@ export function interpretError<T, U extends ErrorData>(
 
 export function castStructuredError<T extends ErrorData>(
 	error: Error,
-	kind: ErrorDataKind,
+	kind: ErrorDataKind
 ): StructuredError<T> | undefined {
 	if (
 		(<StructuredError<T>>error)._structured === 'yes' &&
@@ -90,7 +90,7 @@ export function castStructuredError<T extends ErrorData>(
 
 export function getStructuredData<T extends ErrorData>(
 	error: Error,
-	kind: ErrorDataKind,
+	kind: ErrorDataKind
 ): T | undefined {
 	if (
 		(<StructuredError<T>>error)._structured === 'yes' &&

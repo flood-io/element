@@ -1,25 +1,19 @@
 {
-  "extends": "../../tsconfig.json",
-  "compilerOptions": {
-    "outDir": "dist",
-    "rootDir": ".",
-    "declaration": true,
-    "noUnusedParameters": false,
-    "noUnusedLocals": false,
-    "allowUnusedLabels": true,
-    "esModuleInterop": true
-  },
-  "references": [
-    {
-      "path": "../core"
-    }
-  ],
-  "include": [
-    "src/**/*.ts",
-    "index.d.ts"
-  ],
-  "files": [
-    "./src/index.ts",
-    "src/workers/threadChild.ts"
-  ]
+	"extends": "../../tsconfig.json",
+	"compilerOptions": {
+		"outDir": "./dist",
+		"rootDir": ".",
+		"declaration": true,
+		"noUnusedParameters": false,
+		"noUnusedLocals": false,
+		"allowUnusedLabels": true,
+		"esModuleInterop": true
+	},
+	"references": [
+		{
+			"path": "../core"
+		}
+	],
+	"include": ["src/**/*.ts", "index.d.ts"],
+	"files": ["./src/index.ts", "src/workers/threadChild.ts"]
 }

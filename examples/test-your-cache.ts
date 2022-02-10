@@ -5,7 +5,7 @@ export const settings: TestSettings = {
 }
 
 export default () => {
-	step.once({ waitTimeout: 10 }, async browser => {
+	step.once({ waitTimeout: 10 }, async (browser) => {
 		await browser.visit('https://refreshyourcache.com/en/cache-test/')
 		await browser.takeScreenshot()
 		await browser.clearBrowserCache()

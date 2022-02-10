@@ -31,15 +31,15 @@ const main = async (args: CommandArgs) => {
 			chalk`test script
 {blue ${settings.name || '<no name>'}}
 {blue ${settings.description || '<no description>'}}`,
-			{ padding: 1, margin: 1, align: 'center' },
-		),
+			{ padding: 1, margin: 1, align: 'center' }
+		)
 	)
 
 	console.log(chalk`{blue Settings}:`)
 	console.log(inspect(settings, { colors: true }))
 	console.log()
 	console.log(
-		chalk`{blue The test script has ${String(steps.length)} step${steps.length !== 1 ? 's' : ''}}:`,
+		chalk`{blue The test script has ${String(steps.length)} step${steps.length !== 1 ? 's' : ''}}:`
 	)
 
 	steps.forEach((step: any, i: number) => {
@@ -55,7 +55,7 @@ const main = async (args: CommandArgs) => {
 function printJSON(script: EvaluatedScriptLike) {
 	const o = {
 		settings: script.settings,
-		steps: script.steps.map(s => s.name),
+		steps: script.steps.map((s) => s.name),
 	}
 	console.log(JSON.stringify(o, null, '  '))
 }

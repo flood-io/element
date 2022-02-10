@@ -2,6 +2,7 @@
 id: test-data-generation
 title: Test Data Generation
 ---
+
 ## Overview
 
 Sometimes you want to generate random data that seems realistic. For this we bundle the highly capable open-source Faker library [Faker.js](https://github.com/Marak/faker.js) which makes it simple to add rich, unique, on-the-fly test data to your scripts.
@@ -49,7 +50,7 @@ import { internet } from 'faker'
 
 // Generate different types of names and related data
 const randEmail = internet.email() // returns 'Timmy_Pacocha@gmail.com'
-const randEmailProvider = internet.email('joe','smith','protonmail.com') // returns 'joe.smith@protonmail.com'
+const randEmailProvider = internet.email('joe', 'smith', 'protonmail.com') // returns 'joe.smith@protonmail.com'
 ```
 
 ## Using fake data in tests
@@ -58,30 +59,31 @@ The easiest way to use Faker data in your test is to generate and use it inline 
 
 ```typescript
 step('Write a comment', async (browser: Browser) => {
-  await browser.visit('https://example.com/comments', { waitUntil: 'networkidle2' })
-  await browser.type(By.css('[name="name"]'), faker.name.findName())
-  await browser.type(By.css('[name="comment"]'), faker.lorem.sentences())
-  await browser.click(By.css('[type="submit"]'))
-  await browser.takeScreenshot()
+	await browser.visit('https://example.com/comments', { waitUntil: 'networkidle2' })
+	await browser.type(By.css('[name="name"]'), faker.name.findName())
+	await browser.type(By.css('[name="comment"]'), faker.lorem.sentences())
+	await browser.click(By.css('[type="submit"]'))
+	await browser.takeScreenshot()
 })
 ```
 
-Flood Element's [TestData](./examples_test_data.md) facility makes it simple to use Faker data across multiple steps. You can also generate a large number of fake records to use when running multiple iterations of a test script.
+Flood Element's [TestData](TestData) facility makes it simple to use Faker data across multiple steps. You can also generate a large number of fake records to use when running multiple iterations of a test script.
 This works the same as loading a pre-populated CSV or JSON file, but with the power of randomised values.
 
 ```typescript
 import { name, internet } from 'faker'
 
 interface UserData {
-  name: string
-  email: string
+	name: string
+	email: string
 }
 
 // build a fake User
-const userFactory = () => <UserData>({
-  name: name.findName(),
-  email: internet.email(),
-})
+const userFactory = () =>
+	<UserData>{
+		name: name.findName(),
+		email: internet.email(),
+	}
 
 // create an Array of 5 fake users
 const data = Array.from({ length: 5 }, userFactory)
@@ -108,4 +110,4 @@ step('Step 1', async (browser: Browser, user: UserData) => {
 
 For more information about what Faker can do for you, please consult the [Faker API Documentation](https://github.com/Marak/faker.js#api)
 
-If you have static test data available as CSV or JSON files, consider using Flood Element's [TestData](TestData.md) facility.
+If you have static test data available as CSV or JSON files, consider using Flood Element's [TestData](TestData) facility.

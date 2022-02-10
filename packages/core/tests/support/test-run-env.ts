@@ -13,7 +13,7 @@ export function testWorkRoot(root = workRoot, testData = testDataRoot): WorkRoot
 export default function testRunEnv(
 	stepEnv: Partial<FloodProcessEnv> = {},
 	root = workRoot,
-	testData = testDataRoot,
+	testData = testDataRoot
 ): RuntimeEnvironment {
 	return {
 		stepEnv(): FloodProcessEnv {

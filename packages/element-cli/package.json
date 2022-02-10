@@ -1,6 +1,6 @@
 {
 	"name": "element-cli",
-	"version": "2.0.5-beta.0",
+	"version": "2.0.5-canary.20",
 	"description": "Element is a real browser load testing tool",
 	"bin": {
 		"element": "./dist/bin/element.js"
@@ -36,12 +36,12 @@
 		"url": "https://github.com/flood-io/element/issues"
 	},
 	"dependencies": {
-		"@flood/element-cli": "2.0.5-beta.0",
+		"@flood/element-cli": "2.0.5-canary.20",
 		"find-root": "^1.1.0",
 		"import-local": "^3.0.2"
 	},
 	"gitHead": "75ceb903881476ed98cbc911bfce5fe303a57d55",
 	"devDependencies": {
-		"ts-node": "^8.8.1"
+		"ts-node": "^9.1.1"
 	}
 }

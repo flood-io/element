@@ -412,10 +412,20 @@ JSONStream@^1.2.1, JSONStream@^1.3.5:
     jsonparse "^1.2.0"
     through ">=2.2.7 <3"
 
+acorn-walk@^8.2.0:
+  version "8.2.0"
+  resolved "https://registry.yarnpkg.com/acorn-walk/-/acorn-walk-8.2.0.tgz#741210f2e2426454508853a2f44d0ab83b7f69c1"
+  integrity sha512-k+iyHEuPgSw6SbuDpGQM+06HQUa04DZ3o+F6CSzXMvvI5KMvnaEqXe+YVe555R9nn6GPt404fos4wcgpw12SDA==
+
 acorn@^6.4.1:
   version "6.4.1"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-6.4.1.tgz#531e58ba3f51b9dacb9a6646ca4debf5b14ca474"
   integrity sha512-ZVA9k326Nwrj3Cj9jlh3wGFutC2ZornPNARZwsNYqQYgN0EsV2d53w5RN/co65Ohn4sUAUtb1rSUAOD6XN9idA==
+
+acorn@^8.7.0:
+  version "8.7.0"
+  resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.7.0.tgz#90951fde0f8f09df93549481e5fc141445b791cf"
+  integrity sha512-V/LGr1APy+PXIwKebEWrkZPwoeoF+w1jiOBUmuxuiUIaOHtob8Qc9BTrYo7VuI5fR8tqsy+buA2WFooR5olqvQ==
 
 agent-base@5:
   version "5.1.1"
@@ -5366,9 +5376,12 @@ vm-browserify@^1.0.1:
   integrity sha512-2ham8XPWTONajOR0ohOKOHXkm3+gaBmGut3SRuu75xLd/RRaY6vqgh8NBYYk7+RW3u5AtzPQZG8F10LHkl0lAQ==
 
 vm2@^3.5.2, vm2@^3.9.1:
-  version "3.9.2"
-  resolved "https://registry.yarnpkg.com/vm2/-/vm2-3.9.2.tgz#a4085d2d88a808a1b3c06d5478c2db3222a9cc30"
-  integrity sha512-nzyFmHdy2FMg7mYraRytc2jr4QBaUY3TEGe3q3bK8EgS9WC98wxn2jrPxS/ruWm+JGzrEIIeufKweQzVoQEd+Q==
+  version "3.9.7"
+  resolved "https://registry.yarnpkg.com/vm2/-/vm2-3.9.7.tgz#bb87aa677c97c61e23a6cb6547e44e990517a6f6"
+  integrity sha512-g/GZ7V0Mlmch3eDVOATvAXr1GsJNg6kQ5PjvYy3HbJMCRn5slNbo/u73Uy7r5yUej1cRa3ZjtoVwcWSQuQ/fow==
+  dependencies:
+    acorn "^8.7.0"
+    acorn-walk "^8.2.0"
 
 watchpack-chokidar2@^2.0.0:
   version "2.0.0"

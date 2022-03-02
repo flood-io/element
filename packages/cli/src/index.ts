@@ -1,7 +1,6 @@
 import chalk from 'chalk'
 import argv from 'yargs'
 import { error } from './utils/error'
-import { updateCheck } from './utils/updateCheck'
 import { join } from 'path'
 import initCmd from './cmd/init'
 import runCmd from './cmd/run'
@@ -50,7 +49,6 @@ process.on('uncaughtException', handleUnexpected)
 export async function main(rootPath: string) {
 	// eslint-disable-next-line @typescript-eslint/no-var-requires
 	const pkg = require(join(rootPath, 'package.json'))
-	await updateCheck(pkg)
 
 	const cli = argv
 		.usage(chalk`{bold {blueBright element}} <command> {grey [options]}`)

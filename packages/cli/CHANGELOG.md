@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.5](https://github.com/flood-io/element/compare/v1.5.4...v1.5.5) (2022-03-02)
+
+
+### Bug Fixes
+
+* remove update check in a different way ([1bf19eb](https://github.com/flood-io/element/commit/1bf19ebc34a07ebeb142663560b1cb6371d18229))
+
+
+
+
+
 ## [1.5.4](https://github.com/flood-io/element/compare/v1.5.3...v1.5.4) (2021-04-06)
 
 **Note:** Version bump only for package @flood/element-cli

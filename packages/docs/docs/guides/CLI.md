@@ -156,7 +156,7 @@ module.exports = {
 	},
 	testSettings: {
 		actionDelay: '2s',
-		blockDomains: [],
+		blockedDomains: [],
 		browser: 'chromium',
 		browserLaunchOptions: {},
 		clearCache: false,

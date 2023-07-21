@@ -395,7 +395,7 @@ export default class Test implements ITest {
 		try {
 			debug(`Run step: ${step.name}`) // ${step.fn.toString()}`)
 			browser.settings = { ...this.settings, ...step.options }
-			await step.fn.call(null, browser, testDataRecord)
+			await step.fn.call(null, browser, testDataRecord, this.reporter.worker?.name)
 		} catch (err) {
 			error = err
 		} finally {
